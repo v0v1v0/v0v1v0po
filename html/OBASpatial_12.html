@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.tsroba</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary of a nsroba object
+
+</h2>
+
+<h3>Description</h3>
+
+<p><code>summary</code> method for class "tsroba".
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'tsroba'
+summary(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+
+
+<p>object of the class "tsroba" (see <code>tsroba</code> function).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mean.str</code></td>
+<td>
+
+<p>Estimates for the mean structure parameters <code class="reqn">\bold{beta}</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.str</code></td>
+<td>
+
+<p>Estimates for the variance structure parameters <code class="reqn">\sigma^2, \phi, \nu</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaF</code></td>
+<td>
+
+<p>Sample obtained for <code class="reqn">\bold{beta}</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigmaF</code></td>
+<td>
+
+<p>Sample obtained for <code class="reqn">\sigma^2</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phiF</code></td>
+<td>
+
+<p>Sample obtained for <code class="reqn">\phi</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nuF</code></td>
+<td>
+
+<p>Sample obtained for <code class="reqn">\nu</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Jose A. Ordonez, Marcos O. Prates, Larissa A. Matos, Victor H. Lachos.
+</p>
+
+
+<h3>References</h3>
+
+<p>Ordonez, J.A, M.O. Prattes, L.A. Matos, and V.H. Lachos (2020+). Objective Bayesian analysis for spatial Student-t regression models. (Submitted)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dnsrposoba</code>,<code>dtsrprioroba</code>,<code>dnsrprioroba</code>,<code>tsroba</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+
+
+
+
+set.seed(25)
+data(dataca20)
+d1=dataca20[1:158,]
+
+xpred=model.matrix(calcont~altitude+area,data=dataca20[159:178,])
+xobs=model.matrix(calcont~altitude+area,data=dataca20[1:158,])
+coordspred=dataca20[159:178,1:2]
+
+######covariance matern: kappa=0.3 prior:reference
+res=tsroba(calcont~altitude+area, kappa = 0.3, data=d1,
+           ini.pars=c(10,3,10))
+
+summary(res)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_weather</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add weather data to leaflet map.</h2>
+
+<h3>Description</h3>
+
+<p>Add weather data to leaflet map.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_weather(map, data, lng = NULL, lat = NULL, icon = NULL,
+  template = NULL, popup = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p><code>leaflet</code> map object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>owm data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng</code></td>
+<td>
+<p>numeric vector of longitudes
+(if <code>NULL</code> it will be taken from <code>data</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat</code></td>
+<td>
+<p>numeric vector of latitudes
+(if <code>NULL</code> it will be taken from <code>data</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icon</code></td>
+<td>
+<p>vector of owm icon names
+(usually included in weather column of owm data)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>template</code></td>
+<td>
+<p>template in the form of <br><code>"&lt;b&gt;{{name}}&lt;/b&gt;"</code> <br>
+where variable names in brackets correspond to
+column names of <code>data</code> (see also <code>render</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>popup</code></td>
+<td>
+<p>vector containing (HTML) content for popups,
+skipped in case parameter <code>template</code> is given</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>see <code>addMarkers</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>updated map object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+   owm_data &lt;- find_city("Malaga", units = "metric") %&gt;%
+     owmr_as_tibble()
+   map &lt;- leaflet() %&gt;% addTiles() %&gt;%
+     add_weather(
+       owm_data,
+       template = "&lt;b&gt;{{name}}&lt;/b&gt;, {{temp}}°C",
+       icon = owm_data$weather_icon
+     )
+
+## End(Not run)
+</code></pre>
+
+
+</div>

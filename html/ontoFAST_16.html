@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>paths_sunburst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return ontology paths for characters</h2>
+
+<h3>Description</h3>
+
+<p>Returns ontology paths for all characters. These paths can be used to create a sunburst plot of
+ontological dependencies.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">paths_sunburst(
+  ontology,
+  annotations = "auto",
+  exclude.terms = NULL,
+  include.terms = NULL,
+  use.chars = TRUE,
+  sep = "-"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p>ontology_index object with character annatotions included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotations</code></td>
+<td>
+<p>which annotations to use: "auto" means automatic annotations, "manual" means manual ones.
+Alternatively, any othe list element containing annotations can be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude.terms</code></td>
+<td>
+<p>list of terms to exclude</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include.terms</code></td>
+<td>
+<p>list of terms to include</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use.chars</code></td>
+<td>
+<p>indicate whether character ids should be included in output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>separator used to delimit ontology terms</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Table.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+ontology_partof=get_OBO(system.file("data_onto", "HAO.obo", package = "ontoFAST"),
+extract_tags="everything", propagate_relationships = c("BFO:0000050"))
+ontology_partof&lt;-onto_process(ontology_partof, Sharkey_2011[,1], do.annot = F)
+ontology_partof$annot_characters&lt;-Sharkey_2011_annot
+tb&lt;-paths_sunburst(ontology_partof,
+annotations = ontology_partof$annot_characters, exclude.terms=exclude_terms)
+# library(sunburst)
+sunburst(tb)
+
+</code></pre>
+
+
+</div>

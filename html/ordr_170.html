@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>methods-kmeans</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Functionality for k-means clustering ('kmeans') objects</h2>
+
+<h3>Description</h3>
+
+<p>These methods extract data from, and attribute new data to,
+objects of class <code>"kmeans"</code> as returned by <code>stats::kmeans()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'kmeans'
+as_tbl_ord(x)
+
+## S3 method for class 'kmeans'
+recover_rows(x)
+
+## S3 method for class 'kmeans'
+recover_cols(x)
+
+## S3 method for class 'kmeans'
+recover_coord(x)
+
+## S3 method for class 'kmeans'
+recover_aug_rows(x)
+
+## S3 method for class 'kmeans'
+recover_aug_cols(x)
+
+## S3 method for class 'kmeans'
+recover_aug_coord(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An ordination object.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>The recovery generics <code style="white-space: pre;">⁠recover_*()⁠</code> return core model components, distribution of inertia,
+supplementary elements, and intrinsic metadata; but they require methods for each model class to
+tell them what these components are.
+</p>
+<p>The generic <code>as_tbl_ord()</code> returns its input wrapped in the 'tbl_ord'
+class. Its methods determine what model classes it is allowed to wrap. It
+then provides 'tbl_ord' methods with access to the recoverers and hence to
+the model components.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other methods for idiosyncratic techniques: 
+<code>methods-lm</code>
+</p>
+<p>Other models from the stats package: 
+<code>methods-cancor</code>,
+<code>methods-cmds</code>,
+<code>methods-factanal</code>,
+<code>methods-lm</code>,
+<code>methods-prcomp</code>,
+<code>methods-princomp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># data frame of Anderson iris species measurements
+class(iris)
+head(iris)
+# compute 3-means clustering on scaled iris measurements
+set.seed(5601L)
+iris %&gt;%
+  subset(select = -Species) %&gt;%
+  scale() %&gt;%
+  kmeans(centers = 3) %&gt;%
+  print() -&gt; iris_km
+
+# visualize clusters using PCA
+iris %&gt;%
+  subset(select = -Species) %&gt;%
+  prcomp() %&gt;%
+  as_tbl_ord() %&gt;%
+  mutate_rows(cluster = iris_km$cluster) %&gt;%
+  ggbiplot() +
+  geom_rows_point(aes(color = factor(as.character(as.integer(cluster)),
+                                     levels = as.character(seq(3L))))) +
+  scale_color_brewer(type = "qual", name = "cluster")
+
+# wrap as a 'tbl_ord' object
+(iris_km_ord &lt;- as_tbl_ord(iris_km))
+
+# augment everything with names, observations with cluster assignment
+(iris_km_ord &lt;- augment_ord(iris_km_ord))
+
+# summarize clusters with standard deviation
+iris_km_ord %&gt;%
+  tidy() %&gt;%
+  transform(sdev = sqrt(withinss / size))
+
+# discriminate between clusters 2 and 3
+iris_km_ord %&gt;%
+  ggbiplot(aes(x = `2`, y = `3`), color = factor(.cluster)) +
+  geom_jitter(stat = "rows", aes(shape = cluster), width = .2, height = .2) +
+  geom_cols_axis(aes(color = `1`, label = name),
+                 text_size = 2, text_dodge = .1,
+                 label_size = 3, label_alpha = .5) +
+  scale_x_continuous(expand = expansion(mult = .8)) +
+  scale_y_continuous(expand = expansion(mult = .5)) +
+  ggtitle(
+    "Measurement loadings onto clusters 2 and 3",
+    "Color indicates loadings onto cluster 1"
+  )
+</code></pre>
+
+
+</div>

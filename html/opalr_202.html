@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.table_view_update</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Update the table references and the entity filter of an Opal view</h2>
+
+<h3>Description</h3>
+
+<p>Update the table references and/or the entity filter of an existing Opal view. The view
+dictionary will NOT be modified (use opal.table_dictionary_update to
+apply a dictionary).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.table_view_update(opal, project, table, tables = NULL, where = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal connection object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Project name where the table will be located.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+<p>Table name to be created.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tables</code></td>
+<td>
+<p>List of the fully qualified table names that are referred by the view. Not modified when NULL (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>where</code></td>
+<td>
+<p>The entity filter script. Not modified when NULL (default). To remove the filter, set an empty string.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other table functions: 
+<code>opal.perms()</code>,
+<code>opal.resource_view_create()</code>,
+<code>opal.resource_view_reconnect()</code>,
+<code>opal.table_create()</code>,
+<code>opal.table_delete()</code>,
+<code>opal.table_dictionary_get()</code>,
+<code>opal.table_dictionary_update()</code>,
+<code>opal.table_exists()</code>,
+<code>opal.table_export()</code>,
+<code>opal.table_get()</code>,
+<code>opal.table_import()</code>,
+<code>opal.table_perm()</code>,
+<code>opal.table_perm_add()</code>,
+<code>opal.table_perm_delete()</code>,
+<code>opal.table_save()</code>,
+<code>opal.table_truncate()</code>,
+<code>opal.table_view_create()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+# make a view
+opal.table_view_create(o, "CNSIM", "CNSIM123",
+                       c("CNSIM.CNSIM1"))
+
+# update the table references
+opal.table_view_update(o, "CNSIM", "CNSIM123",
+                       tables = c("CNSIM.CNSIM1", "CNSIM.CNSIM2", "CNSIM.CNSIM3"))
+
+# update the entity filter
+opal.table_view_update(o, "CNSIM", "CNSIM123", where = "$('LAB_TSC').ge(5)")
+
+# remove the entity filter
+opal.table_view_update(o, "CNSIM", "CNSIM123", where = "")
+
+# update both the table references and the entity filter
+opal.table_view_update(o, "CNSIM", "CNSIM123",
+                       tables = c("CNSIM.CNSIM1", "CNSIM.CNSIM2", "CNSIM.CNSIM3"),
+                       where = "$('LAB_TSC').ge(5)")
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

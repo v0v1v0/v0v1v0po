@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>correlated_regressors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate correlated regressor values</h2>
+
+<h3>Description</h3>
+
+<p>This function simulates regressor values from various marginal distributions
+with custom correlations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">correlated_regressors(
+  labels,
+  n = 100,
+  marginals = list(),
+  correlation = diag(length(labels)),
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>[<code>character()</code>]<br>
+Unique labels for the regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+The number of values per regressor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>marginals</code></td>
+<td>
+<p>[<code>list()</code>]<br>
+Optionally marginal distributions for regressors. If not specified,
+standard normal marginal distributions are used.
+</p>
+<p>Each list entry must be named according to a regressor label, and the
+following distributions are currently supported:
+</p>
+
+<dl>
+<dt>discrete distributions</dt>
+<dd>
+
+<ul>
+<li>
+<p> Poisson: <code>list(type = "poisson", lambda = ...)</code>
+</p>
+</li>
+<li>
+<p> categorical: <code>list(type = "categorical", p = c(...))</code>
+</p>
+</li>
+</ul>
+</dd>
+<dt>continuous distributions</dt>
+<dd>
+
+<ul>
+<li>
+<p> normal: <code>list(type = "normal", mean = ..., sd = ...)</code>
+</p>
+</li>
+<li>
+<p> uniform: <code>list(type = "uniform", min = ..., max = ...)</code>
+</p>
+</li>
+</ul>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correlation</code></td>
+<td>
+<p>[<code>matrix()</code>]<br>
+A correlation matrix of dimension <code>length(labels)</code>, where the
+<code>(p, q)</code>-th entry defines the correlation between regressor
+<code>labels[p]</code> and <code>labels[q]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+Print information about the simulated regressors?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> with <code>n</code> rows and <code>length(labels)</code> columns.
+</p>
+
+
+<h3>References</h3>
+
+<p>This function heavily depends on the <code>{SimMultiCorrData}</code> package.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other simulation helpers: 
+<code>ddirichlet_cpp()</code>,
+<code>dmvnorm_cpp()</code>,
+<code>dtnorm_cpp()</code>,
+<code>dwishart_cpp()</code>,
+<code>simulate_markov_chain()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">labels &lt;- c("P", "C", "N1", "N2", "U")
+n &lt;- 100
+marginals &lt;- list(
+  "P" = list(type = "poisson", lambda = 2),
+  "C" = list(type = "categorical", p = c(0.3, 0.2, 0.5)),
+  "N1" = list(type = "normal", mean = -1, sd = 2),
+  "U" = list(type = "uniform", min = -2, max = -1)
+)
+correlation &lt;- matrix(
+  c(1, -0.3, -0.1, 0, 0.5,
+    -0.3, 1, 0.3, -0.5, -0.7,
+    -0.1, 0.3, 1, -0.3, -0.3,
+    0, -0.5, -0.3, 1, 0.1,
+    0.5, -0.7, -0.3, 0.1, 1),
+  nrow = 5, ncol = 5
+)
+data &lt;- correlated_regressors(
+  labels = labels, n = n, marginals = marginals, correlation = correlation
+)
+head(data)
+</code></pre>
+
+
+</div>

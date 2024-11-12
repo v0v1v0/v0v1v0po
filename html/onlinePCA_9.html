@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>impute</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>BLUP Imputation of Missing Values</h2>
+
+<h3>Description</h3>
+
+<p>Missing values of a vector are imputed by best linear unbiased prediction (BLUP) assuming a multivariate normal distribution. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">impute(lambda, U, x, center, tol = 1e-07)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>vector of eigenvalues of length <code>q</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>matrix of eigenvectors (principal components) of dimension <code>p * q</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector of observations of length <code>p</code> with missing entries.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>centering vector for <code>x</code>. Default is zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>tolerance in the calculation of the pseudoinverse.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The vector <code>x</code> is assumed to arise from a multivariate normal distribution with mean vector <code>center</code> and covariance matrix <code class="reqn">U diag(lambda) U^T</code>.</p>
+
+
+<h3>Value</h3>
+
+<p>The imputed vector <code>x</code>.</p>
+
+
+<h3>References</h3>
+
+<p>Brand, M. (2002). Incremental singular value decomposition of uncertain data with missing values. <em>European Conference on Computer Vision (ECCV).</em>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(10)
+lambda &lt;- c(1,2,5)
+U &lt;- qr.Q(qr(matrix(rnorm(30),10,3)))
+x &lt;- U %*% diag(sqrt(lambda)) %*% rnorm(3) + rnorm(10, sd =.05)
+x.na &lt;- x
+x.na[c(1,3,7)] &lt;- NA
+x.imputed &lt;- impute(lambda,U,x.na)
+cbind(x,x.imputed)
+</code></pre>
+
+
+</div>

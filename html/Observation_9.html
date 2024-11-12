@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>manual_compendium_reference</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Manually Encode Direct Observation Intensities by Cross-Referencing the
+<a href="https://sites.google.com/site/compendiumofphysicalactivities/">Compendium
+of Physical Activities</a>
+</h2>
+
+<h3>Description</h3>
+
+<p>Manually Encode Direct Observation Intensities by Cross-Referencing the
+<a href="https://sites.google.com/site/compendiumofphysicalactivities/">Compendium
+of Physical Activities</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">manual_compendium_reference(
+  obs_data,
+  kids = c("yes", "no"),
+  mvpa = c("yes", "no")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obs_data</code></td>
+<td>
+<p>A data frame outputted from
+<code>data_collection_program</code> with
+<code>interactive = FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kids</code></td>
+<td>
+<p>A character scalar in <code>c("yes", "no")</code>:
+Should intensities be determined using youth cutoffs for
+light intensity (2 metabolic equivalents, not 1.5) and
+moderate intensity (4 metabolic equivalents, not 3)
+physical activity? Default is <code>"yes"</code>, with a warning
+that the value was not manually set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mvpa</code></td>
+<td>
+<p>A character scalar in <code>c("yes", "no")</code>: Should
+moderate and vigorous physical activity be coded as a single
+category (i.e., MVPA)? Default is <code>"yes"</code>, with a
+warning that the value was not manually set.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with three elements. The first (<code>data</code>) is the
+original data, where a <code>Final_Intensity</code> column has been
+populated to the extent possible, with "Indeterminate" listed for
+the other activities. The second element (<code>indeterminate</code>) is
+another list, which has one element for each activity in
+<code>data</code> with <code>Final_Intensity = "Indeterminate"</code>. The
+elements of <code>indeterminate</code> are named after the activity they
+represent, and the contents are a subset of the Compendium giving
+suggested matches for the activity, based on its description in
+<code>data</code>. The third element (<code>compendium</code>) gives the entire
+compendium, which can be manually cross-referenced for cases where
+the suggested matches in <code>indeterminate</code> do not give a suitable
+match.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other processing functions: 
+<code>compendium_reference()</code>,
+<code>interactive_compendium_reference()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(example_data)
+
+example_data_processed &lt;- compendium_reference(example_data, FALSE,
+   kids = "yes", mvpa = "yes")
+
+if (interactive()) {
+ View(example_data_processed$data)
+ View(example_data_processed$indeterminate[[1]])
+ View(example_data_processed$compendium)
+}
+
+</code></pre>
+
+
+</div>

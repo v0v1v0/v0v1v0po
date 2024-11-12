@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>direction_summary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary of movement direction for Oregon RFID antenna data</h2>
+
+<h3>Description</h3>
+
+<p>Summarizes the time difference between the first and last movement directions for each unique tag ID. Input data are created by <code>tag_direction</code>, which determines the direction of movement for each detection event in <code>join_multireader_data</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">direction_summary(dir_df, include_stationary = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dir_df</code></td>
+<td>
+<p>output from <code>tag_direction</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_stationary</code></td>
+<td>
+<p>if <em>TRUE</em>, all detections are summarized. If FALSE, only detections with a known movement direction (up or down) are included in the summary.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>direction_summary</code> isolates the first and last direction of movement from <code>tag_direction</code> and determines the time difference in seconds and days. Directions are U for upstream movement, D for downstream movement, and S for no movement, or consecutive detection at the same location.
+</p>
+<p>It is common for a tag to be detected multiple times at the same antenna, which will result in a movement direction of S, or stationary. The user is encouraged to examine direction summaries for <em>include_stationary = TRUE</em> and <em>include_stationary = FALSE</em> to become familiar with their data. When <em>include_stationary = FALSE</em>, there may be fewer tag ids in the direction summary than in the full data set.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a tibble object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Annika Putt &lt;annika@instream.net&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>import_ORFID</code> for importing data files from Oregon RFID ORMR and ORSR antenna readers.
+</p>
+<p><code>join_multireader_data</code> for combining data from Oregon RFID ORMR and ORSR antenna readers into a multi-reader array.
+</p>
+<p><code>tag_direction</code> for determining movement direction of detections in systems with a linear migration route.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create a list containing compiled reader data:
+readers &lt;- list(reader_us, reader_ds)
+
+# Join data into a multi-reader array:
+PIT_data &lt;- join_multireader_data(readers)
+
+# List readers:
+unique(PIT_data$LOC)
+
+# Determine tag direction for animals moving from downstream to upstream:
+dir &lt;- tag_direction(PIT_data, c("downstream_A1", "upstream_A1"))
+ 
+# Determine the time difference between first and last detections:
+dir_summary &lt;- direction_summary(dir)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OOBCurvePars</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OOBCurvePars</h2>
+
+<h3>Description</h3>
+
+<p>With the help of this function the out of bag curves for parameters like mtry, sample.fraction and 
+min.node.size of random forests can be created for any measure that is available in the mlr package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OOBCurvePars(lrn, task, pars = c("mtry"), nr.grid = 10, par.vals = NULL,
+  measures = list(auc))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lrn</code></td>
+<td>
+<p>The learner created with <code>makeLearner</code>. Currently only <code>ranger</code> is supported. 
+num.trees has to be set sufficiently high to produce smooth curves.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>task</code></td>
+<td>
+<p>Learning task created by the function <code>makeClassifTask</code> or <code>makeRegrTask</code> of <a href="https://github.com/mlr-org/mlr">mlr</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pars</code></td>
+<td>
+<p>One of the hyperparameter "mtry", "sample.fraction" or "min.node.size".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nr.grid</code></td>
+<td>
+<p>Number of points on hyperparameter space that should be evaluated (distributed equally)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>par.vals</code></td>
+<td>
+<p>Optional vector of hyperparameter points that should be evaluated. If set, nr.grid is not used anymore. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measures</code></td>
+<td>
+<p>List of performance measure(s) of mlr to evaluate. Default is mmce for classification and mse for regression.
+See the <a href="https://mlr-org.github.io/mlr/articles/measures.html">mlr tutorial</a> for a list of available measures 
+for the corresponding task.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list with parameter values and a list of performances.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OOBCurve</code> for out-of-bag curves dependent on the number of trees.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(mlr)
+task = sonar.task
+
+lrn = makeLearner("classif.ranger", predict.type = "prob", num.trees = 1000)
+results = OOBCurvePars(lrn, task, measures = list(auc))
+plot(results$par.vals, results$performances$auc, type = "l", xlab = "mtry", ylab = "auc")
+
+lrn = makeLearner("classif.ranger", predict.type = "prob", num.trees = 1000, replace = FALSE)
+results = OOBCurvePars(lrn, task, pars = "sample.fraction", measures = list(mmce))
+plot(results$par.vals, results$performances$mmce, type = "l", xlab = "sample.fract.", ylab = "mmce")
+
+results = OOBCurvePars(lrn, task, pars = "min.node.size", measures = list(mmce))
+plot(results$par.vals, results$performances$mmce, type = "l", xlab = "min.node.size", ylab = "mmce")
+## End(Not run)
+</code></pre>
+
+
+</div>

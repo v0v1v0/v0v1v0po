@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cust.colorbar</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+defines colorbar settings for <code>v.raster</code> and <code>add.region</code>-calls.
+</h2>
+
+<h3>Description</h3>
+
+<p>function (used by v) to define the colorbar placement and figure dimensions. Unlike set.colorbar the colorbar is not added to an existing plot but to a dummy device. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cust.colorbar(v_area, lon, lat, cbpos='', cbx, cby, 
+              figdim, input.mode, force.figdim.widget=F, xpos=-1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>v_area</code></td>
+<td>
+
+<p>region-keyword predefined by the region_definitions-dataset or an extent.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lon</code></td>
+<td>
+
+<p>Vector returning longitude coordinates of the area to be plotted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat</code></td>
+<td>
+
+<p>Vector returning latitude coordinates of the area to be plotted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cbpos</code></td>
+<td>
+
+<p>letter ("b", "l", "t", "r") indicating the position of the colorbar (bottom, left, top, right). Overwrites <code>cbx</code> and <code>cby</code> values.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cbx</code></td>
+<td>
+
+<p>the horizontal limits (x1, x2) of the colorbar. If missing, the user will be asked for manual colorbar placement.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cby</code></td>
+<td>
+
+<p>the vertical limits (y1, y2) of the colorbar. If missing, the user will be asked for manual colorbar placement.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figdim</code></td>
+<td>
+
+<p>numeric vector indicating the <code>width</code> and <code>height</code> of the plot device in inches. If missing and <code>force.figdim.widget</code> is set <code>FALSE</code>, figdim is assigned a default <code>width</code> and <code>height</code> of 7in, otherwise the user will be asked to resize the plot device to set plot dimensions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input.mode</code></td>
+<td>
+
+<p>character indicating the input mode of the function: 'i' for manual colorbar placement, 'v' for a vertical colorbar on the right side of the plot or 'h' for a hoizontal colorbar below the plot..
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force.figdim.widget</code></td>
+<td>
+
+<p>whether <code>figdim</code> should be assigned by a widget if missing.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xpos</code></td>
+<td>
+
+<p>integer: initial position of the top left corner of the figure window on the pc-screen, given in pixels. Negative values are from the opposite corner. (default is -1). Disregarded under Mac OS.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>like <code>set.colobar</code> <code>cust.colobar</code> defines colorbar settings, but furthermore the default figure size. The function is used by calls of v on non-<code>'.gz'</code>-files and add.region.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list of colorbar definition vectors: <code>cbx, cby, figdim</code> and <code>align</code> of which the latter holds the values of <code>gradient</code> and <code>oticks</code>. See function argmuments for more details.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+<p>set.colorbar, add.region and v.raster
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example:
+path &lt;- system.file("test_files", package="oceanmap")
+nfiles &lt;- Sys.glob(paste0(path,'/herring*.nc')) # load sample-'.nc'-files
+head(nfiles)
+rfile &lt;- nc2raster(nfiles[1], varname='Conc', layer=1)
+
+ext &lt;- extent(rfile)
+#cb &lt;- cust.colorbar(ext) # starts new plot device to define colorbar placement
+#cust.colorbar(ext, cbx=cb$cbx, cby=cb$cby) # if cbx and cby are given no figure is produced
+
+#plotmap(ext)
+#set.colorbar(cb$cbx, cb$cby) # plots to an existing plot
+</code></pre>
+
+
+</div>

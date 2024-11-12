@@ -1,0 +1,241 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>openCR.design</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Design Data for Open population Models</h2>
+
+<h3>Description</h3>
+
+<p>Internal function used by <code>openCR.fit</code>. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+openCR.design(capthist, models, type, naive = FALSE, stratumcov = NULL, 
+    sessioncov = NULL, timecov = NULL, agecov = NULL, 
+    dframe = NULL, contrasts = NULL, initialage = 0, 
+    minimumage = 0, maximumage = 1, agebreaks = NULL, CJSp1 = FALSE, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>capthist</code></td>
+<td>
+<p> single-session <code>capthist</code> object </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>models</code></td>
+<td>
+<p> list of formulae for parameters of detection </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character string for type of analysis "CJS", "JSSAfCL" etc. (see <code>openCR.fit</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>naive</code></td>
+<td>
+<p> logical if TRUE then modelled parameter is for a naive
+animal (not caught previously)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timecov</code></td>
+<td>
+<p> optional vector or dataframe of values of occasion-specific covariate(s). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratumcov</code></td>
+<td>
+<p> optional dataframe of values of stratum-specific covariate(s) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sessioncov</code></td>
+<td>
+<p> optional dataframe of values of session-specific covariate(s) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>agecov</code></td>
+<td>
+<p> optional dataframe of values of age-specific covariate(s) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dframe</code></td>
+<td>
+<p> optional data frame of design data for detection parameters </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contrasts</code></td>
+<td>
+<p>contrast specification as for <code>model.matrix</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initialage</code></td>
+<td>
+<p>numeric or character (name of individual covariate containing initial ages)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minimumage</code></td>
+<td>
+<p>numeric; ages younger than minimum are truncated up</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maximumage</code></td>
+<td>
+<p>numeric; ages older than maximum are truncated down</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>agebreaks</code></td>
+<td>
+<p>numeric vector of age-class limits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CJSp1</code></td>
+<td>
+<p>logical; if TRUE detection is modelled on first primary session in CJS models</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> other arguments passed to the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> function <code>model.matrix</code> </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is an internal <span class="pkg">openCR</span> function that you are unlikely ever
+to use. ... may be used to pass <code>contrasts.arg</code> to
+<code>model.matrix</code>.
+</p>
+<p>Each real parameter is notionally different for each unique combination
+of individual, secondary session, detector and latent class, i.e., for <code class="reqn">n</code> individuals,
+<code class="reqn">S</code> secondary sessions, <code class="reqn">K</code> detectors and <code class="reqn">m</code> latent classes there are
+<em>potentially</em> <code class="reqn">n \times S \times K \times m </code> different
+values. Actual models always predict a much reduced set of distinct
+values, and the number of rows in the design matrix is reduced
+correspondingly; a parameter index array allows these to retrieved for
+any combination of individual, session and detector. 
+</p>
+<p><code>openCR.design</code> is less tolerant than <code>openCR.fit</code> regarding
+the inputs ‘capthist’ and ‘models’. Model formulae are processed by <code>openCR.fit</code>
+to a standard form (a named list of formulae) before they are passed to
+<code>openCR.design</code>, and multi-session capthist objects are
+automatically ‘reduced’ and ‘joined’ for open-population analysis.
+</p>
+<p>If <code>timecov</code> is a single vector of values (one for each secondary session) 
+then it is treated as a covariate named ‘tcov’.
+If <code>sessioncov</code> is a single vector of values (one for each primary session) 
+then it is treated as a covariate named ‘scov’.
+</p>
+<p>The <code>initialage</code> and <code>maximumage</code> arguments are usually passed via the
+<code>openCR.fit</code> ‘details’ argument.
+</p>
+<p><code>agecov</code> may be used to group ages. It should have length (or number of rows) 
+equal to <code>maximumage</code> + 1. Alternatively, age classes may be defined with the argument <code>agebreaks</code>; this is preferred from openCR 2.2.6.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>designMatrices</code></td>
+<td>
+<p> list of reduced design matrices, one for each
+real parameter </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameterTable</code></td>
+<td>
+<p> index to row of the reduced design matrix for
+each real parameter; dim(parameterTable) = c(uniquepar, np),
+where uniquepar is the number of unique combinations of paramater
+values (uniquepar &lt; <code class="reqn">nSKM</code>) and np is the number of parameters in
+the detection model. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PIA</code></td>
+<td>
+<p> Parameter Index Array - index to row of parameterTable for
+a given animal, occasion and latent class; dim(PIA) = c(n,S,K,M) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validlevels</code></td>
+<td>
+<p> for J primary sessions, a logical matrix of np rows and J columns, mostly
+TRUE, but FALSE for impossible combinations e.g. CJS recapture
+probability in session 1 (validlevels["p",1]) unless <code>CJSp1 = TRUE</code>, or CJS final survival
+probability (validlevels["phi",J]). Also, validlevels["b",1] is
+FALSE with type = "JSSA..." because of the constraint that entry
+parameters sum to one. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>individual</code></td>
+<td>
+<p> TRUE if uses individual variate(s)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>agelevels</code></td>
+<td>
+<p>levels for age factor (cut numeric ages) if ‘age’ in model</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The component validlevels is TRUE in many cases for which a
+parameter is redundant or confounded (e.g. validlevels["phi",J-1]);
+these are sorted out ‘post hoc’ by examining the fitted values,
+their asymptotic variances and the eigenvalues of the Hessian
+matrix.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openCR.fit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## this happens automatically in openCR.fit
+ovenCH1 &lt;- join(reduce(ovenCH, by = "all", newtraps=list(1:44)))
+
+openCR.design (ovenCH1, models = list(p = ~1, phi = ~session),
+    interval = c(1,1,1,1), type = "CJS")
+
+</code></pre>
+
+
+</div>

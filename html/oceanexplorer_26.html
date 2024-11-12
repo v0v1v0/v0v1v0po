@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_NOAA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Obtain NOAA World Ocean Atlas dataset</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves data from the NOAA World Ocean Atlas.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_NOAA(var, spat_res, av_period, cache = FALSE)
+
+url_parser(var, spat_res, av_period, cache = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>var</code></td>
+<td>
+<p>The chemical or physical variable of interest (possible choices:
+<code>"temperature"</code>, <code>"phosphate"</code>, <code>"nitrate"</code>, <code>"silicate"</code>, <code>"oxygen"</code>,
+<code>"salinity"</code>, <code>"density"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spat_res</code></td>
+<td>
+<p>Spatial resolution, either 1 or 5 degree grid-cells (numeric)
+.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>av_period</code></td>
+<td>
+<p>Temporal resolution, either <code>"annual"</code>, specific seasons
+(e.g. <code>"winter"</code>), or month (e.g. <code>"August"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cache</code></td>
+<td>
+<p>Caching the extracted NOAA file in the package's <code>extdata</code>
+directory (default = <code>FALSE</code>). Size of individual files is around 12 Mb. Use
+<code>list_NOAA()</code> to list cached data resources.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Functions to retrieve data from the
+<a href="https://www.ncei.noaa.gov/products/world-ocean-atlas">NOAA World Ocean Atlas</a>
+. Data is an 3D array (longitude, latitude, and depth) and is loaded as a
+<code>stars</code> object. Check <code>NOAA_data</code> for available
+variables, respective units and their citations. The function can automatically
+cache the extracted files (default: <code>cache = FALSE</code>). The cached file will
+then reside in the package's <code>extdata</code> directory.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>stars</code> object or path.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="https://r-spatial.github.io/stars/articles/stars1.html">Introduction to the stars package</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# path to NOAA server or local data source
+url_parser("oxygen", 1, "annual")
+
+if (interactive()) {
+
+# retrieve NOAA data
+get_NOAA("oxygen", 1, "annual")
+
+}
+</code></pre>
+
+
+</div>

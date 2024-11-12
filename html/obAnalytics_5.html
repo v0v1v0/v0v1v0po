@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>depthMetrics</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate order book summary statistics/metrics.</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates various summary statistics describing the state of
+the limit order book after every event. The metrics are intended to quantify
+the "shape" of the order book through time. Currenly the following metrics
+are calculated:
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">depthMetrics(depth, bps = 25, bins = 20)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>depth</code></td>
+<td>
+<p>Price level cumulative depth calculated by priceLevelVolume()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bps</code></td>
+<td>
+<p>Width (in BPS) for each interval/bin</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bins</code></td>
+<td>
+<p>Number of intervals +- the best bid/ask to aggregate.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<pre>
+  [timestamp,
+   best.bid.price, best.bid.vol, bid.vol25:500bps,
+   best.ask.price, best.ask.vol, ask.vol25:500bps,]
+
+where timestamp = time of order book state change
+ best.bid.price = current best bid price
+ best.bid.vol = current amount of volume at the best bid
+ bid.vol25:500bps = amount of volume available &gt; -25bps and &lt;= best bid
+                    until &gt; 500bps &lt;= 475bps.
+   ... the same pattern is then repeated for the ask side.
+</pre>
+
+
+<h3>Value</h3>
+
+<p>data.frame containing order book summary statistics.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+</div>

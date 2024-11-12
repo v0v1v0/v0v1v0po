@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combineStudies</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine two or more studies</h2>
+
+<h3>Description</h3>
+
+<p>Create a new OmicNavigator study by combining two or more existing study
+objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combineStudies(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Two or more objects of class <code>onStudy</code></p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This is a convenience function to quickly and conveniently combine studies.
+However, it is naive, and you will likely need to edit the new study after
+combining. When there are conflicting elements (e.g. different study names or
+different maintainers), then the value for the latter study is kept. As a
+concrete example, if you combined 5 studies, the name of the combined study
+would be the name of the 5th study.
+</p>
+<p>The behavior is more complex for study elements that are nested lists of data
+frames (e.g. results). If the 5 studies included a results table for the same
+modelID/testID combination, then only the results from the 5th study would be
+retained. However, if they each defined a different modelID, then the results
+for all 5 modelIDs would be included in the combined study. Please note that
+you should be extra cautious in the situation where the studies have the same
+modelID/testID combination. Ideally they should all have the same column
+names. Since a data frame is technically a list, the workhorse function
+<code>modifyList</code> will retain any uniquely named
+columns from earlier studies along with the columns from the final study.
+</p>
+<p>Note that as a shortcut you can also combine studies using the S3 method
+<code>c</code>.
+</p>
+<p>If a study you would like to combine is already installed, you can convert it
+to a study object by importing it with <code>importStudy</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a new combined OmicNavigator study object, which is a named
+nested list with class <code>onStudy</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>createStudy</code>,
+<code>importStudy</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Define threee study objects
+studyOne &lt;- createStudy(name = "One",
+                        description = "First study",
+                        studyMeta = list(metafield1 = "metavalue1"))
+
+studyTwo &lt;- createStudy(name = "Two",
+                        description = "Second study",
+                        maintainer = "The Maintainer",
+                        studyMeta = list(metafield2 = "metavalue2"))
+
+studyThree &lt;- createStudy(name = "Three",
+                          description = "Third study",
+                          studyMeta = list(metafield3 = "metavalue3"))
+
+# Combine the three studies
+combineStudies(studyOne, studyTwo, studyThree)
+
+# Equivalently, can use c()
+c(studyOne, studyTwo, studyThree)
+
+</code></pre>
+
+
+</div>

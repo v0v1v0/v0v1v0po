@@ -1,0 +1,193 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.Subcascades</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Heatmap of a Subcascades Object</h2>
+
+<h3>Description</h3>
+
+<p>Plots a heatmap, that shows the performance of cascades of a Subcascades object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'Subcascades'
+plot(
+  x = NULL,
+  classNames = NULL,
+  class.sort = "",
+  row.sort = "",
+  main = "subcascades",
+  xlab = "classes",
+  ylab = "cascades",
+  digits = 3,
+  ignore = 0,
+  casc.colors = c("#f5f5f5", "#01665e"),
+  na.color = c("#f5f5f5"),
+  color.key = TRUE,
+  las = 1,
+  cex = 1,
+  cex.lab = 1,
+  srt = 30,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A Subcascades object as it is returned by <code>subcascades</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>classNames</code></td>
+<td>
+<p>Character vector including the names of the classes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>class.sort</code></td>
+<td>
+<p>The classes can be sorted either by:
+"" = unsorted, "max": sorted according to maximal occurrence of a class or 
+"sens": sorted according to highest class-wise sensitivity</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row.sort</code></td>
+<td>
+<p>The cascade can be sorted by:
+"" = unsorted, "max": sorted according to maximal occurrence of maximal length or 
+"sens": sorted according to highest class-wise sensitivity</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>See <code>plot</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A title for the x axis (see <code>plot</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A title for the y axis (see <code>plot</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>Integer indicating the number of decimal places to be used (see <code>round</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore</code></td>
+<td>
+<p>A numeric value between 0 and 1. 
+All confusion and purity values below this number are not written as string into the corresponding element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>casc.colors</code></td>
+<td>
+<p>A 2-element vector of the color for the minimal and maximal class-wise sensitivity. 
+The color palette is calcuated by an interpolation between the 2 given colors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.color</code></td>
+<td>
+<p>Color, which is used for indicating the empty elements (if the given class is not part of the cascade).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color.key</code></td>
+<td>
+<p>Specifies whether a color key is drawn (TRUE) or not (FALSE).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>las</code></td>
+<td>
+<p>See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.lab</code></td>
+<td>
+<p>See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>srt</code></td>
+<td>
+<p>Angle used to rotate the strings of the x-axis and y-axis labels (see <code>par</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function plots a heatmap with the cascades of the Subcascades object in the rows 
+and all classes present in any of the cascades in the columns. 
+The colors indicate whether a given class is present in the corresponding cascade and with which sensitivity.
+</p>
+
+
+<h3>Value</h3>
+
+<p>No return value, called to generate the heatmap plot of the subcascades Object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>subcascades</code>, <code>plot.Conf</code>, <code>plot.ConfusionTable</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data &lt;- esl$data
+labels &lt;- esl$labels
+foldList &lt;- generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap &lt;- predictionMap(data, labels, foldList = foldList, 
+                        classifier = tunePareto.svm(), kernel='linear')
+# generate Subcascades object
+subc &lt;- subcascades(predMap,thresh=0.7,size=c(3,4))
+
+plot(subc,row.sort='max')
+
+</code></pre>
+
+
+</div>

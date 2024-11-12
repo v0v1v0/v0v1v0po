@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stratumStructure</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return structure of matched sets</h2>
+
+<h3>Description</h3>
+
+<p>Tabulate treatment:control ratios occurring in matched sets, and
+the frequency of their occurrence.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stratumStructure(stratum, trtgrp = NULL, min.controls = 0, max.controls = Inf)
+
+## S3 method for class 'optmatch'
+stratumStructure(stratum, trtgrp, min.controls = 0, max.controls = Inf)
+
+## Default S3 method:
+stratumStructure(stratum, trtgrp, min.controls = 0, max.controls = Inf)
+
+## S3 method for class 'stratumStructure'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stratum</code></td>
+<td>
+<p>Matched strata, as returned by
+<code>fullmatch</code> or <code>pairmatch</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trtgrp</code></td>
+<td>
+<p>Dummy variable for treatment group membership.  (Not
+required if <code>stratum</code> is an optmatch object, as returned by
+<code>fullmatch</code> or <code>pairmatch</code>.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.controls</code></td>
+<td>
+<p>For display, the number of treatment group
+members per stratum will be truncated at the reciprocal of
+<code>min.controls</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.controls</code></td>
+<td>
+<p>For display, the number of control group
+members will be truncated at <code>max.controls</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>stratumStructure object to be printed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to <code>print</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A table showing frequency of occurrence of those
+treatment:control ratios that occur.
+</p>
+<p>The ‘effective sample size’ of the stratification, in
+matched pairs.  Given as an attribute of the table, named
+‘<code>comparable.num.matched.pairs</code>’; see Note.
+</p>
+
+
+<h3>Note</h3>
+
+<p>For comparing treatment and control groups both of size 10,
+say, a stratification consisting of two strata, one with 9
+treatments and 1 control, has a smaller ‘effective sample
+size’, intuitively, than a stratification into 10 matched pairs,
+despite the fact that both contain 20 subjects in
+total. <code>stratumStructure</code> first summarizes this aspect of
+the structure of the stratification it is given, then goes on to
+identify one number as the stratification's effective sample
+size.  The ‘<code>comparable.num.matched.pairs</code>’
+attribute returned by <code>stratumStructure</code> is the sum of
+harmonic means of the sizes of the treatment and control
+subgroups of each stratum, a general way of calibrating such
+differences as well as differences in the number of subjects
+contained in a stratification.  For example, by this metric the
+9:1, 1:9 stratification is comparable to 3.6 matched pairs.
+</p>
+<p>Why should effective sample size be calculated this way?  The
+phrase ‘effective sample size’ suggests the observations
+are taken to be similar in information content.  Modeling them
+as random variables, this suggests that they be assumed to have
+the same variance, <code class="reqn">\sigma</code>, conditional on what
+stratum they reside in.  If that is the case, and if also
+treatment and control observations differ in expectation by a
+constant that is the same for each stratum, then it can be shown
+that the optimum weights with which to combine treatment-control
+contrasts across strata, <code class="reqn">s</code>, are proportional to the
+stratum-wise harmonic means of treatment and control counts,
+<code class="reqn">h_s = [(n_{ts}^{-1} + n_{cs}^{-1})/2]^{-1}</code> (Kalton, 1968).  The thus-weighted
+average of contrasts then has variance <code class="reqn">2\sigma/\sum_s
+  h_s</code>. This motivates the use of <code class="reqn">\sum_s
+  h_s</code> as a measure of effective sample size (Hansen, 2011).
+Somewhat different motivations of the same calculation appear 
+in Hansen (2004) and in Hansen and Bowers (2008).  Since for a
+matched pair <code class="reqn">s</code>, <code class="reqn">h_s=1</code>, <code class="reqn">\sum_s
+  h_s</code> can be thought of as the number of matched pairs
+needed to attain comparable precision.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Ben B. Hansen
+</p>
+
+
+<h3>References</h3>
+
+<p>Kalton, G. (1968), ‘Standardization: A
+technique to control for extraneous variables’, <em>Applied
+Statistics</em>, <b>17</b>, 118–136.
+</p>
+<p>Hansen, B.B. (2004), ‘Full Matching in an Observational
+Study of Coaching for the SAT’, <em>Journal of the American
+Statistical Association</em>, <b>99</b>, 609–618.
+</p>
+<p>Hansen B.B. and Bowers, J. (2008), ‘Covariate balance in
+simple, stratified and clustered comparative studies’,
+<em>Statistical Science</em>, <b>23</b> (2), 219–236.
+</p>
+<p>Hansen, B.B. (2011), ‘Propensity score matching to extract
+latent experiments from nonexperimental data: A case study’.
+Ch. 9 of <em>Looking Backwards: Proceedings from a Conference
+in Honor of Paul W. Holland</em>, Springer.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>matched</code>, <code>fullmatch</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(plantdist)
+plantsfm &lt;- fullmatch(plantdist) # A full match with unrestricted
+                                 # treatment-control balance
+plantsfm1 &lt;- fullmatch(plantdist,min.controls=2, max.controls=3)
+stratumStructure(plantsfm)
+stratumStructure(plantsfm1)
+stratumStructure(plantsfm, max.controls=4)
+
+</code></pre>
+
+
+</div>

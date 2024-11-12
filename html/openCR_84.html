@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ucare.cjs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Goodness-of-fit tests for the Cormack-Jolly-Seber model</h2>
+
+<h3>Description</h3>
+
+<p>The package <span class="pkg">R2ucare</span> (Gimenez et al. 2018, 2022) provides the standard tests for CJS models from Burnham et al. (1987) along with tests for multi-state models as described by Pradel et al. (2005). This function is a wrapper for the tests relevant to <span class="pkg">openCR</span> (see Details). Original papers and the vignette for <span class="pkg">R2ucare</span> should be consulted for interpretation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+ucare.cjs(CH, tests = "all", by = NULL, verbose = TRUE, rounding = 3, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>CH</code></td>
+<td>
+<p>capthist object suitable for openCR</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tests</code></td>
+<td>
+<p>character vector with the names of specific tests (see Details) or ‘all’</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by</code></td>
+<td>
+<p>character name of covariate in CH used to split rows of CH into separate groups </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; if TRUE then additional details are tabulated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rounding</code></td>
+<td>
+<p>integer number of decimal places in output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>split.capthist</code> if needed </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The possible tests are “test3sr", “test3sm", “test2ct", “test2cl", and “overall_CJS".
+</p>
+<p>If <code>CH</code> is a multi-session object then it will first be collapsed to a single-session object with <code>join</code> as usual in <span class="pkg">openCR</span>. If <code>CH</code> has an intervals attribute indicating that the data are from a robust design (some intervals zero) then it will first be collapsed to one secondary session per primary session, with a warning.
+</p>
+<p>If <code>by</code> is specified it should point to a categorical variable (factor or character) in the covariates attribute of <code>CH</code>. Separate tests will be conducted for each group.
+</p>
+<p><span class="pkg">R2ucare</span> was removed from CRAN in May 2022, but will return at some point. In the meantime, it may be necessary to install from GitHub with
+</p>
+<p><code>
+if(!require(devtools)) install.packages("devtools")
+devtools::install_github("oliviergimenez/R2ucare")
+</code>
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of results, possibly nested by the grouping variable <code>by</code>. The verbose form includes both the overall result of each test and its breakdown into components (‘details’).
+</p>
+
+
+<h3>References</h3>
+
+<p>Burnham, K. P., Anderson, D. R., White, G. C., Brownie, C. and Pollock, K. H. (1987) <em>Design and Analysis Methods for Fish Survival Experiments Based on Release-Recapture</em>. American Fisheries Society Monograph 5. Bethesda, Maryland, USA.
+</p>
+<p>Choquet, R., Lebreton, J.-D., Gimenez, O., Reboulet, A.-M. and Pradel, R. (2009) U-CARE: Utilities for performing goodness of fit tests and manipulating CApture-REcapture data. <em>Ecography</em> <b>32</b>, 1071–1074.
+</p>
+<p>Gimenez, O., Lebreton, J.-D., Choquet, R. and Pradel, R. (2018) R2ucare: An R package to perform 
+goodness-of-fit tests for capture–recapture models. <em>Methods in Ecology and Evolution</em> <b>9</b>, 1749–1754.
+</p>
+<p>Gimenez, O., Lebreton, J.-D., Choquet, R. and Pradel, R. (2022) R2ucare: Goodness-of-Fit Tests
+for Capture-Recapture Models. R package version 1.0.2. <a href="https://github.com/oliviergimenez/R2ucare/">https://github.com/oliviergimenez/R2ucare/</a>
+</p>
+<p>Lebreton, J.-D., Burnham, K. P., Clobert, J., and Anderson, D. R. (1992) Modeling survival and testing biological hypotheses using marked animals: a unified approach with case studies. <em>Ecological Monographs</em> <b>62</b>, 67–118.
+</p>
+<p>Pradel, R., Gimenez O. and Lebreton, J.-D. (2005) Principles and interest of GOF tests for multistate capture–recapture models. <em>Animal Biodiversity and Conservation</em> <b>28</b>, 189–204.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>m.array</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace("R2ucare"))
+    ucare.cjs(dipperCH, verbose = FALSE, by = 'sex')
+
+</code></pre>
+
+
+</div>

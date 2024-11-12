@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>once</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Execute Expensive Operations Only Once</h2>
+
+<h3>Description</h3>
+
+<p>The <code>once()</code> function allows you to easily execute expensive compute operations only once, and save the resulting object to disk.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">once(expr, file_path = NULL, rerun = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>expr</code></td>
+<td>
+<p>The expensive expression to evaluate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_path</code></td>
+<td>
+<p>File path for saving the output object as an Rds file. Note that if no file name is provided it will not save!</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rerun</code></td>
+<td>
+<p>Rerun the expression anyway and save the result? Defaults to false.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>the results of expr
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">save_file &lt;- tempfile(fileext = ".Rds")
+ # temporary file path - replace with your preferred saved file path
+my_out &lt;-
+  runif(1e8) %&gt;% # some expensive operation
+  mean() %&gt;%
+  once(file_path = save_file)
+  # only do it once, save output to this file.
+</code></pre>
+
+
+</div>

@@ -1,0 +1,161 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_consumption</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List consumption for a meter</h2>
+
+<h3>Description</h3>
+
+<p>Return a list of consumption values for half-hour periods for a
+given meter-point and meter.
+</p>
+<p>Unit of measurement:
+</p>
+
+<ul>
+<li>
+<p> Electricity meters: kWh
+</p>
+</li>
+<li>
+<p> SMETS1 Secure gas meters: kWh
+</p>
+</li>
+<li>
+<p> SMETS2 gas meters: m^3
+</p>
+</li>
+</ul>
+<h4>Parsing dates</h4>
+
+<p>To return dates properly parsed lubridate is
+required. Use the <code>tz</code> parameter to specify a time zone e.g. <code>tz = "UTC"</code>,
+the default (<code>tz = NULL</code>) will return the dates unparsed, as characters.
+</p>
+
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_consumption(
+  meter_type = c("electricity", "gas"),
+  mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
+  serial_number = get_meter_details(meter_type)[["serial_number"]],
+  api_key = get_api_key(),
+  period_from = NULL,
+  period_to = NULL,
+  tz = NULL,
+  order_by = c("-period", "period"),
+  group_by = c("hour", "day", "week", "month", "quarter")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>meter_type</code></td>
+<td>
+<p>Type of meter-point, electricity or gas</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mpan_mprn</code></td>
+<td>
+<p>The electricity meter-point's MPAN or gas meter-point’s
+MPRN.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>serial_number</code></td>
+<td>
+<p>The meter's serial number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>Your API key. If you are an Octopus Energy customer,
+you can generate an API key on the
+<a href="https://octopus.energy/dashboard/developer/">developer dashboard</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period_from</code></td>
+<td>
+<p>Show consumption from the given datetime (inclusive).
+This parameter can be provided on its own.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period_to</code></td>
+<td>
+<p>Show consumption to the given datetime (exclusive).
+This parameter also requires providing the <code>period_from</code> parameter
+to create a range.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tz</code></td>
+<td>
+<p>a character string that specifies which time zone to parse the date with. The string
+must be a time zone that is recognized by the user's OS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order_by</code></td>
+<td>
+<p>Ordering of results returned. Default is that results are
+returned in reverse order from latest available figure.
+Valid values:
+</p>
+
+<ul>
+<li> <p><code>period</code>, to give results ordered forward.
+</p>
+</li>
+<li> <p><code>-period</code>, (default), to give results ordered from most recent backwards.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group_by</code></td>
+<td>
+<p>Aggregates consumption over a specified time period.
+A day is considered to start and end at midnight in the server's time zone.
+The default is that consumption is returned in half-hour periods.
+Accepted values are:
+</p>
+
+<ul>
+<li> <p><code>hour</code>
+</p>
+</li>
+<li> <p><code>day</code>
+</p>
+</li>
+<li> <p><code>week</code>
+</p>
+</li>
+<li> <p><code>month</code>
+</p>
+</li>
+<li> <p><code>quarter</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a tibble of the requested consumption data.
+</p>
+
+
+</div>

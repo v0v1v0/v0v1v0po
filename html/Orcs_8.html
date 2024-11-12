@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>coords2Lines</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Points to <code style="white-space: pre;">⁠SpatialLines*⁠</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>Create a <code style="white-space: pre;">⁠SpatialLines*⁠</code> object from a <code>Line</code> object or set of point
+coordinates in one go, i.e. without being required to run through the single
+steps outlined in <code>sp::SpatialLines()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'matrix'
+coords2Lines(coords, ID, data, match.ID = TRUE, ...)
+
+## S4 method for signature 'Line'
+coords2Lines(coords, ID, data, match.ID = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p><code>Line</code> object or 2-column <code>numeric</code> <code>matrix</code> with x and y
+coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ID</code></td>
+<td>
+<p><code>character</code>, see <code>sp::Lines()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p><code>data.frame</code> with data to add to the output <code style="white-space: pre;">⁠SpatialLines*⁠</code>
+object (optional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match.ID</code></td>
+<td>
+<p><code>logical</code>, see <code>sp::SpatialLinesDataFrame()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed on to <code>sp::SpatialLines()</code>, i.e.
+<code>proj4string</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If 'data' is missing, a <code>SpatialLines</code> object; else a
+<code>SpatialLinesDataFrame</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(sp)
+
+coords1 &lt;- cbind(c(2, 4, 4, 1, 2), c(2, 3, 5, 4, 2))
+sln1 &lt;- coords2Lines(coords1, ID = "A")
+
+coords2 &lt;- cbind(c(5, 4, 2, 5), c(2, 3, 2, 2))
+sln2 &lt;- coords2Lines(coords2, ID = "B")
+
+plot(sln1, col = "grey75")
+plot(sln2, col = "grey25", add = TRUE)
+
+</code></pre>
+
+
+</div>

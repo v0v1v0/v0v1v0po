@@ -1,0 +1,161 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>MxMatrix-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>MxMatrix Class</h2>
+
+<h3>Description</h3>
+
+<p>MxMatrix is a virtual S4 class that comprises the nine types of matrix objects used by OpenMx (see <code>mxMatrix()</code> for details).  An MxMatrix object is a named entity.  New instances of this class can be created using the function <code>mxMatrix()</code>.  MxMatrix objects may be used as arguments in other functions from the OpenMx package, including <code>mxAlgebra()</code>, <code>mxConstraint()</code>, and <code>mxModel()</code>.
+</p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>All nine types of object that the class comprises can be created via <code>mxMatrix()</code>.</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt>
+<code>name</code>:</dt>
+<dd>
+<p>Character string; the name of the MxMatrix object.  Note that this is the object's "Mx name" (so to speak), which identifies it in OpenMx's internal namespace, rather than the symbol identifying it in <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>'s workspace.  Use of MxMatrix objects in an mxAlgebra or mxConstraint function requires reference by name.</p>
+</dd>
+<dt>
+<code>values</code>:</dt>
+<dd>
+<p>Numeric matrix of values.  If an element is specified as a fixed parameter in the 'free' matrix, then the element in the 'values' matrix is treated as a constant value and cannot be altered or updated by an objective function when included in an <code>mxRun()</code> function. If an element is specified as a free parameter in the 'free' matrix, the element in the 'value' matrix is considered a starting value and can be changed by an objective function when included in an <code>mxRun()</code> function.</p>
+</dd>
+<dt>
+<code>labels</code>:</dt>
+<dd>
+<p>Matrix of character strings which provides the labels of free and fixed parameters. Fixed parameters with identical labels must have identical values.  Free parameters with identical labels impose an equality constraint. The same label cannot be applied to a free parameter and a fixed parameter. A free parameter with the label 'NA' implies a unique free parameter, that cannot be constrained to equal any other free parameter.</p>
+</dd>
+<dt>
+<code>free</code>:</dt>
+<dd>
+<p>Logical matrix specifying whether each element is free versus fixed. An element is a free parameter if-and-only-if the corresponding value in the 'free' matrix is 'TRUE'. Free parameters are elements of an MxMatrix object whose values may be changed by a fitfunction when that MxMatrix object is included in an MxModel object and evaluated using the <code>mxRun()</code> function.</p>
+</dd>
+<dt>
+<code>lbound</code>:</dt>
+<dd>
+<p>Numeric matrix of lower bounds on free parameters.</p>
+</dd>
+<dt>
+<code>ubound</code>:</dt>
+<dd>
+<p>Numeric matrix of upper bounds on free parameters.</p>
+</dd>
+<dt>
+<code>.squareBrackets</code>:</dt>
+<dd>
+<p>Logical matrix; used internally by OpenMx.  Identifies which elements have labels with square brackets in them.</p>
+</dd>
+<dt>
+<code>.persist</code>:</dt>
+<dd>
+<p>Logical; used internally by OpenMx.  Governs how <code>mxRun()</code> handles the MxMatrix object when it is inside the MxModel being run.</p>
+</dd>
+<dt>
+<code>.condenseSlots</code>:</dt>
+<dd>
+<p>Logical; used internally by OpenMx.  If <code>FALSE</code>, then the matrices in the 'values', 'labels', 'free', 'lbound', and 'ubound' slots are all of equal dimensions.  If <code>TRUE</code>, then the last four of those slots will "condense" a matrix consisting entirely of <code>FALSE</code> or <code>NA</code> down to 1x1.</p>
+</dd>
+<dt>
+<code>display</code>:</dt>
+<dd>
+<p>Character string; used internally by OpenMx when parsing MxAlgebras.</p>
+</dd>
+<dt>
+<code>dependencies</code>:</dt>
+<dd>
+<p>Integer; used internally by OpenMx when parsing MxAlgebras.</p>
+</dd>
+</dl>
+<h3>Methods</h3>
+
+
+<dl>
+<dt>$</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>$&lt;-</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>[</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>[&lt;-</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>dim</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>dimnames</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>dimnames&lt;-</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+</dl>
+<dl>
+<dt>length</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>names</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>ncol</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>nrow</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>print</dt>
+<dd>
+<p><code>signature(x = "MxMatrix")</code>: ... </p>
+</dd>
+<dt>show</dt>
+<dd>
+<p><code>signature(object = "MxMatrix")</code>: ... </p>
+</dd>
+</dl>
+<p>Note that some methods are documented separately (see below, under "See Also").
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation">https://openmx.ssri.psu.edu/documentation</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mxMatrix()</code> for creating MxMatrix objects.  Note that functions <code>imxCreateMatrix()</code>, <code>imxDeparse()</code>, <code>imxSquareMatrix()</code>, <code>imxSymmetricMatrix()</code>, and <code>imxVerifyMatrix()</code> are separately documented methods for this class.  More information about the OpenMx package may be found here. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">showClass("MxMatrix")
+</code></pre>
+
+
+</div>

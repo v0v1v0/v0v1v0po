@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scores</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate scores of the sample </h2>
+
+<h3>Description</h3>
+
+<p>This function calculates normal, t, chi-squared, IQR and MAD scores
+of given data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scores(x, type = c("z", "t", "chisq", "iqr", "mad"), prob = NA, lim = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a vector of data. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p> "z" calculates normal scores (differences between each value and the mean
+divided by sd), "t" calculates t-Student scores (transformed by <code>(z*sqrt(n-2))/sqrt(z-1-t^2)</code>
+formula, "chisq" gives chi-squared scores (squares of differences between values and mean
+divided by variance. For the "iqr" type, all values lower than first and greater than third
+quartile is considered, and difference between them and nearest quartile divided by IQR are
+calculated. For the values between these quartiles, scores are always equal to zero.
+"mad" gives differences between each value and median, divided by median absolute deviation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+<p> If set, the corresponding p-values instead of scores are given. If value is set
+to 1, p-value are returned. Otherwise, a logical vector is formed, indicating which values are
+exceeding specified probability. In "z" and "mad" types, there is also possibility to set this
+value to zero, and then scores are confirmed to (n-1)/sqrt(n) value, according to 
+Shiffler (1998). The "iqr" type does not support probabilities, but "lim" value can be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lim</code></td>
+<td>
+<p> This value can be set for "iqr" type of scores, to form logical vector, which values
+has this limit exceeded. </p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector of scores, probabilities, or logical vector.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Lukasz Komsta, corrections by Alan Richter </p>
+
+
+<h3>References</h3>
+
+ 
+<p>Schiffler, R.E (1998). Maximum Z scores and outliers. Am. Stat. 42, 1, 79-80.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>mad</code>, <code>IQR</code>, <code>grubbs.test</code>, </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1234)
+x = rnorm(10)
+scores(x)
+scores(x,prob=1)
+scores(x,prob=0.5)
+scores(x,prob=0.1)
+scores(x,prob=0.93)
+scores(x,type="iqr")
+scores(x,type="mad")
+scores(x,prob=0)
+</code></pre>
+
+
+</div>

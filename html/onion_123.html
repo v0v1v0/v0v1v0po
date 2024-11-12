@@ -1,0 +1,190 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onionmat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Onionic matrices</h2>
+
+<h3>Description</h3>
+
+<p>Simple functionality for quaternionic and octonionic matrices,
+intended for use in the <code>jordan</code> package.  Use idiom like
+<code>matrix(Him,4,5)</code> or <code>matrix(roct(6),2,3)</code> to create an
+<code>onionmat</code> object, a matrix of onions.
+</p>
+<p>The package is intended to match base <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>'s matrix functionality in the
+sense that standard <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> idiom just goes through for onionic matrices.
+Determinants are not well-defined for quaternionic or octonionic
+matrices, and matrix inverses are not implemented.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">newonionmat(d, M)
+onionmat(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
+as.onionmat(x)
+is.onionmat(x)
+onionmat_negative(e1)
+onionmat_inverse(e1)
+onionmat_prod_onionmat(e1,e2)
+onionmat_power_onionmat(...)
+onionmat_prod_single(x,y)
+onionmat_power_single(e1,e2)
+onionmat_plus_onionmat(e1,e2)
+matrix_arith_onion(e1,e2)
+onion_arith_matrix(e1,e2)
+matrix_plus_onion(e1,e2)
+matrix_prod_onion(e1,e2)
+## S4 method for signature 'onionmat,onionmat'
+cprod(x,y)
+## S4 method for signature 'onionmat,missing'
+cprod(x,y)
+## S4 method for signature 'onionmat,ANY'
+cprod(x,y)
+## S4 method for signature 'ANY,ANY'
+cprod(x,y)
+## S4 method for signature 'onion,missing'
+cprod(x,y)
+## S4 method for signature 'onion,onion'
+cprod(x,y)
+## S4 method for signature 'onion,onionmat'
+cprod(x,y)
+## S4 method for signature 'onionmat,onion'
+cprod(x,y)
+## S4 method for signature 'onionmat,onionmat'
+tcprod(x,y)
+## S4 method for signature 'onionmat,missing'
+tcprod(x,y)
+## S4 method for signature 'onionmat,ANY'
+tcprod(x,y)
+## S4 method for signature 'ANY,ANY'
+tcprod(x,y)
+## S4 method for signature 'onion,missing'
+cprod(x,y)
+## S4 method for signature 'onion,onion'
+cprod(x,y)
+## S4 method for signature 'onion,onionmat'
+cprod(x,y)
+## S4 method for signature 'onionmat,onion'
+cprod(x,y)
+## S4 method for signature 'onionmat'
+t(x)
+## S4 method for signature 'onion'
+t(x)
+## S4 method for signature 'onionmat'
+ht(x)
+## S4 method for signature 'onion'
+ht(x)
+nrow(x)
+ncol(x)
+herm_onion_mat(real_diagonal, onions)
+onionmat_complex(z)
+onionmat_conjugate(z)
+onionmat_imag(z)
+onionmat_re(z)
+onionmat_mod(z)
+onionmat_matrixprod_onionmat(x,y)
+onion_matrixprod_onionmat(x,y)
+onionmat_matrixprod_numeric(x,y)
+onionmat_matrixprod_onion(x,y)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>d,M</code></td>
+<td>
+<p>data and matrix index</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x,y,z,e1,e2</code></td>
+<td>
+<p>Objects of class <code>onionmat</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data,nrow,ncol,byrow,dimnames</code></td>
+<td>
+<p>In function
+<code>onionmat()</code>, as for <code>matrix()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments (currently ignored)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>real_diagonal, onions</code></td>
+<td>
+<p>In function <code>herm_onion_mat()</code>, on-
+and  off- diagonal elements of an Hermitian matrix</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An object of class <code>onionmat</code> is a two-element list, the first of
+which is an onion, and the second an index matrix of integers used for
+tracking attributes such as dimensions and dimnames.  This device
+makes the extraction and replacement methods easy.  Use <code>getM()</code>
+to access the index matrix and <code>getd()</code> to access the onionic
+vector.
+</p>
+<p>The S4 method for <code>matrix()</code> simply dispatches to
+<code>onionmat()</code>, which is a drop-in replacement for <code>matrix()</code>.
+</p>
+<p>Function <code>drop()</code> has a method for <code>onionmat</code> objects.
+</p>
+<p>Function <code>newonionmat()</code> is lower-level: it also creates onionmat
+objects, but takes two arguments: an onion and a matrix; the matrix
+argument can be used to specify additional attributes via
+<code>attr()</code>, but this ability is not currently used in the package.
+</p>
+<p>Functions such as <code>onionmat_plus_onionmat()</code> are low-level helper
+functions, not really designed for the end-user.
+</p>
+<p>Vignette <code>onionmat</code> shows some use-cases.
+</p>
+<p>The print method for <code>onionmat</code> objects is sensitive to option
+<code>show_onionmats_in_place</code>.  If <code>TRUE</code>, it prints the matrix
+elements in-place, using <code>onion_to_string()</code>.  It works best when
+option <code>show_onions_compactly</code> is effective.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robin K. S. Hankin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+matrix(rquat(28),4,7)
+
+M &lt;- onionmat(rquat(10),2,5)
+cprod(M) 
+
+Re(M)
+Re(M) &lt;- 0.3
+
+romat() %*% rquat(6)
+
+a &lt;- rsomat()
+a            # default
+options("show_onionmats_in_place" = TRUE)
+a
+options("show_onionmats_in_place" = FALSE) # restore default
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>slide_summary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Slide content in a data.frame</h2>
+
+<h3>Description</h3>
+
+<p>Get content and positions of current slide
+into a data.frame. Data for any tables, images, or paragraphs are
+imported into the resulting data.frame.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">slide_summary(x, index = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rpptx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>slide index</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The column <code>id</code> of the result is not to be used by users.
+This is a technical string id whose value will be used by office
+when the document will be rendered. This is not related to argument
+<code>index</code> required by functions <code>ph_with</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other functions for reading presentation information: 
+<code>annotate_base()</code>,
+<code>color_scheme()</code>,
+<code>doc_properties()</code>,
+<code>layout_properties()</code>,
+<code>layout_summary()</code>,
+<code>length.rpptx()</code>,
+<code>plot_layout_properties()</code>,
+<code>slide_size()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">my_pres &lt;- read_pptx()
+my_pres &lt;- add_slide(my_pres)
+my_pres &lt;- ph_with(my_pres, format(Sys.Date()),
+  location = ph_location_type(type="dt"))
+my_pres &lt;- add_slide(my_pres)
+my_pres &lt;- ph_with(my_pres, iris[1:2,],
+  location = ph_location_type(type="body"))
+slide_summary(my_pres)
+slide_summary(my_pres, index = 1)
+</code></pre>
+
+
+</div>

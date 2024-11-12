@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ors_geocode</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Openrouteservice Geocoding</h2>
+
+<h3>Description</h3>
+
+<p>Resolve input coordinates to addresses and vice versa.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ors_geocode(
+  query,
+  location,
+  ...,
+  api_key = ors_api_key(),
+  output = c("parsed", "text", "sf")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>Name of location, street address or postal code. For a
+structured geocoding request a named list of parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p>Coordinates to be inquired provided in the form <code>c(longitude, latitude)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional parameters as described <a href="https://openrouteservice.org/dev/#/api-docs/geocode">here</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>Character scalar containing openrouteservice API key</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Output format. By default the response is being parsed to a list-based R object</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This endpoint can be used for geocoding (specified <code>query</code>) and reverse
+geocoding requests (specified <code>location</code>). Either <code>query</code> or <code>location</code> has
+to be specified for a valid request. If both parameters are specified
+location takes precedence.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Geocoding: a JSON formatted list of objects corresponding to the
+search input. Reverse geocoding: the next enclosing object with an address
+tag which surrounds the given coordinate.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Andrzej Oleś <a href="mailto:andrzej.oles@gmail.com">andrzej.oles@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## locations of Heidelberg around the globe
+x &lt;- ors_geocode("Heidelberg")
+
+## set the number of results returned
+x &lt;- ors_geocode("Heidelberg", size = 1)
+
+## search within a particular country
+ors_geocode("Heidelberg", boundary.country = "DE")
+
+## structured geocoding
+x &lt;- ors_geocode(list(locality="Heidelberg", county="Heidelberg"))
+
+## reverse geocoding
+location &lt;- x$features[[1L]]$geometry$coordinates
+y &lt;- ors_geocode(location = location, layers = "locality", size = 1)
+</code></pre>
+
+
+</div>

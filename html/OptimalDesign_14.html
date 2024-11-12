@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mvee_REX</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Minimum-volume enclosing ellipsoid
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the shape matrix <code>H</code> and the center <code>z</code> of the minimum-volume ellipsoid enclosing a finite set of data-points.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mvee_REX(Data, alg.AA="REX", eff=0.999999, it.max=Inf, t.max=60,
+         picture=FALSE, echo=TRUE, track=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Data</code></td>
+<td>
+
+<p>the <code>n</code> times <code>d</code> (where <code>d&lt;n</code>) matrix containing the <code>d</code>-dimensional data-vectors as rows.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alg.AA</code></td>
+<td>
+
+<p>the underlying computational method for approximate D-optimal design; possible values are <code>"REX"</code>, <code>"MUL"</code> and <code>"VDM"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eff</code></td>
+<td>
+
+<p>the minimum required efficiency.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>it.max</code></td>
+<td>
+
+<p>a limit on the number of iterations of the underlying D-optimum approximate design algorithm.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.max</code></td>
+<td>
+
+<p>a limit on the time of computation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>picture</code></td>
+<td>
+
+<p>Should a picture be plotted? (For the picture, the data need to be either two- or three-dimensional.)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>track</code></td>
+<td>
+
+<p>Display the progress of the computation?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The problem of the minimum-volume data-enclosing ellipsoid (MVEE) is computationally equivalent to the problem of D-optimal approximate design for an artificial problem based on the data. This procedure performs the computation and the proper conversion of the D-optimal approximate design to the MVEE parameters (the center and the shape matrix).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Output is a list with components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the call of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H</code></td>
+<td>
+<p>the shape matrix of the MVEE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>the center of the MVEE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bpts</code></td>
+<td>
+<p>a set containing the boundary points of the MVEE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vol</code></td>
+<td>
+<p>the volume of the MVEE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eff.best</code></td>
+<td>
+<p>the actual precision of the result (1 is the perfect precision)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.iter</code></td>
+<td>
+<p>the number of iterations of the underlying D-optimum design algorithm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.act</code></td>
+<td>
+<p>the actual time of the computation</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Note: The affine hull of the rows of <code>X</code> should be the full space of dimension <code>d</code>. For the choice of the algorithm, see the comments in <code>od_REX</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Harman R, Filova L, Richtarik P (2019). A randomized exchange algorithm for computing optimal approximate designs of experiments. Journal of the American Statistical Association, 1-30.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>od_REX</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate random 1000 points in a 3-dimensional space
+# and compute the MVEE
+
+Data &lt;- matrix(rnorm(3000), ncol = 3)
+mvee_REX(Data, picture = FALSE)
+</code></pre>
+
+
+</div>

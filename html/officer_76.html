@@ -1,0 +1,52 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>empty_content</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Empty block for 'PowerPoint'</h2>
+
+<h3>Description</h3>
+
+<p>Create an empty object to include as an empty placeholder shape in a
+presentation. This comes in handy when presentation are updated
+through R, but a user still wants to add some comments in this new content.
+</p>
+<p>Empty content also works with layout fields (slide number and date) to preserve them:
+they are included on the slide and keep being updated by PowerPoint, i.e. update to the
+when the slide number when the slide moves in the deck, update to the date.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">empty_content()
+</code></pre>
+
+
+<h3>See Also</h3>
+
+<p><code>ph_with()</code>, <code>body_add_blocks()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fileout &lt;- tempfile(fileext = ".pptx")
+doc &lt;- read_pptx()
+doc &lt;- add_slide(doc, layout = "Two Content",
+  master = "Office Theme")
+doc &lt;- ph_with(x = doc, value = empty_content(),
+ location = ph_location_type(type = "title") )
+
+doc &lt;- add_slide(doc)
+# add slide number as a computer field
+doc &lt;- ph_with(
+  x = doc, value = empty_content(),
+  location = ph_location_type(type = "sldNum"))
+
+print(doc, target = fileout )
+</code></pre>
+
+
+</div>

@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_norm_input_check_samples</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check reference samples to be used for normalization</h2>
+
+<h3>Description</h3>
+
+<p>This function takes as input a two named lists of character vectors with
+matching names and checks the validity of the reference samples. In case of 1
+set of df samples, then all checks are skipped as reference median
+normalization is to be performed.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_norm_input_check_samples(lst_df_samples, lst_ref_samples, norm_mode)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lst_df_samples</code></td>
+<td>
+<p>Named list of all sample identifiers from datasets to
+be normalized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lst_ref_samples</code></td>
+<td>
+<p>Named list of reference sample identifiers to be used
+for normalization.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm_mode</code></td>
+<td>
+<p>Character string indicating the type of normalization to be
+performed. Expecting one of
+bridge, subset, ref_median or norm_ht_3k. # nolint</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>NULL</code> if no warning or error.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Klev Diamanti
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Reference median normalization
+OlinkAnalyze:::olink_norm_input_check_samples(
+  lst_df_samples = list(
+    "p1" = unique(npx_data1$SampleID)
+  ),
+  lst_ref_samples = list(
+    "p1" = npx_data1 |&gt;
+      dplyr::filter(
+        !grepl(pattern = "CONTROL_SAMPLE",
+        x = .data[["SampleID"]],
+        fixed = TRUE)
+      ) |&gt;
+      dplyr::pull(.data[["SampleID"]]) |&gt;
+      unique() |&gt;
+      sort() |&gt;
+      head(n = 6L)
+  ),
+  norm_mode = "ref_median"
+)
+
+# Bridge normalization
+ref_samples_bridge &lt;- intersect(x = npx_data1$SampleID,
+                                y = npx_data2$SampleID) |&gt;
+  (\(x) x[!grepl(pattern = "CONTROL_SAMPLE", x = x, fixed = TRUE)])()
+
+OlinkAnalyze:::olink_norm_input_check_samples(
+  lst_df_samples = list(
+    "p1" = unique(npx_data1$SampleID),
+    "p2" = unique(npx_data2$SampleID)
+  ),
+  lst_ref_samples = list(
+    "p1" = ref_samples_bridge,
+    "p2" = ref_samples_bridge
+  ),
+  norm_mode = "bridge"
+)
+
+# Subset normalization
+ref_samples_subset_1 &lt;- npx_data1 |&gt;
+  dplyr::filter(
+    !grepl(pattern = "CONTROL_SAMPLE",
+           x = .data[["SampleID"]],
+           fixed = TRUE)
+    &amp; .data[["QC_Warning"]] == "Pass"
+  ) |&gt;
+  dplyr::pull(
+    .data[["SampleID"]]
+  ) |&gt;
+  unique()
+ref_samples_subset_2 &lt;- npx_data2 |&gt;
+  dplyr::filter(
+    !grepl(pattern = "CONTROL_SAMPLE",
+           x = .data[["SampleID"]],
+           fixed = TRUE)
+    &amp; .data[["QC_Warning"]] == "Pass"
+  ) |&gt;
+  dplyr::pull(
+    .data[["SampleID"]]
+  ) |&gt;
+  unique()
+
+OlinkAnalyze:::olink_norm_input_check_samples(
+  lst_df_samples = list(
+    "p1" = unique(npx_data1$SampleID),
+    "p2" = unique(npx_data2$SampleID)
+  ),
+  lst_ref_samples = list(
+    "p1" = ref_samples_subset_1,
+    "p2" = ref_samples_subset_2
+  ),
+  norm_mode = "subset"
+)
+
+
+</code></pre>
+
+
+</div>

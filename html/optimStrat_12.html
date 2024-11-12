@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stratify</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Stratification of an Auxiliary Variable</h2>
+
+<h3>Description</h3>
+
+<p>Stratify the auxiliary variable <code>x</code> into <code>H</code> strata using the cum-sqrt-rule.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stratify(x, H, forced = FALSE, J = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a positive numeric vector giving the values of the auxiliary variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H</code></td>
+<td>
+<p>a positive integer smaller or equal than <code>length(x)</code> giving the desired number of strata.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>forced</code></td>
+<td>
+<p>a logical value indicating if the number of strata <em>must</em> be exactly equal to <code>H</code> (see ‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>a positive integer indicating the number of bins used for the cum-sqrt-rule.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The cum-sqrt-rule is used in order to define <code>H</code> strata from the auxiliary vector <code>x</code>.
+</p>
+<p>Depending on some characteristics of <code>x</code>, e.g. high skewness, few observations or too many ties, the resulting stratification may have a number of strata other than <code>H</code>. Using <code>forced = TRUE</code> tries its best to obtain exactly <code>H</code> strata.
+</p>
+<p>Note that if <code>length(x) &lt; H</code> then <code>forced</code> will be set to <code>FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector giving the stratum to which each observation in <code>x</code> belongs.</p>
+
+
+<h3>References</h3>
+
+<p>Sarndal, C.E., Swensson, B. and Wretman, J. (1992). <em>Model Assisted Survey Sampling</em>. Springer.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optiallo</code> for allocating the sample into the strata using Neyman optimal allocation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x&lt;- 1 + sort( rgamma(100, shape=4/9, scale=108) )
+stratify(x, H=3)
+</code></pre>
+
+
+</div>

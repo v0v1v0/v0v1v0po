@@ -1,0 +1,382 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rimle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Robust Improper Maximum Likelihood Clustering</h2>
+
+<h3>Description</h3>
+
+<p><code>rimle</code> searches for <code>G</code> approximately Gaussian-shaped
+clusters with/without noise/outliers. The method's tuning controlling
+the noise level is fixed and is to be provided by the user or will be guessed by
+the function in a rather quick and dirty way (<code>otrimle</code>
+performs  a more sophisticated data-driven choice).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rimle(data, G, initial=NULL, logicd=NULL, npr.max=0.5, erc=20, iter.max=500, tol=1e-6)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>A numeric vector, matrix, or data frame of observations. Rows correspond
+to observations and columns correspond to variables. Categorical
+variables and <code>NA</code> values are not allowed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+
+<p>An integer specifying the number of clusters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initial</code></td>
+<td>
+<p>An integer vector specifying the initial cluster
+assignment  with <code>0</code> denoting noise/outliers. If <code>NULL</code> (default)
+initialization is performed using <code>InitClust</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logicd</code></td>
+<td>
+
+<p>A number <code>log(icd)</code>, where <code>0 &lt;= icd &lt; Inf</code>
+is the value of the improper constant density (<code>icd</code>). This is
+the RIMLE's tuning for controlling the size of the noise.
+If <code>logicd=NULL</code> (default), an <code>icd</code> value is guessed
+based on the data. A pure Gaussian Mixture Model fit is obtained
+with <code>logicd = -Inf</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>npr.max</code></td>
+<td>
+
+<p>A number in <code>[0,1)</code> specifying the maximum proportion of
+noise/outliers. This defines the <em>noise proportion
+constraint</em>. If <code>npr.max=0</code> a solution without noise
+component is computed (corresponding to <code>logicd = -Inf</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>erc</code></td>
+<td>
+
+<p>A number <code>&gt;=1</code> specifying the maximum allowed ratio between
+within-cluster covariance matrix eigenvalues. This defines the
+<em>eigenratio constraint</em>. <code>erc=1</code> enforces spherical clusters
+with equal covariance matrices. A large <code>erc</code> allows for large
+between-cluster covariance discrepancies. In order to facilitate the
+setting of <code>erc</code>, it is suggested to scale the columns of
+<code>data</code> (see <code>scale</code>) whenever measurement units
+of the different variables are grossly incompatible.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter.max</code></td>
+<td>
+
+<p>An integer value specifying the maximum number of iterations allowed
+in the  ECM-algorithm (see Details).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+
+<p>Stopping criterion for the underlying ECM-algorithm. An ECM iteration
+stops if two successive improper log-likelihood values are within
+<code>tol</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>rimle</code> function computes the RIMLE solution using the
+ECM-algorithm proposed in Coretto and Hennig (2017).
+</p>
+<p>There may be datasets for which the function does not provide a
+solution based on default arguments. This corresponds to
+<code>code=0</code> and <code>flag=1</code> or <code>flag=2</code>  in the output (see
+<em>Value</em>-section below).  This usually happens when some (or all) of the
+following circumstances occur: (i) <code>log(icd)</code> is too
+large; (ii) <code>erc</code> is too large; (iii) npr.max is too large;
+(iv) choice of the initial partition. In these cases it is suggested
+to find a suitable interval of <code>icd</code> values by using the
+<code>otrimle</code> function. The <em>Details</em> section of
+<code>otrimle</code> suggests several actions to take
+whenever a <code>code=0</code> non-solution occurs.
+</p>
+<p>The <code>pi</code> object returned by the <code>rimle</code> function (see
+<em>Value</em>) corresponds to the vector of <code>pi</code> parameters in
+the underlying pseudo-model (1) defined in Coretto and Hennig (2017).
+With <code>logicd = -Inf</code> the <code>rimle</code> function approximates the
+MLE for the <em>plain</em> Gaussian mixture model with eigenratio
+covariance regularization, in this case the the first element of the
+<code>pi</code> vector is set to zero because the noise component is not
+considered.  In general, for iid sampling from finite mixture models
+context, these <em>pi</em> parameters define expected clusters'
+proportions. Because of the noise proportion constraint in the RIMLE,
+there are situations where this connection may not happen in
+practice. The latter is likely to happen when both <code>logicd</code> and
+<code>npr.max</code> are large. Therefore, estimated expected clusters'
+proportions are reported in the <code>exproportion</code> object of the
+<code>rimle</code> output, and these are computed based on the
+improper posterior probabilities given in <code>tau</code>.
+See Coretto and Hennig (2017) for more discussion on this. 
+</p>
+<p>An earlier approximate version of the algorithm was originally
+proposed in Coretto and Hennig (2016). Software for the original
+version of the algorithm can be found in the supplementary materials
+of  Coretto and Hennig (2016).
+</p>
+
+
+<h3>Value</h3>
+
+<p>An S3 object of class <code>'rimle'</code>. Output components are as follows:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+
+<p>An integer indicator for the convergence.
+<code>code=0</code> if no solution is found (see <em>Details</em>);
+<code>code=1</code> if the  EM-algorithm did not converge within <code>em.iter.max</code>;
+<code>code=2</code> convergence is fully achieved.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flag</code></td>
+<td>
+
+<p>A character string containing one or more flags related to
+the EM iteration at the optimal icd.
+<code>flag=1</code>  if it was not possible to prevent the numerical
+degeneracy of improper posterior probabilities (<code>tau</code> value
+below).
+<code>flag=2</code> if enforcement of the <em>noise proportion constraint</em>
+failed for numerical reasons.
+<code>flag=3</code> if enforcement of the <em>eigenratio constraint</em> failed for
+numerical reasons.
+<code>flag=4</code> if the  <em>noise proportion constraint</em> has been
+successfully applied at least once.
+<code>flag=5</code> if the  <em>eigenratio constraint</em> has been
+successfully applied at least once.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+
+<p>Number of iterations performed in the underlying  EM-algorithm.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logicd</code></td>
+<td>
+
+<p>Value of the <code>log(icd)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iloglik</code></td>
+<td>
+
+<p>Value of the improper likelihood.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>criterion</code></td>
+<td>
+
+<p>Value of the OTRIMLE criterion.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pi</code></td>
+<td>
+
+<p>Estimated vector of the <code>pi</code> parameters of the underlying pseudo-model (see <em>Details</em>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean</code></td>
+<td>
+
+<p>A matrix of dimension <code>ncol(data) x G</code> containing the
+mean parameters  of each cluster (column-wise).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov</code></td>
+<td>
+
+<p>An array of size <code>ncol(data) x ncol(data) x G</code>
+containing the covariance matrices of each cluster.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>A matrix of dimension <code>nrow(data) x {1+G}</code> where
+<code>tau[i, 1+j]</code> is the estimated (improper) posterior probability that
+the <em>i</em>th observation belongs to the <em>j</em>th cluster.
+<code>tau[i,1]</code> is the estimated (improper) posterior probability that
+<em>i</em>th observation belongs to the noise component.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smd</code></td>
+<td>
+
+<p>A matrix of dimension  <code>nrow(data) x G </code> where <code>smd[i,j]</code>
+is the squared Mahalanobis distance of <code>data[i,]</code> from
+<code>mean[,j]</code> according to <code>cov[,,j]</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+
+<p>A vector of integers  denoting cluster assignments for each
+observation. It's <code>0</code> for observations assigned to  noise/outliers.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+
+<p>A vector of integers with sizes (counts) of each cluster.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exproportion</code></td>
+<td>
+
+<p>A vector of estimated expected clusters' proportions (see <em>Details</em>).
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Pietro Coretto
+<a href="mailto:pcoretto@unisa.it">pcoretto@unisa.it</a>
+<a href="https://pietro-coretto.github.io">https://pietro-coretto.github.io</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Coretto, P.  and C. Hennig (2016).
+Robust improper maximum likelihood: tuning, computation, and a comparison with
+other methods for robust Gaussian clustering.
+<em>Journal of the American Statistical Association</em>, Vol. 111(516),
+pp. 1648-1659. doi: <a href="https://doi.org/10.1080/01621459.2015.1100996">10.1080/01621459.2015.1100996</a>
+</p>
+<p>P. Coretto and C. Hennig (2017).
+Consistency, breakdown robustness, and algorithms for robust improper
+maximum  likelihood clustering.
+<em>Journal of Machine Learning Research</em>, Vol. 18(142), pp. 1-39.
+<a href="https://jmlr.org/papers/v18/16-382.html">https://jmlr.org/papers/v18/16-382.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plot.rimle</code>,
+<code>InitClust</code>,
+<code>otrimle</code>,
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Load  Swiss banknotes data
+data(banknote)
+x &lt;- banknote[,-1]
+
+## -----------------------------------------------------------------------------
+## EXAMPLE 1:
+## Perform RIMLE with default inputs
+## -----------------------------------------------------------------------------
+set.seed(1)
+a &lt;- rimle(data = x, G = 2)
+print(a)
+
+## Plot clustering
+plot(a, data = x, what = "clustering")
+
+## P-P plot of the clusterwise empirical weighted squared Mahalanobis
+## distances against the target distribution pchisq(, df=ncol(data))
+plot(a, what = "fit")
+plot(a, what = "fit", cluster = 1)
+
+
+
+## -----------------------------------------------------------------------------
+## EXAMPLE 2:
+## Compare solutions for different choices of logicd
+## -----------------------------------------------------------------------------
+set.seed(1)
+
+## Case 1: noiseless solution, that is fit a pure Gaussian Mixture Model
+b1 &lt;- rimle(data = x, G = 2, logicd = -Inf)
+plot(b1, data=x, what="clustering")
+plot(b1, what="fit")
+
+## Case 2: low noise level
+b2 &lt;- rimle(data = x, G = 2, logicd = -100)
+plot(b2, data=x, what="clustering")
+plot(b2, what="fit")
+
+## Case 3: medium noise level
+b3 &lt;- rimle(data = x, G = 2, logicd = -10)
+plot(b3, data=x, what="clustering")
+plot(b3, what="fit")
+
+## Case 3: large noise level
+b3 &lt;- rimle(data = x, G = 2, logicd = 5)
+plot(b3, data=x, what="clustering")
+plot(b3, what="fit")
+
+</code></pre>
+
+
+</div>

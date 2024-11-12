@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>writeANALYZE-methods</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>writeANALYZE</h2>
+
+<h3>Description</h3>
+
+<p>This function saves an Analyze-class object to a single binary file in
+Analyze format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'anlz'
+writeANALYZE(
+  aim,
+  filename,
+  gzipped = TRUE,
+  verbose = FALSE,
+  warn = -1,
+  compression = 9
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>aim</code></td>
+<td>
+<p>is an object of class <code>anlz</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>is the path and file name to save the Analyze file pair
+(.hdr,img) <b>without</b> the suffixes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gzipped</code></td>
+<td>
+<p>is a character string that enables exportation of compressed
+(.gz) files (default = <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) that allows
+text-based feedback during execution of the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>is a number to regulate the display of warnings (default = -1).
+See <code>options</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compression</code></td>
+<td>
+<p>The amount of compression to be applied when writing a 
+file when <code>gzipped = TRUE</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>writeANALYZE</code> function utilizes the internal <code>writeBin</code> and
+<code>writeChar</code> command to write information to a binary file.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Nothing.
+</p>
+
+
+<h3>Methods</h3>
+
+ <dl>
+<dt>object = "anlz"</dt>
+<dd>
+<p>Write ANALYZE volume to
+disk.</p>
+</dd> </dl>
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Analyze 7.5<br><a href="http://eeg.sourceforge.net/ANALYZE75.pdf">http://eeg.sourceforge.net/ANALYZE75.pdf</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>writeAFNI</code>, <code>writeNIfTI</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+norm &lt;- dnorm(seq(-5, 5, length=32), sd=2)
+norm &lt;- (norm-min(norm)) / max(norm-min(norm))
+img &lt;- outer(outer(norm, norm), norm)
+img &lt;- round(255*img)
+img[17:32,,] &lt;- 255 - img[17:32,,]
+img.anlz &lt;- anlz(img) # create Analyze object
+
+fname = file.path(tempdir(), "test-anlz-image-uint8")
+
+writeANALYZE(img.anlz, fname, verbose=TRUE)
+## These files should be viewable in, for example, FSLview
+## Make sure you adjust the min/max values for proper visualization
+data &lt;- readANALYZE(fname, verbose=TRUE)
+image(img.anlz, oma=rep(2,4), bg="white")
+image(data, oma=rep(2,4), bg="white")
+abs.err &lt;- abs(data - img.anlz)
+image(as(abs.err, "anlz"), zlim=range(img.anlz), oma=rep(2,4), bg="white")
+
+## Not run: 
+## Loop through all possible data types
+datatypes &lt;- list(code=c(2, 4, 8, 16, 64),
+                  name=c("uint8", "int16", "int32", "float", "double"))
+equal &lt;- vector("list")
+for (i in 1:length(datatypes$code)) {
+  fname &lt;- paste("test-anlz-image-", datatypes$name[i], sep="")
+  fname = file.path(tempdir(), fname)
+  rm(img.anlz)
+  img.anlz &lt;- anlz(img, datatype=datatypes$code[i])
+  writeANALYZE(img.anlz, fname)
+  equal[[i]] &lt;- all(readANALYZE(fname) == img)
+}
+names(equal) &lt;- datatypes$name
+unlist(equal)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

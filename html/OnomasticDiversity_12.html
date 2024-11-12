@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fShannon</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate the Shannon-Weaver diversity index </h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the Shannon-Weaver diversity index introduced by Claude Elwood Shannon. This diversity measure came from information theory and measures the order (or disorder) observed within a particular system. It is a method for quantifying species biodiversity that can be adapted to the context of onomastics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> fShannon(x, k, n, location)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> dataframe of the data values for each species not null (because if you have a sample, there might be species that are not represented)..</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p> name of a variable which represents absolute frequency for each species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p> name of a variable which represents total number of individuals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a community <code class="reqn">i</code>, the index of Shannon-Weaver is defined by the expression
+<code class="reqn">H^{\prime} = -\sum\limits_{k\in S_i} (p_{ki} \log_2 p_{ki})</code>, where <code class="reqn">p_{ki}</code> represents the relative frequency of species <code class="reqn">k</code>, because <code class="reqn">p_{ki} = \frac{N_{ki}}{N_i}</code>, (where <code class="reqn">N_{ki}</code> denotes the number of individuals of species <code class="reqn">k</code> and <code class="reqn">N_i</code> total number of  individuals in all <code class="reqn">S_i</code> species at the community, species richness. This index is related to the weighted geometric mean of the proportional abundances of the types.
+</p>
+<p>In onomastic context, <code class="reqn">p_{ki}</code> denotes the relative frequency of surname <code class="reqn">k</code> in region (<code class="reqn">\approx</code> community diversity context) <code class="reqn">i</code> and <code class="reqn">S_i</code> are all surnames in region <code class="reqn">i</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element, for example the communities / regions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shannon</code></td>
+<td>
+<p> the value of the Shannon-Weaver diversity index.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Shannon C.E. (1948). <em>A mathematical theory of communication</em>. Bell System Technical Journal, <b>27</b>, 379–423.
+</p>
+<p>Shannon C.E., Weaver W. (1949). <em>The Mathematical Theory of Communication</em>.
+Urbana: University of Illinois Press. USA, <b>96</b>. pp. 117. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fMargalef</code>,
+<code>fMenhinick</code>,
+<code>fPielou</code>,
+<code>fSheldon</code>,
+<code>fSimpson</code>,
+<code>fSimpsonInf</code>,
+<code>fGeneralisedMean</code>, <code>fGeometricMean</code>,
+<code>fHeip</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(surnamesgal14)
+result = fShannon (x= surnamesgal14[surnamesgal14$number != 0,],
+k="number", n="population", location  = "muni" )
+result
+
+data(namesmengal16)
+result = fShannon (x= namesmengal16[namesmengal16$number != 0,],
+k="number", n="population", location  = "muni" )
+result
+
+data(nameswomengal16)
+result = fShannon (x= nameswomengal16[nameswomengal16$number != 0,],
+k="number", n="population", location  = "muni" )
+result
+</code></pre>
+
+
+</div>

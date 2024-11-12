@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>zonage_a_facon</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Creating a custom zoning</h2>
+
+<h3>Description</h3>
+
+<p>Creating a custom zoning from a group of entities.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">zonage_a_facon(fondMaille, groupe, idMaille, idGroupe, libGroupe,
+fondContour = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fondMaille</code></td>
+<td>
+<p>objet sf. Fond de carte.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupe</code></td>
+<td>
+<p>tableau de donnees (data.frame) contenant un identifiant de
+maille, un identifiant de groupes et un libelle de groupes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>idMaille</code></td>
+<td>
+<p>chaine de caractere (character). Variable identifiant la
+maille.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>idGroupe</code></td>
+<td>
+<p>chaine de caractere (character). Variable identifiant les
+groupes. Le choix de l'identifiant de groupes est libre ("A", "B" et "C" par
+exemple).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>libGroupe</code></td>
+<td>
+<p>chaine de caractere (character). Variable des libelles de
+groupes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fondContour</code></td>
+<td>
+<p>objet sf. Fond de carte. Par defaut a NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>La fonction <code>zonage_a_facon</code> permet de creer son propre zonage.
+</p>
+<p>A partir d'un fond de maille, la fonction va regrouper certaines entites
+pour en former des plus grandes. Par exemple, partir d'une maille communale
+pour former une maille de zones d'emploi (voir examples).
+</p>
+<p>Il faut s'assurer que l'identifiant de maille de la table corresponde bien a
+l'identifiant du fond de maille.
+</p>
+<p>Le zonage ainsi genere peut correspondre a un zonage connu (administratif ou
+d'etudes) ou inconnu (personnalise).
+</p>
+<p>La fonction peut prendre en parametre un contour de territoire. Il s'agit du
+contour qui delimite l'ensemble de la maille. Il peut etre utile de le
+specifier si vous voulez tronquer la maille sur ce contour. Par exemple,
+pour representer uniquement la partie regionale des zones d'emploi.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Retourne un objet de type <code>sf</code> (fond de carte)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("donnees_a_facon")
+data("com_dep_13_30_83_84")
+data("depm")
+
+ze13etplus &lt;- zonage_a_facon(fondMaille = com_dep_13_30_83_84, groupe = donnees_a_facon,
+idMaille = "DEPCOM", idGroupe = "ZE2010", libGroupe = "LIB_ZE2010",
+fondContour = NULL) # sans contour
+ze13 &lt;- zonage_a_facon(fondMaille = com_dep_13_30_83_84, groupe = donnees_a_facon,
+idMaille = "DEPCOM", idGroupe = "ZE2010", libGroupe = "LIB_ZE2010",
+fondContour = depm[depm$CODE=="13",]) # avec contour
+
+
+# affiche les ZE2010 ayant au moins une partie dans les Bouches-du-Rhone
+plot(sf::st_geometry(ze13etplus), col = "transparent", border = "grey")
+# affiche uniquement la partie des ZE2010 contenue dans les Bouches-du-Rhone
+plot(sf::st_geometry(ze13), col = "transparent", add = TRUE)
+# affiche le contour des Bouches-du-Rhone
+plot(sf::st_geometry(depm[depm$CODE=="13",]), border = "red", add = TRUE)
+
+
+</code></pre>
+
+
+</div>

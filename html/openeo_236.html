@@ -1,0 +1,174 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>toJSON</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wrapper for toJSON</h2>
+
+<h3>Description</h3>
+
+<p>This function is intended to have a preconfigured toJSON function
+to allow a user to visualize a process or graph in JSON. The JSON representation
+of a process is the same as it will be sent to the back-end.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'Process'
+toJSON(
+  x,
+  dataframe = c("rows", "columns", "values"),
+  matrix = c("rowmajor", "columnmajor"),
+  Date = c("ISO8601", "epoch"),
+  POSIXt = c("string", "ISO8601", "epoch", "mongo"),
+  factor = c("string", "integer"),
+  complex = c("string", "list"),
+  raw = c("base64", "hex", "mongo", "int", "js"),
+  null = c("list", "null"),
+  na = c("null", "string"),
+  auto_unbox = FALSE,
+  digits = 4,
+  pretty = FALSE,
+  force = FALSE,
+  ...
+)
+
+## S4 method for signature 'Graph'
+toJSON(
+  x,
+  dataframe = c("rows", "columns", "values"),
+  matrix = c("rowmajor", "columnmajor"),
+  Date = c("ISO8601", "epoch"),
+  POSIXt = c("string", "ISO8601", "epoch", "mongo"),
+  factor = c("string", "integer"),
+  complex = c("string", "list"),
+  raw = c("base64", "hex", "mongo", "int", "js"),
+  null = c("list", "null"),
+  na = c("null", "string"),
+  auto_unbox = FALSE,
+  digits = 4,
+  pretty = FALSE,
+  force = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a Process or Graph object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dataframe</code></td>
+<td>
+<p>how to encode data.frame objects: must be one of 'rows', 'columns' or 'values'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>matrix</code></td>
+<td>
+<p>how to encode matrices and higher dimensional arrays: must be one of 'rowmajor' or 'columnmajor'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Date</code></td>
+<td>
+<p>how to encode Date objects: must be one of 'ISO8601' or 'epoch'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>POSIXt</code></td>
+<td>
+<p>how to encode POSIXt (datetime) objects: must be one of 'string', 'ISO8601', 'epoch' or 'mongo'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>factor</code></td>
+<td>
+<p>how to encode factor objects: must be one of 'string' or 'integer'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>complex</code></td>
+<td>
+<p>how to encode complex numbers: must be one of 'string' or 'list'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>raw</code></td>
+<td>
+<p>how to encode raw objects: must be one of 'base64', 'hex' or 'mongo'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>null</code></td>
+<td>
+<p>how to encode NULL values within a list: must be one of 'null' or 'list'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na</code></td>
+<td>
+<p>how to print NA values: must be one of 'null' or 'string'. Defaults are class specific</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto_unbox</code></td>
+<td>
+<p>automatically <code>unbox()</code> all atomic vectors of length 1. It is usually safer to avoid this and instead use the <code>unbox()</code> function to unbox individual elements.
+An exception is that objects of class <code>AsIs</code> (i.e. wrapped in <code>I()</code>) are not automatically unboxed. This is a way to mark single values as length-1 arrays.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>max number of decimal digits to print for numeric values. Use <code>I()</code> to specify significant digits. Use <code>NA</code> for max precision.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretty</code></td>
+<td>
+<p>adds indentation whitespace to JSON output. Can be TRUE/FALSE or a number specifying the number of spaces to indent. See <code>prettify()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force</code></td>
+<td>
+<p>unclass/skip objects of classes with no defined JSON mapping</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional parameters that are passed to jsonlite::toJSON</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>JSON string of the process as a character string
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# node is a defined process node
+process = as(node, "Process")
+toJSON(process)
+
+graph = process$getProcessGraph()
+toJSON(graph)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

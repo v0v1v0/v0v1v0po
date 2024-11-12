@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>label_detection</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Label detections from a sound event detection procedure</h2>
+
+<h3>Description</h3>
+
+<p><code>label_detection</code> labels the performance of a sound event detection procedure comparing the output selection table to a reference selection table
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">label_detection(reference, detection, cores = 1, pb = TRUE, min.overlap = 0.5,
+ by = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>reference</code></td>
+<td>
+<p>Data frame or 'selection.table' (following the warbleR package format) with the reference selections (start and end of the sound events) that will be used to evaluate the performance of the detection, represented by those selections in 'detection'. Must contained at least the following columns: "sound.files", "selec", "start" and "end". <strong>It must contain the reference selections that will be used for detection optimization</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detection</code></td>
+<td>
+<p>Data frame or 'selection.table' with the detections (start and end of the sound events) that will be compared against the 'reference' selections. Must contained at least the following columns: "sound.files", "selec", "start" and "end". It can contain data for additional sound files not found in 'references'. In this case the routine assumes that no sound events are found in those files, so detection from those files are all false positives.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cores</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.overlap</code></td>
+<td>
+<p>Numeric. Controls the minimum amount of overlap required for a detection and a reference sound for it to be counted as true positive. Default is 0.5. Overlap is measured as intersection over union.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by</code></td>
+<td>
+<p>Character vector with the name of a categorical column in 'reference' for running a stratified. Labels will be returned separated for each level in 'by'. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function identifies the rows in the output of a detection routine as true or false positives. This is achieved by comparing the data frame to a reference selection table in which all sound events of interest have been selected.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame or selection table (if 'detection' was also a selection table, warbleR package's format, see <code>selection_table</code>) including three additional columns, 'detection.class', which indicates the class of each detection, 'reference' which identifies the event in the 'reference' table that was detected  and 'overlap' which refers to the amount overlap to the reference sound. See <code>diagnose_detection</code> for a description of the labels used in 'detection.class'. The output data frame also contains an additional data frame with the overlap for each pair of overlapping detection/reference.  Overlap is measured as intersection over union.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas <a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+<p>Araya-Salas, M., Smith-Vidaurre, G., Chaverri, G., Brenes, J. C., Chirino, F., Elizondo-Calvo, J., &amp; Rico-Guevara, A. 2022. ohun: an R package for diagnosing and optimizing automatic sound event detection. BioRxiv, 2022.12.13.520253. https://doi.org/10.1101/2022.12.13.520253
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>diagnose_detection</code>, <code>summarize_diagnostic</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  # load data
+  data("lbh_reference")
+
+  # an extra one in detection (1 false positive)
+  label_detection(reference = lbh_reference[-1, ], detection = lbh_reference)
+
+  # missing one in detection (all true positives)
+  label_detection(reference = lbh_reference, detection = lbh_reference[-1, ])
+
+  # perfect detection (all true positives)
+  label_detection(reference = lbh_reference, detection = lbh_reference)
+
+  # and extra sound file in reference (all true positives)
+  label_detection(
+    reference = lbh_reference, detection =
+      lbh_reference[lbh_reference$sound.files != "lbh1.wav", ]
+  )
+
+  # and extra sound file in detection (some false positives)
+  label_detection(
+    reference =
+      lbh_reference[lbh_reference$sound.files != "lbh1.wav", ],
+    detection = lbh_reference
+  )
+
+  # duplicate 1 detection row (to get 2 splits)
+  detec &lt;- lbh_reference[c(1, seq_len(nrow(lbh_reference))), ]
+  detec$selec[1] &lt;- 1.2
+  label_detection(
+    reference = lbh_reference,
+    detection = detec
+  )
+
+  # merge 2 detections (to get split and merge)
+  Y &lt;- lbh_reference
+  Y$end[1] &lt;- 1.2
+  label_detection(reference = lbh_reference, detection = Y)
+
+  # remove split to get only merge
+  Y &lt;- Y[-2, ]
+  label_detection(reference = lbh_reference, detection = Y)
+}
+</code></pre>
+
+
+</div>

@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>custom_likelihoods</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Customise likelihood functions for outbreaker</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to specify customised likelihood functions for
+outbreaker. Custom functions are specified as a named list or series of
+comma-separated, named arguments, indicating which log-likelihood component
+they compute. Values currently available are:
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">custom_likelihoods(...)
+
+## S3 method for class 'custom_likelihoods'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>a named list of functions, each computing a log-likelihood component.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>outbreaker_config</code> object as returned by <code>create_config</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<ul>
+<li> <p><code>genetic</code>: the genetic likelihood; by default, the function
+<code>cpp_ll_genetic</code> is used.
+</p>
+</li>
+<li> <p><code>timing_sampling</code>: the likelihood of sampling times; by default, the function
+<code>cpp_ll_timing_sampling</code> is used.
+</p>
+</li>
+<li> <p><code>timing_infections</code>: the likelihood of infection times; by default, the function
+<code>cpp_ll_timing_infections</code> is used.
+</p>
+</li>
+<li> <p><code>reporting</code>: the likelihood of the reporting process; by default,
+the function <code>cpp_ll_reporting</code> is used.
+</p>
+</li>
+<li> <p><code>contact</code>: the likelihood of the contact tracing data; by default,
+the function <code>cpp_ll_contact</code> is used.
+</p>
+</li>
+</ul>
+<p>All log-likelihood functions should have the following arguments, in this
+order:
+</p>
+
+<ul>
+<li> <p><code>data</code>: a list of named items containing input data as returned by
+<code>outbreaker_data</code>
+</p>
+</li>
+<li> <p><code>param</code>: a list of parameters with the class
+<code>create_param</code>
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A named list of list(function, arity) pairs with the class
+<code>custom_likelihood</code>, each function implementing a customised
+log-likelihood component of outbreaker. Functions which are not
+customised will result in a list(NULL, 0) component. Any function with
+arity 3 must have the third parameter default to NULL.
+</p>
+<p>a list of named functions
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thibaut Jombart (<a href="mailto:thibautjombart@gmail.com">thibautjombart@gmail.com</a>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See <a href="http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customizing-likelihood">customization vignette</a> for detailed examples on how to customize likelihoods.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## specify a null model by disabling all likelihood components
+f_null &lt;- function(data, param) {
+  return(0.0)
+}
+
+null_model &lt;- custom_likelihoods(genetic = f_null,
+                                timing_sampling = f_null,
+                                timing_infections = f_null,
+                                reporting = f_null,
+                                contact = f_null)
+
+null_config &lt;- list(find_import = FALSE,
+                    n_iter = 100,
+                    sample_every = 1)
+
+## load data
+x &lt;- fake_outbreak
+data &lt;- outbreaker_data(dates = x$sample, dna = x$dna, w_dens = x$w)
+
+res_null &lt;- outbreaker(data = data,
+                       config = null_config,
+                       likelihoods = null_model)
+
+## visualise ancestries to see if all transmission trees have been explored
+plot(res_null, type = "alpha")
+</code></pre>
+
+
+</div>

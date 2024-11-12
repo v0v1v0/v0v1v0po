@@ -1,0 +1,290 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OUwie.fixed</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generalized Hansen model likelihood calculator</h2>
+
+<h3>Description</h3>
+
+<p>Allows the user to calculate the likelihood given a specified set of parameter values</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OUwie.fixed(phy, data, model=c("BM1","BMS","OU1","OUM","OUMV","OUMA","OUMVA"), 
+simmap.tree=FALSE, root.age=NULL, scaleHeight=FALSE, root.station=FALSE, 
+get.root.theta=FALSE, shift.point=0.5, alpha=NULL, sigma.sq=NULL, theta=NULL, 
+clade=NULL, mserr="none", check.identify=TRUE, algorithm=c("invert", "three.point"), 
+tip.paths=NULL, quiet=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>phy</code></td>
+<td>
+<p>a phylogenetic tree, in <code>ape</code> “phylo” format and with internal nodes labeled denoting the ancestral selective regimes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a dataframe containing species information (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>models to fit to comparative data (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simmap.tree</code></td>
+<td>
+<p>a logical indicating whether the input tree is in SIMMAP format. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root.age</code></td>
+<td>
+<p>indicates the age of the tree. This is to be used in cases where the "tips" are not contemporary, such as in cases for fossil trees. Default is <code>NULL</code> meaning latest tip is modern day.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaleHeight</code></td>
+<td>
+<p>a logical indicating whether the total tree height should be scaled to 1 (see Details). The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root.station</code></td>
+<td>
+<p>a logical indicating whether the starting state, <code class="reqn">\theta_0</code>, should be estimated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get.root.theta</code></td>
+<td>
+<p>a logical indicating whether the starting state, <code class="reqn">\theta_0</code>, should be estimated (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift.point</code></td>
+<td>
+<p>the point along a branch where a regime change is assumed to have occurred (if <code>SIMMAP=FALSE</code>. The default is set to 0.5, or halfway along a branch.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>a numeric vector giving the values of <code class="reqn">\alpha</code> for each selective regime</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma.sq</code></td>
+<td>
+<p>a numeric vector giving the values of <code class="reqn">\sigma^2</code> for each selective regime</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>a numeric vector giving the values of <code class="reqn">\theta</code> for each selective regime</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clade</code></td>
+<td>
+<p>a list containing a pair of taxa whose MRCA is the clade of interest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mserr</code></td>
+<td>
+<p>designates whether a fourth column in the data matrix contains measurement error for each species value ("known"). The measurement error is assumed to be the standard error of the species mean. The default is "none".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check.identify</code></td>
+<td>
+<p>a logical indicating whether to check that the user-supplied regime paintings will produce identifiable theta estimates. The default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>algorithm</code></td>
+<td>
+<p>designates whether the standard matrix inversion ('invert') or the faster 'three-point' algorithm of Ho and Ane (2013) should be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tip.paths</code></td>
+<td>
+<p>an optional list that can be provided by the user where each element from 1:nTips is the path from tip to root by labeled node number. The default is NULL and this option is used for internal speedups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>a logical indicating whether or not to print progress to the screen. The default is "FALSE".</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The input is a tree and a data file. The tree must be of class “phylo” and must contain the ancestral selective regimes as internal node labels. The data file is a data.frame that must have column entries in the following order: [,1] species names and [,2] their current selective regime. The user specifies the  parameter values (i.e. <code class="reqn">\alpha</code>, <code class="reqn">\sigma^2</code>, and <code class="reqn">\theta</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>OUwie.fixed</code> returns an object of class <code>OUwie.fixed</code>. This is a list with elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>$loglik</code></td>
+<td>
+<p>the maximum log-likelihood.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$AIC</code></td>
+<td>
+<p>Akaike information criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$AICc</code></td>
+<td>
+<p>Akaike information criterion corrected for sample-size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$BIC</code></td>
+<td>
+<p>Schwartz information criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$model</code></td>
+<td>
+<p>The model being fit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$param.count</code></td>
+<td>
+<p>The number of parameters counted in the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$solution</code></td>
+<td>
+<p>a matrix containing the maximum likelihood estimates of <code class="reqn">\alpha</code> and <code class="reqn">\sigma^2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$theta</code></td>
+<td>
+<p>a matrix containing the maximum likelihood estimates of <code class="reqn">\theta</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$tot.state</code></td>
+<td>
+<p>A vector of names for the different regimes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$index.mat</code></td>
+<td>
+<p>The indices of the parameters being estimated are returned. The numbers correspond to the row in the <code>eigvect</code> and can useful for identifying the parameters that are causing the objective function to be at a saddlepoint (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$simmap.tree</code></td>
+<td>
+<p>A logical indicating whether the input phylogeny is a SIMMAP formatted tree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$root.age</code></td>
+<td>
+<p>The user-supplied age at the root of the tree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$shift.point</code></td>
+<td>
+<p>The user-specified portion of the branch where a regime shift occurs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$data</code></td>
+<td>
+<p>User-supplied dataset</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$phy</code></td>
+<td>
+<p>User-supplied tree</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$root.station</code></td>
+<td>
+<p>A logical indicating whether the starting state, <code class="reqn">\theta_0</code>, was estimated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$scaleHeight</code></td>
+<td>
+<p>Indicates whether the tree was constrained to a total height of 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$get.root.theta</code></td>
+<td>
+<p>Indicates whether the root.theta was included in the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$regime.weights</code></td>
+<td>
+<p>A table containing parameter estimates and the weights for time spent in each regime for each tip.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$algorithm</code></td>
+<td>
+<p>The algorithm used to estimate parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Jeremy M. Beaulieu</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(tworegime)
+
+#Calculate the likelihood based on known values of
+#alpha, sigma^2, and theta:
+alpha=c(0.5632459,0.1726052)
+sigma.sq=c(0.1064417,0.3461386)
+theta=c(1.678196,0.4185894)
+
+OUwie.fixed(tree,trait,model=c("OUMVA"), simmap.tree=FALSE, scaleHeight=FALSE,
+clade=NULL, alpha=alpha,sigma.sq=sigma.sq,theta=theta, algorithm="three.point")
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>compareDistributions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compare Two Density Distributions Side by Side</h2>
+
+<h3>Description</h3>
+
+<p>This function will produce a plot of two density functions displayed side by
+side.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">compareDistributions(
+  left,
+  right,
+  add.spread = TRUE,
+  print.stats = TRUE,
+  xlim = NULL,
+  ylim = NULL,
+  clrs = c("purple", "lightblue"),
+  xlab = "density",
+  ylab = "value",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>left</code></td>
+<td>
+<p><code>numeric</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>right</code></td>
+<td>
+<p><code>numeric</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.spread</code></td>
+<td>
+<p><code>logical</code>, whether to plot the spread (q25 to q75 and the
+median).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print.stats</code></td>
+<td>
+<p><code>logical</code>, whether to print summary statistics for each
+distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim, ylim</code></td>
+<td>
+<p><code>numeric</code> axis limits, see <code>lattice::xyplot()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clrs</code></td>
+<td>
+<p>A <code>character</code> vector of length 2 specifying the colors for the
+filled density regions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab, ylab</code></td>
+<td>
+<p><code>character</code> axis labels, see <code>graphics::plot()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>stats::density()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>trellis</code> object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tim Appelhans
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">compareDistributions(rnorm(1000, 2, 3), rnorm(1000, -5, 1))
+compareDistributions(rnorm(1000, 2, 3), rnorm(1000, -5, 1), 
+                     add.spread = FALSE)
+compareDistributions(rnorm(1000, 2, 3), rnorm(1000, -5, 1), 
+                     add.spread = TRUE, clrs = c("red", "brown"))
+compareDistributions(rnorm(1000, 2, 5), rnorm(1000, -5, 4), 
+                     print.stats = FALSE, add.spread = FALSE)
+                     
+## pass additional parameters to stats::density() 
+compareDistributions(rnorm(1000, 2, 5), rnorm(1000, -5, 4), 
+                     print.stats = FALSE, add.spread = FALSE, bw = 5)
+compareDistributions(rnorm(1000, 2, 5), rnorm(1000, -5, 4), 
+                     print.stats = FALSE, add.spread = FALSE, bw = 8,
+                     kernel = "rectangular")
+compareDistributions(rnorm(1000, 2, 5), rnorm(1000, -5, 4), 
+                     print.stats = FALSE, add.spread = TRUE, bw = 8,
+                     n = 3)
+compareDistributions(rnorm(1000, 2, 5), rnorm(1000, -5, 4), 
+                     print.stats = TRUE, add.spread = TRUE, bw = 0.1)
+compareDistributions(rnorm(1000, 2, 5), rnorm(1000, -5, 4), 
+                     print.stats = TRUE, add.spread = TRUE, bw = 0.5)                    
+
+</code></pre>
+
+
+</div>

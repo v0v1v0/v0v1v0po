@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>clustCPS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>CPS Analysis for cluster validation..</h2>
+
+<h3>Description</h3>
+
+<p>Covering Point Set Analysis for validating clustering results. It conducts alignment among different results and then calculates the covering point set. The return contains several statistics which can be directly used as input for mplot or cplot. If you want to design your own workflow, you can use function CPS instead.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">clustCPS(
+  data,
+  k,
+  l = TRUE,
+  pre = TRUE,
+  noi = "after",
+  cmethod = "kmeans",
+  dimr = "PCA",
+  vis = "tsne",
+  ref = NULL,
+  nPCA = 50,
+  nEXP = 100
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>– data given in a matrix format, where rows are samples, and columns are variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>– number of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l</code></td>
+<td>
+<p>– logical. If True, log-transformation will be carried out on the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pre</code></td>
+<td>
+<p>– logical. If True, pre-dimension reduction will be carried out based on the variance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noi</code></td>
+<td>
+<p>– adding noise before or after the dimension reduction, choosing between "before" and "after", default "after".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cmethod</code></td>
+<td>
+<p>– clustering method, choosing from "kmeans" and "mclust", default "kmeans".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dimr</code></td>
+<td>
+<p>– dimension reduction technique, choose from "none" and "PCA", default "PCA".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vis</code></td>
+<td>
+<p>– the visualization method to be used, such as "tsne" and "umap", default "tsne". Also, you can provide your own visualization coordinates in a numeric matrix of two columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>– optional, clustering result in a vector format and the first cluster is labeled as 1. If provided it will be used as the reference, if not we will generate one.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPCA</code></td>
+<td>
+<p>– number of principal components to use, default 50.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nEXP</code></td>
+<td>
+<p>– number of perturbed clustering results for CPS Analysis, default 100.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list used for mplot or cplot, in which tight_all is the overall tightness, member is the matrix used for the membership plot, set is the matrix for the covering point set plot, tight is the vector of cluster-wise tightness, vis is the visualization coordinates, ref is the reference labels and topo is the topological relationship between clusters for point-wise uncertainty assessment.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># CPS Analysis on validation of clustering result
+data(YAN)
+# Suppose you generate the visualization coordinates on your own
+x1=matrix(seq(1,nrow(YAN),1),ncol=1)
+x2=matrix(seq(1,nrow(YAN),1),ncol=1)
+# Using nEXP=50 for illustration, usually use nEXP greater 100
+y=clustCPS(YAN[,1:100], k=7, l=FALSE, pre=FALSE, noi="after",vis=cbind(x1,x2), nEXP = 50)
+# visualization of the results
+mplot(y,4)
+</code></pre>
+
+
+</div>

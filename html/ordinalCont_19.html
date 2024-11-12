@@ -1,0 +1,283 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ocm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Ordinal regression for continuous scales</h2>
+
+<h3>Description</h3>
+
+<p>Continuous ordinal regression with logit link using I-splines to model the g function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ocm(
+  formula,
+  data = NULL,
+  scale = NULL,
+  weights,
+  link = c("logit", "probit", "cloglog", "loglog", "cauchit"),
+  niters = c(500, 500),
+  conv_crit = 0.01,
+  n.int.knots = NULL,
+  order = 4,
+  lambdas = NA
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>a formula expression as for regression models, of the form 
+response ~ predictors. Only fixed effects are supported. 
+The model must have an intercept: attempts to remove one will lead to a warning and will be 
+ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an optional data frame in which to interpret the variables occurring in the 
+formulas</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>a vector of length 2 with the boundaries of the ordinal scale used. If not specified, the range of the data is used, and a warning is displayed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>optional case weights in fitting. Defaults to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>link function, i.e. the type of location-scale distribution assumed for 
+the latent distribution. The default “logit” link gives the proportional odds model.
+Other options are "logit", "probit", "cloglog", "loglog", "cauchit".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>niters</code></td>
+<td>
+<p>a vector of length 2 with the maximimum number of external and internal 
+iterations used in the fitting algorithm. The internal algorithm estimates the parameters 
+of the model conditional on the current values of <code class="reqn">\lambda</code>s, the smoothing parameters. 
+The external algorithm estimates the values of <code class="reqn">\lambda</code>s conditional on the current 
+estimates of the parameters of the model. Default is <code>c(500,500)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conv_crit</code></td>
+<td>
+<p>the smoothing parameters <code class="reqn">\lambda</code>'s convergence criteria for the iterative process. 
+Default is <code class="reqn">0.01</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.int.knots</code></td>
+<td>
+<p>the number of internal knots used to compute the spline bases. The default (NULL) is round((n-1-order)*0.8) if in the interval [8,15], and 8 or 15 otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>the order of the spline functions. The default is 4 (cubic splines).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambdas</code></td>
+<td>
+<p>NA (the default) or a vector of length equal to the number of smoothing terms, including the g function and, optionally, the random effect terms and the smooters. If “lambdas” is a vector, each element <code class="reqn">\lambda_i</code> can be a number, in which case the corresponding term is penalized using <code class="reqn">\lambda_i</code> as smoothing parameter, zero, in which case the corresponding term is unpenalized, or NA, in which case the value of <code class="reqn">\lambda_i</code> is estimated maximmizing the marginal posterior function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Fits a continuous ordinal regression model using penalized maximum likelihood. 
+The model can contain fixed effects and optionally mixed effects and smoothers. 
+The g function is estimated using monotone increasing I-splines, and the link function is the logit, 
+implying the standard logistic distribution for the latent variable. Penalized maximum likelihood 
+estimation is performed using the <code>MI</code> algorithm and the splines smoothing parameters are estimated 
+maximizing the marginal posterior (details of the iterative process are printed out during the fit).
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of type <code>ocm</code> with the components listed below. Parameter estimates are in <code>coefficients</code>. 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>coefficients</code></td>
+<td>
+<p>parameter estimates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pars_obj</code></td>
+<td>
+<p>an object of class <code>ocmpars</code> carrying the parameter estimates and other properties of the regression terms</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcov</code></td>
+<td>
+<p>variance-covariance matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H</code></td>
+<td>
+<p>the Hessian matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logLik</code></td>
+<td>
+<p>value of the log-likelihood at the estimated optimum</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penlogLik</code></td>
+<td>
+<p>value of the lenalized log-likelihood at the estimated optimum</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p>vector of continuous scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample.size</code></td>
+<td>
+<p>sample size (can differ from the number of observations if the weights are different from 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edf</code></td>
+<td>
+<p>estimated degrees of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df.residual</code></td>
+<td>
+<p>the residual degrees of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nobs</code></td>
+<td>
+<p>number of observations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>terms</code></td>
+<td>
+<p>model terms</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>call to fit the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the data frame as in input, ordered by the outcome values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.frame</code></td>
+<td>
+<p>the model.frame used in the fit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.matrix</code></td>
+<td>
+<p>the model.matrix used in the fit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>case weights in fitting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sorting</code></td>
+<td>
+<p>the ordinal score v sorting vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>link function used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>formula used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>the boundaries of the ordinal scale used</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maurizio Manuguerra, Gillian Heller
+</p>
+
+
+<h3>References</h3>
+
+<p>Manuguerra M, Heller GZ (2010). Ordinal Regression Models for Continuous 
+Scales, <em>The International Journal of Biostatistics</em>: 6(1), Article 14.
+</p>
+<p>Manuguerra M, Heller GZ, Ma J (2017). Semi-parametric Ordinal Regression Models for Continuous 
+Scales, <em>Proceedings of the 32nd International Workshop on Statistical Modelling</em>. July 3-7, 2017, Groningen, Netherlands.
+</p>
+<p>Manuguerra M, Heller GZ, Ma J (2020). Continuous Ordinal Regression for Analysis of Visual Analogue Scales: The R Package ordinalCont, <em>Journal of Statistical Software</em>. 96(8). doi:10.18637/jss.v096.i08
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fit.overall  &lt;- ocm(overall  ~ cycleno + age + bsa + treatment, data=ANZ0001.sub, scale=c(0,100))
+summary(fit.overall)
+## Not run: 
+plot(fit.overall)
+## Smoothers and complete data set
+fit.overall.smooth  &lt;- ocm(overall  ~ age + treatment : s(cycleno), data=ANZ0001, scale=c(0,100))
+summary(fit.overall.smooth)
+plot(fit.overall.smooth)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

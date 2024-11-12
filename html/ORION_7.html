@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dropThreshold</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Exclude Cascades Based on Threshold</h2>
+
+<h3>Description</h3>
+
+<p>Filters out all cascades that match the comparison with a minimal classwise sensitivity threshold.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dropThreshold(subcascades = NULL, comparison = "&gt;=", thresh = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>subcascades</code></td>
+<td>
+<p>A Subcascades object as it is returned by <code>subcascades</code>-function.
+The Subcascades object is made up of a list of matrices. 
+Each matrix comprises the evaluation results of cascades of a specific length and 
+is sorted row-wise according to the achieved minimal classwise sensitivities of the cascades (decreasing).
+The rownames show the class order by a character string of type '1&gt;2&gt;3' and the entries the sensitivity for each position of the cascade.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comparison</code></td>
+<td>
+<p>Defines the comparison type (&lt;,&gt;,&lt;=,&gt;=) for the threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresh</code></td>
+<td>
+<p>A numeric value between 0 and 1.
+The minimal sensitivity threshold used to filter the returned cascades. 
+Only cascades that pass this threshold are returned. 
+If 0 is used the returned cascades are filtered for &gt;0 and otherwise &gt;= thresh.
+For low thresholds the calculation lasts longer.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A Subcascades object comprising the evaluated cascades and their performances. 
+The Subcascades object is made up of a list of matrices. 
+Each matrix comprises the evaluation results of cascades of a specific length and 
+is sorted row-wise according to the achieved minimal classwise sensitivities of the cascades (decreasing).
+The rownames show the class order by a character string of type '1&gt;2&gt;3' and the entries the sensitivity for each position of the cascade.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dropSize</code>, <code>keepSize</code>, <code>dropSets</code>, <code>keepSets</code>, <code>keepThreshold</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+# generate Subcascades object
+subc = subcascades(predMap,thresh=0.5)
+
+# filters for cascades that 
+# 1. have a minimal classwise sensitivity &gt;= 0.6
+dropThreshold(subc,thresh=0.6)
+# 2. have a minimal classwise sensitivity &lt;= 0.6
+dropThreshold(subc, comparison = '&lt;=', thresh=0.6)
+</code></pre>
+
+
+</div>

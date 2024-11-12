@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>project_cost_effectiveness</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Project cost effectiveness</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the individual cost-effectiveness of each conservation project
+in a project prioritization <code>problem()</code>
+(Joseph, Maloney &amp; Possingham 2009).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">project_cost_effectiveness(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>project prioritization <code>problem()</code>.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Note that project cost-effectiveness cannot be calculated for
+problems with minimum set objectives because the objective function
+for these problems is to minimize cost and not maximize some measure
+of biodiversity persistence.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>tibble::tibble()</code> table containing the following
+columns:
+</p>
+
+<dl>
+<dt><code>"project"</code></dt>
+<dd>
+<p><code>character</code> name of each project</p>
+</dd>
+<dt><code>"cost"</code></dt>
+<dd>
+<p><code>numeric</code> cost of each project.</p>
+</dd>
+<dt><code>"benefit"</code></dt>
+<dd>
+<p><code>numeric</code> benefit for each project. For a
+given project, this is calculated as the difference between (i) the
+objective value for a solution containing all of the management actions
+associated with the project and all zero cost actions, and (ii) the
+objective value for a solution containing the baseline project.</p>
+</dd>
+<dt><code>"ce"</code></dt>
+<dd>
+<p><code>numeric</code> cost-effectiveness of each project.
+For a given project, this is calculated as the difference between the
+the benefit for the project and the benefit for the baseline project,
+divided by the cost of the project. Note that the baseline
+project will have a <code>NaN</code> value because it has a zero cost.</p>
+</dd>
+<dt><code>"rank"</code></dt>
+<dd>
+<p><code>numeric</code> rank for each project according to
+is cost-effectiveness value. The project with a rank of one is the
+most cost-effective project. Ties are accommodated using averages.</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>Joseph LN, Maloney RF &amp; Possingham HP (2009) Optimal allocation of
+resources among threatened species: A project prioritization protocol.
+<em>Conservation Biology</em>, <strong>23</strong>, 328–338.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>solution_statistics()</code>, <code>replacement_costs()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# print project data
+print(sim_projects)
+
+# print action data
+print(sim_features)
+
+# print feature data
+print(sim_actions)
+
+# build problem
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 400) %&gt;%
+     add_feature_weights("weight") %&gt;%
+     add_binary_decisions()
+
+# print problem
+print(p)
+
+# calculate cost-effectiveness of each project
+pce &lt;- project_cost_effectiveness(p)
+
+# print project costs, benefits, and cost-effectiveness values
+print(pce)
+
+# plot histogram of cost-effectiveness values
+hist(pce$ce, xlab = "Cost effectiveness", main = "")
+</code></pre>
+
+
+</div>

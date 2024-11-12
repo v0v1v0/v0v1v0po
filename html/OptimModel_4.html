@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>exp_decay_pl</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Three-parameter exponential decay with initial plateau, gradient, starting values, and back-calculation functions</h2>
+
+<h3>Description</h3>
+
+<p> Three-parameter exponential decay with initial plateau, gradient, starting values, and back-calculation functions.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> 
+        exp_decay_pl(theta, x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p> Vector of four parameters:  (x0, yMax, yMin, k).  See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Vector of concentrations. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The three-parameter exponential decay with initial plateau model is given by <code class="reqn">y = \text{yMax}</code> whenever <code class="reqn">x\le 0</code> otherwise 
+</p>
+<p style="text-align: center;"><code class="reqn">y = \text{yMin} + (\text{yMax}-\text{yMin})\times\exp(-K(x-X0))\text{ if }  x &gt; X0,</code>
+</p>
+
+<p>where <code class="reqn">X0 = \exp(x0)</code> is an inflection point between plateau and exponential decay curve,
+<code class="reqn">\text{yMin} = \min y</code> (min response), <code class="reqn">\text{yMax} = \max y</code> (maximum response), and <code class="reqn">K = \exp(k)</code> is the shape parameter.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Let N = length(x).  Then
+</p>
+
+<ul>
+<li>
+<p> exp_decay_pl(theta, x) returns a numeric vector of length N.
+</p>
+</li>
+<li>
+<p> attr(exp_decay_pl, "gradient")(theta, x) returns an N x 4 matrix.
+</p>
+</li>
+<li>
+<p> attr(exp_decay_pl, "start")(x, y) returns a numeric vector of length 4 with starting values for
+(x0, yMax, yMin, k).
+</p>
+</li>
+<li>
+<p> attr(exp_decay_pl, "backsolve")(theta, y) returns a numeric vector of length=length(y).
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_fit</code>, <code>rout_fitter</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(100)
+x = 2^(-4:4)
+theta = c(0.4, 75, 10, log(3))
+y = exp_decay_pl(theta, x)  + rnorm( length(x), mean=0, sd=1 )
+attr(exp_decay_pl, "gradient")(theta, x)
+attr(exp_decay_pl, "start")(x, y)
+attr(exp_decay_pl, "backsolve")(theta, 38)
+</code></pre>
+
+
+</div>

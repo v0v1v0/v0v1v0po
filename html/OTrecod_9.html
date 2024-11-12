@@ -1,0 +1,247 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>indiv_grp_optimal</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>indiv_grp_optimal()</h2>
+
+<h3>Description</h3>
+
+<p>This function assigns individual predictions to the incomplete information of two integrated datasources by solving a linear optimization problem.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">indiv_grp_optimal(
+  proxim,
+  jointprobaA,
+  jointprobaB,
+  percent_closest = 1,
+  solvr = "glpk",
+  which.DB = "BOTH"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>proxim</code></td>
+<td>
+<p>a <code>proxim_dist</code> object or an object of similar structure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jointprobaA</code></td>
+<td>
+<p>a matrix whose number of columns is equal to the number of modalities of the target variable <code class="reqn">Y</code> in database A, and whose number of rows is equal to the number of modalities of <code class="reqn">Z</code> in database B. It gives an estimation of the joint probability <code class="reqn">(Y,Z)</code> in the database A.
+The sum of cells of this matrix must be equal to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jointprobaB</code></td>
+<td>
+<p>a matrix whose number of columns is equal to the number of modalities of the target variable Y in database A, and whose number of rows is equal to the number of modalities of <code class="reqn">Z</code> in database B. It gives an estimation of the joint probability <code class="reqn">(Y,Z)</code> in the database B.
+The sum of cells of this matrix must be equal to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent_closest</code></td>
+<td>
+<p>a value between 0 and 1 (by default) corresponding to the fixed <code>percent closest</code> of individuals used in the computation of the average distances</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solvr</code></td>
+<td>
+<p>a character string that specifies the type of method selected to solve the optimization algorithms. The default solver is "glpk".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.DB</code></td>
+<td>
+<p>a character string that indicates which individual predictions are computed: only the individual predictions of <code class="reqn">Y</code> in B ("B"), only those of <code class="reqn">Z</code> in A ("A") or the both ("BOTH" by default).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A. THE RECODING PROBLEM IN DATA FUSION
+</p>
+<p>Assuming that <code class="reqn">Y</code> and <code class="reqn">Z</code> are two target variables which refered to the same target population in two separate databases A and B respectively (no overlapping rows),
+so that <code class="reqn">Y</code> and <code class="reqn">Z</code> are never jointly observed. Assuming also that A and B share a subset of common covariates <code class="reqn">X</code> of any types (same encodings in A and B)
+completed or not. Merging these two databases often requires to solve a recoding problem by creating an unique database where
+the missing information of <code class="reqn">Y</code> and <code class="reqn">Z</code> is fully completed.
+</p>
+<p>B. DESCRIPTION OF THE FUNCTION
+</p>
+<p>The function <code>indiv_grp_optimal</code> is an intermediate function used in the implementation of an algorithm called <code>OUTCOME</code> (and its enrichment <code>R-OUTCOME</code> (2)) dedicated to the solving of recoding problems in data fusion using Optimal Transportation theory.
+The model is implemented in the function <code>OT_outcome</code> which integrates the function <code>indiv_grp_optimal</code> in its syntax as a possible second step of the algorithm.
+The function <code>indiv_grp_optimal</code> can nevertheless be used separately providing that the argument <code>proxim</code> receives an output object of the function <code>proxim_dist</code>.
+This latter is available in the package and is so directly usable beforehand.
+</p>
+<p>The function <code>indiv_grp_optimal</code> constitutes an alternative method to the nearest neighbor procedure implemented in the function <code>indiv_grp_closest</code>.
+As for the function <code>indiv_grp_closest</code>, assuming that the objective consists in the prediction of <code class="reqn">Z</code> in the database A, the first step of the algorithm related to <code>OUTCOME</code> provides an estimate of <code class="reqn">\gamma</code>, the solution of the optimization problem, which can be seen, in this case as an estimation of the joint distribution <code class="reqn">(Y,Z)</code> in A.
+Rather than using a nearest neighbor approach to provide individual predictions, the function <code>indiv_grp_optimal</code> solves an optimization problem using the simplex algorithm which searches for the individual predictions of <code class="reqn">Z</code> that minimize the computed total distance satisfying the joint probability distribution estimated in the first part.
+More details about the theory related to the solving of this optimization problem is described in the section 5.3 of (2).
+</p>
+<p>Obviously, this algorithm  runs in the same way for the prediction of <code class="reqn">Y</code> in the database B.
+The function <code>indiv_grp_optimal</code> integrates in its syntax the function <code>avg_dist_closest</code> and the related argument <code>percent_closest</code> is identical in the two functions.
+Thus, when computing average distances between an individual i and a subset of individuals assigned to a same level of <code class="reqn">Y</code> or <code class="reqn">Z</code> is required, user can decide if all individuals from the subset of interest can participate to the computation (<code>percent_closest = 1</code>) or only a fixed part p (&lt;1) corresponding to the closest neighbors of i (in this case <code>percent_closest</code> = p).
+</p>
+<p>The arguments <code>jointprobaA</code> and <code>jointprobaB</code> can be seen as estimations of <code class="reqn">\gamma</code> (sum of cells must be equal to 1) that correspond to estimations of the joint distributions of <code class="reqn">(Y,Z)</code> in A and B respectively.
+</p>
+<p>The argument <code>solvr</code> permits user to choose the solver of the optimization algorithm. The default solver is "glpk" that corresponds to the GNU Linear Programming Kit (see (3) for more details). The solver "clp" (see (4)) for Coin-or Linear Programming, convenient in linear and quadratic situations, is also directly integrated in the function.
+Moreover, the function actually uses the <code>R</code> optimization infrastructure of the package <span class="pkg">ROI</span> which offers a wide choice of solver to users by easily loading the associated plugins of <span class="pkg">ROI</span> (see (5)).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of two vectors of numeric values:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>YAtrans</code></td>
+<td>
+<p>a vector corresponding to the predicted values of <code class="reqn">Y</code> in database B (numeric form) according to the <code>which.DB</code> argument</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ZBtrans</code></td>
+<td>
+<p>a vector corresponding to the predicted values of <code class="reqn">Z</code> in database A (numeric form) according to the <code>which.DB</code> argument</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gregory Guernec, Valerie Gares, Jeremy Omer
+</p>
+<p><a href="mailto:otrecod.pkg@gmail.com">otrecod.pkg@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li>
+<p> Gares V, Dimeglio C, Guernec G, Fantin F, Lepage B, Korosok MR, savy N (2019). On the use of optimal transportation theory to recode variables and application to database merging. The International Journal of Biostatistics.
+Volume 16, Issue 1, 20180106, eISSN 1557-4679. doi:10.1515/ijb-2018-0106
+</p>
+</li>
+<li>
+<p> Gares V, Omer J (2020) Regularized optimal transport of covariates and outcomes in data recoding. Journal of the American Statistical Association. doi: <a href="https://doi.org/10.1080/01621459.2020.1775615">10.1080/01621459.2020.1775615</a>
+</p>
+</li>
+<li>
+<p> Makhorin A (2011). GNU Linear Programming Kit Reference Manual Version 4.47.<a href="http://www.gnu.org/software/glpk/">http://www.gnu.org/software/glpk/</a>
+</p>
+</li>
+<li>
+<p> Forrest J, de la Nuez D, Lougee-Heimer R (2004). Clp User Guide. <a href="https://www.coin-or.org/Clp/userguide/index.html">https://www.coin-or.org/Clp/userguide/index.html</a>
+</p>
+</li>
+<li>
+<p> Theussl S, Schwendinger F, Hornik K (2020). ROI: An Extensible R Optimization Infrastructure.Journal of Statistical Software,94(15), 1-64. doi: <a href="https://doi.org/10.18637/jss.v094.i15">10.18637/jss.v094.i15</a>
+</p>
+</li>
+</ol>
+<h3>See Also</h3>
+
+<p><code>proxim_dist</code>, <code>avg_dist_closest</code>, <code>indiv_grp_closest</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+### Example using The Euclidean distance on a complete database
+# For this example we keep only 200 rows:
+
+data(tab_test)
+tab_test2 &lt;- tab_test[c(1:80, 5001:5080), ]
+dim(tab_test2)
+
+# Adding NAs in Y1 and Y2
+tab_test2[tab_test2$ident == 2, 2] &lt;- NA
+tab_test2[tab_test2$ident == 1, 3] &lt;- NA
+
+# Because all covariates are ordered in numeric form,
+# the transfo_dist function is not required here
+
+mat_testm &lt;- proxim_dist(tab_test2, norm = "M")
+
+### Y(Y1) and Z(Y2) are a same variable encoded in 2 different forms:
+### 4 levels for Y1 and 3 levels for Y2
+### ... Stored in two distinct databases, A and B, respectively
+### The marginal distribution of Y in B is unknown,
+### as the marginal distribution of Z in A ...
+
+# Assuming that the following matrix called transport symbolizes
+# an estimation of the joint distribution L(Y,Z) ...
+# Note that, in reality this distribution is UNKNOWN and is
+# estimated in the OT function by resolving the optimization problem.
+
+# By supposing:
+
+val_trans &lt;- c(0.275, 0.115, 0, 0, 0, 0.085, 0.165, 0, 0, 0, 0.095, 0.265)
+mat_trans &lt;- matrix(val_trans, ncol = 3, byrow = FALSE)
+
+# Getting the individual predictions of Z in A (only)
+# by computing average distances on 90% of the nearest neighbors of
+# each modality of Z in B
+predopt_A &lt;- indiv_grp_optimal(mat_testm,
+  jointprobaA = mat_trans,
+  jointprobaB = mat_trans, percent_closest = 0.90,
+  which.DB = "A"
+)
+
+
+### Example 2 using The Manhattan distance with incomplete covariates
+data(simu_data)
+
+man1 &lt;- transfo_dist(simu_data,
+  quanti = c(3, 8), nominal = c(1, 4:5, 7),
+  ordinal = c(2, 6), logic = NULL, prep_choice = "M"
+)
+mat_man1 &lt;- proxim_dist(man1, norm = "M")
+
+
+### Y and Z are a same variable encoded in 2 different forms:
+### (3 levels for Y and 5 levels for Z)
+### ... Stored in two distinct databases, A and B, respectively
+### The marginal distribution of Y in B is unknown,
+### as the marginal distribution of Z in A ...
+
+
+# By supposing that the following matrix called transport symbolizes
+# an estimation of the joint distribution L(Y,Z) ...
+# Note that, in reality this distribution is UNKNOWN and is
+# estimated in the OT function by resolving an optimisation problem.
+
+mat_trans2 &lt;- matrix(c(0.3625, 0, 0, 0.07083333, 0.05666667,
+                       0, 0, 0.0875, 0, 0, 0.1075, 0,
+                       0, 0.17166667, 0.1433333),
+                     ncol = 5, byrow = FALSE)
+
+
+# The predicted values of Y in database B and Z in
+# database A are stored in the following object:
+
+predopt2 &lt;- indiv_grp_optimal(mat_man1,
+  jointprobaA = mat_trans2,
+  jointprobaB = mat_trans2,
+  percent_closest = 0.90
+)
+summary(predopt2)
+
+
+</code></pre>
+
+
+</div>

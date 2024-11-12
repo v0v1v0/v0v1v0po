@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_anova_posthoc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function which performs an ANOVA posthoc test per protein.</h2>
+
+<h3>Description</h3>
+
+<p>Performs a post hoc ANOVA test using emmeans::emmeans with Tukey p-value adjustment per assay (by OlinkID) for each panel at confidence level 0.95.
+See <code>olink_anova</code> for details of input notation. <br><br>
+The function handles both factor and numerical variables and/or covariates.
+Control samples should be removed before using this function.
+Control assays (AssayType is not "assay", or Assay contains "control" or "ctrl") should be removed before using this function.
+The posthoc test for a numerical variable compares the difference in means of the outcome variable (default: NPX) for 1 standard deviation difference in the numerical variable, e.g.
+mean NPX at mean(numerical variable) versus mean NPX at mean(numerical variable) + 1*SD(numerical variable).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_anova_posthoc(
+  df,
+  olinkid_list = NULL,
+  variable,
+  covariates = NULL,
+  outcome = "NPX",
+  model_formula,
+  effect,
+  effect_formula,
+  mean_return = FALSE,
+  post_hoc_padjust_method = "tukey",
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>NPX data frame in long format with at least protein name (Assay), OlinkID, UniProt, Panel and a factor with at least 3 levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>olinkid_list</code></td>
+<td>
+<p>Character vector of OlinkID's on which to perform post hoc analysis. If not specified, all assays in df are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p>Single character value or character array.
+Variable(s) to test. If length &gt; 1, the included variable names will be used in crossed analyses .
+Also takes ':' notation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covariates</code></td>
+<td>
+<p>Single character value or character array. Default: NULL. Covariates to include. Takes ':' or '*' notation. Crossed analysis will not be inferred from main effects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>Character. The dependent variable. Default: NPX.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model_formula</code></td>
+<td>
+<p>(optional) Symbolic description of the model to be fitted in standard formula notation (e.g. "NPX~A*B"). If provided, this will override the <code>outcome</code>, <code>variable</code> and <code>covariates</code> arguments. Can be a string or of class <code>stats::formula()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effect</code></td>
+<td>
+<p>Term on which to perform post-hoc. Character vector. Must be subset of or identical to variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effect_formula</code></td>
+<td>
+<p>(optional) A character vector specifying the names of the predictors over which estimated marginal means are desired as defined in the <code>emmeans</code> package. May also be a formula. If provided, this will override the <code>effect</code> argument. See <code>?emmeans::emmeans()</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean_return</code></td>
+<td>
+<p>Boolean. If true, returns the mean of each factor level rather than the difference in means (default). Note that no p-value is returned for mean_return = TRUE and no adjustment is performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>post_hoc_padjust_method</code></td>
+<td>
+<p>P-value adjustment method to use for post-hoc comparisons within an assay. Options include <code>tukey</code>, <code>sidak</code>, <code>bonferroni</code> and <code>none</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A "tibble" of posthoc tests for specified effect, arranged by ascending adjusted p-values.
+Columns include:
+</p>
+
+<ul>
+<li>
+<p>Assay: "character" Protein symbol
+</p>
+</li>
+<li>
+<p>OlinkID: "character" Olink specific ID
+</p>
+</li>
+<li>
+<p>UniProt: "character" UniProt ID
+</p>
+</li>
+<li>
+<p>Panel: "character" Name of Olink Panel
+</p>
+</li>
+<li>
+<p>term: "character" term in model
+</p>
+</li>
+<li>
+<p>contrast: "character" the groups that were compared
+</p>
+</li>
+<li>
+<p>estimate: "numeric" difference in mean NPX between groups
+</p>
+</li>
+<li>
+<p>conf.low: "numeric" confidence interval for the mean (lower end)
+</p>
+</li>
+<li>
+<p>conf.high: "numeric" confidence interval for the mean (upper end)
+</p>
+</li>
+<li>
+<p>Adjusted_pval: "numeric" adjusted p-value for the test
+</p>
+</li>
+<li>
+<p>Threshold: "character" if adjusted p-value is significant or not (&lt; 0.05)
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(dplyr)
+
+npx_df &lt;- npx_data1 |&gt; filter(!grepl('control|ctrl',SampleID, ignore.case = TRUE))
+
+#Two-way ANOVA, one main effect (Site) covariate.
+#Results in model NPX~Treatment*Time+Site.
+anova_results &lt;- olink_anova(df = npx_df,
+                             variable=c("Treatment:Time"),
+                             covariates="Site")
+
+#Posthoc test for the model NPX~Treatment*Time+Site,
+#on the interaction effect Treatment:Time with covariate Site.
+
+#Filtering out significant and relevant results.
+significant_assays &lt;- anova_results |&gt;
+filter(Threshold == 'Significant' &amp; term == 'Treatment:Time') |&gt;
+select(OlinkID) |&gt;
+distinct() |&gt;
+pull()
+
+#Posthoc, all pairwise comparisons
+anova_posthoc_results &lt;- olink_anova_posthoc(npx_df,
+variable=c("Treatment:Time"),
+covariates="Site",
+olinkid_list = significant_assays,
+effect = "Treatment:Time")
+
+
+#Posthoc, treated vs untreated at each timepoint, adjusted for Site effect
+anova_posthoc_results &lt;- olink_anova_posthoc(npx_df,
+model_formula = "NPX~Treatment*Time+Site",
+olinkid_list = significant_assays,
+effect_formula = "pairwise~Treatment|Time")
+
+
+
+</code></pre>
+
+
+</div>

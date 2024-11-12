@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readbin</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Returns <code>'.gz'</code>-file as matrix or raster-object</h2>
+
+<h3>Description</h3>
+
+<p>Returns <code>'.gz'</code>-file as matrix or raster-object.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readbin(filename, area, Image = F, byte = F, Raster = T)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+
+<p>Character string indicating search criteria for the <code>'.gz'</code>-file of interest. Only <code>'.gz'</code>-files with valid filenames can be read, consisting of:
+</p>
+<p><code>area, source, parameter, resolution, timestep, date1, date2</code> and <code>option</code>-criteria, separated by an underscore with only <code>option</code> being aligned by a point and ending with <code>'.gz'</code>, e.g.:
+</p>
+<p><code>area_source_parameter_resolution_timestep_date1_date2.option.gz</code>.
+</p>
+<p>See region_definitions for valid area- and parameter_definitions for valid <code>parameter</code>-values, respecively.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Image</code></td>
+<td>
+
+<p>whether the a the <code>'.gz'</code>-file should be plotted immediately using image.plot-function of the fields-package (default is <code>FALSE</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byte</code></td>
+<td>
+
+<p>whether the a the data of the <code>'.gz'</code>-file should be returned unconverted as a byte-values (default is <code>FALSE</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Raster</code></td>
+<td>
+
+<p>whether the a the data of the <code>'.gz'</code>-file should be returned in a raster-object (default is <code>TRUE</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>area</code></td>
+<td>
+
+<p>Character string identifying the region that should be extracted. If missing, region is derived from the <code>'.gz'</code>-filename. 
+See region_definitions for area definitions and use add.region to add new regions.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+ <p>writebin, regions, crop, raster2matrix, param_convert</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### Example: read and plot '.gz'-file
+path &lt;- system.file("test_files", package="oceanmap")
+check_gzfiles(folder=path) # return file summary-table
+gz.files &lt;- Sys.glob(paste0(path,'/*.gz')) # load sample-'.gz'-files
+
+### all manual:
+obj &lt;- readbin(gz.files[2],area='lion')
+obj
+ticks &lt;- seq(20,30,5)
+data('cmap')
+image(obj,zlim=range(ticks),col=cmap$jet)
+plotmap('lion',add=TRUE) # add landmask
+#set.colorbar(ticks=ticks,cb.title='cb.title',cb.xlab='cb.xlab')
+
+### using v:
+
+## ticks set by adaptive.vals
+v(obj,varname="sst2",cb.title='cb.title',cb.xlab='cb.xlab') 
+
+## ticks set by parameter definition
+v(obj,varname="sst2",cb.title='cb.title',cb.xlab='cb.xlab',adaptive.vals=FALSE) 
+
+### extracting subregion:
+obj &lt;- readbin(gz.files[2])
+area.extent &lt;- extent(c(5,10,35,40))
+subarea &lt;- crop(obj,area.extent)
+# v(subarea)
+
+## getting average value:
+mean(subarea[,],na.rm=TRUE)
+</code></pre>
+
+
+</div>

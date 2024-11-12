@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simu.olbm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate OLBM data</h2>
+
+<h3>Description</h3>
+
+<p>It simulates an ordinal data matrix according to OLBM.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simu.olbm(M, P, Pi, rho, delta, mu, sd, thresh)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>The number of rows of the ordinal matrix Y.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P</code></td>
+<td>
+<p>The number of columns of the ordinal matrix Y.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pi</code></td>
+<td>
+<p>A Q x L connectivity matrix to manage missing data (coded az zeros in Y).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>A vector of length Q, containing multinomial probabilities for row cluster assignments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>A vector of length L, containing multinomial probabilities for column cluster assignments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>A Q x L matrix containing the means of the latent Gaussian distributions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+<p>A Q x L matrix containing the standard deviations of the latent Gaussian distributions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresh</code></td>
+<td>
+<p>A K+1 vector containing the sorted tresholds used to simulate the ordinal entries in Y, where K is the number of ordinal modalities. The first entry in tresh must be -Inf, the last entry +Inf.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>It returns a list containing:  
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>An M x P matrix. The observed ordinal entries are integers between 1 and K. Missing data are coded as zeros.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Rclus</code></td>
+<td>
+<p>A vector of length M containing the row cluster memberships.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Cclus</code></td>
+<td>
+<p>A vector of length P containing the column cluster memberships.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Corneli M.,Bouveyron C. and Latouche P. (2019) <em>Co-Clustering of ordinal data via latent continuous random variables and a classification EM algorithm. </em>(<a href="https://hal.archives-ouvertes.fr/hal-01978174">https://hal.archives-ouvertes.fr/hal-01978174</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+M &lt;- 150                                    
+P &lt;- 100 
+Q &lt;- 3
+L &lt;- 2
+
+## connectivity matrix
+Pi &lt;- matrix(.7, nrow = Q, ncol = L)
+Pi[1,1] &lt;- Pi[2,2] &lt;- Pi[3,2] &lt;- .5
+
+## cluster memberships proportions
+rho &lt;- c(1/3, 1/3 ,1/3)
+delta &lt;- c(1/2, 1/2)
+
+# Thresholds
+thresh &lt;- c(-Inf, 2.37, 2.67, 3.18, 4.33, Inf)     # K = 5
+
+## Gaussian parameters
+mu &lt;- matrix(c(0, 3.4, 2.6, 0, 2.6, 3.4), nrow = Q, ncol = L)   
+sd &lt;- matrix(c(1.2,1.4,1.0,1.2,1.4,1.0), nrow = Q, ncol = L)
+
+## Data simulation
+dat &lt;- simu.olbm(M, P, Pi, rho, delta, mu, sd, thresh)
+
+</code></pre>
+
+
+</div>

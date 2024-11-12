@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>odsmle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>MSELE estimator for analyzing the primary outcome in ODS design</h2>
+
+<h3>Description</h3>
+
+<p><code>odsmle</code> provides a maximum semiparametric empirical likelihood estimator
+(MSELE) for analyzing the primary outcome Y with respect to expensive exposure
+and other covariates in ODS design (Zhou et al. 2002).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">odsmle(Y, X, beta, sig, pis, a, rs.size, size, strat)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>vector for the primary response</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>the design matrix with a column of 1's for the intercept</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>starting parameter values for the regression coefficients that
+relate Y to X.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig</code></td>
+<td>
+<p>starting parameter values for the error variance of the regression.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pis</code></td>
+<td>
+<p>starting parameter values for the stratum probabilities (the
+probability that Y belongs to certain stratum) e.g. pis = c(0.1, 0.8, 0.1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>vector of cutpoints for the primary response (e.g., a = c(-2.5,2))</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rs.size</code></td>
+<td>
+<p>size of the SRS (simple random sample)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>vector of the stratum sizes of the supplemental samples (e.g. size
+= c(50,0,50) represents that two supplemental samples each of size 50 are
+taken from the upper and lower tail of Y.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strat</code></td>
+<td>
+<p>vector that indicates the stratum numbers (e.g. strat = c(1,2,3)
+represents that there are three stratums).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>We assume that in the population, the primary outcome variable Y follows the
+following model: </p>
+<p style="text-align: center;"><code class="reqn">Y=\beta_{0}+\beta_{1}X+\epsilon,</code>
+</p>
+<p> where X are the covariates, and epsilon has variance sig. In ODS
+design, a simple random sample is taken from the full cohort, then two
+supplemental samples are taken from two tails of Y, i.e. (-Infty, mu_Y -
+a*sig_Y) and (mu_Y + a*sig_Y, +Infty). Because ODS data has biased sampling
+nature, naive regression analysis will yield biased estimates of the
+population parameters. Zhou et al. (2002) describes a semiparametric empirical
+likelihood estimator for estimating the parameters in the primary outcome
+model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list which contains the parameter estimates for the primary response
+model: </p>
+<p style="text-align: center;"><code class="reqn">Y=\beta_{0}+\beta_{1}X+\epsilon,</code>
+</p>
+<p> where epsilon has variance sig. The list contains the following
+components: </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>parameter estimates for beta</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig</code></td>
+<td>
+<p>estimates
+for sig</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pis</code></td>
+<td>
+<p>estimates for the stratum probabilities</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grad</code></td>
+<td>
+<p>gradient</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hess</code></td>
+<td>
+<p>hessian</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>converge</code></td>
+<td>
+<p>whether the
+algorithm converges: True or False</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i</code></td>
+<td>
+<p>Number of iterations</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ODS)
+# take the example data from the ODS package
+# please see the documentation for details about the data set ods_data
+
+Y &lt;- ods_data[,1]
+X &lt;- cbind(rep(1,length(Y)), ods_data[,2:5])
+
+# use the simple random sample to get an initial estimate of beta, sig #
+# perform an ordinary least squares #
+SRS &lt;- ods_data[1:200,]
+OLS.srs &lt;- lm(SRS[,1] ~ SRS[,2:5])
+OLS.srs.summary &lt;- summary(OLS.srs)
+
+beta &lt;- coefficients(OLS.srs)
+sig &lt;- OLS.srs.summary$sigma^2
+pis &lt;- c(0.1,0.8,0.1)
+
+# the cut points for this data is Y &lt; 0.162, Y &gt; 2.59.
+a &lt;- c(0.162,2.59)
+rs.size &lt;- 200
+size &lt;- c(100,0,100)
+strat &lt;- c(1,2,3)
+
+odsmle(Y,X,beta,sig,pis,a,rs.size,size,strat)
+</code></pre>
+
+
+</div>

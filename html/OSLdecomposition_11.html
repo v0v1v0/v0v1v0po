@@ -1,0 +1,158 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulate_OSLcomponents</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulates signal component decay curves and whole CW-OSL curves</h2>
+
+<h3>Description</h3>
+
+<p>This function builds a bulk CW-OSL curve and CW-OSL component decay curves from OSL component parameters.
+Therewith it supports fit_OSLcurve, decompose_OSLcurve and plot_OSLcurve by providing model and residual curves.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulate_OSLcomponents(
+  components,
+  curve = NULL,
+  channel.width = 0.1,
+  channel.number = 400,
+  simulate.curve = FALSE,
+  add.poisson.noise = TRUE,
+  add.gaussian.noise = 0,
+  add.background = 0,
+  round.values = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>components</code></td>
+<td>
+<p>data.frame (<strong>required</strong>):
+Table with component parameters. The table requires columns <code style="white-space: pre;">⁠$names⁠</code>, <code style="white-space: pre;">⁠$lambda⁠</code> and <code style="white-space: pre;">⁠$n⁠</code>, see section <strong>Examples</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>curve</code></td>
+<td>
+<p>data.frame (<em>optional</em>):
+CW-OSL curve serving as template for the time axis. The input table requires a column <code style="white-space: pre;">⁠$time⁠</code>.
+If no input object is given or the object contains no column <code style="white-space: pre;">⁠$signal⁠</code>,
+<code>simulate.curve</code> will be set <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>channel.width</code></td>
+<td>
+<p>numeric (<em>optional</em>):
+Channel width in seconds. Necessary for curve simulation if <code>curve</code> is not given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>channel.number</code></td>
+<td>
+<p>numeric (<em>optional</em>):
+Number of channels resp. data points. Necessary for curve simulation if <code>curve</code> is not given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simulate.curve</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Decides if the bulk CW-OSL signal shall be calculated from the component parameter.
+If <code>FALSE</code>, the output curve will take over the column <code style="white-space: pre;">⁠$signal⁠</code> from the input <code>curve</code>.
+If <code>TRUE</code>, a new column <code style="white-space: pre;">⁠$signal⁠</code> will be created which is the sum of all component curves.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.poisson.noise</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Adds poisson distributed shot noise to <code style="white-space: pre;">⁠$signal⁠</code> if <code>simulate.curve = TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.gaussian.noise</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Standard deviation of the detector noise in <em>cts/s</em>, added to <code style="white-space: pre;">⁠$signal⁠</code> if <code>simulate.curve = TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.background</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+signal background level in <em>cts/s</em>, added to <code style="white-space: pre;">⁠$signal⁠</code> if <code>simulate.curve = TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round.values</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Rounds <code style="white-space: pre;">⁠$signal⁠</code> values to integers if <code>simulate.curve = TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data.frame of a CW-OSL curve with the columns: <code style="white-space: pre;">⁠$time⁠</code>, <code style="white-space: pre;">⁠$signal⁠</code>, <code style="white-space: pre;">⁠$residual⁠</code>, <code style="white-space: pre;">⁠$sum⁠</code>
+and a signal decay curve for each single component named after the entries in the column <code>components$names</code>
+of the input object.
+</p>
+
+
+<h3>Last updates</h3>
+
+<p>2020-10-30, DM: Renamed from <em>simulate_OSLcurve</em> to <em>simulate_OSLcomponents</em>;
+Renamed argument from <em>template.curve</em> to <em>curve</em>; Rewrote roxygen documentation
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dirk Mittelstraß, <a href="mailto:dirk.mittelstrass@luminescence.de">dirk.mittelstrass@luminescence.de</a>
+</p>
+<p>Please cite the package the following way:
+</p>
+<p>Mittelstraß, D., Schmidt, C., Beyer, J., Heitmann, J. and Straessner, A.:
+R package OSLdecomposition: Automated identification and separation of quartz CW-OSL signal components, <em>in preparation</em>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Mittelstraß, D., 2019. Decomposition of weak optically stimulated luminescence signals and its application in retrospective dosimetry at quartz (Master thesis). TU Dresden, Dresden.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>fit_OSLcurve, decompose_OSLcurve, plot_OSLcurve
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Set some arbitrary decay parameter for a dim CW-OSL measurement of quartz
+components &lt;- data.frame(name = c("fast", "medium", "slow"),
+                         lambda = c(2, 0.5, 0.02),
+                         n = c(1000, 1000, 10000))
+
+# Simulate the CW-OSL curve and add some signal noise
+curve &lt;- simulate_OSLcomponents(components, simulate.curve = TRUE, add.poisson.noise = TRUE)
+
+# Display the simulated curve
+plot_OSLcurve(curve, components)
+
+</code></pre>
+
+
+</div>

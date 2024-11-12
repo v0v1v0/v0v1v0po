@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>targets</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Targets</h2>
+
+<h3>Description</h3>
+
+<p>Targets are used to specify the minimum probability of persistence required
+for each feature. Please note that only some objectives require
+targets, and attempting to solve a problem that requires targets will throw
+an error if targets are not supplied, and attempting to solve a problem that
+does not require targets will throw a warning if targets are supplied.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The following functions can be used to specify targets for a
+project prioritization <code>problem()</code>:
+</p>
+
+<dl>
+<dt><code>add_relative_targets()</code></dt>
+<dd>
+<p>Set targets as a proportion (between 0 and 1) of the maximum probability
+of persistence associated with the best project for each feature. For
+instance, if the best project for a feature has an 80% probability of
+persisting, setting a 50% (i.e. <code>0.5</code>) relative target will
+correspond to a 40% threshold probability of persisting.</p>
+</dd>
+<dt><code>add_absolute_targets()</code></dt>
+<dd>
+<p>Set targets by specifying exactly what probability of persistence is
+required for each feature. For instance, setting an absolute target of
+10% (i.e. <code>0.1</code>) corresponds to a threshold 10% probability of
+persisting.</p>
+</dd>
+<dt><code>add_manual_targets()</code></dt>
+<dd>
+<p>Set targets by manually specifying all the required information for each
+target.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>constraints, decisions,
+objectives, <code>problem()</code>,
+solvers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem with minimum set objective and targets that require each
+# feature to have a 30% chance of persisting into the future
+p1 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+      add_min_set_objective() %&gt;%
+      add_absolute_targets(0.3) %&gt;%
+      add_binary_decisions()
+
+# print problem
+print(p1)
+
+# build problem with minimum set objective and targets that require each
+# feature to have a level of persistence that is greater than or equal to
+# 30% of the best project for conserving it
+p2 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+      add_min_set_objective() %&gt;%
+      add_relative_targets(0.3) %&gt;%
+      add_binary_decisions()
+
+# print problem
+print(p2)
+
+## Not run: 
+# solve problems
+s1 &lt;- solve(p1)
+s2 &lt;- solve(p2)
+
+# print solutions
+print(s1)
+print(s2)
+
+# plot solutions
+plot(p1, s1)
+plot(p2, s2)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

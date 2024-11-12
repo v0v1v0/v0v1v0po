@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>confusionTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Construction of a Confusion Table</h2>
+
+<h3>Description</h3>
+
+<p>Confusion table and class assignments of one cascade.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">confusionTable(
+  predictionMap = NULL,
+  cascade = NULL,
+  other.classes = NULL,
+  sort = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>predictionMap</code></td>
+<td>
+<p>A PredictionMap object as it is returned by <code>predictionMap</code>-function. 
+It is made up of a list of two matrices(pred and meta). Both matrices provide information on individual samples column-wise.
+The rownames of the pred-matrix (e.g. [0vs1]) show the classes of the binary base classifier. The elements are the prediction result of a specific training.
+The rows that correspond to base classifiers that would separate the same class consists of -1. Those rows are not used within the analysis.
+The meta information connects the values in the pred-matrix to a specific fold, run and contains the original label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cascade</code></td>
+<td>
+<p>A numeric vector of classes or a character string of type '1&gt;2&gt;3' of at least two class labels reflected in 'predictionMap'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>other.classes</code></td>
+<td>
+<p>This parameter can be either NULL, 'all' or a numeric vector of classes that are not part of the cascade parameter.
+If other.classes is:
+- NULL, only the cascade classes are evaluated. 
+- 'all', all remaining classes are evaluated. 
+-  a vector of classes, those classes are evaluated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>If TRUE (default) the classes that are not part of cascade are sorted based on their confusion.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of type ConfusionTable including the sensitivities, with the label of the predicted classes in the rows and the labels of the original class in the columns.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summary.ConfusionTable</code>, <code>print.ConfusionTable</code>, <code>plot.ConfusionTable</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+
+# Calculation of the confusion matrix for '0&gt;2&gt;3&gt;4'.
+confTable = confusionTable(predMap, cascade = '0&gt;2&gt;3&gt;4')
+# Calculation of the confusion matrix for '0&gt;2&gt;3&gt;4' 
+# and the assignment of all samples of the other classes.
+confTable = confusionTable(predMap, cascade = '0&gt;2&gt;3&gt;4', 
+                other.classes='all', sort = TRUE)
+</code></pre>
+
+
+</div>

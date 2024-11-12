@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>importScivesco</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import sci:vesco data files.</h2>
+
+<h3>Description</h3>
+
+<p>Import sci:vesco data files.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">importScivesco(file, dir = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>Filename including path if file is not in current working
+directory. File can also be a complete URL. The fileformat
+is .dat.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dir</code></td>
+<td>
+<p>Alternative way to supply the directory where the file is located
+(default <code>NULL</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A single <code>repgrid</code> object in case one file and
+a list of <code>repgrid</code> objects in case multiple files are imported.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Sci:Vesco offers the options to rate the construct poles separately or using a bipolar scale. The separated
+rating is done using the "tetralemma" field. The field is a bivariate plane on which each of the four (tetra)
+corners has a different meaning in terms of rating. Using this approach also allows ratings like: "both poles
+apply", "none of the poles apply" and all intermediate ratings can be chosen. This relaxes the bipolarity
+assumption often assumed in grid theory and allows for deviation from a strict bipolar rating if the constructs
+are not applied in a bipolar way. Using the tetralemma field for rating requires to analyze each construct
+separately though. This means we get a double entry grid where the emergent and contrast pole ratings might not
+simply be a reflection of on another. The tetralemma field is not yet supported and importing will fail. Currently
+only bipolar ratings are supported.
+</p>
+<p>If a tetralemma field has been used for rating, <code>OpenRepGrid</code> will offer the option to transform the scores into
+"normal" grid ratings (i.e. restricted to bipolarity) by projecting the ratings from the bivariate tetralemma
+field onto the diagonal of the tetralemma field and thus forcing a bipolar rating type. This option is not
+recommended due to the fact that the conversion is susceptible to error when both ratings are near to zero.
+</p>
+<p>TODO: For developers: The element IDs are not used yet. This might cause wrong assignments.
+</p>
+
+
+<h3>References</h3>
+
+<p>Menzel, F., Rosenberger, M., Buve, J. (2007). Emotionale, intuitive und
+rationale Konstrukte verstehen. <em>Personalfuehrung, 4</em>(7), 91-99.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>importGridcor()</code>, <code>importGridstat()</code>, <code>importScivesco()</code>, <code>importGridsuite()</code>, <code>importTxt()</code>,
+<code>importExcel()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# supposing that the data file scivesco.scires is in the current directory
+file &lt;- "scivesco.scires"
+rg &lt;- importScivesco(file)
+
+# specifying a directory (arbitrary example directory)
+dir &lt;- "/Users/markheckmann/data"
+rg &lt;- importScivesco(file, dir)
+
+# using a full path
+rg &lt;- importScivesco("/Users/markheckmann/data/scivesco.scires")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

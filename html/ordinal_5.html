@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anova.clm2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Likelihood ratio test of cumulative link models</h2>
+
+<h3>Description</h3>
+
+<p>Comparison of cumulative link models in likelihood ratio tests.
+The models may differ by terms in location, scale and nominal
+formulae, in link, threshold function and random effect structure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'clm2'
+anova(object, ..., test = c("Chisq", "none"))
+## S3 method for class 'clmm2'
+anova(object, ..., test = c("Chisq", "none"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a <code>clm2</code> object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>one or more additional <code>clm2</code> objects.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test</code></td>
+<td>
+<p>if <code>test = "none"</code> the p-value for the likelihood
+ratio test is suppressed.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The method returns an object of class <code>Anova</code> (for printing) and
+<code>data.frame</code> with the following elements
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Model</code></td>
+<td>
+<p>character description of the cumulative link models being
+compared. Location, scale and nominal formulae are separated by
+"|"s in this order.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Resid.df</code></td>
+<td>
+<p>the residual degrees of freedom
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>-2logLik</code></td>
+<td>
+<p>twice the negative log likelihood (proportional to the
+deviance)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Test</code></td>
+<td>
+<p>indication of which models are being compared.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DF</code></td>
+<td>
+<p>the difference in the degrees of freedom in the models being
+compared, i.e. the degrees of freedom for the chi-squared test.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LR stat.</code></td>
+<td>
+<p>the likelihood ratio statistic.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pr(Chi)</code></td>
+<td>
+<p>the p-value from the likelihood ratio test. Absent if
+<code>test = "none"</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Rune Haubo B Christensen</p>
+
+
+<h3>See Also</h3>
+
+<p><code>clm2</code>, <code>addterm</code>,
+<code>dropterm</code> and
+<code>anova.default</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">options(contrasts = c("contr.treatment", "contr.poly"))
+m1 &lt;- clm2(SURENESS ~ PROD, scale = ~PROD, data = soup,
+          link = "logistic")
+
+## anova
+anova(m1, update(m1, scale = ~.-PROD))
+mN1 &lt;- clm2(SURENESS ~ 1, nominal = ~PROD, data = soup,
+           link = "logistic")
+anova(m1, mN1)
+anova(m1, update(m1, scale = ~.-PROD), mN1)
+
+## Fit model from polr example:
+if(require(MASS)) {
+    fm1 &lt;- clm2(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
+    anova(fm1, update(fm1, scale =~ Cont))
+}
+
+</code></pre>
+
+
+</div>

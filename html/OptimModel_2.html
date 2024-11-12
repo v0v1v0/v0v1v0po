@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>exp_2o_decay</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Five-parameter second-order exponential decay, gradient, starting values, and back-calculation functions</h2>
+
+<h3>Description</h3>
+
+<p> Five-parameter second-order exponential decay, gradient, starting values, and back-calculation functions.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> 
+        exp_2o_decay(theta, x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p> Vector of five parameters: (A, B, k1, k2, p).  See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Vector of concentrations. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The five-parameter exponential decay model is given by:
+</p>
+<p style="text-align: center;"><code class="reqn">y = A + B\times P\times \exp(-K1 \times x) + B\times (1 - P)\times \exp(-K2\times x)</code>
+</p>
+  
+<p>The parameter vector is (A, B, k1, k2, p) where <code class="reqn">A = \min y</code> (min y value), <code class="reqn">A+B = \max y</code> (max y value), 
+<code class="reqn">K1 = \exp(k1)</code> which is the shape parameter for first term, <code class="reqn">K2 = \exp(k2)</code> which is the shape parameter for second term, and <code class="reqn">P = 1/(1+\exp(p))</code> which is the  proportion of signal from the first term. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Let N = length(x).  Then
+</p>
+
+<ul>
+<li>
+<p> exp_2o_decay(theta, x) returns a numeric vector of length N.
+</p>
+</li>
+<li>
+<p> attr(exp_2o_decay, "gradient")(theta, x) returns an N x 5 matrix.
+</p>
+</li>
+<li>
+<p> attr(exp_2o_decay, "start")(x, y) returns a numeric vector of length 5 with starting values for (A, B, k1, k2, p). 
+</p>
+</li>
+<li>
+<p> attr(exp_2o_decay, "backsolve")(theta, y) returns a numeric vector of length = length(y).
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_fit</code>, <code>rout_fitter</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123L)
+x = 2^(-4:4)
+theta = c(25, 75, log(3), log(1.2), 1/(1+exp(.7)))
+y = exp_2o_decay(theta, x) + rnorm( length(x), mean=0, sd=1 )
+attr(exp_2o_decay, "gradient")(theta, x)
+attr(exp_2o_decay, "start")(x, y)
+attr(exp_2o_decay, "backsolve")(theta, 38)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,57 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Gulf Stream position</h2>
+
+<h3>Description</h3>
+
+<p>Monthly latitude and longitude of Gulf Stream position, averaged from 1973
+to 1992, according to Drinkwater et al. 1994 (page 103), in the form of a
+list containing <code>month</code>, the numbers 1 through 12, <code>longitude</code>, the
+longitudes in degrees east, and <code>latitude</code>, a matrix of latitudes, with
+columns for months and rows for longitudes.  The data were entered by hand
+by Dan Kelley, and may suffer errors resulting from typos and inaccurate
+reading of occasionally blurry digits.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(gs, package="ocedata")
+</code></pre>
+
+
+<h3>References</h3>
+
+<p>K. F. Drinkwater, R. A Myers, R. G. Pettipas and T. L. Wright, 1994.
+Climatic data for the northwest Atlantic: the position of the shelf/slope
+front and the northern boundary of the Gulf Stream between 50W and 75W,
+1973-1992.  Canadian Data Report of Fisheries and Ocean Sciences 125.
+Department of Fisheries and Oceans, Canada.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(gs, package="ocedata")
+## Not run: 
+library(oce)
+data(coastlineWorldMedium, package="ocedata")
+plot(coastlineWorldMedium, span=3200,
+    clongitude=mean(gs$longitude), clatitude=mean(gs$latitude))
+data(topoWorld, package="oce")
+contour(topoWorld[["longitude"]]-360,
+    topoWorld[["latitude"]], -topoWorld[["z"]],
+    level=1000*(1:5), col='brown', add=TRUE)
+for (i in gs$month)
+    lines(gs$longitude, gs$latitude[,i], col='blue')
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

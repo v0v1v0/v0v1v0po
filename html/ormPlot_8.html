@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>join_ggplots</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Join two ggplot objects side by side</h2>
+
+<h3>Description</h3>
+
+<p>Function to get aligned table of two ggplot objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">join_ggplots(
+  leftplot,
+  rightplot,
+  plot.widths = c(0.5, 0.5),
+  title = "Odds Ratio"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>leftplot</code></td>
+<td>
+<p>the left side plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rightplot</code></td>
+<td>
+<p>the plot on the right</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.widths</code></td>
+<td>
+<p>the relative widths of the left and right plot
+should be a vector (<code>c()</code>)  with 2 elements that sum to 1 defaults to
+equal widths</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>the tile row of the drawn plot</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+#load the libraries
+library(rms)
+library(ormPlot)
+library(ggplot2)
+
+#make the datadist
+dd&lt;-rms::datadist(educ_data)
+options(datadist="dd")
+
+#create the model
+cran_model &lt;- orm(educ_3 ~ YOBc + sex + height_rzs + n_siblings  + cran_rzs, data = educ_data)
+
+#the antilog true produces odd ratios (default value for orm and lrm)
+s&lt;-summary(cran_model, antilog = TRUE)
+
+#set the plotting default theme (optional)
+theme_set(theme_classic())
+
+#return modifiable ggplots
+plots&lt;-forestplot(s, return_ggplots = TRUE )
+
+#modify like any ggplot2 object
+table&lt;-plots[[1]] +  theme(axis.text=element_text(size = 12),
+                           axis.line.x = element_line(color = "red", size = 1),
+                           axis.text.y = element_blank())
+
+graph&lt;-plots[[2]] + theme(axis.line = element_line(color = "red", size = 1),
+                          axis.text.y = element_text())
+
+#join the graphs
+join_ggplots(  graph, table, title = "", plot.widths = c(0.6,0.4))
+
+
+</code></pre>
+
+
+</div>

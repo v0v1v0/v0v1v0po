@@ -1,0 +1,188 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>clusterBoot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multiscale bootstrap cluster analysis.</h2>
+
+<h3>Description</h3>
+
+<p>p-values are calculated for each branch of the cluster dendrogram to indicate the stability of a specific partition.
+<code>clusterBoot</code> will yield the same clusters as the <code>cluster()</code> function (i.e. standard hierarchical clustering) with
+additional p-values. Two kinds of p-values are reported: bootstrap probabilities (BP) and approximately unbiased
+(AU) probabilities (see Details section for more information).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">clusterBoot(
+  x,
+  along = 1,
+  align = TRUE,
+  dmethod = "euclidean",
+  cmethod = "ward.D",
+  p = 2,
+  nboot = 1000,
+  r = seq(0.8, 1.4, by = 0.1),
+  seed = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code style="white-space: pre;">⁠grid object⁠</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>along</code></td>
+<td>
+<p>Along which dimension to cluster. 1 = constructs, 2= elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>align</code></td>
+<td>
+<p>Whether the constructs should be aligned before clustering
+(default is <code>TRUE</code>). If not, the grid matrix is clustered
+as is. See Details section for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dmethod</code></td>
+<td>
+<p>The distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra",
+"binary" or "minkowski". Any unambiguous substring can be given. For additional information on the different types
+type <code>?dist</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cmethod</code></td>
+<td>
+<p>The agglomeration method to be used. This should be (an unambiguous abbreviation of) one of
+<code>"ward.D"</code>, <code>"ward.D2"</code>, <code>"single"</code>, <code>"complete"</code>, <code>"average"</code>, <code>"mcquitty"</code>, <code>"median"</code> or <code>"centroid"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Power of the Minkowski metric. Not yet passed on to pvclust!</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nboot</code></td>
+<td>
+<p>the number of bootstrap replications. The default is
+<code>1000</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>numeric vector which specifies the relative sample sizes of
+bootstrap replications. For original sample size <code class="reqn">n</code> and
+bootstrap sample size <code class="reqn">n'</code>, this is defined as <code class="reqn">r=n'/n</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Random seed for bootstrapping. Can be set for reproducibility (see
+<code>set.seed()</code>). Usually not needed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to pass on to <code>pvclust::pvclust()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In standard (hierarchical) cluster analysis the question arises which of the identified structures are significant
+or just emerged by chance. Over the last decade several methods have been developed to test structures for
+robustness. One line of research in this area is based on resampling. The idea is to resample the rows or columns of
+the data matrix and to build the dendrogram for each bootstrap sample (Felsenstein, 1985). The p-values indicates
+the percentage of times a specific structure is identified across the bootstrap samples. It was shown that the
+p-value is biased (Hillis &amp; Bull, 1993; Zharkikh &amp; Li, 1995). In the literature several methods for bias correction
+have been proposed. In <code>clusterBoot</code> a method based on the
+<em>multiscale bootstrap</em> is used to derive corrected (approximately
+unbiased) p-values (Shimodaira, 2002, 2004). In conventional bootstrap analysis the size of the bootstrap sample is
+identical to the original sample size. Multiscale bootstrap varies the bootstrap sample size in order to infer a
+correction formula for the biased p-value on the basis of the variation of the results for the different sample
+sizes (Suzuki &amp; Shimodaira, 2006).
+</p>
+<p><strong>align</strong>: Aligning will reverse constructs if necessary to yield a
+maximal similarity between constructs. In a first step the constructs are clustered including both directions. In a
+second step the direction of a construct that yields smaller distances to the adjacent constructs is preserved and
+used for the final clustering. As a result, every construct is included once but with an orientation that guarantees
+optimal clustering. This approach is akin to the procedure used in FOCUS (Jankowicz &amp; Thomas, 1982).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A pvclust object as returned by the function <code>pvclust::pvclust()</code>
+</p>
+
+
+<h3>References</h3>
+
+<p>Felsenstein, J. (1985). Confidence Limits on Phylogenies: An Approach Using
+the Bootstrap. <em>Evolution, 39</em>(4), 783. doi:10.2307/2408678
+</p>
+<p>Hillis, D. M., &amp; Bull, J. J. (1993). An Empirical Test of Bootstrapping as a
+Method for Assessing Confidence in Phylogenetic Analysis. <em>Systematic Biology,
+42</em>(2), 182-192.
+</p>
+<p>Jankowicz, D., &amp; Thomas, L. (1982). An Algorithm for the Cluster Analysis of
+Repertory Grids in Human Resource Development. <em>Personnel Review,
+11</em>(4), 15-22. doi:10.1108/eb055464.
+</p>
+<p>Shimodaira, H. (2002) An approximately unbiased test of phylogenetic tree
+selection. <em>Syst, Biol., 51</em>, 492-508.
+</p>
+<p>Shimodaira,H. (2004) Approximately unbiased tests of regions using multistep-
+multiscale bootstrap resampling. <em>Ann. Stat., 32</em>, 2616-2614.
+</p>
+<p>Suzuki, R., &amp; Shimodaira, H. (2006). Pvclust: an R package for assessing the
+uncertainty in hierarchical clustering. <em>Bioinformatics,
+22</em>(12), 1540-1542. doi:10.1093/bioinformatics/btl117
+</p>
+<p>Zharkikh, A., &amp; Li, W.-H. (1995). Estimation of confidence in phylogeny: the
+complete-and-partial bootstrap technique. <em>Molecular Phylogenetic Evolution,
+4</em>(1), 44-63.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# pvclust must be loaded
+library(pvclust)
+
+# p-values for construct dendrogram
+s &lt;- clusterBoot(boeker)
+plot(s)
+pvrect(s, max.only = FALSE)
+
+# p-values for element dendrogram
+s &lt;- clusterBoot(boeker, along = 2)
+plot(s)
+pvrect(s, max.only = FALSE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

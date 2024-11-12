@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>generate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a response for a given prompt</h2>
+
+<h3>Description</h3>
+
+<p>Generate a response for a given prompt
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">generate(
+  model,
+  prompt,
+  suffix = "",
+  images = "",
+  system = "",
+  template = "",
+  context = list(),
+  stream = FALSE,
+  raw = FALSE,
+  keep_alive = "5m",
+  output = c("resp", "jsonlist", "raw", "df", "text", "req"),
+  endpoint = "/api/generate",
+  host = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A character string of the model name such as "llama3".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prompt</code></td>
+<td>
+<p>A character string of the prompt like "The sky is..."</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suffix</code></td>
+<td>
+<p>A character string after the model response. Default is "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>images</code></td>
+<td>
+<p>A path to an image file to include in the prompt. Default is "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>system</code></td>
+<td>
+<p>A character string of the system prompt (overrides what is defined in the Modelfile). Default is "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>template</code></td>
+<td>
+<p>A character string of the prompt template (overrides what is defined in the Modelfile). Default is "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>context</code></td>
+<td>
+<p>A list of context from a previous response to include previous conversation in the prompt. Default is an empty list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stream</code></td>
+<td>
+<p>Enable response streaming. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>raw</code></td>
+<td>
+<p>If TRUE, no formatting will be applied to the prompt. You may choose to use the raw parameter if you are specifying a full templated prompt in your request to the API. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_alive</code></td>
+<td>
+<p>The time to keep the connection alive. Default is "5m" (5 minutes).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>A character vector of the output format. Default is "resp". Options are "resp", "jsonlist", "raw", "df", "text", "req" (httr2_request object).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endpoint</code></td>
+<td>
+<p>The endpoint to generate the completion. Default is "/api/generate".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>host</code></td>
+<td>
+<p>The base URL to use. Default is NULL, which uses Ollama's default base URL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional options to pass to the model.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A response in the format specified in the output parameter.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion">API documentation</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# text prompt
+generate("llama3", "The sky is...", stream = FALSE, output = "df")
+# stream and increase temperature
+generate("llama3", "The sky is...", stream = TRUE, output = "text", temperature = 2.0)
+
+# image prompt
+# something like "image1.png"
+image_path &lt;- file.path(system.file("extdata", package = "ollamar"), "image1.png")
+# use vision or multimodal model such as https://ollama.com/benzie/llava-phi-3
+generate("benzie/llava-phi-3:latest", "What is in the image?", images = image_path, output = "text")
+
+</code></pre>
+
+
+</div>

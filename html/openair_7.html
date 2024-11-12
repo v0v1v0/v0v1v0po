@@ -1,0 +1,377 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calendarPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot time series values in a conventional calendar format</h2>
+
+<h3>Description</h3>
+
+<p>This function will plot data by month laid out in a conventional calendar
+format. The main purpose is to help rapidly visualise potentially complex
+data in a familiar way. Users can also choose to show daily mean wind vectors
+if wind speed and direction are available.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calendarPlot(
+  mydata,
+  pollutant = "nox",
+  year = 2003,
+  month = 1:12,
+  type = "default",
+  annotate = "date",
+  statistic = "mean",
+  cols = "heat",
+  limits = c(0, 100),
+  lim = NULL,
+  col.lim = c("grey30", "black"),
+  col.arrow = "black",
+  font.lim = c(1, 2),
+  cex.lim = c(0.6, 1),
+  digits = 0,
+  data.thresh = 0,
+  labels = NA,
+  breaks = NA,
+  w.shift = 0,
+  w.abbr.len = 1,
+  remove.empty = TRUE,
+  main = NULL,
+  key.header = "",
+  key.footer = "",
+  key.position = "right",
+  key = TRUE,
+  auto.text = TRUE,
+  plot = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame minimally containing <code>date</code> and at least one other
+numeric variable. The date should be in either <code>Date</code> format or class
+<code>POSIXct</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>Mandatory. A pollutant name corresponding to a variable in a
+data frame should be supplied e.g. <code style="white-space: pre;">⁠pollutant = "nox". ⁠</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>Year to plot e.g. <code>year = 2003</code>. If not supplied all data
+potentially spanning several years will be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>month</code></td>
+<td>
+<p>If only certain month are required. By default the function will
+plot an entire year even if months are missing. To only plot certain months
+use the <code>month</code> option where month is a numeric 1:12 e.g. <code>month = c(1, 12)</code> to only plot January and December.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Not yet implemented.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotate</code></td>
+<td>
+<p>This option controls what appears on each day of the
+calendar. Can be: "date" — shows day of the month; "wd"
+— shows vector-averaged wind direction, or "ws" — shows
+vector-averaged wind direction scaled by wind speed. Finally it can be
+“value” which shows the daily mean value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>Statistic passed to <code>timeAverage()</code>. Note that if <code>statistic = "max"</code> and <code>annotate</code> is "ws" or "wd", the hour corresponding to the
+maximum concentration of <code>polluant</code> is used to provide the associated <code>ws</code>
+or <code>wd</code> and not the maximum daily <code>ws</code> or <code>wd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>Colours to be used for plotting. See <code>openColours()</code> for more
+details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits</code></td>
+<td>
+<p>Use this option to manually set the colour scale limits. This
+is useful in the case when there is a need for two or more plots and a
+consistent scale is needed on each. Set the limits to cover the maximum
+range of the data for all plots of interest. For example, if one plot had
+data covering 0–60 and another 0–100, then set <code>limits = c(0, 100)</code>. Note
+that data will be ignored if outside the limits range.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lim</code></td>
+<td>
+<p>A threshold value to help differentiate values above and below
+<code>lim</code>. It is used when <code>annotate = "value"</code>. See next few options for
+control over the labels used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.lim</code></td>
+<td>
+<p>For the annotation of concentration labels on each day. The
+first sets the colour of the text below <code>lim</code> and the second sets the
+colour of the text above <code>lim</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.arrow</code></td>
+<td>
+<p>The colour of the annotated wind direction / wind speed
+arrows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font.lim</code></td>
+<td>
+<p>For the annotation of concentration labels on each day. The
+first sets the font of the text below <code>lim</code> and the second sets the font of
+the text above <code>lim</code>. Note that font = 1 is normal text and font = 2 is
+bold text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.lim</code></td>
+<td>
+<p>For the annotation of concentration labels on each day. The
+first sets the size of the text below <code>lim</code> and the second sets the size of
+the text above <code>lim</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>The number of digits used to display concentration values when
+<code>annotate = "value"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.thresh</code></td>
+<td>
+<p>Data capture threshold passed to <code>timeAverage()</code>. For
+example, <code>data.thresh = 75</code> means that at least 75\
+available in a day for the value to be calculate, else the data is removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>If a categorical scale is defined using <code>breaks</code>, then <code>labels</code>
+can be used to override the default category labels, e.g., <code>labels = c("good", "bad", "very bad")</code>. Note there is one less label than break.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>If a categorical scale is required then these breaks will be
+used. For example, <code>breaks = c(0, 50, 100, 1000)</code>. In this case
+“good” corresponds to values between 0 and 50 and so on. Users
+should set the maximum value of <code>breaks</code> to exceed the maximum data value
+to ensure it is within the maximum final range e.g. 100–1000 in this case.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.shift</code></td>
+<td>
+<p>Controls the order of the days of the week. By default the
+plot shows Saturday first (<code>w.shift = 0</code>). To change this so that it starts
+on a Monday for example, set <code>w.shift = 2</code>, and so on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.abbr.len</code></td>
+<td>
+<p>The default (<code>1</code>) abbreviates the days of the week to a
+single letter (e.g., in English, S/S/M/T/W/T/F). <code>w.abbr.len</code> defines the
+number of letters to abbreviate until. For example, <code>w.abbr.len = 3</code> will
+abbreviate "Monday" to "Mon".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove.empty</code></td>
+<td>
+<p>Should months with no data present be removed? Default is
+<code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>The plot title; default is pollutant and year.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.header</code></td>
+<td>
+<p>Adds additional text/labels to the scale key. For example,
+passing <code>calendarPlot(mydata, key.header = "header", key.footer = "footer")</code> adds addition text above and below the scale key. These
+arguments are passed to <code>drawOpenKey()</code> via <code>quickText()</code>, applying the
+<code>auto.text</code> argument, to handle formatting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.footer</code></td>
+<td>
+<p>see <code>key.header</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.position</code></td>
+<td>
+<p>Location where the scale key is to plotted. Allowed
+arguments currently include <code>"top"</code>, <code>"right"</code>, <code>"bottom"</code> and <code>"left"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>Fine control of the scale key via <code>drawOpenKey()</code>. See
+<code>drawOpenKey()</code> for further details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.text</code></td>
+<td>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code> titles and
+axis labels will automatically try and format pollutant names and units
+properly e.g.  by subscripting the ‘2’ in NO2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should a plot be produced? <code>FALSE</code> can be useful when analysing
+data to extract calendar plot components and plotting them in other ways.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other graphical parameters are passed onto the <code>lattice</code> function
+<code>lattice::levelplot()</code>, with common axis and title labelling options (such
+as <code>xlab</code>, <code>ylab</code>, <code>main</code>) being passed to via <code>quickText()</code> to handle
+routine formatting.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>calendarPlot()</code> will plot data in a conventional calendar format, i.e., by
+month and day of the week. Daily statistics are calculated using
+<code>timeAverage()</code>, which by default will calculate the daily mean
+concentration.
+</p>
+<p>If wind direction is available it is then possible to plot the wind direction
+vector on each day. This is very useful for getting a feel for the
+meteorological conditions that affect pollutant concentrations. Note that if
+hourly or higher time resolution are supplied, then <code>calendarPlot()</code> will
+calculate daily averages using <code>timeAverage()</code>, which ensures that wind
+directions are vector-averaged.
+</p>
+<p>If wind speed is also available, then setting the option <code>annotate = "ws"</code>
+will plot the wind vectors whose length is scaled to the wind speed. Thus
+information on the daily mean wind speed and direction are available.
+</p>
+<p>It is also possible to plot categorical scales. This is useful where, for
+example, an air quality index defines concentrations as bands, e.g., "good",
+"poor". In these cases users must supply <code>labels</code> and corresponding <code>breaks</code>.
+</p>
+<p>Note that is is possible to pre-calculate concentrations in some way before
+passing the data to <code>calendarPlot()</code>. For example <code>rollingMean()</code> could be
+used to calculate rolling 8-hour mean concentrations. The data can then be
+passed to <code>calendarPlot()</code> and <code>statistic = "max"</code> chosen, which will plot
+maximum daily 8-hour mean concentrations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an openair object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other time series and trend functions: 
+<code>TheilSen()</code>,
+<code>runRegression()</code>,
+<code>smoothTrend()</code>,
+<code>timePlot()</code>,
+<code>timeProp()</code>,
+<code>timeVariation()</code>,
+<code>trendLevel()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># basic plot
+calendarPlot(mydata, pollutant = "o3", year = 2003)
+
+# show wind vectors
+calendarPlot(mydata, pollutant = "o3", year = 2003, annotate = "wd")
+## Not run: 
+# show wind vectors scaled by wind speed and different colours
+calendarPlot(mydata,
+  pollutant = "o3", year = 2003, annotate = "ws",
+  cols = "heat"
+)
+
+# show only specific months with selectByDate
+calendarPlot(selectByDate(mydata, month = c(3, 6, 10), year = 2003),
+  pollutant = "o3", year = 2003, annotate = "ws", cols = "heat"
+)
+
+# categorical scale example
+calendarPlot(mydata,
+  pollutant = "no2", breaks = c(0, 50, 100, 150, 1000),
+  labels = c("Very low", "Low", "High", "Very High"),
+  cols = c("lightblue", "green", "yellow", "red"), statistic = "max"
+)
+
+# UK daily air quality index
+pm10.breaks &lt;- c(0, 17, 34, 50, 59, 67, 75, 84, 92, 100, 1000)
+calendarPlot(mydata, "pm10",
+  year = 1999, breaks = pm10.breaks,
+  labels = c(1:10), cols = "daqi", statistic = "mean", key.header = "DAQI"
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

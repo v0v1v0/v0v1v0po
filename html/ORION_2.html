@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as.subcascades</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Coerce to a Subcascades Object</h2>
+
+<h3>Description</h3>
+
+<p>Converts from a Groupwise object to a Subcascades object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as.subcascades(groupwise = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>groupwise</code></td>
+<td>
+<p>A Groupwise object, which comprises a two-leveled list. The first level collects cascades of the same size.
+The second level contains a list of unique class combinations, labelled as a character string with '-' separating the different classes. 
+For each unique set of class combinations the corresponding orders and their performance are given as a matrix, 
+where each row contains a cascade, given as a character string of type '1&gt;2&gt;3', and the columns the sensitivity for the class at the corresponding position.
+Each matrix is sorted row-wise according to the achieved minimal classwise sensitivites of the cascades (decreasing).</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Converts a Groupwise object to a Subcascades object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A Subcascades object comprising the evaluated cascades and their performances. 
+The Subcascades object is made up of a list of matrices. 
+Each matrix comprises the evaluation results of cascades of a specific length and 
+is sorted row-wise according to the achieved minimal classwise sensitivities of the cascades (decreasing).
+The rownames show the class order by a character string of type '1&gt;2&gt;3' and the entries the sensitivity for each position of the cascade.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>groupwise</code>, <code>as.edgedataframe</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+
+# generate a Groupwise object
+subc = subcascades(predMap,thresh=0.7)
+groupwise = groupwise(subc)
+
+#convert it to a Subcascades object
+converted.subcascades = as.subcascades(groupwise)
+</code></pre>
+
+
+</div>

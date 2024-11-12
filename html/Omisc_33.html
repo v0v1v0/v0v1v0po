@@ -1,0 +1,59 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>standardBootIntervals</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>standardBootIntervals</h2>
+
+<h3>Description</h3>
+
+<p>This returns the quantiles of the bootstrap samples specified by the user. The quantiles uses the type=4 argument of the quantile function, which appears to function best.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">standardBootIntervals(boot, lower = 0.025, upper = 0.975)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>boot</code></td>
+<td>
+<p>A vector of bootstrap results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+<p>the lower alpha</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+<p>the upper alpha</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix of the mean, median, min, max, lower and upper CI values
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data&lt;-DFSimulated()
+boots&lt;-NaiveBoot(data, groups="Rs", keepgroups=TRUE, B=100)
+boots&lt;-bootAnalysis(boots, cbind, DFanalysis,1,2,3,TRUE,FALSE,TRUE,TRUE,FALSE)
+apply(boots,1, standardBootIntervals)
+DFanalysis(data,1,2,3)
+</code></pre>
+
+
+</div>

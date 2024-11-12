@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>conf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Construction of Binary Classifier Sensitivities</h2>
+
+<h3>Description</h3>
+
+<p>Sensitivities of all pairwise binary classifiers for all classes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">conf(predictionMap = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>predictionMap</code></td>
+<td>
+<p>A PredictionMap object as it is returned by <code>predictionMap</code>-function. 
+It is made up of a list of two matrices(pred and meta). Both matrices provide information on individual samples column-wise.
+The rownames of the pred-matrix (e.g. [0vs1]) show the classes of the binary base classifier. The elements are the prediction result of a specific training.
+The rows that correspond to base classifiers that would separate the same class consists of -1. Those rows are not used within the analysis.
+The meta information connects the values in the pred-matrix to a specific fold, run and contains the original label.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The Conf object contains all class sensitivities for each binary trained classifiers. 
+The $fC-part is a matrix with one column and contains the sensitivities for the first class 
+of each pairwise classifier. The rows stand for the pairwise classifiers, whereby 
+0vs1 means that this classifier was trained for class 0 against class 1, with 
+class 0 being the first class. The number '-1' is used as placeholder. 
+The $sC-part is a matrix and contains the preformance measures for all second classes, 
+which are meant here as all classes except the first class. The rows correspond 
+to the binary classifiers and the columns to the classes.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of class Conf. Consists of a list of two numeric matrices fC and sC.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summary.Conf</code>, <code>print.Conf</code>, <code>plot.Conf</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+
+conf = conf(predMap)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>newCdmReference</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+<code>cdm_reference</code> objects constructor</h2>
+
+<h3>Description</h3>
+
+<p><code>cdm_reference</code> objects constructor
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">newCdmReference(tables, cdmName, cdmVersion = NULL, .softValidation = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tables</code></td>
+<td>
+<p>List of tables that are part of the OMOP Common Data Model
+reference.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cdmName</code></td>
+<td>
+<p>Name of the cdm object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cdmVersion</code></td>
+<td>
+<p>Version of the cdm. Supported versions 5.3 and 5.4.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.softValidation</code></td>
+<td>
+<p>Whether to perform a soft validation of consistency.
+If set to FALSE, non overlapping observation periods are ensured.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>cdm_reference</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(omopgenerics)
+library(dplyr, warn.conflicts = FALSE)
+
+cdmTables &lt;- list(
+  "person" = tibble(
+    person_id = 1, gender_concept_id = 0, year_of_birth = 1990,
+    race_concept_id = 0, ethnicity_concept_id = 0
+  ) |&gt;
+    newCdmTable(newLocalSource(), "person"),
+  "observation_period" = tibble(
+    observation_period_id = 1, person_id = 1,
+    observation_period_start_date = as.Date("2000-01-01"),
+    observation_period_end_date = as.Date("2023-12-31"),
+    period_type_concept_id = 0
+  ) |&gt;
+    newCdmTable(newLocalSource(), "observation_period")
+)
+cdm &lt;- newCdmReference(tables = cdmTables, cdmName = "mock")
+
+cdm
+
+</code></pre>
+
+
+</div>

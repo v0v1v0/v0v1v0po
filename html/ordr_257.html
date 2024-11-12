@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>methods-factanal</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Functionality for factor analysis ('factanal') objects</h2>
+
+<h3>Description</h3>
+
+<p>These methods extract data from, and attribute new data to,
+objects of class <code>"factanal"</code> as returned by <code>stats::factanal()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'factanal'
+as_tbl_ord(x)
+
+## S3 method for class 'factanal'
+recover_rows(x)
+
+## S3 method for class 'factanal'
+recover_cols(x)
+
+## S3 method for class 'factanal'
+recover_inertia(x)
+
+## S3 method for class 'factanal'
+recover_coord(x)
+
+## S3 method for class 'factanal'
+recover_conference(x)
+
+## S3 method for class 'factanal'
+recover_supp_rows(x)
+
+## S3 method for class 'factanal'
+recover_aug_rows(x)
+
+## S3 method for class 'factanal'
+recover_aug_cols(x)
+
+## S3 method for class 'factanal'
+recover_aug_coord(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An ordination object.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Factor analysis of a data matrix relies on an an eigendecomposition of its
+correlation matrix, whose eigenvectors (up to weighting) comprise the
+variable loadings. For this reason, both row and column recoverers retrieve
+the loadings and inertia is evenly distributed between them. When computed
+and returned by <code>stats::factanal()</code>, the case scores are accessible as
+supplementary elements. Redistribution of inertia commutes through both
+score calculations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The recovery generics <code style="white-space: pre;">⁠recover_*()⁠</code> return core model components, distribution of inertia,
+supplementary elements, and intrinsic metadata; but they require methods for each model class to
+tell them what these components are.
+</p>
+<p>The generic <code>as_tbl_ord()</code> returns its input wrapped in the 'tbl_ord'
+class. Its methods determine what model classes it is allowed to wrap. It
+then provides 'tbl_ord' methods with access to the recoverers and hence to
+the model components.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other methods for eigen-decomposition-based techniques: 
+<code>methods-cmds</code>,
+<code>methods-eigen</code>
+</p>
+<p>Other models from the stats package: 
+<code>methods-cancor</code>,
+<code>methods-cmds</code>,
+<code>methods-kmeans</code>,
+<code>methods-lm</code>,
+<code>methods-prcomp</code>,
+<code>methods-princomp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># data frame of Swiss fertility and socioeconomic indicators
+class(swiss)
+head(swiss)
+# perform factor analysis
+swiss_fa &lt;- factanal(~ ., factors = 2L, data = swiss, scores = "regression")
+
+# wrap as a 'tbl_ord' object
+(swiss_fa &lt;- as_tbl_ord(swiss_fa))
+
+# recover loadings
+get_rows(swiss_fa, elements = "active")
+get_cols(swiss_fa)
+# recover scores
+head(get_rows(swiss_fa, elements = "score"))
+
+# augment column loadings with uniquenesses
+(swiss_fa &lt;- augment_ord(swiss_fa))
+
+# symmetric biplot
+swiss_fa %&gt;%
+  ggbiplot() +
+  theme_bw() +
+  geom_cols_vector(aes(color = uniqueness)) +
+  geom_cols_text_radiate(aes(label = name)) +
+  expand_limits(x = c(-2, 2.5), y = c(-1.5, 2))
+</code></pre>
+
+
+</div>

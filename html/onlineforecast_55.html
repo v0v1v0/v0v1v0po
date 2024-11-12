@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make_periodic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make an forecast matrix with a periodic time signal.</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a data.frame with k-steps-ahead values of a periodic time signal,
+such that it can be added to a data.list and used inputs to a forecast model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">make_periodic(time, kseq, period, offset = 0, tstep = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>vector of times of class "POSIXct" "POSIXt".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kseq</code></td>
+<td>
+<p>vector of integers, representing the desired "k-steps ahead".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p>a numeric setting the length of the period in seconds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>a numeric setting an offset in the period start in seconds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tstep</code></td>
+<td>
+<p>step time of k in seconds.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a forecast matrix (data.frame) with rownames = times, colnames = k1, k2, k3, ...
+The content of the data frame is the hour of day.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>make_tday
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create a time sequence of 30 min sample period
+tseq &lt;- seq(ct("2019-01-01"), ct("2019-02-01 12:00"), by=1800)
+
+# Make the three hourly periodic sequence
+make_periodic(tseq, 1:10, 3*3600)
+
+# With an offset of one hour
+make_periodic(tseq, 1:10, 3*3600, 3600)
+
+</code></pre>
+
+
+</div>

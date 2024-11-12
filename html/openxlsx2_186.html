@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pugixml</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>xml_node</h2>
+
+<h3>Description</h3>
+
+<p>returns xml values as character
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">xml_node(xml, level1 = NULL, level2 = NULL, level3 = NULL, ...)
+
+xml_node_name(xml, level1 = NULL, level2 = NULL, ...)
+
+xml_value(xml, level1 = NULL, level2 = NULL, level3 = NULL, ...)
+
+xml_attr(xml, level1 = NULL, level2 = NULL, level3 = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xml</code></td>
+<td>
+<p>something xml</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level1</code></td>
+<td>
+<p>to please check</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level2</code></td>
+<td>
+<p>to please check</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level3</code></td>
+<td>
+<p>to please check</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>read_xml()</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function returns XML nodes as used in openxlsx2. In theory they
+could be returned as pointers as well, but this has not yet been implemented.
+If no level is provided, the nodes on level1 are returned
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  x &lt;- read_xml("&lt;a&gt;&lt;b/&gt;&lt;/a&gt;")
+  # return a
+  xml_node(x, "a")
+  # return b. requires the path to the node
+  xml_node(x, "a", "b")
+  xml_node_name("&lt;a/&gt;")
+  xml_node_name("&lt;a&gt;&lt;b/&gt;&lt;/a&gt;", "a")
+  x &lt;- read_xml("&lt;a&gt;1&lt;/a&gt;")
+  xml_value(x, "a")
+
+  x &lt;- read_xml("&lt;a&gt;&lt;b r=\"1\"&gt;2&lt;/b&gt;&lt;/a&gt;")
+  xml_value(x, "a", "b")
+
+  x &lt;- read_xml("&lt;a a=\"1\" b=\"2\"&gt;1&lt;/a&gt;")
+  xml_attr(x, "a")
+
+  x &lt;- read_xml("&lt;a&gt;&lt;b r=\"1\"&gt;2&lt;/b&gt;&lt;/a&gt;")
+  xml_attr(x, "a", "b")
+  x &lt;- read_xml("&lt;a a=\"1\" b=\"2\"&gt;1&lt;/a&gt;")
+  xml_attr(x, "a")
+
+  x &lt;- read_xml("&lt;b&gt;&lt;a a=\"1\" b=\"2\"/&gt;&lt;/b&gt;")
+  xml_attr(x, "b", "a")
+</code></pre>
+
+
+</div>

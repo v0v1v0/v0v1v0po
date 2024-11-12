@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>batchpca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Batch PCA</h2>
+
+<h3>Description</h3>
+
+<p>This function performs the PCA of a data matrix or covariance matrix, returning the specified number of principal components (eigenvectors) and eigenvalues.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">batchpca(x, q, center, type = c("data","covariance"), byrow = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>data or covariance matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>number of requested PCs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>optional centering vector for <code>x</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>type of the matrix <code>x</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+<p>Are observation vectors stored in rows (TRUE) or in columns (FALSE)?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The PCA is efficiently computed using the functions <code>svds</code> or <code>eigs_sym</code> of package <code>RSpectra</code>, depending on the argument <code>type</code>. An Implicitly Restarted Arnoldi Method (IRAM) is used in the former case and an Implicitly Restarted Lanczos Method (IRLM) in the latter.<br>
+The arguments <code>center</code> and <code>byrow</code> are only in effect if <code>type</code> is <code>"data"</code>. In this case a scaling factor <code class="reqn">1/\sqrt{n}</code> (not <code class="reqn">1/\sqrt{n-1}</code>) 
+is applied to <code>x</code> before computing its singular values and vectors, where <code class="reqn">n</code> is the number of observation vectors stored in <code>x</code>.    
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>the first <code>q</code> squared singular values of <code>x</code> if <code>type="data"</code>; the first <code>Q</code> eigenvalues if <code>type="covariance"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vectors</code></td>
+<td>
+<p>the first <code>q</code> PC of <code>x</code>.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p><a href="https://www.arpack.org">https://www.arpack.org</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+## Simulate data
+n &lt;- 1e4
+d &lt;- 500
+q &lt;- 10
+x &lt;- matrix(runif(n*d), n, d)
+x &lt;- x %*% diag(sqrt(12*(1:d)))
+# The eigenvalues of cov(x) are approximately 1, 2, ..., d
+# and the corresponding eigenvectors are approximately  
+# the canonical basis of R^p
+
+## PCA computation (from fastest to slowest)
+system.time(pca1 &lt;- batchpca(scale(x,scale=FALSE), q, byrow=TRUE))
+system.time(pca2 &lt;- batchpca(cov(x), q, type="covariance"))
+system.time(pca3 &lt;- eigen(cov(x),TRUE))
+system.time(pca4 &lt;- svd(scale(x/sqrt(n-1),scale=FALSE), 0, q))
+system.time(pca5 &lt;- prcomp(x))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

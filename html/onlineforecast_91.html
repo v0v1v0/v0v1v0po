@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rmse</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the RMSE score.</h2>
+
+<h3>Description</h3>
+
+<p>Returns the RMSE.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rmse(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numerical vector of residuals.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Used for forecast evaluation evaluation and optimization of parameters in model fitting.
+</p>
+<p>Note that <code>NA</code>s are ignored (i.e. <code>mean</code> is called with <code>na.rm=TRUE</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The RMSE score.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>score()</code> for calculation of a score for the k'th horizon
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+ # Just a vector to be forecasted
+ y &lt;- c(filter(rnorm(100), 0.95, "recursive"))
+ # Generate a forecast matrix with a simple persistence model
+ Yhat &lt;- persistence(y, kseq=1:4)
+ # The residuals for each horizon
+ Resid &lt;- residuals(Yhat, y)
+
+# Calculate the score for the k1 horizon
+rmse(Resid$h1)
+
+# For all horizons
+apply(Resid, 2, rmse)
+
+
+</code></pre>
+
+
+</div>

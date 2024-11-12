@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>o2cv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cross validation for O2PLS</h2>
+
+<h3>Description</h3>
+
+<p>Cross validation for O2PLS
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">o2cv(
+  X,
+  Y,
+  nc,
+  nx,
+  ny,
+  group = NULL,
+  nr_folds = 5,
+  ncores = 1,
+  scale = FALSE,
+  center = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>a Numeric matrix (input)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>a Numeric matrix (input)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>Integer. Number of joint PLS components.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nx</code></td>
+<td>
+<p>Integer. Number of orthogonal components in X</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ny</code></td>
+<td>
+<p>Integer. Number of orthogonal components in Y</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>a vector to indicate the group for Y</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nr_folds</code></td>
+<td>
+<p>Integer to indicate the folds for cross validation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p>Integer. Number of CPUs to use for cross validation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>boolean values determining if data should be scaled or not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>boolean values determining if data should be centered or not</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data frame with the Q and RMSE values
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kai Guo
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+X = matrix(rnorm(500),50,10)
+Y = matrix(rnorm(500),50,10)
+X = scale(X, scale = TRUE)
+Y = scale(Y, scale = TRUE)
+# group factor could be omitted if you don't have any group 
+group &lt;- rep(c("Ctrl","Treat"), each = 25)
+cv &lt;- o2cv(X, Y, 1:2, 1:2, 1:2, group=group, nr_folds = 2, ncores=1)
+</code></pre>
+
+
+</div>

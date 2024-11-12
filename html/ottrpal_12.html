@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_all_questions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check all quiz questions</h2>
+
+<h3>Description</h3>
+
+<p>Takes output from [ottrpal::parse_quiz] and runs checks on each question in a quiz by calling [ottrpal::check_question] for each question.
+First splits questions into their own data frame. Returns a list of messages/warnings about each question's set up.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check_all_questions(
+  quiz_specs,
+  quiz_name = NA,
+  verbose = TRUE,
+  ignore_coursera = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>quiz_specs</code></td>
+<td>
+<p>quiz_specs which is output from [ottrpal::parse_quiz].</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiz_name</code></td>
+<td>
+<p>The name of the quiz being checked.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Whether progress messages should be given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore_coursera</code></td>
+<td>
+<p>Coursera doesn't like '!' or ':' in the quizzes. Do not convert quizzes to coursera and ignore ! and : in question prompts that would not be allowed in Leanpub quizzes when converted to a Coursera quiz. Default is to ignore Coursera compatibility.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of the output from [ottrpal::check_question] with messages/warnings regarding each question and each check.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Using good quiz md example
+
+quiz_path &lt;- good_quiz_path()
+good_quiz &lt;- readLines(quiz_path)
+good_quiz_specs &lt;- parse_quiz(good_quiz)
+good_quiz_checks &lt;- check_all_questions(good_quiz_specs)
+
+# Using bad quiz md example
+
+bad_quiz &lt;- readLines(bad_quiz_path())
+bad_quiz_specs &lt;- parse_quiz(bad_quiz)
+bad_quiz_checks &lt;- check_all_questions(bad_quiz_specs)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

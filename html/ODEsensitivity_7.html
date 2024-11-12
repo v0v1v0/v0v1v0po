@@ -1,0 +1,296 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ODEsobol.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Sobol' Sensitivity Analysis for General ODE Models</h2>
+
+<h3>Description</h3>
+
+<p><code>ODEsobol.default</code> is the default method of <code>ODEsobol</code>. It
+performs the variance-based Sobol' sensitivity analysis for general ODE 
+models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+ODEsobol(mod, pars, state_init, times, n = 1000,
+  rfuncs = "runif", rargs = "min = 0, max = 1", sobol_method = "Martinez",
+  ode_method = "lsoda", parallel_eval = FALSE, parallel_eval_ncores = NA,
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>[<code>function(Time, State, Pars)</code>]<br>
+model to examine, supplied in the manner as needed for 
+<code>ode</code> (see example below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pars</code></td>
+<td>
+<p>[<code>character(k)</code>]<br>
+names of the parameters to be included as input variables in the Sobol'
+sensitivity analysis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state_init</code></td>
+<td>
+<p>[<code>numeric(z)</code>]<br>
+vector of <code>z</code> initial values. Must be named (with unique names).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>[<code>numeric</code>]<br>
+points of time at which the sensitivity analysis should be executed (vector
+of arbitrary length). The first point of time must be greater than zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+number of random parameter values used to estimate the Sobol' sensitivity 
+indices by Monte Carlo simulation. Defaults to 1000.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rfuncs</code></td>
+<td>
+<p>[<code>character(1</code> or <code>k)</code>]<br>
+names of the functions used to generate the <code>n</code> random values
+for the <code>k</code> parameters. Can be of length 1 or <code>k</code>. If of length 
+1, the same function is used for all parameters. Defaults to 
+<code>"runif"</code>, so a uniform distribution is assumed for all parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rargs</code></td>
+<td>
+<p>[<code>character(1</code> or <code>k)</code>]<br>
+arguments to be passed to the functions in <code>rfuncs</code>. Can be of length 
+1 or <code>k</code>. If of length 1, the same arguments are used for all 
+parameters. Each element of <code>rargs</code> has to be a string of the form 
+<code>"tag1 = value1, tag2 = value2, ..."</code>, see example below. Default is 
+<code>"min = 0, max = 1"</code>, so (together with the default value of 
+<code>rfuncs</code>) a uniform distribution on [0, 1] is assumed for all 
+parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sobol_method</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+either <code>"Jansen"</code> or <code>"Martinez"</code>, specifying which modification
+of the variance-based Sobol' method shall be used. Defaults to 
+<code>"Martinez"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ode_method</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+method to be used for solving the differential equations, see 
+<code>ode</code>. Defaults to <code>"lsoda"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel_eval</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+logical indicating if the evaluation of the ODE model shall be performed
+parallelized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel_eval_ncores</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+number of processor cores to be used for parallelization. Only applies if
+<code>parallel_eval = TRUE</code>. If set to <code>NA</code> (as per default) and 
+<code>parallel_eval = TRUE</code>, 1 processor core is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Function <code>ode</code> from <code>deSolve</code> is 
+used to solve the ODE system.
+</p>
+<p>The sensitivity analysis is done for all state variables and all
+timepoints simultaneously. If <code>sobol_method = "Jansen"</code>,
+<code>soboljansen</code> from the package 
+<code>sensitivity</code>
+is used to estimate the Sobol' sensitivity indices and if 
+<code>sobol_method = "Martinez"</code>, <code>sobolmartinez</code>
+is used (also from the package <code>sensitivity</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of length <code>length(state_init)</code> and of class <code>ODEsobol</code> 
+containing in each element a list of the Sobol' sensitivity analysis 
+results for the corresponding <code>state_init</code>-variable (i.e. first order 
+sensitivity indices <code>S</code> and total sensitivity indices <code>T</code>) for 
+every point of time in the <code>times</code> vector. This list has an extra 
+attribute <code>"sobol_method"</code> where the value of argument 
+<code>sobol_method</code> is stored (either <code>"Jansen"</code> or 
+<code>"Martinez"</code>).
+</p>
+
+
+<h3>Note</h3>
+
+<p>If the evaluation of the model function takes too long, it might be 
+helpful to try a different type of ODE-solver (argument <code>ode_method</code>). 
+The <code>ode_method</code>s <code>"vode"</code>, <code>"bdf"</code>, <code>"bdf_d"</code>, 
+<code>"adams"</code>, <code>"impAdams"</code> and <code>"impAdams_d"</code> 
+might be faster than the standard <code>ode_method</code> <code>"lsoda"</code>.
+</p>
+<p>If <code>n</code> is too low, the Monte Carlo estimation of the sensitivity 
+indices might be very bad and even produce first order indices &lt; 0 or
+total indices &gt; 1. First order indices in the interval [-0.05, 0) and total 
+indices in (1, 1.05] are considered as minor deviations and set to 0 
+resp. 1 without a warning. First order indices &lt; -0.05 or total indices 
+&gt; 1.05 are considered as major deviations. They remain unchanged and a 
+warning is thrown. Up to now, first order indices &gt; 1 or total indices &lt; 0
+haven't occured yet. If this should be the case, please contact the package
+author.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stefan Theers, Frank Weber
+</p>
+
+
+<h3>References</h3>
+
+<p>J. O. Ramsay, G. Hooker, D. Campbell and J. Cao, 2007,
+<em>Parameter estimation for differential equations: a generalized 
+smoothing approach</em>, Journal of the Royal Statistical Society, Series B, 
+69, Part 5, 741–796.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>soboljansen,
+  sobolmartinez,
+  plot.ODEsobol</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##### Lotka-Volterra equations #####
+# The model function:
+LVmod &lt;- function(Time, State, Pars) {
+  with(as.list(c(State, Pars)), {
+    Ingestion    &lt;- rIng  * Prey * Predator
+    GrowthPrey   &lt;- rGrow * Prey * (1 - Prey/K)
+    MortPredator &lt;- rMort * Predator
+    
+    dPrey        &lt;- GrowthPrey - Ingestion
+    dPredator    &lt;- Ingestion * assEff - MortPredator
+    
+    return(list(c(dPrey, dPredator)))
+  })
+}
+# The parameters to be included in the sensitivity analysis and their lower 
+# and upper boundaries:
+LVpars  &lt;- c("rIng", "rGrow", "rMort", "assEff", "K")
+LVbinf &lt;- c(0.05, 0.05, 0.05, 0.05, 1)
+LVbsup &lt;- c(1.00, 3.00, 0.95, 0.95, 20)
+# The initial values of the state variables:
+LVinit  &lt;- c(Prey = 1, Predator = 2)
+# The timepoints of interest:
+LVtimes &lt;- c(0.01, seq(1, 50, by = 1))
+set.seed(59281)
+# Sobol' sensitivity analysis (here only with n = 500, but n = 1000 is
+# recommended):
+# Warning: The following code might take very long!
+
+LVres_sobol &lt;- ODEsobol(mod = LVmod,
+                        pars = LVpars,
+                        state_init = LVinit,
+                        times = LVtimes,
+                        n = 500,
+                        rfuncs = "runif",
+                        rargs = paste0("min = ", LVbinf,
+                                       ", max = ", LVbsup),
+                        sobol_method = "Martinez",
+                        ode_method = "lsoda",
+                        parallel_eval = TRUE,
+                        parallel_eval_ncores = 2)
+
+
+##### FitzHugh-Nagumo equations (Ramsay et al., 2007) #####
+FHNmod &lt;- function(Time, State, Pars) {
+  with(as.list(c(State, Pars)), {
+    
+    dVoltage &lt;- s * (Voltage - Voltage^3 / 3 + Current)
+    dCurrent &lt;- - 1 / s *(Voltage - a + b * Current)
+    
+    return(list(c(dVoltage, dCurrent)))
+  })
+}
+# Warning: The following code might take very long!
+
+FHNres_sobol &lt;- ODEsobol(mod = FHNmod,
+                         pars = c("a", "b", "s"),
+                         state_init = c(Voltage = -1, Current = 1),
+                         times = seq(0.1, 50, by = 5),
+                         n = 500,
+                         rfuncs = "runif",
+                         rargs = c(rep("min = 0.18, max = 0.22", 2),
+                                   "min = 2.8, max = 3.2"),
+                         sobol_method = "Martinez",
+                         ode_method = "adams",
+                         parallel_eval = TRUE,
+                         parallel_eval_ncores = 2)
+
+# Just for demonstration purposes: The use of different distributions for the 
+# parameters (here, the distributions and their arguments are chosen 
+# completely arbitrarily):
+# Warning: The following code might take very long!
+
+demo_dists &lt;- ODEsobol(mod = FHNmod,
+                       pars = c("a", "b", "s"),
+                       state_init = c(Voltage = -1, Current = 1),
+                       times = seq(0.1, 50, by = 5),
+                       n = 500,
+                       rfuncs = c("runif", "rnorm", "rexp"),
+                       rargs = c("min = 0.18, max = 0.22",
+                                 "mean = 0.2, sd = 0.2 / 3",
+                                 "rate = 1 / 3"),
+                       sobol_method = "Martinez",
+                       ode_method = "adams",
+                       parallel_eval = TRUE,
+                       parallel_eval_ncores = 2)
+
+
+</code></pre>
+
+
+</div>

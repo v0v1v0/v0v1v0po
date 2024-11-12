@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxComputeOnce</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute something once</h2>
+
+<h3>Description</h3>
+
+<p>Some models are optimized for a sparse Hessian. Therefore, it can
+be much more efficient to compute the inverse Hessian in
+comparison to computing the Hessian and then inverting it.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxComputeOnce(
+  from,
+  what = NULL,
+  how = NULL,
+  ...,
+  freeSet = NA_character_,
+  verbose = 0L,
+  .is.bestfit = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>the object to perform the computation (a vector of expectation or fit function names)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>what</code></td>
+<td>
+<p>what to compute</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>how</code></td>
+<td>
+<p>to compute it (optional)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Forces remaining arguments to be specified by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freeSet</code></td>
+<td>
+<p>names of matrices containing free variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>integer. Level of run-time diagnostic output. Set to zero to disable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.is.bestfit</code></td>
+<td>
+<p>do not use; for backward compatibility</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The information matrix is only valid when parameters are at the
+maximum likelihood estimate. The information matrix is returned in
+model$output$hessian. You cannot request both the information
+matrix and the Hessian. The information matrix is invariant to the
+sign of the log likelihood scale whereas the Hessian is not.
+Use the <code>how</code> parameter to specify which approximation to use
+(one of "default", "hessian", "sandwich", "bread", and "meat").
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(demoOneFactor)
+factorModel &lt;- mxModel(name ="One Factor",
+  mxMatrix(type="Full", nrow=5, ncol=1, free=TRUE, values=0.2, name="A"),
+    mxMatrix(type="Symm", nrow=1, ncol=1, free=FALSE, values=1, name="L"),
+    mxMatrix(type="Diag", nrow=5, ncol=5, free=TRUE, values=1, name="U"),
+    mxAlgebra(expression=A %*% L %*% t(A) + U, name="R"),
+    mxFitFunctionML(),mxExpectationNormal(covariance="R", dimnames=names(demoOneFactor)),
+    mxData(observed=cov(demoOneFactor), type="cov", numObs=500),
+    mxComputeOnce('fitfunction', 'fit'))
+factorModelFit &lt;- mxRun(factorModel)
+factorModelFit$output$fit  # 972.15
+</code></pre>
+
+
+</div>

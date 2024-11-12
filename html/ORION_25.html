@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.Conf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prints all details about a Conf object.</h2>
+
+<h3>Description</h3>
+
+<p>Prints all details about a Conf object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'Conf'
+print(x, printfC = TRUE, printsC = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A Conf object as it is returned by <code>conf</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printfC</code></td>
+<td>
+<p>If TRUE, the sensitivities of the first classes are printed (TP = true positives).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printsC</code></td>
+<td>
+<p>If TRUE, the values of sC are printed (TN = true negatives). The values of sC 
+correspond to the rate of samples of a given class (column), which are assigned to the 
+second class of the base classifier (row).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further parameters</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Prints all details about a given Conf object. 
+A Conf object provides the conditional prediction rates of all base classifiers applied to all classes.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+
+conf = conf(predMap)
+
+print(conf)
+</code></pre>
+
+
+</div>

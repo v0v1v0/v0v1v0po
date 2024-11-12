@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>custom_priors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Customise priors for outbreaker</h2>
+
+<h3>Description</h3>
+
+<p>Priors can be specified in several ways in o2geosocial (see details and
+examples). The most flexible way to specify a prior is to provide a prior
+function directly. This function must take an argument 'param', which is a
+list which contains all the states of the parameters and augmented data. See
+the documentation of create_param for more information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">custom_priors(...)
+
+## S3 method for class 'custom_priors'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>A list or a series of named, comma-separated functions
+implementing priors. Each function must have a single argument, which
+corresponds to a 'outbreaker_param' list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>outbreaker_config</code> object as returned by <code>create_config</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>There are three ways a user can specify priors:<br></p>
+<p>1) Default: this is what happens when the 'config' has default values of
+prior parameters.<br>
+2) Customized parameters: in this case, the prior functions are the default
+ones from the package, but will use custom parameters, specified by the user
+through <code>create_config</code>.<br></p>
+<p>3) Customized functions: in this case, prior functions themselves are
+specified by the user, through the '...' argument of 'custom_priors'. The
+requirements is that such functions must have either hard-coded parameters or
+enclosed values. They will take a single argument which is a list containing
+all model parameters with the class 'outbreaker_param'. ALL PRIORS functions
+are expected to return values on a LOG SCALE.<br></p>
+<p>Priors currently used for the model are:
+</p>
+
+<ul>
+<li> <p><code>pi</code> (reporting probability): default function is a beta
+distribution implemented in <code>cpp_prior_pi</code>. New prior
+functions should use <code>x$pi</code> to refer to the current value of <code>pi</code>,
+assuming their argument is called <code>x</code>.
+</p>
+</li>
+<li> <p><code>a</code> (first spatial parameter (population)): default function is 
+a uniform distribution implemented in <code>cpp_prior_a</code>. 
+New prior functions should use <code>x$a</code> to refer to the current value of <code>a</code>,
+assuming their argument is called <code>x</code>.
+</p>
+</li>
+<li> <p><code>b</code> (second spatial parameter (distance)): default function is 
+a uniform distribution implemented in <code>cpp_prior_b</code>.
+New prior functions should use <code>x$b</code> to refer to the current value of <code>b</code>,
+assuming their argument is called <code>x</code>.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A named list of custom functions with class <code>custom_priors</code>. Values
+set to <code>NULL</code> will be ignored and default functions will be used
+instead.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Initial version by Thibaut Jombart, rewritten by Alexis Robert (<a href="mailto:alexis.robert@lshtm.ac.uk">alexis.robert@lshtm.ac.uk</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## SPECIFYING PRIOR PARAMETERS
+## Default values: pi follows a beta distribution (parameters 10, 1), 
+## a and b follow a uniform distribution (parameters 0, 5)
+default_config &lt;- create_config()
+## Use the variables prior_a, prior_b and prior_pi to change the parameters
+## of the prior distributions can be 
+new_config &lt;- create_config(prior_a = c(0,5), prior_b = c(0,5),
+                        prior_pi = c(2, 1))
+
+
+## SPECIFYING A NEW PRIOR FUNCTION
+## Example: flat prior for pi between 0.5 and 1
+f &lt;- function(x) {ifelse(x$pi &gt; 0.5, log(2), log(0))}
+priors &lt;- custom_priors(pi = f)
+## test the new prior distribution
+priors$pi(list(pi=1))
+priors$pi(list(pi=.6))
+priors$pi(list(pi=.2))
+priors$pi(list(pi=.49))
+
+</code></pre>
+
+
+</div>

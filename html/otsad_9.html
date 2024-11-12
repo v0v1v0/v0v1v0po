@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>CpKnnCad</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Classic processing KNN based Conformal Anomaly Detector (KNN-CAD)</h2>
+
+<h3>Description</h3>
+
+<p><code>CpKnnCad</code> calculates the anomalies of a dataset using classical
+processing based on the KNN-CAD algorithm. KNN-CAD is a model-free anomaly
+detection method for univariate time-series which adapts itself to
+non-stationarity in the data stream and provides probabilistic abnormality
+scores based on the conformal prediction paradigm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">CpKnnCad(data, n.train, threshold = 1, l = 19, k = 27,
+  ncm.type = "ICAD", reducefp = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Numerical vector with training and test dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.train</code></td>
+<td>
+<p>Number of points of the dataset that correspond to the training set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Anomaly threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l</code></td>
+<td>
+<p>Window length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Number of neighbours to take into account.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncm.type</code></td>
+<td>
+<p>Non Conformity Measure to use "ICAD" or "LDCD"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reducefp</code></td>
+<td>
+<p>If TRUE reduces false positives.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>data</code> must be a numerical vector without NA values.
+<code>threshold</code> must be a numeric value between 0 and 1. If the anomaly
+score obtained for an observation is greater than the <code>threshold</code>, the
+observation will be considered abnormal. <code>l</code> must be a numerical value
+between 1 and 1/<code>n</code>; <code>n</code> being the length of the training data.
+Take into account that the value of l has a direct impact on the
+computational cost, so very high values will make the execution time longer.
+<code>k</code> parameter must be a numerical value less than the <code>n.train</code>
+value. <code>ncm.type</code> determines the non-conformity measurement to be used.
+ICAD calculates dissimilarity as the sum of the distances of the nearest k
+neighbours and LDCD as the average.
+</p>
+
+
+<h3>Value</h3>
+
+<p>dataset conformed by the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>is.anomaly</code></td>
+<td>
+<p>1 if the value is anomalous, 0 otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anomaly.score</code></td>
+<td>
+<p>Probability of anomaly.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev. Conformal
+k-NN Anomaly Detector for Univariate Data Streams. ArXiv e-prints, jun. 2017.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 350
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[320] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+## Set parameters
+params.KNN &lt;- list(threshold = 1, n.train = 50, l = 19, k = 17)
+
+## Calculate anomalies
+result &lt;- CpKnnCad(
+  data = df$value,
+  n.train = params.KNN$n.train,
+  threshold = params.KNN$threshold,
+  l = params.KNN$l,
+  k = params.KNN$k,
+  ncm.type = "ICAD",
+  reducefp = TRUE
+)
+
+## Plot results
+res &lt;- cbind(df, result)
+PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
+
+</code></pre>
+
+
+</div>

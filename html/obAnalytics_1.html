@@ -1,0 +1,194 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>obAnalytics-package</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>obAnalytics.</h2>
+
+<h3>Description</h3>
+
+<p>Limit order book analytics.
+</p>
+
+
+<h3>Main functionality</h3>
+
+
+<ul>
+<li>
+<p> Limit order book event processing.
+</p>
+</li>
+<li>
+<p> Visualise order book state and market impacts.
+</p>
+</li>
+<li>
+<p> Order book reconstruction and analysis.
+</p>
+</li>
+</ul>
+<h3>Data processing</h3>
+
+<p>The main focus of this package is reconstruction of a limit order book. 
+The <code>processData</code> function will perform data processing based on
+a supplied CSV file, the schema of which is defined in the
+<code>processData</code> function documentation. Example preprocessed limit
+order data are also provided (see <code>lob.data</code>) which has been
+derived from the example raw data provided the inst/extdata directory.
+</p>
+<p>The data processing consists of a number of stages:
+</p>
+
+<ul>
+<li>
+<p> Cleaning of duplicate and erroneous data.
+</p>
+</li>
+<li>
+<p> Identification of sequential event relationships.
+</p>
+</li>
+<li>
+<p> Inference of trade events via order-matching.
+</p>
+</li>
+<li>
+<p> Inference of order types (limit vs market).
+</p>
+</li>
+<li>
+<p> Construction of volume by price level series.
+</p>
+</li>
+<li>
+<p> Construction of order book summary statistics.
+</p>
+</li>
+</ul>
+<p>Limit order events are related to one another by <em>volume deltas</em> (the
+change in volume for a limit order). To simulate a matching-engine, and thus
+determine directional trade data, volume deltas from both sides of the limit
+order book are ordered by time, yielding a sequence alignment problem, to
+which the the
+<a href="https://en.wikipedia.org/wiki/Needleman-Wunsch_algorithm">Needleman-Wunsch</a>
+algorithm has been applied.
+</p>
+
+
+<h3>Visualisation</h3>
+
+<p>The package provides a number of functions for the visualisation of limit
+order events and order book liquidity. The visualisations all make use of
+the <a href="http://ggplot2.org">ggplot2</a> plotting system:
+</p>
+
+<dl>
+<dt>plotTimeSeries</dt>
+<dd>
+<p>General time series plotting.</p>
+</dd>
+<dt>plotTrades</dt>
+<dd>
+<p>Plot <code>trades</code> data.</p>
+</dd>
+<dt>plotCurrentDepth</dt>
+<dd>
+<p>Visualise the <em>shape</em> of an
+<code>orderBook</code>.</p>
+</dd>
+<dt>plotPriceLevels</dt>
+<dd>
+<p>Visualise volume by price level through
+time.</p>
+</dd>
+<dt>plotVolumePercentiles</dt>
+<dd>
+<p>Visualise order book liquidity through
+time.</p>
+</dd>
+<dt>plotEventMap</dt>
+<dd>
+<p>Visualise sequential limit order events by price
+level.</p>
+</dd>
+<dt>plotVolumeMap</dt>
+<dd>
+<p>Visualise sequential limit order events by
+volume.</p>
+</dd>
+<dt>plotEventsHistogram</dt>
+<dd>
+<p>Convenience function.</p>
+</dd>
+</dl>
+<p>The <code>plotPriceLevels</code> visualisation is designed to show the
+<em>ebb and flow</em> of limit order volume at all price levels including the
+interplay between the bid/ask spread. It is possible to identify interesting
+market participant behaviour and to visualise market shocks and resilience
+with this function.
+</p>
+<p>The <code>plotEventMap</code> function is useful for studying systematic
+market participant behaviour. Interesting sequential patterns can be observed
+in this visualisation as algorithms react to various market events by
+repositioning orders.
+</p>
+<p>The <code>plotVolumeMap</code> function shows a visualisation of cancelled
+volume through time. It is possible to identify and filter out individual
+trading algorithms from this graph.
+</p>
+<p>The <code>plotVolumePercentiles</code> visualisation is inspired by the size
+map chart included in many articles from
+<a href="http://www.nanex.net/NxResearch">Nanex research</a> and is intended to
+show available market liquidity.
+</p>
+<p>In all visualisations it is possible to filter the data by time, price and
+volume.
+</p>
+
+
+<h3>Analysis</h3>
+
+<p>In addition to the generated <code>lob.data</code> which are intended to be
+used as a basis for further research, the package currently provides a
+limited set of trade and order book analysis functions:
+</p>
+
+<dl>
+<dt>filterDepth</dt>
+<dd>
+<p>Filter <code>depth</code> data by time period.</p>
+</dd>
+<dt>getSpread</dt>
+<dd>
+<p>Extract the bid/ask quotes from the
+<code>depth.summary</code> data.</p>
+</dd>
+<dt>orderBook</dt>
+<dd>
+<p>Reconstruct a Limit order book from
+<code>events</code> data.</p>
+</dd>
+<dt>tradeImpacts</dt>
+<dd>
+<p>Group <code>trades</code> into individual impact events.</p>
+</dd>
+</dl>
+<p>Additional functionality will be added to the package in the future.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Philip Stubbings <a href="mailto:phil@parasec.net">phil@parasec.net</a>
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="http://parasec.net/transmission/order-book-visualisation">http://parasec.net/transmission/order-book-visualisation</a>
+</p>
+
+
+</div>

@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oa2df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert OpenAlex collection from list to data frame</h2>
+
+<h3>Description</h3>
+
+<p>It converts bibliographic collections gathered from OpenAlex database <a href="https://openalex.org/">https://openalex.org/</a> into data frame.
+The function converts a collection of records about works, authors, institutions, venues or concepts obtained using <code>oa_request</code> into a data frame/tibble.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oa2df(
+  data,
+  entity,
+  options = NULL,
+  count_only = FALSE,
+  group_by = NULL,
+  abstract = TRUE,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>List. Output of <code>oa_request</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>entity</code></td>
+<td>
+<p>Character. Scholarly entity of the search.
+The argument can be one of
+c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>List. Additional parameters to add in the query. For example:
+</p>
+<p>- 'select' Character vector. Top-level fields to show in output.
+Defaults to NULL, which returns all fields.
+https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
+</p>
+<p>- 'sort' Character. Attribute to sort by.
+For example: "display_name" for sources or "cited_by_count:desc" for works.
+See more at &lt;https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists&gt;.
+</p>
+<p>- 'sample' Integer. Number of (random) records to return.
+Should be no larger than 10,000.
+Defaults to NULL, which returns all records satisfying the query.
+Read more at &lt;https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists&gt;.
+</p>
+<p>- 'seed' Integer.
+A seed value in order to retrieve the same set of random records in
+the same order when used multiple times with 'sample'.
+IMPORTANT NOTE: Depending on your query, random results with a seed value may change over time due to new records coming into OpenAlex.
+This argument is likely only useful when queries happen close together (within a day).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>count_only</code></td>
+<td>
+<p>Logical.
+If TRUE, the function returns only the number of item matching the query.
+Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group_by</code></td>
+<td>
+<p>Character. Attribute to group by.
+For example: "oa_status" for works.
+See more at &lt;https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities&gt;.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abstract</code></td>
+<td>
+<p>Logical. If TRUE, the function returns also the abstract of each item.
+Ignored if entity is different from "works". Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical.
+If TRUE, print information about the dataframe conversion process.
+Defaults to TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble/dataframe result of the original OpenAlex result list.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Query to search all works citing the article:
+#  Aria, M., &amp; Cuccurullo, C. (2017). bibliometrix:
+#   An R-tool for comprehensive science mapping analysis.
+#   Journal of informetrics, 11(4), 959-975.
+
+#  published in 2021.
+#  The paper is associated to the OpenAlex id W2755950973.
+
+#  Results have to be sorted by relevance score in a descending order.
+
+query &lt;- oa_query(
+  entity = "works",
+  cites = "W2755950973",
+  from_publication_date = "2021-01-01",
+  to_publication_date = "2021-04-30"
+)
+
+res &lt;- oa_request(
+  query_url = query,
+  count_only = FALSE,
+  verbose = FALSE
+)
+
+oa2df(res, entity = "works")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

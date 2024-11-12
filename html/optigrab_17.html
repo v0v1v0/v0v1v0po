@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opt_get_verb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get verb from the command line</h2>
+
+<h3>Description</h3>
+
+<p>Return the verb for the application. The verb is the first argument that is 
+not part of an option.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opt_get_verb(opts = commandArgs())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>opts</code></td>
+<td>
+<p>character; Vector from which to parse options
+(default: <code>commandArgs()</code> )</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Some applications such as <em>git</em> support command verbs, e.g. <code>push</code>,
+<code>fetch</code>, etc. These style arguments can be retrieved by <code>opt_get_verb</code>.
+</p>
+<p><code>opt_get_verb</code> look for the first unaccounted for options (after
+<code>--args</code>). The number of options needed by each flags is determined by
+and saved by calls to <code>opt_get()</code>. See the details to see how
+<code>n</code> is automatically determined.  When not explicitly defined the number
+of options needed by each flag is 1.  Becasue of this, it convention to call 
+<code>opt_get_verb</code> after all <code>opt_get</code> calls.  For most simple 
+applications, it likely doesn't matter.
+</p>
+
+
+<h3>Value</h3>
+
+<p>character of length 1; the verb found from the command-line. 
+<code>NA</code> if a verb cannot be identified.
+</p>
+
+
+<h3>Assumptions</h3>
+
+<p><code>opt_get_verb</code> assumes any flags occurring before the verb have 
+exactly 1 value. A command line such as "&gt; myscript –verbose verb" will be 
+misparsed; the code will assume that "verb" is the value of the 
+flag "–verbose"
+</p>
+
+
+<h3>See Also</h3>
+
+
+<ul>
+<li> <p><code>opt_get()</code>
+</p>
+</li>
+<li> <p><code>base::commandArgs()</code>
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">  opt_get_verb()  # commandArgs()
+  
+</code></pre>
+
+
+</div>

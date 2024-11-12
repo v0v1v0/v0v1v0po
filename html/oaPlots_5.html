@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>densityLegend</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a colored density legend for visually representing the distribution of
+a color variable on a plot</h2>
+
+<h3>Description</h3>
+
+<p>Create a colored density legend for visually representing the distribution of
+a color variable on a plot
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">densityLegend(x, colorPalette, colorBreaks, side = "right", main = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector used to create the density trace</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorPalette</code></td>
+<td>
+<p>a vector of color values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorBreaks</code></td>
+<td>
+<p>a vector of cutoff values for the color regions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>side</code></td>
+<td>
+<p>the side of the plot to place the desntiy legend</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>the main title for the density legend (optional, recommended to
+use a title that describes x</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>none, graphics are added to the current device
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jason Waddell
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ggplot2)
+library(RColorBrewer)
+
+# subset the data object
+dsub &lt;- subset(diamonds, x &gt; 5 &amp; x &lt; 6 &amp; y &gt; 5 &amp; y &lt; 6)
+dsub &lt;- dsub[-which(dsub$z &gt; 4), ]
+dsub &lt;- dsub[-which(dsub$z &lt; 3), ]
+
+# define color pallette, color vector and color region breaks
+colorPalette &lt;- brewer.pal(9, "Blues")[4:9]
+colorObj &lt;- splitColorVar(colorVar = dsub$z, colorPalette)
+colorVec &lt;- colorObj$colorVec
+breaks &lt;- colorObj$breaks
+
+# plot the data
+prepLegend(side = "right", proportion = 0.3)
+oaTemplate(xlim = range(dsub$x), ylim = range(dsub$y),
+		main = "Diamond Length by Width \n Colored by Depth",
+		xlab = "Length (mm)", ylab = "Width (mm)")
+points(x = dsub$x, y = dsub$y, col = colorVec, pch = 19, cex = 0.6)
+
+# add the legend
+densityLegend(x = dsub$z, colorPalette = colorPalette, side = "right",
+		main = "Diamond Depth", colorBreaks = breaks)
+</code></pre>
+
+
+</div>

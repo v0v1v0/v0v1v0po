@@ -1,0 +1,191 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Box-and-Whisker, Violin Plots and Error Bars
+</h2>
+
+<h3>Description</h3>
+
+<p><code>gplot</code> produce box-and-whisker plots, violin plots, and error bars of the given grouped values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gplot(formula, data, type = c("boxplot-violin", "boxplot", "violin", "errorbar"), 
+  width = c(0.3, 1.0, 0.2), dots = TRUE, binwidth = 0.05, color_manual = NULL, 
+  theme = theme_bw(), xlab = NULL, ylab = NULL, title = NULL, 
+  option = c("sd", "se"), bar = FALSE, na.rm = TRUE)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>a formula of the form <code>lhs ~ rhs</code> where <code>lhs</code> gives the sample values and <code>rhs</code> the corresponding groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a tibble or data frame containing the variables in <code>formula</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>a character string to select one of the plots. "boxplot-violin": box-and-whisker plot with violin lines, "boxplot": box-and-whisker plot, "violin": violin plot, "errorbar": error bar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>a vector including three numeric values. First numeric represents the width of the boxes for box-and-whisker plots (defaults to 0.3). Second numeric belongs to the width of violin plot (defaults to 1.0). Third numeric represents the width of the little lines at the tops and bottoms of the error bars (defaults to 0.20).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dots</code></td>
+<td>
+<p>a logical to draw the dots corresponding the data values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binwidth</code></td>
+<td>
+<p>a numeric to specify bin width of dot(s), defaults to 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color_manual</code></td>
+<td>
+<p>a vector of colors. A palette can also be defined with <code>wes_palette</code>. Default is set to "FantasticFox1" available in <code>wes_palette</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theme</code></td>
+<td>
+<p>a theme (see <code>ggtheme</code>). Default is set to theme_bw().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>a label for the x axis, defaults to a description of x.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>a label for the y axis, defaults to a description of y.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>a main title for the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>option</code></td>
+<td>
+<p>a character string to select one of the options to draw error bars with standard error or standard deviation. "se": standard error, "sd": standard deviation. Defaults to "sd".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bar</code></td>
+<td>
+<p>a logical to add bar to errorbars. Default is fixed to bar = FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>a logical indicating whether NA values should be stripped before the computation proceeds.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The upper whisker of box-and-whisker plots extends from the hinge to the highest value that is within 1.5 * IQR of the hinge, where IQR is the inter-quartile range. The lower whisker extends from the hinge to the lowest value within 1.5 * IQR of the hinge. Data out of the ends of the whiskers are outliers and plotted as points.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Osman Dag
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>geom_boxplot</code> <code>geom_violin</code>  
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(onewaytests)
+
+# box-and-whisker with dots
+gplot(Sepal.Length~Species, data = iris, type = "boxplot") 
+
+# box-and-whisker without dots
+gplot(Sepal.Length~Species, data = iris, type = "boxplot", dots = FALSE) 
+
+# to change the width of the boxes for box-and-whisker plots
+gplot(Sepal.Length~Species, data = iris, type = "boxplot", width = c(0.4, NA, NA)) 
+
+# violin plot with dots
+gplot(Sepal.Length~Species, data = iris, type = "violin") 
+
+# to change the width of violin plots
+gplot(Sepal.Length~Species, data = iris, type = "violin", width = c(NA, 0.8, NA)) 
+
+# box-and-whisker plot with violin lines and dots
+gplot(Sepal.Length~Species, data = iris, type = "boxplot-violin") 
+
+# to change the width of the boxes for box-and-whisker plots and the width of violin plots
+gplot(Sepal.Length~Species, data = iris, type = "boxplot-violin", width = c(0.25, 0.95, NA)) 
+
+# to change the theme
+library(ggplot2)
+gplot(Sepal.Length~Species, data = iris, type = "boxplot-violin", width = c(0.25, 0.95, NA), 
+theme = theme_minimal()) 
+
+# to specify the colors 
+gplot(Sepal.Length~Species, data = iris, type = "boxplot-violin", width = c(0.25, 0.95, NA), 
+color_manual=c("#999999","#E69F00","#56B4E9")) 
+
+# to specify the colors as white
+gplot(Sepal.Length~Species, data = iris, type = "boxplot-violin", width = c(0.25, 0.95, NA), 
+color_manual=c("white","white","white"))
+
+#to change color palette 
+library(wesanderson) 
+gplot(Sepal.Length~Species, data = iris, type = "boxplot-violin", width = c(0.25, 0.95, NA), 
+color_manual=wes_palette(name="GrandBudapest1",n=3))
+
+# error bars (mean +- standard deviation) without bars
+gplot(Sepal.Length~Species, data = iris, type = "errorbar", option = "sd", bar = FALSE) 
+
+# error bars (mean +- standard deviation) with bars
+gplot(Sepal.Length~Species, data = iris, type = "errorbar", option = "sd", bar = TRUE) 
+
+# to change the width of the little lines at the tops and bottoms of the error bars
+gplot(Sepal.Length~Species, data = iris, type = "errorbar", width = c(NA, NA, 0.25)) 
+
+# error bars (mean +- standard error) without bars
+gplot(Sepal.Length~Species, data = iris, type = "errorbar", option = "se", bar = FALSE) 
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,187 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_dxfs_style</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a custom formatting style</h2>
+
+<h3>Description</h3>
+
+<p>Create a new style to apply to worksheet cells. Created styles have to be
+assigned to a workbook to use them
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_dxfs_style(
+  font_name = NULL,
+  font_size = NULL,
+  font_color = NULL,
+  num_fmt = NULL,
+  border = NULL,
+  border_color = wb_color(getOption("openxlsx2.borderColor", "black")),
+  border_style = getOption("openxlsx2.borderStyle", "thin"),
+  bg_fill = NULL,
+  fg_color = NULL,
+  gradient_fill = NULL,
+  text_bold = NULL,
+  text_strike = NULL,
+  text_italic = NULL,
+  text_underline = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>font_name</code></td>
+<td>
+<p>A name of a font. Note the font name is not validated.
+If <code>font_name</code> is <code>NULL</code>, the workbook <code>base_font</code> is used. (Defaults to Calibri), see <code>wb_get_base_font()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font_size</code></td>
+<td>
+<p>Font size. A numeric greater than 0.
+By default, the workbook base font size is used. (Defaults to 11)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font_color</code></td>
+<td>
+<p>Color of text in cell.  A valid hex color beginning with "#"
+or one of colors(). If <code>font_color</code> is NULL, the workbook base font colors is used.
+(Defaults to black)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_fmt</code></td>
+<td>
+<p>Cell formatting. Some custom openxml format</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border</code></td>
+<td>
+<p><code>NULL</code> or <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border_color</code></td>
+<td>
+<p>"black"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border_style</code></td>
+<td>
+<p>"thin"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bg_fill</code></td>
+<td>
+<p>Cell background fill color.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fg_color</code></td>
+<td>
+<p>Cell foreground fill color.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gradient_fill</code></td>
+<td>
+<p>An xml string beginning with <code style="white-space: pre;">⁠&lt;gradientFill&gt;⁠</code> ...</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text_bold</code></td>
+<td>
+<p>bold</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text_strike</code></td>
+<td>
+<p>strikeout</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text_italic</code></td>
+<td>
+<p>italic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text_underline</code></td>
+<td>
+<p>underline 1, true, single or double</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is possible to override border_color and border_style with {left, right, top, bottom}_color, {left, right, top, bottom}_style.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dxfs style node
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wb_add_style()</code> <code>wb_add_dxfs_style()</code>
+</p>
+<p>Other style creating functions: 
+<code>create_border()</code>,
+<code>create_cell_style()</code>,
+<code>create_colors_xml()</code>,
+<code>create_fill()</code>,
+<code>create_font()</code>,
+<code>create_numfmt()</code>,
+<code>create_tablestyle()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># do not apply anything
+style1 &lt;- create_dxfs_style()
+
+# change font color and background color
+style2 &lt;- create_dxfs_style(
+  font_color = wb_color(hex = "FF9C0006"),
+  bgFill = wb_color(hex = "FFFFC7CE")
+)
+
+# change font (type, size and color) and background
+# the old default in openxlsx and openxlsx2 &lt;= 0.3
+style3 &lt;- create_dxfs_style(
+  font_name = "Aptos Narrow",
+  font_size = 11,
+  font_color = wb_color(hex = "FF9C0006"),
+  bgFill = wb_color(hex = "FFFFC7CE")
+)
+
+## See package vignettes for further examples
+</code></pre>
+
+
+</div>

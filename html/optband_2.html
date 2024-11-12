@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>func.sum</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Aggregate <code>survfit</code> object strata</h2>
+
+<h3>Description</h3>
+
+<p><code>func.sum</code> calculates the sum and aggregate time points of two
+cumulative-hazard functions or their variances, designed for use with
+a <code>survfit</code> object having two strata.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">func.sum(f1, f2, f1time, f2time)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>f1</code></td>
+<td>
+<p>vector of cumulative-hazard estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f2</code></td>
+<td>
+<p>vector of cumulative-hazard estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f1time</code></td>
+<td>
+<p>vector of survival times for f1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f2time</code></td>
+<td>
+<p>vector of survival times for f2.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of two numeric vectors.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(survival)
+res &lt;- summary(survfit(Surv(stop, event) ~ rx, data=bladder))
+cols &lt;- lapply(c(2:11) , function(x) res[x])
+tbl &lt;- do.call(data.frame, cols)
+category = unique(tbl$strata)
+temptbl1 = tbl[tbl$strata == category[1],]; temptbl1$n = res$n[1]
+temptbl2 = tbl[tbl$strata == category[2],]; temptbl2$n = res$n[2]
+sigma1_2 = cumhaz.var(temptbl1)
+sigma2_2 = cumhaz.var(temptbl2)
+func.sum(c(0, sigma1_2)/temptbl1$n[1], c(0, sigma2_2)/temptbl2$n[2],
+  c(0, temptbl1$time), c(0, temptbl2$time))
+
+</code></pre>
+
+
+</div>

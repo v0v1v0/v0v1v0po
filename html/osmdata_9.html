@@ -1,0 +1,204 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build an Overpass query</h2>
+
+<h3>Description</h3>
+
+<p>Build an Overpass query
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opq(
+  bbox = NULL,
+  nodes_only = FALSE,
+  osm_types = c("node", "way", "relation"),
+  out = c("body", "tags", "meta", "skel", "tags center", "ids"),
+  datetime = NULL,
+  datetime2 = NULL,
+  adiff = FALSE,
+  timeout = 25,
+  memsize
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>Either (i) four numeric values specifying the maximal and minimal
+longitudes and latitudes, in the form <code>c(xmin, ymin, xmax, ymax)</code>
+or (ii) a character string in the form <code>xmin,ymin,xmax,ymax</code>. These
+will be passed to getbb to be converted to a numerical bounding
+box. Can also be (iii) a matrix representing a bounding polygon as
+returned from <code>getbb(..., format_out = "polygon")</code>. To search in an
+area, (iv) a character string with a relation or a (closed) way id in
+the format <code>"way(id:1)"</code>, <code>"relation(id:1, 2)"</code> or <code>"relation(id:1, 2, 3); way(id:2)"</code> as returned by <code>getbb(..., format_out = "osm_type_id")</code>
+or bbox_to_string with a <code>data.frame</code> from <code>getbb(..., format_out = "data.frame")</code> to select all areas combined (relations and ways).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nodes_only</code></td>
+<td>
+<p>WARNING: this parameter is equivalent to
+<code>osm_types = "node"</code> and will be DEPRECATED. If <code>TRUE</code>, query OSM nodes
+only. Some OSM structures such as <code>place = "city"</code> or
+<code>highway = "traffic_signals"</code> are represented by nodes only. Queries are
+built by default to return all nodes, ways, and relation, but this can
+be very inefficient for node-only queries. Setting this value to <code>TRUE</code>
+for such cases makes queries more efficient, with data returned in the
+<code>osm_points</code> list item.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osm_types</code></td>
+<td>
+<p>A character vector with several OSM types to query: <code>node</code>,
+<code>way</code> and <code>relation</code> is the default. <code>nwr</code>, <code>nw</code>, <code>wr</code>, <code>nr</code> and <code>rel</code>
+are also valid types. Ignored if <code>nodes_only = TRUE</code>.
+<code>osm_types = "node"</code> is equivalent to <code>nodes_only = TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>out</code></td>
+<td>
+<p>The level of verbosity of the overpass result: <code>body</code> (geometries
+and tags, the default), <code>tags</code> (tags without geometry), <code>meta</code> (like
+body + Timestamp, Version, Changeset, User, User ID of the last
+edition), <code>skel</code> (geometries only), <code style="white-space: pre;">⁠tags center⁠</code> (tags without geometry
++ the coordinates of the center of the bounding box) and <code>ids</code> (type and
+id of the objects only).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datetime</code></td>
+<td>
+<p>If specified, a date and time to extract data from the OSM
+database as it was up to the specified date and time, as described at
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#date">https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#date</a>.
+This <em>must</em> be in ISO8601 format ("YYYY-MM-DDThh:mm:ssZ"), where
+both the "T" and "Z" characters must be present.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datetime2</code></td>
+<td>
+<p>If specified, return the <em>difference</em> in the OSM
+database between <code>datetime</code> and <code>datetime2</code>, where
+<code>datetime2 &gt; datetime</code>. See
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Difference_between_two_dates_(diff)">https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Difference_between_two_dates_(diff)</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adiff</code></td>
+<td>
+<p>If <code>TRUE</code>, query for <a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Augmented-difference_between_two_dates_(adiff)">augmented difference</a>.
+The result indicates what happened to the modified and deleted OSM
+objects. Requires <code style="white-space: pre;">⁠datetime(2)*⁠</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeout</code></td>
+<td>
+<p>It may be necessary to increase this value for large queries,
+because the server may time out before all data are delivered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>memsize</code></td>
+<td>
+<p>The default memory size for the 'overpass' server in <em>bytes</em>;
+may need to be increased in order to handle large queries.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>out</code> statement for <code>tags</code>, <code style="white-space: pre;">⁠tags center⁠</code>and <code>id</code>, do not return
+geometries. Neither <code>out = "meta"</code> nor <code>adiff = TRUE</code> options are implemented
+for all <code style="white-space: pre;">⁠osmdata_*⁠</code> functions yet. Use osmdata_xml or osmdata_data_frame
+to get the result of these queries. See the documentation of the <a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#out">out statement</a>
+and <a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Augmented-difference_between_two_dates_(adiff)">augmented difference</a>
+for more details about these options.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>overpass_query</code> object
+</p>
+
+
+<h3>Note</h3>
+
+<p>See
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API#Resource_management_options_.28osm-script.29">https://wiki.openstreetmap.org/wiki/Overpass_API#Resource_management_options_.28osm-script.29</a>
+for explanation of <code>timeout</code> and <code>memsize</code> (or <code>maxsize</code> in overpass terms).
+Note in particular the comment that queries with arbitrarily large <code>memsize</code>
+are likely to be rejected.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other queries: 
+<code>add_osm_features()</code>,
+<code>add_osm_feature()</code>,
+<code>bbox_to_string()</code>,
+<code>getbb()</code>,
+<code>opq_around()</code>,
+<code>opq_csv()</code>,
+<code>opq_enclosing()</code>,
+<code>opq_osm_id()</code>,
+<code>opq_string()</code>,
+<code>overpass_status()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+q &lt;- getbb ("portsmouth", display_name_contains = "United States") %&gt;%
+    opq () %&gt;%
+    add_osm_feature ("amenity", "restaurant") %&gt;%
+    add_osm_feature ("amenity", "pub")
+osmdata_sf (q) # all objects that are restaurants AND pubs (there are none!)
+q1 &lt;- getbb ("portsmouth", display_name_contains = "United States") %&gt;%
+    opq () %&gt;%
+    add_osm_feature ("amenity", "restaurant")
+q2 &lt;- getbb ("portsmouth", display_name_contains = "United States") %&gt;%
+    opq () %&gt;%
+    add_osm_feature ("amenity", "pub")
+c (osmdata_sf (q1), osmdata_sf (q2)) # all restaurants OR pubs
+
+# Use nodes_only to retrieve single point data only, such as for central
+# locations of cities.
+opq &lt;- opq (bbox, nodes_only = TRUE) %&gt;%
+    add_osm_feature (key = "place", value = "city") %&gt;%
+    osmdata_sf (quiet = FALSE)
+
+# Filter by a search area
+qa1 &lt;- getbb ("Catalan Countries", format_out = "osm_type_id") %&gt;%
+    opq (nodes_only = TRUE) %&gt;%
+    add_osm_feature (key = "capital", value = "4")
+opqa1 &lt;- osmdata_sf (qa1)
+# Filter by a multiple search areas
+bb &lt;- getbb ("Vilafranca", format_out = "data.frame")
+qa2 &lt;- bbox_to_string (bb [bb$osm_type != "node", ]) %&gt;%
+    opq (nodes_only = TRUE) %&gt;%
+    add_osm_feature (key = "place")
+opqa2 &lt;- osmdata_sf (qa2)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

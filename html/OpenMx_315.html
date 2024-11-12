@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxComputeTryHard</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Repeatedly attempt a compute plan until successful</h2>
+
+<h3>Description</h3>
+
+<p>The provided compute plan is run until the status code indicates
+success (0 or 1). It gives up after a small number of retries.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxComputeTryHard(
+  plan,
+  ...,
+  freeSet = NA_character_,
+  verbose = 0L,
+  location = 1,
+  scale = 0.25,
+  maxRetries = 3L
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>plan</code></td>
+<td>
+<p>compute plan to optimize the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Forces remaining arguments to be specified by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freeSet</code></td>
+<td>
+<p>names of matrices containing free variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>integer. Level of run-time diagnostic output. Set to zero to disable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p>location of the perturbation distribution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>scale of the perturbation distribution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxRetries</code></td>
+<td>
+<p>maximum number of plan evaluations per invocation (including the first evaluation)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Upon failure, start values are randomly perturbed.  Currently only
+the uniform distribution is implemented.  The distribution is
+parameterized by arguments <code>location</code> and <code>scale</code>.  The
+location parameter is the distribution's median.  For the uniform
+distribution, <code>scale</code> is the absolute difference between its
+median and extrema (i.e., half the width of the rectangle).  Each
+start value is multiplied by a random draw and then added to a
+random draw from a distribution with the same <code>scale</code> but
+with a median of zero.
+</p>
+
+
+<h3>References</h3>
+
+<p>Shanno, D. F. (1985). On Broyden-Fletcher-Goldfarb-Shanno method. <em>Journal of
+Optimization Theory and Applications, 46</em>(1), 87-94.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mxTryHard</code>
+</p>
+
+
+</div>

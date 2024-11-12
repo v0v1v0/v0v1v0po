@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ph_hyperlink</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Hyperlink a placeholder</h2>
+
+<h3>Description</h3>
+
+<p>Add hyperlink to a placeholder in the current slide.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ph_hyperlink(x, type = "body", id = 1, id_chr = NULL, ph_label = NULL, href)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rpptx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>placeholder type</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>placeholder index (integer) for a duplicated type. This is to be used when a placeholder
+type is not unique in the layout of the current slide, e.g. two placeholders with type 'body'. To
+add onto the first, use <code>id = 1</code> and <code>id = 2</code> for the second one.
+Values can be read from <code>slide_summary</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id_chr</code></td>
+<td>
+<p>deprecated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ph_label</code></td>
+<td>
+<p>label associated to the placeholder. Use column
+<code>ph_label</code> of result returned by <code>slide_summary</code>.
+If used, <code>type</code> and <code>id</code> are ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>href</code></td>
+<td>
+<p>hyperlink (do not forget http or https prefix)</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>ph_with</code>
+</p>
+<p>Other functions for placeholders manipulation: 
+<code>ph_remove()</code>,
+<code>ph_slidelink()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fileout &lt;- tempfile(fileext = ".pptx")
+loc_manual &lt;- ph_location(bg = "red", newlabel = "mytitle")
+doc &lt;- read_pptx()
+doc &lt;- add_slide(doc)
+doc &lt;- ph_with(x = doc, "Un titre 1", location = loc_manual)
+slide_summary(doc) # read column ph_label here
+doc &lt;- ph_hyperlink(
+  x = doc, ph_label = "mytitle",
+  href = "https://cran.r-project.org"
+)
+
+print(doc, target = fileout)
+</code></pre>
+
+
+</div>

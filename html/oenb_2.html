@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oenb_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download OeNB Data</h2>
+
+<h3>Description</h3>
+
+<p>Download data sets from the OeNB's data web service <a href="https://www.oenb.at/en/Statistics/User-Defined-Tables/webservice.html">https://www.oenb.at/en/Statistics/User-Defined-Tables/webservice.html</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oenb_data(
+  id,
+  pos,
+  freq = NULL,
+  attr = NULL,
+  starttime = NULL,
+  endtime = NULL,
+  lang = "EN"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>character specifying the ID of the dataset of interest.
+See <code>oenb_toc</code> to obtain the required ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pos</code></td>
+<td>
+<p>character vector specifying the position IDs of the indicators of interest.
+See <code>oenb_dataset</code> to obtain the required ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freq</code></td>
+<td>
+<p>Frequency of the data. Where available, possible values are
+<code>"D"</code>, <code>"M"</code>, <code>"Q"</code>, <code>"H"</code>, <code>"A"</code>
+for daily, monthly, quarterly, semi-annual and annual data.
+See <code>oenb_frequency</code> to obtain possible choices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attr</code></td>
+<td>
+<p>A named vector of further attributes.
+See <code>oenb_attributes</code> to obtain possible choices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>starttime</code></td>
+<td>
+<p>character specifying the start of the series. See 'Details'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endtime</code></td>
+<td>
+<p>character specifying the end of the series. See 'Details'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lang</code></td>
+<td>
+<p>Preferred language of the output. Possible values are "DE" for
+German and "EN" for English (default).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The arguments 'starttime' and 'endtime' can have the format 'YYYY-MM-DD' or
+'YYYYMMDD' for daily data, 'YYYY-MM' or 'YYYYMM' for monthly data, and 'YYYY' for
+annual data. For semiannual data 'YYYY-06' refers to the first half of year 'YYYY' and
+'YYYY-12' to the second. Similarly, for quarterly data 'YYYY-03', 'YYYY-06', 'YYYY-09'
+and 'YYYY-12' refer to the first, second, third and forth quarter of year 'YYYY',
+respectively.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+series &lt;- oenb_data(id = "11", pos = "VDBFKBSC217000", freq = "M", attr = c("dval1" = "AT"),
+                    starttime = "2019-11", endtime = "2019-12")
+series
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,197 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>design</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Design Generator for Three Models</h2>
+
+<h3>Description</h3>
+
+<p>Construct optimal approximate designs as well as efficient exact designs for
+crossover model with subject dropout, crossover model with proportional residual
+effect, and interference model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">design(
+  model = c("dropout", "proportional", "interference"),
+  n,
+  opt,
+  t,
+  p,
+  ...,
+  max_iter = 40
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>an model indicator, must be one of 'dropout', 'proportional', or 'interference'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Positive Integer, total number of observations needed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opt</code></td>
+<td>
+<p>Integer. optimal criterion indicator, opt = 0 means D-opt, opt = 1 means A-opt</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>Positive interger,number or levels of treatment, the default coding is integer from 1 to t</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Numeric, number of periods for crossover model or number of blocks for intereference model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other necessary control parameters required by specific model
+For crossover with dropout, <code>drop</code>, a numeric vector of dropout mechanism
+For crossover proportional, <code>lambda</code>,value of proportion cofficient in proportional model
+and <code>sigma</code>, assumed covariance matrix.
+For interference model, <code>sigma</code>, assumed covariance matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_iter</code></td>
+<td>
+<p>a positive integer. Controls maximum iteration time of exchange. Default is 40.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A S3 object of one of classes 'dropout', 'proportional' or 'interference'.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>the model name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>total number of observations of exact design</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opt</code></td>
+<td>
+<p>optimal criterion</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>number of levels of treaments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>number of periods or plots in a block</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other inputs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initial_design</code></td>
+<td>
+<p>a randomly chosen design as a starting point for
+newton's method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exact_design</code></td>
+<td>
+<p>an exact design rounded from approximate design</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>approx_design</code></td>
+<td>
+<p>optimal approximate design</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verify_equivalence</code></td>
+<td>
+<p>result of general equivalence theorem, the last
+entry is the value of directional derivative</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>computing time for approximate design</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>eff</code>, <code>effLB</code>, <code>summary</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># NOTE: max_iter is usually set to 40. 
+# Here max_iter = 5 is for demenstration only.
+# crossover dropout model
+## D-optimal
+
+example1 &lt;- design('dropout',10,0,3,3,drop=c(0,0,0.5), max_iter = 5)
+summary(example1)
+eff(example1) # efficiency from rounding
+effLB(example1) # obtain lower bound of efficiency
+
+## A-optimal
+design('dropout',10,1,3,3,drop=c(0,0,0.5), max_iter = 5)
+
+
+# proportional model
+## D-optimal
+design('proportional',10,0,3,3, sigma = diag(1,3),tau = matrix(sqrt(1+3),
+    nrow=3, ncol=1),lambda = 0.2, max_iter = 5)
+
+## A-optimal
+design('proportional',10,1,3,3, sigma = diag(1,3), tau = matrix(sqrt(1+3),
+    nrow=3, ncol=1),lambda = 0.2, max_iter = 5)
+
+
+# interference model
+## D-optimal
+design('interference',10,0,3,3, sigma = diag(1,3), max_iter = 5)
+
+## A-optimal
+design('interference',10,1,3,3, sigma = diag(1,3), max_iter = 5)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>krigr_cross_validation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multithreaded cross validation routine for Omic Kriging.</h2>
+
+<h3>Description</h3>
+
+<p>This is a flexible cross validation routine which wraps the Omic Kriging
+calculation. The user can specify the size of the test set, all the way to
+"Leave One Out" cross validation. Additionally, all relevant  parameters in the
+<code>okriging</code> function are exposed. This function uses the doParallel
+package to distribute computation over multiple cores. If the phenotype is 
+case/control, a ROCR AUC and GLM analysis is run and the results printed to screen.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">krigr_cross_validation(cor.list, pheno.df, pheno.id = 1, h2.vec,
+  covar.mat = NULL, nfold = 10, ncore = "all", verbose = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cor.list</code></td>
+<td>
+<p>A list of correlation matrices used in Kriging. rownames and colnames
+of cor should be IID list and include idtest and idtrain.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pheno.df</code></td>
+<td>
+<p>A data frame with rownames set as sample IDs and a column containing phenotype data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pheno.id</code></td>
+<td>
+<p>The name of the column in pheno which contains phenotype data to test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h2.vec</code></td>
+<td>
+<p>has weights for each RM relatednes matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covar.mat</code></td>
+<td>
+<p>Data frame of covariates with rownames() set to sample IDs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nfold</code></td>
+<td>
+<p>Select the number of cross validation rounds to run. The value "LOOCV"
+will run one round of cross validation for each sample in your dataset.
+The value "ncore" will set the test set size such that a single round
+runs on each core specified in the ncore option. Any numeric value
+will be set to the test size. Default runs 10 rounds of cross validation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncore</code></td>
+<td>
+<p>The number of cores available to distribute computaition across
+If a numeric value is supplied, that number of cores is registered. If the
+value "all" is supplied, all available cores are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Report rounds on cross validation on standard out.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional and unnamed arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A dataframe with three columns: sample ID, observed phenotype Ytest, and predicted phenotype Ypred
+</p>
+
+
+</div>

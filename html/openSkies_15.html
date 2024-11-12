@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getVectorSetFeatures</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get positional features of an openSkiesStateVectorSet object
+</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves positional features of an <code>openSkiesStateVectorSet</code> object. 
+Features will be uniformly interpolated from the observed values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getVectorSetFeatures(stateVectorSet, resamplingSize=15, method="fmm", fields=NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stateVectorSet</code></td>
+<td>
+<p>object of class <code>openSkiesStateVectorSet</code> for
+which positional features should be extracted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resamplingSize</code></td>
+<td>
+<p>number of uniformly separated interpolation points at
+which the values of the position features should be calculated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>method to be used for interpolation. "linear" will result in 
+linear interpolation, while "fmm", "periodic", or "natural" will result in 
+different types of spline interpolation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fields</code></td>
+<td>
+<p>character vector indicating the names of the fields of the
+<code>openSkiesStateVector</code> objects that should be included in the
+extracted positional features. In the default behavior, <code>fields=NULL</code>
+and only latitude and longitude values will be used.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector with positional features of the provided <code>openSkiesStateVectorSet</code> object.
+The vector alternates values of longitude and latitude at each interpolated 
+point, unless a character vector with valid names of fields of <code>openSkiesStateVector</code> 
+objects is provided through <code>fields</code>, in which case values of the specified 
+fields are alternated, in the specified order.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Extract positional features for a time series of state vectors for the 
+# aircraft with ICAO 24-bit address 403003 for the 8th of October, 2020 between 
+# 16:50 and 16:53 (London time), with a time resolution of 1 minute.
+
+if(interactive()){
+vectors &lt;- getAircraftStateVectorsSeries(aircraft="4ca7b3", 
+startTime="2020-11-04 10:30:00", endTime="2020-11-04 12:00:00", 
+timeZone="Europe/London", timeResolution=300)
+
+features &lt;- getVectorSetFeatures(vectors)
+}
+</code></pre>
+
+
+</div>

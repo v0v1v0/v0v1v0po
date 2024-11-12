@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grchk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run tests, where possible, on user objective function and (optionally) gradient and hessian</h2>
+
+<h3>Description</h3>
+
+<p><code>grchk</code> checks a user-provided R function, <code>ffn</code>. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">   grchk(xpar, ffn, ggr, trace=0, testtol=(.Machine$double.eps)^(1/3), ...) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xpar</code></td>
+<td>
+
+<p>parameters to the user objective and gradient functions ffn and ggr
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ffn</code></td>
+<td>
+
+<p>User-supplied objective function
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ggr</code></td>
+<td>
+
+<p>User-supplied gradient function
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+
+<p>set &gt;0 to provide output from grchk to the console, 0 otherwise
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testtol</code></td>
+<td>
+
+<p>tolerance for equality tests
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>optional arguments passed to the objective function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<table>
+<tr>
+<td style="text-align: left;">
+Package: </td>
+<td style="text-align: left;"> grchk</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Depends: </td>
+<td style="text-align: left;"> R (&gt;= 2.6.1)</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+License: </td>
+<td style="text-align: left;"> GPL Version 2.</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p><code>numDeriv</code> is used to numerically approximate the gradient of function <code>ffn</code>
+and compare this to the result of function <code>ggr</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>grchk</code> returns a single object <code>gradOK</code> which is true if the differences 
+between analytic and approximated gradient are small as measured by the tolerance 
+<code>testtol</code>.
+</p>
+<p>This has attributes "ga" and "gn" for the analytic and numerically approximated gradients.
+</p>
+<p>At the time of preparation, there are no checks for validity of the gradient code in
+<code>ggr</code> as in the function <code>fnchk</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>John C. Nash
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Would like examples of success and failure. What about "near misses"??
+cat("Show how grchk works\n")
+require(optextras)
+require(numDeriv)
+# require(optimx)
+
+jones&lt;-function(xx){
+  x&lt;-xx[1]
+  y&lt;-xx[2]
+  ff&lt;-sin(x*x/2 - y*y/4)*cos(2*x-exp(y))
+  ff&lt;- -ff
+}
+
+jonesg &lt;- function(xx) {
+  x&lt;-xx[1]
+  y&lt;-xx[2]
+  gx &lt;-  cos(x * x/2 - y * y/4) * ((x + x)/2) * cos(2 * x - exp(y)) - 
+    sin(x * x/2 - y * y/4) * (sin(2 * x - exp(y)) * 2)
+  gy &lt;- sin(x * x/2 - y * y/4) * (sin(2 * x - exp(y)) * exp(y)) - cos(x * 
+              x/2 - y * y/4) * ((y + y)/4) * cos(2 * x - exp(y))
+  gg &lt;- - c(gx, gy)
+}
+
+jonesg2 &lt;- function(xx) {
+  gx &lt;- 1
+  gy &lt;- 2
+  gg &lt;- - c(gx, gy)
+}
+
+
+xx &lt;- c(1, 2)
+
+gcans &lt;- grchk(xx, jones, jonesg, trace=1, testtol=(.Machine$double.eps)^(1/3))
+gcans
+
+gcans2 &lt;- grchk(xx, jones, jonesg2, trace=1, testtol=(.Machine$double.eps)^(1/3))
+gcans2
+
+
+
+
+</code></pre>
+
+
+</div>

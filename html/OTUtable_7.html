@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combine_otus</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Combine OTUs based on identical taxonomic assignments
+</h2>
+
+<h3>Description</h3>
+
+<p>Sums the abundances of OTUs with the same taxonomy at a given level into a single vector for that taxonomy. This creates a new table of relative abundance data at a higher taxonomic level than OTU. This function only works with the OTU level as input, but can be used on any subset of the OTU table created by year_subset() or bog_subset(). The OTU table must have the same number of rows as the taxonomy file (do not remove rows with no reads before running combine_otus())
+If bootstrap values were not removed by expand_taxa(), this command will likely create spurious groupings based on identical bootstrap values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combine_otus(level, table, taxonomy)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+
+<p>The desired level at which to combine OTUs; options are the column names from the taxonomy dataset
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+
+<p>An OTU table containing the relative abundances of each OTU.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taxonomy</code></td>
+<td>
+
+<p>A taxonomy dataset in the form produced by expand_taxa().
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a table of relative abundance data with each row representing all OTUs of a given taxonomic assignment summed together. Row names are now the full taxonomic assignment of each row. To keep only the the lowest taxonomic level in the row names, run the function reduce_names()
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alexandra Linz &lt;amlinz16@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(otu_table)
+data(taxonomy)
+
+example_table &lt;- year_subset("05", otu_table)
+example_table &lt;- bog_subset("TBE", example_table)
+
+phylum_table &lt;- combine_otus("Phylum", example_table, taxonomy)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pipe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Pipe an R object to a unix command </h2>
+
+<h3>Description</h3>
+
+<p>The operator <code>print</code>s the R object into a temporay file and
+then executes the unix command though a <code>pipe</code> 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">r %|% u
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p> Any R object </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>u</code></td>
+<td>
+<p> character string representing the unix command </p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of S3-class <code>unixoutput</code>. The <code>print</code> method 
+for <code>unixoutput</code> objects simply <code>cat</code> the
+string.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Romain Francois &lt;francoisromain@free.fr&gt; </p>
+
+
+<h3>See Also</h3>
+
+ <p><code>pipe</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  ## Not run: 
+    rnorm(30) %|% 'head -n2'
+    rnorm(30) %|% 'sed "s/^ *\\[[0-9]*\\]//g" '
+    
+    if( require(R4X ) ){
+        x &lt;- xml( '&lt;root&gt;
+            &lt;child id="1"&gt;
+              &lt;subchild id = "sub1" &gt;foo&lt;/subchild&gt;
+              &lt;subchild id = "sub2" &gt;bar&lt;/subchild&gt;
+            &lt;/child&gt;
+            &lt;child id="2"&gt;
+              &lt;subchild id="a"&gt;blah&lt;/subchild&gt;
+              &lt;subchild id="b"&gt;bob&lt;/subchild&gt;
+              &lt;something id="c" /&gt;
+            &lt;/child&gt;
+            &lt;fruits&gt;
+               &lt;fruit&gt;banana&lt;/fruit&gt;
+               &lt;fruit&gt;mango&lt;/fruit&gt;
+            &lt;/fruits&gt;
+          &lt;/root&gt;' )
+        x %|% "xml_pp | highlight -S xml -A"  
+    }
+  
+## End(Not run)
+</code></pre>
+
+
+</div>

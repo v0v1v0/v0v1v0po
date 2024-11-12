@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PropertySet-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>PropertySet-class</h2>
+
+<h3>Description</h3>
+
+<p>The <code>PropertySet</code> class is a collection of properties and is
+useful as a data model, e.g., for storing the parameters of some
+operation.
+</p>
+<p><code>setPropertySet</code> is a simple wrapper around <code>setRefClass</code> for
+creating subclasses of <code>PropertySet</code>. It
+ensures that all fields of the subclass are defined via
+<code>properties</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">setPropertySet(Class, fields=list(), prototype=list(), contains="PropertySet", ...,
+    where=topenv(parent.frame()))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Class</code></td>
+<td>
+<p>class name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fields</code></td>
+<td>
+<p>list of fields</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prototype</code></td>
+<td>
+<p>list of default values, as in
+<code>setClass</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contains</code></td>
+<td>
+<p>superclasses, one of which must extend PropertySet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments to <code>setRefClass</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>where</code></td>
+<td>
+<p>the environment in which to define the class</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>PropertySet-class</code>: <code>PropertySet</code> object has following methods, where <code>x</code> is
+a <code>PropertySet</code> object:
+</p>
+
+<dl>
+<dt><code>x$properties()</code></dt>
+<dd>
+<p>Return the classes of the properties as a
+named character vector. Compare to the <code>fields</code> method on
+a reference class generator</p>
+</dd>
+</dl>
+<p>.
+</p>
+<dl>
+<dt><code>as.list(x)</code></dt>
+<dd>
+<p>Returns a named list of the property values.</p>
+</dd>
+</dl>
+<p>When any property in the set changes, the <code>changed(name)</code>
+signal is emitted, where <code>name</code> is the name of the property
+that changed.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>setPropertySet</code>: the class generator object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Michael Lawrence, Tengfei Yin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">filt.gen &lt;- setRefClass("Filter", properties(fields = list(cutoff = "numeric",
+                                                           weight = "numeric"),
+                                  prototype = list(cutoff = 0, weight = 1)),
+                                  contains = "PropertySet")
+obj &lt;- filt.gen$new()
+obj
+obj$properties()
+as.list(obj)
+obj$changed$connect(function(name) print(name))
+obj$cutoffChanged$connect(function() print(paste("change to", obj$cutoff)))
+obj$cutoff &lt;- 0
+obj$cutoff &lt;- 2
+obj$weight &lt;- 3
+
+
+## use setPropertySet, the same thing as above
+filt.gen &lt;- setPropertySet("Filter", fields = list(cutoff = "numeric",
+                                         weight = "numeric"),
+                           prototype = list(cutoff = 0, weight = 1))
+
+obj &lt;- filt.gen$new()
+obj
+obj$properties()
+as.list(obj)
+obj$changed$connect(function(name) print(name))
+obj$cutoffChanged$connect(function() print(paste("change to", obj$cutoff)))
+obj$cutoff &lt;- 0
+obj$cutoff &lt;- 2
+obj$weight &lt;- 3</code></pre>
+
+
+</div>

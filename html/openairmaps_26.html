@@ -1,0 +1,391 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>trajLevelMapStatic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Trajectory level plots in <code>ggplot2</code>
+</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>This function plots back trajectories on a <code>ggplot2</code> map. This function
+requires that data are imported using the <code>openair::importTraj()</code> function.
+It is a <code>ggplot2</code> implementation of <code>openair::trajLevel()</code> with many of the
+same arguments, which should be more flexible for post-hoc changes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">trajLevelMapStatic(
+  data,
+  longitude = "lon",
+  latitude = "lat",
+  pollutant,
+  type = NULL,
+  smooth = FALSE,
+  statistic = "frequency",
+  percentile = 90,
+  lon.inc = 1,
+  lat.inc = 1,
+  min.bin = 1,
+  .combine = NA,
+  sigma = 1.5,
+  alpha = 0.5,
+  tile.border = NA,
+  xlim = NULL,
+  ylim = NULL,
+  crs = sf::st_crs(4326),
+  map = TRUE,
+  map.fill = "grey85",
+  map.colour = "grey75",
+  map.alpha = 0.8,
+  map.lwd = 0.5,
+  map.lty = 1,
+  facet = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p><em>A data frame containing a HYSPLIT trajectory, perhaps accessed
+with <code>openair::importTraj()</code>.</em>
+</p>
+<p><strong>required</strong>
+</p>
+<p>A data frame containing HYSPLIT model outputs. If this data were not
+obtained using <code>openair::importTraj()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latitude, longitude</code></td>
+<td>
+<p><em>The decimal latitude/longitude.</em>
+</p>
+<p><em>default:</em> <code>"lat"</code> / <code>"lon"</code>
+</p>
+<p>Column names representing the decimal latitude and longitude.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>Pollutant to be plotted. By default the trajectory height is
+used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><em>A method to condition the <code>data</code> for separate plotting.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>Used for splitting the trajectories into different groups which can be
+selected between using a "layer control" menu. Passed to
+<code>openair::cutData()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smooth</code></td>
+<td>
+<p>Should the trajectory surface be smoothed? Defaults to <code>FALSE</code>.
+Note that smoothing may cause the plot to render slower, so consider
+setting <code>crs</code> to <code>sf::st_crs(4326)</code> or <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>Statistic to use for <code>trajLevel()</code>. By default, the function
+will plot the trajectory frequencies (<code>statistic = "frequency"</code>). As an
+alternative way of viewing trajectory frequencies, the argument <code>method = "hexbin"</code> can be used. In this case hexagonal binning of the trajectory
+<em>points</em> (i.e., a point every three hours along each back trajectory).
+The plot then shows the trajectory frequencies uses hexagonal binning.
+</p>
+<p>There are also various ways of plotting concentrations.
+</p>
+<p>It is possible to set <code>statistic = "difference"</code>. In this case trajectories
+where the associated concentration is greater than <code>percentile</code> are
+compared with the the full set of trajectories to understand the
+differences in frequencies of the origin of air masses. The comparison is
+made by comparing the percentage change in gridded frequencies. For
+example, such a plot could show that the top 10\
+tend to originate from air-mass origins to the east.
+</p>
+<p>If <code>statistic = "pscf"</code> then a Potential Source Contribution Function map
+is produced. This statistic method interacts with <code>percentile</code>.
+</p>
+<p>If <code>statistic = "cwt"</code> then concentration weighted trajectories are
+plotted.
+</p>
+<p>If <code>statistic = "sqtba"</code> then Simplified Quantitative Transport Bias
+Analysis is undertaken. This statistic method interacts with <code>.combine</code> and
+<code>sigma</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentile</code></td>
+<td>
+<p>The percentile concentration of <code>pollutant</code> against which
+the all trajectories are compared.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lon.inc, lat.inc</code></td>
+<td>
+<p>The longitude and latitude intervals to be used for
+binning data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.bin</code></td>
+<td>
+<p>The minimum number of unique points in a grid cell. Counts
+below <code>min.bin</code> are set as missing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.combine</code></td>
+<td>
+<p>When statistic is "SQTBA" it is possible to combine lots of
+receptor locations to derive a single map. <code>.combine</code> identifies the column
+that differentiates different sites (commonly a column named <code>"site"</code>).
+Note that individual site maps are normalised first by dividing by their
+mean value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>For the SQTBA approach <code>sigma</code> determines the amount of back
+trajectory spread based on the Gaussian plume equation. Values in the
+literature suggest 5.4 km after one hour. However, testing suggests lower
+values reveal source regions more effectively while not introducing too
+much noise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Opacity of the tiles. Must be between <code>0</code> and <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tile.border</code></td>
+<td>
+<p>Colour to use for the border of binned tiles. Defaults to
+<code>NA</code>, which draws no border.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim, ylim</code></td>
+<td>
+<p><em>The x- and y-limits of the plot.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>A numeric vector of length two defining the x-/y-limits of the map, passed
+to <code>ggplot2::coord_sf()</code>. If <code>NULL</code>, limits will be estimated based on the
+lat/lon ranges of the input data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p>The coordinate reference system (CRS) into which all data should
+be projected before plotting. Defaults to latitude/longitude
+(<code>sf::st_crs(4326)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p><em>Draw a base map?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code>
+</p>
+<p>Draws the geometries of countries under the trajectory paths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.fill</code></td>
+<td>
+<p><em>Colour to use to fill the polygons of the base map.</em>
+</p>
+<p><em>default:</em> <code>"grey85"</code>
+</p>
+<p>See <code>colors()</code> for colour options. Alternatively, a hexadecimal color code
+can be provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.colour</code></td>
+<td>
+<p><em>Colour to use for the polygon borders of the base map.</em>
+</p>
+<p><em>default:</em> <code>"grey75"</code>
+</p>
+<p>See <code>colors()</code> for colour options. Alternatively, a hexadecimal color code
+can be provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.alpha</code></td>
+<td>
+<p><em>Transparency of the base map polygons.</em>
+</p>
+<p><em>default:</em> <code>0.8</code>
+</p>
+<p>Must be between <code>0</code> (fully transparent) and <code>1</code> (fully opaque).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.lwd</code></td>
+<td>
+<p><em>Line width of the base map polygon borders.</em>
+</p>
+<p><em>default:</em> <code>0.5</code>
+</p>
+<p>Any numeric value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.lty</code></td>
+<td>
+<p><em>Line type of the base map polygon borders.</em>
+</p>
+<p><em>default:</em> <code>1</code>
+</p>
+<p>See <code>ggplot2::scale_linetype()</code> for common examples. The default, <code>1</code>,
+draws solid lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet</code></td>
+<td>
+<p>Deprecated. Please use <code>type</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code>ggplot2::coord_sf</code>
+</p>
+
+<dl>
+<dt><code>expand</code></dt>
+<dd>
+<p>If <code>TRUE</code>, the default, adds a small expansion factor to
+the limits to ensure that data and axes don't overlap. If <code>FALSE</code>,
+limits are taken exactly from the data or <code>xlim</code>/<code>ylim</code>.</p>
+</dd>
+<dt><code>datum</code></dt>
+<dd>
+<p>CRS that provides datum to use when generating graticules.</p>
+</dd>
+<dt><code>label_graticule</code></dt>
+<dd>
+<p>Character vector indicating which graticule lines should be labeled
+where. Meridians run north-south, and the letters <code>"N"</code> and <code>"S"</code> indicate that
+they should be labeled on their north or south end points, respectively.
+Parallels run east-west, and the letters <code>"E"</code> and <code>"W"</code> indicate that they
+should be labeled on their east or west end points, respectively. Thus,
+<code>label_graticule = "SW"</code> would label meridians at their south end and parallels at
+their west end, whereas <code>label_graticule = "EW"</code> would label parallels at both
+ends and meridians not at all. Because meridians and parallels can in general
+intersect with any side of the plot panel, for any choice of <code>label_graticule</code> labels
+are not guaranteed to reside on only one particular side of the plot panel. Also,
+<code>label_graticule</code> can cause labeling artifacts, in particular if a graticule line
+coincides with the edge of the plot panel. In such circumstances, <code>label_axes</code> will
+generally yield better results and should be used instead.
+</p>
+<p>This parameter can be used alone or in combination with <code>label_axes</code>.</p>
+</dd>
+<dt><code>label_axes</code></dt>
+<dd>
+<p>Character vector or named list of character values
+specifying which graticule lines (meridians or parallels) should be labeled on
+which side of the plot. Meridians are indicated by <code>"E"</code> (for East) and
+parallels by <code>"N"</code> (for North). Default is <code>"--EN"</code>, which specifies
+(clockwise from the top) no labels on the top, none on the right, meridians
+on the bottom, and parallels on the left. Alternatively, this setting could have been
+specified with <code>list(bottom = "E", left = "N")</code>.
+</p>
+<p>This parameter can be used alone or in combination with <code>label_graticule</code>.</p>
+</dd>
+<dt><code>lims_method</code></dt>
+<dd>
+<p>Method specifying how scale limits are converted into
+limits on the plot region. Has no effect when <code>default_crs = NULL</code>.
+For a very non-linear CRS (e.g., a perspective centered
+around the North pole), the available methods yield widely differing results, and
+you may want to try various options. Methods currently implemented include <code>"cross"</code>
+(the default), <code>"box"</code>, <code>"orthogonal"</code>, and <code>"geometry_bbox"</code>. For method <code>"cross"</code>,
+limits along one direction (e.g., longitude) are applied at the midpoint of the
+other direction (e.g., latitude). This method avoids excessively large limits for
+rotated coordinate systems but means that sometimes limits need to be expanded a
+little further if extreme data points are to be included in the final plot region.
+By contrast, for method <code>"box"</code>, a box is generated out of the limits along both directions,
+and then limits in projected coordinates are chosen such that the entire box is
+visible. This method can yield plot regions that are too large. Finally, method
+<code>"orthogonal"</code> applies limits separately along each axis, and method
+<code>"geometry_bbox"</code> ignores all limit information except the bounding boxes of any
+objects in the <code>geometry</code> aesthetic.</p>
+</dd>
+<dt><code>ndiscr</code></dt>
+<dd>
+<p>Number of segments to use for discretising graticule lines;
+try increasing this number when graticules look incorrect.</p>
+</dd>
+<dt><code>default</code></dt>
+<dd>
+<p>Is this the default coordinate system? If <code>FALSE</code> (the default),
+then replacing this coordinate system with another one creates a message alerting
+the user that the coordinate system is being replaced. If <code>TRUE</code>, that warning
+is suppressed.</p>
+</dd>
+<dt><code>clip</code></dt>
+<dd>
+<p>Should drawing be clipped to the extent of the plot panel? A
+setting of <code>"on"</code> (the default) means yes, and a setting of <code>"off"</code>
+means no. In most cases, the default of <code>"on"</code> should not be changed,
+as setting <code>clip = "off"</code> can cause unexpected results. It allows
+drawing of data points anywhere on the plot, including in the plot margins. If
+limits are set via <code>xlim</code> and <code>ylim</code> and some data points fall outside those
+limits, then those data points may show up in places such as the axes, the
+legend, the plot title, or the plot margins.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>ggplot2</code> plot
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openair::trajLevel()</code>
+</p>
+<p><code>trajLevelMap()</code> for the interactive <code>leaflet</code> equivalent of
+<code>trajLevelMapStatic()</code>
+</p>
+<p>Other static trajectory maps: 
+<code>trajMapStatic()</code>
+</p>
+
+
+</div>

@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>paramplot.OEFPIL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot parameters of an OEFPIL object</h2>
+
+<h3>Description</h3>
+
+<p>Function for plotting the estimated values of the parameters with error bars (plus minus standard deviation) using <code>ggplot</code> for an object (or list of objects) of class <code>"OEFPIL"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">paramplot.OEFPIL(object)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object or a <code>list</code> of objects of class <code>"OEFPIL"</code> (a result of a call to <code>OEFPIL</code>).</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The input list has to be without <code>NaN</code>, <code>NA</code>, <code>Inf</code> or <code>-Inf</code> values in the estimated parameters or covariance matrix in the source <code>"OEFPIL"</code> object. In that case the function returns a warning message and no graph is plotted.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A ggplot graph of the estimated parameter values with error bars. The result can be edit using other ggplot components as usually.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Due to possible large differences in units of estimated parameters, the <code>scale</code> argument for facetting in the <code>ggplot</code> graph is set to <code>"free"</code>. It should be taken into account when interpreting the results.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OEFPIL</code>, <code>curvplot.OEFPIL</code> and <code>plot.OEFPIL</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+##-- Continuing the coef.OEFPIL(.) example:
+
+n &lt;- nrow(steamdata)
+CM2 &lt;- diag(c(rep(0.2^2,n), rep(0.1^2,n)))
+st2 &lt;- OEFPIL(steamdata, y ~ b1 * 10^(b2 * x/ (b3 + x)), list(b1 = 5, b2 = 8, b3 = 200),
+             CM2, useNLS = FALSE)
+
+##Example 1 - Use of paramplot.OEFPIL function on an object of class 'OEFPIL'
+paramplot.OEFPIL(st2)
+
+##Example 2 - Use of paramplot.OEFPIL function on a list of objects of class 'OEFPIL'
+paramplot.OEFPIL(list(st1,st2))
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extract-odm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pull a submatrix into memory using the <code>[[</code> operator.</h2>
+
+<h3>Description</h3>
+
+<p>Apply the <code>[[</code> operator to an <code>ondisc_matrix</code> to pull a submatrix into memory. You can pass logical, character,
+or numeric vectors to <code>[[</code>; character vectors are assumed to refer to feature IDs (for rows) and cell barcodes
+(for columns).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'ondisc_matrix,missing,missing'
+x[[i, j]]
+
+## S4 method for signature 'ondisc_matrix,ANY,missing'
+x[[i, j]]
+
+## S4 method for signature 'ondisc_matrix,missing,ANY'
+x[[i, j]]
+
+## S4 method for signature 'ondisc_matrix,ANY,ANY'
+x[[i, j]]
+
+## S4 method for signature 'metadata_ondisc_matrix,ANY,ANY'
+x[[i, j]]
+
+## S4 method for signature 'multimodal_ondisc_matrix,ANY,ANY'
+x[[i, j]]
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>ondisc_matrix</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i</code></td>
+<td>
+<p>a vector (numeric, logical, or character) indicating features to pull into memory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+<p>a vector (numeric, logical, or character) indicating cells to pull into memory.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>You can apply <code>[[</code> to <code>ondisc_matrix</code> objects only. You cannot apply <code>[[</code> to <code>metadata_ondisc_matrix</code> or
+<code>multimodal_ondisc_matrix</code> objects, because in the latter case the data to be accessed is ambiguous.
+</p>
+<p>You can remember the difference between <code>[</code> and <code>[[</code> by thinking about R lists: <code>[</code> is used to subset a list, and
+<code>[[</code> is used to access elements stored <em>inside</em> a list. Similarly, <code>[</code> is used to subset an <code>ondisc_matrix</code>, and
+<code>[[</code> is used to access a submatrix usable within R.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a matrix (as implemented by the Matrix package).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># NOTE: You must create the HDF5 file "expressions.h5" to run this example.
+# Navigate to the help file of "create_ondisc_matrix_from_mtx"
+# (via ?create_ondisc_matrix_from_mtx), and execute the code in the first code block.
+
+h5_fp &lt;- paste0(tempdir(), "/expressions.h5")
+if (file.exists(h5_fp)) {
+odm &lt;- ondisc_matrix(h5_file = h5_fp)
+# extract cells 100-110:
+x &lt;- odm[[,100:110]]
+# extract genes ENSG00000188305, ENSG00000257284, ENSG00000251655:
+x &lt;- odm[[c("ENSG00000188305", "ENSG00000257284", "ENSG00000251655"),]]
+# extract cells CTTAGGACACTGGCGT-1 and AAAGGATTCACATCAG-1:
+x &lt;- odm[[,c("CTTAGGACACTGGCGT-1", "AAAGGATTCACATCAG-1")]]
+}
+</code></pre>
+
+
+</div>

@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cochrane.orcutt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Cochrane-Orcutt Estimation
+</h2>
+
+<h3>Description</h3>
+
+<p>Interactive method using to solve first order autocorrelation problems. This procedure estimates both autocorrelation and beta coefficients recursively until we reach the convergence (8th decimal). The residuals are computed after estimating Beta using EGLS approach and Rho is estimated using the previous residuals
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cochrane.orcutt(reg, convergence = 8, max.iter=100)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>reg</code></td>
+<td>
+
+<p>a linear model built with lm function
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convergence</code></td>
+<td>
+
+<p>decimal value to reach for convergence, 8 as default
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iter</code></td>
+<td>
+
+<p>the maximum number of interactions, 100 as default
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class "orcutt", basically a list including elements
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>coefficients</code></td>
+<td>
+<p> a named vector of coefficients. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals</code></td>
+<td>
+<p> residuals. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.values</code></td>
+<td>
+<p> the fitted mean values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.value</code></td>
+<td>
+<p> t test of coefficients. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p> p-value of coefficients. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p> the matched call. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p> Spearman's rho autocorrelation. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>number.interaction</code></td>
+<td>
+<p> number of interaction of the model. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DW</code></td>
+<td>
+<p> vector contained Durbin-Watson statistics and p-value. </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Stefano Spada
+</p>
+
+
+<h3>References</h3>
+
+<p>Verbeek M. (2004) <em>A guide to modern econometrics</em>, John Wiley &amp; Sons Ltd, ISBN:978-88-08-17054-5
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(icecream, package="orcutt")
+lm = lm(cons ~ price + income + temp, data=icecream)
+coch = cochrane.orcutt(lm)
+coch
+
+</code></pre>
+
+
+</div>

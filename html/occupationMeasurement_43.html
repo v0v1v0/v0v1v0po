@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>set_item_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set / save data for an item.</h2>
+
+<h3>Description</h3>
+
+<p>There can be multiple items on any given page. Items can be different
+questions, or multiple variables that need to be saved from a single
+question. The <code>question_text</code> is typically
+saved in <code>run_before</code> and the reply (<code>response_text</code> and/or <code>response_id</code>) is
+typically saved in <code>run_after</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">set_item_data(
+  session,
+  page_id,
+  item_id = NULL,
+  question_text = NULL,
+  response_text = NULL,
+  response_id = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>session</code></td>
+<td>
+<p>The shiny session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page_id</code></td>
+<td>
+<p>The page for which to retrieve data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item_id</code></td>
+<td>
+<p>The item for which to set/update data.
+This <em>has</em> to be different for different items on the same page.
+Since most pages contain only a single question/item, <code>item_id</code> is set to "default" if missing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>question_text</code></td>
+<td>
+<p>The question's text. (optional)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_text</code></td>
+<td>
+<p>The user's response in text form. (optional)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_id</code></td>
+<td>
+<p>The user's response as an id from a set of choices.
+(optional)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>nothing
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>get_item_data()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+## Not run: 
+# Set up a "fake" shiny session to store data
+session &lt;- shiny::MockShinySession$new()
+session$userData &lt;- list(
+  current_page_id = "other_page",
+  questionnaire_data = list(
+    example_page = list()
+  )
+)
+
+# This code is expected to be run in e.g. run_before or run_after
+# It doesn't really make sense to run this code outside
+set_item_data(
+  session = session,
+  page_id = "example_page",
+  question_text = "How are you?"
+)
+
+set_item_data(
+  session = session,
+  page_id = "example_page",
+  response_id = 3,
+  response_text = "I'm doing great! (response_id = 3)"
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

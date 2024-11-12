@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OSDR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Finds an Optimal System of Distinct Representatives from a family of subsets. 
+</h2>
+
+<h3>Description</h3>
+
+<p>The function finds an Optimal Set of Distinct Representatives (OSDR) from an ordered family of subsets. Optimality is order-wise in the sense specified by Gale: any other SDR cannot be larger and its elements cannot be chosen from more important sets (see details). 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OSDR(M)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+
+<p>An ordered family of subsets. In assignment problems the list specifying the feasible applicants for each job. In matching problems the list specifying the controls matchable with each treated unit. The list is assumed <em>ordered</em> by decreasing assignment/matching priority. 
+</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Consider a set of jobs and a set of suitable applicants for each job. It was shown by D.Gale that there exists an <em>optimally assignable</em> subset of the jobs in the sense that if <code class="reqn">{a_1, \ldots a_k}</code> is optimal and <code class="reqn">{b_1, \ldots b_h}</code> is another assignable set of jobs then: a) <code class="reqn">k \ge h</code>  and b)  <code class="reqn">a_i \le b_i</code>  for  all <code class="reqn">i</code>. The latter means that job <code class="reqn">a_i</code> has as higher a priority as job <code class="reqn">b_i</code>. From a graph perspective, if <code class="reqn">J</code> is the set of jobs and <code class="reqn">A</code> is the set of applicants the OSDR is an <em>order wise</em> maximum size matching of the bipartite graph with vertex set <code class="reqn">J union A</code>. 
+</p>
+<p>Function <code>OSDR</code> finds the optimal matching using an algorithmic proof of Hall's theorem due to logician D.J. Shoesmith. The algorithm assigns greedily until possible and correct backward when necessary. A message is given when a correction is attempted (when it fails another message warns that Hall's condition is not satisfied).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing three elements: the OSDR (a zero in position <em>i</em> indicates impossibility of assigning job <em>i</em>), the index of optimally assignable jobs and the index of unassignable jobs. If the latter is not empty <code>M</code> does not meet Hall's condition, i.e., a complete SDR is not possible.
+</p>
+
+
+
+
+<h3>Note</h3>
+
+<p>In statistical matching problems the sets <code class="reqn">J</code> and <code class="reqn">A</code> are the sets of treated and control units and it is usually required to find the minimum covariate distance matching of treated versus control units. When a complete matching does not exist it can be convenient to find either an order optimal matching or a minimum cost matching on the <code>OSDR</code> subset (see the gender gap example). 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Massimo Cannas &lt;massimo.cannas@unica.it&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Gale, D. (1968) Optimal matching in an ordered set: an application of matroid theory. <em>Journal of Combinatorial Theory 4: 176-180</em>.
+</p>
+<p>Anderson, I. (1989) A first course in Combinatorial Mathematics. <em>Oxford University Press</em>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See also <code>matlist</code>, <code> listmat</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### example 1
+# M is the list of suitable applicants for five jobs
+M1 &lt;- c("A" , "B")
+M2 &lt;- c("B" , "C")
+M3 &lt;- c("B")
+M4 &lt;- c("A" , "C")
+M5 &lt;- c("B" , "C" , "D")
+M  &lt;- list(M1 , M2 , M3 , M4 , M5)
+
+OSDR(M)
+
+# $OSDR
+# [1] "A" "C" "B" "0" "D"
+# $matched
+# [1] 1 2 3 5
+# $unmatched
+# [1] 4
+
+# job 4 unmatched so Hall's condition is not satisfied: it's impossible to fill all the jobs
+# note that there are (order-\emph{suboptimal}) assignments of the same length of the optimal: 
+# eg: 0CBAD , BC0AD
+
+#### example 2: sligthly modified: more than one order optimal matching
+M1&lt;-c("A","B","C")
+M2&lt;-c("A","C")
+M3&lt;-c("B")
+M4&lt;-c("A","C")
+M5&lt;-c("A","D")
+M  &lt;-list(M1,M2,M3,M4,M5)
+
+OSDR(M)
+
+# note there are other order optimal matchings: ACB0D or CAB0D 
+# note there are also other maximum size matchings (not order optimal):
+# e.g. 0CBAD or BC0AD
+
+
+</code></pre>
+
+
+</div>

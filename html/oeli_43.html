@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matrix_diagonal_indices</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get indices of matrix diagonal</h2>
+
+<h3>Description</h3>
+
+<p>This function returns the indices of the diagonal elements of a quadratic
+matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matrix_diagonal_indices(n, triangular = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+The matrix dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>triangular</code></td>
+<td>
+<p>[<code>NULL</code> or <code>character(1)</code>]<br>
+If <code>NULL</code> (default), all elements of the matrix are considered. If
+<code>"lower"</code> (<code>"upper"</code>), only the lower- (upper-) triangular matrix
+is considered.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>integer</code> <code>vector</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other matrix helpers: 
+<code>check_correlation_matrix()</code>,
+<code>check_covariance_matrix()</code>,
+<code>check_transition_probability_matrix()</code>,
+<code>cov_to_chol()</code>,
+<code>diff_cov()</code>,
+<code>insert_matrix_column()</code>,
+<code>matrix_indices()</code>,
+<code>sample_correlation_matrix()</code>,
+<code>sample_covariance_matrix()</code>,
+<code>sample_transition_probability_matrix()</code>,
+<code>stationary_distribution()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># indices of diagonal elements
+n &lt;- 3
+matrix(1:n^2, n, n)
+matrix_diagonal_indices(n)
+
+# indices of diagonal elements of lower-triangular matrix
+L &lt;- matrix(0, n, n)
+L[lower.tri(L, diag=TRUE)] &lt;- 1:((n * (n + 1)) / 2)
+L
+matrix_diagonal_indices(n, triangular = "lower")
+
+# indices of diagonal elements of upper-triangular matrix
+U &lt;- matrix(0, n, n)
+U[upper.tri(U, diag=TRUE)] &lt;- 1:((n * (n + 1)) / 2)
+U
+matrix_diagonal_indices(n, triangular = "upper")
+</code></pre>
+
+
+</div>

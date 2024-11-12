@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get dimension</h2>
+
+<h3>Description</h3>
+
+<p>Return the dimension of an <code>ondisc_matrix</code>, <code>metadata_ondisc_matrix</code>, or <code>multimodal_ondisc_matrix</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'ondisc_matrix'
+dim(x)
+
+## S4 method for signature 'metadata_ondisc_matrix'
+dim(x)
+
+## S4 method for signature 'multimodal_ondisc_matrix'
+dim(x)
+
+ncol(x)
+
+nrow(x)
+
+## S4 method for signature 'multimodal_ondisc_matrix'
+ncol(x)
+
+## S4 method for signature 'multimodal_ondisc_matrix'
+nrow(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>ondisc_matrix</code>, <code>metadata_ondisc_matrix</code>, or <code>multimodal_ondisc_matrix</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>If <code>x</code> is an <code>ondisc_matrix</code> or <code>metadata_ondisc_matrix</code>, length-two integer vector containing
+the dimension of <code>x</code>; if <code>x</code> is a <code>multimodal_ondisc_matrix</code>, a list of integer vectors containing the dimensions
+of the constituent modalities of <code>x</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># NOTE: You must create the RDS files "expressions.rds" and
+# "perturbations.rds" to run this example. Navigate to the help file of
+# "create_ondisc_matrix_from_mtx" (via ?create_ondisc_matrix_from_mtx),
+# and execute both code blocks.
+
+# dimension of an ondisc_matrix
+h5_fp &lt;- paste0(tempdir(), "/expressions.h5")
+if (file.exists(h5_fp)) {
+odm &lt;- ondisc_matrix(h5_file = h5_fp)
+dim(odm)
+}
+
+# dimension of a metadata_ondic_matrix
+expressions_fp &lt;- paste0(tempdir(), "/expressions.rds")
+if (file.exists(expressions_fp)) {
+expressions &lt;- readRDS(expressions_fp)
+dim(expressions)
+}
+
+# dimension of a multimodal_ondisc_matrix
+expression_fp &lt;- paste0(tempdir(), "/expressions.rds")
+perturbations_fp &lt;- paste0(tempdir(), "/perturbations.rds")
+if (file.exists(expression_fp) &amp;&amp; file.exists(perturbations_fp)) {
+    crispr_experiment &lt;- multimodal_ondisc_matrix(list(expressions = readRDS(expression_fp),
+    perturbations = readRDS(perturbations_fp)))
+    dim(crispr_experiment)
+}
+</code></pre>
+
+
+</div>

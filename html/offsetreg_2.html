@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>boost_tree_offset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Boosted Poisson Trees with Offsets</h2>
+
+<h3>Description</h3>
+
+<p><code>boost_tree_offset()</code> defines a model that creates a series of Poisson
+decision trees with pre-defined offsets forming an ensemble. Each tree
+depends on the results of previous trees. All trees in the ensemble are
+combined to produce a final prediction. This function can be used for count
+regression models only.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">boost_tree_offset(
+  mode = "regression",
+  engine = "xgboost_offset",
+  mtry = NULL,
+  trees = NULL,
+  min_n = NULL,
+  tree_depth = NULL,
+  learn_rate = NULL,
+  loss_reduction = NULL,
+  sample_size = NULL,
+  stop_iter = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>A single character string for the type of model. The only
+possible value for this model is "regression"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>engine</code></td>
+<td>
+<p>A single character string specifying what computational engine
+to use for fitting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mtry</code></td>
+<td>
+<p>A number for the number (or proportion) of predictors that will
+be randomly sampled at each split when creating the tree models
+(specific engines only).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trees</code></td>
+<td>
+<p>An integer for the number of trees contained in
+the ensemble.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_n</code></td>
+<td>
+<p>An integer for the minimum number of data points
+in a node that is required for the node to be split further.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tree_depth</code></td>
+<td>
+<p>An integer for the maximum depth of the tree (i.e. number
+of splits) (specific engines only).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>learn_rate</code></td>
+<td>
+<p>A number for the rate at which the boosting algorithm adapts
+from iteration-to-iteration (specific engines only). This is sometimes referred to
+as the shrinkage parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loss_reduction</code></td>
+<td>
+<p>A number for the reduction in the loss function required
+to split further (specific engines only).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample_size</code></td>
+<td>
+<p>A number for the number (or proportion) of data that is
+exposed to the fitting routine. For <code>xgboost</code>, the sampling is done at
+each iteration while <code>C5.0</code> samples once during training.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stop_iter</code></td>
+<td>
+<p>The number of iterations without improvement before
+stopping (specific engines only).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is similar to <code>parsnip::boost_tree()</code> except that
+specification of an offset column is required.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A model specification object with the classes <code>boost_tree_offset</code> and
+<code>model_spec</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>parsnip::boost_tree()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">parsnip::show_model_info("boost_tree_offset")
+
+boost_tree_offset()
+
+</code></pre>
+
+
+</div>

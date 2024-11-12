@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>df_col_dt_format</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Replace unix timestamp column(s) to formated dt string</h2>
+
+<h3>Description</h3>
+
+<p>Replace unix timestamp column(s) to formated dt string
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">df_col_dt_format(
+  df,
+  col,
+  format = "%Y-%m-%d %H:%M:%S",
+  tz = "",
+  on_missing_col = "warn"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>data.frame, input data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>character vector, column names of the df that will be modified</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>A character string.  The default for the <code>format</code>
+methods is
+<code>"%Y-%m-%d %H:%M:%S"</code> if any element has a time
+component which is not midnight, and <code>"%Y-%m-%d"</code>
+otherwise.  If <code>options("digits.secs")</code> is set, up to
+the specified number of digits will be printed for seconds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tz</code></td>
+<td>
+<p>A character string specifying the time zone to be used for
+the conversion.  System-specific (see <code>as.POSIXlt</code>), but
+<code>""</code> is the current time zone, and <code>"GMT"</code> is UTC.
+Invalid values are most commonly treated as UTC, on some platforms with
+a warning.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>on_missing_col</code></td>
+<td>
+<p>string, behavior for missing column(s):
+"warn" - log warning, "skip" - skip missing column(s), "stop" - throw error</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Modified input data.frame
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">df &lt;- data.frame(
+  x = c("a", "b"),
+  dt = c(1687868601, 1688417643)
+)
+df_col_dt_format(df, "dt")
+df_col_dt_format(df, "dt", "%H:%M")
+
+</code></pre>
+
+
+</div>

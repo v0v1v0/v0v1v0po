@@ -1,0 +1,256 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiPresent_for_ImoVifa</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Implementation of opiPresent for the ImoVifa machine.</h2>
+
+<h3>Description</h3>
+
+<p>This is for internal use only. Use <code>opiPresent()</code> after
+<code>chooseOPI("ImoVifa")</code> to call this function.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stim</code></td>
+<td>
+<p>A list containing:
+</p>
+
+<ul>
+<li> <p><code>lum</code> List of stimuli luminances (cd/m^2).
+</p>
+</li>
+<li> <p><code>stim.length</code> The number of elements in this stimuli.
+</p>
+</li>
+<li> <p><code>color1</code> List of stimulus colors for FLAT shapes and patterns.
+</p>
+</li>
+<li> <p><code>sx</code> List of diameters along major axis of ellipse (degrees).
+</p>
+</li>
+<li> <p><code>sy</code> List of diameters along minor axis of ellipse (degrees).
+</p>
+</li>
+<li> <p><code>eye</code> The eye for which to apply the settings.
+</p>
+</li>
+<li> <p><code>t</code> List of stimuli presentation times (ms). If 0, then the next stim
+list element will be shown simultaneously.
+</p>
+</li>
+<li> <p><code>w</code> Time to wait for response including presentation time (ms).
+</p>
+</li>
+<li> <p><code>x</code> List of x co-ordinates of stimuli (degrees).
+</p>
+</li>
+<li> <p><code>y</code> List of y co-ordinates of stimuli (degrees).
+</p>
+</li>
+<li> <p><code>envSdx</code> (Optional) List of envelope sd in x direction in degrees.
+Only useful if envType != NONE
+</p>
+</li>
+<li> <p><code>envSdy</code> (Optional) List of envelope sd in y direction in degrees.
+Only useful if envType != NONE
+</p>
+</li>
+<li> <p><code>envRotation</code> (Optional) List of envelope rotations in degrees. Only useful if envType != NONE
+</p>
+</li>
+<li> <p><code>type</code> (Optional) Stimulus type. Values include FLAT, SINE,
+CHECKERBOARD, SQUARESINE, G1, G2, G3, IMAGE
+</p>
+</li>
+<li> <p><code>frequency</code> (Optional) List of frequencies (in cycles per degrees)
+for generation of spatial patterns. Only useful if type != FLAT
+</p>
+</li>
+<li> <p><code>color2</code> (Optional) List of second colors for non-FLAT shapes
+</p>
+</li>
+<li> <p><code>fullFoV</code> (Optional) If !0 fullFoV scales image to full field of view
+and sx/sy are ignored.
+</p>
+</li>
+<li> <p><code>phase</code> (Optional) List of phases (in degrees) for generation of
+spatial patterns. Only useful if type != FLAT
+</p>
+</li>
+<li> <p><code>imageFilename</code> (Optional) If type == IMAGE, the filename on the
+local filesystem of the machine running JOVP of the image to use
+</p>
+</li>
+<li> <p><code>shape</code> (Optional) Stimulus shape. Values include CROSS, TRIANGLE,
+CIRCLE, SQUARE, OPTOTYPE.
+</p>
+</li>
+<li> <p><code>rotation</code> (Optional) List of angles of rotation of stimuli
+(degrees). Only useful if sx != sy specified.
+</p>
+</li>
+<li> <p><code>texRotation</code> (Optional) List of angles of rotation of stimuli
+(degrees). Only useful if type != FLAT
+</p>
+</li>
+<li> <p><code>defocus</code> (Optional) List of defocus values in Diopters for stimulus post-processing.
+</p>
+</li>
+<li> <p><code>envType</code> (Optional) List of envelope types to apply to the stims).
+Only useful if type != FLAT
+</p>
+</li>
+<li> <p><code>contrast</code> (Optional) List of stimulus contrasts (from 0 to 1). Only
+useful if type != FLAT.
+</p>
+</li>
+<li> <p><code>optotype</code> (Optional) If shape == OPTOTYPE, the letter A to Z to use
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Parameters for other opiPresent implementations that are ignored here.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Elements in <code>lum</code> can take on values in the range <code>[0.0, 1.0E10]</code>.
+</p>
+<p><code>stim.length</code> can take on values in the range <code>[1, 2147483647]</code>.
+</p>
+<p>Elements in <code>color1</code> can take on values in the range <code>[0.0, 1.0]</code>.
+</p>
+<p>Elements in <code>sx</code> can take on values in the range <code>[0.0, 180.0]</code>.
+</p>
+<p>Elements in <code>sy</code> can take on values in the range <code>[0.0, 180.0]</code>.
+</p>
+<p>Elements in <code>eye</code> can take on values in the set
+<code>{"left", "right", "both", "none"}</code>.
+</p>
+<p>Elements in <code>t</code> can take on values in the range <code>[0.0, 1.0E10]</code>.
+</p>
+<p><code>w</code> can take on values in the range <code>[0.0, 1.0E10]</code>.
+</p>
+<p>Elements in <code>x</code> can take on values in the range <code>[-90.0, 90.0]</code>.
+</p>
+<p>Elements in <code>y</code> can take on values in the range <code>[-90.0, 90.0]</code>.
+</p>
+<p>Elements in <code>envSdx</code> can take on values in the range
+<code>[-1.0E10, 1.0E10]</code>.
+</p>
+<p>Elements in <code>envSdy</code> can take on values in the range
+<code>[-1.0E10, 1.0E10]</code>.
+</p>
+<p>Elements in <code>envRotation</code> can take on values in
+the range <code>[-1.0E10, 1.0E10]</code>.
+</p>
+<p>Elements in <code>type</code> can take on values in the set
+<code>{"flat", "checkerboard", "sine", "squaresine", "g1",
+                 "g2", "g3", "text", "image"}</code>.
+</p>
+<p>Elements in <code>frequency</code> can take on values in the
+range <code>[0.0, 300.0]</code>.
+</p>
+<p>Elements in <code>color2</code> can take on values in the range <code>[0.0, 1.0]</code>.
+</p>
+<p>Elements in <code>fullFoV</code> can take on values in the
+range <code>[-1.0E10, 1.0E10]</code>.
+</p>
+<p>Elements in <code>phase</code> can take on values in the range <code>[0.0, 1.0E10]</code>.
+</p>
+<p>Elements in <code>shape</code> can take on values in the set
+<code>{"triangle", "square", "polygon", "hollow_triangle",
+                  "hollow_square", "hollow_polygon", "cross", "maltese",
+                  "circle", "annulus", "optotype", "text", "model"}</code>.
+</p>
+<p>Elements in <code>rotation</code> can take on values in the range <code>[0.0, 360.0]</code>.
+</p>
+<p>Elements in <code>texRotation</code> can take on values in
+the range <code>[0.0, 360.0]</code>.
+</p>
+<p>Elements in <code>defocus</code> can take on values in the range <code>[0.0, 1.0E10]</code>.
+</p>
+<p>Elements in <code>envType</code> can take on values in the set
+<code>{"none", "square", "circle", "gaussian"}</code>.
+</p>
+<p>Elements in <code>contrast</code> can take on values in the range <code>[0.0, 1.0]</code>.
+</p>
+<p>Elements in <code>optotype</code> can take on values in the
+set <code>{"a", "b", "c", "d", "e", "f", "g", "h", "i",
+                     "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                     "u", "v", "w", "x", "y", "z"}</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing:
+</p>
+
+<ul>
+<li> <p><code>err</code> <code>NULL</code> if there was no error, a string message if there is an error.
+</p>
+</li>
+<li> <p><code>eyedStart</code> Diameter of pupil at stimulus onset (pixels).
+</p>
+</li>
+<li> <p><code>eyexEnd</code> x co-ordinate of pupil at button press (pixels from image
+centre. Image is 640x480, left &lt; 0). Note that for
+multi-part stimuli (t=0), the eye taken is the <em>last</em> eye
+in the list of components.
+</p>
+</li>
+<li> <p><code>eyeyEnd</code> y co-ordinate (pixels). See eyexEnd for more details. (up &gt; 0)
+</p>
+</li>
+<li> <p><code>eyedEnd</code> Diameter of pupil at button press or response window expiry (pixels).
+</p>
+</li>
+<li> <p><code>eyexStart</code> x co-ordinates of pupil at stimulus onset (pixels from
+image centre. Image is 640x480, left &lt; 0). For a
+multi-part stimulus (t=0), the eye taken is the <em>first</em>
+eye in the list of components.
+</p>
+</li>
+<li> <p><code>time</code> Response time from stimulus onset if button pressed (ms).
+</p>
+</li>
+<li> <p><code>seen</code> '1' if seen, '0' if not.
+</p>
+</li>
+<li> <p><code>eyeyStart</code> y co-ordinates (pixels from image centre). See eyexStart
+for more details. (up &gt; 0)
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>opiPresent()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">chooseOpi("ImoVifa")
+opiInitialise(list(port = 50001, ip = "localhost"))
+opiSetup(list(eye = "BOTH"))
+result &lt;- opiPresent(stim = list(lum = list(300.0), stim.length = 1, color1 = list(list(1.0,
+                  1.0, 1.0)), sx = list(1.72), sy = list(1.72),
+                  eye = list("LEFT"), t = list(200.0), w = 1500.0, x = list(0.0), y = list(0.0)))
+
+</code></pre>
+
+
+</div>

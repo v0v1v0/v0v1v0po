@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bspline</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute base splines of a variable using the R function <code>splines::bs</code>, use in the transform stage.</h2>
+
+<h3>Description</h3>
+
+<p>Simply wraps the <code>splines::bs</code>, such that it can be used in the transformation stage.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bspline(
+  X,
+  Boundary.knots = NA,
+  intercept = FALSE,
+  df = NULL,
+  knots = NULL,
+  degree = 3,
+  bknots = NA,
+  periodic = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>data.frame (as part of data.list) with horizons as columns named <code>kxx</code> (i.e. one for each horizon)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Boundary.knots</code></td>
+<td>
+<p>The value is NA: then the boundaries are set to the range of each horizons (columns in X). See <code>?splines::bs</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intercept</code></td>
+<td>
+<p>See <code>?splines::bs</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>See <code>?splines::bs</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>knots</code></td>
+<td>
+<p>See <code>?splines::bs</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>degree</code></td>
+<td>
+<p>See <code>?splines::bs</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bknots</code></td>
+<td>
+<p>Is just a short for Boundary.knots and replace Boundary.knots (if Boundary.knots is not given)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>periodic</code></td>
+<td>
+<p>Default FALSE. If TRUE, then <code>pbs::pbs</code> is called and periodic splines are generated.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See the help for all arguments with <code>?splines::bs</code>. NOTE that two arguments have different default values.
+</p>
+<p>See the example <a href="https://onlineforecasting.org/examples/solar-power-forecasting.html">https://onlineforecasting.org/examples/solar-power-forecasting.html</a> where the function is used in a model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of data frames with the computed base splines, each with columns for the same horizons as in X
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Transform stage functions: 
+<code>pbspline()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# How to make a diurnal curve using splines
+# Select first 54 hours from the load data
+D &lt;- subset(Dbuilding, 1:76, kseq=1:4)
+# Make the hour of the day as a forecast input
+D$tday &lt;- make_tday(D$t, kseq=1:4)
+D$tday
+
+# Calculate the base splines for each column in tday
+L &lt;- bspline(D$tday)
+
+# Now L holds a data.frame for each base spline
+str(L)
+# Hence this will result in four inputs for the regression model
+
+# Plot (note that the splines period starts at tday=0)
+plot(D$t, L$bs1$k1, type="s")
+for(i in 2:length(L)){
+  lines(D$t, L[[i]]$k1, col=i, type="s")
+}
+
+# In a model formulation it will be:
+model &lt;- forecastmodel$new()
+model$add_inputs(mutday = "bspline(tday)")
+# We set the horizons (actually not needed for the transform, only required for data checks)
+model$kseq &lt;- 1:4
+# Such that at the transform stage will give the same as above
+model$transform_data(D)
+
+# Periodic splines are useful for modelling a diurnal harmonical functions
+L &lt;- bspline(D$tday, bknots=c(0,24), df=4, periodic=TRUE)
+# or
+L &lt;- pbspline(D$tday, bknots=c(0,24), df=4)
+# Note, how it has to have high enough df, else it generates an error
+
+# Plot
+plot(D$t, L$bs1$k1, type="s")
+for(i in 2:length(L)){
+   lines(D$t, L[[i]]$k1, col=i, type="s")
+}
+
+</code></pre>
+
+
+</div>

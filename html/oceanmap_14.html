@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cmap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+color maps 
+</h2>
+
+<h3>Description</h3>
+
+<p>list holding different color maps that can be used in image plots (see: v, get.bathy, image, image.plots, clim_plot)
+</p>
+<p>available color maps are: <code>ano</code>, <code>bathy</code>, <code>blue</code>, <code>chla</code>, <code>haxby</code>, <code>jet</code> (obtained from matlab), <code>rainbow</code>, <code>red</code>, <code>orange</code>, <code>green</code>, <code>sst</code> and <code>haxbyrev</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(cmap)
+data(cmap_topo)
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>list
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data('cmap') # load color maps data
+names(cmap) # list available color maps
+
+path &lt;- system.file("test_files", package="oceanmap")
+gz.files &lt;- Sys.glob(paste0(path,'/*.gz')) # load sample-'.gz'-files
+# figure(width=15,height=15)
+# par(mfrow=c(4,5))
+# for(n in names(cmap)) v(gz.files[2], v_area='lion', subplot=TRUE,
+#                         pal=n, adaptive.vals=TRUE, main=n)
+
+## simple example of the \link{image}-function
+x &lt;- 10*(1:nrow(volcano))
+y &lt;- 10*(1:ncol(volcano))
+image(x, y, volcano, col = terrain.colors(100))
+image(x, y, volcano, col = cmap$jet) # jet color map
+image(x, y, volcano, col = cmap$haxby) # haxby color map
+image(x, y, volcano, col = cmap$chla) # chlorophyll color map
+image(x, y, volcano, col = cmap$sst) # sst color map
+
+data(cmap_topo)
+image(x, y, volcano, col = cmap_topo$col) # topography color map
+
+## another example: plot bathymetry and topography of the western Mediterranean Sea
+#get.bathy("medw4",visualize=T,terrain=T,res=3)
+#get.bathy("medw4",visualize=T,terrain=F,res=3,levels=c(200,2000)) # show contours
+
+</code></pre>
+
+
+</div>

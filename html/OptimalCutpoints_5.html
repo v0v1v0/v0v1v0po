@@ -1,0 +1,471 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optimal.cutpoints</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Computing Optimal Cutpoints in diagnostic tests
+</h2>
+
+<h3>Description</h3>
+
+<p>optimal.cutpoints calculates optimal cutpoints in diagnostic tests. Several methods or criteria for selecting optimal cutoffs have been implemented, including methods based on cost-benefit analysis and diagnostic test accuracy measures
+(Sensitivity/Specificity, Predictive Values and Diagnostic Likelihood Ratios) or prevalence (Lopez-Raton et al. 2014).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optimal.cutpoints(X, ...)
+## Default S3 method:
+optimal.cutpoints(X, status, tag.healthy, methods, data, direction = c("&lt;", "&gt;"), 
+categorical.cov = NULL, pop.prev = NULL, control = control.cutpoints(), 
+ci.fit = FALSE, conf.level = 0.95, trace = FALSE, ...)
+## S3 method for class 'formula'
+optimal.cutpoints(X, tag.healthy, methods, data, direction = c("&lt;", "&gt;"), 
+categorical.cov = NULL, pop.prev = NULL, control = control.cutpoints(), 
+ci.fit = FALSE, conf.level = 0.95, trace = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>either a character string with the name of the diagnostic test variable (then method 'optimal.cutpoints.default' is called), or a formula (then method 'optimal.cutpoints.formula' is called). When 'X' is a formula, it must be an object of class "formula". Right side of ~ must contain the name of the variable that distinguishes healthy from diseased individuals, and left side of ~ must contain the name of the diagnostic test variable.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+
+<p>a character string with the name of the variable that distinguishes healthy from diseased individuals. Only applies for the method 'optimal.cutpoints.default').
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tag.healthy</code></td>
+<td>
+
+<p>the value codifying healthy individuals in the <code>status</code> variable .
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>methods</code></td>
+<td>
+
+<p>a character vector selecting the method(s) to be used: "CB" (cost-benefit method); "MCT" (minimizes Misclassification Cost Term); "MinValueSp" (a minimum value set for Specificity);
+"MinValueSe" (a minimum value set for Sensitivity); "ValueSe" (a value set for Sensitivity); "MinValueSpSe" (a minimum value set for Specificity and Sensitivity); "MaxSp" (maximizes Specificity); "MaxSe" (maximizes Sensitivity);"MaxSpSe" (maximizes Sensitivity and Specificity simultaneously); 
+"MaxProdSpSe" (maximizes the product of Sensitivity and Specificity or Accuracy Area); "ROC01" (minimizes distance between ROC plot and point (0,1)); "SpEqualSe" (Sensitivity = Specificity); "Youden" (Youden Index); 
+"MaxEfficiency" (maximizes Efficiency or Accuracy, similar to minimize Error Rate); "Minimax" (minimizes the most frequent error); "MaxDOR" (maximizes Diagnostic Odds Ratio); "MaxKappa" (maximizes Kappa Index); 
+"MinValueNPV" (a minimum value set for Negative Predictive Value); "MinValuePPV" (a minimum value set for Positive Predictive Value); "ValueNPV" (a value set for Negative Predictive Value);"ValuePPV" (a value set for Positive Predictive Value);"MinValueNPVPPV" (a minimum value set for Predictive Values); 
+"PROC01" (minimizes distance between PROC plot and point (0,1)); "NPVEqualPPV" (Negative Predictive Value = Positive Predictive Value); "MaxNPVPPV" (maximizes Positive Predictive Value and Negative Predictive Value simultaneously);
+"MaxSumNPVPPV" (maximizes the sum of the Predictive Values); "MaxProdNPVPPV" (maximizes the product of Predictive Values); "ValueDLR.Negative" (a value set for Negative Diagnostic Likelihood Ratio);
+"ValueDLR.Positive" (a value set for Positive Diagnostic Likelihood Ratio); "MinPvalue" (minimizes p-value associated with the statistical Chi-squared test which measures the association between the marker and the binary result obtained on using the cutpoint); 
+"ObservedPrev" (The closest value to observed prevalence); "MeanPrev" (The closest value to the mean of the diagnostic test values); or "PrevalenceMatching" (The value for which predicted prevalence is practically equal to observed prevalence).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>a data frame containing all needed variables.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>direction</code></td>
+<td>
+
+<p>character string specifying the direction to compute the ROC curve. By default individuals with a test value lower than the cutoff are classified as healthy (negative test),
+whereas patients with a test value greater than (or equal to) the cutoff are classified as diseased (positive test). If this is not the case, however, and the high values are related to health, this argument should be established at "&gt;".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>categorical.cov</code></td>
+<td>
+
+<p>a character string with the name of the categorical covariate according to which optimal cutpoints are to be calculated. The default is NULL (no categorical covariate).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pop.prev</code></td>
+<td>
+
+<p>the value of the disease's prevalence. The default is NULL (prevalence is estimated on the basis of sample prevalence). It can be a vector indicating
+the prevalence values for each categorical covariate level.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+
+<p>output of the <code>control.cutpoints</code> function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.fit</code></td>
+<td>
+
+<p>a logical value. If TRUE, inference is performed on the accuracy measures at the optimal cutpoint. The default is FALSE.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.level</code></td>
+<td>
+
+<p>a numerical value with the confidence level for the construction of the confidence intervals. The default value is 0.95.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+
+<p>a logical value. If TRUE, information on progress is shown. The default is FALSE.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods. None are used in this method.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Continuous biomarkers or diagnostic tests are often used to discriminate between diseased and healthy populations. In clinical practice, it is necessary to select a cutpoint or discrimination value c which defines positive and negative test results. Several methods for selecting optimal cutpoints in diagnostic tests have been proposed in the literature depending on the underlying reason for this choice. In this package, thirty-two criteria are available.
+Before describing the methods in detail, mention should be made of the following notation: <code class="reqn">C_{FP}</code>, <code class="reqn">C_{TN}</code>, <code class="reqn">C_{FN}</code> and <code class="reqn">C_{TP}</code> are the costs of False Positive, True Negative, False Negative and True Positive decisions, respectively; <code class="reqn">p</code> is disease prevalence; <code class="reqn">Se</code> is Sensitivity; and <code class="reqn">Sp</code> is Specificity. 
+</p>
+<p><code>"CB"</code>: Criterion based on cost-benefit methodology by means of calculating the slope of the ROC curve at the optimal cutoff as </p>
+<p style="text-align: center;"><code class="reqn"> S=\frac{1-p}{p}CR=\frac{1-p}{p}\frac{C_{FP}-C_{TN}}{C_{FN}-C_{TP}}</code>
+</p>
+<p> (McNeill et al. 1975; Metz et al. 1975; Metz 1978). This method thus weighs the relative costs of the different predictions in the diagnosis. By default, the costs ratio is 1, and this is the <code>costs.ratio</code> argument in the <code>control.cutpoints</code> function.
+</p>
+<p><code>"MCT"</code>: Criterion based on the minimization of the Misclassification Cost Term (MCT) defined as </p>
+<p style="text-align: center;"><code class="reqn">MCT(c)=\frac{C_{FN}}{C_{FP}}p(1-Se(c))+(1-p)(1-Sp(c))</code>
+</p>
+<p>(Smith 1991; Greiner 1995,1996). By default, <code class="reqn">C_{FN}=C_{FP} =</code> 1, and these are the <code>CFN</code> and <code>CFP</code> arguments in the <code>control.cutpoints</code> function.
+</p>
+<p><code>"MinValueSp"</code>: Criterion based on setting a minimum value for Specificity and maximizing Sensitivity, subject to this condition (Shaefer 1989; Vermont et al. 1991; Gallop et al. 2003). Hence, in a case where there is more than one cutpoint fulfilling this condition, those which yield maximum Sensitivity are chosen. If several cutpoints still remain, those yielding the greatest Specificity are chosen. By default, the minimum value for Specificity is 0.85, and this is the <code>valueSp</code> argument in the <code>control.cutpoints</code> function.    
+</p>
+<p><code>"MinValueSe"</code>: Criterion based on setting a minimum value for Sensitivity and maximizing Specificity, subject to this condition (Shaefer 1989; Vermont et al. 1991; Gallop et al. 2003). Hence, in a case where there is more than one cutpoint fulfilling this condition, those which yield maximum Specificity are chosen. If several cutpoints still remain, those yielding the greatest Sensitivity are chosen. By default, the minimum value for Sensitivity is 0.85, and this is the <code>valueSe</code> argument in the <code>control.cutpoints</code> function.
+</p>
+<p><code>"ValueSp"</code>: Criterion based on setting a particular value for Specificity (Rutter and Miglioretti 2003). In a case where there is more than one cutpoint fulfilling this condition, those which yield maximum Sensitivity are chosen.
+</p>
+<p><code>"ValueSe"</code>: Criterion based on setting a particular value for Sensitivity (Rutter and Miglioretti 2003). In a case where there is more than one cutpoint fulfilling this condition, those which yield maximum Specificity are chosen.
+</p>
+<p><code>"MinValueSpSe"</code>: Criterion based on setting minimum values for Sensitivity and Specificity measures (Shaefer 1989). In a case where there is more than one cutpoint fulfilling these conditions, those which yield maximum Sensitivity or maximum Specificity are chosen. The user can select one of these two options by means of the <code>maxSp</code> argument in the <code>control.cutpoints</code> function. If TRUE (the default value), the cutpoint/s yielding maximum Specificity is/are computed. If there are still several cutpoints which maximize the chosen measure, those which also maximize the other measure are chosen. 
+</p>
+<p><code>"MaxSp"</code>: Criterion based on maximization of Specificity (Bortheiry et al. 1994; Hoffman et al. 2000; Alvarez-Garcia et al. 2003). If there is more than one cutpoint fulfilling this condition, those which yield maximum Sensitivity are chosen.
+</p>
+<p><code>"MaxSe"</code>: Criterion based on maximization of Sensitivity (Filella et al. 1995; Hoffman et al. 2000; Alvarez-Garcia et al. 2003). If there is more than one cutpoint fulfilling this condition, those which yield maximum Specificity are chosen.
+</p>
+<p><code>"MaxSpSe"</code>: Criterion based on simultaneously maximizing Sensitivity and Specificity (Riddle and Stratford 1999; Gallop et al. 2003).
+</p>
+<p><code>"MaxProdSpSe"</code>: Criterion based on maximizing the product of Specificity and Sensitivity (Lewis et al. 2008). 
+This criterion is the same as the method based on maximization of the Accuracy Area (Greiner 1995, 1996) defined as </p>
+<p style="text-align: center;"><code class="reqn">AA(c)=frac{TP(c)TN(c)}{(TP(c)+FN(c))(FP(c)+TN(c))}</code>
+</p>
+<p> where <code class="reqn">TP</code>, <code class="reqn">TN</code>, <code class="reqn">FN</code> and <code class="reqn">FP</code> are the number of True Positives, True Negatives, False Negatives and False Positives classifications, respectively.  
+</p>
+<p><code>"ROC01"</code>: Criterion of the point on the ROC curve closest to the point (0,1), i.e, upper left corner of the unit square (Metz 1978; Vermont et al. 1991).
+</p>
+<p><code>"SpEqualSe"</code>: Criterion based on the equality of Sensitivity and Specificity (Greiner et al. 1995; Hosmer and Lemeshow 2000; Peng and So 2002). Since Specificity may not be exactly equal to Sensitivity, the absolute value of the difference between them is minimized.
+</p>
+<p><code>"Youden"</code>: Criterion based on Youden's Index (Youden 1950; Aoki et al. 1997; Shapiro 1999; Greiner et al. 2000) defined as <code class="reqn">YI(c)=max_{c}(Se(c)+Sp(c)-1)</code>. This is identical (from an optimization point of view) to the method that maximizes the sum of Sensitivity and Specificity (Albert and Harris 1987; Zweig and Campbell 1993) and to the criterion that maximizes concordance, wich is a monotone function of the AUC, defined as </p>
+<p style="text-align: center;"><code class="reqn">AUC(c)=\frac{Se(c)-(1-Sp(c))+1}{2}</code>
+</p>
+<p> (Begg et al. 2000; Gonen and Sima 2008).
+Costs of misclassifications can be considered in this criterion and for using the Generalized Youden Index: <code class="reqn">GYI(c)=max_{c}(Se(c)+rSp(c)-1</code> (Geisser 1998; Greiner et al. 2000; Schisterman et al. 2005), where </p>
+<p style="text-align: center;"><code class="reqn">r=\frac{1-p}{p}\frac{C_{FN}}{C_{FP}}</code>
+</p>
+<p>. If the <code>generalized.Youden</code> argument in the <code>control.cutpoints</code> function is TRUE, Generalized Youden Index is computed. The default is FALSE. The <code>CFN</code> and <code>CFP</code> arguments in the <code>control.cutpoints</code> function indicate the cost values, and by default, <code class="reqn">C_{FN}=C_{FP}=</code>1.
+Moreover, the optimal cutpoint based on Youden's Index can be computed by means of cost-benefit methodology (see "CB" method), with the slope of the ROC curve at the optimal cutoff being <code class="reqn">S=1</code> for the Youden Index and <code class="reqn">S=\frac{1-p}{p}\frac{C_{FN}}{C_{FP}}</code> for the Generalized Youden Index. If the <code>costs.benefits.Youden</code> argument in the <code>control.cutpoints</code> function is TRUE, the optimal cutpoint based on cost-benefit methodology is computed. By default, it is FALSE.  
+</p>
+<p><code>"MaxEfficiency"</code>: Criterion based on maximization of the Efficiency, Accuracy, Validity Index or percentage of cases correctly classified defined as <code class="reqn">Ef(c)=pSe(c)+(1-p)Sp(c)</code> (Feinstein 1975; Galen 1986; Greiner 1995, 1996).
+This criterion is similar to the criterion based on minimization of the Misclassification Rate which measures the error in cases where diseased and disease-free patients are misdiagnosed (Metz 1978). It is defined as <code class="reqn">ER(c)= p(1-Se(c))+(1-p)(1-Sp(c))</code>.
+Moreover, the optimal cutpoint based on this method can be computed by means of cost-benefit methodology (see "CB" method), with the slope of the ROC curve at the optimal cutoff being <code class="reqn">S=\frac{1-p}{p}</code>. If the <code>costs.benefits.Efficiency</code> argument in the <code>control.cutpoints</code> function is TRUE, the optimal cut-point based on cost-benefit methodology is computed. By default, it is FALSE.  
+</p>
+<p><code>"Minimax"</code>: Criterion based on minimization of the most frequent error (Hand 1987): <code class="reqn">min_{c}(max(p(1-Se(c)),(1-p)(1-Sp(c))))</code>. In a case where there is more than one cutpoint fulfilling this condition, those which yield maximum Sensitivity or maximum Specificity are chosen. The user can select one of these two options by means of the <code>maxSp</code> argument in the <code>control.cutpoints</code> function. If TRUE (the default value), the cutpoint/s yielding maximum Specificity is/are computed. If there are still several cutpoints which maximize the chosen measure, those which also maximize the other measure are chosen. 
+</p>
+<p><code>"MaxDOR"</code>: Criterion based on maximizating the Diagnostic Odds Ratio (DOR), defined as </p>
+<p style="text-align: center;"><code class="reqn">DOR(c)=\frac{Se(c)}{(1-Se(c))}\frac{Sp(c)}{(1-Sp(c))}</code>
+</p>
+<p> (Kraemer 1992; Greiner et al. 2000; Boehning et al. 2011).
+</p>
+<p><code>"MaxKappa"</code>: Criterion based on maximization of the Kappa Index (Cohen 1960; Greiner et al. 2000). Kappa makes full use of the information in the confusion matrix to assess the improvement over chance prediction. Costs of misclassifications can be considered in this criterion and for using the Weighted Kappa Index (Kraemer 1992; Kraemer et al. 2002) defined as 
+</p>
+<p style="text-align: center;"><code class="reqn">PK(c)=\frac{p(1-p)(Se(c)+Sp(c)-1)}{p(p(1-Se(c))+(1-p)Sp(c))r+(1-p)(pSe(c)+(1-p)(1-Sp(c)))(1-r)}</code>
+</p>
+
+<p>where </p>
+<p style="text-align: center;"><code class="reqn">r=\frac{C_{FP}}{ C_{FP}+ C_{FN}}</code>
+</p>
+<p>. If the <code>weighted.Kappa</code> argument in the <code>control.cutpoints</code> function is TRUE, the Weighted Kappa Index is computed. The default value is FALSE. The <code>CFN</code> and <code>CFP</code> arguments in the <code>control.cutpoints</code> function indicate the cost values, and by default, <code class="reqn">C_{FP}=C_{FN}</code>= 1.
+</p>
+<p><code>"MinValueNPV"</code>: Criterion based on setting a minimum value for Negative Predictive Value (Vermont et al. 1991). In a case where there is more than one cutpoint fulfilling this condition, those which yield the maximum Positive Predictive Value are chosen. If several cutpoints still remain, those yielding the highest Negative Predictive Value are chosen. By default, the minimum value for Negative Predictive Value is 0.85 and this is the <code>valueNPV</code> argument in the <code>control.cutpoints()</code> function. 
+</p>
+<p><code>"MinValuePPV"</code>: Criterion based on setting a minimum value for Positive Predictive Value (Vermont et al. 1991). In a case where there is more than one cutpoint fulfilling this condition, those which yield the maximum Negative Predictive Value are chosen. If several cutpoints still remain, those yielding the highest Positive Predictive Value are chosen. By default, the minimum value for Positive Predictive Value is 0.85, and this is specified by the <code>valuePPV</code> argument in the <code>control.cutpoints()</code> function.
+</p>
+<p><code>"ValueNPV"</code>: Criterion based on setting a particular value for Negative Predictive Value. In a case where there is more than one cutpoint fulfilling this condition, those which yield maximum Positive Predictive Value are chosen.
+</p>
+<p><code>"ValuePPV"</code>: Criterion based on setting a particular value for Positive Predictive Value. In a case where there is more than one cutpoint fulfilling this condition, those which yield maximum Negative Predictive Value are chosen.
+</p>
+<p><code>"MinValueNPVPPV"</code>: Criterion based on setting minimum values for Predictive Values (Vermont et al. 1991). In a case where there is more than one cutpoint fulfilling these conditions, those which yield the maximum Negative or maximum Positive Predictive Value are chosen. The user can select one of these two options by means of the <code>maxNPV</code> argument in the <code>control.cutpoints</code> function. If TRUE (the default value), the cutpoint/s yielding maximum Negative Predictive Value is/are computed. If there are still several cutpoints which maximize the chosen measure, those which also maximize the other measure are chosen.
+</p>
+<p><code>"PROC01"</code>: Criterion of the point on the PROC curve closest to the point (0,1), i.e., upper left corner of the unit square (Vermont et al. 1991; Gallop et al. 2003).
+</p>
+<p><code>"NPVEqualPPV"</code>: Criterion based on the equality of Predictive Values (Vermont et al. 1991). Since the Positive Predictive Value may not be exactly equal to the Negative Predictive Value, the absolute value of the difference between them is minimized.
+</p>
+<p><code>"MaxNPVPPV"</code>: Criterion based on simultaneously maximizing Positive Predictive Value and Negative Predictive Value.
+</p>
+<p><code>"MaxSumNPVPPV"</code>: Criterion based on maximizing the sum of Positive Predictive Value and Negative Predictive Value.
+</p>
+<p><code>"MaxProdNPVPPV"</code>: Criterion based on maximizing the product of Positive Predictive Value and Negative Predictive Value.
+</p>
+<p><code>"ValueDLR.Negative"</code>: Criterion based on setting a particular value for the Negative Diagnostic Likelihood Ratio (Boyko 1994; Rutter and Miglioretti 2003). The default value is 0.5, and it is specified by the <code>valueDLR.Negative</code> argument in the <code>control.cutpoints</code> function.
+</p>
+<p><code>"ValueDLR.Positive"</code>: Criterion based on setting a particular value for the Positive Diagnostic Likelihood Ratio (Boyko 1994; Rutter and Miglioretti 2003). The default value is 2, and it is specified by the <code>valueDLR.Positive</code> argument in the <code>control.cutpoints</code> function.
+</p>
+<p><code>"MinPvalue"</code>: Criterion based on the minimum p-value associated with the statistical Chi-squared test which measures the association between the marker and the binary result obtained on using the cutpoint (Miller and Siegmund 1982; Lausen and Schumacher 1992; Altman et al. 1994; Mazumdar and Glasman 2000). 
+</p>
+<p><code>"ObservedPrev"</code>: Criterion based on setting the closest value to observed prevalence, i.e., <code class="reqn">c/max_{c}{|c-p|}</code>, with p being prevalence estimated from the sample. This criterion is thus indicated/valid in cases where the diagnostic test takes values in the interval (0,1), and it is a useful method in cases where preserving prevalence is of prime importance (Manel et al. 2001).
+</p>
+<p><code>"MeanPrev"</code>: Criterion based on setting the closest value to the mean of the diagnostic test values. This criterion is usually used in cases where the diagnostic test takes values in the interval (0,1), i.e., the mean probability of ocurrence, e.g., based on the results of a statistical model(Manel et al. 2001; Kelly et al. 2008).
+</p>
+<p><code>"PrevalenceMatching"</code>: Criterion based on the equality of sample and predicted prevalence: <code class="reqn">pSe(c)+(1-p)(1-Sp(c))</code> where <code class="reqn">p</code> is the prevalence estimated from the sample (Manel et al. 2001; Kelly et al. 2008). This criterion is usually used in cases where the diagnostic test takes values in the interval (0,1), i.e., the predicted probability, e.g., based on a statistical model.                                                                                                                                                                                                                                 
+</p>
+
+
+<h3>Value</h3>
+
+                                                                                                                                                                                                                                     
+<p>Returns an object of class "optimal.cutpoints" with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>methods</code></td>
+<td>
+<p>a character vector with the value of the <code>methods</code> argument used in the call.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels.cat</code></td>
+<td>
+<p>a character vector indicating the levels of the categorical covariate if the <code>categorical.cov</code> argument in the <code>optimal.cutpoints</code> function is not NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the matched call.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the data frame with the variables used in the call.</p>
+</td>
+</tr>
+</table>
+<p>For each of the methods used in the call, a list with the following components is obtained:  
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>"measures.acc"</code></td>
+<td>
+<p>a list with all possible cutoffs, their associated accuracy measures (Sensitivity, Specificity, Predictive Values, Diagnostic Likelihood Ratios and Area under ROC Curve, AUC),
+the prevalence and the sample size for both healthy and diseased populations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>"optimal.cutoff"</code></td>
+<td>
+<p>a list with the optimal cutoff(s) and its/their associated accuracy measures (Sensitivity, Specificity, Predictive Values, Diagnostic Likelihood Ratios and the number of False Positive and False Negative decisions).</p>
+</td>
+</tr>
+</table>
+<p>The following components only appear in some methods:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>"criterion"</code></td>
+<td>
+<p>the value of the method considered for selecting the optimal cutpoint for each cutoff.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>"optimal.criterion"</code></td>
+<td>
+<p>the optimal value of the method considered for selecting the optimal cutpoint, i.e., the value of the criterion at the optimal cutpoint.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Monica Lopez-Raton and Maria Xose Rodriguez-Alvarez
+</p>
+
+
+<h3>References</h3>
+
+<p>Albert, A. and Harris, E.K. (1987). Multivariate Interpretation of Clinical Laboratory Data. Marcel Dekker, New York, NY.
+</p>
+<p>Altman, D.G., Lausen, B., Sauerbrei, W. and Schumacher, M. (1994). Dangers of using "optimal" cutpoints in the evaluation of prognostic factors. <em>Journal of the National Cancer Institute</em> <b>86</b> (11), 829–835.
+</p>
+<p>Alvarez-Garcia, G. et al. (2003). Influence of age and purpose for testing on the cut-off selection of serological methods in bovine neosporosis. <em>Veterinary Research</em> <b>34</b>, 341–352.
+</p>
+<p>Aoki, K., Misumi, J., Kimura, T., Zhao, W. and Xie, T. (1997). Evaluation of cutoff levels for screening of gastric cancer using serum pepsinogens and distributions of levels of serum pepsinogens I, II and Of PG I/PG II ratios in a gastric cancer case-control study. <em>Journal of Epidemiology</em> <b>7</b>, 143–151.
+</p>
+<p>Begg, C.B., Cramer, L.D., Venkatraman, E.S. and Rosai, J. (2000). Comparing tumour staging and grading systems: a case study and a review of the issues, using thymoma as a model. <em>Statistics in Medicine</em> <b>19</b>, 1997–2014.
+</p>
+<p>Boehning, D., Holling, H. and Patilea, V. (2011). A limitation of the diagnostic-odds ratio in determining an optimal cut-off value for a continuous diagnostic test. <em>Statistical Methods in Medical Research</em>, <b>20</b>(5), 541–550.
+</p>
+<p>Bortheiry, A.L., Malerbi, D.A. and Franco, L.J. (1994). The ROC curve in the evaluation of fasting capillary blood glucose as a screening test for diabetes y IGT. <em>Diabetes Care</em> <b>17</b>, 1269–1272.
+</p>
+<p>Boyko, E.J. (1994). Ruling out or ruling in disease with the most sensitive or specific diagnostic test: short cut or wrong turn?. <em>Medical Decision Making</em> <b>14</b>, 175–179.
+</p>
+<p>Cohen, J. (1960). A coefficient of agreement for nominal scales. <em>Educ Psychol Meas</em> <b>20</b>, 37–46.
+</p>
+<p>Feinstein, S.H. (1975). The accuracy of diver sound localization by pointing. <em>Undersea. Biomed.Res</em> <b>2</b>(3), 173–184.
+</p>
+<p>Filella, X., Alcover, J., Molina, R. et al. (1995). Clinical usefulness of free PSA fraction as an indicator of prostate cancer. <em>Int. J. Cancer</em> <b>63</b>, 780–784.
+</p>
+<p>Galen, R.S. (1986). Use of predictive value theory in clinical immunology. In: N.R.Rose, H. Friedmann and J.L. Fahey (Eds.), Manual of Clinical Laboratory Immunology. American Society of Microbiology. Washington, DC, pp 966-970.
+</p>
+<p>Gallop, R.J., Crits-Christoph, P., Muenz, L.R. and Tu, X.M. (2003). Determination and Interpretation of the Optimal Operating Point for ROC Curves Derived Through Generalized Linear Models. <em>Understanding Statistics</em> <b>2</b>(4), 219–242.
+</p>
+<p>Geisser, S. (1998). Comparing two tests used for diagnostic or screening processes. <em>Statistics Probability Letters</em> <b>40</b>, 113–119.
+</p>
+<p>Gonen, M. and Sima, C. (2008). Optimal cutpoint estimation with censored data. Memorial Sloan-Kettering Cancer Center Department of Epidemiology and Biostatistics Working Paper Series.
+</p>
+<p>Greiner, M. (1995). Two-graph receiver operating characteristic (TG-ROC): a Microsoft-EXCEL template for the selection of cut-off values in diagnostic tests. <em>Journal of Immunological Methods</em> <b>185</b>(1),145–146.
+</p>
+<p>Greiner, M. (1996). Two-graph receiver operating characteristic (TG-ROC): update version supports optimisation of cut-off values that minimise overall misclassification costs. <em>J. Immunol. Methods</em> <b>191</b>, 93–94.
+</p>
+<p>Greiner, M., Pfeiffer, D. and Smith, R.D. (2000). Principals and practical application of the receiver operating characteristic analysis for diagnostic tests. <em>Preventive Veterinary Medicine</em> <b>45</b>, 23–41.
+</p>
+<p>Hand, D. (1987). Screening vs Prevalence Estimation. <em>Applied Statistics</em> <b>36</b>, 1–7.
+</p>
+<p>Hoffman, R.M., Clanon, D.L., Littenberg, B., Frank, J.J. and Peirce, J.C. (2000). Using the Free-to-total Prostate-specific Antigen Ratio to Detect Prostate Cancer in Men with Nonspecific Elevations of Prostate-specific Antigen Levels. <em>J. Gen. Intern Med</em> <b>15</b>, 739–748.
+</p>
+<p>Hosmer, D.W. and Lemeshow, S. (2000). Applied Logistic Regression. Wiley-Interscience, New York, USA.
+</p>
+<p>Kelly, M.J., Dunstan, F.D., Lloyd, K. and Fone, D.L. (2008). Evaluating cutpoints for the MHI-5 and MCS using the GHQ-12: a comparison of five different methods. <em>BMC Psychiatry</em> <b>8</b>, 10.
+</p>
+<p>Kraemer, H.C. (1992). Risk ratios, odds ratio, and the test QROC. In: Evaluating medical tests. Newbury Park, CA: SAGE Publications, Inc.; pp 103–113.
+</p>
+<p>Kraemer, H.C., Periyakoil, V.S. and Noda, A. (2002). Kappa coefficients in medical research. <em>Statistics in Medicine</em> <b>21</b>, 2109–2129.
+</p>
+<p>Lausen, B. and Schumacher, M. (1992). Maximally selected rank statistics. <em>Biometrics</em> <b>48</b>, 73–85.
+</p>
+<p>Lewis, J.D., Chuai, S., Nessel, L., Lichtenstein, G.R., Aberra, F.N. and Ellenberg, J.H. (2008). Use of the Noninvasive Components of the Mayo Score to Assess Clinical Response in Ulcerative Colitis. <em>Inflamm Bowel Dis</em> <b>14</b>(12), 1660–1666.
+</p>
+<p>Lopez-Raton, M., Rodriguez-Alvarez, M.X, Cadarso-Suarez, C. and Gude-Sampedro, F. (2014). OptimalCutpoints: An R Package for Selecting Optimal Cutpoints in Diagnostic Tests. <em>Journal of Statistical Software</em> <b>61</b>(8), 1–36. doi: <a href="https://doi.org/10.18637/jss.v061.i08">10.18637/jss.v061.i08</a>.
+</p>
+<p>Manel, S., Williams, H. and Ormerod, S. (2001). Evaluating Presence-Absence Models in Ecology: the Need to Account for Prevalence. <em>Journal of Applied Ecology</em> <b>38</b>, 921–931.
+</p>
+<p>Mazumdar, M. and Glassman, J.R. (2000). Categorizing a prognostic variable: review of methods, code for easy implementation and applications to decision-making about cancer treatments. <em>Statistics in Medicine</em> <b>19</b>, 113–132.
+</p>
+<p>McNeill, B.J., Keeler, E. and Adelstein, S.J. (1975). Primer on certain elements of medical decision making, with comments on analysis ROC. <em>N. Engl. J Med</em> <b>293</b>, 211–215.
+</p>
+<p>Metz, C.E., Starr, S.J., Lusted, L.B. and Rossmann, K. (1975). Progress in evaluation of human observer visual detection performance using the ROC curve approach. In: Raynaud C, Todd-Pokropek AE eds. Information processing in scintigraphy. Orsay, France: CEA, 420–436.
+</p>
+<p>Metz, CE. (1978). Basic principles of ROC analysis. <em>Seminars Nucl. Med.</em> <b>8</b>, 283–298.
+</p>
+<p>Miller, R. and Siegmund, D. (1982). Maximally selected chi square statistics. <em>Biometrics</em> <b>38</b>, 1011–1016.
+</p>
+<p>Navarro, J.B., Domenech, J.M., de la Osa, N. and Ezpeleta, L. (1998). El analisis de curvas ROC en estudios epidemiologicos de psicopatologia infantil: aplicacion al cuestionario CBCL. <em>Anuario de Psicologia</em> <b>29</b> (1), 3–15.
+</p>
+<p>Peng, C.Y.J. and So, T.S.H. (2002). Logistic Regression Analysis and Reporting: A Primer. <em>Understanding Statistics</em> <b>1</b>(1), 31–70.
+</p>
+<p>Riddle, D.L. and Stratford, P.W. (1999). Interpreting validity indexes for diagnostic tests: an illustration using the Berg Balance Test. <em>Physical Therapy</em> <b>79</b>, 939–950.
+</p>
+<p>Rutter, C.M. and Miglioretti, D.L. (2003). Estimating the accuracy of psychological scales using longitudinal data. <em>Biostatistics</em> <b>4</b>(1), 97–107.
+</p>
+<p>Shaefer, H. (1989). Constructing a cut-off point for a quantitative diagnostic test. <em>Statistics in Medicine</em> <b>8</b>, 1381–1391.
+</p>
+<p>Schisterman, E.F., Perkins, N.J., Liu, A. and Bondell, H. (2005). Optimal cutpoint and its corresponding Youden index to discriminate individuals using pooled blood samples. <em>Epidemiology</em> <b>16</b>, 73–81.
+</p>
+<p>Shapiro, D.E. (1999). The interpretation of diagnostic tests. <em>Statistical Methods in Medical Research</em> <b>8</b>, 113–134.
+</p>
+<p>Smith, R.D. (1991). Evaluation of diagnostic tests. In: R.D. Smith (Ed.), Veterinary Clinical Epidemiology. Butter-worth-Heinemann. Stoneham, pp 29–43.
+</p>
+<p>Vermont J, Bosson JL, Francois P, Robert C, Rueff A, Demongeot J. (1991). Strategies for graphical threshold determination. <em>Computer Methods and Programs in Biomedicine</em> <b>35</b>, 141–150.
+</p>
+<p>Youden, W.J. (1950). Index for rating diagnostic tests. <em>Cancer</em> <b>3</b>, 32–35.
+</p>
+<p>Zweig, M.H., Campbell, G. (1993). Receiver-operating characteristics (ROC) plots: a fundamental evaluation tool in clinical medicine. <em>Clinical Chemistry</em> <b>39</b>, 561–577.  
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>control.cutpoints</code>, <code>summary.optimal.cutpoints</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OptimalCutpoints)
+data(elas)
+####################
+# marker: elas
+# status: status
+# categorical covariates:
+#		gender
+####################
+
+###########################################################
+# Youden Index Method ("Youden"): Covariate gender
+###########################################################
+# Defaut method
+optimal.cutpoint.Youden &lt;- optimal.cutpoints(X = "elas", status = "status", tag.healthy = 0, 
+methods = "Youden", data = elas, pop.prev = NULL, categorical.cov = "gender", 
+control = control.cutpoints(), ci.fit = FALSE, conf.level = 0.95, trace = FALSE)
+
+summary(optimal.cutpoint.Youden)
+
+plot(optimal.cutpoint.Youden)
+
+# Formula method
+optimal.cutpoint.Youden &lt;- optimal.cutpoints(X = elas ~ status, tag.healthy = 0, 
+methods = "Youden", data = elas, pop.prev = NULL, categorical.cov = "gender", 
+control = control.cutpoints(), ci.fit = FALSE, conf.level = 0.95, trace = FALSE)
+
+#  Inference on the test accuracy measures
+optimal.cutpoint.Youden &lt;- optimal.cutpoints(X = "elas", status = "status", tag.healthy = 0, 
+methods = "Youden", data = elas, pop.prev = NULL, categorical.cov = "gender", 
+control = control.cutpoints(), ci.fit = TRUE, conf.level = 0.95, trace = FALSE)
+
+summary(optimal.cutpoint.Youden)
+
+##########################################################################
+# Sensitivity equal to Specificity Method ("SpEqualSe"): Covariate gender
+##########################################################################
+optimal.cutpoint.SpEqualSe &lt;- optimal.cutpoints(X = "elas", status = "status", tag.healthy = 0, 
+methods = "SpEqualSe", data = elas, pop.prev = NULL, categorical.cov = "gender", 
+control = control.cutpoints(), ci.fit = TRUE, conf.level = 0.95, trace = FALSE)
+
+summary(optimal.cutpoint.SpEqualSe)
+
+plot(optimal.cutpoint.SpEqualSe)  
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as.matrix.rpptx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>PowerPoint table to matrix</h2>
+
+<h3>Description</h3>
+
+<p>Convert the data in an a 'PowerPoint' table
+to a matrix or all data to a list of matrices.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'rpptx'
+as.matrix(
+  x,
+  ...,
+  slide_id = NA_integer_,
+  id = NA_character_,
+  span = c(NA_character_, "fill")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The rpptx object to convert (as created by
+<code>officer::read_pptx()</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Ignored</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>slide_id</code></td>
+<td>
+<p>The slide number to load from (NA indicates first slide with
+a table, NULL indicates all slides and all tables)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>The table ID to load from (ignored it <code>is.null(slide_id)</code>, NA
+indicates to load the first table from the <code>slide_id</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>span</code></td>
+<td>
+<p>How should col_span/row_span values be handled?  <code>NA</code> means
+to leave the value as <code>NA</code>, and <code>"fill"</code> means to fill matrix
+cells with the value.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix with the data, or if <code>slide_id=NULL</code>, a list of
+matrices
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(officer)
+pptx_file &lt;- system.file(package="officer", "doc_examples", "example.pptx")
+z &lt;- read_pptx(pptx_file)
+as.matrix(z, slide_id = NULL)
+</code></pre>
+
+
+</div>

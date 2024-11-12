@@ -1,0 +1,515 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>macos_keychain</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query and manipulate the macOS Keychain</h2>
+
+<h3>Description</h3>
+
+<p><code style="white-space: pre;">⁠macos_item_*⁠</code> functions add, delete, update and search Keychain items.
+</p>
+<p><code style="white-space: pre;">⁠macos_keychain_*⁠</code> functions create, delete, list, lock, unlock
+keychains.
+</p>
+<p><code>macos_item_classes()</code> lists the supported Keychain item classes.
+<code>macos_item_attr()</code> lists the supported attributes for these classes.
+<code>macos_item_match_options()</code> lists the options supported by the
+<code>match</code> argument of <code>macos_item_search()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">macos_item_classes()
+
+macos_item(value, attributes = list(), class = "generic_password")
+
+macos_item_add(item, keychain = NULL)
+
+macos_item_search(
+  class = "generic_password",
+  attributes = list(),
+  match = list(),
+  return_data = FALSE,
+  keychain = NULL
+)
+
+macos_item_update(
+  class = "generic_password",
+  attributes = list(),
+  match = list(),
+  update = list(),
+  keychain = NULL
+)
+
+macos_item_delete(
+  class = "generic_password",
+  attributes = list(),
+  match = list(),
+  keychain = NULL
+)
+
+macos_keychain_create(keychain, password = NULL)
+
+macos_keychain_list(domain = c("all", "user", "system", "common", "dynamic"))
+
+macos_keychain_delete(keychain)
+
+macos_keychain_lock(keychain = NULL)
+
+macos_keychain_unlock(keychain = NULL, password = NULL)
+
+macos_keychain_is_locked(keychain = NULL)
+
+macos_item_attr()
+
+macos_item_match_options()
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>Value of the item, a password, key or certificate. It must
+a raw vector or a string. If it is a string, then it is converted to
+UTF-8.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attributes</code></td>
+<td>
+<p>Narrow the search by indicating the attributes that
+the found item or items should have.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>class</code></td>
+<td>
+<p>Type of items to search, see <code>macos_item_classes()</code> for
+possible values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item</code></td>
+<td>
+<p>Keychain item, creted via <code>macos_item()</code> or returned
+by oskeyking itself.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keychain</code></td>
+<td>
+<p>Keychain to use. <code>NULL</code> means the default one.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>Condition the search in a variety of ways. For example, you
+can limit the results to a specific number of items, control case
+sensitivity when matching string attributes, etc. See 'Search parameters'
+below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_data</code></td>
+<td>
+<p>Whether to include the secret data in the
+search result. If this is set to <code>TRUE</code>, then you'll have to set the
+<code>limit</code> parameter (in the <code>match</code> argument) to a finite value.
+If this is <code>TRUE</code>, then macOS will prompt you for passwords if necessary.
+You might get multiple password prompts, if you set <code>limit</code> to a larger
+than one value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>update</code></td>
+<td>
+<p>Named list specifying the new values of attributes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>password</code></td>
+<td>
+<p>Password to unlock the keychain, or new password to
+set when creating a new keychain. May be <code>NULL</code> in interactive
+sessions, to force a secure password dialog.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>The preference domain from which you wish to retrieve
+the keychain search list:
+</p>
+
+<ul>
+<li> <p><code>"all"</code>: include all keychains currently on the search list,
+</p>
+</li>
+<li> <p><code>"user"</code>: user preference domain,
+</p>
+</li>
+<li> <p><code>"system"</code>: system or daemon preference domain,
+</p>
+</li>
+<li> <p><code>"common"</code>: keychains common to everyone,
+</p>
+</li>
+<li> <p><code>"dynamic"</code>: dynamic search list (typically provided by removable
+keychains such as smart cards).
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>macos_item_classes()</code> returns a character vector, the
+names of the supported keychain item classes.
+</p>
+<p><code>macos_item()</code> returns a new <code>oskeyring_macos_item</code>
+object.
+</p>
+<p><code>macos_item_add()</code> returns <code>NULL</code>, invisibly.
+</p>
+<p><code>macos_item_search()</code> returns a list of keychain items.
+</p>
+<p><code>macos_item_update()</code> returns <code>NULL</code>, invisibly.
+</p>
+<p><code>macos_item_delete()</code> returns <code>NULL</code>, invisibly.
+</p>
+<p><code>macos_keychain_create()</code> returns <code>NULL</code>, invisibly.
+</p>
+<p><code>macos_keychain_list()</code> returns a data frame with columns:
+</p>
+
+<ul>
+<li> <p><code>path</code>: Path to the file of the keychain.
+</p>
+</li>
+<li> <p><code>is_locked</code>: Whether the keychain is locked.
+</p>
+</li>
+<li> <p><code>is_readable</code>: Whether the keychain is readable by the user.
+</p>
+</li>
+<li> <p><code>is_writeable</code>: Whether the keychain is writeable by the user.
+</p>
+</li>
+</ul>
+<p><code>macos_keychain_delete()</code> returns <code>NULL</code>, invisibly.
+</p>
+<p><code>macos_keychain_lock()</code> returns <code>NULL</code>, invisibly.
+</p>
+<p><code>macos_keychain_unlock()</code> returns <code>NULL</code>, invisibly.
+</p>
+<p><code>macos_keychain_is_locked()</code> returns <code>TRUE</code> or <code>FALSE</code>.
+</p>
+<p><code>macos_item_attr()</code> returns a list of lists of character
+scalars, the description of keychain item attributes, for each
+keychain item class.
+</p>
+<p><code>macos_item_match_options()</code> returns a list of character
+scalars, the description of the supported match options.
+</p>
+
+
+<h3>Keychain items</h3>
+
+<p><code>macos_item_classes()</code> returns the currently supported Keychain item
+classes.
+</p>
+<div class="sourceCode r"><pre>macos_item_classes()
+#&gt; [1] "generic_password"  "internet_password"
+</pre></div>
+<p><code>macos_item()</code> creates a new Keychain item. See the next section about
+the attributes that are supported for the various item types.
+</p>
+<div class="sourceCode r"><pre>it &lt;- macos_item("secret", list(service = "My service", account = "Gabor"))
+it
+#&gt; &lt;oskeyring_macos_item: generic_password&gt;
+#&gt;  account: Gabor
+#&gt;  service: My service
+#&gt;  value: &lt;-- hidden --&gt;
+</pre></div>
+<p><code>macos_item_add()</code> adds an item to the keychain. If there is already an
+item with the same primary keys, then it will error.
+</p>
+<div class="sourceCode r"><pre>macos_item_add(it)
+</pre></div>
+<p><code>macos_item_search()</code> searches for Keychain items. If <code>return_data</code> is
+<code>TRUE</code> then it also returns the secret data. Returning the secret data
+might create a password entry dialog. If <code>return_data</code> is <code>TRUE</code> then
+you need to set the <code>limit</code> match condition to a (small) finite number.
+</p>
+<div class="sourceCode r"><pre>macos_item_search(attributes = list(service = "My service"))
+#&gt; [[1]]
+#&gt; &lt;oskeyring_macos_item: generic_password&gt;
+#&gt;  account: Gabor
+#&gt;  creation_date: 2022-10-27 11:08:28
+#&gt;  label: My service
+#&gt;  modification_date: 2022-10-27 11:08:28
+#&gt;  service: My service
+</pre></div>
+<p><code>macos_item_update()</code> updates existing Keychain items.
+</p>
+<div class="sourceCode r"><pre>macos_item_update(
+  attributes = list(service = "My service", account = "Gabor"),
+  update = list(account = "Gabor Csardi")
+)
+macos_item_search(attributes = list(service = "My service"))
+#&gt; [[1]]
+#&gt; &lt;oskeyring_macos_item: generic_password&gt;
+#&gt;  account: Gabor Csardi
+#&gt;  creation_date: 2022-10-27 11:08:28
+#&gt;  label: My service
+#&gt;  modification_date: 2022-10-27 11:08:28
+#&gt;  service: My service
+</pre></div>
+<p><code>macos_item_delete()</code> deletes one or more Keychain items. Note that
+all matching items will be deleted.
+</p>
+<div class="sourceCode r"><pre>macos_item_delete(attributes = list(service = "My service"))
+macos_item_search(attributes = list(service = "My service"))
+#&gt; list()
+</pre></div>
+
+
+<h4>Keychain Item Attributes</h4>
+
+
+<ul>
+<li>
+<p> The set of supported attributes depends on the class of the item.
+</p>
+</li>
+<li>
+<p> oskeyring supports the following item classes currently:
+generic_password, internet_password.
+</p>
+</li>
+<li>
+<p> A subset of the attributes form a <em>primary key</em>. It is not possible
+to add more than one item with the same primary key. See the
+primary keys for the various classes below.
+</p>
+</li>
+<li>
+<p> oskeyring does not currently support all attributes that the
+Keychain Services AIP supports.
+</p>
+</li>
+<li>
+<p> Some attributes are read-only. If you try to set them when adding
+or updating items, they will be ignored.
+</p>
+</li>
+<li>
+<p> If an attribute is not included in the return value of
+<code>macos_item_search()</code> then it is not set, and its default value is in
+effect.
+</p>
+</li>
+</ul>
+<h5>Attributes for generic passwords</h5>
+
+
+<ul>
+<li> <p><code>creation_date</code>: [.POSIXct(1)][read-only] The date the item was created.
+</p>
+</li>
+<li> <p><code>modification_date</code>: [.POSIXct(1)][read-only] The last time the item was updated.
+</p>
+</li>
+<li> <p><code>description</code>: [character(1)] User-visible string describing this kind ofitem (for example, 'Disk image password').
+</p>
+</li>
+<li> <p><code>comment</code>: [character(1)] User-editable comment for this item.
+</p>
+</li>
+<li> <p><code>label</code>: [character(1)] User-visible label for this item.
+</p>
+</li>
+<li> <p><code>is_invisible</code>: [logical(1)] <code>TRUE</code> if the item is invisible (that is, should not be displayed).
+</p>
+</li>
+<li> <p><code>is_negative</code>: [logical(1)] Indicates whether there is a valid password associated with this keychain item. This is useful if your application doesn't want a password for some particular service to be stored in the keychain, but prefers that it always be entered by the user.
+</p>
+</li>
+<li> <p><code>account</code>: [character(1)][key] Account name.
+</p>
+</li>
+<li> <p><code>service</code>: [character(1)][key] The service associated with this item.
+</p>
+</li>
+<li> <p><code>generic</code>: [character(1)] User-defined attribute.
+</p>
+</li>
+<li> <p><code>synchronizable</code>: [logical(1)] Indicates whether the item in question is synchronized to other devices through iCloud.
+</p>
+</li>
+</ul>
+<h5>Attributes for internet passwords</h5>
+
+
+<ul>
+<li> <p><code>creation_date</code>: [.POSIXct(1)][read-only] The date the item was created.
+</p>
+</li>
+<li> <p><code>modification_date</code>: [.POSIXct(1)][read-only] The last time the item was updated.
+</p>
+</li>
+<li> <p><code>description</code>: [character(1)] User-visible string describing this kind ofitem (for example, 'Disk image password').
+</p>
+</li>
+<li> <p><code>comment</code>: [character(1)] User-editable comment for this item.
+</p>
+</li>
+<li> <p><code>label</code>: [character(1)] User-visible label for this item.
+</p>
+</li>
+<li> <p><code>is_invisible</code>: [logical(1)] <code>TRUE</code> if the item is invisible (that is, should not be displayed).
+</p>
+</li>
+<li> <p><code>is_negative</code>: [logical(1)] Indicates whether there is a valid password associated with this keychain item. This is useful if your application doesn't want a password for some particular service to be stored in the keychain, but prefers that it always be entered by the user.
+</p>
+</li>
+<li> <p><code>account</code>: [character(1)][key] Account name.
+</p>
+</li>
+<li> <p><code>synchronizable</code>: [logical(1)] Indicates whether the item in question is synchronized to other devices through iCloud.
+</p>
+</li>
+<li> <p><code>security_domain</code>: [character(1)][key] The item's security domain.
+</p>
+</li>
+<li> <p><code>server</code>: [character(1)][key] Contains the server's domain name or IP address.
+</p>
+</li>
+<li> <p><code>protocol</code>: [character(1)][key] The protocol for this item.
+</p>
+</li>
+<li> <p><code>authentication_type</code>: character[1][key] Authentication type.
+</p>
+</li>
+<li> <p><code>port</code>: [integer(1)][key] Internet port number.
+</p>
+</li>
+<li> <p><code>path</code>: [character(1)][key] A path, typically the path component of the URL
+</p>
+</li>
+</ul>
+<h3>Search Parameters</h3>
+
+<p>osxkeychain only supports a limited set of search parameters.
+You can provide these for <code>macos_item_search()</code> as the <code>match</code> argument:
+</p>
+
+<ul><li> <p><code>limit</code>: [numeric(1)] This value specifies the maximum number of results to return or otherwise act upon. Use <code>Inf</code> to specify all matching items.
+</p>
+</li></ul>
+<h3>Keychains</h3>
+
+<p>macOs supports multiple keychains.
+There is always a default keychain, which is the user's login keychain,
+unless configured differently.
+There is also a keychain search list.
+Keychains may belong into four non-exclusive categories, see the
+<code>domain</code> argument of <code>macos_keychain_list()</code>.
+A keychain is stored in an encrypted file on the disk, see the first
+column of the output of <code>macos_keychain_list()</code>.
+</p>
+<p><code style="white-space: pre;">⁠macos_item_*()⁠</code> functions have a <code>keychain</code> argument to direct or
+restrict the operation to a single keychain only. These are the defaults:
+</p>
+
+<ul>
+<li> <p><code>macos_item_add()</code> adds the item to the default keychain.
+</p>
+</li>
+<li> <p><code>macos_item_search()</code> searches all keychains in the search list.
+</p>
+</li>
+<li> <p><code>macos_item_update()</code> updates matching items on all keychains in the
+search list.
+</p>
+</li>
+<li> <p><code>macos_item_delete()</code> deletes matching items from all keychains in the
+search list.
+</p>
+</li>
+</ul>
+<p><code>macos_keychain_create()</code> creates a new keychain.
+</p>
+<p><code>macos_keychain_list()</code> lists all keychains on the search list.
+</p>
+<div class="sourceCode r"><pre>new &lt;- "~/Library/Keychains/test.keychain-db"
+macos_keychain_create(new, password = "secret")
+macos_keychain_list()
+</pre></div>
+<div class="sourceCode r"><pre>##                                                     path is_unlocked
+## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE
+## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE
+## 3  /Users/gaborcsardi/Library/Keychains/test.keychain-db        TRUE
+## 4                     /Library/Keychains/System.keychain       FALSE
+##   is_readable is_writeable
+## 1        TRUE         TRUE
+## 2        TRUE        FALSE
+## 3        TRUE         TRUE
+## 4        TRUE        FALSE
+</pre></div>
+<p><code>macos_keychain_lock()</code> locks a keychain.
+<code>macos_keychain_unlock()</code> unlocks a keychain.
+<code>macos_keychain_is_locked()</code> checks if a keychain is locked.
+</p>
+<div class="sourceCode r"><pre>macos_keychain_lock(new)
+macos_keychain_is_locked(new)
+</pre></div>
+<div class="sourceCode r"><pre>## [1] TRUE
+</pre></div>
+<div class="sourceCode r"><pre>macos_keychain_unlock(new, password = "secret")
+macos_keychain_is_locked(new)
+</pre></div>
+<div class="sourceCode r"><pre>## [1] FALSE
+</pre></div>
+<p><code>macos_keychain_delete()</code> deletes a keychain: it removes it from the
+search list and deletes the data from the disk. It currently refuses to
+delete the user's login keychain and the system keychain. Use Keychain
+Access instead if you want to delete these. (Only do this if you are
+aware of the bad consequences.)
+</p>
+<div class="sourceCode r"><pre>macos_keychain_delete(new)
+macos_keychain_list()
+</pre></div>
+<div class="sourceCode r"><pre>##                                                     path is_unlocked
+## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE
+## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE
+## 3                     /Library/Keychains/System.keychain       FALSE
+##   is_readable is_writeable
+## 1        TRUE         TRUE
+## 2        TRUE        FALSE
+## 3        TRUE        FALSE
+</pre></div>
+
+
+<h3>See Also</h3>
+
+<p>The Keychain Services API documentation at
+<a href="https://developer.apple.com/documentation/security/keychain_services">https://developer.apple.com/documentation/security/keychain_services</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># See above
+</code></pre>
+
+
+</div>

@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dilationErosion</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Dilation or Erosion of an image</h2>
+
+<h3>Description</h3>
+
+<p>this function performs dilation or erosion to a 2- or 3- dimensional image
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dilationErosion(image, Filter, method = "dilation", threads = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>image</code></td>
+<td>
+<p>a matrix, data frame or 3-dimensional array where the third dimension is equal to 3</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Filter</code></td>
+<td>
+<p>a vector specifying the dimensions of the kernel, which will be used to perform either dilation or erosion, such as c(3,3)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>one of 'dilation', 'erosion'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threads</code></td>
+<td>
+<p>number of cores to run in parallel ( &gt; 1 should be used if image high dimensional )</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function utilizes a kernel to perform dilation or erosion. The first value of the vector indicates the number of rows of the kernel, whereas
+the second value indicates the number of columns.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a matrix or 3-dimensional array where the third dimension is equal to 3
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+path = system.file("tmp_images", "1.png", package = "OpenImageR")
+
+image = readImage(path)
+
+res_dilate = dilationErosion(image, Filter = c(3,3), method = 'dilation')
+
+res_erode = dilationErosion(image, Filter = c(5,5), method = 'erosion')
+
+</code></pre>
+
+
+</div>

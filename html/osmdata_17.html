@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osmdata_data_frame</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return an OSM Overpass query as a data.frame object.</h2>
+
+<h3>Description</h3>
+
+<p>Return an OSM Overpass query as a data.frame object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osmdata_data_frame(q, doc, quiet = TRUE, stringsAsFactors = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>An object of class <code>overpass_query</code> constructed with
+opq and add_osm_feature. May be be omitted,
+in which case the attributes of the data.frame will not include
+the query.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doc</code></td>
+<td>
+<p>If missing, <code>doc</code> is obtained by issuing the overpass query,
+<code>q</code>, otherwise either the name of a file from which to read data,
+or an object of class <span class="pkg">xml2</span> returned from
+osmdata_xml.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>suppress status messages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stringsAsFactors</code></td>
+<td>
+<p>Should character strings in the 'data.frame' be
+coerced to factors?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If you are not interested in the geometries of the results, it's a
+good option to query for objects that match the features only and forget
+about members of the ways and relations. You can achieve this by passing
+the parameter <code>body = "tags"</code> to <code>opq</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> with id, type and tags of the the objects from the
+query.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other extract: 
+<code>osmdata_sc()</code>,
+<code>osmdata_sf()</code>,
+<code>osmdata_sp()</code>,
+<code>osmdata_xml()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+hampi_df &lt;- opq ("hampi india") %&gt;%
+    add_osm_feature (key = "historic", value = "ruins") %&gt;%
+    osmdata_data_frame ()
+attr (hampi_df, "bbox")
+attr (hampi_df, "overpass_call")
+attr (hampi_df, "meta")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

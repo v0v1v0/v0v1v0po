@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>se.spmle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>standard error for MSELE estimator</h2>
+
+<h3>Description</h3>
+
+<p><code>se.spmle</code> calculates the standard error for MSELE estimator in Zhou et
+al. 2002
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">se.spmle(y, x, beta, sig, pis, a, N.edf, rhos, strat, size.nc)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>vector of the primary response</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the design matrix with a column of 1's for the intercept</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>final estimates of the regression coefficients obtained from
+odsmle</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig</code></td>
+<td>
+<p>final estimate of the error variance obtained from odsmle</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pis</code></td>
+<td>
+<p>final estimates of the stratum probabilities obtained from odsmle</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>vector of cutpoints for the primary response (e.g., a = c(-2.5,2))</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N.edf</code></td>
+<td>
+<p>should be the size of the SRS (simple random sample)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rhos</code></td>
+<td>
+<p>which is size/pis, where size is a vector representing the
+stratum sizes of supplemental samples. e.g. size = c(100, 0, 100), and pis
+are the final estimates obtained from odsmle.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strat</code></td>
+<td>
+<p>vector that indicates the stratum numbers of supplemental
+samples, except that you should only list stratum with size &gt; 0. (e.g. if
+the supplemental size is c(100, 0, 100), then the strat vector should be
+c(1,3))</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size.nc</code></td>
+<td>
+<p>total size of the validation sample (SRS plus supplemental
+samples)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list which contains the standard error estimates for betas in the
+model : </p>
+<p style="text-align: center;"><code class="reqn">Y=\beta_{0}+\beta_{1}X+\epsilon,</code>
+</p>
+<p> where epsilon has variance sig.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ODS)
+# take the example data from the ODS package
+# please see the documentation for details about the data set ods_data
+
+Y &lt;- ods_data[,1]
+X &lt;- cbind(rep(1,length(Y)), ods_data[,2:5])
+
+# use the simple random sample to get an initial estimate of beta, sig #
+# perform an ordinary least squares #
+SRS &lt;- ods_data[1:200,]
+OLS.srs &lt;- lm(SRS[,1] ~ SRS[,2:5])
+OLS.srs.summary &lt;- summary(OLS.srs)
+
+beta &lt;- coefficients(OLS.srs)
+sig &lt;- OLS.srs.summary$sigma^2
+pis &lt;- c(0.1,0.8,0.1)
+
+# the cut points for this data is Y &lt; 0.162, Y &gt; 2.59.
+a &lt;- c(0.162,2.59)
+rs.size &lt;- 200
+size &lt;- c(100,0,100)
+strat &lt;- c(1,2,3)
+
+# obtain the parameter estimates
+ODS.model = odsmle(Y,X,beta,sig,pis,a,rs.size,size,strat)
+
+# calculate the standard error estimate
+y &lt;- Y
+x &lt;- X
+beta &lt;- ODS.model$beta
+sig &lt;- ODS.model$sig
+pis &lt;- ODS.model$pis
+a &lt;- c(0.162,2.59)
+N.edf &lt;- rs.size
+rhos &lt;- size/pis
+strat &lt;- c(1,3)
+size.nc &lt;- length(y)
+
+se = se.spmle(y, x, beta, sig, pis, a, N.edf, rhos, strat, size.nc)
+
+# summarize the result
+ODS.tvalue &lt;- ODS.model$beta / se
+ODS.pvalue &lt;- 2 * pt( - abs(ODS.tvalue), sum(rs.size, size)-2)
+
+ODS.results &lt;- cbind(ODS.model$beta, se, ODS.tvalue, ODS.pvalue)
+dimnames(ODS.results)[[2]] &lt;- c("Beta","SEbeta","tvalue","Pr(&gt;|t|)")
+row.names(ODS.results) &lt;- c("(Intercept)","X","Z1","Z2","Z3")
+
+ODS.results
+</code></pre>
+
+
+</div>

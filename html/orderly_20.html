@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_graph</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print the dependency tree for a given report using orderly log</h2>
+
+<h3>Description</h3>
+
+<p>Investigate the dependency structure in a set of orderly reports.
+This function allows the dependency graph to be created for set of
+reports that have been run and committed (the archive) or of a set
+of reports that could be run (the src) to be discovered and
+printed to screen.  <em>This is experimental and somewhat subject to
+change and improvement.</em>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_graph(
+  name,
+  id = "latest",
+  root = NULL,
+  locate = TRUE,
+  direction = "downstream",
+  propagate = TRUE,
+  max_depth = Inf,
+  recursion_limit = 100,
+  show_all = FALSE,
+  use = "archive"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>the name of the report</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>the id of the report, if omitted, use the id of the
+latest report</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>direction</code></td>
+<td>
+<p>A string indicating if we want to move up or down
+the tree permitted values are upstream, downstream</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>propagate</code></td>
+<td>
+<p>A boolean indicating if we want to propagate out
+of date through the tree</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_depth</code></td>
+<td>
+<p>A numeric, how far back should the tree go, this
+can be useful to truncate a very large tree. (default = Inf)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recursion_limit</code></td>
+<td>
+<p>A numeric, limit for depth of tree, if the tree
+goes beyond this then an error is thrown. (default = 100)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show_all</code></td>
+<td>
+<p>A boolean, should we show all reports in the tree,
+not just the latest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use</code></td>
+<td>
+<p>Character string indicating what we read to infer the
+dependency tree.  Current valid values are <code>archive</code> (the
+default), which reads from archive reports and <code>src</code> which
+reads from the source reports.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>orderly allows a report to rely on the artefacts of one or more
+other orderly reports. This allows users to develop a network of
+interconnected reports where the output from report becomes the
+source of data for another.  There are two natural questions that
+can develop around this workflow:
+</p>
+
+<ol>
+<li>
+<p> We have updated a report; what are the reports that depend on
+this so that we can re-run them?
+</p>
+</li>
+<li>
+<p> We have a report that we want to re-run to ensure uses the
+latest information. Which other reports are used (directly or
+indirectly) by this report?
+</p>
+</li>
+</ol>
+<p>This function displays this information in an easily readable
+format.  Allowing users to see the dependency tree and which
+reports are out of date and need to be re-run.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An orderly tree object with the root corresponding to the given
+report.
+</p>
+
+
+<h3>Remark</h3>
+
+<p>By default the tree is built using data from the local report
+database (see orderly_commit,
+orderly_db). This means that it will not find changes
+from a report that has not be run and committed. That is, if a
+user changes a report to use or create different artefacts this
+will not be picked up by the function until the reports are
+re-run and committed to the archive.
+</p>
+<p>It is possible to generate a tree from the source reports by using
+<code>use = "src"</code> - this generates the "theoretical tree", and has
+no concept of being "up to date" or of ids.
+</p>
+
+
+<h3>Warning</h3>
+
+<p><em>This interface is considered experimental and may change without
+notice</em>.  Please do not depend on it in scripts as it may break
+things.  Consider this a (hopefully) useful way of exploring the
+dependencies in your reports <em>interactively</em> - let us know what
+is missing and we'll try and build it out.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path &lt;- orderly::orderly_example("demo")
+
+id &lt;- orderly::orderly_run("other", root = path, parameters=list(nmin=0))
+orderly::orderly_commit(id, root = path)
+id &lt;- orderly::orderly_run("use_dependency", root = path)
+orderly::orderly_commit(id, root = path)
+id &lt;- orderly::orderly_run("use_dependency_2", root = path)
+orderly::orderly_commit(id, root = path)
+orderly::orderly_graph("other", root = path)
+orderly::orderly_graph("use_dependency_2", root = path,
+                                 direction = "upstream")
+</code></pre>
+
+
+</div>

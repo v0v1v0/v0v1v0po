@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>total_daily_cost</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute the total daily cost of raising hatchery fish</h2>
+
+<h3>Description</h3>
+
+<p>This function takes the definite integral from time t = 0 until the
+given <code>time</code> of the <code>daily_cost_fun</code>.
+This integral is then the total cost of raising x number of fish until
+<code>time</code> given the other cost function parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">total_daily_cost(
+  time,
+  recruits,
+  daily_cost,
+  init_cost = 0,
+  time_slope = 0,
+  time_exp = 1,
+  rec_slope = 1,
+  rec_exp = 1,
+  type = "multiplicative"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>The time at which fish are raised in hatchery</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recruits</code></td>
+<td>
+<p>The number of recruits raised</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>daily_cost</code></td>
+<td>
+<p>Baseline daily cost to raise a single fish</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>init_cost</code></td>
+<td>
+<p>An intercept on the total cost function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_slope</code></td>
+<td>
+<p>The slope term on the amount of time (see details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_exp</code></td>
+<td>
+<p>The exponent on the amount of time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rec_slope</code></td>
+<td>
+<p>The slope term on the number of recruits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rec_exp</code></td>
+<td>
+<p>The exponent on the number of recruits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Either multiply the number of recruits times the cost-at-time or
+add to it (see Details).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The total cost across time to raise the number of <code>recruits</code>.
+This is simply the integral from time t = 0 until <code>time</code> of the
+<code>daily_cost_fun</code> function.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># total cost of raising 1000 fish for 100 days at given parameters
+total_daily_cost(time = 100, recruits = 100,
+           daily_cost = 0.05,
+           time_slope = 0.01, time_exp = 1.2,
+           rec_slope = 0.05, rec_exp = 1)
+</code></pre>
+
+
+</div>

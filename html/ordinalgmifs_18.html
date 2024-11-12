@@ -1,0 +1,229 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordinalgmifs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Ordinal Generalized Monotone Incremental Forward Stagewise Regression
+</h2>
+
+<h3>Description</h3>
+
+<p>This function can fit a cumulative link, adjacent category, forward and backward continuation ratio, and stereotype ordinal response model when the number of parameters exceeds the sample size, using the the generalized monotone incremental forward stagewise method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordinalgmifs(formula, data, x = NULL, subset, epsilon = 0.001, tol = 1e-05, 
+	scale = TRUE, probability.model = "Cumulative", link = "logit", 
+	verbose=FALSE, assumption=NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>an object of class "<code>formula</code>" (or one that can be coerced to that class): a symbolic description of the model to be fitted. The left side of the formula is the ordinal outcome while the variables on the right side of the formula are the covariates that are not included in the penalization process. Note that if all variables in the model are to be penalized, an intercept only model formula should be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an optional data frame, list or environment (or object coercible by <code>as.data.frame</code> to a data frame) containing the variables in the model. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an optional matrix of predictors that are to be penalized in the model fitting process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p>an optional vector specifying a subset of observations to be used in the fitting process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>small incremental amount used to update a coefficient at a given step.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>the iterative process stops when the difference between successive log-likelihoods is less than this specified level of tolerance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>logical, if TRUE the penalized predictors are centered and scaled.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>probability.model</code></td>
+<td>
+<p>the type of ordinal response model to be fit. Can be <code>"Cumulative"</code>, <code>"AdjCategory"</code>, <code>"ForwardCR"</code>, <code>"BackwardCR"</code>, or <code>"Stereotype"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>the link function used. Allowable links for <code>"Cumulative"</code>, <code>"ForwardCR"</code>, and <code>"BackwardCR"</code> are <code>"logit"</code>, <code>"probit"</code>, and <code>"cloglog"</code>. For an <code>"AdjCategory"</code> model only a <code>"loge"</code> link is allowed; for a <code>"Stereotype"</code> model only a <code>"logit"</code> link is allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical, if TRUE the step number is printed to the console (default is FALSE).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>assumption</code></td>
+<td>
+<p>integer, only use with <code>probability.model = "ForwardCR"</code> and <code>link = "cloglog"</code> to denote the assumption to use for discrete censored survival modeling. If <code>assumption = 1</code>, assume the observation was censored at the end of the discrete time interval in which the censoring occurred; if <code>assumption = 2</code>, assume the observation was censored at the beginning of the interval in which censoring occurred; if <code>assumption = 3</code>, assume constant hazard rate within the interval in which the censoring occurred; if no censoring occurs, do not specify a value for <code>assumption</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A model specified as <code>response~terms, x=penalized.terms</code> where <code>response</code> is the ordinal response vector and <code>terms</code> is the series of variables in the model that are not to be penalized and <code>x</code> is a matrix of variables that are to be penalized. For example, <code>terms</code> may include the variables age and gender while <code>x</code> includes hundreds to thousands of features from a high-throughput genomic experiment. In the event that no baseline demographic/clinical characteristics/subject level variables are available or needed in <code>terms</code> (all variables are to be penalized) then the model is specified as <code>response~1, x=penalized.terms</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>AIC</code></td>
+<td>
+<p>a vector of AIC values for each step (if <code>x</code> is specified).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BIC</code></td>
+<td>
+<p>a vector of BIC values for each step (if <code>x</code> is specified).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>the ordinal threshold estimates for the fitted model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>the coefficient estimates for the unpenalized variables (if <code>terms</code> are specified on the right hand side of the model formula).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>the coefficient estimates for the penalized variables (if <code>x</code> is specified in the model).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi</code></td>
+<td>
+<p>the scaling coefficient estimates (if a <code>"Stereotype"</code> logit model is fit).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logLik</code></td>
+<td>
+<p>a vector of log-likelihood values for each step(if <code>terms</code> are specified on the right hand side of the model formula).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>the link function used in the model fit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.select</code></td>
+<td>
+<p>the step at which the minimum AIC was observed (if <code>terms</code> are specified on the right hand side of the model formula).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>probability.model</code></td>
+<td>
+<p>the model fit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>logical indicating whether penalized variables were centered and scaled.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>the unpenalized variables in the model (if any).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the penalized variables in the model (if any).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>the ordinal response.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Kellie J. Archer, Jiayi Hou, Qing Zhou, Kyle Ferber, John G. Layne, Amanda Gentry
+</p>
+
+
+<h3>References</h3>
+
+<p>Hastie T., Taylor J., Tibshirani R., and Walther G. (2007) Forward stagewise regression and the monotone lasso. <em>Electronic Journal of Statistics</em>, 1, 1-29.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See Also <code>coef.ordinalgmifs</code>, <code>summary.ordinalgmifs</code>, <code>plot.ordinalgmifs</code>, <code>predict.ordinalgmifs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(hccframe)
+# To minimize processing time, MPO_E302_R is coerced into the model and only a subset of 
+# two CpG sites (DDIT3_P1313_R and HDAC9_P137_R) are included as penalized covariates
+# in this demonstration, and epsilon is set to 0.01
+hcc.fit &lt;- ordinalgmifs(group ~ MPO_E302_R, x = c("DDIT3_P1313_R", "HDAC9_P137_R"), 
+	data = hccframe, epsilon = 0.01)
+coef(hcc.fit)
+summary(hcc.fit)
+phat &lt;- predict(hcc.fit)
+head(phat$predicted)
+table(phat$class, hccframe$group)
+</code></pre>
+
+
+</div>

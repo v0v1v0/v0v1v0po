@@ -1,0 +1,240 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxPath</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create List of Paths</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a list of paths.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxPath(from, to = NA, connect = c("single", "all.pairs", "unique.pairs",
+    "all.bivariate", "unique.bivariate"), arrows = 1,
+    free = TRUE, values = NA, labels = NA,
+    lbound = NA, ubound = NA, ..., joinKey = as.character(NA), step = c())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character vector. These are the sources of the new paths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>character vector. These are the sinks of the new paths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>connect</code></td>
+<td>
+<p>String. Specifies the type of source to sink connection: "single", "all.pairs", "all.bivariate", "unique.pairs", "unique.bivariate". Default value is "single".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arrows</code></td>
+<td>
+<p>numeric value. Must be either 0 (for Pearson selection), 1 (for single-headed), or 2 (for double-headed arrows).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>free</code></td>
+<td>
+<p>boolean vector. Indicates whether paths are free or fixed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>numeric vector. The starting values of the parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>character vector. The names of the paths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lbound</code></td>
+<td>
+<p>numeric vector. The lower bounds of free parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ubound</code></td>
+<td>
+<p>numeric vector. The upper bounds of free parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Allows OpenMx to catch the use of the
+deprecated ‘all’ argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>joinKey</code></td>
+<td>
+<p>character vector. The name of the foreign key to join
+against some other model to create a cross model path (regression or
+factor loading.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>step</code></td>
+<td>
+<p>numeric vector. The priority for processing arrows=0
+paths. For example, step 1 is processed before step 2.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The mxPath function creates MxPath objects. These consist of a list of paths describing the relationships between variables in a model using the RAM modeling approach (McArdle and MacDonald, 1984). Variables are referenced by name, and these names must appear in the ‘manifestVars’ and ‘latentVars’ arguments of the mxModel function.
+</p>
+<p>Paths are specified as going "from" one variable (or set of variables) "to" another variable or set of variables using the ‘from’ and ‘to’ arguments, respectively. If ‘to’ is left empty, it will be set to the value of ‘from’.
+</p>
+<p>‘connect’ has five possible connection types: "single", "all.pairs", "all.bivariate", "unique.pairs", "unique.bivariate". The default value is "single". Assuming the values c(‘a’,‘b’,‘c’) for the ‘to’ and ‘from’ fields the paths produced by each connection type are as follows:
+</p>
+
+<dl>
+<dt>"all.pairs":</dt>
+<dd>
+<p>(a,a), (a,b), (a,c), (b,a), (b,b), (b,c), (c,a), (c,b), (c,c).</p>
+</dd>
+<dt>"unique.pairs":</dt>
+<dd>
+<p>(a,a), (a,b), (a,c), (b,b), (b,c), (c,c). </p>
+</dd>
+<dt>"all.bivariate":</dt>
+<dd>
+<p>(a,b), (a,c), (b,a), (b,c), (c,a), (c,b).</p>
+</dd>
+<dt>"unique.bivariate":</dt>
+<dd>
+<p>(a,b), (a,c), (b,c).</p>
+</dd>
+<dt>"single":</dt>
+<dd>
+<p>(a,a), (b,b), (c,c).</p>
+</dd>
+</dl>
+<p>Multiple variables may be input as a vector of variable names. If the ‘connect’ argument is set to "single", then paths are created going from each entry in the ‘from’ vector to the corresponding entry in the ‘to’ vector. If the ‘to’ and ‘from’ vectors are of different lengths when the ‘connect’ argument is set to "single", the shorter vector is repeated to make the vectors of equal length.
+</p>
+<p>The ‘free’ argument specifies whether the paths created by the mxPath function are free or fixed parameters. This argument may take either TRUE for free parameters, FALSE for fixed parameters, or a vector of TRUEs and FALSEs to be applied in order to the created paths.
+</p>
+<p>The ‘arrows’ argument specifies the type of paths created. A value of 1 indicates a one-headed arrow representing regression. This path represents a regression of the ‘to’ variable on the ‘from’ variable, such that the arrow points to the ‘to’ variable in a path diagram. A value of 2 indicates a two-headed arrow, representing a covariance or variance. If multiple paths are created in the same mxPath function, then the ‘arrows’ argument may take a vector of 1s and 2s to be applied to the set of created paths.
+</p>
+<p>The ‘values’ is a numeric vectors containing the starting values of the created paths. ‘values’ gives a starting value for estimation. The ‘labels’ argument specifies the names of the resulting MxPath object.  The ‘lbound’ and ‘ubound’ arguments specify lower and upper bounds for the created paths.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list of paths.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The previous implementation of ‘all’ had unsafe features. Its use is now deprecated, and has been replaced by the new mechanism ‘connect’ which supports safe and controlled generation of desired combinations of paths.
+</p>
+
+
+<h3>References</h3>
+
+<p>McArdle, J. J. and MacDonald, R. P. (1984). Some algebraic properties of the Reticular Action Model for moment structures. <em>British Journal of Mathematical and Statistical Psychology, 37,</em> 234-251.
+</p>
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>mxMatrix for a matrix-based approach to path specification; mxModel for the container in which mxPaths are embedded. More information about the OpenMx package may be found here.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># A simple Example: 1 factor Confirmatory Factor Analysis
+
+library(OpenMx)
+
+data(demoOneFactor)
+manifests &lt;- names(demoOneFactor)
+latents   &lt;- c("G")
+factorModel &lt;- mxModel(model="One Factor", type="RAM",
+      manifestVars = manifests,
+      latentVars   = latents,
+      mxPath(from=latents, to=manifests),
+      mxPath(from=manifests, arrows=2),
+      mxPath(from=latents, arrows=2,free=FALSE, values=1.0),
+      mxData(cov(demoOneFactor), type="cov",numObs=500)
+)
+factorFit &lt;-mxRun(factorModel)
+summary(factorFit)
+
+# A more complex example using features of R to compress
+#  what would otherwise be a long and error-prone script
+
+# list of 100 variable names: "01"  "02"  "03"...
+myManifest &lt;- sprintf("%02d", c(1:100))
+
+# the latent variables for the model
+myLatent &lt;- c("G1", "G2", "G3", "G4", "G5")
+
+
+# Start building the model:
+#  Define its type, and add the manifest and latent variable name lists
+testModel &lt;- mxModel(model="testModel6", type = "RAM",
+                     manifestVars = myManifest, latentVars = myLatent)
+
+# Create covariances between the latent variables and add to the model
+# Here we use combn to create the covariances
+# nb: To create the variances and covariances in one operation you could use
+# expand.grid(myLatent,myLatent) to specify from and to
+
+uniquePairs &lt;- combn(myLatent,2)
+covariances &lt;- mxPath(from = uniquePairs[1,],
+                      to=uniquePairs[2,], arrows = 2, free = TRUE, values = 1)
+testModel &lt;- mxModel(model=testModel, covariances)
+
+# Create variances for the latent variables
+variances &lt;- mxPath(from = myLatent,
+                    to=myLatent, arrows = 2, free = TRUE, values = 1)
+testModel &lt;- mxModel(model=testModel, variances) # add variances to the model
+
+# Make a list of paths from each packet of 20 manifests
+#  to one of the 5 latent variables
+# nb: The first loading to each latent is fixed to 1 to scale its variance.
+singles &lt;- list()
+for (i in 1:5) {
+    j &lt;- i*20
+    singles &lt;- append(singles, mxPath(
+                        from = myLatent[i], to = myManifest[(j - 19):j],
+                        arrows = 1,
+                        free   = c(FALSE, rep(TRUE, 19)),
+                        values = c(1, rep(0.75, 19))))
+}
+
+# add single-headed paths to the model
+testModel &lt;- mxModel(model=testModel, singles)
+
+</code></pre>
+
+
+</div>

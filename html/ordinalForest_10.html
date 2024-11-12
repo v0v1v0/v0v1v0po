@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.ordfor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prediction using ordinal forest objects</h2>
+
+<h3>Description</h3>
+
+<p>Prediction of test data using ordinal forest.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ordfor'
+predict(object, newdata, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>object of class <code>ordfor</code>. See function <code>ordfor</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>data.frame. Data frame containing new data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>predict.ordfor</code> returns an object of class <code>ordforpred</code>.
+An object of class "<code>ordforpred</code>" is a list containing the following components: 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>ypred</code></td>
+<td>
+<p> vector of length <code>nrow(newdata)</code>. Factor-valued test data predictions. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>classprobs</code></td>
+<td>
+<p> predicted class probabilities. Only provided, if the performance function based on the ranked probability score was used, while training the ordinal forest (see <code>ordfor</code>).
+Matrix of dimension <code>nrow(newdata)</code> x J (NA, if the ranked probability was not used while training). The value in the j-th column of the i-th row contains the predicted probability that test observation i is of class j. </p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+
+<ul><li>
+<p> Hornung R. (2020) Ordinal Forests. Journal of Classification 37, 4–17. &lt;doi: <a href="https://doi.org/10.1007/s00357-018-9302-x">10.1007/s00357-018-9302-x</a>&gt;.
+</p>
+</li></ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(hearth)
+
+set.seed(123)
+trainind &lt;- sort(sample(1:nrow(hearth), size=floor(nrow(hearth)*(1/2))))
+testind &lt;- sort(sample(setdiff(1:nrow(hearth), trainind), size=20))
+
+datatrain &lt;- hearth[trainind,]
+datatest &lt;- hearth[testind,]
+
+ordforres &lt;- ordfor(depvar="Class", data=datatrain, perffunction = "probability", nsets=50,
+  nbest=5, ntreeperdiv=100, ntreefinal=1000)
+# NOTE: nsets=50 is not enough, because the prediction performance of the resulting 
+# ordinal forest will be suboptimal!! In practice, nsets=1000 (default value) or a larger
+# number should be used.
+
+preds &lt;- predict(ordforres, newdata=datatest)
+preds
+ 
+table(data.frame(true_values=datatest$Class, predictions=preds$ypred))
+
+head(preds$classprobs)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

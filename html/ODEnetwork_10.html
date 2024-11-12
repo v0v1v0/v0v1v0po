@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ODEnetwork</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Constructor of the class ODEnetwork</h2>
+
+<h3>Description</h3>
+
+<p>Creates a list of class <code>ODEnetwork</code>.
+The coordinate type can be set to cartesian (position and
+velocity) or to polar coordinates (angle and magnitude).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ODEnetwork(masses, dampers, springs, cartesian = TRUE, distances = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>masses</code></td>
+<td>
+<p>[<code>vector</code>] of length n<br>
+The masses of the mechanical oscillators.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dampers</code></td>
+<td>
+<p>[<code>matrix</code>] quadratic of size n<br>
+The dampers of the mechanical oscillators on the main diagonal.
+Connecting dampers between oscillators on the upper triangle.
+(Will be copied automatically to create a symmetric matrix.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>springs</code></td>
+<td>
+<p>[<code>matrix</code>] quadratic of size n<br>
+The springs are defined in the network like matrix of dampers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cartesian</code></td>
+<td>
+<p>[<code>boolean(1)</code>]<br>
+If <code>TRUE</code>, <code>state1</code> and <code>state2</code> are position and velocity,
+otherwise angle and magnitude.
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distances</code></td>
+<td>
+<p>[<code>matrix</code>] quadratic of size n<br>
+Describes the length of each spring.
+Elements on the main diagonal describe spring length connecting the masses to the ground.
+All upper triangle elements describe spring distance between two masses i &lt; j.
+Default is <code>NA</code>, which is equivalent to a zero matrix.
+(Value will be copied automatically to lower triangle creating a symmetric matrix.)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list of class [<code>ODEnetwork</code>].
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">mM &lt;- c(40, 10, 10)
+mD &lt;- diag(c(1, 5, 0))
+mD[1, 2] &lt;- 1
+mD[2, 3] &lt;- 1
+mK &lt;- diag(c(50, 50, 0))
+mK[1, 2] &lt;- 10
+mK[2, 3] &lt;- 10
+odenet &lt;- ODEnetwork(mM, mD, mK)
+</code></pre>
+
+
+</div>

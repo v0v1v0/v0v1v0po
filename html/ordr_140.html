@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lra-ord</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Log-ratio analysis</h2>
+
+<h3>Description</h3>
+
+<p>Represent log-ratios between variables based on their values on
+a population of cases.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lra(x, compositional = FALSE, weighted = TRUE)
+
+## S3 method for class 'lra'
+print(x, nd = length(x$sv), n = 6L, ...)
+
+## S3 method for class 'lra'
+screeplot(x, main = deparse1(substitute(x)), ...)
+
+## S3 method for class 'lra'
+biplot(
+  x,
+  choices = c(1L, 2L),
+  scale = c(0, 0),
+  main = deparse1(substitute(x)),
+  var.axes = FALSE,
+  ...
+)
+
+## S3 method for class 'lra'
+plot(x, main = deparse1(substitute(x)), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric matrix or rectangular data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compositional</code></td>
+<td>
+<p>Logical; whether to normalize rows of <code>x</code> to sum to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted</code></td>
+<td>
+<p>Logical; whether to weight rows and columns by their sums.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nd</code></td>
+<td>
+<p>Integer; number of shared dimensions to include in print.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Integer; number of rows of each factor to print.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main, var.axes, ...</code></td>
+<td>
+<p>Parameters passed to other plotting methods (in the
+case of <code>main</code>, after being <code>force()</code>d.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>choices</code></td>
+<td>
+<p>Integer; length-2 vector specifying the components to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>Numeric; values between 0 and 1 that control how inertia is
+conferred unto the points: Row (<code>i = 1L</code>) and column (<code>i = 2L</code>) coordinates
+are scaled by <code>sv ^ scale[[i]]</code>. If a single value <code>scale</code> is passed, it is
+assigned to the rows while <code>1 - scale</code> is assigned to the columns.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Log-ratio analysis (LRA) is based on a double-centering of log-transformed
+data, usually weighted by row and column totals. The technique is suitable
+for positive-valued variables on a common scale (e.g. percentages). The
+distances between variables' coordinates (in the full-dimensional space) are
+their pairwise log-ratios. The distances between cases' coordinates are
+called their <em>log-ratio distances</em>, and the total variance is the weighted
+sum of their squares.
+</p>
+<p>LRA is not implemented in standard R distributions but is a useful member of
+the ordination toolkit. This is a minimal implementation following
+Greenacre's (2010) exposition in Chapter 7.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Given an <code class="reqn">n * p</code> data matrix and setting <code class="reqn">r=min(n,p)</code>,
+<code>lra()</code> returns a list of class <code>"lra"</code> containing three elements:
+</p>
+
+<ul>
+<li>
+<p>svThe <code class="reqn">r-1</code> singular values
+</p>
+</li>
+<li>
+<p>row.coordsThe <code class="reqn">n * (r-1)</code> matrix
+of row standard coordinates.
+</p>
+</li>
+<li>
+<p>column.coordsThe <code class="reqn">p * (r-1)</code> matrix
+of column standard coordinates.
+</p>
+</li>
+<li>
+<p>row.weightsThe weights used to scale the row coordinates.
+</p>
+</li>
+<li>
+<p>column.weightsThe weights used to scale the column coordinates.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Greenacre MJ (2010) <em>Biplots in Practice</em>. Fundacion BBVA, ISBN:
+978-84-923846.
+<a href="https://www.fbbva.es/microsite/multivariate-statistics/biplots.html">https://www.fbbva.es/microsite/multivariate-statistics/biplots.html</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># U.S. 1973 violent crime arrests
+head(USArrests)
+# row and column subsets
+state_examples &lt;- c("Hawaii", "Mississippi", "North Dakota")
+arrests &lt;- c(1L, 2L, 4L)
+
+# pairwise log-ratios of violent crime arrests for two states
+arrest_pairs &lt;- combn(arrests, 2L)
+arrest_ratios &lt;-
+  USArrests[, arrest_pairs[1L, ]] / USArrests[, arrest_pairs[2L, ]]
+colnames(arrest_ratios) &lt;- paste(
+  colnames(USArrests)[arrest_pairs[1L, ]], "/",
+  colnames(USArrests)[arrest_pairs[2L, ]], sep = ""
+)
+arrest_logratios &lt;- log(arrest_ratios)
+arrest_logratios[state_examples, ]
+
+# non-compositional log-ratio analysis
+(arrests_lra &lt;- lra(USArrests[, arrests]))
+screeplot(arrests_lra)
+biplot(arrests_lra, scale = c(1, 0))
+
+# compositional log-ratio analysis
+(arrests_lra &lt;- lra(USArrests[, arrests], compositional = TRUE))
+biplot(arrests_lra, scale = c(1, 0))
+</code></pre>
+
+
+</div>

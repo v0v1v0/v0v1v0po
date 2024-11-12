@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ssq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate SSQ (accuracy) of biplot representation for elements and constructs.</h2>
+
+<h3>Description</h3>
+
+<p>Each construct and element are vectors in a multidimensional space. When reducing the representation to a lower
+dimensional space, a loss of information (sum-of-squares) will usually occur. The output of the function shows the
+proportion of sum-of-squares (SSQ) explained for the elements (constructs) and the amount explained by each
+principal component. This allows to assess which elements (construct) are represented how well in the current
+representation. Also it shows how much of the total variation is explained.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ssq(
+  x,
+  along = 2,
+  center = 1,
+  normalize = 0,
+  g = 0,
+  h = 1 - g,
+  col.active = NA,
+  col.passive = NA,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>along</code></td>
+<td>
+<p>Numeric. Table of sum-of-squares (SSQ) for 1=constructs, 2=elements (default). Note that currently
+these calculations only make sense for biplot representations with <code>g=1</code> and <code>h=1</code> respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>Numeric. The type of centering to be performed. <code>0</code>= no centering, 1= row mean centering (construct),
+<code>2</code>= column mean centering (elements), <code>3</code>= double-centering (construct and element means), <code>4</code>= midpoint
+centering of rows (constructs). The default is <code>1</code> (row centering).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>A numeric value indicating along what direction (rows, columns) to normalize by standard
+deviations. <code style="white-space: pre;">⁠0 = none, 1= rows, 2 = columns⁠</code> (default is <code>0</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the left singular vectors, i.e. the constructs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the right singular vectors, i.e. the elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.active</code></td>
+<td>
+<p>Columns (elements) that are no supplementary points, i.e. they are used in the SVD to find
+principal components. default is to use all elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.passive</code></td>
+<td>
+<p>Columns (elements) that are supplementary points, i.e. they are NOT used in the SVD but projected
+into the component space afterwards. They do not determine the solution. Default is <code>NA</code>, i.e. no elements are set
+supplementary.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing three elements:
+</p>
+
+<ul>
+<li> <p><code>ssq.table</code>: dataframe with sum-of-squares explained for element/construct by each dimension
+</p>
+</li>
+<li> <p><code>ssq.table.cumsum</code>: dataframe with cumulated sum-of-squares explained for element/construct number of
+dimensions
+</p>
+</li>
+<li> <p><code>ssq.total</code>: total sum-of-squares after pre-transforming grid matrix
+</p>
+</li>
+</ul>
+<h3>Note</h3>
+
+<p>TODO: if g or h is not equal to 1 the SSQ does not measure accuracy of representation as currently the ssq of
+each point are set in contrast with the pre-transformed matrix.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# explained sum-of-squares for elements
+ssq(bell2010)
+
+# explained sum-of-squares for constructs
+ssq(bell2010, along = 1)
+
+# save results
+s &lt;- ssq(bell2010)
+
+# printing options
+print(s)
+print(s, digits = 4)
+print(s, dim = 3)
+print(s, cumulated = FALSE)
+
+# access results
+names(s)
+s$ssq.table
+s$ssq.table.cumsum
+s$ssq.total
+
+</code></pre>
+
+
+</div>

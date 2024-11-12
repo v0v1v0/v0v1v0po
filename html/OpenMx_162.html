@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>imxReportProgress</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Report backend progress</h2>
+
+<h3>Description</h3>
+
+<p>Prints a show status string to the console without emitting a
+newline.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">imxReportProgress(info, eraseLen)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>info</code></td>
+<td>
+<p>the character string to print</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eraseLen</code></td>
+<td>
+<p>the number of characters to erase</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OpenMx)
+
+previousLen &lt;&lt;- 0
+
+easyReportProcess &lt;- function(msg) {
+	imxReportProgress(msg, previousLen)
+	previousLen &lt;&lt;- nchar(msg)
+}
+
+demo &lt;- function() {
+	easyReportProcess("abc123")
+	Sys.sleep(1)
+	easyReportProcess("this is much longer")
+	Sys.sleep(1)
+	easyReportProcess("this is short")
+	Sys.sleep(1)
+	easyReportProcess("almost done")
+	Sys.sleep(1)
+	easyReportProcess("")
+	cat("DONE!", fill=TRUE)
+}
+
+demo()
+</code></pre>
+
+
+</div>

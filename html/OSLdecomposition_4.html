@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optimise_OSLintervals</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find adequate integration intervals for CW-OSL decomposition</h2>
+
+<h3>Description</h3>
+
+<p>This function defines integration intervals for CW-OSL component separation with decompose_OSLcurve.
+The underlying iterative optimisation process aims for minimum cross-correlation between the signal components.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optimise_OSLintervals(
+  components,
+  curve = NULL,
+  channel.width = NA,
+  channel.number = NA,
+  t.start = 0,
+  t.end = NA,
+  background.component = FALSE,
+  verbose = TRUE,
+  parallel.computing = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>components</code></td>
+<td>
+<p>data.frame or numeric vector (<strong>required</strong>):
+Table or vector containing the decay constants of the signal components.
+A data.frame must contain a column <code style="white-space: pre;">⁠$lambda⁠</code>. Usually the data.frame is provided
+by fit_OSLcurve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>curve</code></td>
+<td>
+<p>data.frame or matrix or RLum.Data.Curve (<em>optional</em>):
+OSL signal curve which serves as time axis template.
+The input curve will be used to define <code>channel.width</code> and <code>channel.number</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>channel.width</code></td>
+<td>
+<p>numeric (<em>optional</em>):
+Channel width in seconds. Necessary if <code>curve</code> is not given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>channel.number</code></td>
+<td>
+<p>numeric (<em>optional</em>):
+Number of channels resp. data points. Necessary if <code>curve</code> is not given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.start</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Starting time of the first interval, per default the start of the measurement.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.end</code></td>
+<td>
+<p>numeric (<em>optional</em>):
+End time of the last interval, per default the end of the measurement.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>background.component</code></td>
+<td>
+<p>logical (<em>with default</em>):
+If <code>TRUE</code>, an additional interval for a component with a decay rate of zero will be
+determined. This enables the calculation of the signal background level during the signal
+decomposition with decompose_OSLcurve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Enables console text output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel.computing</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Enables the use of multiple CPU cores. This increases the execution speed significantly
+but may need administrator rights and/or a firewall exception.
+See DEoptim::DEoptim.control for further information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The precision of the component separation with decompose_OSLcurve and the impact of
+systematic decay rate errors on the component separation depends on the integration interval definition.
+This function minimises the influence of an under/over-estimated decay rate to the
+signal intensity calculation of other component. This is done by maximizing the denominator
+determinant in Cramers rule, see Mittelstraß (2019) for details. For maximisation, the iterative
+evolutionary algorithm of Storn and Price (1997) is used, available in <em>R</em> through DEoptim::DEoptim.
+</p>
+<p>The inclusion of a background component is supported, see decompose_OSLcurve for details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The input table <code>components</code> data.frame will be returned with four additional columns:
+<code style="white-space: pre;">⁠$t.start⁠</code>, <code style="white-space: pre;">⁠$t.end⁠</code> defining the time intervals and <code style="white-space: pre;">⁠$ch.start⁠</code>, <code style="white-space: pre;">⁠$ch.end⁠</code> assigning those intervals to channel indicies.
+If a numeric vector is given as input, a new data.frame will be returned.
+</p>
+
+
+<h3>Last updates</h3>
+
+<p>2020-08-23, DM: Replaced previous maximum searching algorithm with DEoptim::DEoptim
+(<strong>update may have changed analysis results</strong>)
+</p>
+<p>2020-10-29, DM: Added <code>parallel.computing</code> argument; enhanced roxygen documentation (<em>minor update</em>)
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dirk Mittelstraß, <a href="mailto:dirk.mittelstrass@luminescence.de">dirk.mittelstrass@luminescence.de</a>
+</p>
+<p>Please cite the package the following way:
+</p>
+<p>Mittelstraß, D., Schmidt, C., Beyer, J., Heitmann, J. and Straessner, A.:
+R package OSLdecomposition: Automated identification and separation of quartz CW-OSL signal components, <em>in preparation</em>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Mittelstraß, D., 2019. Decomposition of weak optically stimulated luminescence signals and its application in retrospective dosimetry at quartz (Master thesis). TU Dresden, Dresden.
+</p>
+<p>Storn, R., Price, K., 1997. Differential Evolution – A Simple and Efficient Heuristic for global Optimization over Continuous Spaces. Journal of Global Optimization 11, 341–359.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>decompose_OSLcurve, RLum.OSL_decomposition, DEoptim::DEoptim, fit_OSLcurve
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+A &lt;- optimise_OSLintervals(c(2, 0.5, 0.02), channel.width = 0.1, channel.number = 200)
+print(A, row.names = FALSE)
+
+</code></pre>
+
+
+</div>

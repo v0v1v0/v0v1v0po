@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dparallel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute Ohta's D Statistics in a manner optimized for parallelization</h2>
+
+<h3>Description</h3>
+
+<p>Infers the comparisons that this instance of the function is supposed to perform given job_id and comparisons_per_job.
+Returns the results of those comparisons to an SQL database.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dparallel(data_set, tot_maf = 0.1, pop_maf = 0.05, comparisons_per_job,
+  job_id, outfile = "Ohta")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data_set</code></td>
+<td>
+<p>The data set that is to be analysed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tot_maf</code></td>
+<td>
+<p>Minimum minor allele frequency across the total population for a marker to be included in the analysis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pop_maf</code></td>
+<td>
+<p>Minimum minor allele frequency across a subpopulation for that subpopulation to be included in analysis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comparisons_per_job</code></td>
+<td>
+<p>The number of comparisons that each instance of dparallel will compute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>job_id</code></td>
+<td>
+<p>A number indicating that this is the nth instance of this function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outfile</code></td>
+<td>
+<p>Prefix for the file name that results will be written to. May be a path. Do not include extension.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(beissinger_data)
+dparallel(data_set = beissinger_data,
+                     comparisons_per_job = 300,
+                     job_id = 1,
+                     outfile = tempfile(pattern = "beissinger_comparison", tmpdir = tempdir()))
+
+</code></pre>
+
+
+</div>

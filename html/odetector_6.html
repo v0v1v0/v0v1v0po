@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>remove.outliers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove outliers</h2>
+
+<h3>Description</h3>
+
+<p>Removes the detected outliers from a data set.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  remove.outliers(x, ot=1, sc=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of <code>outliers</code> class containing the outliers to be removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ot</code></td>
+<td>
+<p>an integer specifying the outlier detection approach. The default is 1 for the Approach 1. For the other methods use 2 or 3. See <code>detect.outliers</code> for the details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sc</code></td>
+<td>
+<p>a logical value for including the objects in the small clusters into removal process. The default is <span class="option">FALSE</span>. Use <span class="option">TRUE</span> for removing the objects in the small clusters.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>Xr</code></td>
+<td>
+<p>a numeric matrix containing the outliers-removed data set.</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Zeynel Cebeci, Cagatay Cebeci, Yalcin Tahtali</p>
+
+
+<h3>See Also</h3>
+
+<p><code>detect.outliers</code>,
+<code>pairs.outliers</code>,
+<code>plot.outliers</code>,
+<code>print.outliers</code>,
+<code>summary.outliers</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Load the dataset x3p4c and extract the first three columns to x
+data(x3p4c)
+x &lt;- x3p4c[,1:3]
+
+# For 4 clusters, run Unsupervised Possibilistic Fuzzy C-Means (UPFC) algorithm 
+# of the package ppclust 
+res.upfc &lt;- ppclust::upfc(x, centers=4)
+
+# Detect the outliers 
+out &lt;- detect.outliers(res.upfc)
+ 
+# Remove the outliers 
+Xr1 &lt;- remove.outliers(out, ot=1)
+print(Xr1)
+
+# Remove the outliers including the collective outliers 
+Xr2 &lt;- remove.outliers(out, ot=1, sc=TRUE)
+print(Xr2)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>outbreaker_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Process input data for outbreaker</h2>
+
+<h3>Description</h3>
+
+<p>This function performs various checks on input data given to outbreaker.  It
+takes a list of named items as input, performs various checks, set defaults
+where arguments are missing, and return a correct list of data input. If no
+input is given, it returns the default settings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">outbreaker_data(..., data = list(...))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>a list of data items to be processed (see description)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>optionally, an existing list of data item as returned by <code>outbreaker_data</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Acceptable arguments for ... are:
+</p>
+
+<dl>
+<dt>dates</dt>
+<dd>
+<p>a vector indicating the collection dates, provided either as
+integer numbers or in a usual date format such as <code>Date</code> or
+<code>POSIXct</code> format. By convention, zero will indicate the oldest date. 
+Cases must be ordering by ascending onset date.</p>
+</dd>
+<dt>age_group</dt>
+<dd>
+<p>a vector indicating the age group of the cases, provided as
+integer numbers. The value of age group corresponds to the position of this age
+group in a_dens.</p>
+</dd>
+<dt>region</dt>
+<dd>
+<p>a vector indicating the region of the cases, provided as
+integer numbers or characters. If numeric, the value of the region corresponds 
+to the position of the region in the distance matrix and the population vector.
+Otherwise, the value corresponds to the region and will be matched to the distance
+matrix and the population vector.</p>
+</dd>
+<dt>w_dens</dt>
+<dd>
+<p>a vector of numeric values indicating the generation time
+distribution, reflecting the infectious potential of a case t = 1, 2, ...
+time steps after infection. By convention, it is assumed that
+newly infected patients cannot see new infections on the same time step. If not
+standardized, this distribution is rescaled to sum to 1.</p>
+</dd>
+<dt>f_dens</dt>
+<dd>
+<p>similar to <code>w_dens</code>, except that this is the distribution
+of the incubation period, i_e. time interval between the reported onset date
+and the infection date.</p>
+</dd>
+<dt>a_dens</dt>
+<dd>
+<p>a matrix of numeric values indicating the contact between age 
+groups, reflecting on the infectious potential of a case for a given age group.</p>
+</dd>
+<dt>genotype</dt>
+<dd>
+<p>a character vector showing the genotype in each case.</p>
+</dd>
+<dt>is_cluster</dt>
+<dd>
+<p>an integer vector indicating which group of cases each case
+belongs to.</p>
+</dd>
+<dt>s_dens</dt>
+<dd>
+<p>a matrix of numeric values indicating the initial value of 
+the connectivity between region. Only needed if a and b are fixed in the model, 
+otherwise NULL.</p>
+</dd>
+<dt>population</dt>
+<dd>
+<p>a double vector indicating the population in every region 
+considered in the study.</p>
+</dd>
+<dt>distance</dt>
+<dd>
+<p>a double matrix indicating the distance between each region.</p>
+</dd>
+<dt>import</dt>
+<dd>
+<p>a logical vector indicating whether each case is an import (TRUE)
+or not (FALSE).</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>A named list containing the value of each elements listed in the 'Details' section. This list describes the data that will be used by the function <code>outbreaker()</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Initial version by Thibaut Jombart, rewritten by Alexis Robert (<a href="mailto:alexis.robert@lshtm.ac.uk">alexis.robert@lshtm.ac.uk</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("toy_outbreak_short")
+dt_cases &lt;- toy_outbreak_short$cases
+dt_cases &lt;- dt_cases[order(dt_cases$Date), ]
+dt_regions &lt;- toy_outbreak_short$dt_regions
+all_dist &lt;- geosphere::distGeo(matrix(c(rep(dt_regions$long, nrow(dt_regions)), 
+                                        rep(dt_regions$lat, nrow(dt_regions))), 
+                                      ncol = 2), 
+                               matrix(c(rep(dt_regions$long, each = nrow(dt_regions)), 
+                                        rep(dt_regions$lat, each = nrow(dt_regions))),
+                                      ncol = 2))
+
+dist_mat &lt;- matrix(all_dist/1000, nrow = nrow(dt_regions))
+pop_vect &lt;- dt_regions$population
+names(pop_vect) &lt;- rownames(dist_mat) &lt;- colnames(dist_mat) &lt;- dt_regions$region
+data &lt;- outbreaker_data(dates = dt_cases$Date, age_group = dt_cases$age_group,
+                        region = dt_cases$Cens_tract, population = pop_vect, 
+                        distance = dist_mat)
+
+</code></pre>
+
+
+</div>

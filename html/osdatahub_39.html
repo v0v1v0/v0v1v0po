@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>query_uprn_places</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query the OS Places API</h2>
+
+<h3>Description</h3>
+
+<p>A query of addresses based on a property's UPRN.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">query_uprn_places(
+  uprn,
+  output_crs = "EPSG:27700",
+  classification_code,
+  logical_status_code,
+  dataset = "DPA",
+  key = get_os_key(),
+  returnType = c("geojson", "list", "sf"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>uprn</code></td>
+<td>
+<p>A valid UPRN.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output_crs</code></td>
+<td>
+<p>(character or numeric) The output CRS. Defaults to
+“EPSG:27700”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>classification_code</code></td>
+<td>
+<p>Classification codes to filter query by.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logical_status_code</code></td>
+<td>
+<p>Logical status code to filter query by.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dataset</code></td>
+<td>
+<p>(character) The dataset to return. Multiple values can be
+provided as a vector. Default is 'DPA'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>(character) OS API key. Default action is to search for an
+environment variable using <code>get_os_key()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnType</code></td>
+<td>
+<p>(character) Return the query results as the raw
+<code>'geojson'</code>, a nested <code>'list'</code> object containing the returns,
+or convert them into Simple Features and return an object of class
+<code>'sf'</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters (not currently used).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The OS Places API provides a detailed view of an address and its
+life cycle. Use this function to query Places based on a UPRN search.
+</p>
+<p>The Places API contains all the records of AddressBase® Premium and
+AddressBase® Premium – Islands and so provides all the information relating
+to an address or property from creation to retirement. It contains local
+authority, Ordnance Survey and Royal Mail® addresses, current addresses,
+and alternatives for current addresses, provisional addresses (such as
+planning developments) and historic information, plus OWPAs and cross
+references to the OS MasterMap® TOIDS®. OS Places API contains addresses
+located within the United Kingdom, Jersey, Guernsey and the Isle of Man.
+For address records in Jersey and Guernsey the coordinates will be ‘0.0’ as
+they fall outside of the British National Grid. This means they are not
+compatible with the GeoSearch operations.
+</p>
+<p>Technical details on the Places API are documented on the Data Hub:
+<a href="https://osdatahub.os.uk/docs/places/technicalSpecification">https://osdatahub.os.uk/docs/places/technicalSpecification</a>.
+</p>
+<p>Note: the Places API requires a Premium API key.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A GeoJSON string with the results of the API query, a list object,
+or an object of class <code>sf</code> based on the <code>returnType</code> parameter.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>query_places()</code>, <code>query_nearest_places()</code>, <code>query_uprn_places()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+results &lt;- query_uprn_places(uprn = 200010019924)
+
+</code></pre>
+
+
+</div>

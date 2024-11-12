@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>CreateOpenBankingClient</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>CreateOpenBankingClient</h2>
+
+<h3>Description</h3>
+
+<p>Creates a new Open Banking (Open Data) API client with convenient queries
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">CreateOpenBankingClient(
+  bankDetails = "default",
+  version = "latest",
+  timeOutSeconds = 15
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bankDetails</code></td>
+<td>
+<p>optional. Bank details list to use. When set to "default", the
+bank details will be taken from the below URL:
+https://github.com/OpenBankingUK/opendata-api-spec-compiled/blob/master/participant_store.json
+</p>
+<p>Otherwise, the user can provide a custom list of bank details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p>optional. Which version of the API to use. Defaults to "latest".
+When set to "latest", the version used will be the latest available for the selected bank and instrument. 
+The latest available version information will be derived from the bank details table above.
+Alternatively, the user can supply a manually set version such as "v2.3"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeOutSeconds</code></td>
+<td>
+<p>optional. Number of seconds before a request times out. Defaults to 15 seconds</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Object of type OpenBankingClient with methods for querying the API
+</p>
+
+
+<h3>Available client fields</h3>
+
+
+<ul><li> <p><strong>BankDetails</strong>: The default table of bank details used to query the API.
+</p>
+</li></ul>
+<h3>Available client queries</h3>
+
+
+<ul>
+<li> <p><strong>GetAvailableBanks</strong>: Get a list of banks that report the API.
+</p>
+</li>
+<li> <p><strong>GetAvailableInstruments</strong>: Get a list of instruments reported via the API.
+</p>
+</li>
+<li> <p><strong>GetRawData</strong>: Get raw data using the API for a given bank and instrument.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(openbankeR)
+
+openBankingClient &lt;- openbankeR::CreateOpenBankingClient()
+
+bankDetails &lt;- openBankingClient$BankDetails
+   
+availableBanks &lt;- openBankingClient$GetAvailableBanks()
+availableInstruments &lt;- openBankingClient$GetAvailableInstruments()
+
+bankName &lt;- "HSBC Group"
+instrument &lt;- "branches"
+
+rawData &lt;- openBankingClient$GetRawData(
+  bankName = bankName,
+  instrument = instrument
+)
+
+
+</code></pre>
+
+
+</div>

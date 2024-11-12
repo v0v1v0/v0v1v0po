@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Category-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Class Category</h2>
+
+<h3>Description</h3>
+
+<p>A S4 class for the Category level result of an Intensity analysis.  Can be
+plotted with the plot method <code>plot</code>.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The slots <code>categoryData</code> and <code>categoryStationarity</code> can receive
+tables for "Gain" or "Loss" in the following format:
+</p>
+
+<ol>
+<li>
+<p> Gain
+</p>
+
+<ul>
+<li> <p><code>categoryData</code>: <code>&lt;tibble&gt;</code>. A table containing 6 columns:
+</p>
+
+<ol>
+<li>
+<p> Period: <code>&lt;fct&gt;</code>. The period <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> To: <code>&lt;fct&gt;</code>. A LUC category <em>j</em>.
+</p>
+</li>
+<li>
+<p> Interval: <code>&lt;int&gt;</code>. Duration of the period <em>[Yt, Yt+1]</em> in years.
+</p>
+</li>
+<li>
+<p> GG_km2/GG_pixel: <code>&lt;dbl&gt;/&lt;int&gt;</code>. Area of gross gain of category
+<em>j</em> during <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> Gtj: <code>&lt;dbl&gt;</code>. Annual intensity of gross gain of category <em>j</em>
+for time interval <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> St: <code>&lt;dbl&gt;</code>. Annual intensity of change for time interval <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+</ol>
+</li>
+<li>
+<p> categoryStationarity:  <code>&lt;tibble&gt;</code>. A table with the results of a
+stationarity test of the gain of the categories on the Category level, containing 5 columns:
+</p>
+
+<ol>
+<li>
+<p> To: <code>&lt;fct&gt;</code>. A category of interest <em>j</em>.
+</p>
+</li>
+<li>
+<p> gain: <code>&lt;int&gt;</code>. Number of times a category had gains during all
+time intervals <em>[Y1, YT]</em>.
+</p>
+</li>
+<li>
+<p> N: <code>&lt;int&gt;</code>. Total number of evaluated time points (T).
+</p>
+</li>
+<li>
+<p> Stationarity: <code>&lt;chr&gt;</code>. <em>Active Gain</em> or <em>Dormant Gain</em>.
+</p>
+</li>
+<li>
+<p> Test: <code>&lt;chr&gt;</code>. <em>Y</em> if stationarity was detected and <em>N</em> if not.
+</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p> Loss
+</p>
+
+<ul>
+<li> <p><code>categoryData</code>: <code>&lt;tibble&gt;</code>. A table containing 6 columns:
+</p>
+
+<ol>
+<li>
+<p> Period: <code>&lt;fct&gt;</code>. The period <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> From: <code>&lt;fct&gt;</code>. A LUC category <em>i</em>.
+</p>
+</li>
+<li>
+<p> Interval: <code>&lt;int&gt;</code>. Duration of the period <em>[Yt, Yt+1]</em> in years.
+</p>
+</li>
+<li>
+<p> GG_km2/GG_pixel: <code>&lt;dbl&gt;/&lt;int&gt;</code>. Area of gross loss of category
+<em>i</em> during <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> Lti: <code>&lt;dbl&gt;</code>. Annual intensity of gross loss of category <em>i</em>
+for time interval <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> STt: <code>&lt;dbl&gt;</code>. Annual intensity of change for time interval <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+</ol>
+</li>
+<li>
+<p> categoryStationarity: <code>&lt;tibble&gt;</code>. A table of stationarity test
+over the loss of the categories in the Category level, containing 5 columns:
+</p>
+
+<ol>
+<li>
+<p> From: <code>&lt;fct&gt;</code>. A category of interest <em>i</em>.
+</p>
+</li>
+<li>
+<p> loss: <code>&lt;int&gt;</code>. Number of times a category had losses during all
+time intervals <em>[Y1, YT]</em>.
+</p>
+</li>
+<li>
+<p> N: <code>&lt;int&gt;</code>. Total number of evaluated time points (T).
+</p>
+</li>
+<li>
+<p> Stationarity: <code>&lt;chr&gt;</code>. <em>Active Loss</em> or <em>Dormant Loss</em>.
+</p>
+</li>
+<li>
+<p> Test: <code>&lt;chr&gt;</code>. <em>Y</em> if stationarity was detected and <em>N</em> if not.
+</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>lookupcolor</code></dt>
+<dd>
+<p>The colors (character vector) associated with the LUC legend items.</p>
+</dd>
+<dt><code>categoryData</code></dt>
+<dd>
+<p>tibble. A table of Category level's results (gain (<em>Gtj</em>)
+or loss (<em>Lti</em>) values).</p>
+</dd>
+<dt><code>categoryStationarity</code></dt>
+<dd>
+<p>tibble. A table containing results of a stationarity
+test. A change is considered stationary only if the intensities for all time
+intervals reside on one side of the uniform intensity, i.e are smaller or bigger
+than the uniform rate over the whole period.</p>
+</dd>
+</dl>
+</div>

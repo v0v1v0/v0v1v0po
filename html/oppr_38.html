@@ -1,0 +1,176 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_min_set_objective</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add minimum set objective</h2>
+
+<h3>Description</h3>
+
+<p>Set the objective of a project prioritization <code>problem()</code> to
+minimize the cost of the solution whilst ensuring that all targets are met.
+This objective is conceptually similar to that used in <em>Marxan</em>
+(Ball, Possingham &amp; Watts 2009).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_min_set_objective(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>A problem objective is used to specify the overall goal of the
+project prioritization problem.
+Here, the minimum set objective seeks to find the set of actions that
+minimizes the overall cost of the prioritization, while ensuring that the
+funded projects meet a set of persistence targets for the conservation
+features (e.g. populations, species, ecosystems). Let <code class="reqn">I</code> represent
+the set of conservation actions (indexed by <code class="reqn">i</code>). Let <code class="reqn">C_i</code> denote
+the cost for funding action <code class="reqn">i</code>. Also, let <code class="reqn">F</code> represent each
+feature (indexed by <code class="reqn">f</code>), <code class="reqn">T_f</code> represent the persistence target
+for feature <code class="reqn">f</code>, and <code class="reqn">E_f</code> denote the probability that each
+feature will go extinct given the funded conservation projects.
+</p>
+<p>To guide the prioritization, the conservation actions are organized into
+conservation projects. Let <code class="reqn">J</code> denote the set of conservation projects
+(indexed by <code class="reqn">j</code>), and let <code class="reqn">A_{ij}</code> denote which actions
+<code class="reqn">i \in I</code> comprise each conservation project
+<code class="reqn">j \in J</code> using zeros and ones. Next, let <code class="reqn">P_j</code> represent
+the probability of project <code class="reqn">j</code> being successful if it is funded. Also,
+let <code class="reqn">B_{fj}</code> denote the enhanced probability that each feature
+<code class="reqn">f \in F</code> associated with the project <code class="reqn">j \in J</code>
+will persist if all of the actions that comprise project <code class="reqn">j</code> are funded
+and that project is allocated to feature <code class="reqn">f</code>.
+For convenience,
+let <code class="reqn">Q_{fj}</code> denote the actual probability that each
+<code class="reqn">f \in F</code> associated with the project <code class="reqn">j \in J</code>
+is expected to persist if the project is funded. If the argument
+to <code>adjust_for_baseline</code> in the <code>problem</code> function was set to
+<code>TRUE</code>, and this is the default behavior, then
+<code class="reqn">Q_{fj} = (P_{j} \times B_{fj}) + \bigg(\big(1 - (P_{j} B_{fj})\big)
+  \times (P_{n} \times B_{fn})\bigg)</code>, where <code>n</code> corresponds to the
+baseline "do nothing" project. This means that the probability
+of a feature persisting if a project is allocated to a feature
+depends on (i) the probability of the project succeeding, (ii) the
+probability of the feature persisting if the project does not fail,
+and (iii) the probability of the feature persisting even if the project
+fails. Otherwise, if the argument is set to <code>FALSE</code>, then
+<code class="reqn">Q_{fj} = P_{j} \times B_{fj}</code>.
+</p>
+<p>The binary control variables <code class="reqn">X_i</code> in this problem indicate whether
+each project <code class="reqn">i \in I</code> is funded or not. The decision
+variables in this problem are the <code class="reqn">Y_{j}</code>, <code class="reqn">Z_{fj}</code>, and <code class="reqn">E_f</code>
+variables.
+Specifically, the binary <code class="reqn">Y_{j}</code> variables indicate if project <code class="reqn">j</code>
+is funded or not based on which actions are funded; the binary
+<code class="reqn">Z_{fj}</code> variables indicate if project <code class="reqn">j</code> is used to manage
+feature <code class="reqn">f</code> or not; and the semi-continuous <code class="reqn">E_f</code> variables
+denote the probability that feature <code class="reqn">f</code> will go extinct.
+</p>
+<p>Now that we have defined all the data and variables, we can formulate
+the problem. For convenience, let the symbol used to denote each set also
+represent its cardinality (e.g. if there are ten features, let <code class="reqn">F</code>
+represent the set of ten features and also the number ten).
+</p>
+<p style="text-align: center;"><code class="reqn">
+  \mathrm{Minimize} \space \sum_{i = 0}^{I} C_i X_i \space
+  \mathrm{(eqn \space 1a)} \\
+  \mathrm{Subject \space to} \space  \\
+  (1 - E_f) \geq T_f \space \forall f \in F \space
+  \mathrm{(eqn \space 1b)} \\
+  E_f = 1 - \sum_{j = 0}^{J} Z_{fj} Q_{fj} \space \forall \space f \in F
+  \space \mathrm{(eqn \space 1c)} \\
+  Z_{fj} \leq Y_{j} \space \forall \space j \in J \space \mathrm{(eqn \space
+  1d)} \\
+  \sum_{j = 0}^{J} Z_{fj} \times \mathrm{ceil}(Q_{fj}) = 1 \space \forall
+  \space f \in F \space \mathrm{(eqn \space 1e)} \\
+  A_{ij} Y_{j} \leq X_{i} \space \forall \space i \in I, j \in J \space
+  \mathrm{(eqn \space 1f)} \\
+  E_{f} \geq 0, E_{f} \leq 1 \space \forall \space b \in B \space
+  \mathrm{(eqn \space 1g)} \\
+  X_{i}, Y_{j}, Z_{fj} \in [0, 1] \space \forall \space i \in I, j \in J, f
+  \in F \space \mathrm{(eqn \space 1h)}
+  </code>
+</p>
+
+<p>The objective (eqn 1a) is to minimize the cost of the funded actions.
+Constraints (eqn 1b) ensure that the persistence targets are met.
+Constraints (eqn 1c) calculate the probability that each feature
+will go extinct according to their allocated project.
+Constraints (eqn 1d) ensure that feature can only be allocated to projects
+that have all of their actions funded. Constraints (eqn 1e) state that each
+feature can only be allocated to a single project. Constraints (eqn 1f)
+ensure that a project cannot be funded unless all of its actions are
+funded. Constraints (eqns 1g) ensure that the probability variables
+(<code class="reqn">E_f</code>) are bounded between zero and one. Constraints (eqns 1h) ensure
+that the action funding (<code class="reqn">X_i</code>), project funding (<code class="reqn">Y_j</code>), and
+project allocation (<code class="reqn">Z_{fj}</code>) variables are binary.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ProjectProblem object with the objective
+added to it.
+</p>
+
+
+<h3>References</h3>
+
+<p>Ball IR, Possingham HP &amp; Watts M (2009) Marxan and relatives: software for
+spatial conservation prioritisation.
+<em>Spatial conservation prioritisation: Quantitative methods and
+computational tools</em>, 185-195.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>objectives, targets.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load the ggplot2 R package to customize plot
+library(ggplot2)
+
+# load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem with minimum set objective and targets that require each
+# feature to have a 30% chance of persisting into the future
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+      add_min_set_objective() %&gt;%
+      add_absolute_targets(0.3) %&gt;%
+      add_binary_decisions()
+
+## Not run: 
+# solve problem
+s &lt;- solve(p)
+
+# print solution
+print(s)
+
+# plot solution, and add a dashed line to indicate the feature targets
+plot(p, s) +
+geom_hline(yintercept = 0.3, linetype = "dashed")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

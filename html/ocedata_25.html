@@ -1,0 +1,48 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>soi</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Southern Oscillation Index</h2>
+
+<h3>Description</h3>
+
+<p><code>soi</code> is a data frame containing the Southern Oscillation Index with
+columns named <code>year</code> for decimal year (sampled monthly and represented
+at mid-month) and <code>index</code> for the index.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(soi, package="ocedata")
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>The data were downloaded on August 11, 2017, and processed as follows.
+</p>
+<div class="sourceCode R"><pre>library(ncdf4)
+url &lt;- "https://www.cgd.ucar.edu/cas/catalog/climind/SOI.nc"
+download.file(url, "SOI.nc")
+f &lt;- nc_open("SOI.nc")
+year &lt;- as.vector(ncvar_get(f, "TIME"))
+index &lt;- as.vector(ncvar_get(f, "SOI_SIGNAL"))
+ok &lt;- is.finite(index)
+year &lt;- year[ok]
+index &lt;- index[ok]
+soi &lt;- data.frame(year=year, index=index)
+</pre></div>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(soi, package="ocedata")
+recent &lt;- subset(soi, year &gt; 1950)
+plot(recent$year, recent$index, type='l', xlab="Year", ylab="SOI")
+</code></pre>
+
+
+</div>

@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otclust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Mean partition by optimal transport alignment.</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the mean partition of an ensemble of partitions by optimal transport alignment and uncertainty/stability measures.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otclust(ensemble, idx = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ensemble</code></td>
+<td>
+<p>– a matrix of ensemble partition. Use <code>ensemble()</code> to generate an ensemble of perturbed partitions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>idx</code></td>
+<td>
+<p>– an integer indicating the index of reference partition in <code>ensemble</code>. If not specified, median partition is used as the reference partition.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list of alignment result.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>idx</code></td>
+<td>
+<p>the index of reference partition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>avedist</code></td>
+<td>
+<p>average distances between each partition and all ensemble partitions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meanpart</code></td>
+<td>
+<p>a list of mean partition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+<p>Wasserstein distances between mean partition and the others.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numcls</code></td>
+<td>
+<p>the number of clusters for each partition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistics</code></td>
+<td>
+<p>average tightness ratio, average coverage ratio, 1-average jaccard distance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cap</code></td>
+<td>
+<p>cluster alignment and points based (CAP) separability.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>switched labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cps</code></td>
+<td>
+<p>covering point set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>topological relationship statistics between the reference partition and the others.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Weight</code></td>
+<td>
+<p>weight matrix.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sim1)
+# the number of clusters.
+C = 4
+ens.data = ensemble(sim1$X[1:100,], nbs=10, clust_param=C, clustering="kmeans", perturb_method=1)
+# find mean partition and uncertainty statistics.
+ota = otclust(ens.data)
+</code></pre>
+
+
+</div>

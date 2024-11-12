@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>findSa</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>findSa</h2>
+
+<h3>Description</h3>
+
+<p>This is an implementation of the YHY bootstrap covariance matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">findSa(S, fitted, p, a = 0.5, df, n, tau = NULL, tol = 1e-07)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>Sample covariance matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted</code></td>
+<td>
+<p>The fitted covariance matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>the number of columns in the covariance matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>the starting value for the a parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>the degrees of freedom in the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>the number of participants in the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>the population tau. If no tau is provided, the estimated tau from the model will be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>the difference between ga and tau at which the function will converge</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list of the "a" adjusted covariance matrix, Sa, the tau, ga, and the number of interations.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">require(Omisc)
+require(lavaan)
+set.seed(2^7-1)
+modelTest&lt;-'
+LV1=~ .7*x1+.8*x2+.75*x3+.6*x4
+LV2=~ .7*y1+.8*y2+.75*y3+.6*y4
+LV1~~.3*LV2
+LV1~~1*LV1
+LV2~~1*LV2
+'
+modelFit&lt;-'
+LV1=~ x1+x2+x3+x4
+LV2=~ y1+y2+y3+y4
+LV1~~start(.5)*LV2
+LV1~~1*LV1
+LV2~~1*LV2
+'
+
+testdata&lt;-simulateData(modelTest, sample.nobs = 250)
+fit&lt;-cfa(modelFit, testdata)
+
+fitted&lt;-fitted(fit)$cov
+fitted&lt;-fitted[,1:ncol(fitted)]
+S&lt;-cov(testdata)
+p&lt;-8
+a&lt;-.5
+n&lt;-250
+df&lt;-21
+findSa(S, fitted, p, .5, df, n)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>header2matrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Converts DICOM Header Field to a Matrix</h2>
+
+<h3>Description</h3>
+
+<p>Converts a vector of DICOM header information, assuming there are multiple
+entries per element of the vector, into a matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">header2matrix(hdr, ncol, sep = " ", byrow = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>hdr</code></td>
+<td>
+<p>is the result from extracting information from a DICOM header
+field; e.g., using <code>extractHeader</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncol</code></td>
+<td>
+<p>is the number of columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>is the character string required to split entries in the header
+field.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+<p>is a logical variable (default = <code>TRUE</code>) telling the
+routine to populate the matrix by rows then columns.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Matrix with <code>length(hdr)</code> rows and <code>ncol</code> columns.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Digital Imaging and Communications in Medicine (DICOM)<br><a href="http://medical.nema.org">http://medical.nema.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>extractHeader</code>, <code>matrix</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- readDICOMFile(system.file("dcm/Abdo.dcm", package="oro.dicom"))
+pixelSpacing &lt;- extractHeader(x$hdr, "PixelSpacing", numeric=FALSE)
+pSmat &lt;- header2matrix(pixelSpacing, ncol=2)
+IOP &lt;- extractHeader(x$hdr, "ImageOrientationPatient", numeric=FALSE)
+IOPmat &lt;- header2matrix(IOP, ncol=6)
+
+</code></pre>
+
+
+</div>

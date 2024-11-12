@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_feature_weights</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add feature weights</h2>
+
+<h3>Description</h3>
+
+<p>Set weights for conserving features in a project prioritization
+<code>problem()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_feature_weights(x, weights)
+
+## S4 method for signature 'ProjectProblem,numeric'
+add_feature_weights(x, weights)
+
+## S4 method for signature 'ProjectProblem,character'
+add_feature_weights(x, weights)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Object that specifies the weights for each feature. See the
+Details section for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Weights are used to specify the relative importance for
+maintaining the persistence of specific features. For budget constrained
+problems (e.g. <code>add_max_richness_objective()</code>), these
+weights
+could be used to specify which features are more important than other
+features according to evolutionary or cultural metrics. Specifically,
+features with a higher weight value are considered more important. It is
+generally best to ensure that the feature weights range between 0.0001 and
+10,000 to reduce the time required to solve problems using exact
+algorithm solvers. As a consequence, you might have to rescale the feature
+weights if the largest or smallest values occur outside this range
+(excluding zeros). If you want to ensure that certain features conserved
+in the solutions, it is strongly recommended to lock in the actions for
+these features instead of setting really high weights for these features.
+Please note that a warning will be thrown if you attempt to solve
+problems with weights when an objective has been specified that does
+not use weights. Currently, all objectives—except for the minimum
+set objective (i.e. <code>add_min_set_objective()</code>)—can use weights.
+</p>
+<p>The weights for a problem can be specified in several different ways:
+</p>
+
+<dl>
+<dt><code>numeric</code></dt>
+<dd>
+<p><code>vector</code> of weight values for each feature.</p>
+</dd>
+<dt><code>character</code></dt>
+<dd>
+<p>specifying the name of column in the
+feature data (i.e. the argument to <code>features</code> in the
+<code>problem()</code> function) that contains the weights.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>weights.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# print feature data
+print(sim_features)
+
+# build problem with maximum richness objective, $300 budget, and no weights
+p1 &lt;- problem(sim_projects, sim_actions, sim_features,
+              "name", "success", "name", "cost", "name") %&gt;%
+      add_max_richness_objective(budget = 200) %&gt;%
+      add_binary_decisions()
+
+# print problem
+print(p1)
+
+# build another problem, and specify feature weights using the values in the
+# "weight" column of the sim_features table by specifying the column
+# name "weight"
+p2 &lt;- p1 %&gt;%
+      add_feature_weights("weight")
+
+# print problem
+print(p2)
+
+# build another problem, and specify feature weights using the
+# values in the "weight column of the sim_features table, but
+# actually input the values rather than specifying the column name
+# "weights" column of the sim_features table
+p3 &lt;- p1 %&gt;%
+      add_feature_weights(sim_features$weight)
+
+# print problem
+print(p3)
+
+## Not run: 
+# solve the problems
+s1 &lt;- solve(p1)
+s2 &lt;- solve(p2)
+s3 &lt;- solve(p3)
+
+# print solutions
+print(s1)
+print(s2)
+print(s3)
+
+# plot solutions
+plot(p1, s1)
+plot(p2, s2)
+plot(p3, s3)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

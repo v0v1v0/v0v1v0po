@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ChangePointsPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot Peak Ranges of Change Points</h2>
+
+<h3>Description</h3>
+
+<p>Plot the peak ranges of change points produced by <em>MultiWindow</em>. 
+The blue solid line is the start of a peak range and the red dashed line
+is the end of that peak range.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ChangePointsPlot(y, result, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>The original data to find change points. Must be one dimensional
+data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>The result of function <em>MultiWindow</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to plot, such as <em>main, xlab, ylab</em>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plot of original data and peak ranges of change points.
+</p>
+
+
+<h3>References</h3>
+
+<p>J. Ding, Y. Xiang, L. Shen, and V. Tarokh, <em>Multiple Change
+Point Analysis: Fast Implementation and Strong Consistency</em>. IEEE
+Transactions on Signal Processing, vol. 65, no. 17, pp. 4495-4510, 2017.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">N &lt;- 1000
+N1 &lt;- floor(0.1*N)
+N2 &lt;- floor(0.3*N)
+a1 &lt;- c(0.8, -0.3); c1 &lt;- 0
+a2 &lt;- c(-0.5, 0.1); c2 &lt;- 0
+a3 &lt;- c(0.5, -0.5); c3 &lt;- 0
+y &lt;- rep(0,N)
+L&lt;-2
+y[1:L] &lt;- rnorm(L)
+for (n in (L+1):N){
+  if (n &lt;= N1) {
+    y[n] &lt;- y[(n-1):(n-L)] %*% a1 + c1 + rnorm(1)
+  } else if (n &lt;= (N1+N2)) {
+    y[n] &lt;- y[(n-1):(n-L)] %*% a2 + c2 + rnorm(1)
+  }
+  else {
+    y[n] &lt;- y[(n-1):(n-L)] %*% a3 + c3 + rnorm(1)
+  }
+}
+result &lt;- MultiWindow(y,window_list=c(100,50,20,10,5),point_max=5)
+ChangePointsPlot(y,result)
+</code></pre>
+
+
+</div>

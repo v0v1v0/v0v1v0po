@@ -1,0 +1,57 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>omxModelDeleteData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove all instances of data from a model</h2>
+
+<h3>Description</h3>
+
+<p>For very large data, it can be desirable to discard data after the model
+is run. That is what the purpose of this function.
+</p>
+<p>Data is discarded from the model and all submodels recursively.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">omxModelDeleteData(model)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>a MxModel object.</p>
+</td>
+</tr></table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(OpenMx)
+
+data(demoOneFactor)
+manifests &lt;- names(demoOneFactor)
+latents   &lt;- c("G")
+factorModel &lt;- mxModel(model="One Factor", type="RAM",
+      manifestVars = manifests,
+      latentVars   = latents,
+      mxPath(from=latents, to=manifests),
+      mxPath(from=manifests, arrows=2),
+      mxPath(from=latents, arrows=2,free=FALSE, values=1.0),
+      mxData(cov(demoOneFactor), type="cov",numObs=500)
+)
+factorFit &lt;-mxRun(factorModel)
+object.size(factorFit)
+factorFit &lt;- omxModelDeleteData(factorFit)
+object.size(factorFit)
+factorFit$data
+
+</code></pre>
+
+
+</div>

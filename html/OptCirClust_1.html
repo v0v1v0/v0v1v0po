@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>CirClust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Circular Data Clustering</h2>
+
+<h3>Description</h3>
+
+<p>Perform clustering on circular data to minimize the
+within-cluster sum of squared distances.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">CirClust(O, K, Circumference, method = c("FOCC", "HEUC", "BOCC"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>O</code></td>
+<td>
+<p>a vector of circular data points. They can be coordinates
+along the circle based on distance, or angles around the circle.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>the number of clusters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Circumference</code></td>
+<td>
+<p>the circumference of the circle where
+data are located</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the circular clustering method.
+<code>"FOCC"</code>: fast and optimal, the default method;
+<code>"HEUC"</code>: based on heuristic k-means, fast but not necessarily optimal;
+<code>"BOCC"</code>: brute-force based on Ckmeans.1d.dp, slow but optimal,
+included to provide a baseline.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By circular data, we broadly refer to data points on any non-self-intersecting loop.
+In clustering <code class="reqn">N</code> circular points into <code class="reqn">K</code> clusters, the "FOCC" algorithm
+is reproducible with runtime <code class="reqn">O(K N \log^2 N)</code>
+(Debnath and Song 2021);
+The "HEUC" algorithm, not always reproducible, calls the <code>kmeans</code> function repeatedly;
+The "BOCC" algorithm with runtime <code class="reqn">O(KN^2)</code>, reproducible but slow, is done via
+repeatedly calling the <code>Ckmeans.1d.dp</code> function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"CirClust"</code> which has a <code>plot</code>
+method. It is a list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>a vector of clusters assigned to each element in <code>O</code>.
+Each cluster is indexed by an integer from 1 to <code>K</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centers</code></td>
+<td>
+<p>a numeric vector of the means for each cluster in the circular data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>withinss</code></td>
+<td>
+<p>a numeric vector of the within-cluster sum of squares for each cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>a vector of the number of elements in each cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>totss</code></td>
+<td>
+<p>the total sum of squared distances between each element and the sample mean.
+This statistic is not dependent on the clustering result.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tot.withinss</code></td>
+<td>
+<p>the total sum of within-cluster squared distances between
+each element and its cluster mean. This statistic is minimized given the number of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betweenss</code></td>
+<td>
+<p>the	sum of squared distances between each cluster mean and sample mean.
+This statistic is maximized given the number of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ID</code></td>
+<td>
+<p>the starting index of the frame with minimum SSQ</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Border</code></td>
+<td>
+<p>the borders of <code>K</code> clusters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Border.mid</code></td>
+<td>
+<p>the middle point of the last and first points of two consequitive clusters.   </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>O_name</code></td>
+<td>
+<p>a character string. The actual name of the <code>O</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Circumference</code></td>
+<td>
+<p> the circumfarence of the circular or periodic data.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Debnath T, Song M (2021).
+“Fast optimal circular clustering and applications on round genomes.”
+<em>IEEE/ACM Transactions on Computational Biology and Bioinformatics</em>.
+doi: <a href="https://doi.org/10.1109/TCBB.2021.3077573">10.1109/TCBB.2021.3077573</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">O &lt;- c(1,2, 10,11,12,13,14,15, 27,28,29,30,31,32, 40,41)
+
+K &lt;- 3
+
+Circumference &lt;- 42
+
+# Perform circular clustering:
+output &lt;- CirClust(O, K, Circumference)
+
+# Visualize the circular clusters:
+opar &lt;- par(mar=c(1,1,2,1))
+plot(output)
+par(opar)
+
+</code></pre>
+
+
+</div>

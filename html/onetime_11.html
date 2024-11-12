@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onetime_only</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wrap a function to be called only once</h2>
+
+<h3>Description</h3>
+
+<p>This takes a function and returns the same function wrapped by <code>onetime_do()</code>.
+Use it for code which should run only once, but which may be called from
+multiple locations. This frees you from having to use the same <code>id</code> multiple
+times.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onetime_only(
+  .f,
+  id = deprecate_calling_package(),
+  path = default_lockfile_dir(),
+  default = NULL,
+  without_permission = "warn"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.f</code></td>
+<td>
+<p>A function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Unique ID string. If this is unset, the name of the calling
+package will be used. Since onetime 0.2.0, not setting <code>id</code> is
+deprecated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Directory to store lockfiles. The default uses a unique
+directory corresponding to the calling package, beneath
+<code>rappdirs::user_config_dir()</code>. Normally you should leave this as the
+default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default</code></td>
+<td>
+<p>Value to return from <code>.f</code> if function was not executed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>without_permission</code></td>
+<td>
+<p>Character string. What to do if the user hasn't
+given permission to store files? <code>"warn"</code> runs the action with an extra
+warning; <code>"run"</code> runs the action with no warning; <code>"pass"</code> does nothing
+and returns the default; <code>"stop"</code> throws an error; <code>"ask"</code> asks for
+permission using <code>check_ok_to_store()</code>, and returns the default if it is
+not granted.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A wrapped function. The function itself returns the result of <code>.f</code>,
+or  <code>default</code> if the inner function was not called.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>onetime_do()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">oo &lt;- options(onetime.dir = tempdir(check = TRUE))
+id &lt;- sample(10000L, 1)
+
+sample_once &lt;- onetime_only(sample, id = id)
+sample_once(1:10)
+sample_once(1:10)
+
+onetime_reset(id)
+options(oo)
+</code></pre>
+
+
+</div>

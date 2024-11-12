@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fill.NAs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create missingness indicator variables and non-informatively fill in missing values</h2>
+
+<h3>Description</h3>
+
+<p>Given a <code>data.frame</code> or <code>formula</code> and data,
+<code>fill.NAs()</code> returns an expanded data frame, including a new
+missingness flag for each variable with missing values and
+replacing each missing entry with a value representing a reasonable
+default for missing values in its column.  Functions in the formula
+are supported, with transformations happening before <code>NA</code>
+replacement.  The expanded data frame is useful for propensity
+modeling and balance checking when there are covariates with
+missing values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fill.NAs(x, data = NULL, all.covs = FALSE, contrasts.arg = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Can be either a data frame (in which case the data
+argument should be <code>NULL</code>) or a formula (in which case data
+must be a data.frame)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>If x is a formula, this must be a data.frame. Otherwise
+it will be ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all.covs</code></td>
+<td>
+<p>Should the response variable be imputed? For
+formula <code>x</code>, this is the variable on the left hand side. For
+<code>data.frame</code> <code>x</code>, the response is considered the first
+column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contrasts.arg</code></td>
+<td>
+<p>(from <code>model.matrix</code>) A list, whose
+entries are values (numeric matrices or character strings naming
+functions) to be used as replacement values for the
+<code>contrasts</code> replacement function and whose names are
+the names of columns of <code>data</code> containing
+<code>factor</code>s.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>fill.NAs</code> prepares data for use in a model or matching
+procedure by filling in missing values with minimally invasive
+substitutes. Fill-in is performed column-wise, with each column
+being treated individually. For each column that is missing, a new
+column is created of the form “ColumnName.NA” with
+indicators for each observation that is missing a value for
+“ColumnName”.  Rosenbaum and Rubin (1984, Sec. 2.4 and
+Appendix B) discuss propensity score models using this data
+structure.
+</p>
+<p>The replacement value used to fill in a missing value is simple
+mean replacement. For transformations of variables, e.g. <code>y ~
+x1 * x2</code>, the transformation occurs first. The transformation
+column will be <code>NA</code> if any of the base columns are
+<code>NA</code>. Fill-in occurs next, replacing all missing values with
+the observed column mean. This includes transformation columns.
+</p>
+<p>Data can be passed to <code>fill.NAs</code> in two ways. First, you can
+simply pass a <code>data.frame</code> object and <code>fill.NAs</code> will
+fill every column. Alternatively, you can pass a <code>formula</code> and
+a <code>data.frame</code>. Fill-in will only be applied to columns
+specifically used in the formula. Prior to fill-in, any functions
+in the formula will be expanded. If any arguments to the functions
+are <code>NA</code>, the function value will also be <code>NA</code> and
+subject to fill-in.
+</p>
+<p>By default, <code>fill.NAs</code> does not impute the response
+variable. This is to encourage more sophisticated imputation
+schemes when the response is a treatment indicator in a matching
+problem. This behavior can be overridden by setting <code>all.covs
+= TRUE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> with all <code>NA</code> values replaced with
+mean values and additional indicator columns for each column
+including missing values. Suitable for directly passing to
+<code>lm</code> or other model building functions to build
+propensity scores.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mark M. Fredrickson and Jake Bowers
+</p>
+
+
+<h3>References</h3>
+
+<p>Rosenbaum, Paul R. and Rubin, Donald B. (1984) ‘Reducing
+Bias in Observational Studies using Subclassification on the
+Propensity Score,’ <em>Journal of the American Statistical
+Association</em>, <b>79</b>, 516 – 524.
+</p>
+<p>Von Hipple, Paul T. (2009) ‘How to impute interactions,
+squares, and other transformed variables,’ <em>Sociological
+Methodology</em>, <b>39</b>(1), 265 – 291.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>match_on</code>, <code>lm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(nuclearplants)
+### Extract some representative covariates:
+np.missing &lt;- nuclearplants[c('t1', 't2', 'ne', 'ct', 'cum.n')]
+
+ ### create some missingness in the covariates
+ n &lt;- dim(np.missing)[1]
+ k &lt;- dim(np.missing)[2]
+
+ for (i in 1:n) {
+   missing &lt;- rbinom(1, prob = .1, size = k)
+   if (missing &gt; 0) {
+     np.missing[i, sample(k, missing)] &lt;- NA
+   }
+ }
+
+### Restore outcome and treatment variables:
+np.missing &lt;- data.frame(nuclearplants[c('cost', 'pr')], np.missing)
+
+### Fit a propensity score but with missing covariate data flagged
+### and filled in, as in Rosenbaum and Rubin (1984, Appendix):
+np.filled &lt;- fill.NAs(pr ~ t1 * t2, np.missing)
+# Look at np.filled to establish what missingness flags were created
+head(np.filled)
+(np.glm &lt;- glm(pr ~ ., family=binomial, data=np.filled))
+(glm(pr ~ t1 + t2 + `t1:t2` + t1.NA + t2.NA,
+                family=binomial, data=np.filled))
+# In a non-interactive session, the following may help, as long as
+# the formula passed to `fill.NAs` (plus any missingness flags) is
+# the desired formula for the glm.
+(glm(formula(terms(np.filled)), family=binomial, data=np.filled))
+
+### produce a matrix of propensity distances based on the propensity model
+### with fill-in and flagging. Then perform pair matching on it:
+pairmatch(match_on(np.glm, data=np.filled), data=np.filled)
+
+## fill NAs without using treatment contrasts by making a list of contrasts for
+## each factor ## following hints from https://stackoverflow.com/a/4569239/161808
+
+np.missing$t1F&lt;-factor(np.missing$t1)
+cov.factors &lt;- sapply(np.missing[,c("t1F","t2")],is.factor)
+cov.contrasts &lt;- lapply(
+  np.missing[,names(cov.factors)[cov.factors],drop=FALSE],
+  contrasts, contrasts = FALSE)
+
+## make a data frame filling the missing covariate values, but without
+## excluding any levels of any factors
+np.noNA2&lt;-fill.NAs(pr~t1F+t2,data=np.missing,contrasts.arg=cov.contrasts)
+
+</code></pre>
+
+
+</div>

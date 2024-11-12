@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>openSkiesStateVectorSet</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>An <code>R6Class</code> object representing an ensemble of aircraft 
+state vectors</h2>
+
+<h3>Description</h3>
+
+<p><code>R6Class</code> object representing an ensemble of aircraft state vectors. 
+Contains a list of objects of class <code>openSkiesStateVector</code>. The
+ensemble can either represent a time series of state vectors of a single 
+aircraft, or represent state vectors corresponding to multiple different
+aircrafts. For details on the information stored in each state vector, see
+the documentation for the <code>openSkiesStateVector</code> class. New instances can be manually 
+created by providing a list of <code>openSkiesStateVector</code> objects.
+Alternatively, <code>getSingleTimeStateVectors</code> and <code>getAircraftStateVectorsSeries</code> 
+will return an <code>openSkiesStateVectorSet</code> object if multiple state
+vectors matching the query conditions are found.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">openSkiesStateVectorSet
+</code></pre>
+
+
+<h3>Fields</h3>
+
+
+<dl>
+<dt><code>state_vectors</code></dt>
+<dd>
+<p>List of <code>openSkiesStateVector</code> objects
+</p>
+</dd>
+<dt><code>time_series</code></dt>
+<dd>
+<p>Logical indicating if the <code>openSkiesStateVectorSet</code>
+object represents a time series of state vectors of a single aircraft.
+</p>
+</dd>
+</dl>
+<h3>Methods</h3>
+
+
+<dl>
+<dt>
+<code>add_state_vector(state_vector)</code>
+</dt>
+<dd>
+<p>This method adds a new state vector to the openSkiesAircraft object, which
+will be set as the new <code>last_state_vector</code> and will be added to
+<code>state_vector_history</code>. <code>state_vector</code> should be an
+<code>openSkiesStateVector</code> object
+</p>
+</dd>
+<dt>
+<code>get_values(fields, removeNAs=FALSE, unwrapAngles=FALSE)</code>
+</dt>
+<dd>
+<p>This method retrieves all the values for the specified fields in the 
+ensemble of <code>openSkiesStateVector</code> objects. One or several
+field names can be provided through the <code>fields</code> argument. The values
+will be returned as a vector if a single field was provided, or as a data
+frame if multiple fields were provided. Field names should match those of
+the fields of <code>openSkiesStateVector</code> objects. If <code>removeNAs=TRUE</code>,
+NA values will be omitted from the output (if multiple fields were provided,
+only state vectors for which all of the fields were NA will be omitted).
+If <code>unwrapAngles=TRUE</code> and values for the <code>true_track</code> field
+were requested, the values will be unwrapped to be a smooth succession of
+values without sudden discontinuities when crossing from 360º to 0º
+(this will likely make multiple values become higher than 360).
+</p>
+</dd>
+<dt>
+<code>get_uniform_interpolation(n, fields, method="fmm")</code>
+</dt>
+<dd>
+<p>This method obtains a data frame with an interpolation of the specified fields along the
+route represented by the state vector set across n evenly distributed points. <code>fields</code>
+should be a character vector with the name of the fields that will be interpolated.
+Only numeric fields are accepted. <code>method</code> represents the interpolation method.
+"linear" will result in linear interpolation, while "fmm", "periodic", or "natural" will result
+in different types of spline interpolation.
+</p>
+</dd>
+<dt>
+<code>get_time_points_interpolation(fields, time_field, timestamps, method="fmm")</code>
+</dt>
+<dd>
+<p>This method obtains a data frame with an interpolation of the specified fields along the
+route represented by the state vector set across the specified timestamps. <code>fields</code>
+should be a character vector with the name of the fields that will be interpolated.
+Only numeric fields are accepted. <code>method</code> represents the interpolation method.
+"linear" will result in linear interpolation, while "fmm", "periodic", or "natural" will result
+in different types of spline interpolation. <code>time_field</code> indicates the
+name of the field of the openSkiesStateVectorSet object from which the 
+timestamps of the original state vectors will be retrieved. Possible values
+are <code>c("requested_time", "last_position_update_time", "last_any_update_time")</code>.
+The time points at which the interpolations should be calculated should be
+provided as a vector through the <code>timestamps</code> argument.
+</p>
+</dd>
+<dt>
+<code>sort_by_field(field, decreasing=FALSE)</code>
+</dt>
+<dd>
+<p>This method sorts the state vectors of the openSkiesStateVectorSet object
+by the values of the field provided through <code>field</code>. By default,
+<code>decreasing=FALSE</code> and the state vectors will be sorted by increasing 
+order of <code>field</code>. If <code>decreasing=TRUE</code>, decreasing order will be
+used.
+</p>
+</dd>
+<dt>
+<code>split_into_flights(timeOnLandThreshold=300, timeDiffThreshold=1800)</code>
+</dt>
+<dd>
+<p>This method automatically detects different flights contained in the
+openSkiesStateVectorSet object and returns a list of objects of class
+<code>openSkiesFlight</code>. Separate flights are detected based on two
+conditions: either the aircraft staying on ground for a given amount of
+time, or the aircraft not sending any status update for a given period. The
+thresholds are controlled, respectively, through the <code>timeOnLandThreshold</code>
+and <code>timeDiffThreshold</code> arguments. In both cases, the value should be
+provided in seconds.
+</p>
+</dd>
+<dt>
+<code>remove_redundants(updateType="position")</code>
+</dt>
+<dd>
+<p>This method removes redundant state vectors, i.e., those that do not
+contain updated information with respect to older state vectors. What is
+considered as a redundant state vector is defined by the <code>updateType</code> 
+argument. If <code>updateType="position"</code>, which is also the default
+behavior, state vectors for which there was no update of positional
+information will be considered as redundant (even if there might have been
+an update of other information). If <code>updateType="any"</code>, only state
+vectors for which no information was updated (positional or any other) will
+be considered as redundant. It should be noted that applying this method
+will also sort the state vectors from older to more recent. The method
+is intended to be applied to time series, and therefore a warning will be
+given if it is applied on an <code>openSkiesStateVectorSet</code> with
+field <code>time_series=FALSE</code>.
+</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Obtain a time series of state vectors for the aircraft with ICAO 24-bit 
+# address 403003 for the 8th of October, 2020 between 16:50 and 16:53 (London
+# time), with a time resolution of 1 minute.
+
+if(interactive()){
+test_stateVectorSet &lt;- getAircraftStateVectorsSeries("403003", startTime="2020-10-08 16:50:00", 
+endTime="2020-10-08 16:52:00", timeZone="Europe/London", timeResolution=60)
+test_stateVectorSet
+}
+</code></pre>
+
+
+</div>

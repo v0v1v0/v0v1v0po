@@ -1,0 +1,64 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orbital_dt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert to data.table code</h2>
+
+<h3>Description</h3>
+
+<p>Returns <a href="https://rdatatable.gitlab.io/data.table/">data.table</a> code that
+is equivilant to prediction code.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orbital_dt(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An orbital object.
+</p>
+<p>This function requires <a href="https://dtplyr.tidyverse.org/">dtplyr</a> to be
+installed to run. The resulting code will likely need to be adopted to your
+use-case. Most likely by removing the initial <code>copy(data-name)</code> at the start.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>data.table code.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(workflows)
+library(recipes)
+library(parsnip)
+
+rec_spec &lt;- recipe(mpg ~ ., data = mtcars) %&gt;%
+  step_normalize(all_numeric_predictors())
+
+lm_spec &lt;- linear_reg()
+
+wf_spec &lt;- workflow(rec_spec, lm_spec)
+
+wf_fit &lt;- fit(wf_spec, mtcars)
+
+orbital_obj &lt;- orbital(wf_fit)
+
+orbital_dt(orbital_obj)
+
+</code></pre>
+
+
+</div>

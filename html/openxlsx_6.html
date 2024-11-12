@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addFilter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add column filters</h2>
+
+<h3>Description</h3>
+
+<p>Add excel column filters to a worksheet
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addFilter(wb, sheet, rows, cols)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name or index of a worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows</code></td>
+<td>
+<p>A row number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>columns to add filter to.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>adds filters to worksheet columns, same as filter parameters in writeData.
+writeDataTable automatically adds filters to first row of a table.
+NOTE Can only have a single filter per worksheet unless using tables.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>writeData()</code>
+</p>
+<p><code>addFilter()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- createWorkbook()
+addWorksheet(wb, "Sheet 1")
+addWorksheet(wb, "Sheet 2")
+addWorksheet(wb, "Sheet 3")
+
+writeData(wb, 1, iris)
+addFilter(wb, 1, row = 1, cols = 1:ncol(iris))
+
+## Equivalently
+writeData(wb, 2, x = iris, withFilter = TRUE)
+
+## Similarly
+writeDataTable(wb, 3, iris)
+## Not run: 
+saveWorkbook(wb, file = "addFilterExample.xlsx", overwrite = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

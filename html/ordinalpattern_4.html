@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>patternchange</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Changepoint Detection Using Ordinal Patterns
+</h2>
+
+<h3>Description</h3>
+
+<p>Test for a change in the dependence structure of two time series using ordinal patterns
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">patternchange(tsx,tsy,h=2,conf.level,weight=TRUE,weightfun=NULL,bn=log(length(tsx)),
+    kernel=function(x){return(max(0,1-abs(x)))})
+
+## S3 method for class 'change'
+plot(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tsx</code></td>
+<td>
+<p>numeric vector of first univariate time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tsy</code></td>
+<td>
+<p>numeric vector of second univariate time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>numeric value determining the length of ordinal pattern.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.level</code></td>
+<td>
+<p>numerical value indicating the confidence level of the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>logical value indicating whether one uses weights of the L1 norm or the empirical probability of identical patterns; see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightfun</code></td>
+<td>
+<p>function which defines the weights given the L1 norm between the patterns if <code>weight=TRUE</code>. If no weight-function is given, the canonical weight function is used; see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bn</code></td>
+<td>
+<p>numerical value determining the bandwidth of the kernel estimator used to estimate the long run variance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernel</code></td>
+<td>
+<p>kernel function for estimating the long run variance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>object of class <code>"change"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to the internal plotting function (<code>plot</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given two timeseries <code>tsx</code> and <code>tsy</code> a cusum type statistic tests whether there is a change in the patter dependence or not. The test is based on a comparison of patterns of length <code>h+1</code> in <code>tsx</code> and <code>tsy</code>. One can either choose the number of identical patterns (<code>weight=FALSE</code>) or a metric that is defined by the <code>weightfun</code> argument to measure the difference between patterns (<code>weight=TRUE</code>). If no (<code>weightfun</code>) is given, the canonical weightfunction is used, which equals 1 if patterns are identical and 0 if the L1 norm of their difference attains the maximal possible value. The value is linear interpolated in between.
+</p>
+<p>The procedure depends on an estimate of the long run variance. Here a kernel estimator is used. A kernel function and a bandwidth can be set using the arguments <code>kernel</code> and <code>bn</code>. If none of them is given, the bartlett kernel with a bandwidth of <code>log(n)</code>, where <code>n</code> equals the length of the timeseries, is used.  
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object with classes <code>"change"</code> and <code>"htest"</code> containing the following values:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>the value of the test statistic. Under the null the test statistic follows asymptotically a Kolmogorov Smirnov distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>the p-value of the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate</code></td>
+<td>
+<p>the estimated time of change.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>null.value</code></td>
+<td>
+<p>the jump height of the at most one change point model, which is under the null hypothesis always 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>a character string describing the alternative hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a characters string describing the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trajectory</code></td>
+<td>
+<p>the cumulative sum on which the tests are based on. Could be used for additional plots.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Alexander Dürre
+</p>
+
+
+<h3>References</h3>
+
+<p>Schnurr, A. (2014): An ordinal pattern approach to detect and to model leverage effects and dependence structures between financial time series, <em>Statistical Papers</em>, vol. 55, 919–931.
+</p>
+<p>Schnurr, A., Dehling, H. (2017): Testing for Structural Breaks via Ordinal Pattern Dependence, <em>Journal of the American Statistical Association</em>, vol. 112, 706–720.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Estimation of the pattern dependence is provided by <code>patterndependence</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1066)
+a1 &lt;- cbind(rnorm(100),rnorm(100))
+a2 &lt;- rmvnorm(100,sigma=matrix(c(1,0.8,0.8,1),ncol=2))
+A &lt;- rbind(a1,a2)
+testresult &lt;- patternchange(A[,1],A[,2])
+plot(testresult)
+testresult
+</code></pre>
+
+
+</div>

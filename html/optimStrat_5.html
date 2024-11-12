@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>expvar</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Expected variance</h2>
+
+<h3>Description</h3>
+
+<p>Compute the expected variance of five sampling strategies.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">expvar(b, d, x, n, H, Rxy, stratum1 = NULL, stratum2 = NULL, st = 1:5,
+   short = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>a numeric vector of length two giving the <em>true</em> shapes of the 
+trend and spread terms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>a numeric vector of length two giving the <em>assumed</em> shapes of the 
+trend and spread terms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a positive numeric vector giving the values of the auxiliary variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>a positive integer indicating the desired sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H</code></td>
+<td>
+<p>a positive integer giving the 
+desired number of strata/poststrata. Ignored if <code>stratum1</code> and <code>stratum2</code> 
+are given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Rxy</code></td>
+<td>
+<p>a number giving the correlation between the auxiliary variable and 
+the study variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratum1</code></td>
+<td>
+<p>a list giving stratum and sample sizes per stratum 
+(see ‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratum2</code></td>
+<td>
+<p>a list giving stratum and sample sizes per stratum (see 
+‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>st</code></td>
+<td>
+<p>a numeric vector indicating the strategies for which the expected variance is to be calculated (see ‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>short</code></td>
+<td>
+<p>logical. If <code>FALSE</code> (the default) a vector of length five is 
+returned. If <code>TRUE</code> only the strategies given by <code>st</code> are returned.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The expected variance of a sample of size <code>n</code> is computed for 
+five sampling strategies (<code class="reqn">\pi</code>ps–reg, STSI–reg, STSI–HT, <code class="reqn">\pi</code>ps–pos and STSI–pos).
+</p>
+<p>The strategies are defined assuming that the underlying superpopulation model is of the form
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{k}=\delta_{0}+\delta_{1}x_{k}^{\delta_{2}}+\epsilon_{k}</code>
+</p>
+
+<p>with <code class="reqn">E\epsilon_{k}=0</code>, <code class="reqn">V\epsilon_{k}=\delta_{3}^{2}x_{k}^{2\delta_{4}}</code> and <code class="reqn">Cov(\epsilon_{k} , \epsilon_{l}) = 0</code>. But the true generating model is of the form
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{k}=\beta_{0}+\beta_{1}x_{k}^{\beta_{2}}+\epsilon_{k}</code>
+</p>
+
+<p>with <code class="reqn">E\epsilon_{k}=0</code>, <code class="reqn">V\epsilon_{k} = \beta_{3}^{2}x_{k}^{2\beta_{4}}</code> and <code class="reqn">Cov(\epsilon_{k},\epsilon_{l})=0</code>.
+</p>
+<p>The parameters <code class="reqn">\beta_2</code> and <code class="reqn">\beta_4</code> are given by <code>b</code>. The parameters <code class="reqn">\delta_2</code> and <code class="reqn">\delta_4</code> are given by <code>d</code>.
+</p>
+<p><code>stratum1</code> and <code>stratum2</code> are lists with two components (each with length <code>length(x)</code>): <code>stratum</code> indicates the stratum to which each element belongs and <code>nh</code> indicates the sample sizes to be selected in each stratum. They can be created via <code>optiallo</code>. <code>stratum1</code> gives the stratification for STSI–HT and the poststrata for <code class="reqn">\pi</code>ps–pos and STSI–pos; whereas <code>stratum2</code> gives the stratification for STSI–reg and STSI–pos. If <code>NULL</code>, <code>optiallo</code> is used for defining <code>H</code> strata/poststrata.
+</p>
+<p><code>st</code> indicates which variances to be calculated. If <code>1 in st</code>, the expected variance of <code class="reqn">\pi</code>ps–reg is calculated. If <code>2 in st</code>, the expected variance of STSI–reg is calculated, and so on.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>short=FALSE</code> a vector of length five is returned giving the expected variance of the strategies given in <code>st</code>. <code>NA</code> is returned for those strategies not given in <code>st</code>. If <code>short=TRUE</code>, the <code>NA</code>s are omitted.</p>
+
+
+<h3>References</h3>
+
+<p>Bueno, E. (2018). <em>A Comparison of Stratified Simple Random Sampling and Probability Proportional-to-size Sampling.</em> Research Report, Department of Statistics, Stockholm University 2018:6. <a href="http://gauss.stat.su.se/rr/RR2018_6.pdf">http://gauss.stat.su.se/rr/RR2018_6.pdf</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optiallo</code> for how to stratify an auxiliary variable and allocate the sample size; <code>desvar</code> for calculating the variance of the five strategies.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x&lt;- 1 + sort( rgamma(5000, shape=4/9, scale=108) )
+expvar(b=c(1,1),d=c(1,1),x,n=500,H=6,Rxy=0.9)
+expvar(b=c(1,1),d=c(1,1),x,n=500,H=6,Rxy=0.9,st=1:3)
+expvar(b=c(1,1),d=c(1,1),x,n=500,H=6,Rxy=0.9,st=1:3,short=TRUE)
+
+st1&lt;- optiallo(n=500,x,H=6)
+post1&lt;- optiallo(n=500,x^1.5,H=10)
+expvar(b=c(1,1),d=c(1,1),x,n=500,H=6,Rxy=0.9,
+   stratum1=post1,stratum2=st1)
+</code></pre>
+
+
+</div>

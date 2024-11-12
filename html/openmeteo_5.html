@@ -1,0 +1,169 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>marine_forecast</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve marine conditions data from the Open-Meteo API</h2>
+
+<h3>Description</h3>
+
+<p><code>marine_forecast()</code> calls the Open-Meteo Marine Forecast API to obtain swell
+and wave data for a given location. Limited historical data is also available
+via this API.
+</p>
+<p>Refer to the API documentation at:
+<a href="https://open-meteo.com/en/docs/marine-weather-api">https://open-meteo.com/en/docs/marine-weather-api</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">marine_forecast(
+  location,
+  start = NULL,
+  end = NULL,
+  hourly = NULL,
+  daily = NULL,
+  response_units = NULL,
+  timezone = "auto"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p>Required. The location for which data will be retrieved.
+Supplied as either a <code>c(latitude,longitude)</code> WGS84 coordinate pair or a
+place name string (with co-ordinates obtained via <code>geocode()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start, end</code></td>
+<td>
+<p>Start and end dates in ISO 8601 (e.g. "2020-12-31"). If no
+dates are supplied, data for the next 7 days will be provided by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hourly, daily</code></td>
+<td>
+<p>At least one required. A marine weather variable accepted
+by the API, or list thereof. See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_units</code></td>
+<td>
+<p>Supply to convert response units for wave heights. This
+defaults to: <code style="white-space: pre;">⁠list(length_unit="metric") for meters. Specify "Imperial" for feet.⁠</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timezone</code></td>
+<td>
+<p>specify timezone for time data as a string, i.e.
+"australia/sydney" (defaults to "auto", the timezone local to the specified
+<code>location</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>You will need to specify at least one variable to retrieve, such as wave
+height, that you want data for. These variables are sampled or aggregated at
+<em>hourly</em> or <em>daily</em> intervals, and can be supplied as a list to request
+multiple variables over the same time period.
+</p>
+<p>Example <em>Hourly</em> variables include:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <strong>Variable</strong> </td>
+<td style="text-align: left;"> <strong>Description</strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>wave_height</code> </td>
+<td style="text-align: left;"> Wave height of significant mean waves </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>wind_wave_height</code> </td>
+<td style="text-align: left;"> Wave height of significant wind waves </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>swell_wave_height</code> </td>
+<td style="text-align: left;"> Wave height of significant swell waves </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>wind_wave_direction</code> </td>
+<td style="text-align: left;"> Mean direction of wind waves </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>swell_wave_period</code> </td>
+<td style="text-align: left;"> Mean period between swell waves </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>Example <em>Daily</em> variables include:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <strong>Variable</strong> </td>
+<td style="text-align: left;"> <strong>Description</strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>wave_height_max</code> </td>
+<td style="text-align: left;"> Maximum wave height for mean waves </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>wind_wave_direction_dominant</code> </td>
+<td style="text-align: left;"> Dominant wave direction of wind waves </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>swell_wave_period_max</code> </td>
+<td style="text-align: left;"> Maximum wave period of swell waves </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>Full documentation for the marine API is available at:
+<a href="https://open-meteo.com/en/docs/marine-weather-api">https://open-meteo.com/en/docs/marine-weather-api</a>
+</p>
+
+
+<h3>Value</h3>
+
+<p>Requested marine conditions data for the given location and time, as
+a tidy tibble.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Obtain maximum wave heights in Nazare, Portugal, over the next week
+marine_forecast("Nazare", daily = "wave_height_max")
+
+</code></pre>
+
+
+</div>

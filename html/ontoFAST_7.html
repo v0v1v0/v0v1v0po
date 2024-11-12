@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>export_cytoscape</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Export to Cytoscape format</h2>
+
+<h3>Description</h3>
+
+<p>This function converts character annotations to Cytoscape format. It returns a table that can be saved as in csv format
+and imported in Cytoscape. In Cytoscape choose File -&gt; Import -&gt; Network -&gt; File. Then assign columns to nodes and edges. Do not select
+columns that enumerate the tables' rows!
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">export_cytoscape(
+  ontology,
+  annotations = "auto",
+  is_a = c("is_a"),
+  part_of = c("BFO:0000050")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p>Ontology</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotations</code></td>
+<td>
+<p>which annotations to use: "auto" means automatic annotations, "manual" means manual ones.
+Alternatively, any other list containing annotations can be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>is_a</code></td>
+<td>
+<p>is_a</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>part_of</code></td>
+<td>
+<p>part_of</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a table
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(HAO)
+data(Sharkey_2011)
+data(Sharkey_2011_annot)
+ontology&lt;-HAO
+# processing ontology to incorporate character statements
+ontology&lt;-onto_process(ontology, Sharkey_2011[,1], do.annot = F)
+# embedding manual annotations
+ontology$annot_characters&lt;-Sharkey_2011_annot
+# exporting
+cyto&lt;-export_cytoscape(ontology, annotations = ontology$annot_characters,
+is_a = c("is_a"), part_of = c("BFO:0000050"))
+#write.csv(cyto, file="cyto.csv")
+
+</code></pre>
+
+
+</div>

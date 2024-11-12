@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.env_summarized</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>plot.env_summarized</h2>
+
+<h3>Description</h3>
+
+<p>Plotting method for <code>env_summarized</code> object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'env_summarized'
+plot(
+  x,
+  col = c("#97CBDE", "#E1B0B5"),
+  x_lab = NULL,
+  y_lab = NULL,
+  base_size = 10,
+  label = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Random patterns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Colors for areas above and below envelope.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_lab, y_lab</code></td>
+<td>
+<p>Labels of x- and y-axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_size</code></td>
+<td>
+<p>Base size of plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label</code></td>
+<td>
+<p>If TRUE the ratios of the area above and below are added to the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>To be generic for plotting function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Plotting method for summarized envelope created with <code>summarize_envelope</code>.
+</p>
+<p>Returns a <code>ggplot</code> object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ggplot
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summarize_envelope</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(42)
+input_pattern &lt;- spatstat.random::rThomas(kappa = 15, scale = 0.05, mu = 5)
+
+cluster_env &lt;- spatstat.explore::envelope(input_pattern, fun = "pcf", nsim = 39,
+funargs = list(divisor = "d", correction = "Ripley", stoyan = 0.25))
+
+x &lt;- summarize_envelope(cluster_env)
+plot(x)
+
+</code></pre>
+
+
+</div>

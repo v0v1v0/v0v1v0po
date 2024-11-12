@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>split_stratum</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Split one stratum into multiple strata</h2>
+
+<h3>Description</h3>
+
+<p>Split one stratum into multiple with specified sample sizes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">split_stratum(
+  z,
+  X,
+  strata,
+  ist,
+  nc,
+  nt,
+  wMax = 5,
+  wEach = 1,
+  solver = "Rglpk",
+  integer = FALSE,
+  threads = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>Vector of treatment assignment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Covariate matrix or data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strata</code></td>
+<td>
+<p>vector of initial strata assignments; only used if <code>object</code> is not supplied.
+Can be <code>NULL</code>, in which case an initial stratification using the quintiles of the
+propensity score is generated using <code>prop_strat()</code> and the generated
+propensity score is also added to the X matrix as an extra covariate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ist</code></td>
+<td>
+<p>the stratum to be split</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>a vector stating how many control units to place in
+each of the new split strata. The sum must be the total number of controls
+in the stratum to be split</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nt</code></td>
+<td>
+<p>a vector stating how many treated units to place in
+each of the new split strata. The sum must be the total number of treated units
+in the stratum to be split</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wMax</code></td>
+<td>
+<p>the weight the objective places on the maximum epsilon</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wEach</code></td>
+<td>
+<p>the weight the objective places on each epsilon</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solver</code></td>
+<td>
+<p>character specifying the optimization software to use.
+Options are "Rglpk" or "gurobi". The default is "gurobi"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>integer</code></td>
+<td>
+<p>boolean whether to use integer programming instead of randomized rounding.
+Default is <code>FALSE</code>. It is not recommended to set this to <code>TRUE</code> as the problem may never finish</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threads</code></td>
+<td>
+<p>how many threads to use in the optimization if using "gurobi" as the solver. Default will use all available threads</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing the following elements:
+</p>
+
+<ul>
+<li>
+<p>valueIP, valueLP: integer and linear programming scaled objective values
+</p>
+</li>
+<li>
+<p>n_smds: number of standardized mean differences contributing to the objective values
+(multiply the scaled objective values by this number to get the true objective values)
+</p>
+</li>
+<li>
+<p>n_fracs: the number of units with fractional linear programming solutions
+</p>
+</li>
+<li>
+<p>rand_c_prop, rand_t_prop: proportions of the control and treated units in each stratum
+that were selected with randomness
+</p>
+</li>
+<li>
+<p>pr: linear programming solution, with rows corresponding to the strata and columns to the units
+</p>
+</li>
+<li>
+<p>selection: vector of selected strata for each unit in the initial stratum to be split
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate a small data set
+set.seed(25)
+samp &lt;- sample(1:nrow(rhc_X), 1000)
+cov_samp &lt;- sample(1:26, 10)
+
+# Create some strata
+ps &lt;- prop_strat(z = rhc_X[samp, "z"],
+                 X = rhc_X[samp, cov_samp], nstrata = 5)
+
+# Save the sample sizes
+tab &lt;- table(ps$z, ps$base_strata)
+
+# Choose the best sample sizes among the options provided
+split_stratum(z = ps$z, X = ps$X, strata = ps$base_strata, ist = 1,
+           nc = c(floor(tab[1, 1] * 0.25), ceiling(tab[1, 1] * 0.75)),
+           nt = c(floor(tab[2, 1] * 0.3), ceiling(tab[2, 1] * 0.7)))
+
+</code></pre>
+
+
+</div>

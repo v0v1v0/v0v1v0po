@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>colorschemes</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Color Schemes for Images and Heat Maps</h2>
+
+<h3>Description</h3>
+
+<p>Create a vector of <code>N</code> contiguous colors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">redscale(N)
+greenscale(N)
+bluescale(N)
+blueyellow(N)
+cyanyellow(N)
+redgreen(N)
+jetColors(N)
+grayscale(N)
+greyscale(N)
+wheel(N, sat = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p> an integer; the number of distinct levels in the color map </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sat</code></td>
+<td>
+<p>a real number between 0 and 1; the saturation amount</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The color maps that ship with R (see, for example,
+<code>terrain.colors</code>) do not include the most common color
+maps used in publications in the microarray literature. This
+collection of color maps expands the available options.  The functions
+<code>redscale</code>, <code>greenscale</code>, and <code>bluescale</code> each range
+from pure black for low values to a pure primary color for high
+values. The synonyms <code>graysale</code> and <code>greysale</code> range from
+pure black to pure white.
+</p>
+<p>The <code>redgreen</code> color map ranges from pure green at the low end,
+through black in the middle, to pure red at the high end. Although
+this is the most common color map used in the microarray literature,
+it will prove problematic for individuals with red-green color-blindness. 
+</p>
+<p>The <code>blueyellow</code> color map ranges from pure blue at the low end,
+through gray in the middle, to pure yellow at the high end.
+</p>
+<p>The <code>jetColors</code> map tries to reproduce the default "jet" color map
+from MATLAB.
+</p>
+<p>The <code>cyanyellow</code> color map was added to provide a divergent map
+that should be usable by the majority of individuals whose vision has
+a color deficit. It ranges from cyan (a mixture of blue and green) at
+the low to yellow (a mixture of red and green) at the high end.  Since
+the vast majority of color deficits arise because an individual lacks
+cones for one of the three primary colors (red, green, or blue), this
+colormap should stil provide adequate contrasts.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character vector '<code>cv</code>' of color names. This can be used to
+create a user-defined color palette for subsequent graphics by
+'<code>palette(cv)</code>' or directly in a '<code>col=</code>' specification in
+'<code>par</code>' or in graphics functions such as '<code>image</code>' or
+'<code>heatmap</code>'. 
+</p>
+
+
+<h3>BUGS</h3>
+
+<p>The names <code>redgreen</code> and <code>blueyellow</code> are inconsistent with
+respect to which color represents low values and which color
+represents high values. It is too late to fix this.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kevin R. Coombes &lt;krc@silicovore.com&gt;</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rainbow</code>, <code>topo.colors</code>,
+<code>terrain.colors</code>, <code>heat.colors</code>,
+<code>rgb</code>, <code>image</code>, <code>heatmap</code>,
+<code>palette</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data &lt;- matrix(1:1024, nrow=1024)
+image(data, col=bluescale(64))
+image(data, col=redgreen(32))
+image(data, col=redscale(128))
+image(data, col=blueyellow(64))
+image(data, col=jetColors(64))
+image(data, col=grayscale(64))
+image(data, col=cyanyellow(64))
+rm(data) # cleanup
+</code></pre>
+
+
+</div>

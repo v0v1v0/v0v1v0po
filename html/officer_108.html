@@ -1,0 +1,56 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>media_extract</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract media from a document object</h2>
+
+<h3>Description</h3>
+
+<p>Extract files from a <code>rpptx</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">media_extract(x, path, target)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rpptx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>media path, should be a relative path</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+<p>target file</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">example_pptx &lt;- system.file(package = "officer",
+  "doc_examples/example.pptx")
+doc &lt;- read_pptx(example_pptx)
+content &lt;- pptx_summary(doc)
+image_row &lt;- content[content$content_type %in% "image", ]
+media_file &lt;- image_row$media_file
+png_file &lt;- tempfile(fileext = ".png")
+media_extract(doc, path = media_file, target = png_file)
+</code></pre>
+
+
+</div>

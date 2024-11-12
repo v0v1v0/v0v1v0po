@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxThreshold</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create List of Thresholds</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a list of thresholds which mxModel can use to set up a thresholds matrix for a RAM model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxThreshold(vars, nThresh=NA,
+	free=FALSE, values=mxNormalQuantiles(nThresh), labels=NA,
+	lbound=NA, ubound=NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>vars</code></td>
+<td>
+<p>character vector. These are the variables for which thresholds are to be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nThresh</code></td>
+<td>
+<p>numeric vector. These are the number of thresholds for each variables listed in ‘vars’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>free</code></td>
+<td>
+<p>boolean vector. Indicates whether threshold parameters are free or fixed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>numeric vector. The starting values of the parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>character vector. The names of the parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lbound</code></td>
+<td>
+<p>numeric vector. The lower bounds of free parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ubound</code></td>
+<td>
+<p>numeric vector. The upper bounds of free parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If you are new to ordinal data modeling and just want something quick to make your ordinal data work, we recommend you try the <code>umxThresholdMatrix</code> function in the <code>umx</code> package.
+</p>
+<p>The mxPath function creates MxThreshold objects. These consist of a list of ordinal variables and the thresholds that define the relationship between the observed ordinal variable and the continuous latent variable assumed to underlie it. This function directly mirrors the usage of mxPath, but is used to specify thresholds rather than means, variances and bivariate relationships.
+</p>
+<p>The ‘vars’ argument specifies which variables you wish to specify thresholds for. Variables are referenced by name, and these names must appear in the ‘manifestVar’ argument of the mxModel function if thresholds are to be correctly processed. Additionally, variables for which thresholds are specified must be specified as ordinal factors in whatever data is included in the model.
+</p>
+<p>The ‘nThresh’ argument specifies how many thresholds are to be specified for the variable or variables included in the ‘vars’ argument. The number of thresholds for a particular variable should be one fewer than the number of categories specified for that variable.
+</p>
+<p>The ‘free’ argument specifies whether the thresholds created by the mxThreshold function are free or fixed parameters. This argument may take either TRUE for free parameters, FALSE for fixed parameters, or a vector of TRUEs and FALSEs to be applied in order to the created thresholds.
+</p>
+<p>‘values’ is a numeric vector containing the starting values of the created thresholds. This gives a starting point for estimation. The ‘labels’ argument specifies the names of the parameters in the resulting MxThreshold object.  The ‘lbound’ and ‘ubound’ arguments specify lower and upper bounds for the created threshold parameters.
+</p>
+<p>Thresholds for multiple variables may be specified simultaneously by including a vector of variable names to the ‘vars’ argument. When multiple variables are included in the ‘vars’ argument, the length of the ‘vars’ argument must be evenly divisable by the length of the ‘nThresh’ argument. All subsequent arguments (‘free’ through ‘ubound’) should have their lengths be a factor of the total number of thresholds specified for all variables.
+</p>
+<p>If four variables are included in the ‘vars’ argument, then the ‘nThresh’ argument should contain either one, two or four elements. If the ‘nThresh’ argument specifies two thresholds for each variable, then ‘free’, ‘values’, and all subsequent arguments should specify eight values by including one, two, four or eight elements. Whenever fewer values are specified than are required (e.g., specify two values for eight thresholds), then the entire vector of values is repeated until the required number of values is reached, and will return an error if the correct number of values cannot be achieved by repeating the entire vector.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list of thresholds.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>umxThresholdMatrix</code> 
+<code>demo("mxThreshold")</code>
+mxPath for comparable specification of paths. mxMatrix for a matrix-based approach to thresholds specification; mxModel for the container in which mxThresholds are embedded. More information about the OpenMx package may be found here.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OpenMx)
+# threshold objects for three variables: 2 binary, and one ordinal.
+mxThreshold(vars = c("z1", "z2", "z3"), nThresh = c(1,1,2),
+  free = TRUE, values = c(-1, 0, -.5, 1.2) )
+</code></pre>
+
+
+</div>

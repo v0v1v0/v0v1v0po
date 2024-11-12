@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>daugment_design</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>D-Augment Design</h2>
+
+<h3>Description</h3>
+
+<p>D-Augments a design. The user gives an initial design for which he would like to add points
+and specifies the weight of the new points. Then he is prompted to choose a
+minimum efficiency. After that, the candidate points region is calculated
+and the user can choose the points and weights to add.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">daugment_design(
+  init_design,
+  alpha,
+  model,
+  parameters,
+  par_values,
+  design_space,
+  calc_optimal_design,
+  weight_fun = function(x) 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>init_design</code></td>
+<td>
+<p>dataframe with "Point" and "Weight" columns that represents the initial design to augment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>combined weight of the new points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>formula that represents the model with x as the independent variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p>character vector with the unknown parameters of the model to estimate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>par_values</code></td>
+<td>
+<p>numeric vector with the initial values of the unknown parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design_space</code></td>
+<td>
+<p>numeric vector with the limits of the space of the design</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calc_optimal_design</code></td>
+<td>
+<p>boolean parameter, if TRUE, the optimal design is calculated and efficiencies of the initial and augmented design are given</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight_fun</code></td>
+<td>
+<p>optional one variable function that represents the square of the structure of variance, in case of heteroscedastic variance of the response</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A dataframe that represents the D-augmented design
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other augment designs: 
+<code>dsaugment_design()</code>,
+<code>laugment_design()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">init_des &lt;- data.frame("Point" = c(30, 60, 90), "Weight" = c(1/3, 1/3, 1/3))
+augment_design("D-Optimality", init_des, 0.25, y ~ 10^(a-b/(c+x)), c("a","b","c"),
+  c(8.07131,  1730.63, 233.426), c(1, 100), TRUE)
+augment_design("D-Optimality", init_des, 0.25, y ~ 10^(a-b/(c+x)), c("a","b","c"),
+  c(8.07131,  1730.63, 233.426), c(1, 100), FALSE)
+</code></pre>
+
+
+</div>

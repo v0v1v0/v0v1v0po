@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_comment</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Helper to create a comment object</h2>
+
+<h3>Description</h3>
+
+<p>Creates a <code>wbComment</code> object. Use with <code>wb_add_comment()</code> to add to a worksheet location.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_comment(
+  text = NULL,
+  style = NULL,
+  visible = FALSE,
+  author = getOption("openxlsx2.creator"),
+  width = 2,
+  height = 4
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>Comment text. Character vector. or a <code>fmt_txt()</code> string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>A Style object or list of style objects the same length as comment vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>visible</code></td>
+<td>
+<p>Is comment visible? Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>author</code></td>
+<td>
+<p>Author of comment. A string. By default, will look at <code>options("openxlsx2.creator")</code>.
+Otherwise, will check the system username.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>Textbox integer width in number of cells</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>Textbox integer height in number of cells</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>wbComment</code> object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- wb_workbook()
+wb$add_worksheet("Sheet 1")
+
+# write comment without author
+c1 &lt;- wb_comment(text = "this is a comment", author = "", visible = TRUE)
+wb$add_comment(dims = "B10", comment = c1)
+
+# Write another comment with author information
+c2 &lt;- wb_comment(text = "this is another comment", author = "Marco Polo")
+wb$add_comment(sheet = 1, dims = "C10", comment = c2)
+
+# write a styled comment with system author
+s1 &lt;- create_font(b = "true", color = wb_color(hex = "FFFF0000"), sz = "12")
+s2 &lt;- create_font(color = wb_color(hex = "FF000000"), sz = "9")
+c3 &lt;- wb_comment(text = c("This Part Bold red\n\n", "This part black"), style = c(s1, s2))
+
+wb$add_comment(sheet = 1, dims = wb_dims(3, 6), comment = c3)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>set_osmapi_connection</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Configure connections from osmapiR</h2>
+
+<h3>Description</h3>
+
+<p>Functions to configure the connections. Probably, you should only use <code>set_osmapi_connection</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">set_osmapi_connection(
+  server = c("openstreetmap.org", "testing"),
+  cache_authentication
+)
+
+get_osmapi_url()
+
+set_osmapi_url(osmapi_url)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>server</code></td>
+<td>
+<p>If <code>openstreetmap.org</code> (default), the API calls will be performed to the servers in production. If
+<code>testing</code>, the calls will be against <a href="https://master.apis.dev.openstreetmap.org">https://master.apis.dev.openstreetmap.org</a> without affecting the main OSM
+data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cache_authentication</code></td>
+<td>
+<p>If <code>TRUE</code>, the authentication token will be cached on disk. This reduces the number of
+times that you need to re-authenticate at the cost of storing access credentials on disk. Cached tokens are
+encrypted and automatically deleted 30 days after creation. If missing (default), no changes will be applied. On
+package load time, the option is set to <code>FALSE</code> if it's not yet set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osmapi_url</code></td>
+<td>
+<p>The desired API URL to send the calls.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When testing your software against the API you should consider using <a href="https://master.apis.dev.openstreetmap.org">https://master.apis.dev.openstreetmap.org</a>
+instead of the live-api (<code>set_osmapi_connection("testing")</code>). Your account for the live service is not in the same
+database, so you probably need a new username and password for the test service; please visit that page in a browser
+to sign up.
+</p>
+<p><code>set_osmapi_url()</code> and <code>get_osmapi_url</code> only deal with the API base URL. On the other hand, <code>set_osmapi_connection</code>
+also configure the authentication parameters needed for <code>PUT</code>, <code>POST</code> and <code>DELETE</code> calls.
+</p>
+<p>For further details, see <a href="https://wiki.openstreetmap.org/wiki/API_v0.6">https://wiki.openstreetmap.org/wiki/API_v0.6</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Configure <code>.Options[grep("^osmapir\\.[a-z]+_(?!secret$)", names(.Options), perl = TRUE)]</code> :) and return
+<code>osmapir.base_api_url</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other API functions: 
+<code>authenticate_osmapi()</code>,
+<code>osm_api_versions()</code>,
+<code>osm_capabilities()</code>,
+<code>osm_permissions()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ori &lt;- get_osmapi_url()
+set_osmapi_connection(server = "testing")
+get_osmapi_url()
+set_osmapi_connection(server = "openstreetmap.org")
+get_osmapi_url()
+
+## Restore options
+if (ori == "https://api.openstreetmap.org") {
+  set_osmapi_connection(server = "openstreetmap.org")
+} else if (ori == "https://master.apis.dev.openstreetmap.org") {
+  set_osmapi_connection(server = "testing")
+} else {
+  warning(
+    "A non standard osmapiR connection detected (", ori,
+    "). If you configured manually options like \"osmapir.base_api_url\" or \"osmapir.oauth_id\", ",
+    "configure it again."
+  )
+}
+</code></pre>
+
+
+</div>

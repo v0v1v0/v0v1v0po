@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>layout_dedupe_ph_labels</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Detect and handle duplicate placeholder labels</h2>
+
+<h3>Description</h3>
+
+<p>PowerPoint does not enforce unique placeholder labels in a layout.
+Selecting a placeholder via its label using ph_location_label will throw
+an error, if the label is not unique. layout_dedupe_ph_labels helps to detect,
+rename, or delete duplicate placholder labels.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">layout_dedupe_ph_labels(x, action = "detect", print_info = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An <code>rpptx</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>action</code></td>
+<td>
+<p>Action to perform on duplicate placeholder labels. One of:
+</p>
+
+<ul>
+<li> <p><code>detect</code> (default) = show info on dupes only, make no changes
+</p>
+</li>
+<li> <p><code>rename</code> = create unique labels. Labels are renamed by appending a sequential number
+separated by dot to duplicate labels. For example, <code>c("title", "title")</code> becomes <code>c("title.1", "title.2")</code>.
+</p>
+</li>
+<li> <p><code>delete</code> = only keep one of the placeholders with a duplicate label
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_info</code></td>
+<td>
+<p>Print action information (e.g. renamed placeholders) to console?
+Default is <code>FALSE</code>. Always <code>TRUE</code> for action <code>detect</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>rpptx</code> object (with modified placeholder labels).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- read_pptx()
+layout_dedupe_ph_labels(x)
+
+file &lt;- system.file("doc_examples", "ph_dupes.pptx", package = "officer")
+x &lt;- read_pptx(file)
+layout_dedupe_ph_labels(x)
+layout_dedupe_ph_labels(x, "rename", print_info = TRUE)
+
+</code></pre>
+
+
+</div>

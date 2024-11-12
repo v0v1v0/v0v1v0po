@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>verify_image_extension</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Verify that the input image extension is valid</h2>
+
+<h3>Description</h3>
+
+<p>Verify that the input image extension is valid
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">verify_image_extension(image_path, regex_img = "jpe?g|png|tif$|tiff$")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>image_path</code></td>
+<td>
+<p>a character string specifying the path to the saved image</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regex_img</code></td>
+<td>
+<p>a character string specifying the regex used to verify if the image extension is valid</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The OpenImageR package uses the 'readPNG', 'readJPEG' and 'readTIFF' R packages in the background. Thus, only image file path
+extensions that can be processed from these R packages should be used as input to the 'readImage' function
+</p>
+
+
+<h3>Value</h3>
+
+<p>either the image path extension or an error
+</p>
+
+
+<h3>References</h3>
+
+<p>https://github.com/mlampros/OpenImageR/issues/25
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+vec_img_ext = c('png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'tif', 'TIF', 'tiff', 'TIFF')
+
+vec_valid = sapply(vec_img_ext, function(x) {
+  ext_iter = paste(c('example_image', x), collapse = '.')
+  verify_image_extension(image_path = ext_iter)
+})
+
+all(vec_img_ext == vec_valid)
+</code></pre>
+
+
+</div>

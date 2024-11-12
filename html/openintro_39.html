@@ -1,0 +1,241 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>boxPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Box plot</h2>
+
+<h3>Description</h3>
+
+<p>An alternative to <code>boxplot</code>. Equations are not accepted. Instead, the
+second argument, <code>fact</code>, is used to split the data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">boxPlot(
+  x,
+  fact = NULL,
+  horiz = FALSE,
+  width = 2/3,
+  lwd = 1,
+  lcol = "black",
+  medianLwd = 2,
+  pch = 20,
+  pchCex = 1.8,
+  col = grDevices::rgb(0, 0, 0, 0.25),
+  add = FALSE,
+  key = NULL,
+  axes = TRUE,
+  xlab = "",
+  ylab = "",
+  xlim = NULL,
+  ylim = NULL,
+  na.rm = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numerical vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>A character or factor vector defining the grouping for
+side-by-side box plots.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horiz</code></td>
+<td>
+<p>If <code>TRUE</code>, the box plot is oriented horizontally.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>The width of the boxes in the plot. Value between <code>0</code> and
+<code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>Width of lines used in box and whiskers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lcol</code></td>
+<td>
+<p>Color of the box, median, and whiskers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>medianLwd</code></td>
+<td>
+<p>Width of the line marking the median.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>Plotting character of outliers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pchCex</code></td>
+<td>
+<p>Size of outlier character.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Color of outliers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+<p>If <code>FALSE</code>, a new plot is created. Otherwise, the boxplots
+are added to the current plot for values of <code>TRUE</code> or a numerical
+vector specifying the locations of the boxes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>The order in which to display the side-by-side boxplots. If
+locations are specified in <code>add</code>, then the elements of <code>add</code> will
+correspond to the elements of <code>key</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axes</code></td>
+<td>
+<p>Whether to plot the axes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>Label for the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>Label for the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>Limits for the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>Limits for the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>Indicate whether <code>NA</code> values should be removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to plot.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Diez
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>histPlot</code>, <code>dotPlot</code>,
+<code>densityPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# univariarate
+boxPlot(email$num_char, ylab = "Number of characters in emails")
+
+# bivariate
+boxPlot(email$num_char, email$spam,
+  xlab = "Spam",
+  ylab = "Number of characters in emails"
+)
+
+# faded outliers
+boxPlot(email$num_char, email$spam,
+  xlab = "Spam",
+  ylab = "Number of characters in emails",
+  col = fadeColor("black", 18)
+)
+
+# horizontal plots
+boxPlot(email$num_char, email$spam,
+  horiz = TRUE,
+  xlab = "Spam",
+  ylab = "Number of characters in emails",
+  col = fadeColor("black", 18)
+)
+
+# bivariate relationships where categorical data have more than 2 levels
+boxPlot(email$num_char, email$image,
+  horiz = TRUE,
+  xlab = "Number of attached images",
+  ylab = "Number of characters in emails",
+  col = fadeColor("black", 18)
+)
+
+# key can be used to restrict to only the desired groups
+boxPlot(email$num_char, email$image,
+  horiz = TRUE, key = c(0, 1, 2),
+  xlab = "Number of attached images (limited to 0, 1, 2)",
+  ylab = "Number of characters in emails",
+  col = fadeColor("black", 18)
+)
+
+# combine boxPlot and dotPlot
+boxPlot(tips$tip, tips$day,
+  horiz = TRUE, key = c("Tuesday", "Friday")
+)
+dotPlot(tips$tip, tips$day,
+  add = TRUE, at = 1:2 + 0.05,
+  key = c("Tuesday", "Friday")
+)
+
+# adding a box
+boxPlot(email$num_char[email$spam == 0], xlim = c(0, 3))
+boxPlot(email$num_char[email$spam == 1], add = 2, axes = FALSE)
+axis(1, at = 1:2, labels = c(0, 1))
+boxPlot(email$num_char[email$spam == 0], ylim = c(0, 3), horiz = TRUE)
+boxPlot(email$num_char[email$spam == 1], add = 2, horiz = TRUE, axes = FALSE)
+axis(2, at = 1:2, labels = c(0, 1))
+</code></pre>
+
+
+</div>

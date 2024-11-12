@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>logLik.oem</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>log likelihood function for fitted oem objects</h2>
+
+<h3>Description</h3>
+
+<p>log likelihood function for fitted oem objects
+</p>
+<p>log likelihood function for fitted cross validation <code>oem</code> objects
+</p>
+<p>log likelihood function for fitted cross validation <code>oem</code> objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'oem'
+logLik(object, which.model = 1, ...)
+
+## S3 method for class 'cv.oem'
+logLik(object, which.model = 1, ...)
+
+## S3 method for class 'xval.oem'
+logLik(object, which.model = 1, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>fitted "oem" model object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.model</code></td>
+<td>
+<p>If multiple penalties are fit and returned in the same <code>oem</code> object, the <code>which.model</code> argument is used to 
+specify which model to plot. For example, if the oem object <code>"oemobj"</code> was fit with argument 
+<code>penalty = c("lasso", "grp.lasso")</code>, then <code>which.model = 2</code> provides a plot for the group lasso model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not used</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+n.obs &lt;- 2000
+n.vars &lt;- 50
+
+true.beta &lt;- c(runif(15, -0.25, 0.25), rep(0, n.vars - 15))
+x &lt;- matrix(rnorm(n.obs * n.vars), n.obs, n.vars)
+y &lt;- rnorm(n.obs, sd = 3) + x %*% true.beta
+
+fit &lt;- oem(x = x, y = y, penalty = c("lasso", "mcp"), compute.loss = TRUE)
+
+logLik(fit)
+
+logLik(fit, which.model = "mcp")
+
+
+fit &lt;- cv.oem(x = x, y = y, penalty = c("lasso", "mcp"), compute.loss = TRUE,
+              nlambda = 25)
+
+logLik(fit)
+
+logLik(fit, which.model = "mcp")
+
+
+fit &lt;- xval.oem(x = x, y = y, penalty = c("lasso", "mcp"), compute.loss = TRUE, 
+                nlambda = 25)
+
+logLik(fit)
+
+logLik(fit, which.model = "mcp")
+
+</code></pre>
+
+
+</div>

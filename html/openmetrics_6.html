@@ -1,0 +1,177 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>metrics</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Metrics</h2>
+
+<h3>Description</h3>
+
+<p>A metric is a measure which can be aggregated into a time series, and comes
+in one of three types: counters, gauges, and histograms.
+</p>
+<p>Metrics must have a unique name.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">counter_metric(
+  name,
+  help,
+  labels = character(),
+  ...,
+  unit = NULL,
+  registry = global_registry()
+)
+
+gauge_metric(
+  name,
+  help,
+  labels = character(),
+  ...,
+  unit = NULL,
+  registry = global_registry()
+)
+
+histogram_metric(
+  name,
+  help,
+  buckets = c(0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10),
+  labels = character(),
+  ...,
+  unit = NULL,
+  registry = global_registry()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>The name of the metric.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>help</code></td>
+<td>
+<p>A brief, one-sentence explanation of the metric's meaning.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>A vector of label names for the metric.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>For backward compatibility, otherwise ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit</code></td>
+<td>
+<p>An optional unit for the metric, e.g. <code>"seconds"</code>. Must
+match the metric name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>registry</code></td>
+<td>
+<p>Where to register the metric for later retrieval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>buckets</code></td>
+<td>
+<p>A sequence of buckets to bin observations into. Defaults to
+Prometheus's suggested buckets, which are a good fit for measuring
+user-visible latency in seconds (e.g. for web services).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>All metric objects have a <code>reset()</code> method that reverts the underlying value
+(or values) to zero, an <code>unregister()</code> method that removes them from the
+registry they were created in, and a <code>render()</code> method that writes a
+representation of the metric in the text-based <a href="https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format">OpenMetrics format</a>.
+Normally, <code>render_metrics()</code> is used instead.
+</p>
+<p>In addition, various metrics have their own methods:
+</p>
+
+<ul>
+<li> <p><code>inc(by = 1, ...)</code>: Increments the metric by some positive number,
+defaulting to 1. Further parameters are interpreted as labels. Available
+for counters and gauges.
+</p>
+</li>
+<li> <p><code>dec(by = 1, ...)</code>: Decrements the metric by some number, defaulting to 1.
+Further parameters are interpreted as labels. Available for gauges.
+</p>
+</li>
+<li> <p><code>set(value, ...)</code>: Sets the metric to some number. Further parameters are
+interpreted as labels. Available for gauges.
+</p>
+</li>
+<li> <p><code>set_to_current_time(...)</code>: Sets the metric to the current time, in seconds
+from the Unix epoch. Further parameters are interpreted as labels.
+Available for gauges.
+</p>
+</li>
+<li> <p><code>observe(value, ...)</code>: Records an observation of some number. Further
+parameters are interpreted as labels. Available for histograms.
+</p>
+</li>
+<li> <p><code>time(expr, ...)</code>: Records an observation for the time elapsed evaluating
+<code>expr</code>, in seconds. Further parameters are interpreted as labels.
+Available for histograms.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>An object with methods to manipulate the metric. See details.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The official documentation on <a href="https://prometheus.io/docs/concepts/metric_types/">Metric Types</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">meows &lt;- counter_metric("meows", "Heard around the house.", labels = "cat")
+meows$inc(cat = "Shamus") # Count one meow from Shamus.
+meows$inc(3, cat = "Unknown") # Count three meows of unknown origin.
+meows$render()
+
+thermostat &lt;- gauge_metric("thermostat", "Thermostat display.")
+thermostat$set(21.3) # Read from the display...
+thermostat$dec(2) # ... and then turn it down 2 degrees.
+thermostat$render()
+
+temperature &lt;- histogram_metric(
+  "temperature", "Ambient room temperature measurements.",
+  buckets = c(10, 15, 20, 22, 25), labels = "room"
+)
+set.seed(9090)
+# Simulate taking ambient temperature samples.
+for (measure in rnorm(20, mean = 21.5)) {
+  temperature$observe(measure, room = sample(c("kitchen", "bathroom"), 1))
+}
+temperature$render()
+
+</code></pre>
+
+
+</div>

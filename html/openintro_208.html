@@ -1,0 +1,214 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>normTail</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Normal distribution tails</h2>
+
+<h3>Description</h3>
+
+<p>Produce a normal (or t) distribution and shaded tail.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">normTail(
+  m = 0,
+  s = 1,
+  L = NULL,
+  U = NULL,
+  M = NULL,
+  df = 1000,
+  curveColor = 1,
+  border = 1,
+  col = "#CCCCCC",
+  xlim = NULL,
+  ylim = NULL,
+  xlab = "",
+  ylab = "",
+  digits = 2,
+  axes = 1,
+  detail = 999,
+  xLab = c("number", "symbol"),
+  cex.axis = 1,
+  xAxisIncr = 1,
+  add = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Numerical value for the distribution mean.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>Numerical value for the distribution standard deviation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>Numerical value representing the cutoff for a shaded lower tail.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>Numerical value representing the cutoff for a shaded upper tail.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>Numerical value representing the cutoff for a shaded central
+region.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>Numerical value describing the degrees of freedom.  Default is
+<code>1000</code>, which results in a nearly normal distribution. Small values may
+be useful to emphasize small tails.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>curveColor</code></td>
+<td>
+<p>The color for the distribution curve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border</code></td>
+<td>
+<p>The color for the border of the shaded area.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>The color for filling the shaded area.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>Limits for the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>Limits for the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A title for the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A title for the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>The maximum number of digits past the decimal to use in axes
+values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axes</code></td>
+<td>
+<p>A numeric value denoting whether to draw both axes (<code>3</code>),
+only the vertical axes (<code>2</code>), only the horizontal axes (<code>1</code>, the
+default), or no axes (<code>0</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detail</code></td>
+<td>
+<p>A number describing the number of points to use in drawing the
+normal curve. Smaller values correspond to a less smooth curve but reduced
+memory usage in the final file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLab</code></td>
+<td>
+<p>If <code>"number"</code>, then the axis is drawn at the mean, and
+every standard deviation out until the third standard deviation. If
+<code>"symbol"</code>, then Greek letters are used for standard deviations from
+three standard deviations from the mean.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.axis</code></td>
+<td>
+<p>Numerical value controlling the size of the axis labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xAxisIncr</code></td>
+<td>
+<p>A number describing how often axis labels are placed,
+scaled by standard deviations. This argument is ignored if <code>xLab =
+"symbol"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+<p>Boolean indicating whether to add this normal curve to the
+existing plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to <code>plot</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Diez
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>buildAxis</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+normTail(3, 2, 5)
+normTail(3, 2, 1, xLab = "symbol")
+normTail(3, 2, M = 1:2, xLab = "symbol", cex.axis = 0.8)
+normTail(3, 2, U = 5, axes = FALSE)
+normTail(L = -1, U = 2, M = c(0, 1), axes = 3, xAxisIncr = 2)
+normTail(
+  L = -1, U = 2, M = c(0, 1),
+  xLab = "symbol", cex.axis = 0.8, xAxisIncr = 2
+)
+</code></pre>
+
+
+</div>

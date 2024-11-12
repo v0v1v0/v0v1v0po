@@ -1,0 +1,416 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>match_on</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create treated to control distances for matching problems</h2>
+
+<h3>Description</h3>
+
+<p>A function with which to produce matching distances, for instance Mahalanobis
+distances, propensity score discrepancies or calipers, or combinations
+thereof, for <code>pairmatch</code> or <code>fullmatch</code> to
+subsequently “match on”.  Conceptually, the result of a call
+<code>match_on</code> is a treatment-by-control matrix of distances.  Because these
+matrices can grow quite large, in practice <code>match_on</code> produces either an
+ordinary dense matrix or a special sparse matrix structure (that can make use
+of caliper and exact matching constraints to reduce storage requirements).
+Methods are supplied for these sparse structures,
+<code>InfinitySparseMatrix</code>es, so that they can be manipulated and modified
+in much the same way as dense matrices.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">match_on(x, within = NULL, caliper = NULL, exclude = NULL, data = NULL, ...)
+
+## S3 method for class 'glm'
+match_on(
+  x,
+  within = NULL,
+  caliper = NULL,
+  exclude = NULL,
+  data = NULL,
+  standardization.scale = NULL,
+  ...
+)
+
+## S3 method for class 'bigglm'
+match_on(
+  x,
+  within = NULL,
+  caliper = NULL,
+  exclude = NULL,
+  data = NULL,
+  standardization.scale = NULL,
+  ...
+)
+
+## S3 method for class 'formula'
+match_on(
+  x,
+  within = NULL,
+  caliper = NULL,
+  exclude = NULL,
+  data = NULL,
+  subset = NULL,
+  method = "mahalanobis",
+  ...
+)
+
+## S3 method for class ''function''
+match_on(
+  x,
+  within = NULL,
+  caliper = NULL,
+  exclude = NULL,
+  data = NULL,
+  z = NULL,
+  ...
+)
+
+## S3 method for class 'numeric'
+match_on(x, within = NULL, caliper = NULL, exclude = NULL, data = NULL, z, ...)
+
+## S3 method for class 'InfinitySparseMatrix'
+match_on(x, within = NULL, caliper = NULL, exclude = NULL, data = NULL, ...)
+
+## S3 method for class 'matrix'
+match_on(x, within = NULL, caliper = NULL, exclude = NULL, data = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A model formula, fitted glm or other object implicitly specifying a distance; see blurbs on specific methods in Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>within</code></td>
+<td>
+<p>A valid distance specification, such as the result of
+<code>exactMatch</code> or <code>caliper</code>. Finite entries indicate
+which distances to create. Including this argument can significantly speed
+up computation for sparse matching problems. Specify this filter either via
+<code>within</code> or via <code>strata</code> elements of a formula; mixing these
+methods will fail.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>caliper</code></td>
+<td>
+<p>The width of a caliper to use to exclude treated-control pairs
+with values greater than the width. For some methods, there may be a speed
+advantage to passing a width rather than using the <code>caliper</code>
+function on an existing distance specification.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>A list of units (treated or control) to exclude from the
+<code>caliper</code> argument (if supplied).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>An optional data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments for methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>standardization.scale</code></td>
+<td>
+<p>Function for rescaling of <code>scores(x)</code>, or
+<code>NULL</code>; defaults to <code>mad</code>. (See Details.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p>A subset of the data to use in creating the distance
+specification.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A string indicating which method to use in computing the
+distances from the data.  The current possibilities are
+<code>"mahalanobis", "euclidean"</code> or <code>"rank_mahalanobis"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>A logical or binary vector indicating treatment and control for each
+unit in the study. TRUE or 1 represents a treatment unit, FALSE of 0 represents
+a control unit. Any unit with NA treatment status will be excluded from the
+distance matrix.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>match_on</code> is generic. There are several supplied methods, all providing
+the same basic output: a matrix (or similar) object with treated units on the
+rows and control units on the columns. Each cell [i,j] then indicates the
+distance from a treated unit i to control unit j. Entries that are <code>Inf</code>
+are said to be unmatchable. Such units are guaranteed to never be in a
+matched set. For problems with many <code>Inf</code> entries, so called sparse
+matching problems, <code>match_on</code> uses a special data type that is more
+space efficient than a standard R <code>matrix</code>.  When problems are not
+sparse (i.e. dense), <code>match_on</code> uses the standard <code>matrix</code> type.
+</p>
+<p><code>match_on</code> methods differ on the types of arguments they take, making
+the function a one-stop location of many different ways of specifying
+matches: using functions, formulas, models, and even simple scores. Many of
+the methods require additional arguments, detailed below. All methods take a
+<code>within</code> argument, a distance specification made using
+<code>exactMatch</code> or <code>caliper</code> (or some additive
+combination of these or other distance creating functions). All
+<code>match_on</code> methods will use the finite entries in the <code>within</code>
+argument as a guide for producing the new distance. Any entry that is
+<code>Inf</code> in <code>within</code> will be <code>Inf</code> in the distance matrix
+returned by <code>match_on</code>. This argument can reduce the processing time
+needed to compute sparse distance matrices.
+</p>
+<p>Details for each particular first type of argument follow:
+</p>
+<p><b>First argument (<code>x</code>): <code>glm</code>.</b> The model is assumed to be
+a fitted propensity score model. From this it extracts distances on the
+<em>linear</em> propensity score: fitted values of the linear predictor, the
+link function applied to the estimated conditional probabilities, as opposed
+to the estimated conditional probabilities themselves (Rosenbaum &amp; Rubin,
+1985).  For example, a logistic model (<code>glm</code> with
+<code>family=binomial()</code>) has the logit function as its link, so from such
+models <code>match_on</code> computes distances in terms of logits of the
+estimated conditional probabilities, i.e. the estimated log odds.
+</p>
+<p>Optionally these distances are also rescaled. The default is to rescale, by
+the reciprocal of an outlier-resistant variant of the pooled s.d. of
+propensity scores; see <code>standardization_scale</code>.  (The
+<code>standardization.scale</code> argument of this function can be used to
+change how this dispersion is calculated, e.g. to calculate an ordinary not
+an outlier-resistant s.d.; it will be passed down
+to <code>standardization_scale</code> as its <code>standardizer</code> argument.)
+To skip rescaling, set argument <code>standardization.scale</code> to 1.
+The overall result records
+absolute differences between treated and control units on linear, possibly
+rescaled, propensity scores.
+</p>
+<p>In addition, one can impose a caliper in terms of these distances by
+providing a scalar as a <code>caliper</code> argument, forbidding matches between
+treatment and control units differing in the calculated propensity score by
+more than the specified caliper.  For example, Rosenbaum and Rubin's (1985)
+caliper of one-fifth of a pooled propensity score s.d. would be imposed by
+specifying <code>caliper=.2</code>, in tandem either with the default rescaling
+or, to follow their example even more closely, with the additional
+specification <code>standardization.scale=sd</code>. Propensity calipers are
+beneficial computationally as well as statistically, for reasons indicated
+in the below discussion of the <code>numeric</code> method.
+</p>
+<p>One can also specify exactMatching criteria by using <code>strata(foo)</code> inside
+the formula to build the <code>glm</code>. For example, passing
+<code>glm(y ~ x + strata(s))</code> to <code>match_on</code> is equivalent to passing
+<code>within=exactMatch(y ~ strata(s))</code>. Note that when combining with
+the <code>caliper</code> argument, the standard deviation used for the caliper will be
+computed across all strata, not within each strata.
+</p>
+<p>If data used to fit the glm have missing values in the left-hand side
+(dependent) variable, these observations are omitted from the output of
+match_on.  If there are observations with missing values in right hand
+side (independent) variables, then a re-fit of the model after imputing
+these variables using a simple scheme and adding indicator variables of
+missingness will be attempted, via the <code>scores</code> function.
+</p>
+<p><b>First argument (<code>x</code>): <code>bigglm</code>.</b> This method works
+analogously to the <code>glm</code> method, but with <code>bigglm</code> objects,
+created by the <code>bigglm</code> function from package ‘biglm’, which
+can handle bigger data sets than the ordinary glm function can.
+</p>
+<p><b>First argument (<code>x</code>): <code>formula</code>.</b> The formula must have
+<code>Z</code>, the treatment indicator (<code>Z=0</code> indicates control group,
+<code>Z=1</code> indicates treatment group), on the left hand side, and any
+variables to compute a distance on on the right hand side. E.g. <code>Z ~ X1
+  + X2</code>. The Mahalanobis distance is calculated as the square root of d'Cd,
+where d is the vector of X-differences on a pair of observations and C is an
+inverse (generalized inverse) of the pooled covariance of Xes. (The pooling
+is of the covariance of X within the subset defined by <code>Z==0</code> and
+within the complement of that subset. This is similar to a Euclidean
+distance calculated after reexpressing the Xes in standard units, such that
+the reexpressed variables all have pooled SDs of 1; except that it addresses
+redundancies among the variables by scaling down variables contributions in
+proportion to their correlations with other included variables.)
+</p>
+<p>Euclidean distance is also available, via <code>method="euclidean"</code>, and
+ranked, Mahalanobis distance, via <code>method="rank_mahalanobis"</code>.
+</p>
+<p>The treatment indicator <code>Z</code> as noted above must either be numeric
+(1 representing treated units and 0 control units) or logical
+(<code>TRUE</code> for treated, <code>FALSE</code> for controls). (Earlier versions of
+the software accepted factor variables and other types of numeric variable; you
+may have to update existing scripts to get them to run.)
+</p>
+<p>As an alternative to specifying a <code>within</code> argument, when <code>x</code> is
+a formula, the <code>strata</code> command can be used inside the formula to specify
+exact matching. For example, rather than using <code>within=exactMatch(y ~
+  z, data=data)</code>, you may update your formula as <code>y ~ x + strata(z)</code>. Do
+not use both methods (<code>within</code> and <code>strata</code> simultaneously. Note
+that when combining with the <code>caliper</code> argument, the standard
+deviation used for the caliper will be computed across all strata, not
+separately by stratum.
+</p>
+<p>A unit with NA treatment status (<code>Z</code>) is ignored and will not be included in the distance output.
+Missing values in variables on the right hand side of the formula are handled as follows. By default
+<code>match_on</code> will (1) create a matrix of distances between observations which
+have only valid values for **all** covariates and then (2) append matrices of Inf values
+for distances between observations either of which has a missing values on any of the right-hand-side variables.
+(I.e., observations with missing values are retained in the output, but
+matches involving them are forbidden.)
+</p>
+<p><b>First argument (<code>x</code>): <code>function</code>.</b> The passed function
+must take arguments: <code>index</code>, <code>data</code>, and <code>z</code>. The
+<code>data</code> and <code>z</code> arguments will be the same as those passed directly
+to <code>match_on</code>. The <code>index</code> argument is a matrix of two columns,
+representing the pairs of treated and control units that are valid
+comparisons (given any <code>within</code> arguments). The first column is the row
+name or id of the treated unit in the <code>data</code> object. The second column
+is the id for the control unit, again in the <code>data</code> object. For each of
+these pairs, the function should return the distance between the treated
+unit and control unit.  This may sound complicated, but is simple to
+use. For example, a function that returned the absolute difference between
+two units using a vector of data would be <code> f &lt;- function(index, data,
+  z) { abs(data[index[,1]] - data[index[,2]]) } </code>.  (Note: This simple case is
+precisely handled by the <code>numeric</code> method.)
+</p>
+<p><b>First argument (<code>x</code>): <code>numeric</code>.</b> This returns
+absolute differences between treated and control units' values of <code>x</code>.
+If a caliper is specified, pairings with <code>x</code>-differences greater than
+it are forbidden.  Conceptually, those distances are set to <code>Inf</code>;
+computationally, if either of <code>caliper</code> and <code>within</code> has been
+specified then only information about permissible pairings will be stored,
+so the forbidden pairings are simply omitted. Providing a <code>caliper</code>
+argument here, as opposed to omitting it and afterward applying the
+<code>caliper</code> function, reduces storage requirements and may
+otherwise improve performance, particularly in larger problems.
+</p>
+<p>For the numeric method, <code>x</code> must have names. If <code>z</code> is named
+it must have the same names as <code>x</code>, though it allows for a different
+ordering of names. <code>x</code>'s name ordering is considered canonical.
+</p>
+<p><b>First argument (<code>x</code>): <code>matrix</code> or <code>InfinitySparseMatrix</code>.</b> These just return their
+arguments as these objects are already valid distance specifications.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A distance specification (a matrix or similar object) which is
+suitable to be given as the <code>distance</code> argument to
+<code>fullmatch</code> or <code>pairmatch</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>P.~R. Rosenbaum and D.~B. Rubin (1985), ‘Constructing a
+control group using multivariate matched sampling methods that incorporate
+the propensity score’, <em>The American Statistician</em>, <b>39</b> 33–38.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fullmatch</code>, <code>pairmatch</code>,
+<code>exactMatch</code>, <code>caliper</code>
+</p>
+<p><code>scores</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(nuclearplants)
+match_on.examples &lt;- list()
+### Propensity score distances.
+### Recommended approach:
+(aGlm &lt;- glm(pr~.-(pr+cost), family=binomial(), data=nuclearplants))
+match_on.examples$ps1 &lt;- match_on(aGlm)
+### A second approach: first extract propensity scores, then separately
+### create a distance from them.  (Useful when importing propensity
+### scores from an external program.)
+plantsPS &lt;- predict(aGlm)
+match_on.examples$ps2 &lt;- match_on(pr~plantsPS, data=nuclearplants)
+### Full matching on the propensity score.
+fm1 &lt;- fullmatch(match_on.examples$ps1, data = nuclearplants)
+fm2 &lt;- fullmatch(match_on.examples$ps2, data = nuclearplants)
+### Because match_on.glm uses robust estimates of spread,
+### the results differ in detail -- but they are close enough
+### to yield similar optimal matches.
+all(fm1 == fm2) # The same
+
+### Mahalanobis distance:
+match_on.examples$mh1 &lt;- match_on(pr ~ t1 + t2, data = nuclearplants)
+
+### Absolute differences on a scalar:
+tmp &lt;- nuclearplants$t1
+names(tmp) &lt;- rownames(nuclearplants)
+
+(absdist &lt;- match_on(tmp, z = nuclearplants$pr,
+                  within = exactMatch(pr ~ pt, nuclearplants)))
+
+### Pair matching on the variable `t1`:
+pairmatch(absdist, data = nuclearplants)
+
+
+### Propensity score matching within subgroups:
+match_on.examples$ps3 &lt;- match_on(aGlm, exactMatch(pr ~ pt, nuclearplants))
+fullmatch(match_on.examples$ps3, data = nuclearplants)
+
+### Propensity score matching with a propensity score caliper:
+match_on.examples$pscal &lt;- match_on.examples$ps1 + caliper(match_on.examples$ps1, 1)
+fullmatch(match_on.examples$pscal, data = nuclearplants) # Note that the caliper excludes some units
+
+### A Mahalanobis distance for matching within subgroups:
+match_on.examples$mh2 &lt;- match_on(pr ~ t1 + t2 , data = nuclearplants,
+                            within = exactMatch(pr ~ pt, nuclearplants))
+
+### Mahalanobis matching within subgroups, with a propensity score
+### caliper:
+fullmatch(match_on.examples$mh2 + caliper(match_on.examples$ps3, 1), data = nuclearplants)
+
+### Alternative methods to matching without groups (exact matching)
+m1 &lt;- match_on(pr ~ t1 + t2, data=nuclearplants, within=exactMatch(pr ~ pt, nuclearplants))
+m2 &lt;- match_on(pr ~ t1 + t2 + strata(pt), data=nuclearplants)
+# m1 and m2 are identical
+
+m3 &lt;- match_on(glm(pr ~ t1 + t2 + cost, data=nuclearplants,
+                   family=binomial),
+               data=nuclearplants,
+               within=exactMatch(pr ~ pt, data=nuclearplants))
+m4 &lt;- match_on(glm(pr ~ t1 + t2 + cost + pt, data=nuclearplants,
+                   family=binomial),
+               data=nuclearplants,
+               within=exactMatch(pr ~ pt, data=nuclearplants))
+m5 &lt;- match_on(glm(pr ~ t1 + t2 + cost + strata(pt), data=nuclearplants,
+                   family=binomial), data=nuclearplants)
+# Including `strata(foo)` inside a glm uses `foo` in the model as
+# well, so here m4 and m5 are equivalent. m3 differs in that it does
+# not include `pt` in the glm.
+</code></pre>
+
+
+</div>

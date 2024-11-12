@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_ordinal_cohens_kappa</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Constructs a serial dependence plot based on the ordinal Cohen's kappa
+considering the block distance</h2>
+
+<h3>Description</h3>
+
+<p><code>plot_ordinal_cohens_kappa</code> constructs a serial dependence plot of an ordinal
+time series based on the ordinal Cohen's kappa considering the block distance
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_ordinal_cohens_kappa(
+  series,
+  states,
+  max_lag = 10,
+  alpha = 0.05,
+  plot = TRUE,
+  title = "Serial dependence plot",
+  bar_width = 0.12,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>series</code></td>
+<td>
+<p>An OTS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>states</code></td>
+<td>
+<p>A numerical vector containing the corresponding
+states.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_lag</code></td>
+<td>
+<p>The maximum lag represented in the plot (default is 10).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The significance level for the corresponding hypothesis test (default is 0.05).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Logical. If <code>plot = TRUE</code> (default), returns the serial dependence
+plot. Otherwise, returns a list with the values of the ordinal Cohens's kappa, the critical
+value and the corresponding p-values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>The title of the graph.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bar_width</code></td>
+<td>
+<p>The width of the corresponding bars.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters for the function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Constructs a serial dependence plot based on the ordinal Cohens's kappa, <code class="reqn">\widehat{\kappa}_d(l)</code>,
+for several lags, where <code class="reqn">d</code> is the block distance between ordinal states, that is, <code class="reqn">d(s_i, s_j)=|i-j|</code> for two states <code class="reqn">s_i</code> and <code class="reqn">s_j</code>.
+A dashed lined is incorporated indicating the critical value
+of the test based on the following asymptotic approximation (under the i.i.d. assumption):
+</p>
+<p style="text-align: center;"><code class="reqn">\sqrt{\frac{T\widehat{disp}_d^2}{4\sum_{k,l=0}^{n-1}(\widehat{f}_{min\{k,l\}}-\widehat{f}_k\widehat{f}_l)^2}}\bigg(\widehat{\kappa}_d(l)+\frac{1}{T}\bigg)\sim N\big(0, 1\big),</code>
+</p>
+<p> where <code class="reqn">T</code> is the series length,
+<code class="reqn">\widehat{f_k}</code> is the estimated cumulative probability for state <code class="reqn">s_k</code>
+and <code class="reqn">\widehat{disp}_d</code> is the DIVC estimate of the dispersion.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>plot = TRUE</code> (default), returns the serial dependence plot based on the ordinal Cohens's kappa. Otherwise, the function
+returns a list with the values of the ordinal Cohens's kappa, the critical
+value and the corresponding p-values.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Ángel López-Oriona, José A. Vilar
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Weiß CH (2019).
+“Distance-based analysis of ordinal data and ordinal time series.”
+<em>Journal of the American Statistical Association</em>.
+</p>
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">plot_ock &lt;- plot_ordinal_cohens_kappa(series = AustrianWages$data[[100]],
+states = 0 : 5, max_lag = 3) # Representing
+# the serial dependence plot
+list_ck &lt;- plot_ordinal_cohens_kappa(series = AustrianWages$data[[100]],
+states = 0 : 5, max_lag = 3, plot = FALSE) # Obtaining
+# the values of the ordinal Cohens's kappa, the critical value and the p-values
+</code></pre>
+
+
+</div>

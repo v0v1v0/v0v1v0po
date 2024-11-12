@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.resource_view_reconnect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reconnect an Opal view to its underlying resource</h2>
+
+<h3>Description</h3>
+
+<p>A view over a resource handles a connection to this resource. When the resource 
+changes (data update, broken connection etc.), the connection to this resource
+can be re-initialized.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.resource_view_reconnect(opal, project, table)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal connection object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Project name where the view is located.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+<p>View name to be reconnected.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other table functions: 
+<code>opal.perms()</code>,
+<code>opal.resource_view_create()</code>,
+<code>opal.table_create()</code>,
+<code>opal.table_delete()</code>,
+<code>opal.table_dictionary_get()</code>,
+<code>opal.table_dictionary_update()</code>,
+<code>opal.table_exists()</code>,
+<code>opal.table_export()</code>,
+<code>opal.table_get()</code>,
+<code>opal.table_import()</code>,
+<code>opal.table_perm()</code>,
+<code>opal.table_perm_add()</code>,
+<code>opal.table_perm_delete()</code>,
+<code>opal.table_save()</code>,
+<code>opal.table_truncate()</code>,
+<code>opal.table_view_create()</code>,
+<code>opal.table_view_update()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+# make a view over a resource
+opal.resource_view_create(o, "CNSIM", "CNSIM4", resource = "RSRC.CNSIM1")
+# re-initialize the view's connection to the resource
+opal.resource_view_reconnect(o, "CNSIM", "CNSIM4")
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

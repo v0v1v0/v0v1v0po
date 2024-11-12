@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>table_rand_pvals</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a covariate balance table from the empirical randomization null distribution</h2>
+
+<h3>Description</h3>
+
+<p>Generate a table using the information collected in <code>rand_pvals()</code>.
+See <code>rand_pvals()</code> for more details about the methods used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">table_rand_pvals(
+  object = NULL,
+  z = NULL,
+  X = NULL,
+  base_strata = NULL,
+  refined_strata = NULL,
+  options = list()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an optional object of class <code>strat</code>,
+typically created using <code>strat()</code>
+or as a result of a call to <code>prop_strat()</code> or <code>refine()</code>.
+If not provided, <code>z</code> and <code>X</code> must be specified</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>vector of treatment assignment; only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>covariate matrix/data.frame; only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_strata</code></td>
+<td>
+<p>optional initial stratification for which to calculate
+the empirical randomization null distribution;
+only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refined_strata</code></td>
+<td>
+<p>optional refined stratification for which to calculate
+the empirical randomization null distribution;
+only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>list of additional options, listed in the <code>details</code> below</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>options</code> list argument can contain any of the following elements:
+</p>
+
+<ul>
+<li>
+<p>nrand: how many times to randomize the treatment assignment when forming the null distribution.
+Default is 10000
+</p>
+</li>
+<li>
+<p>criterion: which optimization criterion to use when calculating the objective value.
+Options are "max", "sum", or "combo", referring to whether to include the
+maximum standardized mean difference (SMD), the sum of all SMDs,
+or a combination of the maximum and the sum. The default is "combo"
+</p>
+</li>
+<li>
+<p>wMax: how much to weight the maximum standardized mean difference compared to the sum.
+Only used if criterion is set to "combo". Default is 5
+</p>
+</li>
+<li>
+<p>incl_base: whether to include columns for the initial stratification in the table.
+Default is <code>TRUE</code> if a base stratification is provided
+</p>
+</li>
+<li>
+<p>rand_pvals: if already calculated, the returned list of information from <code>rand_pvals()</code>.
+If <code>NULL</code>, this will be calculated
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>Matrix with 4 or 8 columns, depending whether one or both of base and
+refined strata are provided and the <code>incl_base</code> option.
+The columns give the observed standardized mean difference or objective value,
+the median and maximum across <code>nrand</code> null simulations, and the P-value which is the
+proportion of the null simulations that have worse covariate balance than the observed value.
+The top three rows give the scaled objective value and the average and maximum standardized mean differences across
+all strata and covariates. The following rows, one for each covariate, give the standardized mean difference
+for that covariate, averaged across strata. The first row for the scaled objective value is <code>NULL</code> for the base
+stratification, if included, as the base stratification does not generally minimize a mathematical objective function.
+</p>
+
+
+</div>

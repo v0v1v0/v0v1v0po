@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extractAIC.ocm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract AIC from a fitted Continuous Ordinal Model</h2>
+
+<h3>Description</h3>
+
+<p>Extracts the AIC for a fitted <code>ocm</code> object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ocm'
+extractAIC(fit, scale = 0, k = 2, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p><code>ocm</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>parameter currently not used. For compatibility with general extractAIC method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>“weight” of the equivalent degrees of freedom (=: edf) 
+in the AIC formula. Defaults to 2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to be passed to methods</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The generalized AIC is computed:
+</p>
+<p style="text-align: center;"><code class="reqn">-2\ell +k\cdot edf</code>
+</p>
+
+<p>where <code class="reqn">\ell</code> is the log-likelihood, k=2 gives the AIC, and 
+k=log(n) gives the BIC.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector of length 2, with first and second elements giving
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>edf</code></td>
+<td>
+<p>the “equivalent degrees of freedom” for the fitted model <code>fit</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AIC</code></td>
+<td>
+<p>the generalized AIC of <code>ocm</code> object <code>fit</code></p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maurizio Manuguerra, Gillian Heller
+</p>
+
+
+<h3>References</h3>
+
+<p>Akaike, H (1983). 
+Information measures and model selection, 
+<em>Bulletin of the International Statistical Institute</em>, 50:277-290.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ocm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+fit.overall  &lt;- ocm(overall  ~ cycleno + age + bsa + treatment, data=ANZ0001.sub, scale=c(0,100))
+extractAIC(fit.overall)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

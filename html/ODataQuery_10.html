@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>to_odata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Macro to convert R to OData syntax</h2>
+
+<h3>Description</h3>
+
+<p>Macro to convert R to OData syntax
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">to_odata(expr)
+
+to_odata_(expr)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>expr</code></td>
+<td>
+<p>Expression to convert to OData</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>to_odata takes unquote R code and quotes its input. Use !! to unquote an argument.
+to_odata_ requires its argument to be quoted already.
+</p>
+<p>Only a subset of R is supported.
+</p>
+<p>* arithmatic
+The operators +, -, *, / and 
+</p>
+<p>* strings (characters in R)
+toupper, tolower, startsWith, endsWith, nchar, paste, paste0, trimws
+</p>
+<p>* arrays (lists in R)
+list, append, length
+</p>
+<p>* Formulae become lambdas in OData
+(x ~ x$Name == "John")
+</p>
+<p>Every unknown function is passed as is.
+If the function name is surrounded by percent signs it's treated as an infix operator.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">to_odata(Field == value)
+address &lt;- "Bakerstreet 4"
+to_odata(!!address %in% Adresses)
+to_odata(Friends$any(f ~ f$FirstName == 'John'))
+
+</code></pre>
+
+
+</div>

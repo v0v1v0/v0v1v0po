@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print_readable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print the Human-readable Representation of the Proto Object</h2>
+
+<h3>Description</h3>
+
+<p>Print the Human-readable Representation of the Proto Object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">print_readable(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The proto object</p>
+</td>
+</tr></table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+library(onnx)
+
+graph_def &lt;- make_graph(
+    nodes = list(
+      make_node("FC", list("X", "W1", "B1"), list("H1")),
+      make_node("Relu", list("H1"), list("R1")),
+      make_node("FC", list("R1", "W2", "B2"), list("Y"))
+    ),
+    name = "MLP",
+    inputs = list(
+      make_tensor_value_info('X' , onnx$TensorProto$FLOAT, list(1L)),
+      make_tensor_value_info('W1', onnx$TensorProto$FLOAT, list(1L)),
+      make_tensor_value_info('B1', onnx$TensorProto$FLOAT, list(1L)),
+      make_tensor_value_info('W2', onnx$TensorProto$FLOAT, list(1L)),
+      make_tensor_value_info('B2', onnx$TensorProto$FLOAT, list(1L))
+    ),
+    outputs = list(
+      make_tensor_value_info('Y', onnx$TensorProto$FLOAT, list(1L))
+    )
+)
+print_readable(graph_def)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

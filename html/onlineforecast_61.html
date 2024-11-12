@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pairs.data.list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generation of pairs plot for a data.list.</h2>
+
+<h3>Description</h3>
+
+<p>Generate a pairs plot for the vectors in the data.list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'data.list'
+pairs(
+  x,
+  subset = NA,
+  nms = NA,
+  kseq = NA,
+  lagforecasts = TRUE,
+  pattern = NA,
+  lower.panel = NULL,
+  panel = panel.smooth,
+  pch = 20,
+  cex = 0.7,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The data.list from which to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p>The subset to be included. Passed to <code>subset.data.list()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nms</code></td>
+<td>
+<p>The names of the variables to be included. Passed to <code>subset.data.list()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kseq</code></td>
+<td>
+<p>The horizons to be included. Passed to <code>subset.data.list()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lagforecasts</code></td>
+<td>
+<p>Lag the forecasts such that they are synced with obervations. Passed to <code>subset.data.list()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p>Regex pattern to select the included variables. Passed to <code>subset.data.list()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower.panel</code></td>
+<td>
+<p>Passed to <code>pairs()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>panel</code></td>
+<td>
+<p>Passed to <code>pairs()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>Passed to <code>pairs()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>Passed to <code>pairs()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to <code>pairs()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A very useful plot for checking what is in the forecasts, how they are synced and match the observations.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Take a subset for the example
+D &lt;- subset(Dbuilding, c("2010-12-15","2011-01-15"), pattern="^Ta|^I", kseq=1:3)
+pairs(D)
+
+# If the forecasts and the observations are not aligned in time,
+# which is easy to see by comparing to the previous plot.
+pairs(D, lagforecasts=FALSE)
+# Especially for the solar I syncronization is really important!
+# Hence if the forecasts were not synced properly, then it can be detected using this type of plot.
+
+# Alternatively, lag when taking the subset
+D &lt;- subset(Dbuilding, c("2010-12-15","2011-01-15"), pattern="^Ta|^I", kseq=1:3, lagforecasts=TRUE)
+pairs(D, lagforecasts=FALSE)
+
+</code></pre>
+
+
+</div>

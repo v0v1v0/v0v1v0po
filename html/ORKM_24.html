@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PKMeans</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Power K-means clustering algorithm for single view data
+</h2>
+
+<h3>Description</h3>
+
+<p>The power K-means algorithm is a generalization of the Lloyd algorithm, which approximates the ordinary K-means algorithm by a majorization-minimization method with the descent properties and lower complexity of the Lloyd algorithm. The power K-means embeds the K-means problem into a series of better performing problems. These smooth intermediate problems have a smoother objective function and tend to guide the clustering to find a global minimum with the K-means as the objective. The method has the same iteration complexity as Lloyd's algorithm, reduces sensitivity to initialization, and greatly improves algorithm performance in the high-dimensional case.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PKMeans(X, K, yitapower, sm, max.m, truere, method = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>is the data matrix
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+
+<p>is the number of cluster 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yitapower</code></td>
+<td>
+
+<p>is the regularized parameter
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sm</code></td>
+<td>
+
+<p>is the banlance parameter
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.m</code></td>
+<td>
+
+<p>is the max iter
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truere</code></td>
+<td>
+
+<p>is the ture label in data set
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+
+<p>is the caluate the NMI
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>center,NMI,result
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Miao Yu
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(MASS)   
+  yitapower=0.5;K=3;sm=0.5;max.m=100;n1=n2=n3=70
+  X1&lt;-rnorm(n1,20,2);X2&lt;-rnorm(n2,25,1.5);X3&lt;-rnorm(n3,30,2) 
+  Xv&lt;-c(X1,X2,X3)
+  data&lt;-matrix(Xv,n1+n2+n3,2)
+  data[1:70,2]&lt;-1;data[71:140,2]&lt;-2;data[141:210,2]&lt;-3
+  truere=data[,2]
+  X11&lt;-matrix(data[,1],n1+n2+n3,1) 
+  PKMeans(X=X11,K=K,yitapower=yitapower,sm=sm,max.m=max.m,truere=truere,method=0)
+</code></pre>
+
+
+</div>

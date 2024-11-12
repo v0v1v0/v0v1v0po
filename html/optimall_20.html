@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optimum_allocation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimum Allocation</h2>
+
+<h3>Description</h3>
+
+<p>Determines the optimum sampling fraction and sample size for
+each stratum in a stratified random sample, which
+minimizes the variance of the sample mean according to Neyman
+Allocation or Exact Optimum Sample Allocation (Wright 2014).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optimum_allocation(
+  data,
+  strata,
+  y = NULL,
+  sd_h = NULL,
+  N_h = NULL,
+  nsample = NULL,
+  ndigits = 2,
+  method = c("WrightII", "WrightI", "Neyman"),
+  allow.na = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame or matrix with at least one column specifying
+each unit's stratum, and either 1) a second column holding the value of the
+continuous variable for which the sample mean variance should be minimized
+(<code>y</code>) or 2) two columns: one holding the the within-stratum
+standard deviation for the variable of interest (<code>sd_h</code>) and another
+holding the stratum sample sizes (<code>N_h</code>).
+If <code>data</code> contains a column <code>y</code> holding values for
+the variable of interest, then <code>data</code> should have one row for
+each sampled unit. If <code>data</code> holds <code>sd_h</code> and <code>N_h</code>, the
+within-stratum standard deviations and population sizes, then <code>data</code>
+should have one row per stratum.
+Other columns are allowed but will be ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strata</code></td>
+<td>
+<p>a character string or vector of character strings
+specifying the name(s) of columns which specify the stratum
+that each unit belongs to. If multiple column names are
+provided, each unique combination of values in these columns
+is taken to define one stratum.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a character string specifying the name of the
+continuous variable for which the variance should be minimized.
+Defaults to <code>NULL</code> and should be left as <code>NULL</code> when <code>data</code>
+holds stratum standard deviations and sample sizes instead of individual
+sampling units.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd_h</code></td>
+<td>
+<p>a character string specifying the name of the
+column holding the within-stratum standard deviations for each stratum.
+Defaults to <code>NULL</code> and should be left as <code>NULL</code> when <code>data</code>
+holds individual sampling units.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N_h</code></td>
+<td>
+<p>a character string specifying the name of the
+column holding the population stratum sizes for each stratum.
+Defaults to <code>NULL</code> and should be left as <code>NULL</code> when <code>data</code>
+holds individual sampling units.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsample</code></td>
+<td>
+<p>the desired total sample size. Defaults to <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ndigits</code></td>
+<td>
+<p>a numeric value specifying the number of digits
+to which the standard deviation and stratum fraction should be rounded.
+Defaults to 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a character string specifying the method of
+optimum sample allocation to use. Must be one of:
+</p>
+
+<ul>
+<li> <p><code>"WrightII"</code>, the default, uses Algorithm II from
+Wright (2014) to determine the optimum allocation of a fixed
+sample size across the strata. It requires that at least two
+samples are allocated to each stratum.
+</p>
+</li>
+<li> <p><code>"WrightI"</code> uses Wright's Algorithm I to determine
+the optimum sample allocation. It only requires that at least
+one sample is allocated to each stratum, and can therefore
+lead to a biased variance estimate.
+</p>
+</li>
+<li> <p><code>"Neyman"</code> uses the standard method of Neyman
+Allocation to determine the optimum sample allocation. When
+<code>nsample = NULL</code>, the optimal sampling fraction is calculated
+and returned. When a numeric value is specified for <code>nsample</code>,
+then the number allocated to each stratum is the optimal sampling
+fraction times <code>nsample</code> rounded to the nearest integer,
+which may no longer be optimall.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allow.na</code></td>
+<td>
+<p>logical input specifying whether y should
+be allowed to have NA values. Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a data frame with the number of samples allocated to each
+stratum, or just the sampling fractions if nsample is NULL.
+</p>
+
+
+<h3>References</h3>
+
+<p>Wright, T. (2014). A Simple Method of Exact Optimal
+Sample Allocation under Stratification with any Mixed
+Constraint Patterns, Research Report Series (Statistics #2014-07),
+Center for Statistical Research and Methodology, U.S. Bureau
+of the Census, Washington, D.C.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">optimum_allocation(
+  data = iris, strata = "Species", y = "Sepal.Length",
+  nsample = 40, method = "WrightII"
+)
+
+# Or if input data is summary of strata sd and N:
+iris_summary &lt;- data.frame(
+  strata = unique(iris$Species),
+  size = c(50, 50, 50),
+  sd = c(0.3791, 0.3138, 0.3225)
+)
+
+optimum_allocation(
+  data = iris_summary, strata = "strata",
+  sd_h = "sd", N_h = "size",
+  nsample = 40, method = "WrightII"
+)
+</code></pre>
+
+
+</div>

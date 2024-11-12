@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>binData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bin data, calculate mean and bootstrap 95 % confidence interval in the mean</h2>
+
+<h3>Description</h3>
+
+<p>Bin a variable and calculate mean an uncertainties in mean
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">binData(mydata, bin = "nox", uncer = "no2", n = 40, interval = NA, breaks = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>Name of the data frame to process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bin</code></td>
+<td>
+<p>The name of the column to divide into intervals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uncer</code></td>
+<td>
+<p>The name of the column for which the mean, lower and upper
+uncertainties should be calculated for each interval of <code>bin</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The number of intervals to split <code>bin</code> into.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+<p>The interval to be used for binning the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>User specified breaks to use for binning.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function summarises data by intervals and calculates the mean and
+bootstrap 95 % confidence intervals in the mean of a chosen variable in a
+data frame. Any other numeric variables are summarised by their mean
+intervals.
+</p>
+<p>There are three options for binning. The default is to bon <code>bin</code> into 40
+intervals. Second, the user can choose an binning interval e.g.
+<code>interval = 5</code>. Third, the user can supply their own breaks to use as
+binning intervals.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a summarised data frame with new columns for the mean and
+upper / lower 95 percent confidence intervals in the mean.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># how does nox vary by intervals of wind speed?
+results &lt;- binData(mydata, bin = "ws", uncer = "nox")
+
+# easy to plot this using ggplot2
+## Not run: 
+library(ggplot2)
+ggplot(results, aes(ws, mean, ymin = min, ymax = max)) +
+geom_pointrange()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

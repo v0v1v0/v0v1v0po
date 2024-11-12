@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dictionary.inspect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Inspect the dictionary of a tibble</h2>
+
+<h3>Description</h3>
+
+<p>Inspect the data dictionary, checking for inconsistencies. Error is raised when the identifiers
+column cannot be found.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dictionary.inspect(tibble, id.name = "id", warn = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tibble</code></td>
+<td>
+<p>Tibble to be inspected.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id.name</code></td>
+<td>
+<p>The name of the column representing the entity identifiers. Default is 'id'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>Print warning messages. Default is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>TRUE if inspection is successful, FALSE otherwise.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# prepare datasets of visits, several visits for one patient
+visits &lt;- tibble::tribble(
+~id, ~patient_id, ~sex, ~visit_date,
+1, 1, "M", as.Date("2020-01-01"),
+2, 2, "F", as.Date("2020-01-02"),
+3, 3, "M", as.Date("2020-01-03"),
+4, 3, "M", as.Date("2020-01-04"))
+
+o &lt;- opal.login("administrator", "password", url = "https://opal-demo.obiba.org")
+
+# save visits dataset
+opal.table_save(o, visits, "RSRC", "visits", type = "Visit", force = TRUE)
+
+# get visit and make it a dataset of patients 
+patients &lt;- opal.table_get(o, "RSRC", "visits", id.name = "id")
+# set dataset IDs
+patients$visit_id &lt;- patients$id
+patients$id &lt;- patients$patient_id
+patients$patient_id &lt;- NULL
+patients
+
+# save patients dataset, there should be a warning that some variables are not repeatable
+# while there are patients with multiple data lines
+opal.table_save(o, patients, "RSRC", "patients", type = "Participant", force = TRUE)
+
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

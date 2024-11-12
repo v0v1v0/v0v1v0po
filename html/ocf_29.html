@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.oml</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prediction Method for oml Objects</h2>
+
+<h3>Description</h3>
+
+<p>Prediction method for class <code>oml</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'oml'
+predict(object, data = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An <code>oml</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Data set of class <code>data.frame</code>. It must contain the same covariates used to train the base learners. If <code>data</code> is <code>NULL</code>, then <code>object$X</code> is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>object$learner == "l1"</code>, then <code>model.matrix</code> is used to handle non-numeric covariates. If we also
+have <code>object$scaling == TRUE</code>, then <code>data</code> is scaled to have zero mean and unit variance.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Matrix of predictions.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Riccardo Di Francesco
+</p>
+
+
+<h3>References</h3>
+
+
+<ul><li>
+<p> Di Francesco, R. (2023). Ordered Correlation Forest. arXiv preprint <a href="https://arxiv.org/abs/2309.08755">arXiv:2309.08755</a>.
+</p>
+</li></ul>
+<h3>See Also</h3>
+
+<p><code>multinomial_ml</code>, <code>ordered_ml</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate synthetic data.
+set.seed(1986)
+
+data &lt;- generate_ordered_data(100)
+sample &lt;- data$sample
+Y &lt;- sample$Y
+X &lt;- sample[, -1]
+
+## Training-test split.
+train_idx &lt;- sample(seq_len(length(Y)), floor(length(Y) * 0.5))
+
+Y_tr &lt;- Y[train_idx]
+X_tr &lt;- X[train_idx, ]
+
+Y_test &lt;- Y[-train_idx]
+X_test &lt;- X[-train_idx, ]
+
+## Fit ordered machine learning on training sample using two different learners.
+ordered_forest &lt;- ordered_ml(Y_tr, X_tr, learner = "forest")
+ordered_l1 &lt;- ordered_ml(Y_tr, X_tr, learner = "l1")
+
+## Predict out of sample.
+predictions_forest &lt;- predict(ordered_forest, X_test)
+predictions_l1 &lt;- predict(ordered_l1, X_test)
+
+## Compare predictions.
+cbind(head(predictions_forest), head(predictions_l1))
+
+</code></pre>
+
+
+</div>

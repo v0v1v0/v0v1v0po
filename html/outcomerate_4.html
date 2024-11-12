@@ -1,0 +1,270 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>outcomerate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>AAPOR Survey Outcome Rates</h2>
+
+<h3>Description</h3>
+
+<p>Provides standardized outcome rates for surveys, primarily as defined by the
+<a href="http://www.aapor.org/">American Association for Public Opinion Research (AAPOR)</a>. Details can be
+found in the Standard Definitions manual (The American Association for Public Opinion Research 2016).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">outcomerate(x, e = NULL, rate = NULL, weight = NULL,
+  return_nd = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a character vector of disposition outcomes (I, P, R, NC, O, UH, or
+UO). Alternatively, a named vector/table of (weighted) disposition counts.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e</code></td>
+<td>
+<p>a scalar number that specifies the eligibility rate (the estimated
+proportion of unknown cases which are eligible). A default method
+of calculating 'e' is provided by <code>eligibility_rate()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rate</code></td>
+<td>
+<p>an optional character vector specifying the rates to be
+calculated. If set to NA (the default), all rates are returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>an optional numeric vector that specifies the weight of each
+element in 'x' if x is a character vector or factor. If none is provided (the
+default), an unweighted estimate is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_nd</code></td>
+<td>
+<p>a logical to switch to having the function return the
+numerator and denominator instead of the rate. Defaults to FALSE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Survey and public opinion research often categorizes interview attempts of
+of a survey according to a set of outcome codes as follows:
+</p>
+
+<ul>
+<li>
+<p> I  = Complete interview
+</p>
+</li>
+<li>
+<p> P  = Partial interview
+</p>
+</li>
+<li>
+<p> R  = Refusal and break-off
+</p>
+</li>
+<li>
+<p> NC = Non-contact
+</p>
+</li>
+<li>
+<p> O  = Other
+</p>
+</li>
+<li>
+<p> UH = Unknown if household/occupied housing unit
+</p>
+</li>
+<li>
+<p> UO = Unknown, other
+</p>
+</li>
+<li>
+<p> NE = Known ineligible
+</p>
+</li>
+</ul>
+<p>These high-level classes are used to calculate outcome rates that
+provide some measure of quality over the fieldwork. These outcome rates
+are defined here as follows:
+</p>
+<p><strong>AAPOR Response Rate</strong>
+</p>
+<p>The proportion of your intended sample that participate in the survey.
+</p>
+
+<ul>
+<li>
+<p> RR1 = I / ((I + P) + (R + NC + O) + (UH + UO))
+</p>
+</li>
+<li>
+<p> RR2 = (I + P) / ((I + P) + (R + NC + O) + (UH + UO))
+</p>
+</li>
+<li>
+<p> RR3 = I / ((I + P) + (R + NC + O) + e(UH + UO))
+</p>
+</li>
+<li>
+<p> RR4 = (I + P) / ((I + P) + (R + NC + O) + e(UH + UO))
+</p>
+</li>
+<li>
+<p> RR5 = I / ((I + P) + (R + NC + O))
+</p>
+</li>
+<li>
+<p> RR6 = (I + P) / ((I + P) + (R + NC + O))
+</p>
+</li>
+</ul>
+<p><strong>AAPOR Cooperation Rates</strong>
+</p>
+<p>The proportion of contacted respondents who participate in the survey.
+</p>
+
+<ul>
+<li>
+<p> COOP1 = I / ((I + P) + R + O)
+</p>
+</li>
+<li>
+<p> COOP2 = (I + P) / ((I + P) + R + O)
+</p>
+</li>
+<li>
+<p> COOP3 = I / ((I + P) + R)
+</p>
+</li>
+<li>
+<p> COOP4 = (I + P) / ((I + P) + R)
+</p>
+</li>
+</ul>
+<p><strong>AAPOR Refusal Rates</strong>
+</p>
+<p>The proportion of the sample that refuses to participate in the survey.
+</p>
+
+<ul>
+<li>
+<p> REF1 = R / ((I + P) + (R + NC + O) + (UH + UO))
+</p>
+</li>
+<li>
+<p> REF2 = R / ((I + P) + (R + NC + O) + e(UH + UO))
+</p>
+</li>
+<li>
+<p> REF3 = R / ((I + P) + (R + NC + O))
+</p>
+</li>
+</ul>
+<p><strong>AAPOR Contact Rates</strong>
+</p>
+<p>The proportion of the sample that is successfully contacted for
+an interview (whether they chose to participate or not).
+</p>
+
+<ul>
+<li>
+<p> CON1 = ((I + P) + (R + O)) / ((I + P) + (R + NC + O) + (UH+ UO))
+</p>
+</li>
+<li>
+<p> CON2 = ((I + P) + (R + O)) / ((I + P) + (R + NC + O) + e(UH + UO))
+</p>
+</li>
+<li>
+<p> CON3 = ((I + P) + (R + O)) / ((I + P) + (R + NC + O))
+</p>
+</li>
+</ul>
+<p><strong>Location Rate</strong>
+</p>
+<p>The proportion of cases that could be located for an interview.
+</p>
+<p>The location rate is not defined in AAPOR's Standards, but can be found in
+(Valliant et al. 2013). Note: depending on how the
+located cases are encoded, this may or may not be the correct formula.
+</p>
+
+<ul>
+<li>
+<p> LOC1 = ((I + P) + (R + O + NC)) / ((I + P) + (R + NC + O) + (UH + UO))
+</p>
+</li>
+<li>
+<p> LOC2 = ((I + P) + (R + O + NC)) / ((I + P) + (R + NC + O) + e(UH + UO))
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>The American Association for Public Opinion Research (2016).
+“Standard Definitions: Final Dispositions of Case Codes and Outcome Rates for Surveys.”
+<a href="https://www.aapor.org/Standards-Ethics/Standard-Definitions-(1).aspx">https://www.aapor.org/Standards-Ethics/Standard-Definitions-(1).aspx</a>.
+</p>
+<p>Valliant R, Dever J, Kreuter F (2013).
+<em>Practical Tools for Designing and Weighting Survey Samples</em>,  series Statistics for Social and Behavioral Sciences.
+Springer New York. The American Association for Public Opinion Research (2016).
+“Standard Definitions: Final Dispositions of Case Codes and Outcome Rates for Surveys.”
+<a href="https://www.aapor.org/Standards-Ethics/Standard-Definitions-(1).aspx">https://www.aapor.org/Standards-Ethics/Standard-Definitions-(1).aspx</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load the outcomerate package
+library(outcomerate)
+
+# Create a vector of survey dispositions
+#
+# I  = Complete interview
+# P  = Partial interview
+# R  = Refusal and break-off
+# NC = Non-contact
+# O  = Other
+# UH = Unknown if household/occupied housing unit
+# UO = Unknown, other
+# NE = Known ineligible
+x &lt;- c("I", "P", "I", "NC", "UH", "I", "R", "NE",
+      "UO", "I", "O", "P", "I")
+
+# calculate all rates
+elr &lt;- eligibility_rate(x)
+outcomerate(x, e = elr)
+
+# return only one rate
+outcomerate(x, rate = "COOP1")
+
+# calculate weighted rates
+w &lt;- runif(length(x), 0, 5)
+outcomerate(x, e = elr, weight = w)
+
+# alternatively, provide input as counts
+freq &lt;- c(I = 6, P = 2, NC = 3, R = 1)
+outcomerate(freq, e = elr)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sunTime</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Convert clock times to sun times
+</h2>
+
+<h3>Description</h3>
+
+<p>Converts a vector of clock times to "sun times", by mapping sunrise to <code class="reqn">\pi/2</code> and sunset to <code class="reqn">3\pi/2</code>. Sunrise and sunset times are determined based on the dates and locations provided. See Nouvellet et al (2012) for a discussion. Requires the <span class="pkg">suntools</span> package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sunTime(clockTime, Dates, Coords)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>clockTime</code></td>
+<td>
+
+<p>a vector of times of observations in <em>radians</em>, ie. scaled to [<code class="reqn">0, 2\pi</code>].
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Dates</code></td>
+<td>
+
+<p>a POSIXct object with the dates of the observations; the time zone must be set to the time zone used for 'clockTime'.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Coords</code></td>
+<td>
+
+<p>a SpatialPoints object with the locations of the observations, or with a single point giving a approximate location for the study area; the coordinates must be geographical coordinates, eg, WGS84, with long before lat.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a vector of "sun times" in <em>radians</em>, where <code class="reqn">\pi/2</code> corresponds to sunrise and <code class="reqn">3\pi/2</code> to sunset.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith.
+</p>
+
+
+<h3>References</h3>
+
+<p>Nouvellet et al (2012) Noisy clocks and silent sunrises: measurement methods of daily activity pattern. <em>Journal of Zoology</em> 286:179-184.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Check that sp and suntools packages are installed
+if(requireNamespace("sp") &amp;&amp; requireNamespace("suntools")) {
+  # Get example data:
+  data(simCalls)
+  str(simCalls)
+
+  # Convert dates to a POSIXct object with the right time zone (GMT):
+  Dates &lt;- as.POSIXct(simCalls$dates, tz="GMT")
+
+  # Create a SpatialPoints object with the location
+  coords &lt;- matrix(c(-3, 56), nrow=1)
+  Coords &lt;- sp::SpatialPoints(coords, proj4string=sp::CRS("+proj=longlat +datum=WGS84"))
+
+  st &lt;- sunTime(simCalls$time, Dates, Coords)
+
+  exPar&lt;-par(mfrow=c(2,1))
+	densityPlot(st, col='red', lwd=2, xaxt='n', main="Sun time")
+		axis(1, at=c(0, 6, 12, 18, 24),
+		labels=c("midnight", "sunrise", "noon", "sunset", "midnight"))
+	densityPlot(simCalls$time, lwd=2, main="Clock time")
+  par(exPar)
+}
+</code></pre>
+
+
+</div>

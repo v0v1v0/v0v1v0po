@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>best_picture</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Oscar Award Best Picture Data</h2>
+
+<h3>Description</h3>
+
+<p>Historical data on the Best Picture nominees and winners
+from 1934 through 2014.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(best_picture)
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A <code>data.frame</code> object with 484 observations and 19 columns. 
+The columns are defined as follows:
+</p>
+
+<dl>
+<dt><code>year</code></dt>
+<dd>
+<p>The integer year of the nomination. These span from 1934 through 2014. Note that the
+number of films nominated per year varies from 5 to 12.</p>
+</dd>
+<dt><code>film</code></dt>
+<dd>
+<p>The title of the film.</p>
+</dd>
+<dt><code>winner</code></dt>
+<dd>
+<p>A logical for whether the film won the Oscar for Best
+Picture. There is exactly one winning film per year.</p>
+</dd>
+<dt><code>nominated_for_Writing</code></dt>
+<dd>
+<p>A logical indicating whether the film
+was also nominated for a Writing award that year.</p>
+</dd>
+<dt><code>nominated_for_BestDirector</code></dt>
+<dd>
+<p>A logical indicating whether the film
+was also nominated for Best Director award that year.</p>
+</dd>
+<dt><code>nominated_for_BestActress</code></dt>
+<dd>
+<p>A logical indicating whether the film
+was also nominated for at least one Best Actress award that year.</p>
+</dd>
+<dt><code>nominated_for_BestActor</code></dt>
+<dd>
+<p>A logical indicating whether the film
+was also nominated for at least one Best Actor award that year.</p>
+</dd>
+<dt><code>nominated_for_BestFilmEditing</code></dt>
+<dd>
+<p>A logical indicating whether the film
+was also nominated for at least one Best Film Editing award that year.</p>
+</dd>
+<dt><code>Adventure</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“Adventure” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>Biography</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“Biography” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>Comedy</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“Comedy” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>Crime</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“Crime” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>Drama</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“Drama” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>History</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“History” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>Musical</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“Musical” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>Romance</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“Romance” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>Thriller</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“Thriller” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>War</code></dt>
+<dd>
+<p>A double computed as a 0/1 indicator of whether
+“War” was one of the genres tagged for the film in IMDb,
+divided by the total count of genres tagged for the film.</p>
+</dd>
+<dt><code>Other</code></dt>
+<dd>
+<p>A double computed as 1 minus the sum of
+the other genre indicators. Effectively this is is the
+sum of indicators for
+“Mystery”, “Family”, “Fantasy”, 
+“Action”, “Western”, “Music”, 
+“Sport”, “Sci Fi”,  “Film-Noir”,
+“Animation”, and “Horror” divided
+by the total count of genres tagged for the film.</p>
+</dd>
+</dl>
+<h3>Note</h3>
+
+<p>“Oscar” is a copyright property of the Academy of Motion
+Picture Arts and Sciences. 
+IMDb is owned by Amazon.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>Source</h3>
+
+<p>Awards data were sourced from Wikipedia, while genre data were
+sourced from IMDb.
+Any errors in transcription are the fault of the package author.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+data(best_picture)
+
+best_picture %&gt;% 
+  group_by(nominated_for_BestDirector) %&gt;% 
+  summarize(propwin=mean(winner)) %&gt;% 
+  ungroup()
+best_picture %&gt;% 
+  group_by(nominated_for_BestActor) %&gt;% 
+  summarize(propwin=mean(winner)) %&gt;% 
+  ungroup()
+# hmmmm.
+best_picture %&gt;% 
+  group_by(nominated_for_BestActress) %&gt;% 
+  summarize(propwin=mean(winner)) %&gt;% 
+ ungroup()
+
+</code></pre>
+
+
+</div>

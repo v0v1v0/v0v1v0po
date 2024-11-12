@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onion</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Basic onion functions
+</h2>
+
+<h3>Description</h3>
+
+<p>Construct, coerce to, test for, and print onions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">octonion(length.out = NULL, Re = 0, i = 0, j = 0, 
+    k = 0, l = 0, il = 0, jl = 0, kl = 0)
+as.octonion(x, single = FALSE)
+is.octonion(x)
+quaternion(length.out = NULL,Re = 0, i = 0, j = 0, k = 0)
+as.quaternion(x, single = FALSE)
+is.quaternion(x)
+is.onion(x)
+as.onion(x,type,single=FALSE)
+quaternion_to_octonion(from)
+octonion_to_quaternion(from)
+## S4 method for signature 'onion'
+as.matrix(x)
+## S4 method for signature 'onion'
+as.numeric(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>length.out</code></td>
+<td>
+<p>In functions <code>quaternion()</code> and
+<code>octonion()</code>, the length of the onionic vector returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Re</code></td>
+<td>
+<p>The real part of the onionic vector returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i,j,k</code></td>
+<td>
+<p>In functions <code>quaternion()</code> and <code>octonion()</code>,
+component <code class="reqn">i,j,k</code> respectively of the returned onion</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l,il,jl,kl</code></td>
+<td>
+<p>In function <code>octonion()</code>, component
+<code class="reqn">l,il,jl,kl</code> respectively of the returned octonion</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x,from</code></td>
+<td>
+<p>Onion to be tested or printed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>single</code></td>
+<td>
+<p>In functions <code>as.octonion()</code> and
+<code>as.quaternion()</code>, Boolean  with
+default <code>FALSE</code> meaning to interpret <code>x</code> as a vector of
+reals to be coerced into an onion  with zero imaginary
+part; and <code>TRUE</code> meaning to interpret <code>x</code> as a length 4
+(or length 8) vector and return the corresponding single onion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>In function <code>as.onion()</code> a string either
+“<code>quaternion</code>” or “<code>octonion</code>” denoting the
+algebra to be forced into</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Functions <code>quaternion()</code> and <code>octonion()</code> use standard
+recycling where possible; <code>rbind()</code> is used.
+</p>
+<p>Functions <code>as.quaternion()</code> and <code>as.octonion()</code> coerce to
+quaternions and octonions respectively.  If given a complex vector,
+the real and imaginary components are interpreted
+as <code>Re</code> and <code>i</code> respectively.
+</p>
+<p>The output of <code>type()</code> is accepted as the <code>type</code> argument of
+function <code>as.onion()</code>; thus <code>as.onion(out,type=type(x))</code> works as
+expected.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Generally return onions</p>
+
+
+<h3>Note</h3>
+
+<p>An <dfn>onion</dfn> is any algebra (over the reals) created by an iterated
+Cayley-Dickson process.  Examples include quaternions, octonions, and
+sedenions.  There does not appear to be a standard generic term for
+such objects (I have seen n-ion, anion and others.  But “onion”
+is pronouncable and a bona fide English word).
+</p>
+<p>Creating further onions—such as the sedenions—is intended to be
+straightforward.
+</p>
+<p>There is a nice example of the onion package in use in the
+<code>permutations</code> package, under <code>cayley.Rd</code>.  This also shows
+the quaternion group Q8, but from a different perspective.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robin K. S. Hankin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- octonion(Re=1,il=1:3)
+x
+kl(x) &lt;- 100
+x
+
+as.quaternion(diag(4))
+
+
+# Cayley table for the quaternion group Q8:
+a &lt;- c(H1,-H1,Hi,-Hi,Hj,-Hj,Hk,-Hk)
+names(a) &lt;- c("+1","-1","+i","-i","+j","-j","+k","-k")
+
+f &lt;- Vectorize(function(x,y){names(a)[a==a[x]*a[y]]})
+X &lt;- noquote(outer(1:8,1:8, f))
+rownames(X) &lt;- names(a)
+colnames(X) &lt;- names(a)
+X
+
+</code></pre>
+
+
+</div>

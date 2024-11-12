@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>constructD</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate Somers' d for the constructs.</h2>
+
+<h3>Description</h3>
+
+<p>Somer's d is an  asymmetric association measure as it depends on which
+variable is set as dependent and independent.
+The direction of dependency needs to be specified.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">constructD(x, dependent = "columns", trim = 30, index = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dependent</code></td>
+<td>
+<p>A string denoting the direction of dependency in the output
+table (as d is asymmetrical). Possible values are <code>"columns"</code>
+(the default) for setting the columns as dependent, <code>"rows"</code>
+for setting the rows as the dependent variable and
+<code>"symmetric"</code> for the
+symmetrical Somers' d measure (the mean of the two directional
+values for <code>"columns"</code> and <code>"rows"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>The number of characters a construct is trimmed to (default is
+<code>30</code>). If <code>NA</code> no trimming occurs. Trimming
+simply saves space when displaying correlation of constructs
+with long names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>Whether to print the number of the construct
+(default is <code>TRUE</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>matrix</code> of construct correlations.
+</p>
+
+
+<h3>Note</h3>
+
+<div class="sourceCode"><pre>         Thanks to Marc Schwartz for supplying the code to calculate
+               Somers' d.
+</pre></div>
+
+
+<h3>References</h3>
+
+<p>Somers, R. H. (1962). A New Asymmetric Measure of Association
+for Ordinal Variables. <em>American Sociological Review, 27</em>(6),
+799-811.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+constructD(fbb2003) # columns as dependent (default)
+constructD(fbb2003, "c") # row as dependent
+constructD(fbb2003, "s") # symmetrical index
+
+# suppress printing
+d &lt;- constructD(fbb2003, out = 0, trim = 5)
+d
+
+# more digits
+constructD(fbb2003, dig = 3)
+
+# add index column, no trimming
+constructD(fbb2003, col.index = TRUE, index = F, trim = NA)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

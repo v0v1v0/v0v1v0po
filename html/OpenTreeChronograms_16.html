@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_valid_children</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract valid children from given taxonomic name(s) or Open Tree of Life
+Taxonomic identifiers (OTT ids) from a taxonomic source.</h2>
+
+<h3>Description</h3>
+
+<p>Extract valid children from given taxonomic name(s) or Open Tree of Life
+Taxonomic identifiers (OTT ids) from a taxonomic source.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_valid_children(input = NULL, ott_ids = NULL, taxonomic_source = "ncbi")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>Optional. A character vector of names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ott_ids</code></td>
+<td>
+<p>If not NULL, it takes this argument and ignores input. A
+numeric vector of ott ids obtained with <code>rotl::taxonomy_taxon_info()</code> or
+<code>rotl::tnrs_match_names()</code> or <code>tnrs_match()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taxonomic_source</code></td>
+<td>
+<p>A character vector with the desired taxonomic sources.
+Options are "ncbi", "gbif" or "irmng". Any other value will retrieve data
+from all taxonomic sources. The function defaults to "ncbi".</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>GBIF and other taxonomies contain deprecated taxa that are not marked as such
+in the Open Tree of Life Taxonomy.
+We are relying mainly in the NCBI taxonomy for now.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A named list containing valid taxonomic children of given taxonomic name(s).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># genus Dictyophyllidites with ott id = 6003921 has only extinct children
+# in cases like this the same name will be returned
+
+tti &lt;- rotl::taxonomy_taxon_info(6003921, include_children = TRUE)
+gvc &lt;- get_valid_children(ott_ids = 6003921)
+
+# More examples:
+
+get_valid_children(ott_ids = 769681) # Psilotopsida
+get_valid_children(ott_ids = 56601) # Marchantiophyta
+</code></pre>
+
+
+</div>

@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>download_os_datapackages</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download OS premium data packages</h2>
+
+<h3>Description</h3>
+
+<p>Main function for downloading OS data packages to your local machine.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">download_os_datapackages(product, ...)
+
+## S3 method for class 'package_list'
+download_os_datapackages(
+  product,
+  file_name,
+  output_dir,
+  overwrite = FALSE,
+  key = get_os_key(),
+  ...
+)
+
+## S3 method for class 'data.frame'
+download_os_datapackages(
+  product,
+  version,
+  file_name,
+  output_dir,
+  overwrite = FALSE,
+  key = get_os_key(),
+  ...
+)
+
+## S3 method for class 'numeric'
+download_os_datapackages(
+  product,
+  version,
+  file_name,
+  output_dir,
+  overwrite = FALSE,
+  key = get_os_key(),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>product</code></td>
+<td>
+<p>A <code>product_list</code> object retrieved and filtered using
+<code>list_os_datapackages</code>. Alternatively, a <code>data.frame</code> object or
+integer or character string of a product ID that can be filtered further.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters. Not currently used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_name</code></td>
+<td>
+<p>(character) Filter downloads to only include those with this
+file name. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output_dir</code></td>
+<td>
+<p>Path to the directory where the downloaded files will be
+saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>Boolean. Should existing files be overwritten? Default is
+<code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>(character) OS API key. Default action is to search for an
+environment variable using <code>get_os_key()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p>(numeric or character) Retrieve information on a specific
+version(s) of a data product. Required when <code>product</code> is a
+<code>data.frame</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The OS Downloads API assists with the discovery and download of OS
+OpenData and OS premium data packages. This function is used as the main
+step to download data packages to your local machine. It is designed to
+work best after <code>list_os_datapackages</code> is first used to search and
+filter for the specific download product. The <code>package_list</code> returned
+by the listing step can be used as the input value to download the desired
+files. Alternatively, it is possible to supply a product and version IDs
+directly when they are already known.
+</p>
+<p>Before downloading a data package, it must be ordered online. See:
+<a href="https://osdatahub.os.uk/downloads/packages">https://osdatahub.os.uk/downloads/packages</a>.
+</p>
+<p>For more information on the Downloads API, see
+<a href="https://osdatahub.os.uk/docs/downloads/technicalSpecification">https://osdatahub.os.uk/docs/downloads/technicalSpecification</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Silently returns the directory where the downloaded files are
+stored.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>list_os_datapackages
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Search and filter available open products.
+pkg_list &lt;- list_os_datapackages()
+
+# Use the package list to initiate a download.
+# Note: 'version' will vary.
+download_os_datapackages(pkg_list, version = 123, output_dir = tempdir())
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

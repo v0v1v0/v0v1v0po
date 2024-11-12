@@ -1,0 +1,271 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>o2pls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>fit O2PLS model with best nc, nx, ny</h2>
+
+<h3>Description</h3>
+
+<p>fit O2PLS model with best nc, nx, ny
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">o2pls(X, Y, nc, nx, ny, scale = FALSE, center = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>a Numeric matrix (input)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>a Numeric matrix (input)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>Integer. Number of joint PLS components.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nx</code></td>
+<td>
+<p>Integer. Number of orthogonal components in X</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ny</code></td>
+<td>
+<p>Integer. Number of orthogonal components in Y</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>boolean values determining if data should be scaled or not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>boolean values determining if data should be centered or not</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object containing
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Xscore</code></td>
+<td>
+<p>Joint <code class="reqn">X</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xloading</code></td>
+<td>
+<p>Joint <code class="reqn">X</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Yscore</code></td>
+<td>
+<p>Joint <code class="reqn">Y</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Yloading</code></td>
+<td>
+<p>Joint <code class="reqn">Y</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TYosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">X</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PYosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">X</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WYosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">X</code> weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>UXosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">Y</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PXosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">Y</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CXosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">Y</code> weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BU</code></td>
+<td>
+<p>Regression coefficient in <code>Tt</code> ~ <code>U</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BT</code></td>
+<td>
+<p>Regression coefficient in <code>U</code> ~ <code>Tt</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xhat</code></td>
+<td>
+<p>Prediction of <code class="reqn">X</code> with <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Yhat</code></td>
+<td>
+<p>Prediction of <code class="reqn">Y</code> with <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Xhat</code></td>
+<td>
+<p>Variation of the predicted <code class="reqn">X</code> as proportion of variation in <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Yhat</code></td>
+<td>
+<p>Variation of the predicted <code class="reqn">Y</code> as proportion of variation in <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2X</code></td>
+<td>
+<p>Variation of the modeled part in <code class="reqn">X</code> (defined by Joint + Orthogonal variation) as proportion of total variation in <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Y</code></td>
+<td>
+<p>Variation of the modeled part in <code class="reqn">Y</code> (defined by Joint + Orthogonal variation) as proportion of total variation in <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Xcorr</code></td>
+<td>
+<p>Variation of the joint part in <code class="reqn">X</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Ycorr</code></td>
+<td>
+<p>Variation of the joint part in <code class="reqn">Y</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Xo</code></td>
+<td>
+<p>Variation of the orthogonal part in <code class="reqn">X</code> as proportion of variation in <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Yo</code></td>
+<td>
+<p>Variation of the orthogonal part in <code class="reqn">Y</code> as proportion of variation in <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Xp</code></td>
+<td>
+<p>Variation in <code class="reqn">X</code> joint part predicted by <code class="reqn">Y</code> Joint part</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Yp</code></td>
+<td>
+<p>Variation in <code class="reqn">Y</code> joint part predicted by <code class="reqn">X</code> Joint part</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varXj</code></td>
+<td>
+<p>Variation in each Latent Variable (LV) in <code class="reqn">X</code> Joint part</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varYj</code></td>
+<td>
+<p>Variation in each Latent Variable (LV) in <code class="reqn">Y</code> Joint part</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varXorth</code></td>
+<td>
+<p>Variation in each Latent Variable (LV) in <code class="reqn">X</code> Orthogonal part</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varYorth</code></td>
+<td>
+<p>Variation in each Latent Variable (LV) in <code class="reqn">Y</code> Orthogonal part</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Exy</code></td>
+<td>
+<p>Residuals in <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Fxy</code></td>
+<td>
+<p>Residuals in <code class="reqn">Y</code></p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Kai Guo
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+X = matrix(rnorm(500),50,10)
+Y = matrix(rnorm(500),50,10)
+X = scale(X, scale = TRUE)
+Y = scale(Y, scale = TRUE)
+fit &lt;- o2pls(X, Y, 1, 2, 2)
+summary(fit)
+</code></pre>
+
+
+</div>

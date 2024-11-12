@@ -1,0 +1,194 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ov_sim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ov_sim
+</h2>
+
+<h3>Description</h3>
+
+<p>This function will create the simulation grid. The simulation will iterate over
+effects sizes and absolute correlations with the outcome (rho) and see how the
+treatment effect and relevant p-value changes
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ov_sim(model_results, plot_covariates, es_grid = seq(-.4, .4, by = 0.05),
+rho_grid = seq(0, .4, by = 0.05), n_reps = 50, progress = TRUE, add = FALSE,
+sim_archive = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model_results</code></td>
+<td>
+
+<p>object returned from outcome_model
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_covariates</code></td>
+<td>
+
+<p>vector of column names representing the covariates that will be plotted on the graphic as observed covariates. Most users will include the variables on the right-hand side of the propensity score model
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>es_grid</code></td>
+<td>
+
+<p>Not required. A grid of effect sizes to simulate over
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho_grid</code></td>
+<td>
+
+<p>Not required. A grid of correlations to simulate over; rho relates the correlation to the effect size.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_reps</code></td>
+<td>
+
+<p>Number of repetitions to simulate over
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+
+<p>Whether or not the function progress should print to screen. The default value is TRUE. If the user does not want the output to print to screen, they should set to FALSE.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+
+<p>Default is FALSE. This is set to true if the user is running additional repetitions after the first call to ov_sim
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sim_archive</code></td>
+<td>
+
+<p>Default is NULL
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>ov_sim returns a list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>p_val</code></td>
+<td>
+<p>matrix of pvalues for each grid point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trt_effect</code></td>
+<td>
+<p>matrix of effect sizes for each grid point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>es_grid</code></td>
+<td>
+<p>vector of the effect size grid</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho_grid</code></td>
+<td>
+<p>vector of the rho grid</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov</code></td>
+<td>
+<p>vector of covariates used to estimate propensity score weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the initial data frame containing data with new weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tx</code></td>
+<td>
+<p>column name in data representing the treatment indicator</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>column name in data representing the outcome</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimand</code></td>
+<td>
+<p>estimand used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_reps</code></td>
+<td>
+<p>number of repetitions to simulate over</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>std.error</code></td>
+<td>
+<p>matrix of standard errors for each grid point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>es_se_raw</code></td>
+<td>
+<p>matrix that stores each repetitions results at every grid point</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sud)
+sud = data.frame(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(1, 10, by=.01), size=nrow(sud), replace = TRUE)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_3",
+                            model_covariates = c("sfs8p_0"),
+                            estimand = "ATE")
+
+ovtool_results = ov_sim(model_results=outcome_mod,
+                        plot_covariates=c("sfs8p_0"),
+                        es_grid = NULL,
+                        rho_grid = NULL,
+                        n_reps = 2,
+                        progress=FALSE)
+</code></pre>
+
+
+</div>

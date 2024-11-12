@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_norm_input_check_df_cols</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check columns of a list of datasets to be normalized.</h2>
+
+<h3>Description</h3>
+
+<p>This function takes as input a named list of datasets and checks if their
+columns allow the normalization to be performed. The input may contain
+"tibble", "ArrowTable" or a mixture of them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_norm_input_check_df_cols(lst_df)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>lst_df</code></td>
+<td>
+<p>Named list of datasets to be normalized.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Named list of vectors with the required column names for each dataset
+in <var>lst_df</var> if no error.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Klev Diamanti
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# One dataset
+OlinkAnalyze:::olink_norm_input_check_df_cols(
+  lst_df = list(
+    "p1" = npx_data1
+  ) |&gt;
+    lapply(function(l_df) {
+      l_df |&gt;
+        dplyr::select(
+          -dplyr::any_of(c("Normalization"))
+        )
+     })
+  )
+
+# Two datasets
+OlinkAnalyze:::olink_norm_input_check_df_cols(
+  lst_df = list(
+    "p1" = npx_data1,
+    "p2" = npx_data2
+  ) |&gt;
+    lapply(function(l_df) {
+      l_df |&gt;
+        dplyr::select(
+          -dplyr::any_of(c("Normalization"))
+        )
+     })
+  )
+
+# Multiple datasets
+OlinkAnalyze:::olink_norm_input_check_df_cols(
+  lst_df = list(
+    "p1" = npx_data1,
+    "p2" = npx_data2,
+    "p3" = npx_data1,
+    "p4" = npx_data2
+  ) |&gt;
+    lapply(function(l_df) {
+      l_df |&gt;
+        dplyr::select(
+          -dplyr::any_of(c("Normalization"))
+        )
+     })
+  )
+
+
+</code></pre>
+
+
+</div>

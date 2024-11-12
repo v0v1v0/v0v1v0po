@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>secondary_ODS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Secondary analysis in ODS design</h2>
+
+<h3>Description</h3>
+
+<p><code>secondary_ODS</code> performs the secondary analysis which describes the
+association between a continuous scale secondary outcome and the expensive
+exposure for data obtained with ODS (outcome dependent sampling) design.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">secondary_ODS(SRS, lowerODS, upperODS, NVsample, cutpoint, Z.dim)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>SRS</code></td>
+<td>
+<p>A data matrix for subjects in the simple random sample. The first
+column is Y1: the primary outcome for which the ODS scheme is based on. The
+second column is Y2: a secondary outcome. The third column is X: the
+expensive exposure. Starting from the fourth column to the end is Z: other
+covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lowerODS</code></td>
+<td>
+<p>A data matrix for supplemental samples taken from the lower
+tail of Y1 (eg. Y1 &lt; a). The data structure is the same as SRS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upperODS</code></td>
+<td>
+<p>A data matrix for supplemental samples taken from the upper
+tail of Y1 (eg. Y1 &gt; b). The data structure is the same as SRS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NVsample</code></td>
+<td>
+<p>A data matrix for subjects in the non-validation sample.
+Subjects in the non-validation sample don't have the expensive exposure X
+measured. The data structure is the same as SRS, but the third column
+(which represents X) has values NA.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutpoint</code></td>
+<td>
+<p>A vector of length two that represents the cut off points for
+the ODS design. eg. cutpoint &lt;- c(a,b). In the ODS design, a simple random
+sample is taken from the full cohort, then two supplemental samples are
+taken from {Y1 &lt; a} and {Y1 &gt; b}, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.dim</code></td>
+<td>
+<p>Dimension of the covariates Z.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list which contains parameter estimates, estimated standard error
+for the primary outcome model:
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{1}=\beta_{0}+\beta_{1}X+\beta_{2}Z,</code>
+</p>
+
+<p>and the secondary outcome model:
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{2}=\gamma_{0}+\gamma_{1}X+\gamma_{2}Z.</code>
+</p>
+
+<p>The list contains the following components: </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>beta_paramEst</code></td>
+<td>
+<p>parameter estimates
+for beta in the primary outcome model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta_stdErr</code></td>
+<td>
+<p>estimated
+standard error for beta in the primary outcome model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma_paramEst</code></td>
+<td>
+<p>parameter estimates for gamma in the secondary
+outcome model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma_stdErr</code></td>
+<td>
+<p>estimated standard error for gamma in
+the secondary outcome model</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ODS)
+# take the example data from the ODS package
+# please see the documentation for details about the data set ods_data_secondary
+data &lt;- ods_data_secondary
+
+# divide the original cohort data into SRS, lowerODS, upperODS and NVsample
+SRS &lt;- data[data[,1]==1,2:ncol(data)]
+lowerODS &lt;- data[data[,1]==2,2:ncol(data)]
+upperODS &lt;- data[data[,1]==3,2:ncol(data)]
+NVsample &lt;- data[data[,1]==0,2:ncol(data)]
+
+# obtain the cut off points for ODS design. For this data, the ODS design
+# uses mean plus and minus one standard deviation of Y1 as cut off points.
+meanY1 &lt;- mean(data[,2])
+sdY1 &lt;- sd(data[,2])
+cutpoint &lt;- c(meanY1-sdY1, meanY1+sdY1)
+
+# the data matrix SRS has Y1, Y2, X and Z. Hence the dimension of Z is ncol(SRS)-3.
+Z.dim &lt;- ncol(SRS)-3
+
+secondary_ODS(SRS, lowerODS, upperODS, NVsample, cutpoint, Z.dim)
+</code></pre>
+
+
+</div>

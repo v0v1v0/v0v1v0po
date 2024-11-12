@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotLambda</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the variaty of the properties dependent on the proportion of heterogeneity in observed data set</h2>
+
+<h3>Description</h3>
+
+<p>This function provides the plots of the dependency of the variety of properties on the proportion of heterogeneity in observed data set. It is not using the clustering as simple input, but it is also computing additional properties. The function can plot within cluster sum of squares, number of cluster, penalized within cluster sum of squares, Calsanzik and Harabasx index and Hartigan index.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  plotLambda(lambdaChoiceOutput,output)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambdaChoiceOutput</code></td>
+<td>
+<p>the output of the function resampleORCME</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>the variable that determines which output would be plotted, the values are "wss" for the cluster sum of squares, "ncluster" for the number of cluster, "pwss" for the penalized within cluster sum of squares, "ch" for the Calsanzik and Harabasx index and "h" for the Hartigan index</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plot of one of the properties mentioned above dependent on the proportion of heterogeneity. The confidence intervals are plotted instead of the point estimates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adetayo Kasim, Martin Otava and  Tobias Verbeke</p>
+
+
+<h3>References</h3>
+
+<p>Lin D., Shkedy Z., Yekutieli D., Amaratunga D., and Bijnens, 
+L. (editors). (2012) Modeling Dose-response Microarray
+Data in Early   Drug Development Experiments Using 
+R. Springer.
+</p>
+<p>Cheng, Y. and Church, G. M. (2000). Biclustering of expression data. In:
+Proceedings of the Eighth International Conference on Intelligent Systems for
+Molecular Biology, 1, 93-103.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ORCME</code>, <code>resampleORCME</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  data(doseData)
+  data(geneData)
+
+  dirData &lt;- monotoneDirection(geneData = geneData,doseData = doseData)
+  incData &lt;- as.data.frame(dirData$incData)
+ 
+  lambdaVector &lt;- c(0.05,0.50,0.95)
+  
+  
+  lambdaChoiceOutput &lt;- resampleORCME(clusteringData=incData, lambdaVector=lambdaVector)
+  plotLambda(lambdaChoiceOutput,output="wss")
+  plotLambda(lambdaChoiceOutput,output="ncluster")
+  plotLambda(lambdaChoiceOutput,output="pwss")
+  plotLambda(lambdaChoiceOutput,output="ch")
+  plotLambda(lambdaChoiceOutput,output="h")
+  
+</code></pre>
+
+
+</div>

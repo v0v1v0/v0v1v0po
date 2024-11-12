@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetWindowLength</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Window Length</h2>
+
+<h3>Description</h3>
+
+<p><code>GetWindowLength</code> Calculates the size of the window. This window focuses on
+the real anomaly and it can be used to know if the detected anomaly is a true positive or not.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetWindowLength(data.length, num.real.anomaly, window.length.perc = 0.1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data.length</code></td>
+<td>
+<p>Dataset length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.real.anomaly</code></td>
+<td>
+<p>Number of real anomalies contained in the data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window.length.perc</code></td>
+<td>
+<p>Window length in percentage of the total data</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>nrow.data</code> and <code>num.real.anomaly</code> must be numeric. Window length is
+calculated by default as 10% of the length of the data set divided by the number of real
+anomalies contained in it.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Window length as numeric.
+</p>
+
+
+<h3>References</h3>
+
+<p>A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
+Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
+Applications (IEEE ICMLA 15), 2015.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 180
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+# Add is.real.anomaly column
+df$is.real.anomaly &lt;- 0
+df[c(25,80,150), "is.real.anomaly"] &lt;- 1
+
+# Get window length
+GetWindowLength(data.length = nrow(df), num.real.anomaly = 3)
+</code></pre>
+
+
+</div>

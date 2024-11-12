@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.orbital_class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prediction using orbital objects</h2>
+
+<h3>Description</h3>
+
+<p>Running prediction on data frame of remote database table, without needing to
+load original packages used to fit model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'orbital_class'
+predict(object, new_data, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An orbital object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new_data</code></td>
+<td>
+<p>A data frame or remote database table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not currently used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Using this function should give identical results to running <code>predict()</code> or
+<code>bake()</code> on the orginal object.
+</p>
+<p>The prediction done will only return prediction colunms, a opposed to
+returning all modified functions as done with <code>orbital_inline()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A modified data frame or remote database table.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workflows)
+library(recipes)
+library(parsnip)
+
+rec_spec &lt;- recipe(mpg ~ ., data = mtcars) %&gt;%
+  step_normalize(all_numeric_predictors())
+
+lm_spec &lt;- linear_reg()
+
+wf_spec &lt;- workflow(rec_spec, lm_spec)
+
+wf_fit &lt;- fit(wf_spec, mtcars)
+
+orbital_obj &lt;- orbital(wf_fit)
+
+predict(orbital_obj, mtcars)
+
+</code></pre>
+
+
+</div>

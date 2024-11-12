@@ -1,0 +1,202 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>refine</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Refine initial stratification</h2>
+
+<h3>Description</h3>
+
+<p>Refine an initial stratification by splitting each stratum or specified subset of strata
+into two refined strata. If no initial
+stratification is provided, one is first generated
+using <code>prop_strat()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">refine(object = NULL, z = NULL, X = NULL, strata = NULL, options = list())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an optional object of class <code>strat</code>,
+typically created using <code>strat()</code>
+or as a result of a call to <code>prop_strat()</code>.
+If not provided, <code>z</code> and <code>X</code> must be specified</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>vector of treatment assignment; only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>covariate matrix/data.frame; only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strata</code></td>
+<td>
+<p>vector of initial strata assignments; only used if <code>object</code> is not supplied.
+Can be <code>NULL</code>, in which case an initial stratification using the quintiles of the
+propensity score is generated using <code>prop_strat()</code> and the generated
+propensity score is also added to the X matrix as an extra covariate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>list containing various options described in the <code>Details</code> below</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>options</code> argument can contain any of the following elements:
+</p>
+
+<ul>
+<li>
+<p>solver: character specifying the optimization software to use.
+Options are "Rglpk" or "gurobi". The default is "Rglpk" unless a gurobi installation is detected,
+in which case it is set to "gurobi". It is recommended to use "gurobi" if available.
+</p>
+</li>
+<li>
+<p>standardize: boolean whether or not to standardize the covariates in X. Default is <code>TRUE</code>
+</p>
+</li>
+<li>
+<p>criterion: which optimization criterion to use.
+Options are "max", "sum", or "combo", referring to whether to optimize the
+maximum standardized mean difference (SMD), the sum of all SMDs,
+or a combination of the maximum and the sum. The default is "combo"
+</p>
+</li>
+<li>
+<p>integer: boolean whether to use integer programming as opposed to
+randomized rounding of linear programs. Note that setting this to <code>TRUE</code>
+may cause this function to never finish depending on the size of the data
+and is not recommended except for tiny data sets
+</p>
+</li>
+<li>
+<p>wMax: how much to weight the maximum standardized mean difference compared to the sum.
+Only used if criterion is set to "combo". Default is 5
+</p>
+</li>
+<li>
+<p>ist: which strata to split. Should be a level from the specified <code>strata</code> or
+a vector of multiple levels. Default is to split all strata
+</p>
+</li>
+<li>
+<p>minsplit: The minimum number of treated and control units to allow in a refined stratum.
+Default is 10
+</p>
+</li>
+<li>
+<p>threads: How many threads you'd like the optimization to use if using the "gurobi" solver. Uses all available threads by default
+</p>
+</li>
+</ul>
+<p>Note that setting a seed before using this function will ensure that the results are reproducible
+on the same machine, but results may vary across machines due to how the optimization solvers work.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of class "strat", which is a list object with the following components:
+</p>
+
+<ul>
+<li>
+<p>z: treatment vector
+</p>
+</li>
+<li>
+<p>X: covariate matrix
+</p>
+</li>
+<li>
+<p>base_strata: initial stratification
+</p>
+</li>
+<li>
+<p>refined_strata: refined_stratification
+</p>
+</li>
+<li>
+<p>details: various details about the optimization that can be ignored in practice, but may be interesting:
+</p>
+
+<ul>
+<li>
+<p>valueIP, valueLP: integer (determined via randomized rounding, unless <code>integer</code> option set to true)
+and linear programming scaled objective values
+</p>
+</li>
+<li>
+<p>n_fracs: number of units with fractional LP solutions
+</p>
+</li>
+<li>
+<p>rand_c_prop, rand_t_prop: proportions of the control and treated units in each
+stratum that were selected with randomness
+</p>
+</li>
+<li>
+<p>pr: linear programming solution,
+with rows corresponding to the strata and columns to the units
+</p>
+</li>
+<li>
+<p>criterion: criterion used in the optimization (see the <code>details</code> about the <code>options</code> for the optimization)
+</p>
+</li>
+<li>
+<p>wMax: weight placed on the maximum standardized mean difference in the optimization
+(see the <code>details</code> about the <code>options</code> for the optimization)
+</p>
+</li>
+<li>
+<p>X_std: standardized version of <code>X</code>
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Choose 400 patients and 4 covariates to work with for the example
+set.seed(15)
+samp &lt;- sample(1:nrow(rhc_X), 400)
+cov_samp &lt;- sample(1:26, 4)
+
+# Let it create propensity score strata for you and then refine them
+ref &lt;- refine(X = rhc_X[samp, cov_samp], z = rhc_X[samp, "z"])
+
+# Or, specify your own initial strata
+ps &lt;- prop_strat(z = rhc_X[samp, "z"],
+                 X = rhc_X[samp, cov_samp], nstrata = 3)
+ref &lt;- refine(X = ps$X, z = ps$z, strata = ps$base_strata)
+
+# Can just input the output of prop_strat() directly
+ref &lt;- refine(object = ps)
+
+</code></pre>
+
+
+</div>

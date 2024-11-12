@@ -1,0 +1,239 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>test.intersection</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Test Overlapping of Polygons Against Random Rotation
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions test the overlaping surface area of a colection of polygons against a a null model of random rotation. <code>test.auto.intersection</code> test for overlapping between polygons of the same type (i.e., the same species) whereas <code>test.intersection</code> test for overlapping between polygons of different types (i.e., between different species).  <code>test.auto.intersection.p</code> and <code>test.intersection.p</code> functions are parallelized versions which might significantly  reduce computing times.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">test.auto.intersection(ventana1, nsim = 199, win = NULL,
+    prop=1, centroides1= NULL,    diametros1 =NULL)
+test.intersection(ventana1, ventana2, nsim, prop = 1, win = NULL,
+   centroides1 = NULL, diametros1 = NULL, centroides2 = NULL, 
+   diametros2 = NULL)
+test.auto.intersection.p(ventana1, nsim = 199, win = NULL,
+    prop=1, centroides1= NULL,    diametros1 =NULL, ncl=2)
+test.intersection.p(ventana1, ventana2, nsim, prop = 1, win = NULL,
+   centroides1 = NULL, diametros1 = NULL, centroides2 = NULL, 
+   diametros2 = NULL, ncl=2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ventana1</code></td>
+<td>
+
+<p>A multiple-polygon window with the format <code>owin</code> of <span class="pkg">spatstat</span>. The "accessory" species in the case of <code>test.intersection</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ventana2</code></td>
+<td>
+
+<p>A multiple-polygon window with the format <code>owin</code> of <span class="pkg">spatstat</span>. The species whose polygons will be rotated (i.e., the "focal" species) in the case of <code>test.intersection</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+
+<p>Number of simulations for the Monte Carlo test.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prop</code></td>
+<td>
+
+<p>Proportion of the diameter of each polygon which will be employed to select potential close neighbours. See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>win</code></td>
+<td>
+
+<p>Observation window, employed to control for edge effects. An objetct with the format <code>owin</code> of <span class="pkg">spatstat</span>. If not provided, it will be estimated by the <em>x</em> and <em>y</em> ranges from <code>ventana</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centroides1</code></td>
+<td>
+
+<p>Matrix or <code>data.frame</code> with the coordinates of the centroids of the polygons of <code>ventana1</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diametros1</code></td>
+<td>
+
+<p>Vector with the diameters of the polygons of <code>ventana1</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centroides2</code></td>
+<td>
+
+<p>Matrix or <code>data.frame</code> with the coordinates of the centroids of the polygons of <code>ventana2</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diametros2</code></td>
+<td>
+
+<p>Vector with the diameters of the polygons of <code>ventana2</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncl</code></td>
+<td>
+
+<p>Number of clusters for the parallel implementation.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The summary statistic employed in the test is the overall sum of the overlapping areas of intersecting polygons. To reduce the computing burden, area intersections are only computed for polygon pairs for which the distance between their centoids is smaller than the sum of their largest diameters (weighted by the argument <code>prop</code>). To avoid edge effects, the test only considers polygons whose centroids are separated from the border of the observation window by a distance larger than their largest diameter.
+In the pairwise tests, the polygons of <code>ventana1</code> are kept fixed in their original positions (i.e., the accessory species) and the polygons of <code>ventana2</code> (i.e., the focal species) are rotated.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Both <code>test.auto.intersection</code> and <code>test.intersection</code> return a vector of length <code>nsim</code>+1, with the sum of observed overlaping areas in the first position and subsequently with the sum of overlapping areas in each the simulated (i.e., randomly rotated) realizations of the null model.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelino de la Cruz Rot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(Astragalus)
+data(Sesleria)
+
+# Test overlapping between Astragalus individuals
+  # Ideally nsim should be at least 199
+   Astragalus.test&lt;- test.auto.intersection(Astragalus, nsim=19)
+   # Observed overlapping area
+   Astragalus.test[1]
+   # p-value (negative value indicates that the observed overlapping is smaller 
+   # than expected)
+   pval(Astragalus.test)
+
+
+# Test overlapping between Astragalus  and Sesleria individuals.
+# Here, Sesleria is the accesory species (its individuals are kept fixed during the
+# test) and Astragalus  the focal one (its individuals are rotated)
+# Ideally nsim should be at least 199
+   Sesleria.Astragalus.test&lt;- test.intersection(ventana1= Sesleria, 
+                                                   ventana2= Astragalus, nsim=19)
+   # Observed overlapping area
+   Sesleria.Astragalus.test[1]
+   # p-value (negative value indicates that the observed overlapping is smaller
+   # than expected)
+   pval(Sesleria.Astragalus.test)
+   
+ 
+
+# Reducing computing burden when making repetitive testing
+ 
+
+# First, put all the polygonal regions in a list, i.e.
+ owins&lt;- list(Astragalus, Sesleria)
+ 
+ # compute diameters and centroids of the individual polygons 
+ # in each polygonal region
+ 
+centroids&lt;- list()
+diams&lt;- list()
+  for ( i in 1: length(owins)){
+    cd&lt;- centroidiam(owins[[i]])
+    centroids[[i]] &lt;- cd$centroids
+    diams[[i]] &lt;- cd$diams
+}
+
+# set the number of simulations for each test
+# Ideally nsim should be at least 199
+online &lt;- interactive()
+Nsim &lt;- if(online) 19 else 3
+
+# create an array to store the results
+result &lt;- array(NA, dim=c(length(owins),length(owins),Nsim+1))
+
+t0&lt;-Sys.time()
+for ( i in 1: length(owins)){
+   for ( j in 1: length(owins)){
+     cat(i,j,"\n")
+       if(j!=i) result[i,j,] &lt;- test.intersection(owins[[i]], owins[[j]], nsim=Nsim,
+		centroides1=centroids[[i]], diametros1=diams[[i]],
+		centroides2=centroids[[j]], diametros2=diams[[j]]) else
+		result[i,j,] &lt;-  test.auto.intersection(owins[[i]], nsim=Nsim,
+		centroides1=centroids[[i]], diametros1=diams[[i]])
+   }
+}
+ Sys.time()-t0
+ 
+ # observed values (focal species in columns)
+ (observed&lt;-  t(result[,,1]))
+ # p-values
+ tabla.p&lt;- apply(result,c(1,2),pval)
+ (p_values &lt;- t(tabla.p))
+ 
+ # Compare with parallelized versions:
+  
+# create an array to store the result.ps
+result.p&lt;- array(NA, dim=c(length(owins),length(owins),Nsim+1))
+
+t0&lt;-Sys.time()
+for ( i in 1: length(owins)){
+   for ( j in 1: length(owins)){
+     cat(i,j,"\n")
+       if(j!=i) result.p[i,j,] &lt;- test.intersection.p(owins[[i]], owins[[j]], nsim=Nsim,
+		centroides1=centroids[[i]], diametros1=diams[[i]],
+		centroides2=centroids[[j]], diametros2=diams[[j]]) else
+		result.p[i,j,] &lt;-  test.auto.intersection.p(owins[[i]], nsim=Nsim,
+		centroides1=centroids[[i]], diametros1=diams[[i]])
+   }
+}
+ Sys.time()-t0
+ 
+ # observed values (focal species in columns)
+ (observed.p&lt;-  t(result.p[,,1]))
+ # p-values
+ tabla.p.p&lt;- apply(result.p,c(1,2),pval)
+ (p_values.p &lt;- t(tabla.p.p))
+ 
+ 
+
+ 
+</code></pre>
+
+
+</div>

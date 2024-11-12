@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>origin-methods</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract Image Attribute <code>origin</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>Methods that act on the <code>origin</code> field in the
+NIfTI/ANALYZE header.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">origin(object)
+
+## S4 method for signature 'nifti'
+origin(object)
+
+## S4 method for signature 'anlz'
+origin(object)
+
+## S4 method for signature 'ANY'
+origin(object)
+
+origin(object) &lt;- value
+
+## S4 replacement method for signature 'anlz'
+origin(object) &lt;- value
+
+## S4 replacement method for signature 'nifti'
+origin(object) &lt;- value
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>is an object of class <code>nifti</code> or <code>anlz</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>is the value to assign to the <code>origin</code> field.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See documentation on the ANALYZE and/or NIfTI data standards for
+more details.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>John Muschelli <a href="mailto:muschellij2@gmail.com">muschellij2@gmail.com</a>,<br>
+Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>ANALYZE 7.5<br><a href="http://eeg.sourceforge.net/ANALYZE75.pdf">http://eeg.sourceforge.net/ANALYZE75.pdf</a><br>
+NIfTI-1<br><a href="http://nifti.nimh.nih.gov/">http://nifti.nimh.nih.gov/</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fname = system.file("nifti", "mniRL.nii.gz", 
+package = "oro.nifti")
+img = readNIfTI(fname)
+oimg = origin(img)
+stopifnot(all(oimg == c(-90, -126, -72)))
+zero_img = img
+origin(zero_img) = rep(0, 3)
+stopifnot(all(origin(zero_img) == 0))
+</code></pre>
+
+
+</div>

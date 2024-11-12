@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.onls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plotting function for 'onls' objects</h2>
+
+<h3>Description</h3>
+
+<p>Plots an orthogonal nonlinear model obtained from <code>onls</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'onls'
+plot(x, fitted.nls = TRUE, fitted.onls = TRUE, 
+                    segments = TRUE,...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object returned from <code>onls</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.nls</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, the fit from the normal (vertical) nonlinear model is plotted as a blue line for comparison purposes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.onls</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, the fit from the orthogonal nonlinear model is plotted as a red line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>segments</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, segments connecting <code class="reqn">(x_i, y_i)</code> and <code class="reqn">(x_{0i}, y_{0i})</code> are displayed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other parameters to <code>plot</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plot of the <code>onls</code> model.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Andrej-Nikolai Spiess
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Quadratic model with 10% added noise.
+## Omitting the "nls" curve,
+## display orthogonal segments.
+set.seed(123)
+x &lt;- 1:20
+y &lt;- 10 + 3*x^2
+y &lt;- y + rnorm(20, 0, 50)
+DAT &lt;- data.frame(x, y)
+mod &lt;- onls(y ~ a + b * x^2, data = DAT, start = list(a = 10, b = 3), extend = c(0.2, 0))
+plot(mod, fitted.nls = FALSE)
+
+## Due to different scaling, 
+## orthogonality of fit is not evident.
+## We need to have equal x/y-scaling for that,
+## using asp = 1!
+plot(mod, fitted.nls = FALSE, xlim = c(0, 10),
+     ylim = c(0, 200), asp = 1)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>countingpatterns</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Empirical Ordinal Pattern Distribution
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the empirical ordinal pattern distribution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">countingpatterns(tsx,h=2,block=FALSE,first=TRUE,tiesmethod=c("random","first"),
+generalized=FALSE)
+
+## S3 method for class 'patterncounts'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tsx</code></td>
+<td>
+<p>numeric vector representing the univariate time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>numeric value determining the length of the ordinal pattern; ordinal patterns are of length h+1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>block</code></td>
+<td>
+<p>logical value determining whether patterns are calculated on disjoint blocks or overlapping blocks.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first</code></td>
+<td>
+<p>logical value indicating which observartions are dropped if <code>block == TRUE</code> and the time series length is no multiple of <code>h+1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tiesmethod</code></td>
+<td>
+<p>character string specifying how ties, that is equal values, are treated if <code>generalized == FALSE</code>, see ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>generalized</code></td>
+<td>
+<p>logical value determining whether classical ordinal patterns or their generalization with regard to ties are considered, see ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>object of class <code>"patterncounts"</code>, which is the output of <code>countingpatterns</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to the internal plotting function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Ordinal patterns, which are defined as sequences of ranks of <code>h+1</code> subsequent observations, are a useful tool to describe the dependence within or between time series. That sequences of subseqent observations can either move one observation per time or a whole block of <code>h+1</code> observations. The former is preferred since it uses more information. If one chooses the later, one has to decide whether the first or the last observations are removed in case that the time series length is no multiple of <code>h+1</code>. With regard to equal values within a window of consecutive observations (ties), the argument <code>tiesmethod</code> determines the approach for computing the respective ordinal patterns. The “<code>first</code>” method is in favor of increasing patterns, whereas the default “<code>random</code>” puts the equal values in random order.
+</p>
+<p>Beside the classical ordinal patterns, one can also consider the generalized version proposed by Schnurr and Fischer (2022), where the ordinal information of stagnation in the case of ties is also included by taking into account a larger set of patterns.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>"patterncounts"</code> containing the following values:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>patterncounts</code></td>
+<td>
+<p>absolute frequencies of ordinal patterns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allpatterns</code></td>
+<td>
+<p>list of all ordinal patterns considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>number of increments defining one pattern; ordinal patterns are of length h+1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>generalized</code></td>
+<td>
+<p>logical value determining whether classical ordinal patterns or their generalization with regard to ties are considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tiesmethod</code></td>
+<td>
+<p>character string specifying how ties are treated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>block</code></td>
+<td>
+<p>logical value determining whether patterns are calculated on disjoint blocks or overlapping blocks.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Angelika Silbernagel
+</p>
+
+
+<h3>References</h3>
+
+<p>Schnurr, A. (2014): An ordinal pattern approach to detect and to model leverage effects and dependence structures between financial time series, <em>Statistical Papers</em>, vol. 55, 919–931.
+</p>
+<p>Schnurr, A., Dehling, H. (2017): Testing for Structural Breaks via Ordinal Pattern Dependence, <em>Journal of the American Statistical Association</em>, vol. 112, 706–720.
+</p>
+<p>Schnurr, A., Fischer, S. (2022): Generalized ordinal patterns allowing for ties and their application in hydrology, <em>Computational Statistics &amp; Data Analysis</em>, vol 171, 107472.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1066)
+countingpatterns(rnorm(100))
+countingpatterns(rpois(100,1), generalized=TRUE)
+</code></pre>
+
+
+</div>

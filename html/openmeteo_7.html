@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>river_discharge</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve river discharge data from the Open-Meteo API</h2>
+
+<h3>Description</h3>
+
+<p><code>river_discharge()</code> calls the Open-Meteo Global Flood API to obtain simulated
+river discharge from the nearest river. Data obtained from the Global Flood
+Awareness System (GloFAS). Forecasts and historical data is available.
+</p>
+<p>Refer to the API documentation at: <a href="https://open-meteo.com/en/docs/flood-api">https://open-meteo.com/en/docs/flood-api</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">river_discharge(location, start = NULL, end = NULL, daily = NULL, model = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p>Required. The location for which data will be retrieved.
+Supplied as either a <code>c(latitude,longitude)</code> WGS84 coordinate pair or a
+place name string (with co-ordinates obtained via <code>geocode()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start, end</code></td>
+<td>
+<p>Start and end dates in ISO 8601 (e.g. "2020-12-31"). If no
+dates are supplied, data for the next 3 months will be provided by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>daily</code></td>
+<td>
+<p>Required. A weather variable accepted by the API, or list
+thereof. See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>Supply to specify a model for forecasted values (defaults to
+latest GloFAS model).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>You will need to specify at least one river discharge variable to retrieve
+data for. These variables are sampled or aggregated at daily intervals, and
+can be supplied as a list to request multiple variables over the same time
+period.
+</p>
+<p>Example daily forecast variables include:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <strong>Variable</strong> </td>
+<td style="text-align: left;"> <strong>Description</strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>river_discharge</code> </td>
+<td style="text-align: left;"> Daily river discharge rate in m³/s </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>river_discharge_median</code> </td>
+<td style="text-align: left;"> Median over ensemble members (forecasts only) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>river_discharge_max</code> </td>
+<td style="text-align: left;"> Maximum over ensemble members (forecasts only) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>Full documentation for the forecast API is available at:
+<a href="https://open-meteo.com/en/docs/flood-api">https://open-meteo.com/en/docs/flood-api</a>
+</p>
+
+
+<h3>Value</h3>
+
+<p>Requested river discharge data (m³/s) for the given location and time
+period, as a tidy tibble.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# obtain historical flood data for Brisbane
+river_discharge("Brisbane",
+  "2022-01-01", "2022-02-01",
+  daily = "river_discharge"
+)
+
+</code></pre>
+
+
+</div>

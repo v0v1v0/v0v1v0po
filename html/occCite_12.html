@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>occCiteMap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generating a map of downloaded points</h2>
+
+<h3>Description</h3>
+
+<p>Makes maps for each individual species in an
+<code>occCiteData</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">occCiteMap(
+  occCiteData,
+  species_map = "all",
+  species_colors = NULL,
+  ds_map = c("GBIF", "BIEN"),
+  map_limit = 1000,
+  awesomeMarkers = TRUE,
+  cluster = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>occCiteData</code></td>
+<td>
+<p>An object of class <code>occCiteData</code> to map</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>species_map</code></td>
+<td>
+<p>Character; either the default "all" to map all species
+in <code>occCiteData</code>, or a subset of these specified as a character
+or character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>species_colors</code></td>
+<td>
+<p>Character; the default NULL will choose random
+colors from those available (see Details), or those specified by the
+user as a character or character vector (the number of colors must match
+the number of species mapped).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ds_map</code></td>
+<td>
+<p>Character; specifies which data service records will be
+mapped, with the default being GBIF, BIEN, and GBIF_BIEN (records with
+the same coordinates in both databases).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map_limit</code></td>
+<td>
+<p>Numeric; the number of points to map per species, set
+at a default of 1000 randomly selected records; users can specify a
+higher number, but be aware that leaflet can lag or crash when too many
+points are plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>awesomeMarkers</code></td>
+<td>
+<p>Logical; if 'TRUE' (default), mapped points will
+be 'awesomeMarkers' attributed with an icon for a globe for GBIF, a leaf
+for BIEN, or a database if records from both databases have the same
+coordinates; if 'FALSE', mapped points will be leaflet 'circleMarkers'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>Logical; if 'TRUE' (default is 'FALSE') turns on marker
+clustering, which does not preserve color differences between species</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When mapping using 'awesomeMarkers' (default), the parameter
+species_colors must match those in a specified color library, currently:
+c("red", "lightred", "orange", "beige", "green", "lightgreen", "blue",
+"lightblue", "purple", "pink", "cadetblue", "white", "gray", "lightgray").
+When 'awesomeMarkers' is 'FALSE' and species_colors are not specified,
+random colors from the 'RColorBrewer' Set1 palette are used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A leaflet map
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(myOccCiteObject)
+occCiteMap(myOccCiteObject, cluster = FALSE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

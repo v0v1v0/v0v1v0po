@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>multilinearReferenceTissueModel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The Multilinear Reference Tissue Model</h2>
+
+<h3>Description</h3>
+
+<p>The multilinear reference tissue model (MRTM) estimates the binding
+potential from an observed time activity curve without the need for arterial
+sampling.  Instead, a second time activity curve must be provided from a
+suitable reference region where there is negligible binding.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">multilinearReferenceTissueModel(
+  tac,
+  ref,
+  time,
+  tstar,
+  MRTM2 = TRUE,
+  k2prime = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tac</code></td>
+<td>
+<p>a vector corresponding to the time activity curve from the tissue
+(in Bq/mL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>a vector corresponding to the time activity curve from the
+reference region (in Bq/mL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>a vector of average frame times (in minutes).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tstar</code></td>
+<td>
+<p>the time (in minutes) where the linear relationship between the
+response and covariates may be assumed to be true.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MRTM2</code></td>
+<td>
+<p>a logical value that selects the three-parameter model (MRTM)
+or the two-parameter model (MRTM2), where k2prime is fixed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2prime</code></td>
+<td>
+<p>the value of k2prime that has been fixed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See the references.
+</p>
+<p>The numeric integration required to construct the design matrix is performed
+by interpolating the time activity curves, both for the tissue and reference
+region, to one-second resolution and then performing the <code>cumsum</code>
+operation on them.
+</p>
+<p>Given the nonlinear relationship between binding potential and the
+regression parameters, the <code>deltamethod</code> is used to approximate its
+standard error.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>BP</code></td>
+<td>
+<p>Binding potential</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BP.error</code></td>
+<td>
+<p>Approximate standard
+error of the binding potential</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R1</code></td>
+<td>
+<p>Ratio of the volumes of
+distrubution for the tissue and reference region (assumes a one-tissue model
+is valid)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R1.error</code></td>
+<td>
+<p>Approximate standard error for the ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2</code></td>
+<td>
+<p>Clearance rate constant from the tissue to plasma (assumes a
+one-tissue model is valid)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2.error</code></td>
+<td>
+<p>Approximate standard error for
+k2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Design matrix used in the linear regression</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>Regression coefficients</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Ichise, M., Ballinger, J.R., Golan, H., Vines, D., Luong, A.,
+Tsai, S. and Kung, H.F. (1996) Noninvasive quantification of dopamine D2
+receptors with iodine-123-IBF SPECT, <em>Journal of Nuclear Medicine</em>,
+<b>37</b>, 513-520.
+</p>
+<p>Ichise, M., Liow, J.-S., Lu, J.-Q., Takano, A., Model, K., Toyama, H.,
+Suhara, T., Suzuki, K., Innis, R.B., Carson, R.E. (2003) Linearized
+reference tissue parametric imaging methods: Application to [11C]DASB
+positron emission tomography studies of the serotonin transporter in human
+brain, <em>Journal of Cerebral Blood Flow &amp; Metabolism</em>, <b>23</b>,
+1096-1112.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>cumsum</code>, <code>deltamethod</code>
+</p>
+
+
+</div>

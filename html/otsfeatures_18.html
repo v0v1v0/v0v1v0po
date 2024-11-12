@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordinal_dispersion_2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the estimated dispersion of an ordinal time series according to
+the approach based on the diversity coefficient (DIVC)</h2>
+
+<h3>Description</h3>
+
+<p><code>ordinal_dispersion_2</code> computes the estimated dispersion
+of an ordinal time series according to the approach based on the
+diversity coefficient
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordinal_dispersion_2(series, states, distance = "Block", normalize = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>series</code></td>
+<td>
+<p>An OTS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>states</code></td>
+<td>
+<p>A numerical vector containing the corresponding
+states.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+<p>A function defining the underlying distance between
+states. The Hamming, block and Euclidean distances are already
+implemented by means of the arguments "Hamming", "Block" (default)
+and "Euclidean". Otherwise, a function taking as input two states must
+be provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>Logical. If <code>normalize = FALSE</code> (default), the value of the estimated dispersion is returned. Otherwise, the function
+returns the normalized estimated dispersion.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given an OTS of length <code class="reqn">T</code> with range <code class="reqn">\mathcal{S}=\{s_0, s_1, s_2, \ldots, s_n\}</code> (<code class="reqn">s_0 &lt; s_1 &lt; s_2 &lt; \ldots &lt; s_n</code>),
+<code class="reqn">\overline{X}_t=\{\overline{X}_1,\ldots, \overline{X}_T\}</code>, the function computes the DIVC
+estimated dispersion given by <code class="reqn">\widehat{disp}_{d}=\frac{T}{T-1}\sum_{i,j=0}^nd\big(s_i, s_j\big)\widehat{p}_i\widehat{p}_j</code>,
+where <code class="reqn">d(\cdot, \cdot)</code> is a distance between ordinal states and <code class="reqn">\widehat{p}_k</code> is the
+standard estimate of the marginal probability for state <code class="reqn">s_k</code>.
+If <code>normalize = TRUE</code>, and <code>distance = "Block"</code> or <code>distance = "Euclidean"</code>, then the normalized versions are computed, that is,
+the corresponding estimates are divided by the factors <code class="reqn">2/m</code> or <code class="reqn">2/m^2</code>, respectively.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The estimated dispersion according to the approach based on the
+diversity coefficient.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Ángel López-Oriona, José A. Vilar
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Weiß CH (2019).
+“Distance-based analysis of ordinal data and ordinal time series.”
+<em>Journal of the American Statistical Association</em>.
+</p>
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">estimated_dispersion &lt;- ordinal_dispersion_2(series = AustrianWages$data[[100]],
+states = 0 : 5) # Computing the DIVC dispersion estimate
+# for one series in dataset AustrianWages using the block distance
+</code></pre>
+
+
+</div>

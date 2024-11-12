@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Orthogonal Signal Deconvolution</h2>
+
+<h3>Description</h3>
+
+<p>Wrapper to use OSD, or OSD along with ICA (ICA-OSD), MCR (MCR-OSD), and also ICR.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osd(D, k, y.profile, 
+res.method = c("ica.osd", "osd", "icr", "mcr"), 
+comp.coef = 2, noise.thr = 0.01)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>D</code></td>
+<td>
+<p>data matrix, where rows are the retention time and columns are the m/z.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>number of components in the model, i.e., the number of compounds to be extracted from data. (Only when methods ICA-OSD, MCR or ICR are used.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y.profile</code></td>
+<td>
+<p>the vector containing the estimated elution profile of the compound which spectrum wants to be deconvolved. (Only when method OSD is used.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res.method</code></td>
+<td>
+<p>the method to be used, including "ica.osd","mcr.osd","icr","mcr". See details for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comp.coef</code></td>
+<td>
+<p>the non-linear factor of compression. See details for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noise.thr</code></td>
+<td>
+<p>this value can be set from 0 to 1. Data in D under this relative threshold is set to zero to reduce the computational cost. Default is 0.01.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The methods are described in [1] and [2] (See references below). OSD is an improved method for spectra extraction from chromatographic data tested in GC-MS and GCxGC samples. 
+</p>
+<p>For tradicional multivariate curve resolution select "mcr" algorithm. Indepenent component regression is also implemented, and can be selected by choosing "icr" method. The OSD implementations using ICA can be used by "ica.osd". Also, OSD can be used alone, for retrieving a purest spectrum if the estimated elution profile of the compound (which spectrum is to be deconvolved) is given. 
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>osd</code> returns an S3 object.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>data </code></td>
+<td>
+<p>the original data matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C </code></td>
+<td>
+<p>the resolved profile or concentration matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S </code></td>
+<td>
+<p>the resolved spectra matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k </code></td>
+<td>
+<p>the number of components used in the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y.profile </code></td>
+<td>
+<p>the estimated elution profile for OSD.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res.method </code></td>
+<td>
+<p>the method used for resolution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comp.coef </code></td>
+<td>
+<p>the non-linear compression coeficient selected.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noise.thr </code></td>
+<td>
+<p>the noise threshold selected.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Xavier Domingo-Almenara. xavier.domingo@urv.cat
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] Domingo-Almenara X, et al. Compound deconvolution in GC-MS-based metabolomics by blind source separation. Journal of Chromatography A (2015). Vol. 1409: 226-233. DOI: 10.1016/j.chroma.2015.07.044
+</p>
+<p>[2] Domingo-Almenara X, et al. Automated resolution of chromatographic signals by independent component analysis - orthogonal signal deconvolution in comprehensive gas chromatography/mass spectrometry-based metabolomics. Computer Methods and Programs in Biomedicine (2016). DOI: 10.1016/j.cmpb.2016.03.007: 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>osd</code>, <code>plotOSDres</code>, <code>gcms1</code>, <code>gcms2</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+#load GC-MS sample data, containing three different metabolites 
+#appearing in co-elution.
+data(gcms1)
+
+#resolve the situation using ICA-OSD algorithm
+resolution &lt;- osd(D=gcms1, k=3, res.method='ica.osd')
+
+#plot the resolution, the extracted ion chromatogram (m/z) are plotted in 
+#grey whereas the profile matrix appear in color.
+plotOSDres(resolution, type='eic')
+
+#plot each resolved spectra for compound 1 to 3.
+plotOSDres(resolution, type='s',1)
+plotOSDres(resolution, type='s',2)
+plotOSDres(resolution, type='s',3)
+
+
+</code></pre>
+
+
+</div>

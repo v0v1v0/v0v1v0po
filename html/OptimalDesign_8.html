@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Fx_glm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Matrix of candidate regressors for a generalized linear model
+</h2>
+
+<h3>Description</h3>
+
+<p>Creates the matrix of all candidate regressors for a linearization of a generalized linear model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Fx_glm(formula, theta0, glm.model="bin-logit", lower=NULL, upper=NULL,
+       n.levels=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+
+<p>the formula of the linear part of the model. The rules for creating the formula are standard for R but: 1) the formula must not contain the dependent variable (it is one-sided); 2) the <code>d</code> factors (variables) must be labeled <code>x1,x2,x3,</code>...
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta0</code></td>
+<td>
+
+<p>the <code>d</code>-dimensional vector of values of the unknown parameter in which to linearize the model
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>glm.model</code></td>
+<td>
+
+<p>the type of the generalized linear model. Available models are <code>"bin-logit"</code>, <code>"bin-probit"</code>,  <code>"bin-cloglog"</code>, and <code>Poisson-log</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+
+<p>the <code>d</code>-dimensional vector of the smallest values of factors. If <code>lower=NULL</code>, the program sets <code>lower &lt;- rep(-1, d)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+
+<p>the <code>d</code>-dimensional vector of the largest values of factors. If <code>upper=NULL</code>, the program sets <code>upper &lt;- rep(1, d)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.levels</code></td>
+<td>
+
+<p>the <code>d</code>-dimensional vector of the numbers of levels of each factor. If <code>n.levels=NULL</code>, the program sets <code>n.levels &lt;- rep(2, d)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For mathematical details, see the referenced paper.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code>n</code> times <code>m</code> matrix of all candidate regressors of a generalized linear regression model linearized in <code>theta0</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Atkinson AC, Woods DC (2015). Designs for generalized linear models. Handbook of Design and Analysis of Experiments, 471-514.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Fx_cube, Fx_simplex, Fx_blocks, Fx_survival, Fx_dose</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The logistic model with second-order predictors x1, x2 in [-1,1]
+# discretized into 21 points and theta0=c(1, 2, 2, -1, -1.5, 1.5)
+
+form.quad &lt;- ~ x1 + x2 + I(x1*x2) + I(x1^2) + I(x2^2)
+Fx &lt;- Fx_glm(form.quad, c(1, 2, 2, -1, -1.5, 1.5),
+             glm.model="bin-logit", n.levels=c(21,21))
+
+# The locally D-optimal approximate design
+w &lt;- od_REX(Fx)$w.best
+Fx.lin &lt;- Fx_cube(form.quad, n.levels=c(21,21)) # Just for the plot
+od_plot(Fx, w, Fx.lin[, 2:3], dd.size=2)
+
+## Not run: 
+#The GLM with Poisson link and 2 linear predictors x1,x2 in [-1,1]
+# discretized into 21 points and theta0=c(0,2,2)
+Fx &lt;- Fx_glm(~x1+x2, c(0, 2, 2), glm.model="Poisson-log", n.levels=c(21, 21))
+
+# The locally D-optimal exact design of size 50 without replications
+w &lt;- od_KL(Fx, 50, bin=TRUE, t.max=5)$w.best
+Fx.lin &lt;- Fx_cube(~x1+x2, n.levels=c(21, 21))
+od_plot(Fx, w, Fx.lin[, 2:3], w.lim=Inf)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

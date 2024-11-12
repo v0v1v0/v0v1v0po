@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordregr_lpost</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Log-posterior function for a proportional odds model</h2>
+
+<h3>Description</h3>
+
+<p>Log-posterior function for a proportional odds model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordregr_lpost(
+  y,
+  nc,
+  Xcal,
+  theta,
+  descending = FALSE,
+  prior = list(mean = NULL, Prec = NULL),
+  gradient = TRUE,
+  Hessian = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Vector containing the ordinal response (coded using integers in 1:nc).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>(optional) Maximum value of <code>y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xcal</code></td>
+<td>
+<p>Design matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>Vector c(alpha,beta) with intercepts &lt;alpha&gt; and regression parameters &lt;beta&gt;.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>descending</code></td>
+<td>
+<p>Logical indicating if the odds of the response taking a value in the upper scale should be preferred over values in the lower scale.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>(optional) List given the mean and Prec(ision) of the regression parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gradient</code></td>
+<td>
+<p>Logical indicating if the gradient of the log-posterior should be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hessian</code></td>
+<td>
+<p>Logical indicating if the Hessian of the log-posterior should be computed.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The log-posterior with the following attributes:
+</p>
+
+<ul>
+<li>
+<p><code>Salpha</code> : <code style="white-space: pre;">⁠ ⁠</code>gradient wrt intercepts 'alpha'.
+</p>
+</li>
+<li>
+<p><code>Sbeta</code> : <code style="white-space: pre;">⁠ ⁠</code>gradient wrt regression parameters 'beta'.
+</p>
+</li>
+<li>
+<p><code>grad</code> : <code style="white-space: pre;">⁠ ⁠</code>gradient wrt  c(alpha,beta).
+</p>
+</li>
+<li>
+<p><code>Halpha</code> : <code style="white-space: pre;">⁠ ⁠</code>Hessian wrt intercepts 'alpha'.
+</p>
+</li>
+<li>
+<p><code>Hbeta</code> : <code style="white-space: pre;">⁠ ⁠</code>Hessian wrt regression parameters 'beta'.
+</p>
+</li>
+<li>
+<p><code>Hba</code> : <code style="white-space: pre;">⁠ ⁠</code>cross-derivatives (Hessian) submatrix wrt 'alpha' &amp; 'beta'.
+</p>
+</li>
+<li>
+<p><code>Hessian</code> : <code style="white-space: pre;">⁠ ⁠</code>Hessian wrt c(alpha,beta).
+</p>
+</li>
+<li>
+<p><code>dtheta</code> : <code style="white-space: pre;">⁠ ⁠</code>step in a Newton-Raphson iteration: solve(-Hessian,grad).
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Lambert, P. and Gressani, 0. (2023) Penalty parameter selection and asymmetry corrections
+to Laplace approximations in Bayesian P-splines models. Statistical Modelling. &lt;doi:10.1177/1471082X231181173&gt;. Preprint: &lt;arXiv:2210.01668&gt;.
+</p>
+
+
+</div>

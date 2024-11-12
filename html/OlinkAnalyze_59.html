@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_pathway_heatmap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Creates a heatmap of selected pathways and proteins</h2>
+
+<h3>Description</h3>
+
+<p>Creates a heatmap of proteins related to pathways using enrichment results from olink_pathway_enrichment.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_pathway_heatmap(
+  enrich_results,
+  test_results,
+  method = "GSEA",
+  keyword = NULL,
+  number_of_terms = 20
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>enrich_results</code></td>
+<td>
+<p>data frame of enrichment results from olink_pathway_enrichment()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test_results</code></td>
+<td>
+<p>filtered results from statistical test with Assay, OlinkID, and estimate columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>method used in olink_pathway_enrichment ("GSEA" (default) or "ORA")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keyword</code></td>
+<td>
+<p>(optional) keyword to filter enrichment results on, if not specified, displays top terms</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>number_of_terms</code></td>
+<td>
+<p>number of terms to display, default is 20</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A heatmap as a ggplot object
+</p>
+
+
+<h3>See Also</h3>
+
+
+<ul>
+<li>
+<p><code>olink_pathway_enrichment</code> for generating enrichment results
+</p>
+</li>
+<li>
+<p><code>olink_pathway_visualization</code> for generating a bar graph of results
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+# Run t-test results (see olink_ttest documentation)
+npx_df &lt;- npx_data1 %&gt;% filter(!grepl('control',SampleID, ignore.case = TRUE))
+ttest_results &lt;- olink_ttest(df=npx_df,
+                             variable = 'Treatment',
+                            alternative = 'two.sided')
+
+try({ # This expression might fail if dependencies are not installed
+#  Run olink_pathway_enrichment (see documentation)
+gsea_results &lt;- olink_pathway_enrichment(data = npx_data1, test_results = ttest_results)
+ora_results &lt;- olink_pathway_enrichment(data = npx_data1,
+                                        test_results = ttest_results, method = "ORA")
+olink_pathway_heatmap(enrich_results = gsea_results, test_results = ttest_results)
+olink_pathway_heatmap(enrich_results = ora_results, test_results = ttest_results,
+                      method = "ORA", keyword = "cell")
+})
+
+
+
+
+</code></pre>
+
+
+</div>

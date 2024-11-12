@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>writeComment</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>write a cell comment</h2>
+
+<h3>Description</h3>
+
+<p>Write a Comment object to a worksheet
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">writeComment(wb, sheet, col, row, comment, xy = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A vector of names or indices of worksheets</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Column a column number of letter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row</code></td>
+<td>
+<p>A row number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comment</code></td>
+<td>
+<p>A Comment object. See <code>createComment()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xy</code></td>
+<td>
+<p>An alternative to specifying <code>col</code> and
+<code>row</code> individually.  A vector of the form
+<code>c(col, row)</code>.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>createComment()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- createWorkbook()
+addWorksheet(wb, "Sheet 1")
+
+c1 &lt;- createComment(comment = "this is comment")
+writeComment(wb, 1, col = "B", row = 10, comment = c1)
+
+s1 &lt;- createStyle(fontSize = 12, fontColour = "red", textDecoration = c("BOLD"))
+s2 &lt;- createStyle(fontSize = 9, fontColour = "black")
+
+c2 &lt;- createComment(comment = c("This Part Bold red\n\n", "This part black"), style = c(s1, s2))
+c2
+
+writeComment(wb, 1, col = 6, row = 3, comment = c2)
+## Not run: 
+saveWorkbook(wb, file = "writeCommentExample.xlsx", overwrite = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

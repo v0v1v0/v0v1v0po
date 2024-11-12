@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pairmatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal 1:1 and 1:k matching</h2>
+
+<h3>Description</h3>
+
+<p>Given a treatment group, a larger control reservoir, and a method for creating
+discrepancies between each treatment and control unit (or optionally an
+already created such discrepancy matrix), finds a pairing of treatment units
+to controls that minimizes the sum of discrepancies.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pairmatch(x, controls = 1, data = NULL, remove.unmatchables = FALSE, ...)
+
+pair(x, controls = 1, data = NULL, remove.unmatchables = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Any valid input to <code>match_on</code>. If <code>x</code> is a numeric vector,
+there must also be passed a vector <code>z</code> indicating grouping. Both vectors
+must be named.
+</p>
+<p>Alternatively, a precomputed distance may be entered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>controls</code></td>
+<td>
+<p>The number of controls to be matched to each treatment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Optional data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove.unmatchables</code></td>
+<td>
+<p>Should treatment group members for which there are
+no eligible controls be removed prior to matching?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to pass to <code>match_on</code>
+(e.g. <code>within</code>)) or to <code>fullmatch</code> (e.g. <code>tol</code>).
+It is an error to pass <code>min.controls</code>,
+<code>max.controls</code>, <code>mean.controls</code> or <code>omit.fraction</code> as
+<code>pairmatch</code> must set these values.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a wrapper to <code>fullmatch</code>; see its documentation for more
+information, especially on additional arguments to pass, additional discussion
+of valid input for parameter <code>x</code>, and feasibility recovery.
+</p>
+<p>If <code>remove.unmatchables</code> is <code>FALSE</code>, then if there are unmatchable
+treated units then the matching as a whole will fail and no units will be
+matched.  If <code>TRUE</code>, then this unit will be removed and the function will
+attempt to match each of the other treatment units.  As of version 0.9-8,
+if there are fewer matchable treated units than matchable controls then
+<code>pairmatch</code> will attempt to place each into a matched pair each of the
+matchable controls and a strict subset of the matchable treated units.
+(Previously matching would have failed for subclasses of this structure.)
+</p>
+<p>Matching can still fail,
+even with <code>remove.unmatchables</code> set to <code>TRUE</code>,
+if there is too much competition for certain controls; if you
+find yourself in that situation you should consider full matching, which
+necessarily finds a match for everyone with an eligible match somewhere.
+</p>
+<p>The units of the <code>optmatch</code> object returned correspond to members of the
+treatment and control groups in reference to which the matching problem was
+posed, and are named accordingly; the names are taken from the row and column
+names of <code>distance</code> (with possible additions from the optional
+<code>data</code> argument).  Each element of the vector is the concatenation of:
+(i) a character abbreviation of <code>subclass.indices</code>, if that argument was
+given, or the string '<code>m</code>' if it was not; (ii) the string <code>.</code>; and
+(iii) a non-negative integer. Unmatched units have <code>NA</code> entries.
+Secondarily, <code>fullmatch</code> returns various data about the matching process
+and its result, stored as attributes of the named vector which is its primary
+output.  In particular, the <code>exceedances</code> attribute gives upper bounds,
+not necessarily sharp, for the amount by which the sum of distances between
+matched units in the result of <code>fullmatch</code> exceeds the least possible sum
+of distances between matched units in a feasible solution to the matching
+problem given to <code>fullmatch</code>.  (Such a bound is also printed by
+<code>print.optmatch</code> and by <code>summary.optmatch</code>.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>optmatch</code> object (<code>factor</code>) indicating matched groups.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hansen, B.B. and Klopfer, S.O. (2006), ‘Optimal full matching
+and related designs via network flows’, <em>Journal of Computational
+and Graphical Statistics</em>, <b>15</b>, 609–627.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>matched</code>, <code>caliper</code>, <code>fullmatch</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(nuclearplants)
+
+### Pair matching on a Mahalanobis distance
+( pm1 &lt;- pairmatch(pr ~ t1 + t2, data = nuclearplants) )
+summary(pm1)
+
+### Pair matching within a propensity score caliper.
+ppty &lt;- glm(pr ~ . - (pr + cost), family = binomial(), data = nuclearplants)
+### For more complicated models, create a distance matrix and pass it to fullmatch.
+mhd &lt;- match_on(pr ~ t1 + t2, data = nuclearplants) + caliper(match_on(ppty), 2)
+( pm2 &lt;- pairmatch(mhd, data = nuclearplants) )
+summary(pm2)
+
+### Propensity balance assessment. Requires RItools package.
+if(require(RItools)) summary(pm2, ppty)
+
+### 1:2 matched triples
+( tm &lt;- pairmatch(pr ~ t1 + t2, controls = 2, data = nuclearplants) )
+summary(tm)
+
+### Creating a data frame with the matched sets attached.
+### match_on(), caliper() and the like cooperate with pairmatch()
+### to make sure observations are in the proper order:
+all.equal(names(tm), row.names(nuclearplants))
+### So our data frame including the matched sets is just
+cbind(nuclearplants, matches=tm)
+
+### In contrast, if your matching distance is an ordinary matrix
+### (as earlier versions of optmatch required), you'll
+### have to align it by observation name with your data set.
+cbind(nuclearplants, matches = tm[row.names(nuclearplants)])
+
+
+### Match in subgroups only. There are a few ways to specify this.
+m1 &lt;- pairmatch(pr ~ t1 + t2, data=nuclearplants,
+                within=exactMatch(pr ~ pt, data=nuclearplants))
+m2 &lt;- pairmatch(pr ~ t1 + t2 + strata(pt), data=nuclearplants)
+### Matching on propensity scores within matching in subgroups only:
+m3 &lt;- pairmatch(glm(pr ~ t1 + t2, data=nuclearplants, family=binomial),
+                data=nuclearplants,
+                within=exactMatch(pr ~ pt, data=nuclearplants))
+m4 &lt;- pairmatch(glm(pr ~ t1 + t2 + pt, data=nuclearplants,
+                    family=binomial),
+                data=nuclearplants,
+                within=exactMatch(pr ~ pt, data=nuclearplants))
+m5 &lt;- pairmatch(glm(pr ~ t1 + t2 + strata(pt), data=nuclearplants,
+                    family=binomial), data=nuclearplants)
+# Including `strata(foo)` inside a glm uses `foo` in the model as
+# well, so here m4 and m5 are equivalent. m3 differs in that it does
+# not include `pt` in the glm.
+</code></pre>
+
+
+</div>

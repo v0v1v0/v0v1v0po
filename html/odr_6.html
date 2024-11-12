@@ -1,0 +1,297 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od.2.221</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal sample allocation calculation for two-level CRTs probing
+mediation effects with cluster-level mediators</h2>
+
+<h3>Description</h3>
+
+<p>The optimal design of two-level
+cluster randomized trials (CRTs) probing mediation effects with
+cluster-level mediators is to to identify
+the optimal sample allocation that requires the minimum budget
+to achieve certain power level.
+The optimal design parameters include
+the level-1 sample size per level-2 unit (<code>n</code>)
+and the proportion of level-2 clusters/groups to be assigned to
+treatment (<code>p</code>).
+This function solves the optimal <code>n</code> and/or <code>p</code>
+with and without a constraint.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od.2.221(
+  a = NULL,
+  b = NULL,
+  n = NULL,
+  p = NULL,
+  icc = NULL,
+  c1 = NULL,
+  c1t = NULL,
+  c2 = NULL,
+  c2t = NULL,
+  m = NULL,
+  r2m = 0,
+  r.yx = 0,
+  r.mw = 0,
+  r.yw = 0,
+  q.a = 0,
+  q.b = 0,
+  test = "joint",
+  tol = 1e-11,
+  power = 0.8,
+  d.p = c(0.1, 0.5),
+  d.n = c(2, 100),
+  sig.level = 0.05,
+  two.tailed = TRUE,
+  Jlim = c(max(q.a, q.b) + 4, 1e+06),
+  verbose = TRUE,
+  nrange = c(1.5, 10000),
+  max.value = Inf,
+  max.iter = 300,
+  e = 1e-10,
+  n.of.ants = 10,
+  n.of.archive = 50,
+  q = 1e-04,
+  xi = 0.5
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>The treatment effect on the mediator.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>The within treatment correlation between the outcome and
+the mediator at the cluster level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The level-1 sample size per level-2 unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The proportion of level-2 clusters/units to be assigned to treatment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icc</code></td>
+<td>
+<p>The unconditional intraclass correlation coefficient (ICC) in population or in
+each treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1</code></td>
+<td>
+<p>The cost of sampling one level-1 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1t</code></td>
+<td>
+<p>The cost of sampling one level-1 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c2</code></td>
+<td>
+<p>The cost of sampling one level-2 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c2t</code></td>
+<td>
+<p>The cost of sampling one level-2 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Total budget.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r2m</code></td>
+<td>
+<p>The proportion of mediator variance explained by covariates in
+the mediator model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.yx</code></td>
+<td>
+<p>The correlation between the outcome and the covariate at the
+individual level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.mw</code></td>
+<td>
+<p>The correlation between the mediator and the covariate at the
+cluster level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.yw</code></td>
+<td>
+<p>The correlation between the outcome and the covariate at the
+cluster level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.a</code></td>
+<td>
+<p>The number of covariates in the mediator model
+(except the treatment indicator).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.b</code></td>
+<td>
+<p>The  number of covariates in the outcome model
+at the cluster level
+(except the treatment indicator and the mediator).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test</code></td>
+<td>
+<p>The type of test will be used to detect mediation effects.
+Default is the joint significance test (i.e., test = "joint").
+The other choice is the Sobel test
+by specifying the argument as test = "sobel".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>convergence tolerance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Statistical power specified. The default value is .80.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d.p</code></td>
+<td>
+<p>The initial sampling domains for p. Default is c(0.1, 0.5).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d.n</code></td>
+<td>
+<p>The initial sampling domain for n. Default is c(2, 100).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig.level</code></td>
+<td>
+<p>Significance level or type I error rate, default value is 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>two.tailed</code></td>
+<td>
+<p>Two tailed test, the default value is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Jlim</code></td>
+<td>
+<p>The range for J to solve for a numerical solution.
+Default is c(max(q.a, q.b)+4, 1e6).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Print out evaluation process if TRUE, default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrange</code></td>
+<td>
+<p>The range of the individual-level sample size per cluster
+that used to exclude unreasonable values. Default value is c(1.5, 10000).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.value</code></td>
+<td>
+<p>Maximal value of optimization when used as
+the stopping criterion. Default is -Inf.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iter</code></td>
+<td>
+<p>Maximal number of function evaluations when used as
+the stopping criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e</code></td>
+<td>
+<p>Maximum error value used when solution quality used as
+the stopping criterion, default is 1e-10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.of.ants</code></td>
+<td>
+<p>Number of ants used in each iteration after the initialization
+of power analysis for calculating required budget, default value is 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.of.archive</code></td>
+<td>
+<p>Size of the solution archive, default is 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>Locality of the search (0,1), default is 0.0001.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xi</code></td>
+<td>
+<p>Convergence pressure (0, Inf), suggested: (0, 1), default is 0.5.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Unconstrained or constrained optimal sample allocation
+(<code>n</code> and <code>p</code>).
+The function also returns the variance of a mediation effect
+or statistical power,
+function name, design type,
+and parameters used in the calculation.
+</p>
+
+
+</div>

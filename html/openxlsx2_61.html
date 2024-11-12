@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sheet_visibility-wb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get/set worksheet visible state in a workbook</h2>
+
+<h3>Description</h3>
+
+<p>Get and set worksheet visible state. This allows to hide worksheets from the workbook.
+The visibility of a worksheet can either be  "visible", "hidden", or "veryHidden".
+You can set this when creating a worksheet with <code>wb_add_worksheet(visible = FALSE)</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_get_sheet_visibility(wb)
+
+wb_set_sheet_visibility(wb, sheet = current_sheet(), value)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A <code>wbWorkbook</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>Worksheet identifier</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>a logical/character vector the same length as sheet,
+if providing a character vector, you can provide any of "hidden", "visible", or "veryHidden"</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+
+<ul>
+<li> <p><code>wb_set_sheet_visibility</code>: The Workbook object, invisibly.
+</p>
+</li>
+<li> <p><code>wb_get_sheet_visibility()</code>: A character vector of the worksheet visibility value
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+wb &lt;- wb_workbook()
+wb$add_worksheet(sheet = "S1", visible = FALSE)
+wb$add_worksheet(sheet = "S2", visible = TRUE)
+wb$add_worksheet(sheet = "S3", visible = FALSE)
+
+wb$get_sheet_visibility()
+wb$set_sheet_visibility(1, TRUE)         ## show sheet 1
+wb$set_sheet_visibility(2, FALSE)        ## hide sheet 2
+wb$set_sheet_visibility(3, "hidden")     ## hide sheet 3
+wb$set_sheet_visibility(3, "veryHidden") ## hide sheet 3 from UI
+</code></pre>
+
+
+</div>

@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rls_summary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print summary of an onlineforecast model fitted with RLS</h2>
+
+<h3>Description</h3>
+
+<p>The summary of an onlineforecast model fitted with RLS with simple stats providing a simple overview.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rls_summary(object, scoreperiod = NA, scorefun = rmse, printit = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>of class <code>rls_fit</code>, so a fit calculated by <code>rls_fit</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scoreperiod</code></td>
+<td>
+<p>logical (or index). If this scoreperiod is given, then it will be used over the one in the fit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scorefun</code></td>
+<td>
+<p>The score function to be applied on each horizon.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printit</code></td>
+<td>
+<p>Print the result.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The following is printed:
+</p>
+<p>* The model.
+</p>
+<p>* Number of observations included in the scoreperiod.
+</p>
+<p>* RLS coefficients summary statistics for the estimated coefficient time series (since observations are correlated, then usual statistics cannot be applied directly):
+</p>
+<p>- mean: the sample mean of the series.
+</p>
+<p>- sd: sample standard deviation of the series.
+</p>
+<p>- min: minimum of the series.
+</p>
+<p>- max: maximum of the series.
+</p>
+<p>* Scorefunction applied for each horizon, per default the RMSE.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of:
+</p>
+<p>- scorefun.
+</p>
+<p>- scoreval (value of the scorefun for each horizon).
+</p>
+<p>- scoreperiod is the scoreperiod used.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Take data
+D &lt;- subset(Dbuilding, c("2010-12-15", "2011-01-01"))
+D$y &lt;- D$heatload
+D$scoreperiod &lt;- in_range("2010-12-20", D$t)
+# Define a model
+model &lt;- forecastmodel$new()
+model$add_inputs(Ta = "Ta",
+                 mu = "one()")
+model$add_regprm("rls_prm(lambda=0.99)")
+model$kseq &lt;- 1:6
+# Fit it
+fit &lt;- rls_fit(prm=c(lambda=0.99), model, D)
+
+# Print the summary
+summary(fit)
+# We see:
+#   - The model (output, inputs, lambda)
+#   - The Ta coefficient is around -0.12 in average (for all horizons) with a standard dev. of 0.03,
+#     so not varying extremely (between -0.18 and -0.027).
+#   - The intercept mu is around 5.5 and varying very little.
+#   - The RMSE is around 0.9 for all horizons.
+
+# The residuals and coefficient series can be seen by
+plot_ts(fit)
+
+</code></pre>
+
+
+</div>

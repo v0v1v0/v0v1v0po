@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extractHeader</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract Single Field from DICOM Headers</h2>
+
+<h3>Description</h3>
+
+<p>A particular DICOM field is extracted for a collection of DICOM headers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extractHeader(hdrs, string, numeric = TRUE, names = FALSE,
+  inSequence = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>hdrs</code></td>
+<td>
+<p>List object of DICOM headers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>string</code></td>
+<td>
+<p>DICOM field name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numeric</code></td>
+<td>
+<p>Logical; values are converted to numbers when <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>names</code></td>
+<td>
+<p>Logical; file names are kept with elements of the vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inSequence</code></td>
+<td>
+<p>Logical; whether or not to look into SequenceItem
+elements.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The DICOM field is extracted from each DICOM header and placed into a
+vector.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector of values from the requested DICOM field.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Digital Imaging and Communications in Medicine (DICOM)<br><a href="http://medical.nema.org">http://medical.nema.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>readDICOM</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- readDICOMFile(system.file("dcm/Abdo.dcm", package="oro.dicom"))
+seriesDescription &lt;- extractHeader(x$hdr, "SeriesDescription", numeric=FALSE)
+IOP &lt;- extractHeader(x$hdr, "ImageOrientationPatient", numeric=FALSE)
+
+</code></pre>
+
+
+</div>

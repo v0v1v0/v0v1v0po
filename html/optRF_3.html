@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opt_importance</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimise random forest for estimation of variable importance</h2>
+
+<h3>Description</h3>
+
+<p>Optimising random forest for estimating the importance of variables by calculating the variable importance stability with certain numbers of trees
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opt_importance(
+  y = NULL,
+  X = NULL,
+  number.repetitions = 10,
+  alpha = 0.05,
+  num.trees_values = c(250, 500, 750, 1000, 2000),
+  visualisation = c("none", "importance", "selection"),
+  recommendation = c("importance", "selection", "none"),
+  rec.thresh = 1e-06,
+  round.recommendation = c("thousand", "hundred", "ten", "none"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A vector containing the response variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>A data frame containing the explanatory variables. The number of rows must be equal to the number of elements in y.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>number.repetitions</code></td>
+<td>
+<p>Number of repetitions of random forest to estimate the variable importance stability.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The amount of most important variables to be selected based on their estimated variable importance. If &lt; 1, alpha will be considered the relative amount of variables in the data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.trees_values</code></td>
+<td>
+<p>A vector containing the numbers of trees to be analysed. If not specified, 250, 500, 750, 1000, and 2000 trees will be analysed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>visualisation</code></td>
+<td>
+<p>Can be set to "importance" to draw a plot of the variable importance stability or to "selection" to draw a plot of the selection stability for the numbers of trees to be analysed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recommendation</code></td>
+<td>
+<p>If set to "importance" (default) or "selection", a recommendation will be given based on optimised variable importance or selection stability. If set to be "none", the function will analyse the stability of random forest with the inserted numbers of trees without giving a recommendation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rec.thresh</code></td>
+<td>
+<p>If the number of trees leads to an increase of stability smaller or equal to the value specified, this number of trees will be recommended. Default is 1e-6.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round.recommendation</code></td>
+<td>
+<p>Setting to what number the recommended number of trees should be rounded to. Options: "none", "ten", "hundred", "thousand".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Any other argument from the ranger package.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An opt_importance_object containing the recommended number of trees, based on which measure the recommendation was given (importance or selection), a matrix summarising the estimated stability and computation time of a random forest with the recommended numbers of trees, a matrix containing the calculated stability and computation time for the analysed numbers of trees, and the parameters used to model the relationship between stability and numbers of trees.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(SNPdata)
+set.seed(123)
+result_optimp = opt_importance(y = SNPdata[,1], X=SNPdata[,-1]) # optimise random forest
+summary(result_optimp)
+
+
+</code></pre>
+
+
+</div>

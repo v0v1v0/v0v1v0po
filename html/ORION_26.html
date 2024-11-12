@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.ConfusionTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prints all details about a ConfusionTable object.</h2>
+
+<h3>Description</h3>
+
+<p>Prints all details about a ConfusionTable object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ConfusionTable'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A ConfusionTable object as it is returned by <code>confusionTable</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further parameters</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Prints all conditional prediction rates for the specified cascade.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+
+# Calculation of the confusion matrix for '0&gt;2&gt;3&gt;4'.
+confTable = confusionTable(predMap, cascade = '0&gt;2&gt;3&gt;4')
+
+print(confTable)
+</code></pre>
+
+
+</div>

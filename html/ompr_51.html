@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>set_bounds</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set the bounds of a variable</h2>
+
+<h3>Description</h3>
+
+<p>Change the lower and upper bounds of a named variable,
+indexed variable or a group of variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">set_bounds(.model, .variable, ..., lb = NULL, ub = NULL)
+
+set_bounds_(.model, .variable, ..., lb = NULL, ub = NULL, .dots)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.model</code></td>
+<td>
+<p>the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.variable</code></td>
+<td>
+<p>the variable name/definition or a linear constraint</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>quantifiers for the indexed variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lb</code></td>
+<td>
+<p>the lower bound of the variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ub</code></td>
+<td>
+<p>the upper bound of the variable
+</p>
+<p>For <code>MIPModel</code> you can also pass (in)equalities to define bounds. Please
+look at the examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.dots</code></td>
+<td>
+<p>Used to work around non-standard evaluation.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+MIPModel() %&gt;%
+  add_variable(x[i], i = 1:5) %&gt;%
+  add_constraint(x[i] &gt;= 1, i = 1:5) %&gt;% # creates 5 constraints
+  set_bounds(x[i], lb = 3, i = 1:3) %&gt;%
+  variable_bounds()
+
+MIPModel() %&gt;%
+  add_variable(x[i], i = 1:5) %&gt;%
+  set_bounds(x[i] &lt;= i, i = 1:5) %&gt;% # upper bound
+  set_bounds(x[i] &gt;= 0, i = 1:5) %&gt;% # lower bound
+  set_bounds(x[5] == 45) %&gt;%
+  variable_bounds()
+</code></pre>
+
+
+</div>

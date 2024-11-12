@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readNIfTI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>readNIfTI</h2>
+
+<h3>Description</h3>
+
+<p>These functions read in the header information and multidimensional array
+from a binary file in NIfTI-1 format into a <code>nifti</code>-class
+object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readNIfTI(
+  fname,
+  verbose = FALSE,
+  warn = -1,
+  reorient = TRUE,
+  call = NULL,
+  read_data = TRUE,
+  rescale_data = TRUE
+)
+
+nifti_header(fname, verbose = FALSE, warn = -1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fname</code></td>
+<td>
+<p>is the file name of the NIfTI file(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) that allows
+text-based feedback during execution of the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>is a number to regulate the display of warnings (default = -1).
+See <code>options</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reorient</code></td>
+<td>
+<p>is a logical variable (default = <code>TRUE</code>) that enforces
+Qform/Sform transformations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>keeps track of the current function call for use in the NIfTI
+extension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>read_data</code></td>
+<td>
+<p>Should the data be read in?  If this is FALSE,
+then an array of NAs are given instead of the true data.
+Useful if you are simply interested in the header.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rescale_data</code></td>
+<td>
+<p>Should the data be rescaled using the 
+slope and intercept values?  If so, slope and intercept will be reset</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>readNIfTI</code> function utilizes internal methods <code>readBin</code> and
+<code>readChar</code> to efficiently extract information from the binary file(s).
+</p>
+<p>Current acceptable data types include </p>
+ <dl>
+<dt>list("UINT8")</dt>
+<dd>
+<p>BINARY
+(1 bit per voxel)</p>
+</dd> <dt>list("INT16")</dt>
+<dd>
+<p>SIGNED SHORT (16 bits per voxel)</p>
+</dd>
+<dt>list("INT32")</dt>
+<dd>
+<p>SINGED INT (32 bits per voxel)</p>
+</dd>
+<dt>list("FLOAT32")</dt>
+<dd>
+<p>FLOAT (32 bits per voxel)</p>
+</dd>
+<dt>list("DOUBLE64")</dt>
+<dd>
+<p>DOUBLE (64 bits per voxel)</p>
+</dd>
+<dt>list("UINT16")</dt>
+<dd>
+<p>UNSIGNED SHORT (16 bits per voxel)</p>
+</dd>
+<dt>list("UINT32")</dt>
+<dd>
+<p>UNSIGNED INT (32 bits per voxel)</p>
+</dd> </dl>
+<h3>Value</h3>
+
+<p>An object of class <code>nifti</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>,<br> Volker Schmid
+<a href="mailto:volkerschmid@users.sourceforge.net">volkerschmid@users.sourceforge.net</a>,<br> Andrew Thornton
+<a href="mailto:zeripath@users.sourceforge.net">zeripath@users.sourceforge.net</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>NIfTI-1<br><a href="http://nifti.nimh.nih.gov/">http://nifti.nimh.nih.gov/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>readAFNI</code>, <code>readANALYZE</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+url &lt;- "http://nifti.nimh.nih.gov/nifti-1/data/filtered_func_data.nii.gz"
+urlfile &lt;- file.path(system.file("nifti", package="oro.nifti"),
+                     "filtered_func_data")
+download.file(url, urlfile, quiet=TRUE)
+
+## End(Not run)
+## The NIfTI file provided here contains the first 18 volumes (10%)
+## of the original data set
+urlfile &lt;- file.path(system.file("nifti", package="oro.nifti"),
+                     "filtered_func_data")
+(ffd &lt;- readNIfTI(urlfile))
+image(ffd, oma=rep(2,4))
+orthographic(ffd, oma=rep(2,4))
+## Not run: 
+## 27 scans of Colin Holmes (MNI) brain co-registered and averaged
+## NIfTI two-file format
+URL &lt;- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
+urlfile &lt;- file.path(tempdir(), "colin_1mm.tgz")
+download.file(URL, dest=urlfile, quiet=TRUE)
+untar(urlfile, exdir=tempdir())
+colin &lt;- readNIfTI(file.path(tempdir(), "colin_1mm"))
+image(colin, oma=rep(2,4))
+orthographic(colin, oma=rep(2,4))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>patternFilter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Regular expression filters </h2>
+
+<h3>Description</h3>
+
+<p>Filters a character vector by a regular expression.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  x %~|% rx
+  x %!~|% rx
+  
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> text to manipulate </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rx</code></td>
+<td>
+<p> regular expression </p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>'<code>%~|%</code>' : a character vector containing all the elements of <code>x</code>
+that match the regular expression <code>rx</code> or <code>NULL</code> if there 
+is no match.
+</p>
+<p>'<code>%!~|%</code>' : a character vector containing all the elements of 
+<code>x</code> that <em>do not</em> match the regular expression <code>rx</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The filtering is done using the <code>regexpr</code> function. Logical arguments 
+of <code>regexpr</code> can be indirectly used by <code>%~|%</code> or <code>%!~|%</code> by using
+the <code>operators.regexpr</code> option declared with this package. 
+See <code>%but%</code> for a description of this mecanism. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Romain Francois &lt;francoisromain@free.fr&gt; </p>
+
+
+<h3>See Also</h3>
+
+ <p>grep, gsub </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">                        
+  
+  cols &lt;- colors()
+  cols %~|% "^blue"
+  
+  ### blue colors that don't finish with a digit
+  ( a1 &lt;- cols %~|% "blue" %!~|% "\\d$"         )
+  ( a2 &lt;- cols %~|% "blue[^0-9]*$"                )
+  ( a3 &lt;- grep( "blue[^0-9]*", cols, value = TRUE ) )
+  
+  # using perl regular expressions
+  
+  ### not necessary since p is in the default of the package
+  with( options( operators.regexpr = "p" ), { 
+  	( a4 &lt;- grep( "blue[^\\d]*", cols, value = TRUE, perl = TRUE  ) )
+  	( a5 &lt;- cols %~|% "blue[^\\d]*$" )
+  })
+  
+  ### blue colors that contain a r
+  cols %~|% "blue" %~|% "r"
+  grep( "r", grep( "blue", cols, value = TRUE ), value = TRUE  )
+  
+  ### blue colors that don't contain a r
+  cols %~|% "blue" %!~|% "r"
+  cols %~|% "^[^r]*blue[^r]*$"
+  
+  grep( "^[^r]*$", grep( "blue", cols, value = TRUE ), value = TRUE  ) # tricky and verbose
+  # or in two steps, ... laborious
+  bluecols &lt;- grep( "blue", cols, value = TRUE )
+  bluecols[ -grep( "r", bluecols) ]
+  
+</code></pre>
+
+
+</div>

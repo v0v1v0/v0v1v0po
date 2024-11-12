@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matchTrades</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Construct trades data.table.</h2>
+
+<h3>Description</h3>
+
+<p>Given event data which has been pre-matched with maker/taker event ids,
+this function will return a data.table containing all matched executions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matchTrades(events)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>events</code></td>
+<td>
+<p>Limit order event data with assigned maker/taker event ids.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A data.frame describing marketable order executions of the following
+form:
+</p>
+
+<dl>
+<dt>timestamp</dt>
+<dd>
+<p>min(maker timestamp, taker timestamp) (first time we
+learned of this trade)</p>
+</dd>
+<dt>price</dt>
+<dd>
+<p>Maker price (taker limit price can cross the book.)</p>
+</dd>
+<dt>volume</dt>
+<dd>
+<p>Lifted/traded volume</p>
+</dd>
+<dt>direction</dt>
+<dd>
+<p>Trade direction (side of the aggressor/taker)</p>
+</dd>
+<dt>maker.event.id</dt>
+<dd>
+<p>event.id corresponding to row in events data</p>
+</dd>
+<dt>taker.event.id</dt>
+<dd>
+<p>event.id corresponding to tow in events data</p>
+</dd>
+<dt>maker</dt>
+<dd>
+<p>Maker limit order id</p>
+</dd>
+<dt>taker</dt>
+<dd>
+<p>Taker limit order id</p>
+</dd>
+</dl>
+<p>A market limit order (marketable) is first a taker and then becomes a maker
+after landing in the order book before it's limit is reached.
+</p>
+<p>A market order is always a taker: it's volume will be filled before it's
+limit is reached.
+</p>
+<p>Grouping executions by maker/taker can be used to analyse market impact
+events.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+csv.file &lt;- system.file("extdata", "orders.csv.xz", package="obAnalytics")
+events &lt;- loadEventData(csv.file)
+events &lt;- eventMatch(events)
+trades &lt;- matchTrades(events)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

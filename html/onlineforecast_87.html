@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rls_prm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function for generating the parameters for RLS regression</h2>
+
+<h3>Description</h3>
+
+<p>Function for generating the parameters for RLS regression
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rls_prm(lambda)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>The forgetting factor</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The RLS needs only a forgetting factor parameter.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of the parameters
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Take data
+D &lt;- subset(Dbuilding, c("2010-12-15", "2011-01-01"))
+D$y &lt;- D$heatload
+D$scoreperiod &lt;- in_range("2010-12-20", D$t)
+# Define a simple model 
+model &lt;- forecastmodel$new()
+model$add_inputs(Ta = "Ta", mu = "one()")
+model$kseq &lt;- 1:6
+
+# Here the expression which sets the parameters is defined
+model$add_regprm("rls_prm(lambda=0.99)")
+model$regprmexpr
+
+# These will fit with lambda=0.99
+rls_fit(prm=NA, model, D)
+rls_fit(prm=c(lambda=0.99), model, D)
+
+# The expression is evaluated when the model is fitted
+rls_fit(prm=c(lambda=0.85), model, D)
+
+# What happens is simply that the expression was manipulated
+model$regprmexpr
+model$regprm
+
+# Same change could be done by
+model$regprm &lt;- list(lambda=0.3)
+model$regprm
+val &lt;- rls_fit(prm=NA, model, D)
+
+</code></pre>
+
+
+</div>

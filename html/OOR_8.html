@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>POO</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parallel Optimistic Optimization</h2>
+
+<h3>Description</h3>
+
+<p>Global optimization of a blackbox function given a finite budget of noisy evaluations,
+via the Parallel Optimistic Optimization algorithm.
+The knowledge of the function's smoothness is not required.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">POO(f, horizon = 100, noise.level, rhomax = 20, nu = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>function to maximize.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizon</code></td>
+<td>
+<p>maximum number of function evaluations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noise.level</code></td>
+<td>
+<p>scalar bound on the noise value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rhomax</code></td>
+<td>
+<p>number of equidistant <code>rho</code> values in [0,1], that are used by the corresponding HOO subroutines, see Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nu</code></td>
+<td>
+<p>scalar (&gt; 0) assessing the complexity of the function, along with <code>rho</code> (see the near optimality definition in the reference below).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Only 1-dimensional functions defined on [0, 1] are handled so far.
+POO uses Hierarchical Optimistic Optimisation (HOO) as a subroutine, whose number is set by <code>rhomax</code>.
+<code>POO</code> handles more difficult functions than <code>StoSOO</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Random point evaluated by the best HOO, in the form of a list with elements:
+</p>
+
+<ul>
+<li>
+<p> par parameter value at this point,
+</p>
+</li>
+<li>
+<p> value noisy value at <code>par</code>,
+</p>
+</li>
+<li>
+<p> best_rho best <code>rho</code> value.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>M. Binois (translation in R code), J.-B. Grill, M. Valko and R. Munos (Python code)
+</p>
+
+
+<h3>References</h3>
+
+<p>J.-B. Grill, M. Valko and R. Munos (2015), Black-box optimization of noisy functions with unknown smoothness,
+<em>NIPS</em>, 667-675 <a href="https://inria.hal.science/hal-01222915">https://inria.hal.science/hal-01222915</a>. Python code: <a href="https://team.inria.fr/sequel/software/POO/">https://team.inria.fr/sequel/software/POO/</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#------------------------------------------------------------
+# Maximization with POO
+#------------------------------------------------------------
+set.seed(10)
+noise.level &lt;- 0.05
+
+## Define and display objective
+ftest &lt;- function(x){return(double_sine(x) + runif(1, min = -noise.level, max = noise.level))}
+xgrid &lt;- seq(0, 1, length.out = 1000)
+plot(xgrid, sapply(xgrid, double_sine), type = 'l', ylab = "double_sine(x)", xlab = 'x')
+
+## Optimization
+Sol &lt;- POO(ftest, horizon = 1000, noise.level = noise.level)
+
+## Display result
+abline(v = Sol$par)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

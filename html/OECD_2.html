@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_dataset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download OECD data sets.</h2>
+
+<h3>Description</h3>
+
+<p>Returns a data frame with the requested data, downloaded through the OECD's API.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_dataset(
+  dataset,
+  filter = NULL,
+  start_time = NULL,
+  end_time = NULL,
+  pre_formatted = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataset</code></td>
+<td>
+<p>A string with the code for the desired data set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>A list of character vectors specifying filters to be applied to 
+each dimension of the dataset (see <code>examples</code> below). If no filter is specified,
+the function downloads all dimensions unfiltered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_time</code></td>
+<td>
+<p>Starting time for data. If left blank, no time filter is 
+applied (i.e. all observations since the earliest available observation are 
+downloaded). If end_time is specified, a <code>start_time</code> must also be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_time</code></td>
+<td>
+<p>End time for data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pre_formatted</code></td>
+<td>
+<p>boolean. Set to TRUE if filter to be applied is already 
+formatted (e.g. if copied from the OECD's SDMX generator (see example below)).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters passed to <code>data.frame</code> (e.g.
+stringsAsFactors = FALSE).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get entire dataset 
+## Not run: df &lt;- get_dataset("EPL_OV")
+## Not run: head(df, 10)
+
+# Apply filter on dimensions "country" and "series"
+## Not run: df &lt;- get_dataset("EPL_OV", 
+                           filter = list(c("DEU", "FRA"), 
+                           c("EPRC_V1", "EPRC_V2")), 
+                           start_time = 2008, end_time = 2010)
+## End(Not run)
+## Not run: head(df, 10)
+
+# Use pre-formatted filter copied from stats.oecd.org
+## Not run: df &lt;- get_dataset("PATS_REGION", 
+               filter = "PCT_A.INVENTORS.BEL+BE10+BE21.TOTAL+BIOTECH+ICT",
+               start_time = 2008, end_time = 2010, pre_formatted = TRUE)
+## End(Not run)
+## Not run: head(df, 10)
+
+</code></pre>
+
+
+</div>

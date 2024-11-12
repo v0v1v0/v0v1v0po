@@ -1,0 +1,55 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>x0</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>x0/y0-values from orthogonal nonlinear least squares regression</h2>
+
+<h3>Description</h3>
+
+<p>Returns the <code class="reqn">{\color{red} x_{0i}/y_{0i}}</code> values as obtained from minimizing the Euclidean distance </p>
+<p style="text-align: center;"><code class="reqn">\min\| D_i \| \equiv \min\sqrt{(x_i - {\color{red}x_{0i}})^2 + (y_i - {\color{red}y_{0i}})^2}</code>
+</p>
+ 
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">x0(object) 
+y0(object) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object returned from <code>onls</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A vector of <code class="reqn">\color{red}x_{0i}</code> or <code class="reqn">\color{red}y_{0i}</code> values.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Andrej-Nikolai Spiess
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">DNase1 &lt;- subset(DNase, Run == 1)
+DNase1$density &lt;- sapply(DNase1$density, function(x) rnorm(1, x, 0.1 * x))
+mod &lt;- onls(density ~ Asym/(1 + exp((xmid - log(conc))/scal)), 
+             data = DNase1, start = list(Asym = 3, xmid = 0, scal = 1))
+x0(mod)
+y0(mod)
+</code></pre>
+
+
+</div>

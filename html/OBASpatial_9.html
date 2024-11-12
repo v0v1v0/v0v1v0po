@@ -1,0 +1,298 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nsroba</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Bayesian estimation for the NSR model.
+</h2>
+
+<h3>Description</h3>
+
+<p>This function performs Bayesian estimation of <code class="reqn">\theta=(\bold{\beta},\sigma^2,\phi)</code> for the NSR model using the based reference, Jeffreys' rule ,Jeffreys' independent and vague  priors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nsroba(formula, method="median",
+prior = "reference",coords.col = 1:2,kappa = 0.5,
+cov.model = "matern", data,asigma=2.1, intphi = "default",
+ini.pars, burn=500, iter=5000, thin=10,
+cprop = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+
+<p>A valid formula for a linear regression model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+
+<p>Method to estimate (<code class="reqn">\bold{beta},\sigma,\phi</code>). The methods availables are <code>"mean"</code>,<code>"median"</code> and <code>"mode"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+
+<p>Objective prior densities avaiable for the TSR model: ( <code>reference</code>: Reference based, <code>jef.rul</code>: Jeffreys' rule, <code>jef.ind</code>: Jeffreys' independent, <code>vague</code>, Vague).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords.col</code></td>
+<td>
+
+<p>A vector with the column numbers corresponding to the spatial coordinates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kappa</code></td>
+<td>
+
+<p>Shape parameter of the covariance function (fixed).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov.model</code></td>
+<td>
+<p> Covariance functions available for the TSR
+model. <code>matern</code>: Matern, <code>pow.exp</code>: power exponential, <code>exponential</code>:exponential, <code>cauchy</code>: Cauchy, <code>spherical</code>: Spherical.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>Data set with 2D spatial coordinates, the response and optional covariates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asigma</code></td>
+<td>
+
+<p>Value of <code class="reqn">a</code> for  the vague prior.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intphi</code></td>
+<td>
+
+<p>An interval for <code class="reqn">\phi</code> used for the uniform proposal. See <code>DETAILS</code> below.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ini.pars</code></td>
+<td>
+
+<p>Initial values for <code class="reqn">(\sigma^2,\phi)</code> in that order.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>burn</code></td>
+<td>
+
+<p>Number of observations considered in the burning process.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+
+<p>Number of iterations for the sampling procedure.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thin</code></td>
+<td>
+
+<p>Number of observations considered in the thin process.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cprop</code></td>
+<td>
+
+<p>A constant related to the acceptance probability
+(Default = NULL indicates that cprop is computed as the interval length of intphi). See
+<code>DETAILS</code> below.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For the <code>"unif"</code> proposal, it was considered the structure where a priori, <code class="reqn">\phi</code> follows an uniform distribution on the interval <code>intphi</code>. By default, this interval is computed using the empirical range of data as well as the constant <code>cprop</code>.
+</p>
+<p>For the Jeffreys independent prior, the sampling procedure generates improper posterior distribution when intercept is considered for the mean function.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>$dist</code></td>
+<td>
+
+<p>Joint sample (matrix object) obtaining for (<code class="reqn">\bold{beta},\sigma^2,\phi</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$betaF</code></td>
+<td>
+
+<p>Sample obtained for <code class="reqn">\bold{beta}</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$sigmaF</code></td>
+<td>
+
+<p>Sample obtained for <code class="reqn">\sigma^2</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$phiF</code></td>
+<td>
+
+<p>Sample obtained for <code class="reqn">\phi</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$coords</code></td>
+<td>
+
+<p>Spatial data coordinates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$kappa</code></td>
+<td>
+
+<p>Shape parameter of the covariance function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$X</code></td>
+<td>
+
+<p>Design matrix of the model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$type</code></td>
+<td>
+
+<p>Covariance function of the model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$theta</code></td>
+<td>
+
+<p>Bayesian estimator of (<code class="reqn">\bold{beta},\sigma,\phi</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$y</code></td>
+<td>
+
+<p>Response variable.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$prior</code></td>
+<td>
+
+<p>Prior density considered.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Jose A. Ordonez, Marcos O. Prates, Larissa A. Matos, Victor H. Lachos.
+</p>
+
+
+<h3>References</h3>
+
+<p>Berger, J.O,  De Oliveira, V. and Sanso, B. (2001). Objective Bayesian Analysis of Spatially Correlated Data. Journal of the American Statistical Association., 96, 1361 – 1374.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dnsrposoba</code>,<code>dtsrprioroba</code>,<code>dnsrprioroba,tsroba</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+
+
+
+
+set.seed(25)
+data(dataelev)
+
+
+######covariance matern: kappa=0.5
+res=nsroba(elevation~1, kappa = 0.5, cov.model = "matern", data=dataelev,
+ini.pars=c(10,390))
+
+summary(res)
+
+######covariance matern: kappa=1
+res1=nsroba(elevation~1, kappa = 1, cov.model = "matern", data=dataelev,
+ini.pars=c(10,390))
+
+summary(res1)
+
+######covariance matern: kappa=1.5
+res2=nsroba(elevation~1, kappa = 1.5, cov.model = "matern", data=dataelev,
+ini.pars=c(10,390))
+
+summary(res2)
+
+
+
+
+</code></pre>
+
+
+</div>

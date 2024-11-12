@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>audio_speech_request</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>API audio: text to speech request</h2>
+
+<h3>Description</h3>
+
+<p>Generates audio from the input text. To get more details, visit
+https://platform.openai.com/docs/api-reference/audio/createSpeech
+https://platform.openai.com/docs/guides/speech-to-text
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">audio_speech_request(
+  model,
+  input,
+  voice,
+  response_format = NULL,
+  speed = NULL,
+  api_key = api_get_key()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>string, one of the available TTS models: 'tts-1' or 'tts-1-hd'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>string, the text to generate audio for. The maximum length is 4096 characters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>voice</code></td>
+<td>
+<p>string, the voice to use when generating the audio. Supported voices are alloy, echo, fable, onyx, nova,
+and shimmer. Previews of the voices are available in the Text to speech guide -
+https://platform.openai.com/docs/guides/text-to-speech/voice-options</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_format</code></td>
+<td>
+<p>string, the format to audio in. Supported formats are mp3 (default), opus, aac, and flac</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>speed</code></td>
+<td>
+<p>double, the speed of the generated audio. Select a value from 0.25 to 4.0, 1.0 is the default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>string, OpenAI API key
+(see https://platform.openai.com/account/api-keys)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>content of the httr response object
+or SimpleError (conditions) enhanced with
+two additional fields: 'status_code' (response$status_code)
+and 'message_long' (built on response content)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+res_content &lt;- audio_speech_request(
+  "tts-1",
+  "When the power of love overcomes the love of power, the world will know peace.",
+  "nova"
+)
+if (!is_error(res_content)) {
+  writeBin(res_content, "peace.mp3")
+}
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create3D</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create Arrays from DICOM Headers/Images</h2>
+
+<h3>Description</h3>
+
+<p>A DICOM list structure is used to produce a multi-dimensional array
+representing a single acquisition of medical imaging data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create3D(dcm, mode = "integer", transpose = TRUE, pixelData = TRUE,
+  mosaic = FALSE, mosaicXY = NULL, sequence = FALSE,
+  boffset = NULL)
+
+create4D(dcm, mode = "integer", transpose = TRUE, pixelData = TRUE,
+  mosaic = FALSE, mosaicXY = NULL, nslices = NULL, ntimes = NULL,
+  instance = TRUE, sequence = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dcm</code></td>
+<td>
+<p>is the DICOM list structure (if <code>pixelData</code> = <code>TRUE</code>)
+or the DICOM header information (if <code>pixelData</code> = <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>is a valid character string for <code>storage.mode</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transpose</code></td>
+<td>
+<p>is available in order to switch the definition of rows and
+columns from DICOM (default = <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pixelData</code></td>
+<td>
+<p>is a logical variable (default = <code>TRUE</code>) that is
+associated with the DICOM image data being pre-loaded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mosaic</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) to denote
+storage of the data in Siemens ‘Mosaic’ format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mosaicXY</code></td>
+<td>
+<p>is a vector of length two that provides the (x,y) dimensions
+of the individual images.  Default behavior is to use the AcquisitonMatrix
+to determine the (x,y) values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sequence</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) on whether to
+look in SequenceItem entries for DICOM header information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boffset</code></td>
+<td>
+<p>is the number of bytes to skip at the beginning of the DICOM
+file (default = <code>NULL</code> which lets the code determine the starting
+point).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nslices</code></td>
+<td>
+<p>is the third dimension of the array.  Attempts are made to
+determine this number from the DICOM data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ntimes</code></td>
+<td>
+<p>is the fourth dimension of the array.  Attempts are made to
+determine this number from the DICOM data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instance</code></td>
+<td>
+<p>is a logical variable (default = <code>TRUE</code>) that
+determines whether or not to access the <code>InstanceNumber</code> field in the
+DICOM header to help order the slices.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Multi-dimensional array of medical imaging data.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Digital Imaging and Communications in Medicine (DICOM)<br><a href="http://medical.nema.org">http://medical.nema.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>array</code>, <code>readDICOM</code>,
+<code>storage.mode</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+load(system.file("hk-40/hk40.RData", package="oro.dicom"))
+dcmList &lt;- hk40
+dcmImage &lt;- create3D(dcmList)
+image(dcmImage[,,1], col=grey(0:64/64), axes=FALSE, xlab="", ylab="",
+      main=paste("First Slice from HK-40"))
+imagePositionPatient &lt;- attributes(dcmImage)$ipp
+dSL &lt;- abs(diff(imagePositionPatient[,3]))
+plot(dSL, ylim=range(range(dSL) * 1.5, 0, 10), xlab="Image", ylab="mm",
+     main="Difference in Slice Location")
+
+## Not run: 
+## pixelData = FALSE
+## The DICOM image data are read from create3D()
+## This may save on memory for large batches of DICOM data
+dcmList &lt;- readDICOM(system.file("hk-40", package="oro.dicom"),
+                     pixelData=FALSE)
+dcmImage &lt;- create3D(dcmList, pixelData=FALSE)
+image(dcmImage[,,1], col=grey(0:64/64), axes=FALSE, xlab="", ylab="",
+      main=paste("First Slice from HK-40 (again)"))
+
+## End(Not run)
+## mosaic = TRUE
+mosaicFile &lt;- system.file("dcm/MR-sonata-3D-as-Tile.dcm", package="oro.dicom")
+dcm &lt;- readDICOMFile(mosaicFile)
+image(t(dcm$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="",
+      main="Siemens MOSAIC")
+dcmImage &lt;- create3D(dcm, mode="integer", mosaic=TRUE)
+z &lt;- trunc(dim(dcmImage)[3]/2)
+image(dcmImage[,,z], col=grey(0:64/64), axes=FALSE, xlab="", ylab="",
+      main=paste("Slice", z, "from Siemens MOSAIC"))
+
+</code></pre>
+
+
+</div>

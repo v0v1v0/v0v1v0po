@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>apply_multiwave</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Apply a basic optimall function to a Multiwave Object</h2>
+
+<h3>Description</h3>
+
+<p>Given a specified phase and wave of an object of class multiwave,
+<code>apply_multiwave</code> applies one of four <code>optimall</code> functions
+and returns an updated multiwave object with the output of the applied
+function in its specified slot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">apply_multiwave(x, phase, wave, fun, ...)
+
+## S4 method for signature 'Multiwave'
+apply_multiwave(x, phase, wave, fun, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An Object of class <code>"multiwave"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phase</code></td>
+<td>
+<p>A numeric or character value specifying the phase of
+<code>multiwave</code> where the desired output should be placed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wave</code></td>
+<td>
+<p>A numeric or character value specifying the wave of <code>phase</code>
+in <code>multiwave</code> where the output should be placed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>A character value specifying the name of the <code>optimall</code>
+function to apply. The four available functions are:
+<code>optimum_allocation</code>,
+<code>allocate_wave</code>, <code>sample_strata</code>, and <code>merge_samples</code>.
+</p>
+
+<ul>
+<li> <p><code>optimum_allocation</code>: Uses the <code>data</code> from
+the previous wave
+(or previous phase if <code>wave = 1</code>) to determine the optimum sampling
+allocation for the specified wave. If used, the output multiwave
+object contains an updated <code>"design"</code> slot in the specified wave.
+</p>
+</li>
+<li> <p><code>allocate_wave</code>: Uses the <code>data</code> from the previous wave
+(or previous phase if <code>wave = 1</code>) to determine the optimum sampling
+allocation for the specified wave. If used, the outputted multiwave object
+contains an updated <code>"design"</code> slot in the specified wave.
+The default argument when <code>allocate_wave</code> is applied in a <code>apply_multiwave()</code> is <code>detailed = TRUE</code>.
+</p>
+</li>
+<li> <p><code>sample_strata</code>: Uses the <code>data</code> from the previous wave
+(or previous phase if <code>wave = 1</code>) and <code>design</code>
+from current wave to generate a vector of ids to sample for the current
+wave. Note that the <code>wave</code> argument of the standalone
+<code>sample_strata()</code> function does not apply here,
+If used, the output multiwave object contains an updated
+<code>"samples"</code> slot in the specified wave.
+</p>
+</li>
+<li> <p><code>merge_samples</code>: Uses the <code>data</code> from the previous wave (or
+previous phase if <code>wave = 1</code>) and <code>sampled_data</code> from the
+specified wave to generate the final, merged data for the current wave.
+If used, the output multiwave object contains an updated <code>"data"</code>
+slot in the specified wave. Note that <code>merge_samples</code> is already a
+method for multiwave objects, so calling
+it through <code>apply_multiwave</code> is the exact same as calling it on its
+own.</p>
+</li>
+</ul>
+<p>See documentation of these functions for more details on the
+specific uses and arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional arguments to be given to <code>fun</code>. Not necessary if
+the arguments are already provided as named values in the wave, phase,
+or overall metadata in the multiwave object. Arguments provided here
+will override specifications in the metadata if provided in both places.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The inputted multiwave object with one slot updated to include the
+output of the specified function.
+</p>
+<p>Note that the phase and wave arguments specify where the function
+<em>output</em> should be placed. <code>apply_multiwave</code> will determine where
+to get the input dataframes from (returning an error if those slots are
+empty or invalid) given the specified wave for the output. For example, if
+<code>phase = 2, wave = 2, function = "allocate_wave"</code>, the data to
+determine the optimum allocation will be taken from the previous wave
+(phase 2, wave 1) and the output multiwave object will have an updated
+<code>"design"</code> slot of phase 2, wave 2.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(datasets)
+
+MySurvey &lt;- multiwave(phases = 2, waves = c(1, 3))
+set_mw(MySurvey, phase = 1, slot = "data") &lt;-
+  dplyr::select(datasets::iris, -Sepal.Width)
+
+# Get Design by applying optimum_allocation
+MySurvey &lt;- apply_multiwave(MySurvey,
+  phase = 2, wave = 1,
+  fun = "optimum_allocation", strata = "Species",
+  y = "Sepal.Length",
+  nsample = 15,
+  method = "WrightII"
+)
+
+# or, we can establish function args in the metadata
+set_mw(MySurvey, phase = 2, slot = "metadata") &lt;- list(
+  strata = "Species",
+  nsample = 15,
+  y = "Sepal.Length",
+  method = "WrightII"
+)
+
+# which allows the function to be run without specifying the args
+MySurvey &lt;- apply_multiwave(MySurvey,
+  phase = 2, wave = 1,
+  fun = "optimum_allocation"
+)
+</code></pre>
+
+
+</div>

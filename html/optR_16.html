@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimization &amp; predictive modelling Toolsets</h2>
+
+<h3>Description</h3>
+
+<p>optR function for solving linear systems using numerical approaches. 
+Current toolbox supports Gauss Elimination, LU decomposition, Conjugate Gradiant Decent and Gauss-Sideal methods for solving the system of form AX=b
+For optimization using numerical methods cgm method performed faster in comparision with gaussseidel.
+For decomposition LU is utilized for multiple responses to enhance the speed of computation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optR(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>: Input matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>: S3 method</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>optR   : Return optR class
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>PKS Prakash
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Solving equation Ax=b
+A&lt;-matrix(c(6,-4,1, -4,6,-4,1,-4,6), nrow=3,ncol=3, byrow = TRUE)
+b&lt;-matrix(c(-14,36, 6), nrow=3,ncol=1,byrow=TRUE)
+Z&lt;-optR(A, b, method="gauss") # Solve Linear model using Gauss Elimination
+
+# Solve Linear model using LU decomposition (Supports Multi-response)
+Z&lt;-optR(A, b, method="LU") 
+
+# Solve the matrix using Gauss Elimination (1, -1, 2)
+A&lt;-matrix(c(2,-2,6, -2,4,3,-1,8,4), nrow=3,ncol=3, byrow = TRUE)
+b&lt;-matrix(c(16,0, -1), nrow=3,ncol=1,byrow=TRUE)
+Z&lt;-optR(A, b, method="gauss") # Solve Linear model using Gauss Elimination
+
+require(utils)
+set.seed(129)
+n &lt;- 10 ; p &lt;- 4
+X &lt;- matrix(rnorm(n * p), n, p) # no intercept!
+y &lt;- rnorm(n)
+Z&lt;-optR(X, y, method="cgm")
+</code></pre>
+
+
+</div>

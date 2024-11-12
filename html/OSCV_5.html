@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>h_ASE_reg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The ASE-optimal bandwidth in the regression context.</h2>
+
+<h3>Description</h3>
+
+<p>Computing the ASE-optimal bandwidth for the Gaussian local linear regression estimator.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">h_ASE_reg(desx, y, rx)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>desx</code></td>
+<td>
+<p>numerical vecror of design points,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>numerical vecror of data points corresponding to the design points <code class="reqn">desx</code>,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rx</code></td>
+<td>
+<p>numerical vecror of the regression function values at <code class="reqn">desx</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Computing the ASE-optimal bandwidth for the local linear estimator in the regression context. The ASE-optimal bandwidth is the global minimizer of the ASE function <code>ASE_reg</code>. This bandwidth is optimal for the data set at hand.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The ASE-optimal bandwidth (scalar).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ASE_reg</code>, <code>loclin</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Simulated example.
+n=300
+dx=runif(n)            #uniform design
+regx=5*dx^10*(1-dx)^2+2.5*dx^2*(1-dx)^10
+ydat=regx+rnorm(n,sd=1/250)
+hase=round(h_ASE_reg(dx,ydat,regx),digits=4)
+u=seq(0,1,len=1000)
+fun=5*u^10*(1-u)^2+2.5*u^2*(1-u)^10
+dev.new()
+plot(dx,ydat,pch=20,cex=1.5,xlab="argument",ylab="function",cex.lab=1.7,cex.axis=1.7,
+main="Function, data, and the ASE-optimal bandwidth",cex.main=1.5)
+lines(u,fun,'l',lwd=3,col="blue")
+legend(0,0.03,legend=paste("h_ASE=",hase),cex=1.8,bty="n")
+legend(0.6,-0.002,legend=paste("n=",n),cex=2,bty="n")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

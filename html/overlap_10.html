@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Example data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Times of 'capture' of large mammals
+</h2>
+
+<h3>Description</h3>
+
+<p>Times of capture of large mammals in camera traps in Kerinci Seblat National Park, Indonesia.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(kerinci)
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 1098 rows and three columns:
+</p>
+
+<dl>
+<dt>Zone</dt>
+<dd>
+<p>A number indicating which of four zones the record comes from.</p>
+</dd>
+<dt>Sps</dt>
+<dd>
+<p>A factor indicating which species was observed: boar (wild pig), clouded leopard, golden cat, macaque, muntjac, sambar deer, tapir, or tiger.</p>
+</dd>
+<dt>Time</dt>
+<dd>
+<p>The time of the observation on a scale of 0 to 1, where 0 and 1 both correspond to midnight</p>
+</dd>
+</dl>
+<h3>Source</h3>
+
+<p>Ridout, M.S. and Linkie, M. (2009) Estimating overlap of daily activity patterns from camera trap data. <em>Journal of Agricultural, Biological and Environmental Statistics</em>, 14, 322-337.
+</p>
+<p><a href="https://www.kent.ac.uk/smsas/personal/msr/overlap.html">https://www.kent.ac.uk/smsas/personal/msr/overlap.html</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(kerinci)
+str(kerinci)
+# Time is in days, ie. 0 to 1:
+range(kerinci$Time)
+# Convert to radians:
+timeRad &lt;- kerinci$Time * 2*pi
+
+# Extract data for tiger and tapir for Zone3:
+spsA &lt;- timeRad[kerinci$Zone == 3 &amp; kerinci$Sps == 'tiger']
+spsB &lt;- timeRad[kerinci$Zone == 3 &amp; kerinci$Sps == 'tapir']
+
+# Plot the data:
+overlapPlot(spsA, spsB)  # Tapir are mainly nocturnal
+overlapPlot(spsA, spsB, xcenter="midnight")
+legend('topleft', c("Tiger", "Tapir"), lty=c(1, 2), col=c("black", "blue"), bty='n')
+
+# Check sample sizes:
+length(spsA)
+length(spsB)
+# If the smaller sample is less than 50, Dhat1 gives the best estimates, together with
+# confidence intervals from a smoothed bootstrap with norm0 or basic0 confidence interval.
+
+# Calculate estimates of overlap:
+( Dhats &lt;- overlapEst(spsA, spsB) )  # or just get Dhat1
+( Dhat1 &lt;- overlapEst(spsA, spsB, type="Dhat1") )
+
+# Do 999 smoothed bootstrap values:
+bs &lt;- bootstrap(spsA, spsB, 999, type="Dhat1", cores=1)
+mean(bs)
+hist(bs)
+abline(v=Dhat1, col='red', lwd=2)
+abline(v=mean(bs), col='blue', lwd=2, lty=3)
+
+# Get confidence intervals:
+bootCI(Dhat1, bs)['norm0', ]
+bootCI(Dhat1, bs)['basic0', ]
+</code></pre>
+
+
+</div>

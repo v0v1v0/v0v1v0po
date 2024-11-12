@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dtsrposoba</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Objective posterior density for the TSR model
+</h2>
+
+<h3>Description</h3>
+
+<p>It calculates the density function <code class="reqn">\pi(\phi,\nu)</code> (up to a proportionality constant) for the TSR model using the based reference, Jeffreys' rule, Jeffreys' independent and vague priors. In this context <code class="reqn">\phi</code> corresponds to the range parameter and <code class="reqn">\nu</code> to the degrees of freedom.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dtsrposoba(x,formula,prior="reference",coords.col=1:2,
+kappa=0.5,cov.model="exponential",data,asigma=2.1,intphi,intnu)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A vector with the quanties <code class="reqn">(\phi,\nu)</code>. For the vague prior x must be a three dimension vector <code class="reqn">(\phi,\nu,\lambda)</code> with <code class="reqn">\lambda</code> a number in the interval <code class="reqn">(0.02,0.5)</code>. See <code>DETAILS</code> below.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+
+<p>A valid formula for a linear regression model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+
+<p>Objective prior densities avaiable for the TSR model: ( <code>reference</code>: Reference based, <code>jef.rul</code>: Jeffreys' rule, <code>jef.ind</code>: Jeffreys' independent).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords.col</code></td>
+<td>
+
+<p>A vector with the column numbers corresponding to the spatial coordinates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kappa</code></td>
+<td>
+
+<p>Shape parameter of the covariance function (fixed).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov.model</code></td>
+<td>
+<p> Covariance functions available for the TSR
+model. <code>matern</code>: Matern, <code>pow.exp</code>: power exponential, <code>exponential</code>:exponential, <code>cauchy</code>: Cauchy, <code>spherical</code>: Spherical.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>Data set with 2D spatial coordinates, the response and optional covariates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asigma</code></td>
+<td>
+
+<p>Value of <code class="reqn">a</code> for  vague prior.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intphi</code></td>
+<td>
+
+<p>An interval for <code class="reqn">\phi</code> used for vague prior.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intnu</code></td>
+<td>
+
+<p>An interval for <code class="reqn">\nu</code> used for vague prior.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The posterior distribution is computed for this priors under the improper family <code class="reqn">\frac{\pi(\phi,\nu)}{(\sigma^2)^a}</code>. For the vague prior, it was considered the structure <code class="reqn">\pi(\phi,\nu,\lambda)=\phi(\phi)\pi(\nu|\lambda)\pi(\lambda)</code> where a priori, <code class="reqn">\phi</code> follows an uniform distribution on the interval <code>intphi</code>, <code class="reqn">\nu|\lambda~ Texp(\lambda,A)</code> with A the interval given by the argument <code>intnu</code> and <code class="reqn">\lambda~unif(0.02,0.5)</code>.
+</p>
+<p>For the Jeffreys independent prior, this family of priors generates improper posterior distribution when intercept is considered for the mean function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Posterior density of x=(<code class="reqn">\phi,\nu</code>) for the reference based, Jeffreys' rule and Jeffreys' independent priors. For the vague the result is the posterior density of x=(<code class="reqn">\phi,\nu,\lambda</code>)
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jose A. Ordonez, Marcos O. Prates, Larissa A. Matos, Victor H. Lachos.
+</p>
+
+
+<h3>References</h3>
+
+<p>Ordonez, J.A, M.O. Prattes, L.A. Matos, and V.H. Lachos (2020+). Objective Bayesian analysis for spatial Student-t regression models (Submitted).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dnsrposoba</code>,<code>dtsrprioroba</code>,<code>dnsrprioroba</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(dataca20)
+
+######### Using reference prior ###########
+dtsrposoba(x=c(5,11),prior="reference",formula=calcont~altitude+area,
+kappa=0.3,cov.model="matern",data=dataca20)
+
+######### Using Jeffreys' rule prior ###########
+dtsrposoba(x=c(5,11),prior="jef.rul",formula=calcont~altitude+area,
+kappa=0.3,cov.model="matern",data=dataca20)
+
+
+######### Using Jeffreys' independent prior ###########
+dtsrposoba(x=c(5,11),prior="jef.ind",formula=calcont~altitude+area
+,kappa=0.3,cov.model="matern",data=dataca20)
+
+######### Using vague independent prior ###########
+dtsrposoba(x=c(5,11,.3),prior="vague",formula=calcont~altitude+area,
+kappa=0.3,cov.model="matern",data=dataca20,intphi=c(0.1,10),
+intnu=c(4.1,30))
+</code></pre>
+
+
+</div>

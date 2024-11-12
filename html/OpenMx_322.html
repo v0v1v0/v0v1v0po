@@ -1,0 +1,364 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create MxData Object</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a new MxData object. This can be used all forms of analysis (including WLS: see mxFitFunctionWLS).
+It packages observed data (e.g. a dataframe, matrix, or cov or cor matrix) into an object with additional information allowing it to be processed in an mxModel.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">   mxData(observed=NULL, type="none", means = NA, numObs = NA, acov=NA, fullWeight=NA,
+          thresholds=NA, ..., observedStats=NA, sort=NA, primaryKey = as.character(NA),
+          weight = as.character(NA), frequency = as.character(NA),
+          verbose = 0L, .parallel=TRUE, .noExoOptimize=TRUE,
+     minVariance=sqrt(.Machine$double.eps), algebra=c(),
+   warnNPDacov=TRUE, warnNPDuseWeight=TRUE, exoFree=NULL,
+   naAction=c("pass","fail","omit","exclude"),
+   fitTolerance=sqrt(as.numeric(mxOption(key="Optimality tolerance"))),
+   gradientTolerance=1e-2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>observed</code></td>
+<td>
+<p>A matrix or data.frame which provides data to the
+MxData object. Can be NULL when summary data are provided via ‘observedStats’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A character string defining the type of data in the
+‘observed’ argument. Must be one of “raw”,
+“cov”, “cor”, or “acov”. If no observed data are
+provided then use “none”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>means</code></td>
+<td>
+<p>An optional vector of means for use when ‘type’ is “cov”, or “cor”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numObs</code></td>
+<td>
+<p>The number of observations in the data supplied in the ‘observed’ argument. Required unless ‘type’ equals “raw”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used. Forces remaining arguments to be specified by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>observedStats</code></td>
+<td>
+<p>A list containing observed statistics for weighted least squares estimation. See details for contents</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>Whether to sort raw data prior to use (default NA).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>primaryKey</code></td>
+<td>
+<p>The column name of the primary key used to uniquely identify rows (default NA)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>The column name containing row weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>frequency</code></td>
+<td>
+<p>The column name containing row frequencies.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>level of diagnostic output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.parallel</code></td>
+<td>
+<p>logical. Whether to compute observed summary statistics in parallel.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.noExoOptimize</code></td>
+<td>
+<p>logical. Whether to use math short-cuts for the case of no exogenous predictors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minVariance</code></td>
+<td>
+<p>numeric. The minimum acceptable variance for ‘observedStats$cov’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>acov</code></td>
+<td>
+<p>Deprecated in favor of the acov element of observedStats.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fullWeight</code></td>
+<td>
+<p>Deprecated in favor of the fullWeight element of observedStats.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresholds</code></td>
+<td>
+<p>Deprecated in favor of the thresholds element of observedStats.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>algebra</code></td>
+<td>
+<p>character vector. Names of algebras used to fill in
+calculated columns of raw data. <a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warnNPDacov</code></td>
+<td>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warnNPDuseWeight</code></td>
+<td>
+<p>logical. Whether to warn when the asymptotic
+covariance matrix is non-positive definite.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exoFree</code></td>
+<td>
+<p>logical matrix of observed manifests by
+exogenous predictors. Defaults to all TRUE, but you can fix some
+regression coefficients in the <code>observedStats</code> <code>slope</code>
+matrix to zero by setting entries to FALSE. <a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>naAction</code></td>
+<td>
+<p>Specify treatment of missing data. See details. <a href="https://lifecycle.r-lib.org/articles/stages.html#maturing"><img src="../help/figures/lifecycle-maturing.svg" alt="[Maturing]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitTolerance</code></td>
+<td>
+<p>fit tolerance used for WLS summary statistics <a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gradientTolerance</code></td>
+<td>
+<p>gradient tolerance used for WLS summary statistics <a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The mxData function creates MxData objects used in mxModels.
+The ‘observed’ argument may take either a data frame or a matrix, which is then described with the
+‘type’ argument. Data types describe compatibility and usage with expectation functions in MxModel
+objects. Three data types are supported (acov is deprecated).
+</p>
+
+<dl>
+<dt>raw</dt>
+<dd>
+<p>The contents of the ‘observed’ argument are treated as raw data. Missing values are permitted and must be
+designated as the system missing value. The ‘means’ and ‘numObs’ arguments cannot be specified, as the
+‘means’ argument is not relevant and the ‘numObs’ argument is automatically populated with the number of rows
+in the data. Data of this type may use fit functions such as mxFitFunctionML or mxFitFunctionWLS.
+mxFitFunctionML will automatically use use full-information maximum likelihood for raw data.</p>
+</dd>
+<dt>cov</dt>
+<dd>
+<p>The contents of the ‘observed’ argument are treated as a covariance matrix. The ‘means’ argument is
+not required, but may be included for estimations involving means. The ‘numObs’ argument is required, which should
+reflect the number of observations or rows in the data described by the covariance matrix. Cov data typically use the
+mxFitFunctionML fit function, depending on the specified model.</p>
+</dd>
+<dt>acov</dt>
+<dd>
+<p> This type was used for WLS data as created by mxDataWLS. Unless you are using summary data, its use is deprecated.
+Instead, use type =‘raw’ and an mxFitFunctionWLS. If type ‘acov’ is set, the ‘observed’ argument will
+(usually) contain raw data and the ‘observedStats’ slot contain a list of observed statistics.</p>
+</dd>
+<dt>cor</dt>
+<dd>
+<p>The contents of the ‘observed’ argument are treated as a correlation matrix. The ‘means’ argument is
+not required, but may be included for estimations involving means. The ‘numObs’ argument is required, which should
+reflect the number of observations or rows in the data described by the covariance matrix. Models with cor data typically use
+the mxFitFunctionML fit function.</p>
+</dd>
+</dl>
+<p><em>Note on data handling</em>: OpenMx uses the names of variables to map them onto other elements of your model, such as expectation functions.
+Thus for data provided as a data.frame, ensure the columns have appropriate <code>names</code>.
+Covariance and correlation matrices need to have both the row and column names set and these must be
+identical, for instance by using <code>dimnames = list(varNames, varNames)</code>.
+</p>
+<p><strong>Correlation data</strong>
+</p>
+<p>To obtain accurate parameter estimates and standard errors,
+it is necessary to constrain the model implied covariance matrix to have
+unit variances. This constraint is added automatically if you use an
+<code>mxModel</code> with <code>type='RAM'</code> or <code>type='LISREL'</code>.
+Otherwise, you will need to add this constraint yourself.
+</p>
+<p><strong>WLS data</strong>
+</p>
+<p>The <code>observedStats</code> contains the following named objects: cov, slope, means, asymCov, useWeight, and thresholds.
+</p>
+<p>‘cov’ The (polychoric) covariance matrix of raw data variables. An error is raised if any variance is smaller <code>minVariance</code>.
+</p>
+<p>‘slope’ The regression coefficients from all exogenous predictors to all observed variables. Required for exogenous predictors.
+</p>
+<p>‘means’ The means of the data variables. Required for estimations involving means.
+</p>
+<p>‘thresholds’ Thresholds of ordinal variables. Required for models including ordinal variables.
+</p>
+<p>‘asymCov’ The asymptotic covariance matrix (all entries
+non-zero). This matrix is sample size independent. Lavaan's <code>NACOV</code> is
+comparable to <code>asymCov</code> multiplied by N^2.
+</p>
+<p>‘useWeight’ (optional) The weight matrix used in the
+mxFitFunctionWLS. Can be dense or diagonal for diagonally
+weighted least squares. This matrix is scaled by the sample size.
+Lavaan's <code>WLS.V</code> is comparable to <code>useWeight</code>.
+</p>
+<p>A simple Newton Raphson optimizer is used to obtain the summary
+statistics from the raw data. There are two parameters that control the
+accuracy of the optimization. In a first pass, the fit function is
+optimized to ‘fitTolerance’. However, fit function becomes
+imprecise as the amount of data increases due to catastrophic
+cancellation. To fine-tune the fit, the gradient is optimized to
+‘gradientTolerance’.
+</p>
+<p><em>note</em>: WLS data typically use the mxFitFunctionWLS function.
+</p>
+<p><em>IMPORTANT</em>: The WLS interface is under heavy development to support both very fast backend processing of raw data while
+continuing to support modeling applications which require direct access to the object in the front end. Some user-interface
+changes should be expected as we optimize both these workflows.
+</p>
+<p><strong>Missing values</strong>
+</p>
+<p>For raw data, the ‘naAction’ option controls the treatment of missing values.
+When set to ‘pass’, the data is passed as-is.
+When set to ‘fail’, the presence of any missing value will
+trigger an error.
+When set to ‘omit’, missing data will be discarded row-wise.
+For example, a single missing value in a row will cause the whole row to
+be discarded.
+When set to ‘exclude’, rows with missing data are retained
+but their ‘frequency’ is set to zero.
+</p>
+<p><strong>Weights</strong>
+</p>
+<p>In the case of raw data, the optional ‘weight’ argument names a column in the data that contains per-row weights.
+Similarly, the optional ‘frequency’ argument names a column in the ‘observed’ data that contains per-row
+frequencies. Frequencies must be integers but weights can be arbitrary real numbers. For data with many repeated response
+patterns, organizing the data into unique patterns and frequencies can reduce model evaluation time.
+</p>
+<p>In some cases, the fit function can be evaluated more efficiently when data are sorted. When a primary key is provided,
+sorting is disabled. Otherwise, sort defaults to TRUE.
+</p>
+<p>The mxData function does not currently place restrictions on the size, shape, or symmetry of matrices input into the
+‘observed’ argument. While it is possible to specify MxData objects as covariance or correlation matrices that do not
+have the properties commonly associated with these matrices, failure to correctly specify these matrices will likely lead to
+problems in model estimation.
+</p>
+<p><em>note</em>: MxData objects may not be included in mxAlgebras nor in the mxFitFunctionAlgebra function. To
+reference data in these functions, use a mxMatrix or a definition variable (data.var) label.
+</p>
+<p>Also, while column names are stored in the ‘observed’ slot of MxData objects, these names are not automatically
+recognized as variable names in mxPaths in RAM models. These models use the ‘manifestVars’ of
+the mxModel function to explicitly identify used variables used in the model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a new MxData object.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>To generate data, see <code>mxGenerateData</code>; For objects which may be entered as arguments in the
+‘observed’ slot, see matrix and data.frame. See MxData for the S4 class created by mxData.
+For WLS data, see mxDataWLS (deprecated). More information about the OpenMx package may be found
+here.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(OpenMx)
+
+# Simple covariance model. See other mxFitFunctions for examples with different data types
+
+# 1. Create a covariance matrix x and y
+covMatrix &lt;- matrix(nrow = 2, ncol = 2, byrow = TRUE,
+	c(0.77642931, 0.39590663,
+      0.39590663, 0.49115615)
+)
+covNames &lt;- c("x", "y")
+dimList &lt;- list(covNames, covNames)
+dimnames(covMatrix) &lt;- dimList
+
+# 2. Create an MxData object from covMatrix
+testData &lt;- mxData(observed=covMatrix, type="cov", numObs = 100)
+
+testModel &lt;- mxModel(model="testModel2",
+	mxMatrix(name="expCov", type="Symm", nrow=2, ncol=2,
+                 values=c(.2,.1,.2), free=TRUE, dimnames=dimList),
+    mxExpectationNormal("expCov", dimnames=covNames),
+    mxFitFunctionML(),
+	testData
+)
+
+outModel &lt;- mxRun(testModel)
+
+summary(outModel)
+
+</code></pre>
+
+
+</div>

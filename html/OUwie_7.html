@@ -1,0 +1,243 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OUwie.dredge</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generalized Detection of shifts in OU process</h2>
+
+<h3>Description</h3>
+
+<p>Allows the hypothesis free detection of shifts in the OU process. The number and location of shifts is estimated using a user-specified information criterion.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OUwie.dredge(phy, data, criterion=c("AIC", "AICc", "BIC", "mBIC"), shift.max=3, 
+sigma.sq.max.k=3, alpha.max.k=3, root.age=NULL, scaleHeight=FALSE, root.station=FALSE, 
+shift.point=0.5, mserr="none", algorithm=c("invert", "three.point"), 
+opts = list("algorithm"="NLOPT_LN_SBPLX", "maxeval"="1000", 
+"ftol_rel"=.Machine$double.eps^0.5))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>phy</code></td>
+<td>
+<p>a phylogenetic tree, in <code>ape</code> “phylo” format and with internal nodes labeled denoting the ancestral selective regimes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a dataframe containing two columns, taxon names in the first column, and species trait information in the second column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>criterion</code></td>
+<td>
+<p>information criterion to use for shift detection.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift.max</code></td>
+<td>
+<p>maximum allowed number of shifts.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma.sq.max.k</code></td>
+<td>
+<p>maximum allowed number of sigma.sq parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha.max.k</code></td>
+<td>
+<p>maximum allowed number of alpha parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root.age</code></td>
+<td>
+<p>indicates the age of the tree. This is to be used in cases where the "tips" are not contemporary, such as in cases for fossil trees. Default is <code>NULL</code> meaning latest tip is modern day.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaleHeight</code></td>
+<td>
+<p>a logical indicating whether the total tree height should be scaled to 1. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root.station</code></td>
+<td>
+<p>a logical indicating whether the starting state, <code class="reqn">\theta_0</code>, should be estimated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift.point</code></td>
+<td>
+<p>the point along a branch where a regime change is assumed to have occurred (if <code>SIMMAP=FALSE</code>. The default is set to 0.5, or halfway along a branch.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>algorithm</code></td>
+<td>
+<p>designates whether the standard matrix inversion ('invert') or the faster 'three-point' algorithm of Ho and Ane (2013) should be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mserr</code></td>
+<td>
+<p>designates whether a fourth column in the data matrix contains measurement error for each species value ("known"). The measurement error is assumed to be the standard error of the species mean. The default is "none".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opts</code></td>
+<td>
+<p>a list of options to pass to nloptr for the optimization: useful to adjust for faster, coarser searches</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is an expanded version of the shift point model of Ho and Ane (2014). This is currently being tested, but as of now we strongly recommend using the mBIC criterion when searching for shifts.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>OUwie.dredge</code> returns an object of class <code>OUwie.dredge</code>. This is a list with elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>$loglik</code></td>
+<td>
+<p>the maximum log-likelihood.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$criterion</code></td>
+<td>
+<p>the information criterion to use for shift detection.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$criterion.score</code></td>
+<td>
+<p>the information criterion score used for shift detection.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$shift.model</code></td>
+<td>
+<p>The shift model estimated from the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$solution</code></td>
+<td>
+<p>a matrix containing the maximum likelihood estimates of <code class="reqn">\alpha</code> and <code class="reqn">\sigma^2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$mserr.est</code></td>
+<td>
+<p>indicates value of the measurement error if it was estimated from the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$theta</code></td>
+<td>
+<p>a matrix containing the maximum likelihood estimates of <code class="reqn">\theta</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$tot.states</code></td>
+<td>
+<p>A vector of names for the different regimes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$index.mat</code></td>
+<td>
+<p>The indices of the parameters being estimated are returned. The numbers correspond to the row in the <code>eigvect</code> and can useful for identifying the parameters that are causing the objective function to be at a saddlepoint (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$simmap.tree</code></td>
+<td>
+<p>A logical indicating whether the input phylogeny is a SIMMAP formatted tree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$root.age</code></td>
+<td>
+<p>The user-supplied age at the root of the tree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$scaleHeight</code></td>
+<td>
+<p>Indicates whether the tree was constrained to a total height of 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$shift.point</code></td>
+<td>
+<p>The user-specified portion of the branch where a regime shift occurs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$opts</code></td>
+<td>
+<p>Settings used for optimization routine.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$data</code></td>
+<td>
+<p>The shift model dataset, which includes regime painting for each tip.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$phy</code></td>
+<td>
+<p>The shift model painted phylogeny.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$root.station</code></td>
+<td>
+<p>A logical indicating whether the starting state, <code class="reqn">\theta_0</code>, was estimated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$starting.vals</code></td>
+<td>
+<p>the starting values used for the parameter search.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$regime.weights</code></td>
+<td>
+<p>A table containing parameter estimates and the weights for time spent in each regime for each tip.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Jeremy M. Beaulieu</p>
+
+
+<h3>References</h3>
+
+<p>Ho, L.S.T., and C. Ane. 2014. Intrinsic inference difficulties for trait evolution with Ornstein-Uhlenbeck models. Methods in Ecology and Evolution, 5: 1133-1146.
+</p>
+
+
+</div>

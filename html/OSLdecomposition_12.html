@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sum_OSLcurves</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine RLum OSL records to one global average curve</h2>
+
+<h3>Description</h3>
+
+<p>This function adds up all CW-OSL records of the same type saved in RLum.Analysis objects and
+calculates the arithmetic mean signal from all records for each channel.
+This is useful to create global average curve with sufficient signal-to-noise ratio
+for OSL components identification with fit_OSLcurve or to create a signal background
+reference curve.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sum_OSLcurves(
+  object,
+  record_type = "OSL",
+  aliquot_selection = NULL,
+  offset_value = 0,
+  verbose = TRUE,
+  output.plot = FALSE,
+  theme.set = ggplot2::theme_classic(),
+  plot.first = FALSE,
+  title = "default",
+  filename = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>RLum.Analysis or list of RLum.Analysis (<strong>required</strong>):
+Data set of one or multiple aliquots containing CW-OSL records.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>record_type</code></td>
+<td>
+<p>character (<em>with default</em>):
+Type of records which are selected from the input <code>object</code>,
+for example: <code>"OSL"</code>,<code>"SGOSL"</code> or <code>"IRSL"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aliquot_selection</code></td>
+<td>
+<p>numeric vector (<em>optional</em>):
+Vector specifying the indices of elements (aliquots) of a list of RLum.Analysis objects
+which shall be included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset_value</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Signal offset (background) which will be subtracted from each record.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Enables console text output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output.plot</code></td>
+<td>
+<p>logical (<em>with default</em>):
+returns a plot with all data points of all records and the average curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theme.set</code></td>
+<td>
+<p>ggplot2 object (<em>with default</em>):
+sets the graphical theme of the output plot.
+See ggplot2::theme_bw for available themes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.first</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Plot includes additional drawing of first <code>record_type</code> record of first <code>object</code> list element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>character (<em>with default</em>):
+Plot title. Set <code>title = "default"</code> for an automatically generated title.
+Set <code>title = NULL</code> for no title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>character (<em>optional</em>):
+File name or path to save the plot as image. If just a file name is given, the image is
+saved in the working directory. The image type is chosen by the file ending. Both, vector images
+as well as pixel images are possible. Allowed are <code>.pdf</code>, <code>.eps</code>, <code>.svg</code> (vector graphics),
+<code>.jpg</code>, <code>.png</code>, <code>.bmp</code> (pixel graphics) and more, see ggplot2::ggsave.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data.frame of the average CW-OSL curve is returned, containing two columns: <code style="white-space: pre;">⁠$time⁠</code> and <code style="white-space: pre;">⁠$signal⁠</code>.
+</p>
+
+
+<h3>Last updates</h3>
+
+<p>2020-10-30, DM: Overworked plotting; Expanded roxygen documentation
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dirk Mittelstraß, <a href="mailto:dirk.mittelstrass@luminescence.de">dirk.mittelstrass@luminescence.de</a>
+</p>
+<p>Please cite the package the following way:
+</p>
+<p>Mittelstraß, D., Schmidt, C., Beyer, J., Heitmann, J. and Straessner, A.:
+R package OSLdecomposition: Automated identification and separation of quartz CW-OSL signal components, <em>in preparation</em>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>fit_OSLcurve, RLum.OSL_correction, RLum.OSL_global_fitting
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# 'FB_10Gy' is a dose recovery test with the Fontainebleau quartz
+# measured in a lexsyg research with green LED stimulation
+data_path &lt;- system.file("examples", "FB_10Gy_SAR.bin", package = "OSLdecomposition")
+data_set &lt;- Luminescence::read_BIN2R(data_path, fastForward = TRUE)
+
+# Give average CW-OSL curve back
+average_curve &lt;- sum_OSLcurves(data_set)
+
+</code></pre>
+
+
+</div>

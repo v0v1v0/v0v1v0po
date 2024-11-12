@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Fx_ItoA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Transformation of candidate regressors for I-optimality
+</h2>
+
+<h3>Description</h3>
+
+<p>Pre-transforms the matrix of all candidate regressors to the form suitable for computing I-optimal designs via A-optimum algorithms.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Fx_ItoA(Fx, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> matrix of candidate regressors (as rows), where <code>n</code> is the number of candidate design points and <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) is the number of parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is simple to see that the problem of I-optimality is equivalent to the problem of A-optimality for a transformed matrix of candidate regressors. This function performs the transformation. See <a href="http://www.iam.fmph.uniba.sk/design/">http://www.iam.fmph.uniba.sk/design/</a> for more details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code>n</code> times <code>m</code> matrix <code>Fx.trans</code> of all candidate regressors with the following property: The A-optimal design for the problem defined by <code>Fx.trans</code> is the same as the I-optimal design for the problem defined by <code>Fx</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>It is also simple to transform the <em>weighted</em> I-optimality to A-optimality; just multiply the rows of <code>Fx</code> by the squares roots of weights of individual design points and transform the resulting matrix by <code>Fx_ItoA</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Fx_CtoA</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Compute an I-efficient exact size 20 design without replications
+# for the Scheffe mixture model with 4 components
+# using the AQUA heuristic for A-optimality.
+
+Fx &lt;- Fx_simplex(~x1 + x2 + x3 + x4 + I(x1*x2) + I(x1*x3) + I(x1*x4) +
+                  I(x2*x3) + I(x2*x4) + I(x3*x4) - 1, 11)
+
+w &lt;- od_AQUA(Fx_ItoA(Fx), b3=24, bin=TRUE, crit="I", conic=FALSE)$w.best
+od_plot(Fx, w, Fx[, 2:4])
+
+## End(Not run)
+</code></pre>
+
+
+</div>

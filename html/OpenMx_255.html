@@ -1,0 +1,293 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxCompare</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Likelihood ratio test</h2>
+
+<h3>Description</h3>
+
+<p>Compare the fit of one or more models to that of a reference (base) model or set of reference models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxCompare(base, comparison, ..., all = FALSE,
+  boot=FALSE, replications=400, previousRun=NULL, checkHess=FALSE)
+mxCompareMatrix(models,
+			    diag=c('minus2LL','ep','df','AIC'),
+			    stat=c('p', 'diffLL','diffdf'), ...,
+  boot=FALSE, replications=400, previousRun=NULL,
+ checkHess=FALSE, wholeTable=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>base</code></td>
+<td>
+<p>A MxModel object or list of MxModel objects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comparison</code></td>
+<td>
+<p>A MxModel object or list of MxModel objects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>models</code></td>
+<td>
+<p>A MxModel object or list of MxModel objects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diag</code></td>
+<td>
+<p>statistic used for diagonal entries</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>statistic used for off-diagonal entries</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>Boolean. Whether to compare all base models with all comparison models. Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boot</code></td>
+<td>
+<p>Whether to use the bootstrap distribution to compute the p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replications</code></td>
+<td>
+<p>How many replications to use to approximate the bootstrap distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>previousRun</code></td>
+<td>
+<p>Results to re-use from a previous bootstrap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkHess</code></td>
+<td>
+<p>Whether to approximate the Hessian in each replication</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wholeTable</code></td>
+<td>
+<p>Return the whole table instead of a matrix shaped summary</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>mxCompare</code> is used to compare the fit of one or more mxModels to one or more comparison models. <code>mxCompareMatrix</code> compares all the models provided against each other.
+</p>
+<p>Model comparisons are made by subtracting the fit statistics for the comparison model from the fit statistics for the base model. Raw fit statistics of each ‘base’ model are also listed in the output table.
+</p>
+<p>The fit statistics compared depend on the kinds of models compared.  Models fit with maximum likelihood are compared based on their minus two log likelihood values.  Under certain regularity conditions, the difference in minus two log likelihood values from nested models is chi-squared distributed and forms a likelihood ratio test statistic.  Models fit with weighted least squares are compared based on their Satorra-Bentler (2001) scaled difference chi-squared test statistics.  Under full weighted least squares, the Satorra-Bentler chi-squared value is equal to the difference in the model chi-squared values; however, for unweighted and diagonally weighted least squares, the two are no longer equal.  Satorra and Bentler (2001) showed that that their test statistic behaved well under a variety of conditions, including small sample sizes.  By contrast the much simpler difference in the chi-squared statistics only behaved well under large sample sizes (e.g., greater than or equal to 300 rows of data).
+</p>
+<p>Specific to weighted least squares, researchers sometimes use mean-adjusted chi-squared statistics and mean-and-variance scaled chi-squared statistics.  Some programs call these WLSM and WLSMV statistics.  In some cases, it is fine to evaluate the total fit of a model using adjusted and scaled chi-squared statistics.  However, never, ever, ever, ..., ever take differences in mean-adjusted chi-squared statistics, and use them for nested model comparisons.  Similarly, never, ever, ever, ..., ever, ever take differences in mean-and-variance scaled chi-squared statistics, and use them for nested model comparisons.  The differences in these adjusted and scaled chi-squared statistics are not chi-squared distributed and do not form a valid basis for model comparison.  So, just don't do it.
+</p>
+<p>Although not always checked by <code>mxCompare</code>, you should never compare models with different data sets or that use different variables from the same data set.  <code>mxCompare</code> might not stop you from doing this, so be thoughtful when comparing models.  Make sure your models are nested and use the same data.  Weighted least squares models are one case of comparing different data sets that requires particular care.  <em>When comparing WLS models, make sure you are using the same exogenous covariates for all compared models.</em>  Because WLS is a multi-stage estimation approach, exogenous covariates residualize and change the data fitted in WLS.  Consequently, WLS models with different exogenous covariates actually have different data.  By contrast, maximum likelihood models with different exogenous covariates still use the same data and are valid to compare.
+</p>
+<p>The <code>mxCompare</code> function makes an effort to only make valid comparisons.
+If a comparison is made where the <code>comparison</code> model has a
+higher minus 2 log likelihood (-2LL) than the <code>base</code> model, then the
+difference in their -2LLs will be negative. P-values for likelihood
+ratio tests will not be reported when either the -2LL or degrees of
+freedom for the comparison are negative. 
+To ensure that the differences between models are positive and yield p-values for likelihood ratio
+tests, models listed in the ‘base’ argument must
+be more saturated (i.e., more estimated parameters and fewer degrees of
+freedom) than models listed in the ‘comparison’ argument. For
+<code>mxCompareMatrix</code> only the comparisons that make sense will be included.
+</p>
+<p>When multiple models are included in both the ‘base’ and ‘comparison’ arguments, then comparisons are made between the two lists of models based on the value of the ‘all’ argument. If ‘all’ is set to FALSE (default), then the first model in the ‘base’ list is compared to the first model in the ‘comparison’ list, second with second, and so on. If there are an unequal number of ‘base’ and ‘comparison’ models, then the shorter list of models is repeated to match the length of the longer list. For example, comparing base models ‘B1’ and ‘B2’ with comparison models ‘C1’, ‘C2’ and ‘C3’ will yield three comparisons: ‘B1’ with ‘C1’, ‘B2’ with ‘C2’, and ‘B1’ with ‘C3’. Each of those comparisons are prefaced by a comparison between the base model and a missing comparison model to present the fit of the base model.
+</p>
+<p>If ‘all’ is set to TRUE, all possible comparisons between base and comparison models are made, and one entry is made for each base model. All comparisons involving the first model in ‘base’ are made first, followed by all comparisons with the second ‘base’ model, and so on. When there are multiple models in either the ‘base’ or ‘comparison’ arguments but not both, then the ‘all’ argument does not affect the set of comparisons made.
+</p>
+<p>The following columns appear in the output for maximum likelihood comparisons:
+</p>
+
+<dl>
+<dt>base</dt>
+<dd>
+<p>Name of the base model.</p>
+</dd>
+<dt>comparison</dt>
+<dd>
+<p>Name of the comparison model. Is &lt;NA&gt; for the first </p>
+</dd>
+<dt>ep</dt>
+<dd>
+<p>Estimated parameters of the comparison model.</p>
+</dd>
+<dt>minus2LL</dt>
+<dd>
+<p>Minus 2*log-likelihood of the comparison model. If the comparison model is &lt;NA&gt;, then the minus 2*log-likelihood of the base model is given.</p>
+</dd>
+<dt>df</dt>
+<dd>
+<p>Degrees in freedom of the comparison model. If the comparison model is &lt;NA&gt;, then the degrees of freedom of the base model is given.</p>
+</dd>
+<dt>AIC</dt>
+<dd>
+<p>Akaike's Information Criterion for the comparison model. If the comparison model is &lt;NA&gt;, then the AIC of the base model is given.</p>
+</dd>
+<dt>diffLL</dt>
+<dd>
+<p>Difference in minus 2*log-likelihoods of the base and comparison models. Will be positive when base model -2LL is higher than comparison model -2LL.</p>
+</dd>
+<dt>diffdf</dt>
+<dd>
+<p>Difference in degrees of freedoms of the base and comparison models. Will be positive when base model DF is lower than comparison model DF (base model estimated parameters is higher than comparison model estimated parameters)</p>
+</dd>
+<dt>p</dt>
+<dd>
+<p>P-value for likelihood ratio test based on diffLL and diffdf values.</p>
+</dd>
+</dl>
+<p>Weighted least squares reports a similar set of columns with four substitutions:
+</p>
+
+<dl>
+<dt>chisq</dt>
+<dd>
+<p>Replaces the <code>minus2LL</code> column.  This is the comparison model's chi-squared statistic from Browne (1984, Equation 2.20a), accounting for some misspecification of the weight matrix.</p>
+</dd>
+<dt>AIC</dt>
+<dd>
+<p>Although this has the same name as that in maximum likelihood, it is really a pseudo-AIC using the comparison model chi-squared and the number of estimated parameters.  It is the chi-squared value plus two times the number of free parameters.</p>
+</dd>
+<dt>SBchisq</dt>
+<dd>
+<p>Replaces the <code>diffLL</code> column.  This is the Satorra-Bentler (2001, p. 511) scaled difference chi-squared statisic between the base model and the comparison model.  If your models use full weighted least squares, then this will be the same as the difference between the individual model chi-squared statistics.  However, for unweighted and diagonally weighted least square, the <code>SB chisq</code> will not be equal to the difference between the component model chi-squared statistics.</p>
+</dd>
+<dt>p</dt>
+<dd>
+<p>p-value for the Satorra-Bentler chi-squared statistic.</p>
+</dd>
+</dl>
+<p>In addition to the particular columns for maximum likelihood and weighted least squares, there are three general columns that are not printed but are accessible via the <code>$</code> and <code>[</code> extractors.
+</p>
+
+<dl>
+<dt>fit</dt>
+<dd>
+<p>The individual model fit value: <code>m2ll</code> for maximum likelihood models, <code>chisq</code> for WLS models.</p>
+</dd>
+<dt>fitUnits</dt>
+<dd>
+<p>The units of the fit function: <code>"-2LL"</code> for ML models, <code>"r'Wr"</code> for WLS models.</p>
+</dd>
+<dt>diffFit</dt>
+<dd>
+<p>The difference in fit values between the base and comparison models: <code>diffLL</code> for ML models, <code>SBchisq</code> for WLS models.</p>
+</dd>
+</dl>
+<p><code>mxCompare</code> will give a p-value for any comparison in which
+both ‘diffLL’ and ‘diffdf’ are non-negative. However, this
+p-value is based on the assumptions of the likelihood ratio test,
+specifically that the two models being compared are nested. The
+likelihood ratio test and associated p-values are not valid when the
+comparison model is not nested in the referenced base model. For a more
+accurate p-value, the empirical bootstrap distribution can be computed
+(‘boot=TRUE’). However, ‘replications’ must be set high
+enough for an accurate approximation. The Monte Carlo SE of a proportion
+for B replications is <code class="reqn">\sqrt(p*(1-p)/B)</code>, but this will be zero if p
+is zero, which is nonsense.  Note that a parametric-bootstrap p-value of
+zero must be interpreted as <code class="reqn">p &lt; 1/B</code>, which, depending on <code class="reqn">B</code>
+and the desired Type I error rate, may not be "statistically significant."
+</p>
+<p>When ‘boot=TRUE’, the model has a default compute plan, and
+‘checkHess’ is kept at FALSE then the Hessian will not be
+approximated or checked.  On the other hand, ‘checkHess’ is TRUE
+then the Hessian will be approximated by finite differences. This
+procedure is of some value because it can be informative to check
+whether the Hessian is positive definite (see
+<code>mxComputeHessianQuality</code>).  However, approximating the
+Hessian is often costly in terms of CPU time. For bootstrapping, the
+parameter estimates derived from the resampled data are typically of
+primary interest.
+</p>
+<p><em>note</em>: The mxCompare function does not directly accept a digits argument, and depends
+on the value of the 'digits' option. To set the minimum number of significant digits
+printed, use options('digits' = N) (see example).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a new <code>MxCompare</code> object.  If you want something more like a table of results, use <code>as.data.frame()</code> on the returned <code>MxCompare</code> object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mxPowerSearch</code>;
+<code>mxModel</code>;  <code>options</code> (use options('mxOptions') to see all the OpenMx-specific options) 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(demoOneFactor)
+manifests &lt;- names(demoOneFactor)
+latents &lt;- "G1"
+model1 &lt;- mxModel(model="One Factor", type="RAM",
+      manifestVars = manifests,
+      latentVars = latents,
+      mxPath(from = latents, to=manifests),
+      mxPath(from = manifests, arrows = 2),
+      mxPath(from = latents, arrows = 2, free = FALSE, values = 1.0),
+      mxData(cov(demoOneFactor), type = "cov", numObs = 500)
+)
+
+fit1 &lt;- mxRun(model1)
+
+latents &lt;- c("G1", "G2")
+model2 &lt;- mxModel(model="One factor Rasch equated", type="RAM",
+      manifestVars = manifests,
+      latentVars = latents,
+      mxPath(from = latents[1], to=manifests[1:5], labels='raschEquated'),
+
+      mxPath(from = manifests, arrows = 2),
+      mxPath(from = latents, arrows = 2, free = FALSE, values = 1.0),
+      mxData(cov(demoOneFactor), type = "cov", numObs=500)
+)
+fit2 &lt;- mxRun(model2)
+
+mxCompare(fit1, fit2) # Rasch equated is significantly worse
+
+# Vary precision (rounding) of the table 
+oldPrecision = as.numeric(options('digits')) 
+options('digits' = 1)
+mxCompare(fit1, fit2)
+options('digits' = oldPrecision)
+</code></pre>
+
+
+</div>

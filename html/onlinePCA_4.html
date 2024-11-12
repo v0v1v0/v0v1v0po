@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ccipca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Candid Covariance-Free Incremental PCA</h2>
+
+<h3>Description</h3>
+
+<p>Stochastic gradient ascent algorithm CCIPCA of Weng et al. (2003). 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ccipca(lambda, U, x, n, q = length(lambda), l=2, center, tol = 1e-8, sort = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>vector of eigenvalues.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>matrix of eigenvectors (PC) stored in columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>new data vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>sample size before observing <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>number of eigenvectors to compute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l</code></td>
+<td>
+<p>'amnesic' parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>optional centering vector for <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>numerical tolerance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>Should the new eigenpairs be sorted?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The 'amnesic' parameter <code>l</code> determines the weight of past observations in the PCA update. If <code>l=0</code>, all observations have  equal weight, which is appropriate for stationary processes. Otherwise, typical values of <code>l</code> range between 2 and 4. 
+As <code>l</code> increases, more weight is placed on new observations and less on older ones. For meaningful results, the condition <code>0&lt;=l&lt;n</code> should hold.<br>
+The CCIPCA algorithm iteratively updates the PCs while deflating  <code>x</code>. If at some point the Euclidean norm of <code>x</code> becomes less than <code>tol</code>, the algorithm stops to prevent numerical overflow.<br>
+If <code>sort</code> is TRUE, the updated eigenpairs are sorted by decreasing eigenvalue. If FALSE, they are not sorted.      
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components  
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>updated eigenvalues.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vectors</code></td>
+<td>
+<p>updated eigenvectors.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Weng et al. (2003). Candid Covariance-free Incremental Principal Component Analysis. <em>IEEE Trans. Pattern Analysis and Machine Intelligence</em>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Simulation of Brownian motion
+n &lt;- 100 # number of paths
+d &lt;- 50	 # number of observation points
+q &lt;- 10	 # number of PCs to compute
+x &lt;- matrix(rnorm(n*d,sd=1/sqrt(d)), n, d)
+x &lt;- t(apply(x,1,cumsum))	
+
+## Initial PCA
+n0 &lt;- 50
+pca &lt;- princomp(x[1:n0,])
+xbar &lt;- pca$center
+pca &lt;- list(values=pca$sdev^2, vectors=pca$loadings)
+
+## Incremental PCA
+for (i in n0:(n-1))
+{	xbar &lt;- updateMean(xbar, x[i+1,], i)
+  	pca &lt;- ccipca(pca$values, pca$vectors, x[i+1,], i, q = q, center = xbar) }
+
+# Uncentered PCA
+nx1 &lt;- sqrt(sum(x[1,]^2))
+pca &lt;- list(values=nx1^2, vectors=as.matrix(x[1,]/nx1))
+for (i in n0:(n-1))
+  	pca &lt;- ccipca(pca$values, pca$vectors, x[i+1,], i, q = q)
+
+</code></pre>
+
+
+</div>

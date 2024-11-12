@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>runOntoFast</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run ontoFAST interactively</h2>
+
+<h3>Description</h3>
+
+<p>This function runs ontoFAST in interactive mode. Interactive mode allows character annotation and navigation through ontology network.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">runOntoFast(
+  is_a = c("is_a"),
+  part_of = c("BFO:0000050"),
+  nchar = "all",
+  show.chars = TRUE,
+  shiny_in = "shiny_in",
+  file2save = "OntoFAST_shiny_in.RData",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>is_a</code></td>
+<td>
+<p>term for is_a relationships</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>part_of</code></td>
+<td>
+<p>term for part_of relationships</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nchar</code></td>
+<td>
+<p>number of characters to show</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.chars</code></td>
+<td>
+<p>shows character statements</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shiny_in</code></td>
+<td>
+<p>a name of ontology (shiny_in) object in "ontofast" enviroment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file2save</code></td>
+<td>
+<p>a name of the file to which shiny_in object is saved in interactive mode</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>runs ontoFAST interactively using Shiny.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Sharkey_2011)
+data(HAO)
+hao_obo&lt;-onto_process(HAO, Sharkey_2011[,1], do.annot = FALSE)
+ontofast &lt;- new.env(parent = emptyenv())
+ontofast$shiny_in &lt;- make_shiny_in(hao_obo)
+runOntoFast(is_a = c("is_a"), part_of = c("BFO:0000050"), shiny_in="shiny_in" )
+</code></pre>
+
+
+</div>

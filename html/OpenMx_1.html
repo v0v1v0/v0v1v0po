@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OpenMx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OpenMx: An package for Structural Equation Modeling and Matrix Algebra Optimization</h2>
+
+<h3>Description</h3>
+
+<p>OpenMx is a package for structural equation modeling, matrix algebra optimization and other statistical estimation problems. 
+Try the example below. We try and have useful help files: for instance help(<code>mxRun</code>) to learn more. Also the reference manual
+</p>
+
+
+<h3>Details</h3>
+
+<p>OpenMx solves algebra optimization and statistical estimation problems using matrix algebra. 
+Most users use it for Structural equation modeling.
+</p>
+<p>The core function is <code>mxModel</code>, which makes a model. Models are containers for <code>mxData</code>, <code>matrices</code>, <code>mxPath</code>s
+<code>algebras</code>, mxBounds, <code>confidence intervals</code>, and <code>mxConstraints</code>.
+Most models require an expectation (see the list below) to calculate the expectations for the model.
+Models also need a fit function, several of which are built-in (see below).
+OpenMx also allows user-defined fit functions for purposes not covered by the built-in functions. (e.g., <code>mxFitFunctionR</code> or <code>mxFitFunctionAlgebra</code>).
+</p>
+<p><em>Note</em>, for mxModels of <code>type="RAM"</code>, the expectation and fit-function are set for you automatically.
+</p>
+<p><strong>Running and summarizing a model</strong>
+</p>
+<p>Once built, the resulting mxModel can be run (i.e., optimized) using  <code>mxRun</code>. This returns the fitted model.
+</p>
+<p>You can summarize the results of the model using <code>summary</code>(yourModel)
+</p>
+<p><strong>Additional overview of model making and getting started</strong>
+</p>
+<p>The OpenMx manual is online (see references below). However, <code>mxRun</code>, <code>mxModel</code>, <code>mxMatrix</code>
+all have working examples that will help get you started as well.
+</p>
+<p>The main OpenMx functions are: <code>mxAlgebra</code>, <code>mxBounds</code>, <code>mxCI</code>, <code>mxConstraint</code>, <code>mxData</code>, 
+<code>mxMatrix</code>, <code>mxModel</code>, and <code>mxPath</code>.
+</p>
+<p>Expectation functions include <code>mxExpectationNormal</code>, <code>mxExpectationRAM</code>, <code>mxExpectationLISREL</code>, and <code>mxExpectationStateSpace</code>;
+</p>
+<p>Fit functions include mxFitFunctionML, mxFitFunctionAlgebra, mxFitFunctionRow and mxFitFunctionR.
+</p>
+<p><strong>Datasets built into OpenMx</strong>
+</p>
+<p><code>OpenMx</code> comes with over a dozen useful datasets built-in. Discover them using <code>data(package="OpenMx")</code>, and open them with, 
+for example, <code>data("jointdata", package ="OpenMx", verbose= TRUE)</code>
+</p>
+<p>Please cite the 'OpenMx' package in any publications that make use of it:
+</p>
+<p>Michael C. Neale, Michael D. Hunter, Joshua N. Pritikin, Mahsa Zahery, Timothy R. Brick Robert M.
+Kirkpatrick, Ryne Estabrook, Timothy C. Bates, Hermine H. Maes, Steven M. Boker. (2016).
+OpenMx 2.0: Extended structural equation and statistical modeling. <em>Psychometrika</em>, <strong>81</strong>, 535–549. 
+DOI: 10.1007/s11336-014-9435-8
+</p>
+<p>Steven M. Boker, Michael C. Neale, Hermine H. Maes, Michael J. Wilde, Michael Spiegel, Timothy R. Brick,
+Jeffrey Spies, Ryne Estabrook, Sarah Kenny, Timothy C. Bates, Paras Mehta, and John Fox. (2011)
+OpenMx: An Open Source Extended Structural Equation Modeling Framework. 
+<em>Psychometrika</em>, 306-317. DOI:10.1007/s11336-010-9200-6
+</p>
+<p>Steven M. Boker, Michael C. Neale, Hermine H. Maes, Michael J. Wilde, Michael Spiegel, Timothy R. Brick, Ryne
+Estabrook, Timothy C. Bates, Paras Mehta, Timo von Oertzen, Ross J. Gore, Michael D. Hunter, Daniel C.
+Hackett, Julian Karch, Andreas M. Brandmaier, Joshua N. Pritikin, Mahsa Zahery, Robert M. Kirkpatrick, 
+Yang Wang, and Charles Driver. (2016) OpenMx 2 User Guide. 
+http://openmx.ssri.psu.edu/docs/OpenMx/latest/OpenMxUserGuide.pdf
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation">https://openmx.ssri.psu.edu/documentation</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OpenMx)
+data(demoOneFactor)
+# ===============================
+# = Make and run a 1-factor CFA =
+# ===============================
+
+latents  = c("G") # the latent factor
+manifests = names(demoOneFactor) # manifest variables to be modeled
+# ====================
+# = Make the MxModel =
+# ====================
+m1 &lt;- mxModel("One Factor", type = "RAM", 
+	manifestVars = manifests, latentVars = latents, 
+	mxPath(from = latents, to = manifests),
+	mxPath(from = manifests, arrows = 2),
+	mxPath(from = latents, arrows = 2, free = FALSE, values = 1.0),
+	mxData(cov(demoOneFactor), type = "cov", numObs = 500)
+)
+
+# ===============================
+# = mxRun it and get a summary! =
+# ===============================
+
+m1 = mxRun(m1)
+summary(m1)
+
+</code></pre>
+
+
+</div>

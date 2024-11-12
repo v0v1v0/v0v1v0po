@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.outForest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Out-of-Sample Application</h2>
+
+<h3>Description</h3>
+
+<p>Identifies outliers in new data based on previously fitted "outForest" object.
+The result of <code>predict()</code> is again an object of class "outForest".
+All its methods can be applied to it.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'outForest'
+predict(
+  object,
+  newdata,
+  replace = c("pmm", "predictions", "NA", "no"),
+  pmm.k = 3L,
+  threshold = object$threshold,
+  max_n_outliers = Inf,
+  max_prop_outliers = 1,
+  seed = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object of class "outForest".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>A new <code>data.frame</code> to be assessed for numeric outliers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replace</code></td>
+<td>
+<p>Should outliers be replaced via predictive mean matching "pmm"
+(default), by "predictions", or by <code>NA</code> ("NA").
+Use "no" to keep outliers as they are.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pmm.k</code></td>
+<td>
+<p>For <code>replace = "pmm"</code>, from how many nearest OOB prediction neighbours
+(from the original non-outliers) to sample?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Threshold above which an outlier score is considered an outlier.
+The default is 3.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_n_outliers</code></td>
+<td>
+<p>Maximal number of outliers to identify.
+Will be used in combination with <code>threshold</code> and <code>max_prop_outliers</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_prop_outliers</code></td>
+<td>
+<p>Maximal relative count of outliers.
+Will be used in combination with <code>threshold</code> and <code>max_n_outliers</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Integer random seed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class "outForest".
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>outForest()</code>, <code>outliers()</code>, <code>Data()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">(out &lt;- outForest(iris, allow_predictions = TRUE))
+iris1 &lt;- iris[1, ]
+iris1$Sepal.Length &lt;- -1
+pred &lt;- predict(out, newdata = iris1)
+outliers(pred)
+Data(pred)
+plot(pred)
+plot(pred, what = "scores")
+</code></pre>
+
+
+</div>

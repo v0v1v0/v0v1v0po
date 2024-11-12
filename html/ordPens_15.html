@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordCV</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cross-validation for penalized regression with ordinal predictors.</h2>
+
+<h3>Description</h3>
+
+<p>Performs k-fold cross-validation in order to evaluate the performance and/or select an optimal smoothing parameter of a penalized regression model with ordinal predictors.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordCV(x, y, u = NULL, z = NULL, k=5, lambda, offset = rep(0,length(y)), 
+  model = c("linear", "logit", "poisson", "cumulative"), 
+  type=c("selection", "fusion"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>matrix of integers 1,2,... giving the observed levels
+of the ordinal factor(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>the vector of response values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>u</code></td>
+<td>
+<p>a matrix (or <code>data.frame</code>) of additional categorical (nominal) 
+predictors, with each column corresponding to one (additional) predictor and
+containing numeric values from {1,2,...}; corresponding dummy coefficients
+will not be penalized, and for each covariate category 1 is taken as reference category. Currently not supported if <code>model="cumulative"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>a matrix (or <code>data.frame</code>) of additional metric predictors, with 
+each column corresponding to one (additional) predictor; corresponding
+coefficients will not be penalized. Currently not supported if <code>model="cumulative"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>number of folds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>vector of penalty parameters (in decreasing order).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>vector of offset values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>the model which is to be fitted. Possible choices are "linear"
+(default), "logit", "poisson" or "cumulative". See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>penalty to be applied. If "selection", group lasso penalty for smoothing and selection is used. If "fusion", a fused lasso penalty for fusion and selection is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments to <code>ordFusion</code> and
+<code>ordSelect</code>, respectively.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The method assumes that categorical covariates (contained in <code>x</code> and 
+<code>u</code>) take values 1,2,...,max, where max denotes the (columnwise) highest 
+level observed in the data. If any level between 1 and max is not observed for an ordinal predictor, 
+a corresponding (dummy) coefficient is fitted anyway. If any level &gt; max is 
+not observed but possible in principle, and a corresponding coefficient is to 
+be fitted, the easiest way is to add a corresponding row to <code>x</code> (and 
+<code>u</code>,<code>z</code>) with corresponding <code>y</code> value being <code>NA</code>.
+</p>
+<p>If a linear regression model is fitted, response vector <code>y</code> may contain 
+any numeric values; if a logit model is fitted, <code>y</code> has to be 0/1 coded;
+if a poisson model is fitted, <code>y</code> has to contain count data. If a cumulative   logit model is fitted, <code>y</code> takes values 1,2,...,max. 
+</p>
+<p>For the cumulative model, the measure of performance used by the function is the brier score, being the sum of squared differences between (indicator) outcome and predicted probabilities  <code class="reqn">P(Y_i=r)=P(y_{ir})=\pi_{ir}</code>, with observations <code class="reqn">i=1,...,n</code> and classes <code class="reqn">r=1,...,c</code>. Otherwise, the deviance is used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Train</code></td>
+<td>
+<p>matrix of size (<code>k</code> <code class="reqn">x</code> <code>length(lambda)</code>) containing brier/deviance scores on the training data. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Test</code></td>
+<td>
+<p>Brier/deviance score matrix when looking at the test data set.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Aisouda Hoshiyar</p>
+
+
+<h3>References</h3>
+
+<p>Hoshiyar, A., Gertheiss, L.H., and Gertheiss, J. (2023). <em>Regularization and     Model Selection for Item-on-Items Regression with Applications to Food Products' Survey Data.</em> Preprint, available from https://arxiv.org/abs/2309.16373.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ordSelect</code>, <code>ordFusion</code></p>
+
+
+</div>

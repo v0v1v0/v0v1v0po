@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convert_date</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert from Excel date, datetime or hms number to R Date type</h2>
+
+<h3>Description</h3>
+
+<p>Convert from Excel date number to R Date type
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convert_date(x, origin = "1900-01-01", ...)
+
+convert_datetime(x, origin = "1900-01-01", ...)
+
+convert_hms(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A vector of integers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>origin</code></td>
+<td>
+<p>date. Default value is for Windows Excel 2010</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code>base::as.Date.character</code>
+</p>
+
+<dl>
+<dt><code>format</code></dt>
+<dd>
+<p>a <code>character</code> string.  If not specified when
+converting from a character representation, it will try
+<code>tryFormats</code> one by one on the first non-<code>NA</code> element, and
+give an error if none works.  Otherwise, the processing is via
+<code>strptime()</code> whose help page describes available
+conversion specifications.</p>
+</dd>
+<dt><code>tryFormats</code></dt>
+<dd>
+<p><code>character</code> vector of <code>format</code>
+strings to try if <code>format</code> is not specified.</p>
+</dd>
+<dt><code>optional</code></dt>
+<dd>
+<p><code>logical</code> indicating to return <code>NA</code>
+(instead of signalling an error) if the format guessing does not succeed.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Excel stores dates as number of days from some origin day
+</p>
+
+
+<h3>Value</h3>
+
+<p>A date, datetime, or hms.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wb_add_data()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># date --
+## 2014 April 21st to 25th
+convert_date(c(41750, 41751, 41752, 41753, 41754, NA))
+convert_date(c(41750.2, 41751.99, NA, 41753))
+
+# datetime --
+##  2014-07-01, 2014-06-30, 2014-06-29
+x &lt;- c(41821.8127314815, 41820.8127314815, NA, 41819, NaN)
+convert_datetime(x)
+convert_datetime(x, tz = "Australia/Perth")
+convert_datetime(x, tz = "UTC")
+
+# hms ---
+## 12:13:14
+x &lt;- 0.50918982
+convert_hms(x)
+</code></pre>
+
+
+</div>

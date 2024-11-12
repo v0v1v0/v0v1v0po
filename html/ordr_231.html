@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>recoverers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Access factors, coordinates, and metadata from ordination objects</h2>
+
+<h3>Description</h3>
+
+<p>These functions return information about the matrix
+factorization underlying an ordination.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">recover_rows(x)
+
+recover_cols(x)
+
+## Default S3 method:
+recover_rows(x)
+
+## Default S3 method:
+recover_cols(x)
+
+## S3 method for class 'data.frame'
+recover_rows(x)
+
+## S3 method for class 'data.frame'
+recover_cols(x)
+
+get_rows(x, elements = "all")
+
+get_cols(x, elements = "all")
+
+## S3 method for class 'tbl_ord'
+as.matrix(x, ..., .matrix, elements = "all")
+
+recover_inertia(x)
+
+## Default S3 method:
+recover_inertia(x)
+
+recover_coord(x)
+
+## Default S3 method:
+recover_coord(x)
+
+## S3 method for class 'data.frame'
+recover_coord(x)
+
+get_coord(x)
+
+get_inertia(x)
+
+## S3 method for class 'tbl_ord'
+dim(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class 'tbl_ord'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>elements</code></td>
+<td>
+<p>Character vector; which elements of each factor for which to
+render graphical elements. One of <code>"all"</code> (the default), <code>"active"</code>, or any
+supplementary element type defined by the specific class methods (e.g.
+<code>"score"</code> for 'factanal', 'lda_ord', and 'cancord_ord' and <code>"intraset"</code> and
+<code>"interset"</code> for 'cancor_ord').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments from <code>base::as.matrix()</code>; ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.matrix</code></td>
+<td>
+<p>A character string partially matched (lowercase) to several
+indicators for one or both matrices in a matrix decomposition used for
+ordination. The standard values are <code>"rows"</code>, <code>"cols"</code>, and <code>"dims"</code> (for
+both).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code style="white-space: pre;">⁠recover_*()⁠</code> S3 methods extract one or both of the
+row and column matrix factors that constitute the original ordination. These
+are interpreted as the case scores (rows) and the variable loadings
+(columns). The <code style="white-space: pre;">⁠get_*()⁠</code> functions optionally (and by default) include any
+supplemental observations (see supplementation).
+</p>
+<p>The <code style="white-space: pre;">⁠recover_*()⁠</code> functions are generics that require methods for each
+ordination class. They are not intended to be called directly but are
+exported so that users can query <code>methods("recover_*")</code>.
+</p>
+<p><code>get_coord()</code> retrieves the names of the coordinates shared by the matrix
+factors on which the original data were ordinated, and <code>get_inertia()</code>
+retrieves a vector of the inertia with these names. <code>dim()</code> retrieves the
+dimensions of the row and column factors, which reflect the dimensions of the
+matrix they reconstruct—<strong>not</strong> the original data matrix. (This matters for
+techniques that rely on eigendecomposition, for which the decomposed matrix
+is square.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code style="white-space: pre;">⁠recover_*()⁠</code> functions are generics whose methods return base R
+objects retrieved from the model wrapped in the 'tbl_ord' class:
+</p>
+
+<ul>
+<li> <p><code>rows</code>: the row matrix as stored in the model
+</p>
+</li>
+<li> <p><code>cols</code>: the column matrix as stored in the model
+</p>
+</li>
+<li> <p><code>inertia</code>: the vector of eigen-values or squared singular values,
+often known by other names depending on the model
+</p>
+</li>
+<li> <p><code>coord</code>: names for the artificial axes, from the model if available
+The <code style="white-space: pre;">⁠get_*()⁠</code> functions (which are not generics) return modifications of
+these objects:
+</p>
+</li>
+<li> <p><code>rows</code>: the recovered rows,
+adjusted according to any negation of axes or conference of inertia
+</p>
+</li>
+<li> <p><code>cols</code>: the recovered columns,
+adjusted according to any negation of axes or conference of inertia
+</p>
+</li>
+<li> <p><code>inertia</code>: the recovered inertia, named by the recovered coordinates
+</p>
+</li>
+<li> <p><code>coord</code>: the recovered coordinates (unmodified)
+<code>dim()</code> returns the dimensions of the decomposed matrix, i.e. the numbers of
+rows of <code>recover_rows()</code> and of <code>recover_cols()</code>.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other generic recoverers: 
+<code>augmentation</code>,
+<code>conference</code>,
+<code>supplementation</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># example ordination: LRA of U.S. arrests data
+arrests_lra &lt;- ordinate(USArrests, cols = c(Murder, Rape, Assault), lra)
+
+# extract matrix factors
+as.matrix(arrests_lra, .matrix = "rows")
+as.matrix(arrests_lra, .matrix = "cols")
+# special named functions
+get_rows(arrests_lra)
+get_cols(arrests_lra)
+# get dimensions of underlying matrix factorization (not of original data)
+dim(arrests_lra)
+
+# get names of artificial / latent coordinates
+get_coord(arrests_lra)
+# get distribution of inertia
+get_inertia(arrests_lra)
+</code></pre>
+
+
+</div>

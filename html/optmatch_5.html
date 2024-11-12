@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>antiExactMatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Specify a matching problem where units in a common factor cannot be matched.</h2>
+
+<h3>Description</h3>
+
+<p>This function builds a distance specification where treated units
+are infinitely far away from control units that share the same
+level of a given factor variable. This can be useful for ensuring
+that matched groups come from qualitatively different groups.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">antiExactMatch(x, z)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A factor across which matches should be allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>A logical or binary vector the same length as <code>x</code>
+indicating treatment and control for each unit in the study.
+TRUE or 1 represents a treatment unit, FALSE of 0 represents
+a control unit. NA units are excluded.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>exactMatch</code> function provides a way of specifying
+a matching problem where only units within a factor level may be
+matched. This function provides the reverse scenario: a matching
+problem in which only units across factor levels are permitted to
+match. Like <code>exactMatch</code>, the results of this function will
+most often be used as a <code>within</code> argument to
+<code>match_on</code> or another distance specification creation
+function to limit the scope of the final distance specification
+(i.e., disallowing any match between units with the same value on
+the factor variable <code>x</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A distance specification that encodes the across factor level constraint.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>exactMatch</code>, <code>match_on</code>, <code>caliper</code>, <code>fullmatch</code>, <code>pairmatch</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(nuclearplants)
+
+# force entries to be within the same factor:
+em &lt;- fullmatch(exactMatch(pr ~ pt, data = nuclearplants), data = nuclearplants)
+table(nuclearplants$pt, em)
+
+# force treated and control units to have different values of `pt`:
+z &lt;- nuclearplants$pr
+names(z) &lt;- rownames(nuclearplants)
+aem &lt;- fullmatch(antiExactMatch(nuclearplants$pt, z), data = nuclearplants)
+table(nuclearplants$pt, aem)
+</code></pre>
+
+
+</div>

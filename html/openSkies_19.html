@@ -1,0 +1,158 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>openSkiesFlight</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>An <code>R6Class</code> object representing a specific flight</h2>
+
+<h3>Description</h3>
+
+<p><code>R6Class</code> object representing a specific flight performed by a
+certain aircraft. Contains information about the aircraft that performed the
+flight, the airports of origin and destination, the times of departure and
+arrival and the callsign under which the flight was performed. New instances can be manually created by providing values for at least the fields <code>ICAO24</code>,  <code>departure_time</code> and  <code>arrival_time</code>. 
+Alternatively, <code>getAircraftFlights</code>, <code>getAirportDepartures</code>,
+<code>getAirportArrivals</code> <code>getIntervalFlights</code> will all 
+return lists of <code>openSkiesFlight</code> objects corresponding to the flights
+that match the query conditions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">openSkiesFlight
+</code></pre>
+
+
+<h3>Fields</h3>
+
+
+<dl>
+<dt><code>ICAO24</code></dt>
+<dd>
+<p>String with the ICAO 24-bit aicraft address associated to
+the aircraft in hexadecimal format
+</p>
+</dd>
+<dt><code>call_sign</code></dt>
+<dd>
+<p>String with callsign under which the flight was
+performed
+</p>
+</dd>
+<dt><code>state_vectors</code></dt>
+<dd>
+<p>Object of class <code>openSkiesStateVectorSet</code>
+with field <code>time_series = TRUE</code> containing the state vectors received
+from the aircraft during the flight
+</p>
+</dd>
+<dt><code>origin_airport</code></dt>
+<dd>
+<p>String with the ICAO 4-letter code of the airport
+of origin
+</p>
+</dd>
+<dt><code>destination_airport</code></dt>
+<dd>
+<p>String with the ICAO 4-letter code of the 
+destination airport
+</p>
+</dd>
+<dt><code>departure_time</code></dt>
+<dd>
+<p>String with the date and time at which the 
+aircraft took off
+</p>
+</dd>
+<dt><code>arrival_time</code></dt>
+<dd>
+<p>String with the date and time at which the 
+aircraft arrived at its destination
+</p>
+</dd>
+</dl>
+<h3>Methods</h3>
+
+
+<dl>
+<dt>
+<code>get_moment_state_vector(time, includeFuture = TRUE)</code>
+</dt>
+<dd>
+<p>This method retrieves the state vector closest with the timestamp closest
+to the provided time, which must be supplied as a date-time string. In the 
+default behaviour, <code>includeFuture=TRUE</code> and the retrieved vector will 
+be the one with the closest timestamp, regardless of if this is earlier or
+later than the provided time. If <code>includeFuture=FALSE</code>, the closest
+earlier state vector will be retrieved.
+</p>
+</dd>
+</dl>
+<p>,
+</p>
+<dl>
+<dt>
+<code>get_duration()</code>
+</dt>
+<dd>
+<p>This method returns the duration of the flight in seconds
+</p>
+</dd>
+</dl>
+<p>,
+</p>
+<dl>
+<dt>
+<code>distance_to_flight(flight, numberSamples=15, 
+                             samplesAggregationMethod="concatenated", 
+                             method="euclidean", additionalFields=NULL)</code>
+</dt>
+<dd>
+<p>This method calculates the distance to the provided flight, which must be 
+another object of class openSkiesFlight. Both openSkiesFlight objects
+will be resampled to the number of points specified by 
+<code>numberSamples</code>. If <code>samplesAggregationMethod="concatenated"</code>,
+a vector of values indicating the distance between the flights at each
+point is returned. If <code>samplesAggregationMethod="average"</code>, the
+average distance is returned. By default, <code>method="euclidean"</code> and
+euclidean distances are calculated. Other possible values of <code>method</code>
+are all values accepted by <code>dist</code>. By default, 
+<code>additionalFields=NULL</code>, and only latitude and longitude values will
+be included in the features vectors used to calculate distances. Additional
+fields can be specified by providing their names as a character vector
+through <code>additionalFields</code>. The names should be valid names of fields
+of <code>openSkiesStateVector</code> objects.
+</p>
+</dd>
+<dt>
+<code>detect_phases(time_window, use_baro_altitude = FALSE)</code>
+</dt>
+<dd>
+<p>This method detects the phases of the flight, applying the <code>findFlightPhases</code>
+function. A time window will be applied to calculate mean values of altitude,
+vertical rate and speed. Its length is provided in seconds through the 
+<code>time_window</code> argument. Setting this value to 1 effectively disables
+the usage of a time window. By default, <code>use_baro_altitude=FALSE</code> and
+geo altitude values will be used to calculate the flight phases. If 
+<code>use_baro_altitude=TRUE</code>, barometric altitude values will be used instead.
+</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create a list of openSkiesFlight objects corresponding to all the flights that 
+# landed at Frankfurt International Airport on the 29th of January, 2018 between 
+# 12 PM and 1 PM
+
+if(interactive()){
+test_flights &lt;- getAirportArrivals(airport="EDDF", startTime="2018-01-29 12:00:00", 
+endTime="2018-01-29 13:00:00", timeZone="Europe/Berlin")
+test_flights
+}
+</code></pre>
+
+
+</div>

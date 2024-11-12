@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rollingMean</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate rollingMean values</h2>
+
+<h3>Description</h3>
+
+<p>Calculate rollingMean values taking account of data capture thresholds
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rollingMean(
+  mydata,
+  pollutant = "o3",
+  width = 8,
+  new.name = "rolling",
+  data.thresh = 75,
+  align = "centre",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame containing a <code>date</code>
+field. <code>mydata</code> must contain a <code>date</code> field in
+<code>Date</code> or <code>POSIXct</code> format. The input time series must
+be regular e.g. hourly, daily.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>The name of a pollutant e.g. <code>pollutant = "o3"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>The averaging period (rolling window width) to use
+e.g. <code>width = 8</code> will generate 8-hour rolling mean values
+when hourly data are analysed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new.name</code></td>
+<td>
+<p>The name given to the new rollingMean variable. If
+not supplied it will create a name based on the name of the
+pollutant and the averaging period used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.thresh</code></td>
+<td>
+<p>The data capture threshold in %. No values are
+calculated if data capture over the period of interest is less
+than this value. For example, with <code>width = 8</code> and
+<code>data.thresh = 75</code> at least 6 hours are required to calculate
+the mean, else <code>NA</code> is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>align</code></td>
+<td>
+<p>specifies how the moving window should be
+aligned. <code>"right"</code> means that the previous <code>hours</code>
+(including the current) are averaged. This seems to be the default
+for UK air quality rolling mean statistics. <code>"left"</code> means
+that the forward <code>hours</code> are averaged, and <code>"centre"</code> or
+<code>"center"</code>, which is the default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments, currently unused.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a utility function mostly designed to calculate rolling
+mean statistics relevant to some pollutant limits e.g. 8 hour
+rolling means for ozone and 24 hour rolling means for
+PM10. However, the function has a more general use in helping to
+display rolling mean values in flexible ways e.g. with the rolling
+window width left, right or centre aligned.
+</p>
+<p>The function will try and fill in missing time gaps to get a full
+time sequence but return a data frame with the same number of rows
+supplied.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## rolling 8-hour mean for ozone
+mydata &lt;- rollingMean(mydata, pollutant = "o3", width = 8, new.name =
+"rollingo3", data.thresh = 75, align = "right")
+
+
+</code></pre>
+
+
+</div>

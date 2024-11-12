@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxPearsonSelCov</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform Pearson Aitken selection</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#maturing"><img src="../help/figures/lifecycle-maturing.svg" alt="[Maturing]"></a>
+These functions implement the Pearson Aitken selection formulae.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxPearsonSelCov(origCov, newCov)
+mxPearsonSelMean(origCov, newCov, origMean)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>origCov</code></td>
+<td>
+<p>covariance matrix. The covariance prior to selection.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newCov</code></td>
+<td>
+<p>covariance matrix. A subset of <code>origCov</code> to replace.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>origMean</code></td>
+<td>
+<p>column vector. A mean vector to adjust.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Which dimensions to condition on can be communicated in one
+of two ways: (1) <code>newCov</code> is a submatrix of <code>origCov</code>.
+The dimnames are matched to determine which
+partition of <code>origCov</code> to replace with <code>newCov</code>.
+Or (2) <code>newCov</code> is the same dimension as <code>origCov</code>.
+The matrix entries are inspected to determine which entries have
+changed. The changed entries determine which partition of
+<code>origCov</code> to replace with <code>newCov</code>.
+</p>
+<p>Let the <code class="reqn">n \times n</code> covariance matrix R (<code>origCov</code>) be partitioned into non-empty,
+disjoint sets p and q.
+Let <code class="reqn">R_{ij}</code> denote the covariance matrix between the p
+and q variables where the subscripts denote the variable subsets (e.g. <code class="reqn">R_{pq}</code>).
+Let column vectors <code class="reqn">\mu_p</code> and <code class="reqn">\mu_q</code> contain the means of p and q
+variables, respectively.
+We wish to compute the conditional covariances of the variables in q
+for a subset of the population where <code class="reqn">R_{pp}</code> and <code class="reqn">\mu_p</code> are known (or partially known)—that is, we wish
+to <em>condition</em> the covariances and means of q on those of p.
+Let <code class="reqn">V_{pp}</code> (<code>newCov</code>) be an arbitrary covariance matrix of the same
+dimension as <code class="reqn">R_{pp}</code>.
+If we replace <code class="reqn">R_{pp}</code> by <code class="reqn">V_{pp}</code> then the mean
+of q (<code>origMean</code>) is transformed as
+</p>
+<p style="text-align: center;"><code class="reqn">\mu_q \to \mu_q + R_{qp} R_{pp}^{-1} \mu_p</code>
+</p>
+
+<p>and the covariance of p and q are transformed as
+</p>
+<p style="text-align: center;"><code class="reqn">\left[
+\begin{array}{c|c}
+R_{pp} &amp; R_{pq} \\
+\hline
+R_{qp} &amp; R_{qq}
+\end{array}
+\right] \to
+\left[
+\begin{array}{c|c}
+V_{pp} &amp; V_{pp}R_{pp}^{-1}R_{pq} \\
+\hline
+R_{qp}R_{pp}^{-1}V_{pp} &amp; R_{qq}-R_{qp} (R_{pp}^{-1} - R_{pp}^{-1} V_{pp} R_{pp}^{-1}) R_{pq}
+\end{array}
+\right]</code>
+</p>
+
+
+
+<h3>References</h3>
+
+<p>Aitken, A. (1935). Note on selection from a multivariate normal population. <em>Proceedings of
+the Edinburgh Mathematical Society (Series 2), 4</em>(2), 106-110.
+doi:10.1017/S0013091500008063
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OpenMx)
+
+m1 &lt;- mxModel(
+  'selectionTest',
+  mxMatrix('Full', 10, 10, values=rWishart(1, 20, toeplitz((10:1)/10))[,,1],
+           dimnames=list(paste0('c',1:10),paste0('c',1:10)), name="m1"),
+  mxMatrix('Full', 2, 2, values=diag(2),
+           dimnames=list(paste0('c',1:2),paste0('c',1:2)), name="m2"),
+  mxMatrix('Full', 10, 1, values=runif(10),
+           dimnames=list(paste0('c',1:10),c('v')), name="u1"),
+  mxAlgebra(mxPearsonSelCov(m1, m2), name="c1"),
+  mxAlgebra(mxPearsonSelMean(m1, m2, u1), name="u2")
+)
+
+m1 &lt;- mxRun(m1)
+</code></pre>
+
+
+</div>

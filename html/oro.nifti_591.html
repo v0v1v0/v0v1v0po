@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readANALYZE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>readANALYZE</h2>
+
+<h3>Description</h3>
+
+<p>These functions read in the header information and multi-dimensional array
+from a binary file in Analyze 7.5 format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readANALYZE(fname, SPM = FALSE, verbose = FALSE, warn = -1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fname</code></td>
+<td>
+<p>Pathname of the Analyze pair of files .img and .hdr without the
+suffix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SPM</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) that forces the
+voxel data values to be rescaled using the funused1 ANALYZE header field.
+This is an undocumented convention of ANALYZE files processed using the
+Statistical Parametric Mapping (SPM) software.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) that allows
+text-based feedback during execution of the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>is a number to regulate the display of warnings (default = -1).
+See <code>options</code> for more details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The internal functions <code>readBin</code> and <code>rawToChar</code> are utilized in
+order to efficiently extract information from a binary file.  The types of
+data are limited to 1- and 2-byte integers, 4-byte floats and 8-byte
+doubles.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>anlz</code> is produced.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>,<br> Volker Schmid
+<a href="mailto:volkerschmid@users.sourceforge.net">volkerschmid@users.sourceforge.net</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>ANALYZE 7.5<br><a href="http://eeg.sourceforge.net/ANALYZE75.pdf">http://eeg.sourceforge.net/ANALYZE75.pdf</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>readNIfTI</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## avg152T1
+anlz.path &lt;- system.file("anlz", package="oro.nifti")
+mni152 &lt;- readANALYZE(file.path(anlz.path, "avg152T1"))
+image(mni152, oma=rep(2,4))
+orthographic(mni152, oma=rep(2,4))
+</code></pre>
+
+
+</div>

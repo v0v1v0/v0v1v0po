@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>genesForVariant</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieves variant-surrounding genes with calculated statistics for causal gene prioritization.</h2>
+
+<h3>Description</h3>
+
+<p>This function retrieves all calculated prioritizing scores for surrounding genes of a specific variant based on the Open Target Genetics locus-to-gene (L2G) ML scoring pipeline.
+It provides detailed insights into the relationship between genetic variants and genes, allowing users to explore the impact of variants on gene expression, colocalization scores, chromatin interactions, and predicted functional effects.
+The function returns the information in a structured format, making it easier to analyze and interpret the results.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">genesForVariant(variant_id)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>variant_id</code></td>
+<td>
+<p>A character string specifying the ID of the variant for which to fetch gene information.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+
+<ul>
+<li> <p><code>v2g</code>: A data frame with all variant-to-gene information with the following data structure:
+- <code>gene.symbol</code>: character
+- <code>variant</code>: character
+- <code>overallScore</code>: numeric
+- <code>gene.id</code>: character
+</p>
+</li>
+<li> <p><code>tssd</code>: A data frame with all details on colocalization scores effect of variant in expression of the genes across tissues with the following data structure:
+- <code>gene.symbol</code>: character
+- <code>variant</code>: character
+- <code>typeId</code>: character
+- <code>sourceId</code>: character
+- <code>aggregatedScore</code>: numeric
+- <code>tissues_distance</code>: integer
+- <code>tissues_score</code>: numeric
+- <code>tissues_quantile</code>: numeric
+- <code>tissues_id</code>: character
+- <code>tissues_name</code>: character
+</p>
+</li>
+<li> <p><code>qtls</code>: List of QTL associations between genes and variants across analyzed tissues with the following data structure:
+- <code>gene.symbol</code>: character
+- <code>variant</code>: character
+- <code>typeId</code>: character
+- <code>aggregatedScore</code>: numeric
+- <code>tissues_quantile</code>: numeric
+- <code>tissues_beta</code>: numeric
+- <code>tissues_pval</code>: numeric
+- <code>tissues_id</code>: character
+- <code>tissues_name</code>: character
+</p>
+</li>
+<li> <p><code>chromatin</code>: A data frame including all information on chromatin interactions effect involving genes and variants with the following data structure:
+- <code>gene.symbol</code>: character
+- <code>variant</code>: character
+- <code>typeId</code>: character
+- <code>sourceId</code>: character
+- <code>aggregatedScore</code>: numeric
+- <code>tissues_quantile</code>: numeric
+- <code>tissues_score</code>: numeric
+- <code>tissues_id</code>: character
+- <code>tissues_name</code>: character
+</p>
+</li>
+<li> <p><code>functionalpred</code>: A data frame including predicted functional effects of variants on genes across tissues with the following data structure:
+- <code>gene.symbol</code>: character
+- <code>variant</code>: character
+- <code>typeId</code>: character
+- <code>sourceId</code>: character
+- <code>aggregatedScore</code>: numeric
+- <code>tissues_maxEffectLabel</code>: character
+- <code>tissues_maxEffectScore</code>: numeric
+- <code>tissues_id</code>: character
+- <code>tissues_name</code>: character
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+  result &lt;- genesForVariant(variant_id = "1_154453788_C_T")
+  result &lt;- genesForVariant(variant_id = "rs4129267")
+  print(result)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

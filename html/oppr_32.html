@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_manual_targets</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add manual targets</h2>
+
+<h3>Description</h3>
+
+<p>Set targets for a project prioritization <code>problem()</code> by manually
+specifying all the required information for each target. This function
+is useful because it can be used to customize all aspects of a target. For
+most cases, targets can be specified using the
+<code>add_absolute_targets()</code> and <code>add_relative_targets()</code>
+functions. However, this function can be used to mix absolute and
+relative targets for different features.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_manual_targets(x, targets)
+
+## S4 method for signature 'ProjectProblem,data.frame'
+add_manual_targets(x, targets)
+
+## S4 method for signature 'ProjectProblem,tbl_df'
+add_manual_targets(x, targets)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>targets</code></td>
+<td>
+<p><code>data.frame</code> or <code>tibble::tibble()</code> object. See
+the Details section for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Targets are used to specify the minimum probability of persistence
+for each feature in solutions. For minimum set objectives
+(i.e. <code>add_min_set_objective()</code>, these targets
+specify the minimum probability of persistence required for each species
+in the solution. And for budget constrained objectives that use targets
+(i.e. <code>add_max_targets_met_objective()</code>), these targets
+specify the minimum threshold probability of persistence that needs to be
+achieved to count the benefits for conserving these species.
+Please note that attempting to solve problems with objectives that require
+targets without specifying targets will throw an error.
+</p>
+<p>The <code>targets</code> argument should contain the following columns:
+</p>
+
+<dl>
+<dt><code>"feature"</code></dt>
+<dd>
+<p><code>character</code> name of features in argument
+to <code>x</code>.</p>
+</dd>
+<dt><code>"type"</code></dt>
+<dd>
+<p><code>character</code> describing the type of target.
+Acceptable values include <code>"absolute"</code> and <code>"relative"</code>.
+These values correspond to <code>add_absolute_targets()</code>,
+and <code>add_relative_targets()</code> respectively.</p>
+</dd>
+<dt><code>"sense"</code></dt>
+<dd>
+<p><code>character</code> sense of the target. The
+only acceptable value currently supported is: <code>"&gt;="</code>. This field
+(column) is optional and if it is missing then target senses will
+default to <code>"&gt;="</code> values.</p>
+</dd>
+<dt><code>"target"</code></dt>
+<dd>
+<p><code>numeric</code> target threshold.</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>ProjectProblem object with the targets added
+to it.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>targets.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+
+# create data frame with targets
+targets &lt;- data.frame(feature = sim_features$name,
+                      type = "absolute",
+                      target = 0.1)
+
+# print targets
+print(targets)
+
+# build problem with minimum set objective and targets that require each
+# feature to have a 30% chance of persisting into the future
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+      add_min_set_objective() %&gt;%
+      add_manual_targets(targets) %&gt;%
+      add_binary_decisions()
+
+# print problem
+print(p)
+
+## Not run: 
+# solve problem
+s &lt;- solve(p)
+
+# print solution
+print(s)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

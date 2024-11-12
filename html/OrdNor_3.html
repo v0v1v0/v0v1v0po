@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>genOrdNor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Generates a data set with ordinal and normal variables
+</h2>
+
+<h3>Description</h3>
+
+<p>The function simulates a data set with ordinal and normal components with a pre-specified correlation matrix and marginals.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">genOrdNor(n, plist, cmat.star, mean.vec, sd.vec, no.ord, no.norm)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>Number of rows
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plist</code></td>
+<td>
+
+<p>A list of probability vectors corresponding to each ordinal variable. The i-th element of <code>plist</code> is a vector of the cumulative probabilities defining the marginal distribution of the i-th ordinal component of the multivariate variables. If the i-th ordinal variable has k categories, the i-th vector of the <code>plist</code> will contain k-1 probability values. The k-th element is implicitly 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cmat.star</code></td>
+<td>
+
+<p>The intermediate correlation matrix obtained from <code>cmat.star</code> function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean.vec</code></td>
+<td>
+
+<p>A vector of means for the normal variables.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd.vec</code></td>
+<td>
+
+<p>A vector of standard deviations for the normal variables.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no.ord</code></td>
+<td>
+
+<p>Number of ordinal variables.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no.norm</code></td>
+<td>
+
+<p>Number of normal variables.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix of size <code class="reqn">n \times (no.ord + no.norm)</code>, of which first <code>no.ord</code> are ordinal variables.
+</p>
+
+
+<h3>References</h3>
+
+<p>Demirtas, H., Yavuz, Y. (2015). Concurrent generation of ordinal and normal data. <em>Journal of Biopharmaceutical Statistics</em>; <b>25(4)</b>, 635-650.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>cmat.star</code>, <code>validate.target.cormat</code>, <code>validate.plist</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	Sigma = diag(4)
+	Sigma[lower.tri(Sigma)] = c(0.42, 0.78, 0.29, 0.37, 0.14, 0.26)
+	Sigma = Sigma + t(Sigma)
+	diag(Sigma)=1
+
+	marginal = list( c(0.2, 0.5), c(0.4, 0.7, 0.9))
+	cmat= cmat.star(marginal, Sigma, 2, 2)  
+	mean.vec = c(2,4)
+	sd.vec = c(0.5, 1.5)
+	Y=genOrdNor(10000,marginal, cmat, mean.vec, sd.vec, 2, 2)
+	cor(Y)
+</code></pre>
+
+
+</div>

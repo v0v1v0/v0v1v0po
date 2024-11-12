@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>processData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import CSV file.</h2>
+
+<h3>Description</h3>
+
+<p>Imports and performs preprocessing of limit order data contained in a CSV.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">processData(csv.file)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>csv.file</code></td>
+<td>
+<p>Location of CSV file to import</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The CSV file is expected to contain 7 columns:
+</p>
+
+<dl>
+<dt>id</dt>
+<dd>
+<p>Numeric limit order unique identifier</p>
+</dd>
+<dt>timestamp</dt>
+<dd>
+<p>Time in milliseconds when event received locally</p>
+</dd>
+<dt>exchange.timestamp</dt>
+<dd>
+<p>Time in milliseconds when order first created on
+the exchange</p>
+</dd>
+<dt>price</dt>
+<dd>
+<p>Price level of order event</p>
+</dd>
+<dt>volume</dt>
+<dd>
+<p>Remaining order volume</p>
+</dd>
+<dt>action</dt>
+<dd>
+<p>Event type (see below)</p>
+</dd>
+<dt>direction</dt>
+<dd>
+<p>Side of order book (bid or ask)</p>
+</dd>
+</dl>
+<p><em>action</em> describes the limit order life-cycle:
+</p>
+
+<dl>
+<dt>created</dt>
+<dd>
+<p>The limit order has been created</p>
+</dd>
+<dt>modified</dt>
+<dd>
+<p>The limit order has been modified (partial fill)</p>
+</dd>
+<dt>deleted</dt>
+<dd>
+<p>The limit order was deleted. If the remaining volume is 0,
+the order has been filled.</p>
+</dd>
+</dl>
+<p>An example dataset returned from this function can be seen in
+<code>lob.data</code> which is the result of processing the example data
+included in the <code>inst/extdata</code> directory of this package.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing 4 data frames:
+</p>
+
+<dl>
+<dt>events</dt>
+<dd>
+<p>Limit order events.</p>
+</dd>
+<dt>trades</dt>
+<dd>
+<p>Inferred trades (executions).</p>
+</dd>
+<dt>depth</dt>
+<dd>
+<p>Order book price level depth through time.</p>
+</dd>
+<dt>depth.summary</dt>
+<dd>
+<p>Limit order book summary statistics.</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+csv.file &lt;- system.file("extdata", "orders.csv.xz", package="obAnalytics")
+lob.data &lt;- processData(csv.file)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>base_font-wb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set the default font in a workbook</h2>
+
+<h3>Description</h3>
+
+<p>Modify / get the default font for the workbook. This will alter the latin
+major and minor font in the workbooks theme.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_set_base_font(
+  wb,
+  font_size = 11,
+  font_color = wb_color(theme = "1"),
+  font_name = "Aptos Narrow",
+  ...
+)
+
+wb_get_base_font(wb)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font_size</code></td>
+<td>
+<p>Font size</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font_color</code></td>
+<td>
+<p>Font color</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font_name</code></td>
+<td>
+<p>Name of a font</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The font name is not validated in anyway. Spreadsheet software replaces
+unknown font names with system defaults.
+</p>
+<p>The default base font is Aptos Narrow, black, size 11. If <code>font_name</code> differs
+from the name in <code>wb_get_base_font()</code>, the theme is updated to use the newly
+selected font name.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other workbook styling functions: 
+<code>wb_add_dxfs_style()</code>,
+<code>wb_add_style()</code>,
+<code>wb_base_colors</code>
+</p>
+<p>Other workbook wrappers: 
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>grouping-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## create a workbook
+wb &lt;- wb_workbook(theme = "Office 2013 - 2022 Theme")
+wb$add_worksheet("S1")
+## modify base font to size 10 Aptos Narrow in red
+wb$set_base_font(font_size = 10, font_color = wb_color("red"), font_name = "Aptos Narrow")
+
+wb$add_data(x = iris)
+
+## font color does not affect tables
+wb$add_data_table(x = iris, dims = wb_dims(from_col = 10))
+
+## get the base font
+wb_get_base_font(wb)
+
+</code></pre>
+
+
+</div>

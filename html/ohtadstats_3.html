@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dheatmap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Heatmap Plot</h2>
+
+<h3>Description</h3>
+
+<p>Plots a matrix of D statistics, output from dwrapper, as a heatmap.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dheatmap(d_matrix, colors = c("white", "lightblue", "blue", "darkblue",
+  "black"), mode = "linear", tick.labels = TRUE, nbins = 5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>d_matrix</code></td>
+<td>
+<p>A matrix of D statistics or a matrix of D statistic ratios.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p>An optional color vector. Optionally modify the color scheme of the heatmap. If mode = 'binned', must be of length 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>A string indicating desired coloring scheme. The option "linear" scales
+colors linearly, "truncated" truncates values greater than 1, and "binned" returns
+a discretedistribution of colors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tick.labels</code></td>
+<td>
+<p>A logical indicating whether or not marker labels should be drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nbins</code></td>
+<td>
+<p>An integer specifying the number of bins to be used. Only relevent if mode is "binned".</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The d_matrix input should be one of the matrices output by dwrapper. Options are d2it_mat, d2is_mat, d2st_mat, dp2st_mat, dp2is_mat, npops_mat, ratio1, and ratio2.
+More customized plots can be developed using the "levelplot" package.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A color plot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(miyashita_langley_data)
+miyashita_langley_subset &lt;- miyashita_langley_data[,1:15]
+ml_results &lt;- dwrapper(miyashita_langley_subset)
+dheatmap(ml_results[["d2it_mat"]], mode = 'linear')
+
+## Not run: 
+data(miyashita_langley_data)
+ml_results &lt;- dwrapper(miyashita_langley_data)
+dheatmap(ml_results[["d2it_mat"]], mode = 'linear')
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

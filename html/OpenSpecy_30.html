@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>adj_res</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Normalization and conversion of spectral data</h2>
+
+<h3>Description</h3>
+
+<p><code>adj_res()</code> and <code>conform_res()</code> are helper functions to align
+wavenumbers in terms of their spectral resolution.
+<code>adj_neg()</code> converts numeric intensities <code>y</code> &lt; 1 into values &gt;= 1,
+keeping absolute differences between intensity values by shifting each value
+by the minimum intensity.
+<code>make_rel()</code> converts intensities <code>y</code> into relative values between
+0 and 1 using the standard normalization equation.
+If <code>na.rm</code> is <code>TRUE</code>, missing values are removed before the
+computation proceeds.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">adj_res(x, res = 1, fun = round)
+
+conform_res(x, res = 5)
+
+adj_neg(y, na.rm = FALSE)
+
+mean_replace(y, na.rm = TRUE)
+
+is_empty_vector(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector or an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> object which is coercible to one by
+<code>as.vector(x, "numeric")</code>; <code>x</code> should contain the spectral
+wavenumbers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>spectral resolution supplied to <code>fun</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>the function to be applied to each element of <code>x</code>; defaults
+to <code>round()</code> to round to a specific resolution <code>res</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a numeric vector containing the spectral intensities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>logical. Should missing values be removed?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>adj_res()</code> and <code>conform_res()</code> are used in Open Specy to
+facilitate comparisons of spectra with different resolutions.
+<code>adj_neg()</code> is used to avoid errors that could arise from log
+transforming spectra when using <code>adj_intens()</code> and other
+functions.
+<code>make_rel()</code> is used to retain the relative height proportions between
+spectra while avoiding the large numbers that can result from some spectral
+instruments.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>adj_res()</code> and <code>conform_res()</code> return a numeric vector with
+resolution-conformed wavenumbers.
+<code>adj_neg()</code> and <code>make_rel()</code> return numeric vectors
+with the normalized intensity data.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>min()</code> and <code>round()</code>;
+<code>adj_intens()</code> for log transformation functions;
+<code>conform_spec()</code> for conforming wavenumbers of an
+<code>OpenSpecy</code> object to be matched with a reference library
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">adj_res(seq(500, 4000, 4), 5)
+conform_res(seq(500, 4000, 4))
+adj_neg(c(-1000, -1, 0, 1, 10))
+make_rel(c(-1000, -1, 0, 1, 10))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>model_predict</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make predictions</h2>
+
+<h3>Description</h3>
+
+<p>Make predictions according to a given model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">model_predict(
+  data_test,
+  trained_model,
+  return_type,
+  threshold = NULL,
+  model_family = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data_test</code></td>
+<td>
+<p>Data for which predictions are to be computed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trained_model</code></td>
+<td>
+<p>Model for which predictions are to be made</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_type</code></td>
+<td>
+<p>??</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>??</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model_family</code></td>
+<td>
+<p>??</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to function <code>predict.glm()</code> or <code>predict.ranger()</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Vector of predictions
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Set seed for reproducibility
+seed=1234
+set.seed(seed)
+
+# Initialisation of patient data
+n_iter &lt;- 500           # Number of point estimates to be calculated
+nobs &lt;- 5000            # Number of observations, i.e patients
+npreds &lt;- 7             # Number of predictors
+
+# Model family
+family="log_reg"
+
+# Baseline behaviour is an oracle Bayes-optimal predictor on only one variable
+max_base_powers &lt;- 1
+base_vars=1
+
+# Check the following holdout size fractions
+frac_ho = 0.1
+
+
+# Set ground truth coefficients, and the accuracy at baseline
+coefs_general &lt;- rnorm(npreds,sd=1/sqrt(npreds))
+coefs_base &lt;- gen_base_coefs(coefs_general, max_base_powers = max_base_powers)
+
+# Generate dataset
+X &lt;- gen_preds(nobs, npreds)
+
+# Generate labels
+newdata &lt;- gen_resp(X, coefs = coefs_general)
+Y &lt;- newdata$classes
+
+# Combined dataset
+pat_data &lt;- cbind(X, Y)
+pat_data$Y = factor(pat_data$Y)
+
+# For each holdout size, split data into intervention and holdout set
+mask &lt;- split_data(pat_data, frac_ho)
+data_interv &lt;- pat_data[!mask,]
+data_hold &lt;- pat_data[mask,]
+
+# Train model
+trained_model &lt;- model_train(data_hold, model_family = family)
+thresh &lt;- 0.5
+
+# Make predictions
+class_pred &lt;- model_predict(data_interv, trained_model,
+                            return_type = "class",
+                            threshold = 0.5, model_family = family)
+
+
+# Simulate baseline predictions
+base_pred &lt;- oracle_pred(data_hold,coefs_base[base_vars, ], num_vars = base_vars)
+
+
+# Contingency table for model-based predictor (on intervention set)
+print(table(class_pred,data_interv$Y))
+
+# Contingency table for model-based predictor (on holdout set)
+print(table(base_pred,data_hold$Y))
+
+</code></pre>
+
+
+</div>

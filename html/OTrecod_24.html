@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>transfo_target</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>transfo_target()</h2>
+
+<h3>Description</h3>
+
+<p>This function prepares the encoding of the target variable before running an algorithm using optimal transportation theory.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">transfo_target(z, levels_order = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>a factor variable (ordered or not). A variable of another type will be, by default, convert to a factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels_order</code></td>
+<td>
+<p>a vector corresponding to the values of the levels of z. When the target is ordinal, the levels can be sorted by ascending order.
+By default, the initial order is remained.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>transfo_target</code> is an intermediate function direcly implemented in the functions <code>OT_outcome</code> and <code>OT_joint</code>,
+two functions dedicated to data fusion (see (1) and (2) for details). Nevertheless, this function can also be used separately to assist user in the conversion
+of a target variable (outcome) according to the following rules:
+</p>
+
+<ul>
+<li>
+<p> A character variable is converted in factor if the argument <code>levels_order</code> is set to NULL. In this case, the levels of the factor are assigned by order of appearance in the database.
+</p>
+</li>
+<li>
+<p> A character variable is converted in ordered factor if the argument <code>levels_order</code> differs from NULL. In this case, the levels of the factor correspond to those assigned in the argument.
+</p>
+</li>
+<li>
+<p> A factor stays unchanged if the argument <code>levels_order</code> is set to NULL. Otherwise the factor is converted in ordered factor and the levels are ordered according to the argument <code>levels_order</code>.
+</p>
+</li>
+<li>
+<p> A numeric variable, discrete or continuous is converted in factor if the argument <code>levels_order</code> is set to NULL, and the related levels are the values assigned in ascending order.
+</p>
+</li>
+<li>
+<p> A numeric variable, discrete or continuous is converted in ordered factor if the argument <code>levels_order</code> differed from NULL, and the related levels correspond to those assigned in the argument.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>The list returned is:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>NEW</code></td>
+<td>
+<p>an object of class factor of the same length as z</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LEVELS_NEW</code></td>
+<td>
+<p>the levels (ordered or not) retained for z</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gregory Guernec
+</p>
+<p><a href="mailto:otrecod.pkg@gmail.com">otrecod.pkg@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li>
+<p> Gares V, Dimeglio C, Guernec G, Fantin F, Lepage B, Korosok MR, savy N (2019). On the use of optimal transportation theory to recode variables and application to database merging. The International Journal of Biostatistics.
+Volume 16, Issue 1, 20180106, eISSN 1557-4679. doi:10.1515/ijb-2018-0106
+</p>
+</li>
+<li>
+<p> Gares V, Omer J (2020) Regularized optimal transport of covariates and outcomes in data recoding. Journal of the American Statistical Association. doi: <a href="https://doi.org/10.1080/01621459.2020.1775615">10.1080/01621459.2020.1775615</a>
+</p>
+</li>
+</ol>
+<h3>See Also</h3>
+
+<p><code>compare_lists</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">y &lt;- rnorm(100, 30, 10)
+ynew1 &lt;- transfo_target(y)
+
+newlev &lt;- unique(as.integer(y))
+ynew2 &lt;- transfo_target(y, levels_order = newlev)
+newlev2 &lt;- newlev[-1]
+ynew3 &lt;- transfo_target(y, levels_order = newlev2)
+
+outco &lt;- c(rep("A", 25), rep("B", 50), rep("C", 25))
+outco_new1 &lt;- transfo_target(outco, levels_order = c("B", "C", "A"))
+outco_new2 &lt;- transfo_target(outco, levels_order = c("E", "C", "A", "F"))
+outco_new3 &lt;- transfo_target(outco)
+
+outco2 &lt;- c(rep("A", 25), NA, rep("B", 50), rep("C", 25), NA, NA)
+gg &lt;- transfo_target(outco2)
+hh &lt;- transfo_target(outco2, levels_order = c("B", "C", "A"))
+
+</code></pre>
+
+
+</div>

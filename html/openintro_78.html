@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dotPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Dot plot</h2>
+
+<h3>Description</h3>
+
+<p>Plot observations as dots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dotPlot(
+  x,
+  fact = NULL,
+  vertical = FALSE,
+  at = 1,
+  key = NULL,
+  pch = 20,
+  col = fadeColor("black", "66"),
+  cex = 1.5,
+  add = FALSE,
+  axes = TRUE,
+  xlim = NULL,
+  ylim = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numerical vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>A character or factor vector defining the grouping for data in
+<code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vertical</code></td>
+<td>
+<p>If <code>TRUE</code>, the plot will be oriented vertically.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>at</code></td>
+<td>
+<p>The vertical coordinate of the points, or the horizontal
+coordinate if <code>vertical=TRUE</code>. If <code>fact</code> is provided, then
+locations can be specified for each group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>The factor levels corresponding to <code>at</code>, <code>pch</code>,
+<code>col</code>, and <code>cex</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>Plotting character. If <code>fact</code> is given, then different
+plotting characters can be specified for each factor level. If <code>key</code> is
+specified, the elements of <code>pch</code> will correspond to the elements of
+<code>key</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Plotting character color. If <code>fact</code> is given, then different
+colors can be specified for each factor level. If <code>key</code> is specified,
+the elements of <code>col</code> will correspond to the elements of <code>key</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>Plotting character size. If <code>fact</code> is given, then different
+character sizes can be specified for each factor level. If <code>key</code> is
+specified, the elements of <code>cex</code> will correspond to the elements of
+<code>key</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+<p>If <code>TRUE</code>, then the points are added to the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axes</code></td>
+<td>
+<p>If <code>FALSE</code>, no axes are plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>Limits for the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>Limits for the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to <code>plot</code> if
+<code>add=FALSE</code> or <code>points</code> if <code>add=TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Diez
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>histPlot</code>, <code>densityPlot</code>,
+<code>boxPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+
+# Price by type
+dotPlot(cars93$price,
+  cars93$type,
+  key = c("large", "midsize", "small"),
+  cex = 1:3
+)
+
+# Hours worked by educational attainment or degree
+gss2010_nona &lt;- gss2010 |&gt;
+  filter(!is.na(hrs1) &amp; !is.na(degree))
+
+dotPlot(gss2010_nona$hrs1,
+  gss2010_nona$degree,
+  col = fadeColor("black", "11")
+)
+
+# levels reordered
+dotPlot(gss2010_nona$hrs1,
+  gss2010_nona$degree,
+  col = fadeColor("black", "11"),
+  key = c("LT HIGH SCHOOL", "HIGH SCHOOL", "BACHELOR", "JUNIOR COLLEGE", "GRADUATE")
+)
+
+# with boxPlot() overlaid
+dotPlot(mariokart$total_pr,
+  mariokart$cond,
+  ylim = c(0.5, 2.5), xlim = c(25, 80), cex = 1
+)
+boxPlot(mariokart$total_pr,
+  mariokart$cond,
+  add = 1:2 + 0.1,
+  key = c("new", "used"), horiz = TRUE, axes = FALSE
+)
+</code></pre>
+
+
+</div>

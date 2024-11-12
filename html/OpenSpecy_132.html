@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>subtr_baseline</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Automated background subtraction for spectral data</h2>
+
+<h3>Description</h3>
+
+<p>This baseline correction routine iteratively finds the baseline of a spectrum
+using a polynomial fitting or accepts a manual baseline.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">subtr_baseline(x, ...)
+
+## Default S3 method:
+subtr_baseline(x, ...)
+
+## S3 method for class 'OpenSpecy'
+subtr_baseline(
+  x,
+  type = "polynomial",
+  degree = 8,
+  raw = FALSE,
+  baseline,
+  make_rel = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a list object of class <code>OpenSpecy</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>one of <code>"polynomial"</code> or <code>"manual"</code> depending on
+whether you want spectra to be corrected with a manual baseline or with
+polynomial baseline fitting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>degree</code></td>
+<td>
+<p>the degree of the polynomial. Must be less than the number of
+unique points when raw is <code>FALSE</code>. Typically a good fit can be
+found with a 8th order polynomial.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>raw</code></td>
+<td>
+<p>if <code>TRUE</code>, use raw and not orthogonal polynomials.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseline</code></td>
+<td>
+<p>an <code>OpenSpecy</code> object containing the baseline data to be
+subtracted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>make_rel</code></td>
+<td>
+<p>logical; if <code>TRUE</code> spectra are automatically normalized
+with <code>make_rel()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to <code>poly()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a translation of Michael Stephen Chen's MATLAB code written for the
+<code>imodpolyfit</code> routine from Zhao et al. 2007.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>subtr_baseline()</code> returns a data frame containing two columns named
+<code>"wavenumber"</code> and <code>"intensity"</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>References</h3>
+
+<p>Chen MS (2020). Michaelstchen/ModPolyFit. <em>MATLAB</em>.
+Retrieved from <a href="https://github.com/michaelstchen/modPolyFit">https://github.com/michaelstchen/modPolyFit</a>
+(Original work published July 28, 2015)
+</p>
+<p>Zhao J, Lui H, McLean DI, Zeng H (2007). “Automated Autofluorescence
+Background Subtraction Algorithm for Biomedical Raman Spectroscopy.”
+<em>Applied Spectroscopy</em>, <strong>61</strong>(11), 1225–1232.
+<a href="https://doi.org/10.1366/000370207782597003">doi:10.1366/000370207782597003</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>poly()</code>;
+<code>smooth_intens()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("raman_hdpe")
+
+subtr_baseline(raman_hdpe)
+
+</code></pre>
+
+
+</div>

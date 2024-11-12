@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_bbox_objects</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve map data by bounding box</h2>
+
+<h3>Description</h3>
+
+<p>The following command returns:
+</p>
+
+<ul>
+<li>
+<p> All nodes that are inside a given bounding box and any relations that reference them.
+</p>
+</li>
+<li>
+<p> All ways that reference at least one node that is inside a given bounding box, any relations that reference them
+[the ways], and any nodes outside the bounding box that the ways may reference.
+</p>
+</li>
+<li>
+<p> All relations that reference one of the nodes, ways or relations included due to the above rules. (Does ”'not”'
+apply recursively, see explanation below.)
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_bbox_objects(bbox, format = c("R", "xml", "json"), tags_in_columns = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>Coordinates for the area to retrieve the map data from (<code style="white-space: pre;">⁠left,bottom,right,top⁠</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default), <code>"xml"</code>, or <code>"json"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tags_in_columns</code></td>
+<td>
+<p>If <code>FALSE</code> (default), the tags of the objects are saved in a single list column <code>tags</code>
+containing a <code>data.frame</code> for each OSM object with the keys and values. If <code>TRUE</code>, add a column for each key.
+Ignored if <code>format != "R"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that, while this command returns those relations that reference the aforementioned nodes and ways, the reverse
+is not true: it does not (necessarily) return all of the nodes and ways that are referenced by these relations. This
+prevents unreasonably-large result sets. For example, imagine the case where:
+</p>
+
+<ul>
+<li>
+<p> There is a relation named "England" that references every node in England.
+</p>
+</li>
+<li>
+<p> The nodes, ways, and relations are retrieved for a bounding box that covers a small portion of England.
+While the result would include the nodes, ways, and relations as specified by the rules for the command, including
+the "England" relation, it would (fortuitously) <strong>not</strong> include <strong>every</strong> node and way in England. If desired, the
+nodes and ways referenced by the "England" relation could be retrieved by their respective IDs.
+</p>
+</li>
+</ul>
+<p>Also note that ways which intersect the bounding box but have no nodes within the bounding box will not be returned.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>format = "R"</code>, returns a data frame with one OSM object per row. If <code>format = "xml"</code>, returns a
+xml2::xml_document following the
+<a href="https://wiki.openstreetmap.org/wiki/OSM_XML#OSM_XML_file_format_notes">OSM_XML format</a>. If <code>format = "json"</code>,
+returns a list with a json structure following the <a href="https://wiki.openstreetmap.org/wiki/OSM_JSON">OSM_JSON format</a>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>For downloading data for purposes other than editing or exploring the history of the objects, perhaps is better to
+use the Overpass API. A similar function to download OSM objects using Overpass, is implemented in the
+<span class="pkg">osmdata</span> function <code>opq()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other get OSM objects' functions: 
+<code>osm_get_objects()</code>,
+<code>osm_history_object()</code>,
+<code>osm_relations_object()</code>,
+<code>osm_ways_node()</code>,
+<code>osmapi_objects()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">map_data &lt;- osm_bbox_objects(bbox = c(1.8366775, 41.8336843, 1.8379971, 41.8344537))
+## bbox as a character value also works (bbox = "1.8366775,41.8336843,1.8379971,41.8344537").
+map_data
+</code></pre>
+
+
+</div>

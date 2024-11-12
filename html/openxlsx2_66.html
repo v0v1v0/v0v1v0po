@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_border</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modify borders in a cell region of a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>wb wrapper to create borders for cell regions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_border(
+  wb,
+  sheet = current_sheet(),
+  dims = "A1",
+  bottom_color = wb_color(hex = "FF000000"),
+  left_color = wb_color(hex = "FF000000"),
+  right_color = wb_color(hex = "FF000000"),
+  top_color = wb_color(hex = "FF000000"),
+  bottom_border = "thin",
+  left_border = "thin",
+  right_border = "thin",
+  top_border = "thin",
+  inner_hgrid = NULL,
+  inner_hcolor = NULL,
+  inner_vgrid = NULL,
+  inner_vcolor = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A <code>wbWorkbook</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>Cell range in the worksheet e.g. "A1", "A1:A5", "A1:H5"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bottom_color, left_color, right_color, top_color, inner_hcolor, inner_vcolor</code></td>
+<td>
+<p>a color, either something openxml knows or some RGB color</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>left_border, right_border, top_border, bottom_border, inner_hgrid, inner_vgrid</code></td>
+<td>
+<p>the border style, if <code>NULL</code> no border is drawn.
+See <code>create_border()</code> for possible border styles</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>create_border()</code>
+</p>
+<p>Other styles: 
+<code>wb_add_cell_style()</code>,
+<code>wb_add_fill()</code>,
+<code>wb_add_font()</code>,
+<code>wb_add_named_style()</code>,
+<code>wb_add_numfmt()</code>,
+<code>wb_cell_style</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- wb_workbook() %&gt;% wb_add_worksheet("S1") %&gt;%  wb_add_data("S1", mtcars)
+wb &lt;- wb_add_border(wb, 1, dims = "A1:K1",
+ left_border = NULL, right_border = NULL,
+ top_border = NULL, bottom_border = "double")
+wb &lt;- wb_add_border(wb, 1, dims = "A5",
+ left_border = "dotted", right_border = "dotted",
+ top_border = "hair", bottom_border = "thick")
+wb &lt;- wb_add_border(wb, 1, dims = "C2:C5")
+wb &lt;- wb_add_border(wb, 1, dims = "G2:H3")
+
+wb &lt;- wb_add_border(wb, 1, dims = "G12:H13",
+ left_color = wb_color(hex = "FF9400D3"), right_color = wb_color(hex = "FF4B0082"),
+ top_color = wb_color(hex = "FF0000FF"), bottom_color = wb_color(hex = "FF00FF00"))
+wb &lt;- wb_add_border(wb, 1, dims = "A20:C23")
+wb &lt;- wb_add_border(wb, 1, dims = "B12:D14",
+ left_color = wb_color(hex = "FFFFFF00"), right_color = wb_color(hex = "FFFF7F00"),
+ bottom_color = wb_color(hex = "FFFF0000"))
+wb &lt;- wb_add_border(wb, 1, dims = "D28:E28")
+
+# With chaining
+
+wb &lt;- wb_workbook()
+wb$add_worksheet("S1")$add_data("S1", mtcars)
+wb$add_border(1, dims = "A1:K1",
+ left_border = NULL, right_border = NULL,
+ top_border = NULL, bottom_border = "double")
+wb$add_border(1, dims = "A5",
+ left_border = "dotted", right_border = "dotted",
+ top_border = "hair", bottom_border = "thick")
+wb$add_border(1, dims = "C2:C5")
+wb$add_border(1, dims = "G2:H3")
+wb$add_border(1, dims = "G12:H13",
+ left_color = wb_color(hex = "FF9400D3"), right_color = wb_color(hex = "FF4B0082"),
+ top_color = wb_color(hex = "FF0000FF"), bottom_color = wb_color(hex = "FF00FF00"))
+wb$add_border(1, dims = "A20:C23")
+wb$add_border(1, dims = "B12:D14",
+ left_color = wb_color(hex = "FFFFFF00"), right_color = wb_color(hex = "FFFF7F00"),
+ bottom_color = wb_color(hex = "FFFF0000"))
+wb$add_border(1, dims = "D28:E28")
+# if (interactive()) wb$open()
+
+wb &lt;- wb_workbook()
+wb$add_worksheet("S1")$add_data("S1", mtcars)
+wb$add_border(1, dims = "A2:K33", inner_vgrid = "thin", inner_vcolor = c(rgb="FF808080"))
+</code></pre>
+
+
+</div>

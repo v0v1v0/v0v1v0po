@@ -1,0 +1,302 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>decompose_OSLcurve</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multi-exponential CW-OSL decomposition</h2>
+
+<h3>Description</h3>
+
+<p>Function for determining the signal component amplitudes of a multi-exponential decay curve if
+the signal component decay parameters are already given. Thus, this function decomposes CW-OSL
+curves with known components of unknown intensity.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">decompose_OSLcurve(
+  curve,
+  components,
+  background.fitting = FALSE,
+  algorithm = "det",
+  error.estimation = "empiric",
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>curve</code></td>
+<td>
+<p>data.frame or matrix or RLum.Data.Curve (<strong>required</strong>):
+CW-OSL curve x-Axis: <code style="white-space: pre;">⁠$time⁠</code> or first column as measurement time (must have constant time intervals);
+y-Axis: <code style="white-space: pre;">⁠$signal⁠</code> or second column as luminescence signal. Further columns will be ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>components</code></td>
+<td>
+<p>data.frame or numeric vector (<strong>required</strong>):
+Either a vector containing the decay parameters of the CW-OSL components or a table (data.frame), usually the table returned by fit_OSLcurve.
+In case of a vector: It is recommended to use less than 7 parameters. The parameters will be sorted in decreasing order.
+In case of a data.frame, one column must be named <code style="white-space: pre;">⁠$lambda⁠</code>.
+It is recommended to provide also integration interval parameters (columns <code style="white-space: pre;">⁠$t.start⁠</code>, <code style="white-space: pre;">⁠$t.end⁠</code>, <code style="white-space: pre;">⁠$ch.start⁠</code>, <code style="white-space: pre;">⁠$ch.end⁠</code>),
+which can be found by applying optimise_OSLintervals to the global mean curve, calculated by sum_OSLcurves.
+If one or more column is missing, a simple interval definition algorithm is run automatically, see section <strong>Details</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>background.fitting</code></td>
+<td>
+<p>logical (<em>with default</em>):
+if <code>TRUE</code>, an additional signal component with a decay rate of <code class="reqn">\lambda = 0</code> is included.
+This allows for an accurate estimation of slow component intensities if the data is not background
+corrected. However, the additional component reduces the overall precision of the algorithm.
+It can also cause implausible slow component results if the measurement duration is not sufficiently long (&gt; 30 s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>algorithm</code></td>
+<td>
+<p>character string (<em>with default</em>):
+Choice of curve decomposition approach. Either <code>"det"</code> or <code>"det+nls"</code> or <code>"nls"</code>, see section <strong>Details</strong>.
+^^</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error.estimation</code></td>
+<td>
+<p>character string (<em>with default</em>):
+integral error estimation approach, either <code>"empiric"</code> or <code>"poisson"</code> or a numeric value or <code>"none"</code>,
+see section <strong>Details</strong>. This argument has no effect if <code>algorithm = "nls"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical (<em>with default</em>):
+enables console text output</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function assumes multiple exponentially decaying signal components with first-order kinetics:
+</p>
+<p style="text-align: center;"><code class="reqn">I(t) = n_1 \lambda_1 exp(-\lambda_1 t) + n_2 \lambda_2 exp(-\lambda_2 t) + ... + n_K \lambda_K exp(-\lambda_K t)</code>
+</p>
+
+<p>with <code class="reqn">I(t)</code> the CW-OSL signal, <code class="reqn">n</code> the signal component intensity,
+<code class="reqn">\lambda</code> the signal component decay constant and <code class="reqn">K</code> the number of signal components.
+For the actual decomposition procedure, the integrated version of this formula is used, see Mittelstrass et al. (2021) for details.
+</p>
+<p><strong>Decomposition algorithm</strong>
+</p>
+<p>The calculation procedure depends on the function argument <code>algorithm</code>.
+This function includes two different decomposition algorithms: <code>"det"</code> for <strong>det</strong>erminant solution
+and <code>"nls"</code> for <strong>n</strong>onlinear <strong>l</strong>east <strong>s</strong>quares estimate
+</p>
+<p><code>algorithm = "det"</code> (default)
+</p>
+<p>The function calculates the CW-OSL component intensities by building an equation system
+which is then solved by a determinant-based approach (Cramers rule). This purely analytical
+approach gives the algorithm a solution in all possible cases, even if the measurement consists just of noise
+or the wrong model is used. There are also no 'false minima' events.
+The statistical error is calculated by applying the <em>propagation of uncertainty</em> method on Cramers rule.
+</p>
+<p>The precision of this algorithm as well as the propagation of eventual systematic errors of the decay rate values,
+depend on the integration intervals, given by the columns <code style="white-space: pre;">⁠$t.start⁠</code>, <code style="white-space: pre;">⁠$t.end⁠</code>, <code style="white-space: pre;">⁠$ch.start⁠</code> and <code style="white-space: pre;">⁠$ch.end⁠</code>
+of the data.frame used as input for the argument <code>components</code>.
+In principle, these can be chosen freely. Reasonable integration intervals are defined by optimise_OSLintervals.
+If not defined, the logarithmic mean values between life times (reciprocal decay rate) of subsequent components are
+used as interval borders.
+</p>
+<p><code>algorithm = "nls"</code>
+</p>
+<p>As alternative algorithm, Levenberg-Marquardt nonlinear regression is available, see minpack.lm::nlsLM for details.
+The results are identical to that of the <code>"det"</code> algorithm in accuracy and precision. But there is the slight chance (&lt; 1 %)
+of fitting failure when using the <code>"nls"</code> algorithm. Also, the statistical errors are underestimated by 20-80 %
+in most cases. As advantage, the <code>"nls"</code> algorithm is less sensitive against systematic errors
+caused by uncorrected signal background.
+</p>
+<p><code>algorithm = "det+nls"</code>
+</p>
+<p>Both algorithms can be combined. Then, <code>"det"</code> provides the startings values and the error estimations for
+<code>"nls"</code> and returns replacement results, in case <code>"nls"</code> fails. <code>"nls"</code> compensates for potential systematic
+errors in the fast and medium components intensity values due to uncorrected signal background. However, the
+background signal will still affect slow component results. The slowest component will be overestimated while
+the second slowest component will be underestimated. If these components are of particular interest,
+it is recommended to set <code>background.fitting = TRUE</code>
+</p>
+<p>All three methods were tested at 5x10^6 simulated CW-OSL curves by Mittelstrass (2019) for their performance
+(+++ reliable results in all cases; ++ reliable in &gt;95% of cases: + reliable in most cases):
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<strong>Characteristics</strong> </td>
+<td style="text-align: left;"> <strong>det</strong> </td>
+<td style="text-align: left;"> <strong>nls</strong> </td>
+<td style="text-align: left;"> <strong>det+nls</strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Decomposition success rate </td>
+<td style="text-align: left;"> 100 % </td>
+<td style="text-align: left;"> &gt;99 % </td>
+<td style="text-align: left;"> 100 % </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Component intensity accuracy </td>
+<td style="text-align: left;"> +++ </td>
+<td style="text-align: left;"> +++ </td>
+<td style="text-align: left;"> +++ </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Accuracy in case of uncorrected background </td>
+<td style="text-align: left;"> + </td>
+<td style="text-align: left;"> ++ </td>
+<td style="text-align: left;"> ++ </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Error estimation accuracy </td>
+<td style="text-align: left;"> +++ </td>
+<td style="text-align: left;"> + </td>
+<td style="text-align: left;"> ++
+</td>
+</tr>
+</table>
+<p>In summary, <code>algorithm = "det"</code> is recommended for the most cases. If the signal background level is
+significant (&gt; 2 % of initial signal) but was not corrected, <code>algorithm = "det+nls"</code> is the better choice.
+Setting <code>background.fitting = TRUE</code> is usually not recommended, only in case slow components shall
+be investigated in measurements with uncorrected background.
+</p>
+<p><strong>Error estimation</strong>
+</p>
+<p>In case of <code>algorithm = "det"</code> or <code>"det+nls"</code> the Propagation of Uncertainty method is used to
+transform signal bin error values (column <code style="white-space: pre;">⁠$bin.error⁠</code>) into component intensity error values (column <code style="white-space: pre;">⁠$n.error⁠</code>). The signal bin error
+calculation depends on the argument <code>error.estimation</code>, see below.
+If <code>algorithm = "nls"</code> is used, the error values provided by minpack.lm::nlsLM are returned.
+</p>
+<p><code>error.estimation = "empiric"</code> (default)
+</p>
+<p>The standard deviation of each signal bin (signal bin = signal value of an integrated time interval) is
+calculated from the <em>corrected sample variance</em> between the CW-OSL model and the actual CW-OSL curve
+for that interval. Thus, statistical errors are monitored accurately without any prior knowledge required.
+However, potential systematic errors are monitored insufficiently. Also, at least two (better more) data points
+per signal bin are needed to estimate its standard deviation. If a signal bin consists just of one data point,
+its square root value is taken as standard deviation, in accordance to the Poisson distribution.
+</p>
+<p><code>error.estimation = "poisson"</code> or numeric value
+</p>
+<p>Alternatively the standard error can be calculated by approximating a <strong>Poisson</strong> distributed signal error,
+known as <em>Shot noise</em>. This is suitable if the lack of data points on the x-axis circumvents an empiric error
+estimation, like with spatially or spectrally resolved CCD measurements. Also the parameter can be set to a numeric
+value, which  represents the detector noise in <em>cts / s</em> and is assumed to be normal distributed.
+The detector noise will be added on top of the Poisson distributed shot noise.
+</p>
+<p><code>error.estimation = "only.bin.RSS"</code>
+</p>
+<p>The error estimation is omitted but the residual sum of squares (RSS) between input curve and combined
+signal component curves is calculated. However, the RSS value is divided into sections according to
+the signal bins (column <code style="white-space: pre;">⁠$bin.RSS⁠</code>). The full RSS value can be calculated by summing over the complete column.
+The RSS value is usually used a minimization target in fitting algorithms, like done in fit_OSLcurve.
+The values of the <code style="white-space: pre;">⁠$bin.RSS⁠</code> column allows for weighted fitting by applying pre-factors to the bin RSS values.
+For further speed advance, the calculation of <code style="white-space: pre;">⁠$components$n.residual⁠</code> and <code style="white-space: pre;">⁠$components$initial.signal⁠</code> is
+also omitted.
+</p>
+<p><code>error.estimation = "none"</code>
+</p>
+<p>The error estimation is omitted. This option saves significant computing time, if the error estimation is
+not of significance. For further speed advance, the calculation of <code style="white-space: pre;">⁠$components$n.residual⁠</code> and
+<code style="white-space: pre;">⁠$components$initial.signal⁠</code> is also omitted.
+</p>
+<p><em>Systematic errors</em>
+</p>
+<p>The ratio of the error values of both error estimation methods can be used to detect (but not quantify) systematic
+errors. <code>"poisson"</code> error values are not affected by systematic errors, while <code>"empiric"</code> errors are.
+If the detector noise is known and taken into account, the relation between both values for a given
+signal bin should be about <code class="reqn">empiric / poisson = 1</code>. In case of systematic errors, this ratio increases.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The input table <strong>components</strong> data.frame will be returned with added or overwritten
+columns: <code style="white-space: pre;">⁠$n⁠</code>, <code style="white-space: pre;">⁠$n.error⁠</code>, <code style="white-space: pre;">⁠$n.residual⁠</code>, <code style="white-space: pre;">⁠$bin⁠</code>, <code style="white-space: pre;">⁠$bin.error⁠</code>, <code style="white-space: pre;">⁠$bin.RSS⁠</code>, <code style="white-space: pre;">⁠$initial.signal⁠</code>.
+Which columns are written depends on the selected parameters. If an input data.frame contains already
+one of the above columns but parameters are selected which do not re-calculate the values, the values
+of the columns are set to <code>NA</code>.
+</p>
+
+
+<h3>Last updates</h3>
+
+<p>2022-07-25, DM: Extended algorithm for bin-wise RSS calculation and added error estimation option "only.bin.RSS"
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dirk Mittelstraß, <a href="mailto:dirk.mittelstrass@luminescence.de">dirk.mittelstrass@luminescence.de</a>
+</p>
+<p>Please cite the package the following way:
+</p>
+<p>Mittelstraß, D., Schmidt, C., Beyer, J., Heitmann, J. and Straessner, A.:
+R package OSLdecomposition: Automated identification and separation of quartz CW-OSL signal components, <em>in preparation</em>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Mittelstraß, D., 2019. Decomposition of weak optically stimulated luminescence signals and
+its application in retrospective dosimetry at quartz (Master thesis). TU Dresden, Dresden.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>fit_OSLcurve, optimise_OSLintervals, RLum.OSL_decomposition, minpack.lm::nlsLM
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Set some arbitrary decay parameter for a dim CW-OSL measurement of quartz
+components &lt;- data.frame(name = c("fast", "medium", "slow"),
+                         lambda = c(2, 0.5, 0.02),
+                         n = c(1000, 1000, 10000))
+
+# Simulate the CW-OSL curve and add some signal noise and some detection background
+curve &lt;- simulate_OSLcomponents(components, simulate.curve = TRUE,
+                                add.poisson.noise = TRUE, add.background = 40)
+
+# Decompose the simulated curve
+components &lt;- decompose_OSLcurve(curve, components)
+
+# Display the component separation results
+plot_OSLcurve(curve, components)
+
+### Decomposition including signal background fitting:
+
+# Define optimized integration intervals, including an interval for the background
+components &lt;- optimise_OSLintervals(components, curve, background.component = TRUE)
+
+# Decompose again and view results
+components &lt;- decompose_OSLcurve(curve, components, background.fitting = TRUE)
+plot_OSLcurve(curve, components)
+
+</code></pre>
+
+
+</div>

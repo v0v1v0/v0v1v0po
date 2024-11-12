@@ -1,0 +1,238 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderBook</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Instantaneous limit order book reconstruction.</h2>
+
+<h3>Description</h3>
+
+<p>Given a set of <code>events</code>, reconstructs a limit order book for a
+specific point in time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderBook(events, tp = as.POSIXlt(Sys.time(), tz = "UTC"),
+  max.levels = NULL, bps.range = 0, min.bid = 0, max.ask = Inf)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>events</code></td>
+<td>
+<p>Limit order <code>events</code> data.frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tp</code></td>
+<td>
+<p>Time point to re-construct order book at.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.levels</code></td>
+<td>
+<p>Max number of price levels to return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bps.range</code></td>
+<td>
+<p>Max depth to return +- BPS from best bid/ask.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.bid</code></td>
+<td>
+<p>Min bid to return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.ask</code></td>
+<td>
+<p>Max ask to return.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An order book consists of 2 sides: <em>bids</em> and <em>asks</em>, an example of
+which is shown below:
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+      id </td>
+<td style="text-align: right;">  price </td>
+<td style="text-align: right;">     volume </td>
+<td style="text-align: right;">  liquidity </td>
+<td style="text-align: right;">  bps </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65613703 </td>
+<td style="text-align: right;"> 236.58 </td>
+<td style="text-align: right;">  910229141 </td>
+<td style="text-align: right;"> 6341547077 </td>
+<td style="text-align: right;"> 2.11 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65613655 </td>
+<td style="text-align: right;"> 236.56 </td>
+<td style="text-align: right;"> 1320000000 </td>
+<td style="text-align: right;"> 5431317936 </td>
+<td style="text-align: right;"> 1.26 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65613700 </td>
+<td style="text-align: right;"> 236.55 </td>
+<td style="text-align: right;"> 1320000000 </td>
+<td style="text-align: right;"> 4111317936 </td>
+<td style="text-align: right;"> 0.84 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65613698 </td>
+<td style="text-align: right;"> 236.54 </td>
+<td style="text-align: right;"> 1600000000 </td>
+<td style="text-align: right;"> 2791317936 </td>
+<td style="text-align: right;"> 0.42 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65613712 </td>
+<td style="text-align: right;"> 236.53 </td>
+<td style="text-align: right;"> 1191317936 </td>
+<td style="text-align: right;"> 1191317936 </td>
+<td style="text-align: right;"> 0.00 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+       - </td>
+<td style="text-align: right;">      - </td>
+<td style="text-align: right;">          - </td>
+<td style="text-align: right;">          - </td>
+<td style="text-align: right;">    - </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65613225 </td>
+<td style="text-align: right;"> 236.36 </td>
+<td style="text-align: right;">   16154172 </td>
+<td style="text-align: right;">   16154172 </td>
+<td style="text-align: right;"> 0.00 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65613681 </td>
+<td style="text-align: right;"> 236.31 </td>
+<td style="text-align: right;">  200000000 </td>
+<td style="text-align: right;">  216154172 </td>
+<td style="text-align: right;"> 2.11 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65613220 </td>
+<td style="text-align: right;"> 236.30 </td>
+<td style="text-align: right;">  100000000 </td>
+<td style="text-align: right;">  316154172 </td>
+<td style="text-align: right;"> 2.53 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65612978 </td>
+<td style="text-align: right;"> 236.28 </td>
+<td style="text-align: right;">  100000000 </td>
+<td style="text-align: right;">  416154172 </td>
+<td style="text-align: right;"> 3.38 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+65612388 </td>
+<td style="text-align: right;"> 236.17 </td>
+<td style="text-align: right;">  100000000 </td>
+<td style="text-align: right;">  516154172 </td>
+<td style="text-align: right;"> 8.03</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Limit Order Book structure. A list containing 3 fields:
+</p>
+
+<dl>
+<dt>timestamp</dt>
+<dd>
+<p>Timestamp the order book was reconstructed for.</p>
+</dd>
+<dt>asks</dt>
+<dd>
+<p>A data.frame containing the Ask side of the order book.</p>
+</dd>
+<dt>bids</dt>
+<dd>
+<p>A data.frame containing the Bid side of the order book.</p>
+</dd>
+</dl>
+<p>The <em>bids</em> and <em>asks</em> data consists of the following:
+</p>
+
+<dl>
+<dt>id</dt>
+<dd>
+<p>Limit order Id.</p>
+</dd>
+<dt>timestamp</dt>
+<dd>
+<p>Last modification time to limit order.</p>
+</dd>
+<dt>exchange.timestamp</dt>
+<dd>
+<p>Time at which order was placed in order book.</p>
+</dd>
+<dt>price</dt>
+<dd>
+<p>Limit order price.</p>
+</dd>
+<dt>volume</dt>
+<dd>
+<p>Limit orer volume.</p>
+</dd>
+<dt>liquidity</dt>
+<dd>
+<p>Cumulative sum of volume from best bid/ask up until price.</p>
+</dd>
+<dt>bps</dt>
+<dd>
+<p>Distance (in BPS) of order from best bid/ask.</p>
+</dd>
+</dl>
+<p>Both the <em>bids</em> and <em>asks</em> data are ordered by descending price.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+tp &lt;- as.POSIXct("2015-05-01 04:25:15.342", tz="UTC")
+orderBook(lob.data$events, max.levels=5)
+
+</code></pre>
+
+
+</div>

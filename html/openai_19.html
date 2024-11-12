@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>list_fine_tune_events</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List fine-tune events</h2>
+
+<h3>Description</h3>
+
+<p>Returns events related to a specified fine-tune job. See <a href="https://platform.openai.com/docs/api-reference/fine-tunes/events">this page</a> for
+details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">list_fine_tune_events(
+  fine_tune_id,
+  stream = FALSE,
+  openai_api_key = Sys.getenv("OPENAI_API_KEY"),
+  openai_organization = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fine_tune_id</code></td>
+<td>
+<p>required; a length one character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stream</code></td>
+<td>
+<p>required; defaults to <code>FALSE</code>; a length one logical vector.
+<strong>Currently is not implemented.</strong></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>openai_api_key</code></td>
+<td>
+<p>required; defaults to <code>Sys.getenv("OPENAI_API_KEY")</code>
+(i.e., the value is retrieved from the <code>.Renviron</code> file); a length one
+character vector. Specifies OpenAI API key.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>openai_organization</code></td>
+<td>
+<p>optional; defaults to <code>NULL</code>; a length one
+character vector. Specifies OpenAI organization.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For arguments description please refer to the <a href="https://platform.openai.com/docs/api-reference/fine-tunes/events">official documentation</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list, elements of which contains information about the
+fine-tune events.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other fine-tune functions: 
+<code>cancel_fine_tune()</code>,
+<code>create_fine_tune()</code>,
+<code>delete_fine_tune_model()</code>,
+<code>list_fine_tunes()</code>,
+<code>retrieve_fine_tune()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+training_file &lt;- system.file(
+    "extdata", "sport_prepared_train.jsonl", package = "openai"
+)
+validation_file &lt;- system.file(
+    "extdata", "sport_prepared_train.jsonl", package = "openai"
+)
+
+training_info &lt;- upload_file(training_file, "fine-tune")
+validation_info &lt;- upload_file(validation_file, "fine-tune")
+
+info &lt;- create_fine_tune(
+    training_file = training_info$id,
+    validation_file = validation_info$id,
+    model = "ada",
+    compute_classification_metrics = TRUE,
+    classification_positive_class = " baseball" # Mind space in front
+)
+
+id &lt;- ifelse(
+    length(info$data$id) &gt; 1,
+    info$data$id[length(info$data$id)],
+    info$data$id
+)
+
+list_fine_tune_events(fine_tune_id = id)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

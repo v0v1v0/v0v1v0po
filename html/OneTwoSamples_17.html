@@ -1,0 +1,228 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>one_two_sample</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Deal with one and two (normal) samples
+</h2>
+
+<h3>Description</h3>
+
+<p>Deal with one and two (normal) samples. For one normal sample x, the function reports descriptive statistics, plot, interval estimation and test of hypothesis of x. For two normal samples x and y, the function reports descriptive statistics, plot, interval estimation and test of hypothesis of x and y, respectively. It also reports interval estimation and test of hypothesis of mu1-mu2 (the difference of the means of x and y) and sigma1^2/sigma2^2 (the ratio of the variances of x and y), tests whether x and y are from the same population, finds the correlation coefficient of x and y if x and y have the same length.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">one_two_sample(x, y = NULL, mu = c(Inf, Inf), sigma = c(-1, -1), 
+               var.equal = FALSE, ratio = 1, side = 0, alpha = 0.05)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A numeric vector.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>A numeric vector.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+
+<p>If <code>y = NULL</code>, i.e., there is only one sample. See the argument <code>mu</code> in <code>one_sample</code>. For two normal samples <code>x</code> and <code>y</code>, <code>mu</code> plays one role: the population means. However, <code>mu</code> is used in two places: one is the two sided or one sided interval estimation of <code>sigma1^2 / sigma2^2</code> of two normal samples, another is the two sided or one sided test of hypothesis of <code>sigma1^2</code> and <code>sigma2^2</code> of two normal samples. When <code>mu</code> is known, input it, and the function computes the interval endpoints (or the F value) using an F distribution with degree of freedom <code>(n1, n2)</code>. When it is unknown, ignore it, and the function computes the interval endpoints (or the F value) using an F distribution with degree of freedom <code>(n1-1, n2-1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+
+<p>If <code>y = NULL</code>, i.e., there is only one sample. See the argument <code>sigma</code> in <code>one_sample</code>. For two normal samples <code>x</code> and <code>y</code>, <code>sigma</code> plays one role: the population standard deviations. However, <code>sigma</code> is used in two places: one is the two sided or one sided interval estimation of <code>mu1-mu2</code> of two normal samples, another is the two sided or one sided test of hypothesis of <code>mu1</code> and <code>mu2</code> of two normal samples. When the standard deviations are known, input it, then the function computes the interval endpoints using normal population; when the standard deviations are unknown, ignore it, now we need to consider whether the two populations have equal variances. See <code>var.equal</code> below.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.equal</code></td>
+<td>
+
+<p>A logical variable indicating whether to treat the two variances as being equal. If <code>TRUE</code> then the pooled variance is used to estimate the variance otherwise the Welch (or Satterthwaite) approximation to the degrees of freedom is used.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ratio</code></td>
+<td>
+
+<p>The hypothesized ratio of the population variances of <code>x</code> and <code>y</code>. It is used in <code>var.test(x, y, ratio = ratio, ...)</code>, i.e., when computing the interval estimation and test of hypothesis of <code>sigma1^2 / sigma2^2</code> when <code>mu1</code> or <code>mu2</code> is unknown.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>side</code></td>
+<td>
+
+<p>If <code>y = NULL</code>, i.e., there is only one sample. See the argument <code>side</code> in <code>one_sample</code>. For two normal samples <code>x</code> and <code>y</code>, <code>sigma</code> is used in four places: interval estimation of <code>mu1-mu2</code>, test of hypothesis of <code>mu1</code> and <code>mu2</code>, interval estimation of <code>sigma1^2 / sigma2^2</code>, test of hypothesis of <code>sigma1^2</code> and <code>sigma2^2</code>. In interval estimation of <code>mu1-mu2</code> or <code>sigma1^2 / sigma2^2</code>, <code>side</code> is a parameter used to control whether to compute two sided or one sided interval estimation. When computing the one sided upper limit, input <code>side = -1</code> (or a number &lt; 0); when computing the one sided lower limit, input <code>side = 1</code> (or a number &gt; 0); when computing the two sided limits, input <code>side = 0</code> (default). In test of hypothesis of <code>mu1</code> and <code>mu2</code> or <code>sigma1^2</code> and <code>sigma2^2</code>, <code>side</code> is a parameter used to control two sided or one sided test of hypothesis. When inputting <code>side = 0</code> (default), the function computes two sided test of hypothesis, and <code>H1: mu1 != mu2</code> or <code>H1: sigma1^2 != sigma2^2</code>; when inputting <code>side = -1</code> (or a number &lt; 0), the function computes one sided test of hypothesis, and <code>H1: mu1 &lt; mu2</code> or <code>H1: sigma1^2 &lt; sigma2^2</code>; when inputting <code>side = 1</code> (or a number &gt; 0), the function computes one sided test of hypothesis, and <code>H1: mu1 &gt; mu2</code> or <code>H1: sigma1^2 &gt; sigma2^2</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+
+<p>The significance level, a real number in [0, 1]. Default to 0.05. 1-alpha is the degree of confidence.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>one_sample_x </code></td>
+<td>
+<p>It contains the results by <code>one_sample(x, ...)</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>one_sample_y </code></td>
+<td>
+<p>It contains the results by <code>one_sample(y, ...)</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu1_mu2_interval </code></td>
+<td>
+<p>It contains the results of interval estimation of <code>mu1-mu2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu1_mu2_hypothesis </code></td>
+<td>
+<p>It contains the results of test of hypothesis of <code>mu1-mu2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma_ratio_interval </code></td>
+<td>
+<p>It contains the results of interval estimation of <code>sigma1^2 / sigma2^2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma_ratio_hypothesis </code></td>
+<td>
+<p>It contains the results of test of hypothesis of <code>sigma1^2 / sigma2^2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res.ks </code></td>
+<td>
+<p>It contains the results of <code>ks.test(x,y)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res.binom </code></td>
+<td>
+<p>It contains the results of <code>binom.test(sum(x&lt;y), length(x))</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res.wilcox </code></td>
+<td>
+<p>It contains the results of <code>wilcox.test(x, y, ...)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor.pearson </code></td>
+<td>
+<p>It contains the results of <code>cor.test(x, y, method = "pearson", ...)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor.kendall </code></td>
+<td>
+<p>It contains the results of <code>cor.test(x, y, method = "kendall", ...)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor.spearman </code></td>
+<td>
+<p>It contains the results of <code>cor.test(x, y, method = "spearman", ...)</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Ying-Ying Zhang (Robert) <a href="mailto:robertzhangyying@qq.com">robertzhangyying@qq.com</a> 
+</p>
+
+
+<h3>References</h3>
+
+<p>Zhang, Y. Y., Wei, Y. (2013), One and two samples using only an R funtion,
+<a href="https://doi.org/10.2991/asshm-13.2013.29">doi:10.2991/asshm-13.2013.29</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## One sample
+x=rnorm(10, mean = 1, sd = 0.2); x
+
+## one_sample(x, ...) == one_two_sample(x, ...)
+one_sample(x, mu = 1, sigma = 0.2, side = 1)
+one_two_sample(x, mu = 1, sigma = 0.2, side = 1)
+
+one_sample(x, sigma = 0.2, side = 1)
+one_two_sample(x, sigma = 0.2, side = 1)
+
+one_sample(x, mu = 1, side = 1)
+one_two_sample(x, mu = 1, side = 1)
+
+one_sample(x)
+one_two_sample(x)
+
+## Two samples
+set.seed(1)
+x=rnorm(10, mean = 1, sd = 0.2); x
+y=rnorm(20, mean = 2, sd = 0.3); y
+y2=rnorm(20, mean = 2, sd = 0.2); y2
+
+## sigma1, sigma2 known; mu1, mu2 known
+one_two_sample(x, y, sigma = c(0.2, 0.3), mu = c(1, 2))
+
+## sigma1 = sigma2 unknown; mu1, mu2 known
+one_two_sample(x, y2, var.equal = TRUE, mu = c(1, 2))
+
+## sigma1 != sigma2 unknown; mu1, mu2 known
+one_two_sample(x, y, mu = c(1, 2))
+
+## sigma1, sigma2 known; mu1, mu2 unknown
+one_two_sample(x, y, sigma = c(0.2, 0.3))
+
+## sigma1 = sigma2 unknown; mu1, mu2 unknown
+one_two_sample(x, y2, var.equal = TRUE)
+
+## sigma1 != sigma2 unknown; mu1, mu2 unknown
+one_two_sample(x, y)
+
+</code></pre>
+
+
+</div>

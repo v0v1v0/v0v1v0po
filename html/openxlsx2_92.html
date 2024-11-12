@@ -1,0 +1,295 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_pivot_table</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a pivot table to a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>The data must be specified using <code>wb_data()</code> to ensure the function works.
+The sheet will be empty unless it is opened in spreadsheet software. Find
+more details in the <a href="https://janmarvin.github.io/ox2-book/chapters/openxlsx2_pivot_tables.html">section about pivot tables</a>
+in the openxlsx2 book.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_pivot_table(
+  wb,
+  x,
+  sheet = next_sheet(),
+  dims = "A3",
+  filter,
+  rows,
+  cols,
+  data,
+  fun,
+  params,
+  pivot_table,
+  slicer,
+  timeline
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object containing a #' worksheet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>data.frame</code> that inherits the <code>wb_data</code> class.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A worksheet containing a #'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>The worksheet cell where the pivot table is placed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>The column name(s) of <code>x</code> used for filter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows</code></td>
+<td>
+<p>The column name(s) of <code>x</code> used as rows</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>The column names(s) of <code>x</code> used as cols</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The column name(s) of <code>x</code> used as data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>A vector of functions to be used with <code>data</code>. See <strong>Details</strong> for the list of available options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>params</code></td>
+<td>
+<p>A list of parameters to modify pivot table creation. See <strong>Details</strong> for available options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pivot_table</code></td>
+<td>
+<p>An optional name for the pivot table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>slicer, timeline</code></td>
+<td>
+<p>Any additional column name(s) of <code>x</code> used as slicer/timeline</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The pivot table is not actually written to the worksheet, therefore the cell
+region has to remain empty. What is written to the workbook is something
+like a recipe how the spreadsheet software has to construct the pivot table
+when opening the file.
+</p>
+<p>It is possible to add slicers to the pivot table. For this the pivot
+table has to be named and the variable used as slicer, must be part
+of the selected pivot table names (<code>cols</code>, <code>rows</code>, <code>filter</code>, or
+<code>slicer</code>). If these criteria are matched, a slicer can be added
+using <code>wb_add_slicer()</code>.
+</p>
+<p>Be aware that you should always test on a copy if a <code>param</code> argument works
+with a pivot table. Not only to check if the desired effect appears, but
+first and foremost if the file loads. Wildly mixing params might brick the
+output file and cause spreadsheet software to crash.
+</p>
+<p><code>fun</code> can be any of <code>AVERAGE</code>, <code>COUNT</code>, <code>COUNTA</code>, <code>MAX</code>, <code>MIN</code>,
+<code>PRODUCT</code>, <code>STDEV</code>, <code>STDEVP</code>, <code>SUM</code>, <code>VAR</code>, <code>VARP</code>.
+</p>
+<p><code>show_data_as</code> can be any of <code>normal</code>, <code>difference</code>, <code>percent</code>, <code>percentDiff</code>,
+<code>runTotal</code>, <code>percentOfRow</code>, <code>percentOfCol</code>, <code>percentOfTotal</code>, <code>index</code>.
+</p>
+<p>It is possible to calculate data fields if the formula is assigned as a
+variable name for the field to calculate. This would look like this:
+<code>data = c("am", "disp/cyl" = "New")</code>
+</p>
+<p>Possible <code>params</code> arguments are listed below. Pivot tables accepts more
+parameters, but they were either not tested or misbehaved (probably because
+we misunderstood how the parameter should be used).
+</p>
+<p>Boolean arguments:
+</p>
+
+<ul>
+<li>
+<p> apply_alignment_formats
+</p>
+</li>
+<li>
+<p> apply_number_formats
+</p>
+</li>
+<li>
+<p> apply_border_formats
+</p>
+</li>
+<li>
+<p> apply_font_formats
+</p>
+</li>
+<li>
+<p> apply_pattern_formats
+</p>
+</li>
+<li>
+<p> apply_width_height_formats
+</p>
+</li>
+<li>
+<p> no_style
+</p>
+</li>
+<li>
+<p> compact
+</p>
+</li>
+<li>
+<p> outline
+</p>
+</li>
+<li>
+<p> compact_data
+</p>
+</li>
+<li>
+<p> row_grand_totals
+</p>
+</li>
+<li>
+<p> col_grand_totals
+</p>
+</li>
+</ul>
+<p>Table styles accepting character strings:
+</p>
+
+<ul>
+<li>
+<p> auto_format_id: style id as character in the range of 4096 to 4117
+</p>
+</li>
+<li>
+<p> table_style: a predefined (pivot) table style <code>"TableStyleMedium23"</code>
+</p>
+</li>
+<li>
+<p> show_data_as: accepts character strings as listed above
+</p>
+</li>
+</ul>
+<p>Miscellaneous:
+</p>
+
+<ul>
+<li>
+<p> numfmt: accepts vectors of the form <code>c(formatCode = "0.0%")</code>
+</p>
+</li>
+<li>
+<p> choose: select variables in the form of a named logical vector like
+<code>c(agegp = 'x &gt; "25-34"')</code> for the <code>esoph</code> dataset.
+</p>
+</li>
+<li>
+<p> sort_item: named list of index or character vectors
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>wb_data()</code>
+</p>
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>grouping-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+<p>Other worksheet content functions: 
+<code>col_widths-wb</code>,
+<code>filter-wb</code>,
+<code>grouping-wb</code>,
+<code>named_region-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_conditional_formatting()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_thread()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- wb_workbook() %&gt;% wb_add_worksheet() %&gt;% wb_add_data(x = mtcars)
+
+df &lt;- wb_data(wb, sheet = 1)
+
+wb &lt;- wb %&gt;%
+  # default pivot table
+  wb_add_pivot_table(df, dims = "A3",
+    filter = "am", rows = "cyl", cols = "gear", data = "disp"
+  ) %&gt;%
+  # with parameters
+  wb_add_pivot_table(df,
+    filter = "am", rows = "cyl", cols = "gear", data = "disp",
+    params = list(no_style = TRUE, numfmt = c(formatCode = "##0.0"))
+  )
+</code></pre>
+
+
+</div>

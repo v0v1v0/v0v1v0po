@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>distrib_variable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Histogram of the distribution of the class variable</h2>
+
+<h3>Description</h3>
+
+<p>Displays a histogram of the distribution of the class variable (ratio, part,
+evolution ...)  based on the specified method, number of classes or breaks.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">distrib_variable(data, varRatio, methode = "kmeans", nbClasses = 3,
+bornes = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>tableau de donnees (data.frame).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varRatio</code></td>
+<td>
+<p>chaine de caracteres (character). Variable des classes de la
+table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>methode</code></td>
+<td>
+<p>chaine de caracteres (character). A choisir parmi "kmeans"
+(par defaut), "fisher", "jenks" ou "quantile".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nbClasses</code></td>
+<td>
+<p>valeur numerique (numeric). Nombre de classes. Par defaut 3
+classes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bornes</code></td>
+<td>
+<p>vecteur de valeurs numeriques (numeric). Par defaut a NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Si les bornes sont renseignees, aucune methode est appliquee. Elle est
+consideree comme manuelle.
+</p>
+<p>Si les donnees a representer possedent des valeurs negatives et positives,
+alors une borne de classe a zero est geree automatiquement pour les methodes
+"kmeans", "fisher" et "jenks". La distribution des valeurs dans les classes,
+effectuee par la methode specifiee, est independante entre les valeurs
+negatives et les valeurs positives.
+</p>
+<p>La methode "quantile" ne gere pas de borne a zero.
+</p>
+<p>La fonction <code>ggplot2::ggplot</code> est utilisee pour la creation de
+l'histogramme.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Retourne un objet de type <code>ggplot</code>
+</p>
+<p>Affiche l'histogramme dans le plot.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ggplot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("donnees_monoloc")
+
+distrib_variable(data = donnees_monoloc ,varRatio = "VAR_AN_MOY", nbClasses = 4)
+
+</code></pre>
+
+
+</div>

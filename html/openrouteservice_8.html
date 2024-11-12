@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ors_matrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Openrouteservice Matrix</h2>
+
+<h3>Description</h3>
+
+<p>Obtain one-to-many, many-to-one and many-to-many matrices for time and
+distance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ors_matrix(
+  locations,
+  profile = ors_profile(),
+  ...,
+  api_key = ors_api_key(),
+  output = c("parsed", "text")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>locations</code></td>
+<td>
+<p>List of <code style="white-space: pre;">⁠longitude, latitude⁠</code> coordinate pairs, alternatively a two column <code>matrix</code> or <code>data.frame</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>profile</code></td>
+<td>
+<p>Route profile, defaults to <code>"driving-car"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional parameters as described <a href="https://openrouteservice.org/dev/#/api-docs/v2/matrix/%7Bprofile%7D/post">here</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>Character scalar containing openrouteservice API key</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Output format. By default the response is being parsed to a list-based R object</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Duration or distance matrix for multiple source and destination
+</p>
+
+<ul><li>
+<p> for <code>"text"</code>, a character vector of length 1 re-encoded to UTF-8.
+</p>
+</li></ul>
+<ul><li>
+<p> for <code>"parsed"</code>, a parsed R object.
+</p>
+</li></ul>
+<h3>Author(s)</h3>
+
+<p>Andrzej Oleś <a href="mailto:andrzej.oles@gmail.com">andrzej.oles@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">coordinates &lt;- list(
+  c(9.970093, 48.477473),
+  c(9.207916, 49.153868),
+  c(37.573242, 55.801281),
+  c(115.663757,38.106467)
+)
+
+# query for duration and distance in km
+res &lt;- ors_matrix(coordinates, metrics = c("duration", "distance"), units = "km")
+
+# duration in hours
+res$durations / 3600
+
+# distance in km
+res$distances
+</code></pre>
+
+
+</div>

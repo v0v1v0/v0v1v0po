@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orbital_r_fun</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Turn orbital object into a R function</h2>
+
+<h3>Description</h3>
+
+<p>Returns a R file that contains a function that output predictions when
+applied to data frames.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orbital_r_fun(x, name = "orbital_predict", file)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An orbital object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>Name of created function. Defaults to '"orbital_predict"“.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>A file name.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The generated function is only expected to work on data frame objects. The
+generated function doesn't require the orbital package to be loaded.
+Depending on what models and steps are used, other packages such as dplyr
+will need to be loaded as well.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Nothing.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workflows)
+library(recipes)
+library(parsnip)
+
+rec_spec &lt;- recipe(mpg ~ ., data = mtcars) %&gt;%
+  step_normalize(all_numeric_predictors())
+
+lm_spec &lt;- linear_reg()
+
+wf_spec &lt;- workflow(rec_spec, lm_spec)
+
+wf_fit &lt;- fit(wf_spec, mtcars)
+
+orbital_obj &lt;- orbital(wf_fit)
+
+file_name &lt;- tempfile()
+
+orbital_r_fun(orbital_obj, file = file_name)
+
+readLines(file_name)
+
+</code></pre>
+
+
+</div>

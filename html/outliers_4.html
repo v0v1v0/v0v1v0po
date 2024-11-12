@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grubbs.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Grubbs tests for one or two outliers in data sample</h2>
+
+<h3>Description</h3>
+
+<p>Performs Grubbs' test for one outlier, two outliers on one tail,
+or two outliers on opposite tails, in small sample.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">grubbs.test(x, type = 10, opposite = FALSE, two.sided = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a numeric vector for data values. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opposite</code></td>
+<td>
+<p>  a logical indicating whether you want to check not the value with 
+largest difference from the mean, but opposite (lowest, if most suspicious is highest etc.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p> Integer value indicating test variant. 10 is a test for one outlier (side is
+detected automatically and can be reversed by <code>opposite</code> parameter). 11 is a test
+for two outliers on opposite tails, 20 is test for two outliers in one tail.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>two.sided</code></td>
+<td>
+<p> Logical value indicating if there is a need to treat this test as two-sided. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function can perform three tests given and discussed by Grubbs (1950).
+</p>
+<p>First test (10) is used to detect if the sample dataset contains one outlier, statistically different than the other values.
+Test is based by calculating score of this outlier G (outlier minus mean and divided by sd) and
+comparing it to appropriate critical values. Alternative method is calculating ratio of variances
+of two datasets - full dataset and dataset without outlier. The obtained value called U is bound
+with G by simple formula.
+</p>
+<p>Second test (11) is used to check if lowest and highest value are two outliers on opposite tails
+of sample. It is based on calculation of ratio of range to standard deviation of the sample. 
+</p>
+<p>Third test (20) calculates ratio of variance of full sample and sample without two extreme observations.
+It is used to detect if dataset contains two outliers on the same tail.
+</p>
+<p>The p-values are calculated using <code>qgrubbs</code> function.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>the value statistic. For type 10 it is difference between outlier and
+the mean divided by standard deviation, and for type 20 it is sample range divided
+by standard deviation. Additional value U is ratio of sample variances with and withour suspicious outlier.
+According to Grubbs (1950) these values for type 10 are bound by simple formula and only one of them
+can be used, but function gives both. For type 20 the G is the same as U.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>the p-value for the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>a character string describing the alternative hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a character string indicating what type of test was performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.name</code></td>
+<td>
+<p>name of the data argument.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Lukasz Komsta </p>
+
+
+<h3>References</h3>
+
+ 
+<p>Grubbs, F.E. (1950). Sample Criteria for testing outlying observations. Ann. Math. Stat. 21, 1, 27-58.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>dixon.test</code>, <code>chisq.out.test</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(1234)
+x = rnorm(10)
+grubbs.test(x)
+grubbs.test(x,type=20)
+grubbs.test(x,type=11)
+
+</code></pre>
+
+
+</div>

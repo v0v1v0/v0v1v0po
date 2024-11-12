@@ -1,0 +1,150 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osf_download</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download files and directories from OSF</h2>
+
+<h3>Description</h3>
+
+<p>Files stored on OSF can be downloaded locally by passing an <code>osf_tbl_file</code>
+that contains the files and folders of interest. Use <code>path</code> to specify
+<em>where</em> the files should be downloaded, otherwise they are downloaded to
+your working directory by default.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osf_download(
+  x,
+  path = NULL,
+  recurse = FALSE,
+  conflicts = "error",
+  verbose = FALSE,
+  progress = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An <code>osf_tbl_file</code> containing a single file or directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Path pointing to a local directory where the downloaded files
+will be saved. Default is to use the current working directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recurse</code></td>
+<td>
+<p>Applies only to OSF directories. If <code>TRUE</code>, a directory is
+fully recursed and all nested files and subdirectories are downloaded.
+Alternatively, a positive number will determine the number of levels
+to recurse.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conflicts</code></td>
+<td>
+<p>This determines what happens when a file with the same name
+exists at the specified destination. Can be one of the following:
+</p>
+
+<ul>
+<li> <p><code>"error"</code> (the default): throw an error and abort the file transfer operation.
+</p>
+</li>
+<li> <p><code>"skip"</code>: skip the conflicting file(s) and continue transferring the
+remaining files.
+</p>
+</li>
+<li> <p><code>"overwrite"</code>: replace the existing file with the transferred copy.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical, indicating whether to print informative messages
+about interactions with the OSF API (default <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>Logical, if <code>TRUE</code> progress bars are displayed for each file
+transfer. Mainly useful for transferring large files. For tracking lots of
+small files, setting <code>verbose = TRUE</code> is more informative.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The same <code>osf_tbl_file</code> passed to <code>x</code> with a new column,
+<code>"local_path"</code>, containing paths to the local files.
+</p>
+
+
+<h3>Implementation details</h3>
+
+<p>Directories are always downloaded from OSF as zip files that contain its
+entire contents. The logic for handling conflicts and recursion is
+implemented locally, acting on these files in a temporary location and
+copying them to <code>path</code> as needed. This creates a <em>gotcha</em> if you're
+downloading directories with large files and assuming that setting <code>conflicts = "skip"</code> and/or limiting recursion will reduce the number of files you're
+downloading. In such a case, a better strategy would be to use
+<code>osf_ls_files()</code> to list the contents of the directory and pass that output
+to <code>osf_download()</code>.
+</p>
+
+
+<h3>A note about synchronization</h3>
+
+<p>While <code>osf_download()</code> and <code>osf_upload()</code> allow you to conveniently shuttle
+files back and forth between OSF and your local machine, it's important to
+note that <strong>they are not file synchronization functions</strong>. In contrast to
+something like <a href="https://rsync.samba.org"><code>rsync</code></a>,
+<code>osf_download()</code>/<code>osf_upload()</code> do not take into account a file's contents or
+modification time. Whether you're uploading or downloading, if <code>conflicts = "overwrite"</code>, osfr will overwrite the existing file regardless of whether it
+is the more recent copy. You have been warned.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<ul>
+<li> <p><code>osf_upload()</code> for uploading files to OSF.
+</p>
+</li>
+<li> <p><code>osf_ls_files()</code> for listing files and directories on OSF.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# download a single file
+analysis_plan &lt;- osf_retrieve_file("2ryha") %&gt;%
+  osf_download()
+
+# verify the file was downloaded locally
+file.exists(analysis_plan$local_path)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

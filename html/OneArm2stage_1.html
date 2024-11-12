@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>FitDat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit Historical Survival Data Assuming the Failure Time Follows a
+Weibull Distribution</h2>
+
+<h3>Description</h3>
+
+<p>The function fits parametric models for the time-to-event data with the
+underlying distribution of the failure time assumed to be Weibull.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">FitDat(data)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a historical survival data sample, has to contain two variables
+'Time' and 'Cens': <br><em>Time</em>, the time under observation during trial for each
+patient.<br><em>Cens</em>, the status indicator of patients (event = 1,
+censored = 0).</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p><em>fit.Weibull</em> the fitted model assuming a Weibull distribution.
+<br><em>AIC</em> the AIC value from the fitted model. <br><em>parameter.estimates</em> the estimated parameters from the fitted
+model.
+</p>
+
+
+<h3>References</h3>
+
+<p>Wang, M., Rule, S., Zinzani, P. L., Goy, A., Casasnovas, O., Smith, S. D.,..., Robak, T. (2018).
+Acalabrutinib in relapsed or refractory mantle cell lymphoma (ACE-LY-004):
+a single-arm, multicentre, phase 2 trial. The Lancet, 391(10121), 659–667.
+https://doi.org/10.1016/s0140-6736(17)33108-2
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(IPDfromKM)
+# a sample dataset that we already extracted from Wang et al, 2018.
+df&lt;- read.csv(system.file("extdata", "df.csv", package = "OneArm2stage"))
+
+# risk time points
+trisk &lt;- c(0,2,4,6,8,10,12,14,16,18,20,22,24)
+
+# number of patients at risk at each risk time point
+nrisk.radio &lt;- c(124,120,115,110,107,104,103,95,46,18,11,8,0)
+
+# Preprocess the raw coordinates into an proper format for reconstruct IPD
+pre_radio &lt;- preprocess(dat=df, trisk=trisk,
+                     nrisk=nrisk.radio,totalpts=NULL,maxy=100)
+
+#Reconstruct IPD
+est_radio &lt;- getIPD(prep=pre_radio,armID=0,tot.events=NULL)
+
+# shift the IPD data into the proper format for 'FitDat()'
+ipd &lt;- est_radio$IPD
+dat3 &lt;- as.data.frame(cbind(rep(0, nrow(ipd)),ipd$time, ipd$status))
+colnames(dat3) &lt;- c("Entry", "Time", "Cens")
+
+# use FitDat function to fit the historical dat
+modelSelect &lt;- FitDat(dat3)
+modelSelect$AIC
+# Weibull
+# 301.7776
+
+# check the estimated parameters from the modeling results
+modelSelect$parameter.estimates
+# $Weibull
+# shape     scale
+# 0.1133671 3.9939753
+
+</code></pre>
+
+
+</div>

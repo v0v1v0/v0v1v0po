@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>harvest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OAI-PMH Harvester</h2>
+
+<h3>Description</h3>
+
+<p>Harvest a repository using Open Archives Initiative Protocol for
+Metadata Harvesting (OAI-PMH) requests.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oaih_harvest(baseurl, prefix = "oai_dc",
+             from = NULL, until = NULL, set = NULL,
+             transform = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>baseurl</code></td>
+<td>
+<p>a character string giving the base URL of the
+repository.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefix</code></td>
+<td>
+<p>a character vector with the formats in which metadata
+should be obtained, or <code>NULL</code>, indicating all available
+formats.  The default (<code>"oai_dc"</code>) corresponds to the mandatory
+OAI unqualified Dublin Core metadata schema.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from, until</code></td>
+<td>
+<p>character strings or Date or
+POSIXt date/time objects giving
+datestamps to be used as lower or upper bounds, respectively, for
+datestamp-based selective harvesting (i.e., only harvest records
+with datestamps in the given range).  If character, dates and times
+must be encoded using ISO 8601 in either ‘<span class="samp">⁠%F⁠</span>’ or
+‘<span class="samp">⁠%FT%TZ⁠</span>’ format (see <code>strptime</code>).  The trailing
+‘<span class="samp">⁠Z⁠</span>’ must be used when including time.  OAI-PMH implies
+<abbr><span class="acronym">UTC</span></abbr> for data/time specifications.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>set</code></td>
+<td>
+<p>a character vector giving the sets to be used for selective
+harvesting (i.e., only harvest records in the given sets), or
+<code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transform</code></td>
+<td>
+<p>a logical indicating whether the OAI-PMH XML results
+to “useful” R data structures via <code>oaih_transform</code>.
+Default: true.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a high-level function for conveniently harvesting metadata
+from a repository, allowing specifying several metadata formats or
+sets.  It also maps datestamps specified as R date or date/time
+objects to valid OAI-PMH datestamps according to the granularity of
+the repository.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If the OAI-PMH request was successful, the result of the request as
+XML or (default) transformed to “useful” R data structures.
+</p>
+
+
+</div>

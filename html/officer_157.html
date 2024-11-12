@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>prop_section</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Section properties</h2>
+
+<h3>Description</h3>
+
+<p>A section is a grouping of blocks (ie. paragraphs and tables)
+that have a set of properties that define pages on which the text will appear.
+</p>
+<p>A Section properties object stores information about page composition,
+such as page size, page orientation, borders and margins.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">prop_section(
+  page_size = NULL,
+  page_margins = NULL,
+  type = NULL,
+  section_columns = NULL,
+  header_default = NULL,
+  header_even = NULL,
+  header_first = NULL,
+  footer_default = NULL,
+  footer_even = NULL,
+  footer_first = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>page_size</code></td>
+<td>
+<p>page dimensions, an object generated with function page_size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page_margins</code></td>
+<td>
+<p>page margins, an object generated with function page_mar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Section type. It defines how the contents of the section will be
+placed relative to the previous section. Available types are "continuous"
+(begins the section on the next paragraph), "evenPage" (begins on the next
+even-numbered page), "nextColumn" (begins on the next column on the page),
+"nextPage" (begins on the following page), "oddPage" (begins on the next
+odd-numbered page).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>section_columns</code></td>
+<td>
+<p>section columns, an object generated with function section_columns. Use NULL (default value) for no content.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header_default</code></td>
+<td>
+<p>content as a <code>block_list()</code> for the default page header. Use NULL (default value) for no content.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header_even</code></td>
+<td>
+<p>content as a <code>block_list()</code> for the even page header. Use NULL (default value) for no content.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header_first</code></td>
+<td>
+<p>content as a <code>block_list()</code> for the first page header. Use NULL (default value) for no content.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>footer_default</code></td>
+<td>
+<p>content as a <code>block_list()</code> for the default page footer. Use NULL (default value) for no content.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>footer_even</code></td>
+<td>
+<p>content as a <code>block_list()</code> for the even page footer. Use NULL (default value) for no content.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>footer_first</code></td>
+<td>
+<p>content as a <code>block_list()</code> for the default page footer. Use NULL (default value) for no content.</p>
+</td>
+</tr>
+</table>
+<h3>Illustrations</h3>
+
+<p><img src="../help/figures/prop_section_doc_1.png" width="80%" alt="prop_section_doc_1.png"></p>
+
+
+<h3>See Also</h3>
+
+<p>block_section
+</p>
+<p>Other functions for section definition: 
+<code>page_mar()</code>,
+<code>page_size()</code>,
+<code>section_columns()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(officer)
+
+landscape_one_column &lt;- block_section(
+  prop_section(
+    page_size = page_size(orient = "landscape"), type = "continuous"
+  )
+)
+landscape_two_columns &lt;- block_section(
+  prop_section(
+    page_size = page_size(orient = "landscape"), type = "continuous",
+    section_columns = section_columns(widths = c(4.75, 4.75))
+  )
+)
+
+doc_1 &lt;- read_docx()
+# there starts section with landscape_one_column
+doc_1 &lt;- body_add_table(doc_1, value = mtcars[1:10, ], style = "table_template")
+doc_1 &lt;- body_end_block_section(doc_1, value = landscape_one_column)
+# there stops section with landscape_one_column
+
+
+# there starts section with landscape_two_columns
+doc_1 &lt;- body_add_par(doc_1, value = paste(rep(letters, 50), collapse = " "))
+doc_1 &lt;- body_end_block_section(doc_1, value = landscape_two_columns)
+# there stops section with landscape_two_columns
+
+doc_1 &lt;- body_add_table(doc_1, value = mtcars[1:25, ], style = "table_template")
+
+print(doc_1, target = tempfile(fileext = ".docx"))
+
+
+# an example with headers and footers -----
+txt_lorem &lt;- rep(
+  "Purus lectus eros metus turpis mattis platea praesent sed. ",
+  50
+)
+txt_lorem &lt;- paste0(txt_lorem, collapse = "")
+
+header_first &lt;- block_list(fpar(ftext("text for first page header")))
+header_even &lt;- block_list(fpar(ftext("text for even page header")))
+header_default &lt;- block_list(fpar(ftext("text for default page header")))
+footer_first &lt;- block_list(fpar(ftext("text for first page footer")))
+footer_even &lt;- block_list(fpar(ftext("text for even page footer")))
+footer_default &lt;- block_list(fpar(ftext("text for default page footer")))
+
+ps &lt;- prop_section(
+  header_default = header_default, footer_default = footer_default,
+  header_first = header_first, footer_first = footer_first,
+  header_even = header_even, footer_even = footer_even
+)
+x &lt;- read_docx()
+for (i in 1:20) {
+  x &lt;- body_add_par(x, value = txt_lorem)
+}
+x &lt;- body_set_default_section(
+  x,
+  value = ps
+)
+print(x, target = tempfile(fileext = ".docx"))
+</code></pre>
+
+
+</div>

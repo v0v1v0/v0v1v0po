@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.xval.oem</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prediction function for fitted cross validation oem objects</h2>
+
+<h3>Description</h3>
+
+<p>Prediction function for fitted cross validation oem objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'xval.oem'
+predict(
+  object,
+  newx,
+  which.model = "best.model",
+  s = c("lambda.min", "lambda.1se"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>fitted "cv.oem" model object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newx</code></td>
+<td>
+<p>Matrix of new values for x at which predictions are to be made. Must be a matrix; can be sparse as in the 
+<code>CsparseMatrix</code> objects of the <span class="pkg">Matrix</span> package
+This argument is not used for type=c("coefficients","nonzero")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.model</code></td>
+<td>
+<p>If multiple penalties are fit and returned in the same <code>oem</code> object, the <code>which.model</code> argument is used to 
+specify which model to make predictions for. For example, if the oem object "oemobj" was fit with argument 
+<code>penalty = c("lasso", "grp.lasso")</code>, then <code>which.model = 2</code> provides predictions for the group lasso model. For 
+<code>predict.cv.oem()</code>, can specify
+<code>"best.model"</code> to use the best model as estimated by cross-validation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>Value(s) of the penalty parameter <code>lambda</code> at which predictions are required. Default is the entire sequence used to create 
+the model. For predict.cv.oem, can also specify <code>"lambda.1se"</code> or <code>"lambda.min"</code> for best lambdas estimated by cross validation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>used to pass the other arguments for <code>predict.oem()</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object depending on the type argument
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+n.obs &lt;- 1e4
+n.vars &lt;- 100
+n.obs.test &lt;- 1e3
+
+true.beta &lt;- c(runif(15, -0.5, 0.5), rep(0, n.vars - 15))
+
+x &lt;- matrix(rnorm(n.obs * n.vars), n.obs, n.vars)
+y &lt;- rnorm(n.obs, sd = 3) + x %*% true.beta
+x.test &lt;- matrix(rnorm(n.obs.test * n.vars), n.obs.test, n.vars)
+y.test &lt;- rnorm(n.obs.test, sd = 3) + x.test %*% true.beta
+
+fit &lt;- xval.oem(x = x, y = y, 
+                penalty = c("lasso", "grp.lasso"), 
+                groups = rep(1:10, each = 10), 
+                nlambda = 10)
+
+preds.best &lt;- predict(fit, newx = x.test, type = "response", which.model = "best.model")
+
+apply(preds.best, 2, function(x) mean((y.test - x) ^ 2))
+
+preds.gl &lt;- predict(fit, newx = x.test, type = "response", which.model = "grp.lasso")
+
+apply(preds.gl, 2, function(x) mean((y.test - x) ^ 2))
+
+preds.l &lt;- predict(fit, newx = x.test, type = "response", which.model = 1)
+
+apply(preds.l, 2, function(x) mean((y.test - x) ^ 2))
+</code></pre>
+
+
+</div>

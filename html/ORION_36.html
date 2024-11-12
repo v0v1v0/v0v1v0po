@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.Subcascades</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary Subcascades Characteristics</h2>
+
+<h3>Description</h3>
+
+<p>Generates a general overview of the characteristics of the Subcascades object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'Subcascades'
+summary(object = NULL, includeClassSummary = TRUE, digits = 3, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A Subcascades object as it is returned by <code>subcascades</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeClassSummary</code></td>
+<td>
+<p>Boolean indicating if the occurrence of classes by size should be included in the summary.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>Integer defining the number of decimal places as it is used in the <code>round</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function gives a general overview of characteristics of the Subcascades object, like number of cascades or maximal cascade length.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>subcascades</code>, <code>summary.PredictionMap</code>, <code>summary.Groupwise</code>, <code>summary.Conf</code>, <code>summary.ConfusionTable</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data &lt;- esl$data
+labels &lt;- esl$labels
+foldList &lt;- generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap &lt;- predictionMap(data, labels, foldList = foldList, 
+                        classifier = tunePareto.svm(), kernel='linear')
+# generate Subcascades object
+subc &lt;- subcascades(predMap,thresh=0.7,numSol=10000)
+
+summary(subc)
+</code></pre>
+
+
+</div>

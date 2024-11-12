@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bng_to_geom</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return the geometry of a British National Grid square</h2>
+
+<h3>Description</h3>
+
+<p>Convert a valid British National Grid (BNG) grid reference string into a grid
+square with the resolution implied by the length of the reference string.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bng_to_geom(grid_ref, returnType = c("wkt", "geojson", "geos", "sf"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>grid_ref</code></td>
+<td>
+<p>(character) BNG grid reference (required).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnType</code></td>
+<td>
+<p>(character) Representation for the returned geometry.
+Choose <code>'wkt'</code> or <code>'geojson'</code> to return the geometry in
+Well-Known Text format or GeoJSON, respectively, <code>'geos'</code> to return an
+object of class <code>geos</code> or <code>'sf'</code> for a Simple Features object of
+class <code>sf</code>. Default is WKT format.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The National Grid is a unique reference system that covers Great
+Britain in a series of grid squares at multiple scales. Grid references
+begin with 2 letters to identify 100km squares followed by a series of
+digits to identify quadrants nested within. For more information, see
+<a href="https://www.ordnancesurvey.co.uk/documents/resources/guide-to-nationalgrid.pdf">https://www.ordnancesurvey.co.uk/documents/resources/guide-to-nationalgrid.pdf</a>
+</p>
+<p>The purpose of this function is to generate geometries based on the extent
+of the grid square which can be used as spatial filters in OS Data Hub API
+queries.
+</p>
+<p>Note that all geometries returned will have a coordinate reference system
+(CRS) of a EPSG:27700. The <code>sf</code> package must be installed in order to
+return an object of class <code>sf</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The coordinates of the grid square boundary in either Well-Known
+Text (WKT) format, GeoJSON format, an object of class <code>geos</code> or as a
+Simple Features object of class <code>sf</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>extent_from_bng()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">bng_to_geom('TL63')
+bng_to_geom('TL683365', returnType = 'geojson')
+
+</code></pre>
+
+
+</div>

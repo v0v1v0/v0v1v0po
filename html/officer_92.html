@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ftext</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Formatted chunk of text</h2>
+
+<h3>Description</h3>
+
+<p>Format a chunk of text with text formatting properties (bold, color, ...).
+The function allows you to create pieces of text formatted the way you want.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ftext(text, prop = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>text value, a single character value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prop</code></td>
+<td>
+<p>formatting text properties returned by fp_text. It also can be NULL in
+which case, no formatting is defined (the default is applied).</p>
+</td>
+</tr>
+</table>
+<h3>usage</h3>
+
+<p>You can use this function in conjunction with fpar to create paragraphs
+consisting of differently formatted text parts. You can also use this
+function as an <em>r chunk</em> in an R Markdown document made with package
+officedown.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>fp_text
+</p>
+<p>Other run functions for reporting: 
+<code>external_img()</code>,
+<code>hyperlink_ftext()</code>,
+<code>run_autonum()</code>,
+<code>run_bookmark()</code>,
+<code>run_columnbreak()</code>,
+<code>run_comment()</code>,
+<code>run_footnote()</code>,
+<code>run_footnoteref()</code>,
+<code>run_linebreak()</code>,
+<code>run_pagebreak()</code>,
+<code>run_reference()</code>,
+<code>run_tab()</code>,
+<code>run_word_field()</code>,
+<code>run_wordtext()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ftext("hello", fp_text())
+
+properties1 &lt;- fp_text(color = "red")
+properties2 &lt;- fp_text(bold = TRUE, shading.color = "yellow")
+ftext1 &lt;- ftext("hello", properties1)
+ftext2 &lt;- ftext("World", properties2)
+paragraph &lt;- fpar(ftext1, " ", ftext2)
+
+x &lt;- read_docx()
+x &lt;- body_add(x, paragraph)
+print(x, target = tempfile(fileext = ".docx"))
+</code></pre>
+
+
+</div>

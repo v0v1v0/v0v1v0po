@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>institutions2df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert OpenAlex collection of institutions' records from list format to data frame</h2>
+
+<h3>Description</h3>
+
+<p>It converts bibliographic collection of institutions' records gathered from OpenAlex database <a href="https://openalex.org/">https://openalex.org/</a> into data frame.
+The function converts a list of institutions' records obtained using <code>oa_request</code> into a data frame/tibble.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">institutions2df(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>List. Output of <code>oa_request</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical.
+If TRUE, print information about the dataframe conversion process.
+Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Progress bar object. If verbose, computed from 'oa_progress'.
+NULL otherwise.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data.frame.
+</p>
+<p>For more extensive information about OpenAlex API, please visit: &lt;https://docs.openalex.org&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Query to search information about all Italian educational institutions
+
+query_inst &lt;- oa_query(
+  entity = "institutions",
+  country_code = "it",
+  type = "education"
+)
+
+res &lt;- oa_request(
+  query_url = query_inst,
+  count_only = FALSE,
+  verbose = FALSE
+)
+
+oa2df(res, entity = "institutions")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

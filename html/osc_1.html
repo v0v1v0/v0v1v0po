@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>assign.data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Assign data to clusters
+</h2>
+
+<h3>Description</h3>
+
+<p>After clustering assign additional data from a data frame with columns indicated as latitude and longitude.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">assign.data(cluster, points, dist=1000)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+
+<p>The from cca() generated data frame with cluster-information.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>points</code></td>
+<td>
+
+<p>Data frame with additional data, containing at least a "lat" and "long" column with point coordinates which will be assigned.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist</code></td>
+<td>
+
+<p>The assignment distance given in meters. Are the given point coordinates within this distance from an identified cluster, this point will be assigned to the cluster.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Multiple points can be assigned to the same cluster. If no cluster is within the given distance, the cluster_id  will be 0.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the data frame given as points with an additional column "cluster_id" referring to the identified cluster. A cluster_id 0 indicates that no cluster was within the given distance.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(landcover)
+
+# clustering urban areas
+urban &lt;- cca(landcover, cell.class=1,s=2000, unit="m")
+str(urban)
+
+# plot the result    
+result &lt;- landcover*NA
+result[cellFromXY(result,urban$cluster[,c("long","lat")])]&lt;-urban$cluster[,"cluster_id"]*(-1)
+plot(result, col=rainbow(9))
+
+# data.frame with additional information (name)    
+data.points &lt;- data.frame(
+      long=c(13.26,13.28),
+      lat=c(52.34,52.20),
+      name=c("Pappelhausen","New Garden")
+    )
+    
+points(data.points$long, data.points$lat, pch="X")
+    
+assign.data(cluster=urban$cluster, points=data.points, dist=3000)
+</code></pre>
+
+
+</div>

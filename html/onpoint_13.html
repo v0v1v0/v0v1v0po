@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulate_heterogenous_pattern</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>simulate_heterogenous_pattern</h2>
+
+<h3>Description</h3>
+
+<p>Simulate heterogeneous pattern
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulate_heterogenous_pattern(x, nsim, fix_n = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ppp</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>Number of patterns to simulate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fix_n</code></td>
+<td>
+<p>Logical if true the null model patterns have exactly the same number of points ais input.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed to <code>spatstat.explore::density.ppp()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Simulate heterogeneous point patterns as null model data for <code>spatstat.explore::envelope()</code>.
+A heterogeneous Poisson process is used, meaning that there are no interaction between points,
+however, the simulated coordinates depend on the intensity <code class="reqn">\lambda</code> of the input pattern.
+</p>
+<p>Returns a <code>list</code> with <code>ppp</code> objects.
+</p>
+
+
+<h3>Value</h3>
+
+<p>list
+</p>
+
+
+<h3>References</h3>
+
+<p>Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology
+and applications with R. Chapman and Hall/CRC Press, London, UK. &lt;isbn:978-1-4822-1020-0&gt;
+</p>
+<p>Wiegand, T., Moloney, K.A., 2014. Handbook of spatial point-pattern analysis in
+ecology. Chapman and Hall/CRC Press, Boca Raton, USA. &lt;isbn:978-1-4200-8254-8&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>envelope</code> <br><code>density.ppp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(42)
+input_pattern &lt;- spatstat.random::rpoispp(lambda = function(x , y) {100 * exp(-3 * x)}, nsim = 1)
+null_model &lt;- simulate_heterogenous_pattern(input_pattern, nsim = 19)
+spatstat.explore::envelope(Y = input_pattern, fun = spatstat.explore::pcf, nsim = 19,
+simulate = null_model)
+
+</code></pre>
+
+
+</div>

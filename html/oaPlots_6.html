@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>drawSplitDensity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Draw a Split Density Plot</h2>
+
+<h3>Description</h3>
+
+<p>Draw a Split Density Plot
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">drawSplitDensity(x = NULL, y = NULL, densityObj = NULL, yshift = 0,
+  colVec, outerCol, lwd = 2, split = NULL, yScale = NULL,
+  fillBackground = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>x vector from a density object. e.g. data &lt;- rnorm(100); x &lt;- density(data)$x</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>y vector from a density object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>densityObj</code></td>
+<td>
+<p>an object created by the function density()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yshift</code></td>
+<td>
+<p>vertical shift to be applied to the y object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colVec</code></td>
+<td>
+<p>color vector for the shaded regions that compose the interior of the plot.
+The length of 'colVec' should be one greater than the length of split</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outerCol</code></td>
+<td>
+<p>the color for the outer density line</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>line width for the outer density line</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split</code></td>
+<td>
+<p>vector of x values at which to split the density plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yScale</code></td>
+<td>
+<p>vertical scale at which to plot the density. For example, a call with 'yScale = 1' will
+produce a density curve scaled between 0 and 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fillBackground</code></td>
+<td>
+<p>binary specification of whether to fill in the background the outerCol color</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>none. Graph is plotted to the current device
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jason Waddell
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(RColorBrewer)
+data &lt;- rnorm(1000)
+x &lt;- density(data)$x
+y &lt;- density(data)$y
+colVec &lt;- brewer.pal(9, "Blues")[3:8]
+outerCol &lt;- brewer.pal(9, "Blues")[9]
+
+oaTemplate(xlim = range(x), ylim = c(0, 1), ygrid = 0, cex.axis = 1.2)
+drawSplitDensity(x, y, colVec = colVec, split = c(-8),
+		outerCol = outerCol,
+		yScale = 0.95, yshift = 0)
+</code></pre>
+
+
+</div>

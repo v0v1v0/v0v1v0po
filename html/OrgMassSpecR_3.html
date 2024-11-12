@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ConvertPeptide</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert peptide sequence.</h2>
+
+<h3>Description</h3>
+
+<p>Convert single amino acid codes to an elemental formula or three letter codes.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ConvertPeptide(sequence, output = "elements", IAA = TRUE)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sequence</code></td>
+<td>
+<p>a character string representing the amino acid sequence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>a character string specifying the output.  Options are <code>"elements"</code> (default) for the elemental formula or <code>"3letter"</code> for the three letter codes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>IAA</code></td>
+<td>
+<p>logical. <code>TRUE</code> specifies iodoacetylated cysteine and <code>FALSE</code> specifies unmodified cystine.  Used only in determining the elemental formula, not the three letter codes.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The amino acid residues must be specified by the one letter codes defined in the help for <code>Digest</code>.
+</p>
+<p>The argument <code>IAA</code> specifies treatment of the protein with iodoacetamide to break the disulfide bonds.  This treatment produces iodoacetylated cysteine residues (elemental formula C5H8N2O2S).
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>output = "elements"</code>, the value is a list specifying the number of each element.  This list can be used as input to other functions, see the examples.  If output = <code>"3letter"</code>, the value is a vector of length 1, containing the amino acid sequence in three letter codes.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Nathan G. Dodder</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ConvertPeptide("SEQENCE", output = "3letter")
+
+# as input to MonoisotopicMass
+MonoisotopicMass(formula = ConvertPeptide("SEQENCE"), charge = 1)
+
+# as input to MolecularWeight
+MolecularWeight(formula = ConvertPeptide("SEQENCE"))
+</code></pre>
+
+
+</div>

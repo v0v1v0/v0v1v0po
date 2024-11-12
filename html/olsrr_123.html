@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_step_best_subset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Best subsets regression</h2>
+
+<h3>Description</h3>
+
+<p>Select the subset of predictors that do the best at meeting some
+well-defined objective criterion, such as having the largest R2 value or the
+smallest MSE, Mallow's Cp or AIC. The default metric used for selecting the
+model is R2 but the user can choose any of the other available metrics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_step_best_subset(model, ...)
+
+## Default S3 method:
+ols_step_best_subset(
+  model,
+  max_order = NULL,
+  include = NULL,
+  exclude = NULL,
+  metric = c("rsquare", "adjr", "predrsq", "cp", "aic", "sbic", "sbc", "msep", "fpe",
+    "apc", "hsp"),
+  ...
+)
+
+## S3 method for class 'ols_step_best_subset'
+plot(x, model = NA, print_plot = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other inputs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_order</code></td>
+<td>
+<p>Maximum subset order.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include</code></td>
+<td>
+<p>Character or numeric vector; variables to be included in selection process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>Character or numeric vector; variables to be excluded from selection process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+<p>Metric to select model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class <code>ols_step_best_subset</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_plot</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, prints the plot else returns a plot object.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>ols_step_best_subset</code> returns an object of class <code>"ols_step_best_subset"</code>.
+An object of class <code>"ols_step_best_subset"</code> is a list containing the following:
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>metrics</code></td>
+<td>
+<p>selection metrics</p>
+</td>
+</tr></table>
+<h3>References</h3>
+
+<p>Kutner, MH, Nachtscheim CJ, Neter J and Li W., 2004, Applied Linear Statistical Models (5th edition).
+Chicago, IL., McGraw Hill/Irwin.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">model &lt;- lm(mpg ~ disp + hp + wt + qsec, data = mtcars)
+ols_step_best_subset(model)
+ols_step_best_subset(model, metric = "adjr")
+ols_step_best_subset(model, metric = "cp")
+
+# maximum subset
+model &lt;- lm(mpg ~ disp + hp + drat + wt + qsec, data = mtcars)
+ols_step_best_subset(model, max_order = 3)
+
+# plot
+model &lt;- lm(mpg ~ disp + hp + wt + qsec, data = mtcars)
+k &lt;- ols_step_best_subset(model)
+plot(k)
+
+# return only models including `qsec`
+ols_step_best_subset(model, include = c("qsec"))
+
+# exclude `hp` from selection process
+ols_step_best_subset(model, exclude = c("hp"))
+
+</code></pre>
+
+
+</div>

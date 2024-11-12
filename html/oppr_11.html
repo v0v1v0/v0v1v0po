@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_default_solver</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a default solver</h2>
+
+<h3>Description</h3>
+
+<p>Identify the best solver currently installed on the system and specify that
+it should be used to solve a project prioritization <code>problem()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_default_solver(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to the solver.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Ranked from best to worst, the solvers that can be used are:
+<span class="pkg">gurobi</span>, (<code>add_gurobi_solver()</code>),
+<span class="pkg">Rsymphony</span> (<code>add_rsymphony_solver()</code>), <span class="pkg">lpsymphony</span>
+(<code>add_lpsymphony_solver()</code>), and <span class="pkg">lpSolveAPI</span>
+(<code>add_lpsolveapi_solver()</code>). This function does not consider
+solvers that generate solutions using heuristic algorithms (i.e.
+<code>add_heuristic_solver()</code>) or random processes
+(i.e. <code>add_random_solver()</code>) because they cannot provide
+any guarantees on solution quality.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>solvers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem with default solver
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 200) %&gt;%
+     add_binary_decisions() %&gt;%
+     add_default_solver()
+
+# print problem
+print(p)
+
+## Not run: 
+# solve problem
+s &lt;- solve(p)
+
+# print solution
+print(s)
+
+# plot solution
+plot(p, s)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

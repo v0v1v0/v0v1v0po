@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>paircomp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Pairwise Comparisons
+</h2>
+
+<h3>Description</h3>
+
+<p><code>paircomp</code> is a generic function for pairwise comparisons by adjusting p-values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'owt'
+paircomp(x, adjust.method = c("bonferroni", "holm", "hochberg", "hommel", "BH", 
+  "BY", "fdr", "none"), verbose = TRUE, ...)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a <code>owt</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust.method</code></td>
+<td>
+<p>Method for adjusting p values (see <code>p.adjust</code>). Default is set to "bonferroni".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>a logical for printing output to R console.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments affecting multiple comparisons of groups in one-way independent designs.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a data.frame of output.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Osman Dag</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(onewaytests)
+
+out &lt;- aov.test(Sepal.Length ~ Species, data = iris)
+paircomp(out)
+paircomp(out, adjust.method = "hochberg")
+
+out2 &lt;- kw.test(Sepal.Length ~ Species, data = iris)
+paircomp(out2)
+paircomp(out2, adjust.method = "hommel")
+
+out3 &lt;- kw.test(Sepal.Length ~ Species, data = iris)
+paircomp(out3)
+paircomp(out3, adjust.method = "holm")
+
+
+</code></pre>
+
+
+</div>

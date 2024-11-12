@@ -1,0 +1,202 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Transition-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Class Transition</h2>
+
+<h3>Description</h3>
+
+<p>A S4 class for the Transition level result of an Intensity analysis. Can be
+plotted with the plot method <code>plot</code>.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The slots <code>transitionData</code> and <code>transitionStationarity</code> can
+receive tables for "Gain of category n" or "Loss of category m" in the following
+format:
+</p>
+
+<ol>
+<li>
+<p> Gain of category n:
+</p>
+
+<ul>
+<li> <p><code>transitionData</code>: <code>&lt;tibble&gt;</code>. A table with 7 columns:
+</p>
+
+<ol>
+<li>
+<p> Period: <code>&lt;fct&gt;</code>. The period <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> From: <code>&lt;fct&gt;</code>. A category i.
+</p>
+</li>
+<li>
+<p> To: <code>&lt;fct&gt;</code>. The gaining category in the transition of interest <em>(n)</em>.
+</p>
+</li>
+<li>
+<p> Interval: <code>&lt;int&gt;</code>. Duration of the period <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> T_i2n_km2/T_i2n_pixel: <code>&lt;dbl&gt;</code>. Area with transition from category
+i to category n during time interval <em>[Yt, Yt+1]</em> where <em>i</em>
+<code>is not equal to</code> <em>n</em>.
+</p>
+</li>
+<li>
+<p> Rtin: <code>&lt;dbl&gt;</code>. Annual intensity of transition from category i to
+category n
+during time interval <em>[Yt, Yt+1]</em> where <em>i</em>  <code>is not equal to</code> <em>n</em>.
+</p>
+</li>
+<li>
+<p> Wtn: <code>&lt;dbl&gt;</code>. Value of the uniform intensity of the transition
+to category n from all non-n categories at time Yt during time interval <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+</ol>
+</li>
+<li>
+<p> transitionStationarity: <code>&lt;tibble&gt;</code>. A table containing results of
+a stationarity test over the gain on <em>category n</em> containing 5 columns:
+</p>
+
+<ol>
+<li>
+<p> From: <code>&lt;fct&gt;</code>. The losing category in the transition of interest
+to the category n.
+</p>
+</li>
+<li>
+<p> loss: <code>&lt;int&gt;</code>. Number of times the category had losses to the
+category n.
+</p>
+</li>
+<li>
+<p> N: <code>&lt;int&gt;</code>. Total number of transitions to be considered as stationary (T).
+</p>
+</li>
+<li>
+<p> Stationarity: <code>&lt;chr&gt;</code>. <em>targeted by</em> or <em>avoided by</em>
+the category <code>n</code>.
+</p>
+</li>
+<li>
+<p> Test: <code>&lt;chr&gt;</code>. <em>Y</em> for stationarity detected and <em>N</em>
+when not.
+</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p> Loss of category m:
+</p>
+
+<ul>
+<li> <p><code>transitionData</code>: <code>&lt;tibble&gt;</code>. A table with 7 columns:
+</p>
+
+<ol>
+<li>
+<p> Period: <code>&lt;fct&gt;</code>. The period <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> To: <code>&lt;fct&gt;</code>. A category <em>j</em>.
+</p>
+</li>
+<li>
+<p> From: <code>&lt;fct&gt;</code>. The losing category in the transition of interest (m).
+</p>
+</li>
+<li>
+<p> Interval: <code>&lt;dbl&gt;</code>. Duration of the period <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> T_m2j_km2/T_m2j_pixel: <code>&lt;dbl&gt;</code>. Area with transition from category
+<em>m</em> to category <em>j</em> during time interval <em>[Yt, Yt+1]</em>
+where <em>j</em>  <code>is not equal to</code> <em>m</em>.
+</p>
+</li>
+<li>
+<p> Qtmj: <code>&lt;dbl&gt;</code>. Annual intensity of transition from category <em>m</em> to
+category <em>j</em> during time interval <em>[Yt, Yt+1]</em>
+where <em>j</em>  <code>is not equal to</code> <em>m</em>.
+</p>
+</li>
+<li>
+<p> Vtm: <code>&lt;dbl&gt;</code>. Value of the uniform intensity of the transition
+from category <em>m</em> to all <em>non-m</em> categories at time Y<sub>t+1</sub>
+during time interval <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+</ol>
+</li>
+<li>
+<p> transitionStationarity: <code>&lt;tibble&gt;</code>. A table containing results of
+a stationarity test
+over the loss of <em>category m</em> containing 5 columns:
+</p>
+
+<ol>
+<li>
+<p> To: <code>&lt;fct&gt;</code>. The gaining category in the transition of interest
+from the category m.
+</p>
+</li>
+<li>
+<p> gain: <code>&lt;int&gt;</code>. Number of times the category had gains from the
+category m.
+</p>
+</li>
+<li>
+<p> N: <code>&lt;int&gt;</code>. Total number of transitions to be considered as stationary (T).
+</p>
+</li>
+<li>
+<p> Stationarity: <code>&lt;chr&gt;</code>. <em>targeted</em> or <em>avoided</em> the category <code>m</code>.
+</p>
+</li>
+<li>
+<p> Test: <code>&lt;chr&gt;</code>. <em>Y</em> for stationarity detected and <em>N</em> when not.
+</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>lookupcolor</code></dt>
+<dd>
+<p>The colors (character vector) associated with the LUC legend items.</p>
+</dd>
+<dt><code>transitionData</code></dt>
+<dd>
+<p>tibble. A table of Transition level's results (gain n (<em>Rtin</em> &amp; <em>Wtn</em>)
+or loss m (<em>Qtmj</em> &amp; <em>Vtm</em>) values).</p>
+</dd>
+<dt><code>transitionStationarity</code></dt>
+<dd>
+<p>tibble. A table containing results of a stationarity
+test. A change is considered stationary only if the intensities for all time
+intervals reside on one side of the uniform intensity, i.e are smaller or bigger
+than the uniform rate over the whole period.</p>
+</dd>
+</dl>
+</div>

@@ -1,0 +1,221 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_TS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plots the median and quantiles of a time-series</h2>
+
+<h3>Description</h3>
+
+<p>Plots the median and quantiles of a time-series
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_TS(
+  x,
+  xlab = "Year",
+  ylab = "Spawning Biomass",
+  title = "",
+  quantiles = c(0.025, 0.975),
+  scale = NULL,
+  alpha = 0.1,
+  lwd = 1,
+  use_theme = NULL,
+  colpalette = "Dark2",
+  facet = TRUE,
+  inc.Legend = !facet,
+  inc.Hist = FALSE,
+  print = TRUE,
+  get_function = get_SSB,
+  years = NULL,
+  ...
+)
+
+plot_SSB(x, ...)
+
+plot_Biomass(x, ylab = "Biomass", ...)
+
+plot_Landings(x, ylab = "Landings", ...)
+
+plot_Removals(x, ylab = "Removals", ...)
+
+plot_Recruits(x, ylab = "Recruits", ...)
+
+plot_F(x, ylab = "Fishing Mortality (F)", ...)
+
+plot_LifeHistory(
+  x,
+  xlab = "Year",
+  ylab = "Median (quantiles)",
+  title = "",
+  quantiles = c(0.025, 0.975),
+  scale = NULL,
+  alpha = 0.1,
+  lwd = 1,
+  use_theme = NULL,
+  colpalette = "Dark2",
+  facet = TRUE,
+  inc.Legend = !facet,
+  inc.Hist = FALSE,
+  print = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class <code>Hist</code>, <code>MSE</code>, or a list of <code>Hist</code> or <code>MSE</code> objects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>X-axis label (default 'Year')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>Y-axes label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>Optional title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantiles</code></td>
+<td>
+<p>Lower and upper quantiles to calculate. Numeric vector of length 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>An optional function with a single numeric argument that returns transformed or scaled numeric values. See <code>lb2kg</code> and <code>kg2lb</code> for example.
+Can be a list of functions for list objects (NA for no transformation)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Transparency parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>Line width</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_theme</code></td>
+<td>
+<p>Optional ggplot theme</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colpalette</code></td>
+<td>
+<p>Color palette from <code>RColorBrewer</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet</code></td>
+<td>
+<p>Logical. Facet the plot?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inc.Legend</code></td>
+<td>
+<p>Logical. Include legend?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inc.Hist</code></td>
+<td>
+<p>Logical. For <code>MSE</code> results, include the historical period?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print</code></td>
+<td>
+<p>Logical. Print the plot?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get_function</code></td>
+<td>
+<p><code>get_</code> function to extract time-series information from <code>x</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>years</code></td>
+<td>
+<p>Optional numeric vector specifying the years to plot. Default is all years.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Named arguments passed to <code>plot_TS</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A named list with:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<code>p</code> </td>
+<td style="text-align: left;"> The <code>ggplot</code> object </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>df</code> </td>
+<td style="text-align: left;"> Data.frame with the summary statistics (median and quantiles) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>Functions</h3>
+
+
+<ul>
+<li> <p><code>plot_SSB()</code>: Plot the Spawning Biomass
+</p>
+</li>
+<li> <p><code>plot_Biomass()</code>: Plot the Total Biomass
+</p>
+</li>
+<li> <p><code>plot_Landings()</code>: Plot the Landings (biomass)
+</p>
+</li>
+<li> <p><code>plot_Removals()</code>: Plot the Removals (biomass)
+</p>
+</li>
+<li> <p><code>plot_Recruits()</code>: Plot the Recruits (numbers)
+</p>
+</li>
+<li> <p><code>plot_F()</code>: Plot the Recruits (numbers)
+</p>
+</li>
+<li> <p><code>plot_LifeHistory()</code>: Plot the Life-History parameters
+</p>
+</li>
+</ul>
+</div>

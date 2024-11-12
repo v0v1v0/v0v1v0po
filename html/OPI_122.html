@@ -1,0 +1,412 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ZEST</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ZEST</h2>
+
+<h3>Description</h3>
+
+<p>An implementation of the Bayesian test procedures of King-Smith et al.
+and Watson and Pelli. Note that we use the term <code>pdf</code> throughout as in the
+original paper, even though they are discrete probability functions in this
+implementation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ZEST(
+  domain = 0:40,
+  prior = rep(1/length(domain), length(domain)),
+  likelihood = sapply(domain, function(tt) 0.03 + (1 - 0.03 - 0.03) * (1 -
+    stats::pnorm(domain, tt, 1))),
+  stopType = "S",
+  stopValue = 1.5,
+  minStimulus = utils::head(domain, 1),
+  maxStimulus = utils::tail(domain, 1),
+  maxSeenLimit = 2,
+  minNotSeenLimit = 2,
+  maxPresentations = 100,
+  minInterStimInterval = NA,
+  maxInterStimInterval = NA,
+  verbose = 0,
+  makeStim,
+  stimChoice = "mean",
+  ...
+)
+
+ZEST.start(
+  domain = 0:40,
+  prior = rep(1/length(domain), length(domain)),
+  likelihood = sapply(domain, function(tt) 0.03 + (1 - 0.03 - 0.03) * (1 -
+    stats::pnorm(domain, tt, 1))),
+  stopType = "S",
+  stopValue = 1.5,
+  minStimulus = utils::head(domain, 1),
+  maxStimulus = utils::tail(domain, 1),
+  maxSeenLimit = 2,
+  minNotSeenLimit = 2,
+  maxPresentations = 100,
+  makeStim,
+  stimChoice = "mean",
+  ...
+)
+
+ZEST.step(state, nextStim = NULL, fixedStimValue = NA, fixedResponse = NA)
+
+ZEST.stop(state)
+
+ZEST.final(state)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>Vector of values over which pdf is kept.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>Starting probability distribution over domain. Same length as <code>domain</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>likelihood</code></td>
+<td>
+<p>Matrix where <code>likelihood[s,t]</code> is likelihood of seeing <code>s</code>
+given <code>t</code> is the true threshold. That is, Pr(s|t) where <code>s</code> and <code>t</code> are
+indexes into <code>domain</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopType</code></td>
+<td>
+<p><code>N</code>, for number of presentations; <code>S</code>, for standard deviation
+of the pdf; and <code>H</code>, for the entropy  of the pdf.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopValue</code></td>
+<td>
+<p>Value for number of presentations (<code>stopType=N</code>), standard deviation
+(<code>stopType=S)</code> or Entropy (<code>stopType=H</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minStimulus</code></td>
+<td>
+<p>The smallest stimuli that will be presented. Could be different from
+<code>domain[1]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxStimulus</code></td>
+<td>
+<p>The largest stimuli that will be presented. Could be different from
+<code>tail(domain,1)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxSeenLimit</code></td>
+<td>
+<p>Will terminate if <code>maxStimulus</code> value is seen this many times.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNotSeenLimit</code></td>
+<td>
+<p>Will terminate if <code>minStimulus</code> value is not seen this many times.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxPresentations</code></td>
+<td>
+<p>Maximum number of presentations regardless of <code>stopType</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minInterStimInterval</code></td>
+<td>
+<p>If both <code>minInterStimInterval</code> and <code>maxInterStimInterval</code>
+are not <code>NA</code>, then between each stimuli there is a random wait period drawn uniformly
+between <code>minInterStimInterval</code> and <code>maxInterStimInterval</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxInterStimInterval</code></td>
+<td>
+<p><code>minInterStimInterval</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>verbose=0</code> does nothing, <code>verbose=1</code> stores pdfs for returning,
+and <code>verbose=2</code> stores pdfs and also prints each presentation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>makeStim</code></td>
+<td>
+<p>A function that takes a dB value and numPresentations and returns an OPI datatype
+ready for passing to opiPresent. See examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stimChoice</code></td>
+<td>
+<p>A true ZEST procedure uses the <code>"mean"</code> of the current pdf as the stimulus,
+but <code>"median"</code> and <code>"mode"</code> (as used in a QUEST procedure) are provided for your
+enjoyment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Extra parameters to pass to the opiPresent function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state</code></td>
+<td>
+<p>Current state of the ZEST returned by <code>ZEST.start</code> and <code>ZEST.step</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nextStim</code></td>
+<td>
+<p>A valid object for <code>opiPresent</code> to use as its <code>nextStim</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixedStimValue</code></td>
+<td>
+<p>A number in <code>state$domain</code> that, is <code>!is.na</code>, will be used as the stimulus value
+overriding <code>state$minStimulus</code>, <code>state$maxStimulus</code> and <code>state$stimChoice</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixedResponse</code></td>
+<td>
+<p>Ignored if <code>!is.na</code> otherwise used as the response to the stim shown.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is an implementation of King-Smith et al.'s ZEST procedure and Watson and Pelli's
+QUEST procedure. All presentations are rounded to an element of the supplied domain.
+</p>
+<p>Note this function will repeatedly call <code>opiPresent</code> for a stimulus until <code>opiPresent</code>
+returns <code>NULL</code> (ie no error occurred).
+</p>
+<p>The <code>checkFixationOK</code> function is called (if present in stim made from <code>makeStim</code>)
+after each presentation, and if it returns FALSE, the pdf for that location is not changed
+(ie the presentation is ignored), but the stim, number of presentations etc is recorded in
+the state.
+</p>
+<p>If more than one ZEST is to be interleaved (for example, testing multiple locations), then the
+<code>ZEST.start</code>, <code>ZEST.step</code>, <code>ZEST.stop</code> and <code>ZEST.final</code> calls can maintain
+the state of the ZEST after each presentation, and should be used. If only a single ZEST is
+required, then the simpler <code>ZEST</code> can be used, which is a wrapper for the four functions
+that maintain state. See examples below.
+</p>
+
+
+<h3>Value</h3>
+
+
+
+<h4>Single location</h4>
+
+<p><code>ZEST</code> returns a list containing
+</p>
+
+<ul>
+<li> <p><code>npres</code> Total number of presentations used.
+</p>
+</li>
+<li> <p><code>respSeq</code> Response sequence stored as a matrix: row 1 is dB values of stimuli, row 2
+</p>
+</li>
+<li>
+<p> is 1/0 for seen/not-seen, row 3 is fixated 1/0 (always 1 if <code>checkFixationOK</code> not
+</p>
+</li>
+<li>
+<p> present in stim objects returned from <code>makeStim</code>).
+</p>
+</li>
+<li> <p><code>pdfs</code> If <code>verbose</code> is bigger than 0, then this is a list of the pdfs used for each presentation, otherwise NULL.
+</p>
+</li>
+<li> <p><code>final</code> The mean/median/mode of the final pdf, depending on <code>stimChoice</code>, which is the determined threshold.
+</p>
+</li>
+<li> <p><code>opiResp</code> A list of responses received from each successful call to <code>opiPresent</code> within <code>ZEST</code>.
+</p>
+</li>
+</ul>
+<h4>Multilple locations</h4>
+
+<p><code>ZEST.start</code> returns a list that can be passed to <code>ZEST.step</code>, <code>ZEST.stop</code>, and
+<code>ZEST.final</code>. It represents the state of a ZEST at a single location at a point in time
+and contains the following.
+</p>
+
+<ul>
+<li> <p><code>name</code> <code>ZEST</code>.
+</p>
+</li>
+<li> <p><code>pdf</code> Current pdf: vector of probabilities the same length as <code>domain</code>.
+</p>
+</li>
+<li> <p><code>numPresentations</code> The number of times <code>ZEST.step</code> has been called on this state.
+</p>
+</li>
+<li> <p><code>stimuli</code> A vector containing the stimuli used at each call of <code>ZEST.step</code>.
+</p>
+</li>
+<li> <p><code>responses</code> A vector containing the responses received at each call of <code>ZEST.step</code>.
+</p>
+</li>
+<li> <p><code>responseTimes</code> A vector containing the response times received at each call of <code>ZEST.step</code>.
+</p>
+</li>
+<li> <p><code>fixated</code> A vector containing TRUE/FALSE if fixation was OK according to
+<code>checkFixationOK</code> for each call of <code>ZEST.step</code> (defaults to TRUE if
+<code>checkFixationOK</code> not present).
+</p>
+</li>
+<li> <p><code>opiResp</code> A list of responses received from each call to <code>opiPresent</code> within <code>ZEST.step</code>.
+</p>
+</li>
+<li>
+<p> A copy of all of the parameters supplied to ZEST.start: <code>domain</code>,
+<code>likelihood</code>, <code>stopType</code>, <code>stopValue</code>, <code>minStimulus</code>, <code>maxStimulus</code>,
+<code>maxSeenLimit</code>, <code>minNotSeenLimit</code>, <code>maxPresentations</code>, <code>makeStim</code>,
+<code>stimChoice</code>, <code>currSeenLimit</code>, <code>currNotSeenLimit</code>, and <code>opiParams</code>.
+</p>
+</li>
+</ul>
+<p><code>ZEST.step</code> returns a list containing
+* <code>state</code> The new state after presenting a stimuli and getting a response.
+* <code>resp</code> The return from the <code>opiPresent</code> call that was made.
+</p>
+<p><code>ZEST.stop</code> returns <code>TRUE</code> if the ZEST has reached its stopping criteria, and <code>FALSE</code> otherwise.
+</p>
+<p><code>ZEST.final</code> returns an estimate of threshold based on state. If <code>state$stimChoice</code>
+is <code>mean</code> then the mean is returned. If <code>state$stimChoice</code> is <code>mode</code> then the
+mode is returned. If <code>state$stimChoice</code> is <code>median</code> then the median is returned.
+</p>
+
+<p>A list containing
+* <code>state</code> The new state after presenting a stimuli and getting a response.
+* <code>resp</code> The return from the <code>opiPresent</code> call that was made.
+</p>
+
+
+<h3>References</h3>
+
+<p>P.E. King-Smith, S.S. Grigsny, A.J. Vingrys, S.C. Benes, and A. Supowit. "Efficient and Unbiased
+Modifications of the QUEST Threshold Method: Theory, Simulations, Experimental Evaluation and
+Practical Implementation", Vision Research 34(7) 1994. Pages 885-912.
+</p>
+<p>A.B. Watson and D.G. Pelli. "QUEST: A Bayesian adaptive psychophysical method", Perception and
+Psychophysics 33 1983. Pages 113-l20.
+</p>
+<p>A. Turpin, P.H. Artes and A.M. McKendrick "The Open Perimetry Interface: An enabling tool for
+clinical visual psychophysics", Journal of Vision 12(11) 2012.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dbTocd</code>, <code>opiPresent</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">chooseOpi("SimHenson")
+if(!is.null(opiInitialize(type="C", cap=6)$err))
+  stop("opiInitialize failed")
+
+##############################################
+# This section is for single location ZESTs
+##############################################
+# Stimulus is Size III white-on-white as in the HFA
+makeStim &lt;- function(db, n) {
+  s &lt;- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
+            duration=200, responseWindow=1500, checkFixationOK=NULL)
+  class(s) &lt;- "opiStaticStimulus"
+  return(s)
+}
+
+repp &lt;- function(...) sapply(1:50, function(i) ZEST(makeStim=makeStim, ...))
+a &lt;- repp(stopType="H", stopValue=  3, verbose=0, tt=30, fpr=0.03)
+b &lt;- repp(stopType="S", stopValue=1.5, verbose=0, tt=30, fpr=0.03)
+c &lt;- repp(stopType="S", stopValue=2.0, verbose=0, tt=30, fpr=0.03)
+d &lt;- repp(stopType="N", stopValue= 50, verbose=0, tt=30, fpr=0.03)
+e &lt;- repp(prior=dnorm(0:40,m=0,s=5), tt=30, fpr=0.03)
+f &lt;- repp(prior=dnorm(0:40,m=10,s=5), tt=30, fpr=0.03)
+g &lt;- repp(prior=dnorm(0:40,m=20,s=5), tt=30, fpr=0.03)
+h &lt;- repp(prior=dnorm(0:40,m=30,s=5), tt=30, fpr=0.03)
+
+layout(matrix(1:2,1,2))
+boxplot(lapply(list(a,b,c,d,e,f,g,h), function(x) unlist(x["final",])))
+boxplot(lapply(list(a,b,c,d,e,f,g,h), function(x) unlist(x["npres",])))
+
+##############################################
+# This section is for multiple ZESTs
+##############################################
+makeStimHelper &lt;- function(db,n, x, y) {  # returns a function of (db,n)
+  ff &lt;- function(db, n) db+n
+  body(ff) &lt;- substitute({
+    s &lt;- list(x=x, y=y, level=dbTocd(db), size=0.43, color="white",
+              duration=200, responseWindow=1500, checkFixationOK=NULL)
+    class(s) &lt;- "opiStaticStimulus"
+    return(s)
+  }, list(x=x,y=y))
+  return(ff)
+}
+
+# List of (x, y, true threshold) triples
+locations &lt;- list(c(9,9,30), c(-9,-9,32), c(9,-9,31), c(-9,9,33))
+
+# Setup starting states for each location
+states &lt;- lapply(locations, function(loc) {
+  ZEST.start(
+    domain=-5:45,
+    minStimulus=0,
+    maxStimulus=40,
+    makeStim=makeStimHelper(db,n,loc[1],loc[2]),
+    stopType="S", stopValue= 1.5, tt=loc[3], fpr=0.03, fnr=0.01)})
+
+# Loop through until all states are "stop"
+while(!all(st &lt;- unlist(lapply(states, ZEST.stop)))) {
+  i &lt;- which(!st)                         # choose a random,
+  i &lt;- i[runif(1, min=1, max=length(i))]  # unstopped state
+  r &lt;- ZEST.step(states[[i]])             # step it
+  states[[i]] &lt;- r$state                  # update the states
+}
+
+finals &lt;- lapply(states, ZEST.final)    # get final estimates of threshold
+for(i in 1:length(locations)) {
+  #cat(sprintf("Location (%+2d,%+2d) ",locations[[i]][1], locations[[i]][2]))
+  #cat(sprintf("has threshold %4.2f\n", finals[[i]]))
+}
+
+if (!is.null(opiClose()$err))
+  warning("opiClose() failed")
+</code></pre>
+
+
+</div>

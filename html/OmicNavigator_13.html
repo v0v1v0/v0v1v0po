@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addPlots</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add custom plotting functions</h2>
+
+<h3>Description</h3>
+
+<p>Include custom plots that the app will display when a feature is selected by
+the user.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addPlots(study, plots, reset = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>study</code></td>
+<td>
+<p>An OmicNavigator study created with <code>createStudy</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plots</code></td>
+<td>
+<p>Custom plotting functions for the study. The input object is a
+nested list. The first list corresponds to the modelID(s). The second list
+corresponds to the name(s) of the function(s) defined in the current R
+session. The third list provides metadata to describe each plot. The only
+required metadata element is <code>displayName</code>, which controls how the
+plot will be named in the app. You are encouraged to also specify the
+<code>plotType</code>, e.g. <code>"singleFeature"</code>, <code>"multiFeature"</code>,
+<code>"multiTest"</code>, <code>"multiModel"</code>. PlotType accepts vector of
+entries, whenever applicable, e.g., plotType = c(<code>"multiFeature"</code>,
+<code>"multiTest"</code>). If you do not specify the <code>plotType</code>, the plot
+will be assumed to be <code>"singleFeature"</code> and <code>"singleTest"</code>.
+Optionally, if the plotting function requires external packages, these can
+be defined in the element <code>packages</code>. To share plots across multiple
+models, use the modelID "default". To add a plotting function that returns
+an interactive plotly plot, add "plotly" to the <code>plotType</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reset</code></td>
+<td>
+<p>Reset the data prior to adding the new data (default:
+<code>FALSE</code>). The default is to add to or modify any previously added data
+(if it exists). Setting <code>reset = TRUE</code> enables you to remove existing
+data you no longer want to include in the study.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Custom plotting functions are passed a list of data frames: <code>assays</code>
+with the measurements, <code>features</code> with the feature data,
+<code>samples</code> with the sample data, and <code>results</code> with test results
+data. Note that <code>assays</code>, <code>features</code> and <code>results</code>
+only include data for the specified featureID(s) (and
+re-ordered so their rows match). Thus your custom plotting function must have
+at least one argument. It can have additional arguments if you wish, but
+these must be provided with default values, because <code>plotStudy</code> only
+passes the plotting data to the first argument.
+</p>
+<p>Note that any ggplot2 plots will require extra care. This is because the
+plotting code will be inserted into a study package, and thus must follow the
+<a href="https://ggplot2.tidyverse.org/articles/ggplot2-in-packages.html#using-aes-and-vars-in-a-package-function-1">best
+practices for using ggplot2 within packages</a>. Specifically, when you refer to
+columns of the data frame, e.g. <code>aes(x = group)</code>, you need to prefix it
+with <code>.data$</code>, so that it becomes <code>aes(x = .data$group)</code>.
+Fortunately this latter code will also run fine as you interactively develop
+the function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the original <code>onStudy</code> object passed to the argument
+<code>study</code>, but modified to include the newly added data
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>getPlottingData</code>, <code>plotStudy</code>
+</p>
+
+
+</div>

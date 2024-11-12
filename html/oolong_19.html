@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summarize_oolong</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarize oolong objects</h2>
+
+<h3>Description</h3>
+
+<p>This function summarizes one or more oolong objects. All oolong objects must be locked.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">summarize_oolong(..., target_value = NULL, n_iter = 1500)
+
+summarise_oolong(..., target_value = NULL, n_iter = 1500)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>(tm/gs) one or more oolong objects to be summarized</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target_value</code></td>
+<td>
+<p>(gs) a vector of numeric values, the value you want to validate against the human-coded gold standard. One example of this target value is sentiment score extracted automatically from text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_iter</code></td>
+<td>
+<p>(ti) number of iterations to calculate the median test</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An oolong summary.
+Depends on purpose, an oolong summary object has the following values:
+</p>
+
+<dl>
+<dt><code>$type</code></dt>
+<dd>
+<p>(gs/tm) type of analysis, either 'gs' or 'tm'</p>
+</dd>
+<dt>
+<code>$kripp_alpha</code>; <code>$kripp_alpha_wsi</code>
+</dt>
+<dd>
+<p>(wi, wsi) Krippendorff's Alpha, if more than one oolong object is analyzed.</p>
+</dd>
+<dt>
+<code>$rater_precision</code>; <code>$rater_precision_wsi</code>
+</dt>
+<dd>
+<p>(wi, wsi) Model precision</p>
+</dd>
+<dt><code>$res$rater_precision_p_value</code></dt>
+<dd>
+<p>(wi) Model precision's p-value calculated by one-sample binomial test and Fisher's Omnibus method.</p>
+</dd>
+<dt>
+<code>$k_precision</code>; <code>$k_precision_wsi</code>
+</dt>
+<dd>
+<p>(wi, wsi) precision for each topic</p>
+</dd>
+<dt><code>$tlo</code></dt>
+<dd>
+<p>(ti) vector of topic log odds</p>
+</dd>
+<dt><code>$tlo_pvalue</code></dt>
+<dd>
+<p>(ti) Median topic log odds's p-value calculated by permutation test.</p>
+</dd>
+<dt><code>$cor</code></dt>
+<dd>
+<p>(gs) Pearson's correlation between average answer and target value</p>
+</dd>
+<dt><code>$cor_length</code></dt>
+<dd>
+<p>(gs) Pearson's correlation between content length and target value</p>
+</dd>
+<dt><code>$diag_plot</code></dt>
+<dd>
+<p>(gs) diagnostic plot.</p>
+</dd>
+</dl>
+<p>A useful summary of an object can be obtained either by <code>print.oolong_summary</code> or <code>plot.oolong_summary</code>. For details, please see the overview vignette: <code>vignette("overview", package = "oolong")</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Chung-hong Chan
+</p>
+
+
+<h3>References</h3>
+
+<p>Chang, J., Gerrish, S., Wang, C., Boyd-Graber, J. L., &amp; Blei, D. M. (2009). Reading tea leaves: How humans interpret topic models. In Advances in neural information processing systems (pp. 288-296).
+</p>
+<p>Song et al. (2020) In validations we trust? The impact of imperfect human annotations as a gold standard on the quality of validation of automated content analysis. Political Communication.
+</p>
+<p>Ying, L., Montgomery, J. M., &amp; Stewart, B. M. (2021). Topics, Concepts, and Measurement: A Crowdsourced Procedure for Validating Topics as Measures. Political Analysis.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Please try this example in interactive R sessions only.
+if (interactive()) {
+   data(abstracts_stm)
+   oolong_test1 &lt;- create_oolong(abstracts_stm)
+   oolong_test2 &lt;- clone_oolong(oolong_test1)
+   oolong_test1$do_word_intrusion_test()
+   oolong_test2$do_word_intrusion_test()
+   oolong_test1$lock()
+   oolong_test2$lock()
+   summarize_oolong(oolong_test1, oolong_test2)
+}
+</code></pre>
+
+
+</div>

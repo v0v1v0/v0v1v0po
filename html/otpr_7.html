@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otp_get_distance</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Finds the distance in metres between supplied origin and destination</h2>
+
+<h3>Description</h3>
+
+<p>Finds the distance in metres between supplied origin and destination. Only makes
+sense for walk, cycle or car modes (not transit)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otp_get_distance(otpcon, fromPlace, toPlace, mode = "CAR")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otpcon</code></td>
+<td>
+<p>An OTP connection object produced by <code>otp_connect</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fromPlace</code></td>
+<td>
+<p>Numeric vector, Latitude/Longitude pair, e.g. 'c(53.48805, -2.24258)'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toPlace</code></td>
+<td>
+<p>Numeric vector, Latitude/Longitude pair, e.g. 'c(53.36484, -2.27108)'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>Character vector, single mode of travel. Valid values are WALK, BICYCLE, or CAR. Default is CAR.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If OTP has not returned an error then a list containing <code>errorId</code>
+with the value "OK", and the <code>distance</code> in metres. If OTP has returned an
+error then a list containing <code>errorId</code> with the OTP error code and <code>errorMessage</code>
+with the error message returned by OTP. In both cases there will be a third element
+named <code>query</code> which is a character string containing the URL that was submitted to the OTP API.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+otp_get_distance(otpcon, fromPlace = c(53.48805, -2.24258), toPlace = c(53.36484, -2.27108))
+
+otp_get_distance(otpcon, fromPlace = c(53.48805, -2.24258), toPlace = c(53.36484, -2.27108),
+mode = "WALK")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

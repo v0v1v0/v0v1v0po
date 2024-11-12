@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optimbase.gridsearch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Grid evaluation of a constrained or unconstrained cost function
+</h2>
+
+<h3>Description</h3>
+
+<p>Evaluate a constrained or unconstrained cost function on a grid of points 
+around a given initial point estimate.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  optimbase.gridsearch(fun = NULL, x0 = NULL, xmin = NULL, 
+                       xmax = NULL, npts = 3, alpha = 10)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>A constrained or unconstrained cost function defined as described 
+in the vignette (<code>vignette('optimbase',package='optimbase')</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x0</code></td>
+<td>
+<p>The initial point estimate, provided as a numeric vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmin</code></td>
+<td>
+<p>Optional: a vector of lower bounds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmax</code></td>
+<td>
+<p>Optional: a vector of upper bounds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>npts</code></td>
+<td>
+<p>A integer scalar greater than 2, indicating the number of 
+evaluation points will be used on each dimension to build the search grid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>A vector of numbers greater than 1, which give the factor(s) used 
+to calculate the evaluation range of each dimension of the search grid (see 
+Details). If <code>alpha</code> length is lower than that of <code>x0</code>, elements 
+of <code>alpha</code> are recycled. If its length is higher than that of 
+<code>x0</code>, <code>alpha</code> is truncated.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>optimbase.gridsearch</code> evaluates the cost function at each point 
+of a grid of <code>npts^length(x0)</code> points. If lower (<code>xmin</code>) and upper 
+(<code>xmax</code>) bounds are provided, the range of evaluation points is limited 
+by those bounds and <code>alpha</code> is not used. Otherwise, the range of 
+evaluation points is defined as <code>[x0/alpha,x0*alpha]</code>.
+</p>
+<p><code>optimbase.gridsearch</code> also determines if the cost function is
+feasible at each evaluation point by calling <code>optimbase.isfeasible</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Return a data.frame with the coordinates of the evaluation point, the value of
+the cost function and its feasibility. The data.frame is ordered by 
+feasibility and increasing value of the cost function.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sebastien Bihorel (<a href="mailto:sb.pmlab@gmail.com">sb.pmlab@gmail.com</a>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optimbase.isfeasible</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Problem: find x and y that maximize 3.6*x - 0.4*x^2 + 1.6*y - 0.2*y^2 and
+#          satisfy the constrains:
+#            2*x - y &lt;= 10
+#            x &gt;= 0
+#            y &gt;= 0
+#
+
+gridfun &lt;- function(x=NULL,index=NULL,fmsfundata=NULL,...){
+
+  f &lt;- c()
+  c &lt;- c()
+  if (index == 2 | index == 6)
+    f &lt;- -(3.6*x[1] - 0.4*x[1]*x[1] + 1.6*x[2] - 0.2*x[2]*x[2])
+  if (index == 5 | index == 6)
+    c &lt;- c(10 - 2*x[1] - x[2],
+           x[1],
+           x[2])
+  varargout &lt;- list(f = f, g = c(), c = c, gc = c(), index = index)
+
+  return(varargout)
+}
+
+
+x0 &lt;- c(0.35,0.3)
+npts &lt;- 6
+alpha &lt;- 10
+
+res &lt;- optimbase.gridsearch(fun=gridfun,x0=x0,xmin=NULL,xmax=NULL,
+                     npts=npts,alpha=alpha)
+
+# 3.5 and 3 is the actual solution of the optimization problem
+print(res)
+
+</code></pre>
+
+
+</div>

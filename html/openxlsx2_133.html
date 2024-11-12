@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_merge_cells</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Merge cells within a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>Worksheet cell merging
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_merge_cells(wb, sheet = current_sheet(), dims = NULL, solve = FALSE, ...)
+
+wb_unmerge_cells(wb, sheet = current_sheet(), dims = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name or index of a worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>worksheet cells</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solve</code></td>
+<td>
+<p>logical if intersecting merges should be solved</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If using the deprecated arguments <code>rows</code> and <code>cols</code> with a merged region must be rectangular,
+only min and max of <code>cols</code> and <code>rows</code> are used.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>grouping-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+<p>Other worksheet content functions: 
+<code>col_widths-wb</code>,
+<code>filter-wb</code>,
+<code>grouping-wb</code>,
+<code>named_region-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_conditional_formatting()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_thread()</code>,
+<code>wb_freeze_pane()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create a new workbook
+wb &lt;- wb_workbook()$add_worksheet()
+
+# Merge cells: Row 2 column C to F (3:6)
+wb &lt;- wb_merge_cells(wb, dims = "C3:F6")
+
+# Merge cells:Rows 10 to 20 columns A to J (1:10)
+wb &lt;- wb_merge_cells(wb, dims = wb_dims(rows = 10:20, cols = 1:10))
+
+wb$add_worksheet()
+
+## Intersecting merges
+wb &lt;- wb_merge_cells(wb, dims = wb_dims(cols = 1:10, rows = 1))
+wb &lt;- wb_merge_cells(wb, dims = wb_dims(cols = 5:10, rows = 2))
+wb &lt;- wb_merge_cells(wb, dims = wb_dims(cols = 1:10, rows = 12))
+try(wb_merge_cells(wb, dims = "A1:A10"))
+
+## remove merged cells
+# removes any intersecting merges
+wb &lt;- wb_unmerge_cells(wb, dims = wb_dims(cols = 1, rows = 1))
+wb &lt;- wb_merge_cells(wb, dims = "A1:A10")
+
+# or let us decide how to solve this
+wb &lt;- wb_merge_cells(wb, dims = "A1:A10", solve = TRUE)
+
+</code></pre>
+
+
+</div>

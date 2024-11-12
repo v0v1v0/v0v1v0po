@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hyp.ordi.breadth</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+hyp.ordi.breadth
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the diet breadth of a hypothetical herbivore placed in ordination space.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hyp.ordi.breadth(dat, grouping, dist.method = "jaccard", distance = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+
+<p>A matrix of diet associations. Rows are herbivores and columns are diet items.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grouping</code></td>
+<td>
+
+<p>a vector of ones and zeros or TRUE and FALSE indicting diet items of hypothetical herbivore
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.method</code></td>
+<td>
+
+<p>Dissimilarity index passed on to vegdist in the vegan package
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+
+<p>a logical indicating whether to return distance of hypothetical herbivore centroid to plants used in PCoA space and the coordinates of the centroid in PCoA space
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tot.breadth</code></td>
+<td>
+<p>Ordinated host breadth of hypothetical herbivore</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distances</code></td>
+<td>
+<p>Distance from centroid to diet items in PCoA space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centroid</code></td>
+<td>
+<p>Coordinates of the centroid of hypothetical herbivore</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>James Fordyce
+</p>
+
+
+<h3>References</h3>
+
+<p>Fordyce, J.A., C.C. Nice, C.A. Hamm, &amp; M.L. Forister. Quantifying diet breadth through ordination of host association. Ecology
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">testdata&lt;-	
+	c(		
+			0,0,0,0,1,0,0,0,0,0,#1
+			0,0,0,0,0,0,1,1,0,0,#2
+			1,1,1,0,0,0,0,0,0,0,#3
+			0,0,0,0,1,1,0,1,0,1,#4
+			1,1,1,0,0,0,1,0,0,0,#4
+			1,1,0,0,1,0,1,0,0,0,#4
+			0,0,0,1,0,0,1,0,1,1,#4
+			1,0,1,0,1,1,0,0,0,1, #5
+			1,1,0,0,1,0,0,1,1,1,#6
+			1,1,1,0,1,1,0,1,1,1) #8
+
+
+dat&lt;-array(dim=c(10,10),data=testdata)
+dat&lt;-t(dat)
+colnames(dat)&lt;-paste("",LETTERS[1:10],sep="")
+rownames(dat)&lt;-paste("bug",1:10,sep="")
+
+group&lt;-c(TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE)
+hyp.ordi.breadth(dat,group)
+hyp.ordi.breadth(dat,group,distance=TRUE)
+
+group&lt;-c(1,1,1,1,1,1,1,1,1,1)
+hyp.ordi.breadth(dat,group)#extreme generalist
+hyp.ordi.breadth(dat,group,distance=TRUE)
+
+</code></pre>
+
+
+</div>

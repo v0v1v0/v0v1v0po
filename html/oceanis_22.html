@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>coord_legende</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns the lon / lat coordinates of a 'leaflet' map's legend</h2>
+
+<h3>Description</h3>
+
+<p>Returns the lon / lat coordinates of a 'leaflet' map's legend for
+proportional circles, chroropleth, typology, proportional and sapphire
+arrows.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">coord_legende(map)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>objet leaflet.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Au moins une legende doit exister sur la carte avant de pouvoir connaitre sa
+position. Les cartes en ronds proportionnels avec une analyse en classes ont
+2 legendes.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Retourne un objet data.frame avec les coordonnees lon/lat de la (ou
+des) legende(s). Le type de legende est indique dans le row.names.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>add_legende_ronds, add_legende_classes,
+add_legende_typo,</code>
+</p>
+<p><code>add_legende_joignantes, add_legende_saphirs,</code>
+</p>
+<p><code>leaflet_ronds, leaflet_classes,
+leaflet_ronds_classes,</code>
+</p>
+<p><code>leaflet_classes_ronds, leaflet_typo,
+leaflet_oursins, leaflet_joignantes,</code>
+</p>
+<p><code>leaflet_saphirs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("donnees_monoloc")
+data("depm")
+
+# Ronds proportionnels
+map &lt;- leaflet_ronds(data = donnees_monoloc, fondMaille = depm,
+idData = "COD_DEP", varVolume = "POP_2015")
+map &lt;- add_legende_ronds(map = map, titre = "POP_2015")
+
+ map
+
+
+coord &lt;- coord_legende(map)
+map &lt;- add_legende_ronds(map = map, titre = "POP_2015", lng = 8, lat = 50)
+
+ map
+
+
+</code></pre>
+
+
+</div>

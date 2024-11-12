@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordFacRegCox</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute Cox-regression for ordered predictors</h2>
+
+<h3>Description</h3>
+
+<p>This function computes estimates in Cox-regression where coefficients corresponding to
+dummy variables of ordered factors are estimated to be in non-decreasing order and at least 0.
+An active set algorithm as described in Duembgen et al. (2007) is used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordFacRegCox(ttf, tf, Z, fact, ordfact, ordering = NA, intercept = TRUE, 
+    display = 0, eps = 0)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ttf</code></td>
+<td>
+<p>Survival times.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tf</code></td>
+<td>
+<p>Censoring indicator (1 = event, 0 = censored).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>Matrix of predictors. Factors are coded with levels from 1 to <code class="reqn">j</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>Specify columns in <code class="reqn">Z</code> that correspond to unordered factors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ordfact</code></td>
+<td>
+<p>Specify columns in <code class="reqn">Z</code> that correspond to ordered factors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ordering</code></td>
+<td>
+<p>Vector of the same length as <code>ordfact</code>. Specifies ordering of ordered factors: <code>"i"</code> means
+that the coefficients of the corresponding ordered factor are estimated in non-decreasing order and <code>"d"</code> means
+non-increasing order. See the examples in <code>ordFacReg</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intercept</code></td>
+<td>
+<p>If <code>TRUE</code>, an intercept (= column of all 1's) is added to the design matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>display</code></td>
+<td>
+<p>If <code>display == 1</code> progress of the algorithm is output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>Quantity to which the criterion in the Basic Procedure 2 in Duembgen et al. (2007) is compared.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a detailed description of the problem and the algorithm we refer to Rufibach (2010).</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>Value of the criterion function at the maximum.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>Computed regression coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A</code></td>
+<td>
+<p>Set <code class="reqn">A</code> of active constraints.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design.matrix</code></td>
+<td>
+<p>Design matrix that was generated.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Kaspar Rufibach (maintainer) <br><a href="mailto:kaspar.rufibach@gmail.com">kaspar.rufibach@gmail.com</a> <br><a href="http://www.kasparrufibach.ch">http://www.kasparrufibach.ch</a></p>
+
+
+<h3>References</h3>
+
+<p>Duembgen, L., Huesler, A. and Rufibach, K. (2010).
+Active set and EM algorithms for log-concave densities based on complete and censored data.
+Technical report 61, IMSV, Univ. of Bern, available at <a href="http://arxiv.org/abs/0707.4643">http://arxiv.org/abs/0707.4643</a>.
+</p>
+<p>Rufibach, K. (2010).
+An Active Set Algorithm to Estimate Parameters in Generalized Linear Models with Ordered Predictors.
+<em>Comput. Statist. Data Anal.</em>, <b>54</b>, 1442-1456.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ordFacReg</code> computes estimates for least squares and logistic regression.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## ========================================================
+## Artificial data is used to illustrate Cox-regression.
+## ========================================================
+
+## --------------------------------------------------------
+## initialization
+## --------------------------------------------------------
+set.seed(1977)
+n &lt;- 500
+Z &lt;- NULL
+intercept &lt;- FALSE
+
+## --------------------------------------------------------
+## quantitative variables
+## --------------------------------------------------------
+n.q &lt;- 2
+if (n.q &gt; 0){for (i in 1:n.q){Z &lt;- cbind(Z, rnorm(n, rgamma(2, 2, 1)))}}
+
+## --------------------------------------------------------
+## unordered factors
+## --------------------------------------------------------
+un.levels &lt;- c(8, 2)[2]
+for (i in 1:length(un.levels)){Z &lt;- cbind(Z, sample(round(runif(n, 0, 
+    un.levels[i] - 1)) + 1))}
+fact &lt;- n.q + 1:length(un.levels)
+
+## --------------------------------------------------------
+## ordered factors
+## --------------------------------------------------------
+levels &lt;- c(4, 5, 10)
+for (i in 1:length(levels)){Z &lt;- cbind(Z, sample(round(runif(n, 0, 
+    levels[i] - 1)) + 1))}
+ordfact &lt;- n.q + length(un.levels) + 1:length(levels)
+
+## --------------------------------------------------------
+## generate response
+## --------------------------------------------------------
+ttf &lt;- rexp(n)
+tf &lt;- round(runif(n))
+
+## --------------------------------------------------------
+## generate design matrix
+## --------------------------------------------------------
+Y &lt;- prepareData(Z, fact, ordfact, ordering = NA, intercept)$Y
+
+## --------------------------------------------------------
+## compute estimates
+## --------------------------------------------------------
+res1 &lt;- eha::coxreg.fit(Y, Surv(ttf, tf), max.survs = length(tf), 
+    strats = rep(1, length(tf)))$coefficients
+res2 &lt;- ordFacRegCox(ttf, tf, Z, fact, ordfact, ordering = NA, 
+    intercept = intercept, display = 1, eps = 0)
+b1 &lt;- matrix(res1, ncol = 1)
+g1 &lt;- coxDeriv(b1, ttf, tf, Y)$dL
+b2 &lt;- res2$beta
+g2 &lt;- coxDeriv(b2, ttf, tf, Y)$dL
+Ls &lt;- c(coxLoglik(b1, ttf, tf, Y)$L, res2$L)
+names(Ls) &lt;- c("MLE", "ordFact") 
+disp &lt;- cbind(1:length(b1), round(cbind(b1, g1, cumsum(g1)), 4), 
+    round(cbind(b2, g2, cumsum(g2)), 4))
+
+## --------------------------------------------------------
+## display results
+## --------------------------------------------------------
+disp
+Ls
+</code></pre>
+
+
+</div>

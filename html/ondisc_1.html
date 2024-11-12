@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_ondisc_matrix_from_mtx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an <code>ondisc_matrix</code> from a .mtx file.</h2>
+
+<h3>Description</h3>
+
+<p>Initializes an <code>ondisc_matrix</code> from a .mtx file, a features.tsv file, and a barcodes.tsv file. Returns an <code>ondisc_matrix</code> along with cell-specific and feature-specific covariate matrices.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_ondisc_matrix_from_mtx(
+  mtx_fp,
+  barcodes_fp,
+  features_fp,
+  n_lines_per_chunk = 3e+08,
+  on_disk_dir = NULL,
+  file_name = NULL,
+  return_metadata_ondisc_matrix = FALSE,
+  progress = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mtx_fp</code></td>
+<td>
+<p>file path to a .mtx file storing the expression data. The .mtx file can represent either an integer matrix or a logical (i.e., binary) matrix. If the .mtx file contains only two columns (after the initial three-column row of metadata), then the .mtx file is assumed to represent a logical matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>barcodes_fp</code></td>
+<td>
+<p>file path to the .tsv file containing the cell barcodes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>features_fp</code></td>
+<td>
+<p>file path to the features.tsv file. The first column (required) contains the feature IDs (e.g., ENSG00000186092), and the second column (optional) contains the human-readable feature names (e.g., OR4F5). Subsequent columns are discarded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_lines_per_chunk</code></td>
+<td>
+<p>(optional) number of lines in .mtx file to process per chunk. Defaults to 3e+08.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>on_disk_dir</code></td>
+<td>
+<p>(optional) directory in which to store the on-disk portion of the ondisc_matrix. Defaults to the directory in which the .mtx file is located.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_name</code></td>
+<td>
+<p>(optional) name of the file in which to store the .h5 data on-disk. Defaults to ondisc_matrix_x.h5, where x is a unique integer starting at 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_metadata_ondisc_matrix</code></td>
+<td>
+<p>(optional) return the output as a metadata_ondisc_matrix (instead of a list)? Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>(optional; default FALSE) print progress messages?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function can compute the following cell-specific and feature-specific covariates:
+</p>
+
+<ul>
+<li>
+<p> cell-specific: (i) total number of features expressed in cell (n_nonzero_cell), (ii) total UMI count (n_umis_cell), and (iii) percentage of UMIs that map to mitochondrial genes (p_mito_cell).
+</p>
+</li>
+<li>
+<p> feature-specific: (i) total number of cells in which feature is expressed (n_nonzero_feature), (ii) mean expression of feature across cells (mean_expression_feature), (iii) coefficient of variation of feature expression across cells (coef_of_variation_feature).
+</p>
+</li>
+</ul>
+<p>The function decides which covariates to compute given the input; in general, the function computes the maximum set of covariates possible.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing (i) an ondisc_matrix, (ii) a cell-specific covariate matrix, and (iii) a feature-specific covariate matrix; if the parameter return_metadata_ondisc_matrix set to TRUE, converts the list to a metadata_ondisc_matrix before returning.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# First example: initialize a metadata_ondisc_matrix
+# using simulated expression data; store output in tempdir()
+file_locs &lt;- system.file("extdata",package = "ondisc",
+c("gene_expression.mtx", "genes.tsv", "cell_barcodes.tsv"))
+names(file_locs) &lt;- c("expressions", "features", "barcodes")
+expression_data &lt;- create_ondisc_matrix_from_mtx(mtx_fp = file_locs[["expressions"]],
+barcodes_fp = file_locs[["barcodes"]],
+features_fp = file_locs[["features"]],
+on_disk_dir = tempdir(),
+file_name = "expressions",
+return_metadata_ondisc_matrix = TRUE)
+saveRDS(object = expression_data, file = paste0(tempdir(), "/expressions.rds"))
+
+# Second example: initialize a metadata_ondisc_matrix using simulated
+# gRNA perturbation data; store in tempdir()
+file_locs &lt;- system.file("extdata", package = "ondisc",
+c("perturbation.mtx", "guides.tsv", "cell_barcodes.tsv"))
+names(file_locs) &lt;- c("perturbations", "features", "barcodes")
+perturbation_data &lt;- create_ondisc_matrix_from_mtx(mtx_fp = file_locs[["perturbations"]],
+barcodes_fp = file_locs[["barcodes"]],
+features_fp = file_locs[["features"]],
+on_disk_dir = tempdir(),
+file_name = "perturbations",
+return_metadata_ondisc_matrix = TRUE)
+saveRDS(object = perturbation_data, file = paste0(tempdir(), "/perturbations.rds"))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

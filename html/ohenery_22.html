@@ -1,0 +1,212 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rsm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate variates from a softmax distribution.</h2>
+
+<h3>Description</h3>
+
+<p>Generate variates from a softmax distribution
+under Harville or Henery models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rsm(eta, g = NULL, mu = NULL, gamma = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>a vector of the odds.
+Must be the same length as <code>g</code> if <code>g</code> is given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>a vector giving the group indices. If <code>NULL</code>,
+then we assume only one group is in consideration.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>a vector of the probablities.
+Must be the same length as <code>g</code> if <code>g</code> is given.
+If <code>mu</code> and <code>eta</code> are both given, we ignore
+<code>eta</code> and use <code>mu</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p>a vector of the gamma parameters for the
+Henery model. Typically the first element should be 1.
+Omit or set all values to 1 to recover the Harville model.
+The last element will be extended if the gamma is
+not long enough for a given group. Note that gamma is expected
+to be very short, and is not ‘aligned’ with
+<code>eta</code> in any way.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given the <code class="reqn">\eta</code> in odds space, and a grouping
+variable, returns values in one to the number of
+elements in a group. That is, we have a permutation
+of 1 through <code class="reqn">n_g</code> on each group as output.
+</p>
+<p>For a single group, the probability that the <code class="reqn">i</code>th
+element of the output is a 1 is equal to
+</p>
+<p style="text-align: center;"><code class="reqn">\pi_{1,i} = \frac{\mu_i^{\gamma_1}}{\sum_j \mu_j^{\gamma_1}}.</code>
+</p>
+
+<p>Once an element has been selected to have output
+1, remove it from the set and iterate, but with the
+next <code class="reqn">\gamma</code> elements.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a vector of integers, each a permutation of one through
+the number of elements in each group.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The output of this function satisfies a kind
+of order invariance that <code>rhenery</code>
+does not, at the cost of some computational inefficiency.
+Namely that for a fixed randseed, and for distinct
+<code>eta</code>, the output is equivariant with respect
+to permutation of the vector <code>eta</code> when there
+is only one group.
+</p>
+<p>Regarding the ‘direction’, we associate
+higher odds with a smaller outcome. That is, the ith element of
+the output encodes the place that the ith participant 
+took in the simulated ‘race’; it should be small if the
+odds for that participant are very high.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># simple use
+set.seed(1234)
+g &lt;- ceiling(seq(1,10,by=0.1))
+eta &lt;- rnorm(length(g))
+y &lt;- rsm(eta,g=g)
+
+# same same:
+set.seed(235)
+y1 &lt;- rsm(eta,g=g)
+set.seed(235)
+y2 &lt;- rsm(g=g,mu=smax(eta,g=g))
+y1 - y2
+
+# the default model is Harville
+set.seed(1212)
+y1 &lt;- rsm(eta,g=g)
+set.seed(1212)
+y2 &lt;- rsm(eta,g=g,gamma=c(1,1,1,1))
+y1 - y2
+
+# repeat several times with the cards stack against
+# early runners
+set.seed(1234)
+colMeans(t(replicate(1000,rsm(sort(rnorm(10,sd=1.5)),g=rep(1,10)))))
+
+# illustrate the invariance
+mu &lt;- (1:10) / 55
+set.seed(1414)
+y1 &lt;- rsm(mu=mu,gamma=c(1,1,1))
+set.seed(1414)
+y2 &lt;- rev(rsm(mu=rev(mu),gamma=c(1,1,1)))
+y1 - y2
+
+
+nfeat &lt;- 5
+set.seed(1234)
+g &lt;- ceiling(seq(0.1,1000,by=0.1))
+X &lt;- matrix(rnorm(length(g) * nfeat),ncol=nfeat)
+beta &lt;- rnorm(nfeat)
+eta &lt;- X %*% beta
+y &lt;- rsm(eta,g=g)
+
+idx &lt;- order(g,y,decreasing=TRUE) - 1
+fooey &lt;- harsmlik(g,idx,eta,deleta=X)
+set.seed(3493)
+dib &lt;- rnorm(length(beta))
+xvl &lt;- seq(-0.01,0.01,length.out=301)
+rsu &lt;- sapply(xvl,
+              function(del) {
+                beta1 &lt;- beta + del * dib
+                eta1 &lt;- X %*% beta1
+                fooey2 &lt;- harsmlik(g,idx,eta1,deleta=X)
+                as.numeric(fooey2) - as.numeric(fooey)
+              })
+drv &lt;- sapply(xvl,
+              function(del) {
+                beta1 &lt;- beta + del * dib
+                eta1 &lt;- X %*% beta1
+                fooey2 &lt;- harsmlik(g,idx,eta1,deleta=X)
+                sum(attr(fooey2,'gradient') * dib)
+              })
+
+if (require('ggplot2') &amp;&amp; require('dplyr')) {
+  bestx &lt;- xvl[which.max(rsu)]
+  ph &lt;- data.frame(x=xvl,lik=rsu,grd=drv) %&gt;%
+    ggplot(aes(x=x,y=lik)) + 
+    geom_point() + 
+    geom_line(aes(y=grd/200)) +
+    geom_vline(xintercept=bestx,linetype=2,alpha=0.5) + 
+    geom_hline(yintercept=0,linetype=2,alpha=0.5)
+  print(ph)
+}
+
+
+if (require('dplyr') &amp;&amp; require('knitr')) {
+  # expect this to be very small, almost always 1
+  set.seed(1234)
+  simdraw &lt;- replicate(10000,{
+    rsm(eta=c(100,rnorm(7)))[1]
+  })
+
+  as.data.frame(table(simdraw)) %&gt;%
+    mutate(prob=Freq / sum(Freq)) %&gt;%
+    knitr::kable()
+
+  # expect this to be uniform on 2 through 8
+  set.seed(1234)
+  simdraw &lt;- replicate(10000,{
+    rsm(eta=c(100,rnorm(7)))[2]
+  })
+
+  as.data.frame(table(simdraw)) %&gt;%
+    mutate(prob=Freq / sum(Freq)) %&gt;%
+    knitr::kable()
+}
+
+</code></pre>
+
+
+</div>

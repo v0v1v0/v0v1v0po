@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>snowball2df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Flatten snowball result</h2>
+
+<h3>Description</h3>
+
+<p>|  id|title |...|cited_by_count| referenced_works   |cited_by |...|
+| 100|foo   |...|             1| 98, 99             |101      |...|
+| 200|bar   |...|             2| 198, 199           |201, 202 |...|
+| 300|wug   |...|             2| 296, 297, 298, 299 |301, 302 |...|
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">snowball2df(data, verbose = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>List result from 'oa_snowball'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. If TRUE, print information on wrangling process.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Tibble/data.frame of works with additional columns:
+append 'citing', 'backward_count', 'cited_by', 'forward_count', 'connection',
+and 'connection_count.' For each work/row, these counts are WITHIN one
+data search, and so 'forward_count' &lt;= 'cited_by_count'.
+</p>
+<p>Consider the universe of all works linked to a set of starting works, ('oa_input = TRUE')
+for each work/row i:
+- citing: works in the universe that i cites
+- backward_count: number of works in the universe that i cites
+- cited_by: works that i is cited by
+- forward_count: number of works in the universe that i is cited by
+- connection: works in the universe linked to i
+- connection_count: number of works in the universe linked to i (degree of i)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+flat_snow &lt;- snowball2df(oa_snowball(
+  identifier = "W1516819724",
+  verbose = TRUE
+))
+
+flat_snow[, c("id", "connection", "connection_count")]
+
+## End(Not run)
+</code></pre>
+
+
+</div>

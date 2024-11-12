@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>geospiza</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Data on Darwin's finches</h2>
+
+<h3>Description</h3>
+
+<p>Morphological measurements of Darwin's finches, together with a phylogeny.
+</p>
+
+
+<h3>Format</h3>
+
+<p>The object <code>geospiza</code> is a list containing:
+</p>
+
+<ul>
+<li> <p><code>phy</code>, a phylogenetic tree of class 'phylo' (see <code>read.tree</code>)
+</p>
+</li>
+<li> <p><code>dat</code>, a data frame containing data on various morphological measurements.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Aaron A. King, Emmanuel Paradis, Daniel Lawson
+</p>
+
+
+<h3>Source</h3>
+
+<p>Data obtained from the <span class="pkg">geiger</span> package, version 2.0.7.1.
+It is attributed there to D. Schluter, with no other details given.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other examples: 
+<code>anolis.ssd</code>,
+<code>bimac</code>,
+<code>ouch-package</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### Darwin's finches.
+ ## Save time for CRAN
+### The data were taken from package 'geiger' due to the latter being orphaned.
+if (requireNamespace("ape")) {
+
+  data(geospiza)
+  plot(geospiza$phy)
+  print(geospiza$dat)
+  
+### make an ouchtree out of the phy-format tree
+  ot &lt;- ape2ouch(geospiza$phy)
+
+### merge data with tree info
+  otd &lt;- as(ot,"data.frame")
+  otd &lt;- merge(otd,geospiza$dat,by.x="labels",by.y="row.names",all=TRUE)
+### row-names are used by 'hansen'
+  rownames(otd) &lt;- otd$nodes
+  print(otd)
+### this data-frame now contains the data as well as the tree geometry
+
+### now remake the ouch tree
+  ot &lt;- with(otd,ouchtree(nodes=nodes,ancestors=ancestors,times=times,labels=labels))
+  plot(ot)
+
+  b1 &lt;- brown(tree=ot,data=otd[c("tarsusL","beakD")])
+  summary(b1)
+
+### evaluate an OU model with a single, global selective regime
+  otd$regimes &lt;- as.factor("global")
+  h1 &lt;- hansen(
+    tree=ot,
+    data=otd[c("tarsusL","beakD")],
+    regimes=otd["regimes"],
+    sqrt.alpha=c(1,0,1),
+    sigma=c(1,0,1),
+    maxit=10000
+  )
+  summary(h1)
+  plot(h1)
+
+}
+
+</code></pre>
+
+
+</div>

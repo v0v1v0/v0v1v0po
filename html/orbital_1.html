@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orbital</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Turn tidymodels objects into orbital objects</h2>
+
+<h3>Description</h3>
+
+<p>Fitted workflows, parsnip objects, and recipes objects can be turned into an
+orbital object that contain all the information needed to perform
+predictions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orbital(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A fitted workflow, parsnip, or recipes object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not currently used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An orbital object contains all the information that is needed to perform
+predictions. This makes the objects substantially smaller than the original
+objects. The main downside with this object is that all the input checking
+has been removed, and it is thus up to the user to make sure the data is
+correct.
+</p>
+<p>The printing of orbital objects reduce the number of significant digits for
+easy viewing, the can be changes by using the <code>digits</code> argument of <code>print()</code>
+like so <code>print(orbital_object, digits = 10)</code>. The printing likewise truncates
+each equation to fit on one line. This can be turned off using the <code>truncate</code>
+argument like so <code>print(orbital_object, truncate = FALSE)</code>.
+</p>
+<p>Full list of supported models and recipes steps can be found here:
+<code>vignette("supported-models")</code>.
+</p>
+<p>These objects will not be useful by themselves. They can be used to
+predict() with, or to generate code using functions
+such as <code>orbital_sql()</code> or <code>orbital_dt()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An orbital object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workflows)
+library(recipes)
+library(parsnip)
+
+rec_spec &lt;- recipe(mpg ~ ., data = mtcars) %&gt;%
+  step_normalize(all_numeric_predictors())
+
+lm_spec &lt;- linear_reg()
+
+wf_spec &lt;- workflow(rec_spec, lm_spec)
+
+wf_fit &lt;- fit(wf_spec, mtcars)
+
+orbital(wf_fit)
+
+# Also works on parsnip object by itself
+fit(lm_spec, mpg ~ disp, data = mtcars) %&gt;%
+  orbital()
+
+# And prepped recipes
+prep(rec_spec) %&gt;%
+  orbital()
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filter_NOAA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter NOAA</h2>
+
+<h3>Description</h3>
+
+<p>This function aids filtering of NOAA datasets.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filter_NOAA(NOAA, depth = 0, coord = NULL, epsg = NULL, fuzzy = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>NOAA</code></td>
+<td>
+<p>Dataset of the NOAA World Ocean Atlas (with <code>get_NOAA()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>depth</code></td>
+<td>
+<p>Depth in meters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coord</code></td>
+<td>
+<p>List with named elements, matrix with dimnames, or simple
+feature geometry list column: <code>lon</code> for longitude in degrees, and <code>lat</code> for
+latitude in degrees.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsg</code></td>
+<td>
+<p>Coordinate reference number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fuzzy</code></td>
+<td>
+<p>If no values are returned, fuzzy uses a buffer area around the
+point to extract values from adjacent grid cells. The fuzzy argument is
+supplied in units of kilometer (great circle distance).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function helps filtering relevant data from NOAA World Ocean Atlas
+3D arrays (longitude, latitude, and depth) which have been stored with
+<code>get_NOAA()</code>. An 2D <code>stars</code> object is returned if
+only providing a depth. An <code>sf</code> object is returned, when
+further providing coordinates, as a list (e.g. <code>list(lon = -120, lat = 12)</code>),
+a matrix (e.g. <code>cbind(lon = -120, lat = 12)</code>), or an <code>sf</code>
+object with POINT geometries. In the latter case it is import to follow the
+GeoJSON conventions for the order in <code>sf</code> vectors with <code>x</code> (<code>lon</code> =
+longitude) followed by <code>y</code> (<code>lat</code> = latitude).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Either a <code>stars</code> object or
+<code>sf</code> dataframe.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="https://r-spatial.github.io/sf/articles/sf1.html">Simple Features for R</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# get atlas
+NOAAatlas &lt;- get_NOAA("oxygen", 1, "annual")
+
+# filter atlas for specific depth and coordinate location
+filter_NOAA(NOAAatlas, 30, list(lon = c(-160, -120), lat =  c(11, 12)))
+
+}
+</code></pre>
+
+
+</div>

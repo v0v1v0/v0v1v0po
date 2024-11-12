@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>LLsurface</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot Likelihood Surface</h2>
+
+<h3>Description</h3>
+
+<p>Calculate log likelihood over a grid of values of two beta parameters
+from a fitted openCR model and optionally make an approximate contour plot of the log
+likelihood surface.
+</p>
+<p>This is a method for the generic function <code>LLsurface</code> defined in <span class="pkg">secr</span>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+## S3 method for class 'openCR'
+LLsurface(object, betapar = c("phi", "sigma"), xval = NULL, yval = NULL, 
+   centre = NULL, realscale = TRUE, plot = TRUE, plotfitted = TRUE, ncores = NULL, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p><code>openCR</code> object output from <code>openCR.fit</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betapar</code></td>
+<td>
+<p>character vector giving the names of two beta parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xval</code></td>
+<td>
+<p>vector of numeric values for x-dimension of grid</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yval</code></td>
+<td>
+<p>vector of numeric values for y-dimension of grid</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centre</code></td>
+<td>
+<p>  vector of central values for all beta parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>realscale</code></td>
+<td>
+<p>logical. If TRUE input and output of x and y is on
+the untransformed (inverse-link) scale.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>logical. If TRUE a contour plot is produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotfitted</code></td>
+<td>
+<p>logical. If TRUE the MLE from <code>object</code> is shown on the plot (+)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p>integer number of cores available for parallel processing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>contour</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>centre</code> is set by default to the fitted values of the beta
+parameters in <code>object</code>. This has the effect of holding parameters
+other than those in <code>betapar</code> at their fitted values.
+</p>
+<p>If <code>xval</code> or <code>yval</code> is not provided then 11 values are set at
+equal spacing between 0.8 and 1.2 times the values in <code>centre</code> (on
+the ‘real’ scale if <code>realscale</code> = TRUE and on the ‘beta’ scale
+otherwise).
+</p>
+<p>Contour plots may be customized by passing graphical parameters through
+the ... argument.
+</p>
+<p>The value of <code>ncores</code> is passed to <code>openCR.fit</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Invisibly returns a matrix of the log likelihood evaluated at each
+grid point
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>LLsurface.openCR</code> works for named ‘beta’ parameters rather than
+‘real’ parameters. The default <code>realscale = TRUE</code> only works for
+beta parameters that share the name of the real parameter to which
+they relate i.e. the beta parameter for the base level of the real
+parameter. This is because link functions are defined for real
+parameters not beta parameters.
+</p>
+<p>Handling of multiple threads was changed in version 1.5.0 to align 
+with <code>LLsurface.secr</code>.
+</p>
+<p>The contours are approximate because they rely on interpolation. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>LLsurface.secr</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# not yet
+
+</code></pre>
+
+
+</div>

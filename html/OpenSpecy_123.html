@@ -1,0 +1,180 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sig_noise</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate signal and noise metrics for OpenSpecy objects</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates common signal and noise metrics for <code>OpenSpecy</code>
+objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sig_noise(x, ...)
+
+## Default S3 method:
+sig_noise(x, ...)
+
+## S3 method for class 'OpenSpecy'
+sig_noise(
+  x,
+  metric = "run_sig_over_noise",
+  na.rm = TRUE,
+  prob = 0.5,
+  step = 20,
+  breaks = seq(min(unlist(x$spectra)), max(unlist(x$spectra)), length =
+    ((nrow(x$spectra)^(1/3)) * (max(unlist(x$spectra)) - min(unlist(x$spectra))))/(2 *
+    IQR(unlist(x$spectra)))),
+  sig_min = NULL,
+  sig_max = NULL,
+  noise_min = NULL,
+  noise_max = NULL,
+  abs = T,
+  spatial_smooth = F,
+  sigma = c(1, 1),
+  threshold = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>OpenSpecy</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+<p>character; specifying the desired metric to calculate.
+Options include <code>"sig"</code> (mean intensity), <code>"noise"</code> (standard
+deviation of intensity), <code>"sig_times_noise"</code> (absolute value of
+signal times noise), <code>"sig_over_noise"</code> (absolute value of signal /
+noise), <code>"run_sig_over_noise"</code> (absolute value of signal /
+noise where signal is estimated as the max intensity and noise is
+estimated as the height of a low intensity region.),
+<code>"log_tot_sig"</code> (sum of the inverse log intensities, useful for spectra  in log units),
+<code>"tot_sig"</code> (sum of intensities), or <code>"entropy"</code> (Shannon entropy of intensities)..</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>logical; indicating whether missing values should be removed
+when calculating signal and noise. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+<p>numeric single value; the probability to retrieve for the quantile where
+the noise will be interpreted with the run_sig_over_noise option.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>step</code></td>
+<td>
+<p>numeric; the step size of the region to look for the run_sig_over_noise option.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>numeric; the number or positions of the breaks for entropy calculation.
+Defaults to infer a decent value from the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig_min</code></td>
+<td>
+<p>numeric; the minimum wavenumber value for the signal region.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig_max</code></td>
+<td>
+<p>numeric; the maximum wavenumber value for the signal region.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noise_min</code></td>
+<td>
+<p>numeric; the minimum wavenumber value for the noise region.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noise_max</code></td>
+<td>
+<p>numeric; the maximum wavenumber value for the noise region.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abs</code></td>
+<td>
+<p>logical; whether to return the absolute value of the result</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spatial_smooth</code></td>
+<td>
+<p>logical; whether to spatially smooth the sig/noise using the xy
+coordinates and a gaussian smoother.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>numeric; two value vector describing standard deviation for smoother in
+each dimension, y is specified first followed by x, should be the same for each in most cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>numeric; if NULL, no threshold is set, otherwise use a numeric value
+to set the target threshold which true signal or noise should be above. The
+function will return a logical value instead of numeric if a threshold is set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to subfunctions; currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A numeric vector containing the calculated metric for each spectrum in the
+<code>OpenSpecy</code> object or logical value if threshold is set describing if
+the numbers where above or equal to (TRUE) the threshold.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>restrict_range()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("raman_hdpe")
+
+sig_noise(raman_hdpe, metric = "sig")
+sig_noise(raman_hdpe, metric = "noise")
+sig_noise(raman_hdpe, metric = "sig_times_noise")
+
+</code></pre>
+
+
+</div>

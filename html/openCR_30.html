@@ -1,0 +1,401 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make.kernel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Discrete Movement Kernel</h2>
+
+<h3>Description</h3>
+
+<p>Functions to create, plot and summarise a discrete representation of a movement kernel.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+make.kernel(movementmodel = c("BVN", "BVE", "BVC", "BVT","RDE", "RDG", "RDL", "UNI"), 
+    kernelradius = 10, spacing, move.a, move.b, 
+    sparsekernel = FALSE, clip = FALSE, normalize = TRUE,     
+    stat = c('estimate','lcl', 'ucl'), session = 1, r0 = 1/sqrt(pi), ...)
+
+## S3 method for class 'kernel'
+plot(x, type = "kernel", contour = FALSE, levels = NULL, text = FALSE,
+    title = NULL, add = FALSE, xscale = 1, ...)
+
+## S3 method for class 'kernel'
+summary(object, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>movementmodel</code></td>
+<td>
+<p>character or function or openCR object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernelradius</code></td>
+<td>
+<p>integer radius of kernel in grid cells</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spacing</code></td>
+<td>
+<p>numeric spacing between cell centres</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>move.a</code></td>
+<td>
+<p>numeric parameter of kernel</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>move.b</code></td>
+<td>
+<p>numeric parameter of kernel</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sparsekernel</code></td>
+<td>
+<p>logical; if TRUE then only cardinal and intercardinal axes are included</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clip</code></td>
+<td>
+<p>logical; if TRUE then corner cells are removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>logical; if TRUE then cell values are divided by their sum</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>character; predicted statistic to use for move.a (openCR object only) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>session</code></td>
+<td>
+<p>integer; session for move.a, move.b if input is fitted model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r0</code></td>
+<td>
+<p>numeric; effective radius of zero cell for movement models</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>kernel object from <code>make.kernel</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character; plot style (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contour</code></td>
+<td>
+<p>logical; if TRUE then contour lines are overlaid on any plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>numeric vector of contour levels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>logical; if TRUE then cell probabilities are overprinted, rounded to 3 d.p.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>character; if NULL a title is constructed automatically</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+<p>logical; if TRUE a line is added to an existing plot (types "gr", "fr", "Fr")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xscale</code></td>
+<td>
+<p>numeric multiplier for distance axis (0.001 for distances in km)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>predict.openCR</code> (<code>make.kernel</code>) or
+<code>plot.mask</code> (plot type "kernel") or <code>lines</code> ( plot types "gr", "fr", "Fr") (not used by summary method)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>kernel object from <code>make.kernel</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A kernel object is a type of mask with cell probabilities stored in the covariate ‘kernelp’. All kernels are truncated at kernelradius x spacing.
+</p>
+<p>The <code>movementmodel</code> may also be a function or a previously fitted openCR model that includes movement. If a fitted openCR object, parameter values and kernel attributes are derived from that object and other arguments are ignored.
+</p>
+<p>The parameter ‘move.a’ is a scale parameter in metres, except for the UNIzi and INDzi models for which it is the zero-inflation parameter (‘move.b’ is the zero-inflation parameter for BVNzi, BVEzi and RDEzi). 
+</p>
+<p>'Sparse' kernels include only those grid cells that lie on 4 axes (N-S, E-W, NW-SE, NE-SW); cell probabilities are adjusted to maintain nearly the same distance distribution as the non-sparse equivalents.
+</p>
+<p>Movement models are listed in Movement models and further described in the vignettes <a href="../doc/openCR-vignette.pdf">openCR-vignette.pdf</a>.
+</p>
+<p>Plot type may be one or more of –
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+`kernel' </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> coloured 2-D depiction </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+`gr' </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> cross-section through the origin of <code class="reqn">g(r)</code> (the 2-D kernel) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+`fr' </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> continuous probability density <code class="reqn">f(r)</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+`Fr' </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> cumulative probability distribution <code class="reqn">F(r)</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>Type “kernel" by default includes an informative title with font size from the graphical parameter ‘cex.main’. Set <code>title = ""</code> to suppress the title.
+</p>
+<p>Useful properties of theoretical (not discretized) kernels may be recovered with <code>matchscale</code>, <code>pkernel</code>, <code>dkernel</code> and <code>qkernel</code>.
+</p>
+<p>The obscure argument <code>r0</code> controls the value assigned to the central cell of a discretized kernel. For positive <code>r0</code> the value is F(r0*cellsize), where F is the cumulative probability distribution of distance moved. Otherwise the cell is assigned the value g(0)*cellarea, where g() is the 2-D kernel probability density (this fails where g(0) is undefined or infinite).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>make.kernel</code> returns an object of class c('kernel','mask','data.frame').
+</p>
+<p>The kernel object has attributes: 
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+Attribute </td>
+<td style="text-align: left;"> Description </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+movementmodel </td>
+<td style="text-align: left;"> saved input </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+K2 </td>
+<td style="text-align: left;"> saved kernelradius </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+move.a </td>
+<td style="text-align: left;"> saved input </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+move.b </td>
+<td style="text-align: left;"> saved input </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+distribution </td>
+<td style="text-align: left;"> empirical cumulative distribution function </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>The empirical cumulative distribution is a dataframe with columns for the sorted cell radii ‘r’ and the 
+associated cumulative probability ‘cumprob’ (one row per cell).
+</p>
+<p><code>summary.kernel</code> returns an object with these components, displayed with the corresponding print method.
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+Component </td>
+<td style="text-align: left;"> Description </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+k2        </td>
+<td style="text-align: left;"> kernel radius in mask cells </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+spacing   </td>
+<td style="text-align: left;"> cell width </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+ncells    </td>
+<td style="text-align: left;"> number of cells in kernel </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+movementmodel </td>
+<td style="text-align: left;"> movement model code </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+move.a    </td>
+<td style="text-align: left;"> first (scale) parameter </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+move.b    </td>
+<td style="text-align: left;"> second (shape) parameter </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+mu        </td>
+<td style="text-align: left;"> mean of logs (RDL only; from move.a) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+s         </td>
+<td style="text-align: left;"> SD of logs (RDL only; from move.b) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+expectedmove </td>
+<td style="text-align: left;"> mean movement (untruncated) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+expectedmovetr </td>
+<td style="text-align: left;"> mean movement (trucated at kernel radius) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+expectedmoveemp </td>
+<td style="text-align: left;"> mean computed directly from kernel cell values as sum(r.p) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+ptruncated    </td>
+<td style="text-align: left;"> proportion of theoretical distribution truncated at radius </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+expectedq50   </td>
+<td style="text-align: left;"> theoretical (untruncated) median </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+expectedq90   </td>
+<td style="text-align: left;"> theoretical (untruncated) 90th percentile </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+expectedq50tr </td>
+<td style="text-align: left;"> theoretical truncated median </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+expectedq90tr </td>
+<td style="text-align: left;"> theoretical truncated 90th percentile</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>The empirical mean in <code>expectedmoveemp</code> is usually the most pertinent property of a fitted kernel.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The plot method for kernels supercedes the function <code>plotKernel</code> that has been removed.
+</p>
+
+
+<h3>References</h3>
+
+<p>Clark, J. S, Silman, M., Kern, R., Macklin, E. and HilleRisLambers, J. (1999) Seed dispersal near and far: patterns across temperate and tropical forests. <em>Ecology</em> <b>80</b>, 1475–1494.
+</p>
+<p>Efford, M. G. and Schofield, M. R. (2022) A review of movement models in open population capture–recapture. <em>Methods in Ecology and Evolution</em> <b>13</b>, 2106–2118. https://doi.org/10.1111/2041-210X.13947
+</p>
+<p>Ergon, T. and Gardner, B. (2014) Separating mortality and emigration: modelling space use, dispersal and survival with robust-design spatial capture–recapture data. <em>Methods in Ecology and Evolution</em> <b>5</b>, 1327–1336.
+</p>
+<p>Nathan, R., Klein, E., Robledo-Arnuncio, J. J. and Revilla, E. (2012) Dispersal kernels: review. In: J. Clobert et al. (eds) <em>Dispersal Ecology and Evolution</em>. Oxford University Press. Pp. 187–210.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Movement models, <code>mask</code>, <code>matchscale</code>, <code>dkernel</code>, <code>pkernel</code>, <code>qkernel</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+k &lt;- make.kernel(movementmodel = 'BVT', spacing = 10, move.a = 20, move.b = 1)
+summary(k)
+
+# read a previously fitted movement model packaged with 'openCR'
+fit &lt;- readRDS(system.file("exampledata", "spmOV.RDS", package = "openCR"))
+k &lt;- make.kernel(fit)
+plot(k)
+if (interactive()) {
+   spotHeight(k, dec = 3)  # click on points; Esc to exit
+}
+</code></pre>
+
+
+</div>

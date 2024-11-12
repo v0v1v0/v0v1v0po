@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OcpTsSdEwma</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimized Classic Processing Two-Stage Shift-Detection based on EWMA</h2>
+
+<h3>Description</h3>
+
+<p><code>OcpTsSdEwma</code> calculates the anomalies of a dataset using
+an optimized verision of classical processing based on the SD-EWMA
+algorithm. It is an optimized implementation of the <code>CpTsSdEwma</code>
+algorithm using environment variables. It has been shown that in long
+datasets it can reduce runtime by up to 50%. This algorithm is a
+novel method for covariate shift-detection tests based on a two-stage
+structure for univariate time-series. This algorithm works in two phases. In
+the first phase, it detects anomalies using the SD-EWMA
+<code>CpSdEwma</code> algorithm. In the second phase, it checks the veracity
+of the anomalies using the Kolmogorov-Simirnov test to reduce false alarms.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OcpTsSdEwma(data, n.train, threshold, l = 3, m = 5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Numerical vector with training and test dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.train</code></td>
+<td>
+<p>Number of points of the dataset that correspond to the training set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Error smoothing constant.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l</code></td>
+<td>
+<p>Control limit multiplier.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Length of the subsequences for applying the Kolmogorov-Smirnov test.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>data</code> must be a numerical vector without NA values.
+<code>threshold</code> must be a numeric value between 0 and 1.
+It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is
+used. Finally, <code>l</code> is the parameter that determines the control limits.
+By default, 3 is used. <code>m</code> is the length of the subsequences for
+applying the Kolmogorov-Smirnov test. By default, 5 is used. It should be
+noted that the last <code>m</code> values will not been verified because another
+<code>m</code> values are needed to be able to perform the verification.
+</p>
+
+
+<h3>Value</h3>
+
+<p>dataset conformed by the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>is.anomaly</code></td>
+<td>
+<p>1 if the value is anomalous 0, otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ucl</code></td>
+<td>
+<p>Upper control limit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lcl</code></td>
+<td>
+<p>Lower control limit.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Raza, H., Prasad, G., &amp; Li, Y. (03 de 2015). EWMA model based
+shift-detection methods for detecting covariate shifts in non-stationary
+environments. Pattern Recognition, 48(3), 659-669.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 180
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+## Calculate anomalies
+result &lt;- OcpTsSdEwma(
+  data = df$value,
+  n.train = 5,
+  threshold = 0.01,
+  l = 3,
+  m = 20
+)
+res &lt;- cbind(df, result)
+
+## Plot results
+PlotDetections(res, title = "TSSD-EWMA ANOMALY DETECTOR")
+</code></pre>
+
+
+</div>

@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.summary.rms</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Forest Plot of an rms model summary</h2>
+
+<h3>Description</h3>
+
+<p>Convenience function to create a plot of the <code>orm</code>  model
+summary. For further customizing the plots use <code>return_ggplots = TRUE</code>
+This will create 2 <code>ggplot2</code> objects that can be joined with the
+<code>join_ggplots</code> commands.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'summary.rms'
+plot(x, ...)
+
+forestplot(
+  x,
+  return_ggplots = FALSE,
+  plot.widths = c(0.5, 0.5),
+  title = "Odds ratio",
+  digits = 3,
+  shape = 19,
+  header = NULL,
+  limits = NULL,
+  breaks = c(0.5, 1, 1.5, 2, 3, 4),
+  theme = ggplot2::theme_get(),
+  row.names.y = NULL
+)
+
+forestplot.default(x, ...)
+
+forestplot.summary.rms(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>result of a <code>summary</code> command on
+<code>orm</code> or <code>lrm</code>  model ie a
+<code>summary.rms</code> class object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>see parameters of method <code>forestplot</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_ggplots</code></td>
+<td>
+<p>if <code>TRUE</code> the function returns 2 ggplot objects
+in a list instead of drawing a tablegrid</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.widths</code></td>
+<td>
+<p>the relative widths of the left and right plot
+should be a vector (<code>c()</code>)  with 2 elements that sum to 1 defaults to
+equal widths</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>the tile row of the drawn plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>the number of significant digits to display</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape</code></td>
+<td>
+<p>point shape, see <code>aes_linetype_size_shape</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header</code></td>
+<td>
+<p>names of the table columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits</code></td>
+<td>
+<p>the x axis limits as a vector, see also:
+<code>scale_continuous</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>the x axis breaks as a vector,help see also:
+<code>scale_continuous</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theme</code></td>
+<td>
+<p>the desired ggplot2 theme</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row.names.y</code></td>
+<td>
+<p>new names for the variable rows</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+#load the libraries
+library(rms)
+library(ormPlot)
+library(ggplot2)
+
+#make the datadist
+dd&lt;-rms::datadist(educ_data)
+options(datadist="dd")
+
+#create the model
+cran_model &lt;- orm(educ_3 ~ YOBc + sex + height_rzs + n_siblings  + cran_rzs, data = educ_data)
+
+#the antilog true produces odd ratios (default value for orm and lrm)
+s&lt;-summary(cran_model, antilog = TRUE)
+
+#set the plotting default theme (optional)
+theme_set(theme_classic())
+
+#show simply the result
+forestplot(s)
+
+#return modifiable ggplots
+forestplot(s, return_ggplots = TRUE )
+
+#new row names and header
+newnames &lt;- c("Year of birth", "Height", "Number of children", "Cranial volume", "Sex" )
+newhead &lt;- c("Odds Ratio", "CI 5%", "CI 95%" )
+
+#adjust also the relative plot widths and change the color and shape
+newtheme &lt;- theme_classic() + theme(text = element_text(color = "red", size = 12),
+                                    line = element_line(color= "red"),
+                                    rect = element_rect(color="red"))
+
+forestplot(s, row.names.y = newnames, header = newhead,
+           plot.widths = c(0.6,0.4), shape = 17,
+           theme = newtheme)
+</code></pre>
+
+
+</div>

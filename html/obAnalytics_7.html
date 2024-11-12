@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>events</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Limit order events.</h2>
+
+<h3>Description</h3>
+
+<p>A data.frame containing the lifecycle of limit orders.
+</p>
+
+
+<h3>Format</h3>
+
+<p>A data.frame consisting of the following fields:
+</p>
+
+<dl>
+<dt>event.id</dt>
+<dd>
+<p>Event ID.</p>
+</dd>
+<dt>id</dt>
+<dd>
+<p>Limit Order ID.</p>
+</dd>
+<dt>timestamp</dt>
+<dd>
+<p>Local timestamp for order update (create/modify/delete).</p>
+</dd>
+<dt>exchange.timestamp</dt>
+<dd>
+<p>Exchange order creation time.</p>
+</dd>
+<dt>price</dt>
+<dd>
+<p>Limit order price level.</p>
+</dd>
+<dt>volume</dt>
+<dd>
+<p>Remaining limit order volume.</p>
+</dd>
+<dt>action</dt>
+<dd>
+<p>Event action: created, changed, deleted.</p>
+</dd>
+<dt>direction</dt>
+<dd>
+<p>Order book side: bid, ask.</p>
+</dd>
+<dt>fill</dt>
+<dd>
+<p>For changed or deleted events, indicates the change in volume.</p>
+</dd>
+<dt>matching.event</dt>
+<dd>
+<p>Matching <code>event.id</code> if this event is part of a
+trade. <code>NA</code> otherwise.</p>
+</dd>
+<dt>type</dt>
+<dd>
+<p>Limit order type (see <em>Event types</em> below.)</p>
+</dd>
+<dt>aggressiveness.bps</dt>
+<dd>
+<p>The distance of the order from the edge of the
+book in Basis Points (BPS).</p>
+</dd>
+</dl>
+<p>Each limit order <em>type</em> has been categorised as follows:
+</p>
+
+<dl>
+<dt>unknown</dt>
+<dd>
+<p>It was not possible to infer the order type given the
+available data.</p>
+</dd>
+<dt>flashed-limit</dt>
+<dd>
+<p>Order was created then subsequently deleted. 96% of
+example data.</p>
+</dd>
+<dt>resting-limit</dt>
+<dd>
+<p>Order was created and left in order book indefinitely
+until filled.</p>
+</dd>
+<dt>market-limit</dt>
+<dd>
+<p>Order was partially filled before landing in the order
+book at it's limit price.</p>
+</dd>
+<dt>market</dt>
+<dd>
+<p>Order was completely filled and did not come to rest in the
+order book.</p>
+</dd>
+<dt>pacman</dt>
+<dd>
+<p>A limit-price modified <em>in situ</em> (exchange algorithmic
+order).</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>The purpose of this table is to keep account of the lifecycle of all orders
+in both sides of the limit order book. The lifecycle of an individual limit
+order follows a sequence of events:
+</p>
+
+<dl>
+<dt>created</dt>
+<dd>
+<p>The order is created with a specified amount of volume and
+a limit price.</p>
+</dd>
+<dt>changed</dt>
+<dd>
+<p>The order has been partially filled. On each modification, 
+the remaining volume will decrease.</p>
+</dd>
+<dt>deleted</dt>
+<dd>
+<p>The order may be deleted at the request of the trader or, in
+the event that the order has been completely filled, deleted by the exchange.
+An order deleted by the exchange as a result of being filled will have 0
+remaining volume at time of deletion.</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Limit.order.book.data: <code>depth.summary</code>,
+<code>depth</code>, <code>trades</code>
+</p>
+
+
+</div>

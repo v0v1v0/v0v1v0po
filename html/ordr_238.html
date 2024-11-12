@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>methods-eigen</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Functionality for eigen-decompositions</h2>
+
+<h3>Description</h3>
+
+<p>These methods extract data from, and attribute new data to,
+objects of class <code>"eigen"</code> returned by <code>base::eigen()</code> when the parameter
+<code>only.values</code> is set to <code>FALSE</code> or of class <code>"eigen_ord"</code> returned by
+<code>eigen_ord()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'eigen'
+as_tbl_ord(x)
+
+## S3 method for class 'eigen'
+recover_rows(x)
+
+## S3 method for class 'eigen'
+recover_cols(x)
+
+## S3 method for class 'eigen'
+recover_inertia(x)
+
+## S3 method for class 'eigen'
+recover_coord(x)
+
+## S3 method for class 'eigen'
+recover_conference(x)
+
+## S3 method for class 'eigen_ord'
+recover_aug_rows(x)
+
+## S3 method for class 'eigen_ord'
+recover_aug_cols(x)
+
+## S3 method for class 'eigen'
+recover_aug_coord(x)
+
+## S3 method for class 'eigen_ord'
+as_tbl_ord(x)
+
+## S3 method for class 'eigen_ord'
+recover_rows(x)
+
+## S3 method for class 'eigen_ord'
+recover_cols(x)
+
+## S3 method for class 'eigen_ord'
+recover_inertia(x)
+
+## S3 method for class 'eigen_ord'
+recover_coord(x)
+
+## S3 method for class 'eigen_ord'
+recover_conference(x)
+
+## S3 method for class 'eigen_ord'
+recover_aug_rows(x)
+
+## S3 method for class 'eigen_ord'
+recover_aug_cols(x)
+
+## S3 method for class 'eigen_ord'
+recover_aug_coord(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An ordination object.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p><code>base::eigen()</code> usually returns an object of class <code>"eigen"</code>, which contains
+the numerical eigendecomposition without annotations such as row and column
+names. To facilitate downstream analysis, <code>eigen_ord()</code> returns a modified
+'eigen' object with row names taken (if available) from the original data and
+column names indicating the integer index of each eigenvector.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The recovery generics <code style="white-space: pre;">⁠recover_*()⁠</code> return core model components, distribution of inertia,
+supplementary elements, and intrinsic metadata; but they require methods for each model class to
+tell them what these components are.
+</p>
+<p>The generic <code>as_tbl_ord()</code> returns its input wrapped in the 'tbl_ord'
+class. Its methods determine what model classes it is allowed to wrap. It
+then provides 'tbl_ord' methods with access to the recoverers and hence to
+the model components.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other methods for eigen-decomposition-based techniques: 
+<code>methods-cmds</code>,
+<code>methods-factanal</code>
+</p>
+<p>Other models from the base package: 
+<code>methods-svd</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># subset QS data to rank variables
+qs_ranks &lt;- subset(
+  qswur_usa,
+  complete.cases(qswur_usa),
+  select = 8:13
+)
+head(qs_ranks)
+
+# eigendecomposition of Kendall correlation matrix
+qs_ranks %&gt;%
+  cor(method = "kendall") %&gt;%
+  eigen() %&gt;%
+  print() -&gt; qs_eigen
+
+# recover eigenvectors
+get_rows(qs_eigen)
+identical(get_cols(qs_eigen), get_rows(qs_eigen))
+
+# wrap as a 'tbl_ord'
+as_tbl_ord(qs_eigen)
+
+# same eigendecomposition, preserving row names and adding column names
+qs_ranks %&gt;%
+  cor(method = "kendall") %&gt;%
+  eigen_ord() %&gt;%
+  print() -&gt; qs_eigen
+
+# wrap as a 'tbl_ord' and augment with dimension names
+augment_ord(as_tbl_ord(qs_eigen))
+
+# decomposition returns pure eigenvectors
+get_conference(qs_eigen)
+</code></pre>
+
+
+</div>

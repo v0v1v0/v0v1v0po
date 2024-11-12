@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.OEFPIL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the estimate from an OEPFIL object</h2>
+
+<h3>Description</h3>
+
+<p>Plot of the iterated linearization estimate of a function from an <code>"OEFPIL"</code> object with pointwise confidence and prediction bands.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'OEFPIL'
+plot(x, xx, signif.level, interval, new.obs.variance, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class <code>"OEFPIL"</code> (a result of a call to <code>OEFPIL</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xx</code></td>
+<td>
+<p>a sequence of x-coordinates of points for computing and plotting confidence bands. If missing, the default sequence <code>seq(from = min(x), to = max(x), length.out = 301)</code> is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signif.level</code></td>
+<td>
+<p>a numerical value or a vector of significance levels for confidence bands.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+<p>a character vector. It states type of an interval to draw. Following values are possible: <code>"conf"</code> for confidence interval, <code>"pred"</code> for prediction interval or <code>c("conf", "pred")</code> for both. If missing, no intervals are plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new.obs.variance</code></td>
+<td>
+<p>the variance of a new observation for prediction interval computing (see <code>confBands.OEFPIL</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments (same as in plot function) affecting the plot.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the <code>signif.level</code> argument is missing, even though an <code>interval</code> argument is set to <code>"conf"</code>, the default value 0.05 is used.
+The line type is set to <code>'dashed'</code> for confidence bands and <code>'dotted'</code> for prediction bands.
+The confidence and prediction bands are computed under normality assumption. If the vector <code>signif.level</code> length is greater than 1,
+then multiple bands are plotted. The widest band has colour no. 2. The second widest band has colour no. 3 etc.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of type list containing at least the following components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>xx</code></td>
+<td>
+<p>a numerical vector of points where bands are calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yy</code></td>
+<td>
+<p>a numerical vector with values of estimated function in <code>xx</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PointwiseCB</code></td>
+<td>
+<p>a matrix of confidence intervals at points <code>xx</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PredictCB</code></td>
+<td>
+<p>a matrix of prediction intervals at points <code>xx</code>.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>OEFPIL</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(MASS)
+
+##Use of plot function with default parameters
+##(only estimation of the function is plotted, without confidence or prediction bands)
+steamdata &lt;- steam
+colnames(steamdata) &lt;- c("x","y")
+n &lt;- nrow(steamdata)
+CM1 &lt;- diag(rep(10,2*n))
+st1 &lt;- OEFPIL(steamdata, y ~ b1 * 10^(b2 * x/ (b3 + x)), list(b1 = 5, b2 = 8, b3 = 200),
+             CM1, useNLS = FALSE)
+plot(st1)
+
+##Use of plot function for plotting confidence bands
+plot(st1, seq(0,113,0.1), signif.level = c(0.01,0.05), interval = "conf",
+ main = "Graph of estimated function")
+
+##Use of plot function for plotting prediction bands
+plot(st1, seq(0,113,0.1), interval = "pred", new.obs.variance = 15)
+
+##Return values of plot function
+(a &lt;- plot(st1, signif.level = 0.05, interval = "conf"))
+
+</code></pre>
+
+
+</div>

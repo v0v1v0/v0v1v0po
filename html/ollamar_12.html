@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>embed</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate embedding for inputs</h2>
+
+<h3>Description</h3>
+
+<p>Supercedes the <code>embeddings()</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">embed(
+  model,
+  input,
+  truncate = TRUE,
+  normalize = TRUE,
+  keep_alive = "5m",
+  endpoint = "/api/embed",
+  host = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A character string of the model name such as "llama3".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>A vector of characters that you want to get the embeddings for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truncate</code></td>
+<td>
+<p>Truncates the end of each input to fit within context length. Returns error if FALSE and context length is exceeded. Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>Normalize the vector to length 1. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_alive</code></td>
+<td>
+<p>The time to keep the connection alive. Default is "5m" (5 minutes).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endpoint</code></td>
+<td>
+<p>The endpoint to get the vector embedding. Default is "/api/embeddings".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>host</code></td>
+<td>
+<p>The base URL to use. Default is NULL, which uses Ollama's default base URL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional options to pass to the model.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A numeric matrix of the embedding. Each column is the embedding for one input.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://github.com/ollama/ollama/blob/main/docs/api.md#generate-embeddings">API documentation</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+embed("nomic-embed-text:latest", "The quick brown fox jumps over the lazy dog.")
+# pass multiple inputs
+embed("nomic-embed-text:latest", c("Good bye", "Bye", "See you."))
+# pass model options to the model
+embed("nomic-embed-text:latest", "Hello!", temperature = 0.1, num_predict = 3)
+
+</code></pre>
+
+
+</div>

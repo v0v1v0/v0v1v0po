@@ -1,0 +1,57 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>beer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The beer dataset</h2>
+
+<h3>Description</h3>
+
+<p>The beer dataset contains 60 samples published by Norgaard et al.
+Recorded with a 30mm quartz cell on the undiluted degassed beer
+and measured from 1100 to 2250 nm (576 data points) in steps of 2 nm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(beer)
+</code></pre>
+
+
+<h3>References</h3>
+
+<p>Norgaard, L., Saudland, A., Wagner, J., Nielsen, J. P., Munck, L., &amp;
+Engelsen, S. B. (2000). Interval partial least-squares regression (iPLS):
+a comparative chemometric study with an example from near-infrared
+spectroscopy. <em>Applied Spectroscopy</em>, 54(3), 413–419.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("beer")
+x.cal &lt;- beer$xtrain
+dim(x.cal)
+x.test &lt;- beer$xtest
+dim(x.test)
+y.cal &lt;- beer$ytrain
+dim(y.cal)
+y.test &lt;- beer$ytest
+dim(y.test)
+
+X &lt;- rbind(x.cal, x.test)
+y &lt;- rbind(y.cal, y.test)
+n &lt;- nrow(y)
+
+set.seed(1001)
+samp.idx &lt;- sample(1L:n, round(n * 0.7))
+X.cal &lt;- X[samp.idx, ]
+y.cal &lt;- y[samp.idx]
+X.test &lt;- X[-samp.idx, ]
+y.test &lt;- y[-samp.idx]
+</code></pre>
+
+
+</div>

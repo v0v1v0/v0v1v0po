@@ -1,0 +1,240 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>new_page</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a new questionnaire page.</h2>
+
+<h3>Description</h3>
+
+<p>Each page corresponds to a page within the app/questionnaire.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">new_page(
+  page_id,
+  render,
+  condition = NULL,
+  run_before = NULL,
+  render_before = NULL,
+  render_after = NULL,
+  run_after = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>page_id</code></td>
+<td>
+<p>A unique string identifiying this page. (Required)
+This will be used to store data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>render</code></td>
+<td>
+<p>Function to render the page. (Required)
+It is expected, that the function returns a list of shiny tags.
+Its output will be combined with <code>render_before</code> and <code>render_after.</code>
+This function has access to the shiny <code>session</code> and the <code>run_before_output.</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condition</code></td>
+<td>
+<p>Function to check whether the page should be shown.
+When this function returns <code>TRUE</code>, the page will be shown upon navigating
+there, if it returns <code>FALSE</code> it will be skipped.
+Defaults to show the page.
+This function has access to the shiny <code>session</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run_before</code></td>
+<td>
+<p>Function that prepares data to render the page.
+Called immediately after condition (if <code>condition</code> returned <code>TRUE</code>).
+Whatever run_before returns is available in render, render_before and
+render_after as <code>run_before_output</code>.
+This function has access to the shiny <code>session</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>render_before</code></td>
+<td>
+<p>Called exactly like <code>render</code>. Output will be added
+just <em>before</em> the output from render. Mainly used to add additional
+outputs to existing pages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>render_after</code></td>
+<td>
+<p>Called exactly like <code>render</code>. Output will be added
+just <em>after</em> the output from render. Mainly used to add additional
+outputs to existing pages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run_after</code></td>
+<td>
+<p>Function that handles the user input when they leave the
+page. This function has access to the shiny session and shiny input.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Pages are rendered by calling the different life-cycle functions one
+after another. The order in which they are called is as follows:
+</p>
+
+<ol>
+<li> <p><code>condition</code> (<code>session</code>)
+Only if this evaluated to <code>TRUE</code>, continue.
+</p>
+</li>
+<li> <p><code>run_before</code> (<code>session</code>)
+</p>
+</li>
+<li> <p><code>render_before</code> (<code>session</code>, <code>run_before_output</code>, <code>input</code>, <code>output</code>)
+</p>
+</li>
+<li> <p><code>render</code> (<code>session</code>, <code>run_before_output</code>, <code>input</code>, <code>output</code>)
+</p>
+</li>
+<li> <p><code>render_after</code> (<code>session</code>, <code>run_before_output</code>, <code>input</code>, <code>output</code>)
+The outputs from <code>render_before</code>, <code>render</code> &amp; <code>render_after</code> are
+stitched together to produce the final HTML output of the page.
+</p>
+</li>
+<li> <p><code>run_after</code> (<code>session</code>, <code>input</code>, <code>output</code>)
+Run when the user leaves the page (=clicks the next button). Any
+user input has to be handled here. For each question asked, one will
+typically call <code>set_item_data()</code> to save the collected data
+internally.
+</p>
+</li>
+</ol>
+<p>Each of the life-cycle functions above is annotated with the
+paramaters it has access to. <code>session</code>, <code>input</code> and <code>output</code> are
+passed directly from shiny and correspond to the objects made available by
+<code>shiny::shinyServer()</code>, <code>run_before_output</code> is available for convenience and
+corresponds to whatever is returned by <code>run_before</code>.
+</p>
+<p>Some side-effects occur:
+</p>
+
+<ul>
+<li> <p><code>occupationMeasurement:::init_page_data</code> is called before 1. <code>run_before</code>.
+It sets up an internal representation of the page data to be saved.
+</p>
+</li>
+<li> <p><code>occupationMeasurement:::finalize_data</code> is called before 6. <code>run_before</code>.
+</p>
+</li>
+<li> <p><code>occupationMeasurement:::save_page_data</code> is called after 6. <code>run_before</code>.
+It saves the responses on a hard drive, i.e. it appends the responses
+from this page to <code>table_name == "answers"</code>. See the vignette
+and <code>create_app_settings()</code> for details.
+</p>
+</li>
+</ul>
+<p>Use of <code>render_before</code>, <code>render_after</code> is discouraged if not necessary,
+as these two life-cycle functions have only been added to allow for easier
+modification and extension of existing pages.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A new <code>page</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+## Not run: 
+very_simple_page &lt;- new_page(
+  page_id = "example",
+  render = function(session, run_before_output, input, output, ...) {
+    list(
+      shiny::tags$h1("My test page"),
+      button_previous(),
+      button_next()
+    )
+  }
+)
+
+# Example where we also save some data
+page_that_saves_two_items &lt;- new_page(
+  page_id = "questions_1_and_2",
+  render = function(session, run_before_output, page, input, output, ...) {
+    list(
+      shiny::tags$h1("Questions"),
+      shiny::textAreaInput(
+        inputId = "day_freetext",
+        label = "How was your day? Please give a detailed answer.",
+        value = get_item_data(
+          session = session, page_id = page$page_id,
+          item_id = "day_freetext",
+          key = "response_text"
+        )
+      ),
+      shiny::tags$p("How would you rate your day? On a scale of 1 - 4"),
+      radioButtons(
+        inputId = "day_radio",
+        label = NULL,
+        width = "100%",
+        choices = list(One = 1, Two = 2, Three = 3, Four = 4),
+        selected = get_item_data(
+          session = session,
+          page_id = page$page_id,
+          item_id = "day_radio",
+          key = "response_id",
+          default = character(0)
+        )
+      ),
+      button_previous(),
+      button_next()
+    )
+  },
+  run_after = function(session, page, input, ...) {
+    set_item_data(
+      session = session,
+      page_id = page$page_id,
+      item_id = "day_freetext",
+      response_text = input$day_freetext
+    )
+    set_item_data(
+      session = session,
+      page_id = page$page_id,
+      item_id = "day_radio",
+      response_id = input$day_radio
+    )
+  }
+)
+
+questionnaire_that_saves_two_items &lt;- list(
+  page_that_saves_two_items,
+  # So we have a next page to go to
+  very_simple_page
+)
+
+if (interactive()) {
+  app(questionnaire = questionnaire_that_saves_two_items)
+}
+
+## End(Not run)
+</code></pre>
+
+
+</div>

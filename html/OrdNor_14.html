@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>validate.target.cormat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Checks the target correlation matrix
+</h2>
+
+<h3>Description</h3>
+
+<p>The function checks the validity of the values of pairwise correlations. Additionally, it checks positive definitiveness, symmetry and correct dimension.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">validate.target.cormat(plist, CorrMat, no.ord, no.norm)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>plist</code></td>
+<td>
+
+<p>A list of probability vectors corresponding to each ordinal variable. The i-th element of <code>plist</code> is a vector of the cumulative probabilities defining the marginal distribution of the i-th ordinal component of the multivariate variables. If the i-th ordinal variable has k categories, the i-th vector of the <code>plist</code> will contain k-1 probability values. The k-th element is implicitly 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CorrMat</code></td>
+<td>
+
+<p>The target correlation matrix which must be positive definite and within the valid limits.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no.ord</code></td>
+<td>
+
+<p>Number of ordinal variables.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no.norm</code></td>
+<td>
+
+<p>Number of normal variables.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In addition to being positive definite and symmetric, the values of pairwise correlations in the target correlation matrix must also fall within the limits imposed by the marginal distributions of the ordinal variables.The function ensures that the supplied correlation matrix is valid for simulation. If a violation occurs, an error message is displayed that identifies the violation. The function returns a logical value <code>TRUE</code> when no such violation occurs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+Sigma = diag(4)
+Sigma[lower.tri(Sigma)] = c(0.42, 0.78, 0.29, 0.37, 0.14, 0.26)
+Sigma = Sigma + t(Sigma)
+diag(Sigma)=1
+
+marginal = list( c(0.2, 0.5), c(0.4, 0.7, 0.9))
+validate.target.cormat(marginal, Sigma, 2,2)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Function evaluations</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Computation of Function Value(s)
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions compute the value of the function at the vertices points
+stored in the current simplex object and stored them back into the simplex
+object. <code>optimsimplex.computefv</code> determines how many vertices are stored
+in the simplex object and delegates the calculation of the function values to
+<code>optimsimplex.compsomefv</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  optimsimplex.computefv(this = NULL, fun = NULL, data = NULL)
+  optimsimplex.compsomefv(this = NULL, fun = NULL, indices = NULL, data = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>this</code></td>
+<td>
+<p>The current simplex object, containing the nbve x n matrix of
+vertice coordinates (i.e. <code>x</code> element), where n is the
+dimension of the space and nbve the number of vertices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>The function to compute at vertices. The function is expected to
+have the following input and output arguments:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+      myfunction &lt;- function(x, this){ </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+        ... </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+        return(list(f=f,this=this)) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+      }
+    </td>
+</tr>
+</table>
+<p>where x is a row vector and this a user-defined data, i.e. the <code>data</code> 
+argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A user-defined data passed to the function. If data is provided,
+it is passed to the callback function both as an input and output argument.
+<code>data</code> may be used if the function uses some additionnal parameters. It
+is returned as an output parameter because the function may modify the data
+while computing the function value. This feature may be used, for example,
+to count the number of times that the function has been called.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indices</code></td>
+<td>
+<p>A vector of increasing integers from 1 to nbve.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>optimsimplex.computefv</code> and <code>optimsimplex.compsomefv</code> return a
+list with the following elements: </p>
+
+<dl>
+<dt>this</dt>
+<dd>
+<p>The updated simplex object.</p>
+</dd>
+<dt>data</dt>
+<dd>
+<p>The updated user-defined data.</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Author of Scilab optimsimplex module: Michael Baudin (INRIA - Digiteo)
+</p>
+<p>Author of R adaptation: Sebastien Bihorel (<a href="mailto:sb.pmlab@gmail.com">sb.pmlab@gmail.com</a>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optimsimplex</code>
+</p>
+
+
+</div>

@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>subdim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns the dimension of each valid subproblem</h2>
+
+<h3>Description</h3>
+
+<p>Returns a list containing the dimensions of all valid subproblems.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">subdim(x)
+
+## S3 method for class 'InfinitySparseMatrix'
+subdim(x)
+
+## S3 method for class 'matrix'
+subdim(x)
+
+## S3 method for class 'BlockedInfinitySparseMatrix'
+subdim(x)
+
+## S3 method for class 'optmatch.dlist'
+subdim(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A distance specification to get the sub-dimensions of.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A data frame listing the dimensions of each valid subproblem. Any subproblems with 0 controls
+or 0 treatments will be ignored. The names of the entries in the list will be the names of the
+subproblems, if they exist.  There will be two rows, named "treatments" and "controls".
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">em &lt;- exactMatch(pr ~ pt, data=nuclearplants)
+m1 &lt;- fullmatch(pr ~ t1 + t2, within=em, data=nuclearplants)
+stratumStructure(m1)
+(subdims_em &lt;- subdim(em))
+m2 &lt;- fullmatch(pr ~ t1 + t2, within=em, data=nuclearplants,
+                mean.controls=pmin(1.5, subdims_em["controls",] / subdims_em["treatments",])
+                )
+stratumStructure(m2)
+                
+</code></pre>
+
+
+</div>

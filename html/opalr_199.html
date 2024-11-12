@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.table_save</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Save a local tibble as a Opal table</h2>
+
+<h3>Description</h3>
+
+<p>Upload a local tibble to the R server side through Opal, assign this tibble to the provided
+symbol name and import it as a table into a Opal project.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.table_save(
+  opal,
+  tibble,
+  project,
+  table,
+  overwrite = TRUE,
+  force = FALSE,
+  identifiers = NULL,
+  policy = "required",
+  id.name = "id",
+  type = "Participant"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal connection object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tibble</code></td>
+<td>
+<p>The tibble object to be imported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Project name where the table will be located.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+<p>Destination table name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>If the destination table already exists, it will be replaced (deleted, 
+re-created with associated permissions reinstated and then imported). Otherwise the table
+will be updated (data dictionaries merge may conflict). Default  is TRUE. See 
+also opal.table_truncate function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force</code></td>
+<td>
+<p>If the destination already exists, stop with an informative message if this flag 
+is FALSE (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>identifiers</code></td>
+<td>
+<p>Name of the identifiers mapping to use when assigning entities to Opal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>policy</code></td>
+<td>
+<p>Identifiers policy: 'required' (each identifiers must be mapped prior importation 
+(default)), ignore' (ignore unknown identifiers) and 'generate' (generate a system identifier for 
+each unknown identifier).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id.name</code></td>
+<td>
+<p>The name of the column representing the entity identifiers. Default is 'id'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Entity type (what the data are about). Default is 'Participant'</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An invisible logical indicating whether the destination table exists.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other table functions: 
+<code>opal.perms()</code>,
+<code>opal.resource_view_create()</code>,
+<code>opal.resource_view_reconnect()</code>,
+<code>opal.table_create()</code>,
+<code>opal.table_delete()</code>,
+<code>opal.table_dictionary_get()</code>,
+<code>opal.table_dictionary_update()</code>,
+<code>opal.table_exists()</code>,
+<code>opal.table_export()</code>,
+<code>opal.table_get()</code>,
+<code>opal.table_import()</code>,
+<code>opal.table_perm()</code>,
+<code>opal.table_perm_add()</code>,
+<code>opal.table_perm_delete()</code>,
+<code>opal.table_truncate()</code>,
+<code>opal.table_view_create()</code>,
+<code>opal.table_view_update()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+cqx &lt;- opal.table_get(o, "CPTP", "Cag_coreqx")
+# do some (meta)data transformations, then save in opal's database
+opal.table_save(o, cqx, "CPTP", "Cag_coreqx", overwrite = TRUE, force = TRUE)
+# or overwrite data only (keep original data dictionary)
+opal.table_save(o, cqx, "CPTP", "Cag_coreqx", overwrite = 'values', force = TRUE)
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

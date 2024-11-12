@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>keepSets</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter Subcascades</h2>
+
+<h3>Description</h3>
+
+<p><code>keepSets</code> filters specific cascade sets.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">keepSets(
+  subcascades = NULL,
+  sets = NULL,
+  direction = "sub",
+  ordered = FALSE,
+  neighborhood = "direct",
+  type = "any"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>subcascades</code></td>
+<td>
+<p>A Subcascades object as it is returned by <code>subcascades</code>-function.
+The Subcascades object is made up of a list of matrices. 
+Each matrix comprises the evaluation results of cascades of a specific length and 
+is sorted row-wise according to the achieved minimal classwise sensitivities of the cascades (decreasing).
+The rownames show the class order by a character string of type '1&gt;2&gt;3' and the entries the sensitivity for each position of the cascade.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sets</code></td>
+<td>
+<p>Contains the set used for filtering. It is either a list of numeric vectors, a numeric vector, 
+or a vector of characters representing a cascade of the following format '1&gt;2&gt;4'. Empty vectors are not allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>direction</code></td>
+<td>
+<p>Either 'sub','super' or 'exact', indicating whether the subset, the superset or the exact set is filtered. 
+The 'exact' case filters exactly the cascades defined in <code>sets</code>. Please refer to the details section for a detailed description.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ordered</code></td>
+<td>
+<p>Either TRUE or FALSE indicating whether the order of the classes in sets is considered or not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>neighborhood</code></td>
+<td>
+<p>Either 'direct' or 'indirect' defines whether the given classes have to be direct neighbors ('direct') or there are other classes allowed inbetween ('indirect').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>If more than one cascade is defined in sets, this parameter defines whether the filtered cascade has to
+fit to at least one of the sets ('any') or to all of the given sets ('all').</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function allows for filtering the Subcascades object. 
+</p>
+<p>If <code>direction</code> is set to 'exact' the parameter <code>neighborhood</code> is ignored and the parameter <code>type</code> is used as its default and cannot be changed.
+There has to be an exact match between the classes of the sets parameter cascades and the cascade of the Subcascades object, 
+so not more but also not less classes are allowed. If the <code>ordered</code> parameter is set to TRUE also the order of the classes within the 
+<code>sets</code> parameter and within the Subcascades object has be be exactly the same.
+</p>
+<p>If <code>direction</code> is set to 'sub' the Subcascades object is filtered for subsets of the given cascades. 
+If the <code>type</code> parameter is set to 'any' each cascade is considered individually otherwise all cascades are used as reference for filtering.
+This means that either for each cascade of the <code>sets</code> parameter individually or for taking all together the Subcascades object is filtered for cascades that are 
+made up of the same classes, a subset of classes (<code>ordered = FALSE</code>) or a cascade, part of a cascade (<code>ordered = TRUE</code>), 
+resulting in a set of cascades that might contain less classes.
+The parameter <code>neighbourhood</code> is not considered.
+</p>
+<p>If <code>direction</code> is set to 'super' the Subcascades object is filtered for a superset of the given cascades. 
+If the <code>type</code> parameter is set to 'any' each cascade is considered individually otherwise all cascades are used as reference for filtering.
+A superset are cascades that are made up of (parts) of the given cascades (<code>ordered = TRUE</code>) or classes (<code>ordered=FALSE</code>) but can contain also more classes. 
+Depending on the parameter <code>neighborhood</code> only classes defined in the <code>sets</code> parameter are allowed as neighbors ('direct').
+If <code>neighborhood</code> is set to 'indirect' the filtering is less strict and the direct neighborhood defined in <code>sets</code> is not considered.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A Subcascades object comprising the evaluated cascades and their performances. 
+The Subcascades object is made up of a list of matrices. 
+Each matrix comprises the evaluation results of cascades of a specific length and 
+is sorted row-wise according to the achieved minimal classwise sensitivities of the cascades (decreasing).
+The rownames show the class order by a character string of type '1&gt;2&gt;3' and the entries the sensitivity for each position of the cascade.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dropSize</code>, <code>keepSize</code>, <code>dropSets</code>, <code>dropThreshold</code>, <code>keepThreshold</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+# generate Subcascades object
+subc = subcascades(predMap,thresh=0.7)
+
+#define sets
+set1 = list(c(1,2,3),c(2,3,4))
+set2 = c('1&gt;2&gt;3','2&gt;3&gt;4')
+
+# filter for the subset cascades that contain either the classes 
+# {1,2,3} or {2,3,4} independent of the order, but neighbored
+keepSets(subc, sets = set1, direction = 'sub', 
+         ordered = FALSE, neighborhood = 'direct')
+keepSets(subc, sets = set2, direction = 'sub', 
+         ordered = FALSE, neighborhood = 'direct')
+
+# filter for the superset cascades that contain either the classes 
+# {1,2,3} or {2,3,4} independent of the order, but neighbored
+keepSets(subc, sets = set1, direction = 'super', 
+         ordered = FALSE, neighborhood = 'direct')
+keepSets(subc, sets = set2, direction = 'super', 
+         ordered = FALSE, neighborhood = 'direct')
+
+# filter for the superset cascades that contain both the classes 
+# {1,2,3} and {2,3,4} in exactly the given order, but allowing 
+# for other classes inbetween
+keepSets(subc, sets = set1, direction = 'super', 
+        ordered = TRUE, neighborhood = 'indirect', type = 'all')
+keepSets(subc, sets = set2, direction = 'super',
+        ordered = TRUE, neighborhood = 'indirect', type = 'all')
+         
+# filter for the exact cascades
+# sets can be a numeric list
+result &lt;- keepSets(subc, list(c(0,1,2),c(2,3,4,1)),
+                   direction = 'exact', ordered=TRUE)
+unlist(t(lapply(result,rownames)))
+# or sets can be a character vector
+result &lt;- keepSets(subc, c('0&gt;1&gt;2','2&gt;3&gt;4&gt;1'),
+                   direction = 'exact',ordered=TRUE)
+unlist(t(lapply(result,rownames)))         
+ 
+</code></pre>
+
+
+</div>

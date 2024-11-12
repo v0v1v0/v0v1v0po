@@ -1,0 +1,54 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>%T&gt;%</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Tee operator</h2>
+
+<h3>Description</h3>
+
+<p>This package uses the "tee" operator (<code style="white-space: pre;">⁠%T&gt;%⁠</code>) to modify objects.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>lhs, rhs</code></td>
+<td>
+<p>An object and a function.</p>
+</td>
+</tr></table>
+<h3>See Also</h3>
+
+<p><code>magrittr::%T&gt;%()</code>, <code>pipe()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># the tee operator returns the left-hand side of the result and can be
+# useful when dealing with mutable objects. In this example we want
+# to use the function "f" to modify the object "e" and capture the
+# result
+
+# create an empty environment
+e &lt;- new.env()
+
+# create a function to modify an environment and return NULL
+f &lt;- function(x) {x$a &lt;- 5; return(NULL)}
+
+# if we use the pipe operator we won't capture the result since "f"()
+# returns a NULL
+e2 &lt;- e %&gt;% f()
+print(e2)
+
+# but if we use the tee operator then the result contains a copy of "e"
+e3 &lt;- e %T&gt;% f()
+print(e3)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ONEST_main</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ONEST main function</h2>
+
+<h3>Description</h3>
+
+<p>This is the ONEST main function taking binary (0/1) pathology data as input. This function
+utilizes the plotline function to produce the ONEST graphs and estimates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ONEST_main(data)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a matrix containing the binary pathology data. Each row is the data from one case, and each column is the data from one rater. Missing values are allowed and can be denoted as NA or left blank. If there are n cases and k raters, the input ‘data’ is a matrix with dimension n by k.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>consist_p: a vector of length k-1, indicating proportion of identical reads among a set of pathologists. For example, the first element of “consist_p” is the estimate of agreement percentage for 2 raters. The k-1 th element is the estimate of agreement percentage for k raters.
+</p>
+<p>consist_low: a vector of length k-1, indicating the lower bound of the agreement percentage with 95 percent confidence level corresponding to “consist_p”.
+</p>
+<p>diff_consist: a vector of length k-2, indicating the difference between the consist_p. For example, the first element of “diff_consist” is the estimated difference of agreement percentage after increasing from 2 to 3 raters. The k-2 th element is the difference of agreement percentage after increasing from k-1 to k raters.
+</p>
+<p>diff_high: a vector of length k-2, indicating the upper bound of the change of agreement percentage corresponding to “diff_consist” with 95 percent confidence level.
+</p>
+<p>size_case: number of cases n
+</p>
+<p>size_rater: number of raters k
+</p>
+<p>p: the probability of of being rated positive among the proportion of ‘1-p_plus-p_minus’ cases.
+</p>
+<p>p_plus: proportion of the cases rated positive by all raters.
+</p>
+<p>p_minus: proportion of the cases rated negative by all raters.
+</p>
+<p>empirical: a matrix of dimension k-1 by 3, including the empirical estimate of the agreement percentage, and the empirical 95 percent confidence intervals (CI) of the agreement percentage with equal tail probabilities on the two sides. The empirical estimate and CI were calculated by permuting the raters with 1000 random permutations, and using the mean, 2.5th percentile, and 97.5th percentile.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("sp142_bin")
+ONEST_main(sp142_bin)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dstat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Tomoka Ohta's D Statistics</h2>
+
+<h3>Description</h3>
+
+<p>Implements Ohta's D statistics for a pair of loci. Statistics are returned in a vector in the following order:
+Number of populations, D2it, D2is, D2st, D'2st, D'2is.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dstat(index, data_set, tot_maf = 0.1, pop_maf = 0.05)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>A two-element vector of column names or numbers for which
+Ohta's D Statistics will be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_set</code></td>
+<td>
+<p>Matrix containing genotype data with individuals as rows and
+loci as columns. Genotypes should be coded as 0 (homozygous), 1 (heterozygous),
+or 2 (homozygous). Rownames must be subpopulation names and column names
+should be marker names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tot_maf</code></td>
+<td>
+<p>Minimum minor allele frequency across the total population
+for a marker to be included in the analysis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pop_maf</code></td>
+<td>
+<p>Minimum minor allele frequency across a subpopulation for
+that subpopulation to be included in analysis.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When the loci being evaluated fail to pass the filtering thresholds determined by
+tot_maf and pop_maf, NAs are returned.
+</p>
+
+
+<h3>Value</h3>
+
+<p>nPops Number of subpopulations used for computation, after filtering.
+</p>
+<p>D2it A measure of the correlation of alleles at two loci on the same
+gametes in a subpopulation relative to their expectation according to allele
+frequencies in the total population.
+</p>
+<p>D2is Expected variance of LD for subpopulations.
+</p>
+<p>D2st Expected correlation of alleles in a subpopulation relative to their
+expected correlation in the total population.
+</p>
+<p>Dp2st Variance of LD for the total population computed over alleles only.
+</p>
+<p>Dp2is Correlation of alleles at two loci on the same gamete in subpopulations
+relative to their expected correlation in the total population.
+</p>
+
+
+<h3>References</h3>
+
+<p>Beissinger et al. (2016) Heredity. (https://www.nature.com/articles/hdy201581) &amp;
+Ohta. (1982) Proc. Natl. Acad. Science. (http://www.pnas.org/content/79/6/1940)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(beissinger_data)
+dstat(index = c(5,6), data_set = beissinger_data)
+
+</code></pre>
+
+
+</div>

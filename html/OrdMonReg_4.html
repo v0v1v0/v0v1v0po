@@ -1,0 +1,329 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BoundedAntiMeanTwo, BoundedIsoMeanTwo</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute solution to the problem of two ordered isotonic or antitonic curves</h2>
+
+<h3>Description</h3>
+
+<p>See details below.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">BoundedIsoMeanTwo(g1, w1, g2, w2, K1 = 1000, K2 = 400, 
+    delta = 10^(-4), errorPrec = 10, output = TRUE)
+BoundedAntiMeanTwo(g1, w1, g2, w2, K1 = 1000, K2 = 400, 
+    delta = 10^(-4), errorPrec = 10, output = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>g1</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code>, measurements of upper function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w1</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code>, weights for upper function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g2</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code>, measurements of lower function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w2</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code>, weights for lower function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K1</code></td>
+<td>
+<p>Upper bound on number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K2</code></td>
+<td>
+<p>Number of iterations where step length is changed from the inverse of the norm of the subgradient to 
+a <em>diminishing</em> function of the norm of the subgradient.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>Upper bound on the error, defines stopping criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>errorPrec</code></td>
+<td>
+<p>Computation of stopping criterion is expensive. Therefore, the stopping criterion is
+only evaluated at every <code>errorPrec</code>-th iteration of the algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Should intermediate results be output?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>We consider the problem of estimating two isotonic (antitonic) regression curves <code class="reqn">g_1^\circ</code> and 
+<code class="reqn">g_2^\circ</code> under the 
+constraint that <code class="reqn">g_1^\circ \le g_2^\circ</code>. Given two sets of <code class="reqn">n</code> data points <code class="reqn">y_1, \ldots, y_n</code> 
+and <code class="reqn">z_1, \ldots, z_n</code> 
+that are observed at (the same) deterministic design points <code class="reqn">x_1, \ldots, x_n</code> with weights
+<code class="reqn">w_{1,i}</code> and <code class="reqn">w_{2,i}</code>, respectively, the estimates are obtained by 
+minimizing the Least Squares criterion 
+</p>
+<p style="text-align: center;"><code class="reqn">L_2(a, b) = \sum_{i=1}^n (y_i - a_i)^2 w_{1,i} + \sum_{i=1}^n (z_i - b_i)^2 w_{2,i}</code>
+</p>
+
+<p>over the class of pairs of vectors <code class="reqn">(a, b)</code> such that <code class="reqn">a</code> and <code class="reqn">b</code> are isotonic (antitonic) and 
+<code class="reqn">a_i \le b_i</code> for all <code class="reqn">i = {1, \ldots, n}</code>. The estimates are computed with a projected 
+subgradient algorithm where the projection is calculated using a suitable version of the pool-adjacent-violaters 
+algorithm (PAVA).
+</p>
+<p>The algorithm is implemented for antitonic curves in the function <code>BoundedAntiMeanTwo</code>.
+The function <code>BoundedIsoMeanTwo</code> solves the same problem for isotonic curves, by simply invoking 
+<code>BoundedAntiMeanTwo</code> and suitably flipping some of the arguments.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>g1</code></td>
+<td>
+<p>The estimated function <code class="reqn">\hat g_1^\circ</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g2</code></td>
+<td>
+<p>The estimated function <code class="reqn">\hat g_2^\circ</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>Value of the least squares criterion at the minimum.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error</code></td>
+<td>
+<p>Value of error.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Number of iterations performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>Step length at final iteration.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Fadoua Balabdaoui <a href="mailto:fadoua@ceremade.dauphine.fr">fadoua@ceremade.dauphine.fr</a>
+<br><a href="http://www.ceremade.dauphine.fr/~fadoua">http://www.ceremade.dauphine.fr/~fadoua</a>
+</p>
+<p>Kaspar Rufibach (maintainer) <a href="mailto:kaspar.rufibach@gmail.com">kaspar.rufibach@gmail.com</a>
+<br><a href="http://www.kasparrufibach.ch">http://www.kasparrufibach.ch</a>
+</p>
+<p>Filippo Santambrogio <a href="mailto:filippo.santambrogio@math.u-psud.fr">filippo.santambrogio@math.u-psud.fr</a>
+<br><a href="http://www.math.u-psud.fr/~santambr/">http://www.math.u-psud.fr/~santambr/</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Balabdaoui, F., Rufibach, K., Santambrogio, F. (2009).
+<em>Least squares estimation of two ordered monotone regression curves.</em>
+Preprint.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The functions <code>BoundedAntiMean</code> and <code>BoundedIsoMean</code> for the problem of 
+estimating <em>one</em> antitonic (isotonic) regression
+function bounded above and below by <em>fixed</em> functions. The function <code>BoundedAntiMeanTwo</code> depends 
+on the functions <code>BoundedAntiMean</code>, <code>bstar_n</code>, 
+<code>LSfunctional</code>, and <code>Subgradient</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## ========================================================
+## The first example uses simulated data
+## For the analysis of the mechIng dataset see below
+## ========================================================
+
+## --------------------------------------------------------
+## initialization
+## --------------------------------------------------------
+set.seed(23041977)
+n &lt;- 100
+x &lt;- 1:n
+g1 &lt;- 1 / x^2 + 2
+g1 &lt;- g1 + 3 * rnorm(n)
+g2 &lt;- 1 / log(x+3) + 2
+g2 &lt;- g2 + 4 * rnorm(n)
+w1 &lt;- runif(n)
+w1 &lt;- w1 / sum(w1)
+w2 &lt;- runif(n)
+w2 &lt;- w2 / sum(w2)
+
+## --------------------------------------------------------
+## compute estimates
+## --------------------------------------------------------
+shor &lt;- BoundedAntiMeanTwo(g1, w1, g2, w2, errorPrec = 20, 
+    delta = 10^(-10))
+    
+## corresponding isotonic problem
+shor2 &lt;- BoundedIsoMeanTwo(-g2, w2, -g1, w1, errorPrec = 20, 
+    delta = 10^(-10))
+    
+## the following vectors are equal
+shor$g1 - -shor2$g2    
+shor$g2 - -shor2$g1
+        
+## --------------------------------------------------------
+## for comparison, compute estimates via cyclical projection
+## algorithm due to Dykstra (1983) (isotonic problem)
+## --------------------------------------------------------
+dykstra1 &lt;- BoundedIsoMeanTwoDykstra(-g2, w2, -g1, w1, 
+    delta = 10^(-10))
+
+## the following vectors are equal
+shor2$g1 - dykstra1$g1
+shor2$g2 - dykstra1$g2
+
+## --------------------------------------------------------
+## Checking of solution
+## --------------------------------------------------------
+# This compares the first component of shor$g1 with a^*_1:
+c(shor$g1[1], astar_1(g1, w1, g2, w2))
+
+## --------------------------------------------------------
+## plot original functions and estimates
+## --------------------------------------------------------
+par(mfrow = c(1, 1), mar = c(4.5, 4, 3, 0.5))
+plot(x, g1, col = 2, main = "Original observations and estimates in problem 
+two ordered antitonic regression functions", xlim = c(0, max(x)), ylim = 
+range(c(shor$g1, shor$g2, g1, g2)), xlab = expression(x), 
+ylab = "measurements and estimates")
+points(x, g2, col = 3)
+lines(x, shor$g1 + 0.01, col = 2, type = 's', lwd = 2)
+lines(x, shor$g2 - 0.01, col = 3, type = 's', lwd = 2)
+legend("bottomleft", c(expression("upper estimated function g"[1]*"*"), 
+    expression("lower estimated function g"[2]*"*")), lty = 1, col = 2:3, 
+    lwd = 2, bty = "n")
+
+
+## ========================================================
+## Analysis of the mechIng dataset
+## ========================================================
+
+## --------------------------------------------------------
+## input data
+## --------------------------------------------------------
+data(mechIng)
+x &lt;- mechIng$x
+n &lt;- length(x)
+g1 &lt;- mechIng$g1
+g2 &lt;- mechIng$g2
+w1 &lt;- rep(1, n)
+w2 &lt;- w1
+
+## --------------------------------------------------------
+## compute unordered estimates
+## --------------------------------------------------------
+g1_pava &lt;- BoundedIsoMean(y = g1, w = w1, a = NA, b = NA)
+g2_pava &lt;- BoundedIsoMean(y = g2, w = w2, a = NA, b = NA)
+
+## --------------------------------------------------------
+## compute estimates via cyclical projection algorithm due to
+## Dysktra (1983)
+## --------------------------------------------------------
+dykstra1 &lt;- BoundedIsoMeanTwoDykstra(g1, w1, g2, w2, 
+    delta = 10^-10, output = TRUE)
+    
+## --------------------------------------------------------
+## compute smoothed versions
+## --------------------------------------------------------
+g1_mon &lt;- dykstra1$g1
+g2_mon &lt;- dykstra1$g2   
+
+kernel &lt;- function(x, X, h, Y){
+    tmp &lt;- dnorm((x - X) / h) 
+    res &lt;- sum(Y * tmp) / sum(tmp)
+    return(res)
+    }
+h &lt;- 0.1 * n^(-1/5)
+
+g1_smooth &lt;- rep(NA, n)
+g2_smooth &lt;- g1_smooth
+for (i in 1:n){
+    g1_smooth[i] &lt;- kernel(x[i], X = x, h, g1_mon)
+    g2_smooth[i] &lt;- kernel(x[i], X = x, h, g2_mon)
+}
+            
+## --------------------------------------------------------
+## plot original functions and estimates
+## --------------------------------------------------------
+par(mfrow = c(2, 1), oma = c(0, 0, 2, 0), mar = c(4.5, 4, 2, 0.5), 
+    cex.main = 0.8, las = 1) 
+
+plot(0, 0, type = 'n', xlim = c(0, max(x)), ylim = 
+    range(c(g1, g2, g1_mon, g2_mon)), xlab = "x", ylab = 
+    "measurements and estimates", main = "ordered antitonic estimates")
+points(x, g1, col = grey(0.3), pch = 20, cex = 0.8)
+points(x, g2, col = grey(0.6), pch = 20, cex = 0.8)
+lines(x, g1_mon + 0.1, col = 2, type = 's', lwd = 3)
+lines(x, g2_mon - 0.1, col = 3, type = 's', lwd = 3)
+legend(0.2, 10, c(expression("upper isotonic function g"[1]*"*"), 
+    expression("lower isotonic function g"[2]*"*")), lty = 1, col = 2:3, 
+    lwd = 3, bty = "n")
+
+plot(0, 0, type = 'n', xlim = c(0, max(x)), ylim = 
+    range(c(g1, g2, g1_mon, g2_mon)), xlab = "x", ylab = "measurements and 
+    estimates", main = "smoothed ordered antitonic estimates")
+points(x, g1, col = grey(0.3), pch = 20, cex = 0.8)
+points(x, g2, col = grey(0.6), pch = 20, cex = 0.8)
+lines(x, g1_smooth + 0.1, col = 2, type = 's', lwd = 3)
+lines(x, g2_smooth - 0.1, col = 3, type = 's', lwd = 3)
+legend(0.2, 10, c(expression("upper isotonic smoothed function "*tilde(g)[1]*"*"), 
+    expression("lower isotonic smoothed function "*tilde(g)[2]*"*")), 
+    lty = 1, col = 2:3, lwd = 3, bty = "n")
+
+par(cex.main = 1)
+title("Original observations and estimates in mechanical engineering example", 
+    line = 0, outer = TRUE)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>CPS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>CPS Analysis on a collection of clustering results</h2>
+
+<h3>Description</h3>
+
+<p>Covering Point Set Analysis of given clustering results. It conducts alignment among different results and then calculates the covering point set. The return contains several statistics which can be directly used as input for mplot or cplot. By using this function you can design your own workflow instead of using clustCPS, see vignette for more details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">CPS(ref, vis, pert)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>– the reference clustering result in a vector, the first cluster is labeled as 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vis</code></td>
+<td>
+<p>– the visualization coordinates in a numeric matrix of two columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pert</code></td>
+<td>
+<p>– a collection of clustering results in a matrix format, each column represents one clustering result.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list used for mplot or cplot, in which tight_all is the overall tightness, member is the matrix used for the membership heat map, set is the matrix for the covering point set plot, tight is the vector of cluster-wise tightness, vis is the visualization coordinates, ref is the reference labels and topo is the topological relationship between clusters for point-wise uncertainty assessment.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># CPS analysis on selection of visualization methods
+data(vis_pollen)
+k1=kmeans(vis_pollen$vis,max(vis_pollen$ref))$cluster
+k2=kmeans(vis_pollen$vis,max(vis_pollen$ref))$cluster
+k=cbind(as.matrix(k1,ncol=1),as.matrix(k2,ncol=1))
+c=CPS(vis_pollen$ref, vis_pollen$vis, pert=k)
+# visualization of the results
+mplot(c,2)
+cplot(c,2)
+</code></pre>
+
+
+</div>

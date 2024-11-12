@@ -1,0 +1,523 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>General-purpose optimization</h2>
+
+<h3>Description</h3>
+
+<p>General-purpose optimization wrapper function that calls multiple other
+R tools for optimization, including the existing optim() function tools.
+</p>
+<p>Because SANN does not return a meaningful convergence code
+(conv), <code>opm()</code> does not call the SANN method, but it can be invoked 
+in <code>optimr()</code>.
+</p>
+<p>There is a pseudo-method "ALL" that runs all available methods. Note that
+this is upper-case. This function is a replacement for optimx() from the
+optimx package.  <code>opm()</code> calls the <code>optimr()</code> function for each 
+solver in the <code>method</code> list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opm(par, fn, gr=NULL, hess=NULL, lower=-Inf, upper=Inf, 
+            method=c("Nelder-Mead","BFGS"), hessian=FALSE,
+            control=list(),
+             ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>par</code></td>
+<td>
+<p>a vector of initial values for the parameters 
+for which optimal values are to be found. Names on the elements
+of this vector are preserved and used in the results data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fn</code></td>
+<td>
+<p>A function to be minimized (or maximized), with a first
+argument the vector of parameters over which minimization is to take
+place.  It should return a scalar result.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gr</code></td>
+<td>
+<p>A function to return (as a vector) the gradient for those methods that 
+can use this information.
+</p>
+<p>If 'gr' is <code>NULL</code>, whatever default actions are supplied by the methods
+specified will be used. However, some methods REQUIRE a gradient function, so 
+will fail in this case. <code>opm()</code> will generally return with <code>convergence</code>
+set to 9998 for such methods.
+</p>
+<p>If 'gr' is a character string, this character string will be taken to be the name
+of an available gradient approximation function. Examples are "grfwd", "grback", 
+"grcentral" and "grnd", with the last name referring to the default method of 
+package <code>numDeriv</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hess</code></td>
+<td>
+<p>A function to return (as a symmetric matrix) the Hessian of the objective 
+function for those methods that can use this information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower, upper</code></td>
+<td>
+<p>Bounds on the variables for methods such as <code>"L-BFGS-B"</code> that can
+handle box (or bounds) constraints. These are vectors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A vector of the methods to be used, each as a character string.
+Note that this is an important change from optim() that allows
+just one method to be specified. See ‘Details’. If <code>method</code>
+has just one element, <code>"ALL"</code> (capitalized), all available and 
+appropriate methods will be tried.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hessian</code></td>
+<td>
+<p>A logical control that if TRUE forces the computation of an approximation 
+to the Hessian at the final set of parameters. If FALSE (default), the hessian is
+calculated if needed to provide the KKT optimality tests (see <code>kkt</code> in
+‘Details’ for the <code>control</code> list).
+This setting is provided primarily for compatibility with optim().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of control parameters. See ‘Details’. There is
+a spreadsheet <code>/inst/doc/optcontrol.xls</code> that is an ongoing attempt to
+document the different controls used in the various methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>For <code>optimx</code> further arguments to be passed to <code>fn</code> 
+and <code>gr</code>; otherwise, further arguments are not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that arguments after <code>...</code> must be matched exactly.
+</p>
+<p>For details of how <code>opm()</code> calls the methods, see the documentation
+and code for <code>optimr()</code>. The documentation and code for individual
+methods may also be useful. Note that some simplification of the calls
+may have been necessary, for example, to provide reasonable default values
+for method controls that are consistent across several methods, though this
+is not always possible to guarantee. The documentation for <code>optimr</code> and the source
+code of the quite simple routine <code>ctrldefault.R</code> may be useful.
+</p>
+<p>Some of the commonly useful elements of the <code>control</code> list are: 
+</p>
+
+<dl>
+<dt><code>trace</code></dt>
+<dd>
+<p>Non-negative integer. If positive,
+tracing information on the
+progress of the optimization is produced. Higher values may
+produce more tracing information: for method <code>"L-BFGS-B"</code>
+there are six levels of tracing. trace = 0 gives no output 
+(To understand exactly what these do see the source code: higher 
+levels give more detail.)</p>
+</dd>
+<dt><code>maxfeval</code></dt>
+<dd>
+<p>For methods that can use this control, a limit
+on the number of function evaluations. This control is simply passed
+through. It is not checked by <code>opm</code>.</p>
+</dd>
+<dt><code>maxit</code></dt>
+<dd>
+<p>For methods that can use this control, a limit
+on the number of gradient evaluations or major iterations.</p>
+</dd>
+<dt><code>fnscale</code></dt>
+<dd>
+<p>An overall scaling to be applied to the value
+of <code>fn</code> and <code>gr</code> during optimization. If negative,
+turns the problem into a maximization problem. Optimization is
+performed on <code>fn(par)/fnscale</code>. For methods from the set in
+<code>optim()</code>. Note potential conflicts with the control <code>maximize</code>.</p>
+</dd>
+<dt><code>parscale</code></dt>
+<dd>
+<p>A vector of scaling values for the parameters.
+Optimization is performed on <code>par/parscale</code> and these should be
+comparable in the sense that a unit change in any element produces
+about a unit change in the scaled value.For <code>optim</code>.</p>
+</dd>
+<dt><code>save.failures</code></dt>
+<dd>
+<p> = TRUE (default) if we wish to keep "answers" from runs 
+where the method does not return convergence==0. FALSE otherwise.</p>
+</dd>
+<dt><code>maximize</code></dt>
+<dd>
+<p> = TRUE if we want to maximize rather than minimize 
+a function. (Default FALSE). Methods nlm, nlminb, ucminf cannot maximize a
+function, so the user must explicitly minimize and carry out the adjustment
+externally. However, there is a check to avoid
+usage of these codes when maximize is TRUE. See <code>fnscale</code> below for 
+the method used in <code>optim</code> that we deprecate.</p>
+</dd>
+<dt><code>all.methods</code></dt>
+<dd>
+<p>= TRUE if we want to use all available (and suitable)
+methods.  This is equivalent to setting <code>method="ALL"</code></p>
+</dd>
+<dt><code>kkt</code></dt>
+<dd>
+<p>=FALSE if we do NOT want to test the Kuhn, Karush, Tucker
+optimality conditions. The default is generally TRUE. However, because the Hessian
+computation may be very slow, we set <code>kkt</code> to be FALSE if there are 
+more than than 50 parameters when the gradient function <code>gr</code> is not 
+provided, and more than 500
+parameters when such a function is specified. We return logical values <code>KKT1</code>
+and <code>KKT2</code> TRUE if first and second order conditions are satisfied approximately.
+Note, however, that the tests are sensitive to scaling, and users may need
+to perform additional verification. If <code>hessian</code> is TRUE, this overrides 
+control <code>kkt</code>.</p>
+</dd>
+<dt><code>all.methods</code></dt>
+<dd>
+<p>= TRUE if we want to use all available (and suitable)
+methods.</p>
+</dd>
+<dt><code>kkttol</code></dt>
+<dd>
+<p>= value to use to check for small gradient and negative
+Hessian eigenvalues. Default = .Machine$double.eps^(1/3) </p>
+</dd>
+<dt><code>kkt2tol</code></dt>
+<dd>
+<p>= Tolerance for eigenvalue ratio in KKT test of positive 
+definite Hessian. Default same as for kkttol </p>
+</dd>
+<dt><code>dowarn</code></dt>
+<dd>
+<p>= FALSE if we want to suppress warnings generated by <code>opm()</code> or
+<code>optimr()</code>. Default is TRUE.</p>
+</dd>
+<dt><code>badval</code></dt>
+<dd>
+<p>= The value to set for the function value when try(fn()) fails.
+The value is then a signal of failure when execution continues with other methods.
+It may also, in non-standard usage, be helpful in heuristic search methods like 
+"Nelder-Mead" to avoid parameter
+regions that are unwanted or inadmissible. It is inappropriate for gradient methods.
+Default is (0.5)*.Machine$double.xmax </p>
+</dd>
+</dl>
+<p>There may be <code>control</code> elements that apply only to some of the methods. Using these
+may or may not "work" with <code>opm()</code>, and errors may occur with methods for which 
+the controls have no meaning. 
+However, it should be possible to call the underlying <code>optimr()</code> function with 
+these method-specific controls.
+</p>
+<p>Any names given to <code>par</code> will be copied to the vectors passed to
+<code>fn</code> and <code>gr</code>.  Note that no other attributes of <code>par</code>
+are copied over. (We have not verified this as at 2009-07-29.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>If there are <code>npar</code> parameters, then the result is a dataframe having one row
+for each method for which results are reported, using the method as the row name,
+with columns
+</p>
+<p><code>par_1, .., par_npar, value, fevals, gevals, niter, convergence, kkt1, kkt2, xtimes</code>
+</p>
+<p>where
+</p>
+
+<dl>
+<dt>par_1</dt>
+<dd>
+<p> .. </p>
+</dd>
+<dt>par_npar</dt>
+<dd>
+<p>The best set of parameters found.</p>
+</dd>
+<dt>value</dt>
+<dd>
+<p>The value of <code>fn</code> corresponding to <code>par</code>.</p>
+</dd>
+<dt>fevals</dt>
+<dd>
+<p>The number of calls to <code>fn</code>. NOT reported for method <code>lbfgs</code>.</p>
+</dd>
+<dt>gevals</dt>
+<dd>
+<p>The number of calls to <code>gr</code>. This excludes those calls needed
+to compute the Hessian, if requested, and any calls to <code>fn</code> to
+compute a finite-difference approximation to the gradient.  NOT reported for method <code>lbfgs</code>.</p>
+</dd>
+<dt>convergence</dt>
+<dd>
+<p>An integer code. <code>0</code> indicates successful
+convergence. Various methods may or may not return sufficient information
+to allow all the codes to be specified. An incomplete list of codes includes
+</p>
+
+<dl>
+<dt><code>1</code></dt>
+<dd>
+<p>indicates that the iteration limit <code>maxit</code>
+had been reached.</p>
+</dd>
+<dt><code>20</code></dt>
+<dd>
+<p>indicates that the initial set of parameters is inadmissible, that is,
+that the function cannot be computed or returns an infinite, NULL, or NA value.</p>
+</dd>
+<dt><code>21</code></dt>
+<dd>
+<p>indicates that an intermediate set of parameters is inadmissible.</p>
+</dd>
+<dt><code>10</code></dt>
+<dd>
+<p>indicates degeneracy of the Nelder–Mead simplex.</p>
+</dd>
+<dt><code>51</code></dt>
+<dd>
+<p>indicates a warning from the <code>"L-BFGS-B"</code>
+method; see component <code>message</code> for further details.</p>
+</dd>
+<dt><code>52</code></dt>
+<dd>
+<p>indicates an error from the <code>"L-BFGS-B"</code>
+method; see component <code>message</code> for further details.</p>
+</dd>
+<dt><code>9998</code></dt>
+<dd>
+<p>indicates that the method has been called with a NULL 'gr'
+function, and the method requires that such a function be supplied.</p>
+</dd>
+<dt><code>9999</code></dt>
+<dd>
+<p>indicates the method has failed.</p>
+</dd>
+</dl>
+</dd>
+<dt>kkt1</dt>
+<dd>
+<p>A logical value returned TRUE if the solution reported has a “small” gradient.</p>
+</dd>
+<dt>kkt2</dt>
+<dd>
+<p>A logical value returned TRUE if the solution reported appears to have a 
+positive-definite Hessian.</p>
+</dd>
+<dt>xtimes</dt>
+<dd>
+<p>The reported execution time of the calculations for the particular method.</p>
+</dd>
+</dl>
+<p>The attribute "details" to the returned answer object contains information,
+if computed, on the gradient (<code>ngatend</code>) and Hessian matrix (<code>nhatend</code>) 
+at the supposed optimum, along with the eigenvalues of the Hessian (<code>hev</code>), 
+as well as the <code>message</code>, if any, returned by the computation for each <code>method</code>,
+which is included for each row of the <code>details</code>. 
+If the returned object from optimx() is <code>ans</code>, this is accessed 
+via the construct
+<code>attr(ans, "details")</code>
+</p>
+<p>This object is a  matrix based on a list so that if ans is the output of optimx
+then attr(ans, "details")[1, ] gives the first row and 
+attr(ans,"details")["Nelder-Mead", ] gives the Nelder-Mead row. There is 
+one row for each method that has been successful 
+or that has been forcibly saved by save.failures=TRUE. 
+</p>
+<p>There are also attributes
+</p>
+
+<dl>
+<dt>maximize</dt>
+<dd>
+<p>to indicate we have been maximizing the objective</p>
+</dd>
+<dt>npar</dt>
+<dd>
+<p>to provide the number of parameters, thereby facilitating easy
+extraction of the parameters from the results data frame</p>
+</dd>
+<dt>follow.on</dt>
+<dd>
+<p>to indicate that the results have been computed sequentially,
+using the order provided by the user, with the best parameters from one
+method used to start the next. There is an example (<code>ans9</code>) in 
+the script <code>ox.R</code> in the demo directory of the package.</p>
+</dd>
+</dl>
+<h3>Note</h3>
+
+<p>Most methods in <code>optimx</code> will work with one-dimensional <code>par</code>s, but such
+use is NOT recommended. Use <code>optimize</code> or other one-dimensional methods instead.
+</p>
+<p>There are a series of demos available. Once the package is loaded (via <code>require(optimx)</code> or
+<code>library(optimx)</code>, you may see available demos via 
+</p>
+<p>demo(package="optimx")
+</p>
+<p>The demo 'brown_test' may be run with the command
+demo(brown_test, package="optimx")
+</p>
+<p>The package source contains several functions that are not exported in the
+NAMESPACE. These are 
+</p>
+
+<dl>
+<dt><code>optimx.setup()</code></dt>
+<dd>
+<p> which establishes the controls for a given run;</p>
+</dd>
+<dt><code>optimx.check()</code></dt>
+<dd>
+<p> which performs bounds and gradient checks on
+the supplied parameters and functions;</p>
+</dd>
+<dt><code>optimx.run()</code></dt>
+<dd>
+<p>which actually performs the optimization and post-solution
+computations;</p>
+</dd>
+<dt><code>scalechk()</code></dt>
+<dd>
+<p> which actually carries out a check on the relative scaling
+of the input parameters.</p>
+</dd>
+</dl>
+<p>Knowledgeable users may take advantage of these functions if they are carrying
+out production calculations where the setup and checks could be run once.
+</p>
+
+
+<h3>Source</h3>
+
+<p>See the manual pages for <code>optim()</code> and the packages the DESCRIPTION <code>suggests</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>See the manual pages for <code>optim()</code> and the packages the DESCRIPTION <code>suggests</code>.
+</p>
+<p>Nash JC, and Varadhan R (2011). Unifying Optimization Algorithms to Aid Software System Users: 
+<b>optimx</b> for R., <em>Journal of Statistical Software</em>, 43(9), 1-14.,  
+URL http://www.jstatsoft.org/v43/i09/.
+</p>
+<p>Nash JC (2014). On Best Practice Optimization Methods in R., 
+<em>Journal of Statistical Software</em>, 60(2), 1-14.,
+URL http://www.jstatsoft.org/v60/i02/.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>spg</code>, <code>nlm</code>, <code>nlminb</code>,
+<code>bobyqa</code>, 
+<code>ucminf</code>, 
+<code>nmkb</code>,
+<code>hjkb</code>.
+<code>optimize</code> for one-dimensional minimization;
+<code>constrOptim</code> or <code>spg</code> for linearly constrained optimization.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">require(graphics)
+cat("Note possible demo(ox) for extended examples\n")
+
+
+## Show multiple outputs of optimx using all.methods
+# genrose function code
+genrose.f&lt;- function(x, gs=NULL){ # objective function
+## One generalization of the Rosenbrock banana valley function (n parameters)
+	n &lt;- length(x)
+        if(is.null(gs)) { gs=100.0 }
+	fval&lt;-1.0 + sum (gs*(x[1:(n-1)]^2 - x[2:n])^2 + (x[2:n] - 1)^2)
+        return(fval)
+}
+
+genrose.g &lt;- function(x, gs=NULL){
+# vectorized gradient for genrose.f
+# Ravi Varadhan 2009-04-03
+	n &lt;- length(x)
+        if(is.null(gs)) { gs=100.0 }
+	gg &lt;- as.vector(rep(0, n))
+	tn &lt;- 2:n
+	tn1 &lt;- tn - 1
+	z1 &lt;- x[tn] - x[tn1]^2
+	z2 &lt;- 1 - x[tn]
+	gg[tn] &lt;- 2 * (gs * z1 - z2)
+	gg[tn1] &lt;- gg[tn1] - 4 * gs * x[tn1] * z1
+	return(gg)
+}
+
+genrose.h &lt;- function(x, gs=NULL) { ## compute Hessian
+   if(is.null(gs)) { gs=100.0 }
+	n &lt;- length(x)
+	hh&lt;-matrix(rep(0, n*n),n,n)
+	for (i in 2:n) {
+		z1&lt;-x[i]-x[i-1]*x[i-1]
+		z2&lt;-1.0-x[i]
+                hh[i,i]&lt;-hh[i,i]+2.0*(gs+1.0)
+                hh[i-1,i-1]&lt;-hh[i-1,i-1]-4.0*gs*z1-4.0*gs*x[i-1]*(-2.0*x[i-1])
+                hh[i,i-1]&lt;-hh[i,i-1]-4.0*gs*x[i-1]
+                hh[i-1,i]&lt;-hh[i-1,i]-4.0*gs*x[i-1]
+	}
+        return(hh)
+}
+
+startx&lt;-4*seq(1:10)/3.
+ans8&lt;-opm(startx,fn=genrose.f,gr=genrose.g, hess=genrose.h,
+   method="ALL", control=list(save.failures=TRUE, trace=0), gs=10)
+# Set trace=1 for output of individual solvers
+ans8
+ans8[, "gevals"]
+ans8["spg", ]
+summary(ans8, par.select = 1:3)
+summary(ans8, order = value)[1, ] # show best value
+head(summary(ans8, order = value)) # best few
+## head(summary(ans8, order = "value")) # best few -- alternative syntax
+
+## order by value.  Within those values the same to 3 decimals order by fevals.
+## summary(ans8, order = list(round(value, 3), fevals), par.select = FALSE)
+summary(ans8, order = "list(round(value, 3), fevals)", par.select = FALSE)
+
+## summary(ans8, order = rownames, par.select = FALSE) # order by method name
+summary(ans8, order = "rownames", par.select = FALSE) # same
+
+summary(ans8, order = NULL, par.select = FALSE) # use input order
+## summary(ans8, par.select = FALSE) # same
+
+</code></pre>
+
+
+</div>

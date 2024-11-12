@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>complete_cases</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find complete cases in forecast matrices</h2>
+
+<h3>Description</h3>
+
+<p>Returns a logical vector indicating the time points which
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">complete_cases(object, kseq = NA)
+
+## S3 method for class 'list'
+complete_cases(object, kseq = NA)
+
+## S3 method for class 'data.frame'
+complete_cases(object, kseq = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A data.frame (with columns named 'kxx') or a list of
+data.frames.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kseq</code></td>
+<td>
+<p>integer vector: If given then only these horizons are processed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given a forecast matrix the forecasts are lagged "+k" steps to align them and
+then 'complete.cases()' is run on that .
+</p>
+<p>Gieven a list of forecast matrices the points where all are complete (also all horizons) are complete are TRUE.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A logical vector specifying if there is no missing
+values across all horizonsd.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peder Bacher
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Take a small data set
+D &lt;- subset(Dbuilding, 1:20, kseq=1:5)
+# Check the forecast matrix of ambient temperature
+D$Ta
+# Which are complete over all horizons? The first are not since not all horizons
+# have a value there (after lagging)
+complete_cases(D$Ta)
+# Same goes if given as a list
+complete_cases(D["Ta"])
+# and if more than one is given
+complete_cases(D[c("Ta","I")])
+
+# Set some NA of some horizon
+D$I$k3[8:9] &lt;- NA
+# Now they are recognized as not complete
+complete_cases(D[c("Ta","I")])
+
+# If we deal with residuals, which are observations and there for have column names "hxx"
+Resid &lt;- residuals(D$Ta, D$Taobs)
+names(Resid)
+# With columns with "h" instead of "k" no lagging occurs in complete_cases
+complete_cases(Resid)
+#
+Resid2 &lt;- Resid
+Resid$h3[8:9] &lt;- NA
+complete_cases(list(Resid,Resid2))
+
+</code></pre>
+
+
+</div>

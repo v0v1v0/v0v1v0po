@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convert_coursera_quizzes</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Leanpub md quiz to Coursera yaml quiz</h2>
+
+<h3>Description</h3>
+
+<p>Convert Leanpub md quiz to Coursera yaml quiz
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convert_coursera_quizzes(
+  input_quiz_dir = "quizzes",
+  output_quiz_dir = "coursera_quizzes",
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input_quiz_dir</code></td>
+<td>
+<p>A path to a directory of leanpub formatted quiz md files. By default assumes "quizzes" and looks in current directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output_quiz_dir</code></td>
+<td>
+<p>A folder (existing or not) that the new coursera converted quizzes should be saved to. By default saves to "coursera_quizzes".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Would you like the progress messages: TRUE/FALSE?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A folder of coursera ready quiz files saved to the output directory specified as a yamls.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Set up a directory with a quiz in it for this example
+tdir &lt;- tempfile()
+dir.create(tdir, showWarnings = FALSE, recursive = TRUE)
+
+file.copy(
+  from = good_quiz_path(),
+  to = file.path(tdir, basename(good_quiz_path()))
+)
+
+# Provide path to directory of quizzes
+convert_coursera_quizzes(tdir)
+
+system("rm -r coursera_quizzes")
+</code></pre>
+
+
+</div>

@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ocf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Ordered Correlation Forest</h2>
+
+<h3>Description</h3>
+
+<p>Nonparametric estimator for ordered non-numeric outcomes. The estimator modifies a standard random forest
+splitting criterion to build a collection of forests, each estimating the conditional probability of a single class.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ocf(
+  Y = NULL,
+  X = NULL,
+  honesty = FALSE,
+  honesty.fraction = 0.5,
+  inference = FALSE,
+  alpha = 0,
+  n.trees = 2000,
+  mtry = ceiling(sqrt(ncol(X))),
+  min.node.size = 5,
+  max.depth = 0,
+  replace = FALSE,
+  sample.fraction = ifelse(replace, 1, 0.5),
+  n.threads = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Outcome vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Covariate matrix (no intercept).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>honesty</code></td>
+<td>
+<p>Whether to grow honest forests.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>honesty.fraction</code></td>
+<td>
+<p>Fraction of honest sample. Ignored if <code>honesty = FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inference</code></td>
+<td>
+<p>Whether to extract weights and compute standard errors. The weights extraction considerably slows down the routine. <code>honesty = TRUE</code> is required for valid inference.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Controls the balance of each split. Each split leaves at least a fraction <code>alpha</code> of observations in the parent node on each side of the split.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.trees</code></td>
+<td>
+<p>Number of trees.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mtry</code></td>
+<td>
+<p>Number of covariates to possibly split at in each node. Default is the square root of the number of covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.node.size</code></td>
+<td>
+<p>Minimal node size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.depth</code></td>
+<td>
+<p>Maximal tree depth. A value of 0 corresponds to unlimited depth, 1 to "stumps" (one split per tree).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replace</code></td>
+<td>
+<p>If <code>TRUE</code>, grow trees on bootstrap subsamples. Otherwise, trees are grown on random subsamples drawn without replacement.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample.fraction</code></td>
+<td>
+<p>Fraction of observations to sample.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.threads</code></td>
+<td>
+<p>Number of threads. Zero corresponds to the number of CPUs available.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Object of class <code>ocf</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Riccardo Di Francesco
+</p>
+
+
+<h3>References</h3>
+
+
+<ul><li>
+<p> Di Francesco, R. (2023). Ordered Correlation Forest. arXiv preprint <a href="https://arxiv.org/abs/2309.08755">arXiv:2309.08755</a>.
+</p>
+</li></ul>
+<h3>See Also</h3>
+
+<p><code>marginal_effects</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate synthetic data.
+set.seed(1986)
+
+data &lt;- generate_ordered_data(100)
+sample &lt;- data$sample
+Y &lt;- sample$Y
+X &lt;- sample[, -1]
+
+## Training-test split.
+train_idx &lt;- sample(seq_len(length(Y)), floor(length(Y) * 0.5))
+
+Y_tr &lt;- Y[train_idx]
+X_tr &lt;- X[train_idx, ]
+
+Y_test &lt;- Y[-train_idx]
+X_test &lt;- X[-train_idx, ]
+
+## Fit ocf on training sample.
+forests &lt;- ocf(Y_tr, X_tr)
+
+## We have compatibility with generic S3-methods.
+print(forests)
+summary(forests)
+predictions &lt;- predict(forests, X_test)
+head(predictions$probabilities)
+table(Y_test, predictions$classification)
+
+## Compute standard errors. This requires honest forests.
+honest_forests &lt;- ocf(Y_tr, X_tr, honesty = TRUE, inference = TRUE)
+head(honest_forests$predictions$standard.errors)
+
+## Marginal effects.
+me &lt;- marginal_effects(forests, eval = "atmean")
+print(me)
+print(me, latex = TRUE)
+
+## Compute standard errors. This requires honest forests.
+honest_me &lt;- marginal_effects(honest_forests, eval = "atmean", inference = TRUE)
+honest_me$standard.errors
+print(honest_me, latex = TRUE)
+
+</code></pre>
+
+
+</div>

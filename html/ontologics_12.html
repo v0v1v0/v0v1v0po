@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>new_source</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a new valid source to an ontology</h2>
+
+<h3>Description</h3>
+
+<p>Add a new valid source to an ontology
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">new_source(
+  ontology = NULL,
+  name = NULL,
+  version = NULL,
+  date = NULL,
+  description = NULL,
+  homepage = NULL,
+  uri_prefix = NULL,
+  license = NULL,
+  notes = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p><code>ontology(1)</code><br> either a path where the ontology is
+stored, or an already loaded ontology into which the new source should be
+included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p><code>character(1)</code><br> the name of the new source (must
+not contain empty spaces).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p><code>character(1)</code><br> an optional version of the new
+source (any value is allowed, but should be a value that follows
+<a href="https://semver.org/">semantic versioning</a>). Either version or date
+need to be given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p><code>character(1)</code><br> an optional date at which that
+version of an external vocabulary has been created. Should be a value of
+the form YYYY-MM-DD. Either version or date need to be given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>description</code></td>
+<td>
+<p><code>character(1)</code><br> a verbatim description of
+the new source.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>homepage</code></td>
+<td>
+<p><code>character(1)</code><br> the homepage of the new
+source, typically the place where additional information or meta-data could
+be retrieved in a non-formalised way.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uri_prefix</code></td>
+<td>
+<p><code>character(1)</code><br> the basic uniform resource
+locator (URL) all concepts of a new source have in common and which is thus
+the basis to construct the concept specific URI.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>license</code></td>
+<td>
+<p><code>character(1)</code><br> the licenses under which the
+new source is published.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>notes</code></td>
+<td>
+<p><code>character(1)</code><br> any notes on the new source that
+don't fit into any of the other meta-data fields here.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Fundamentally, there are two types of sources that can be defined
+with this function. </p>
+<ul>
+<li> <p><em>attribute collections</em>: where a
+collection of terms or concepts are associated as a descriptive attribute
+to the harmonised concepts, and </p>
+</li>
+<li> <p><em>linked open data</em>: where the
+concepts that occur in another vocabulary or ontology and which are
+themselves part of linked datasets (and hence have a valid URI) are
+associated as related concepts to the harmonised concepts.</p>
+</li>
+</ul>
+<p> In the latter
+case, each mapped concept should be provided by its ID and the source needs
+to have a URL that allows in combination with the concept IDs to construct
+the URI under which the mapped concepts are stored in the semantic web.
+</p>
+
+
+<h3>Value</h3>
+
+<p>the updated ontology that contains the new source defined here.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ontoDir &lt;- system.file("extdata", "crops.rds", package = "ontologics")
+onto &lt;- load_ontology(path = ontoDir)
+
+onto &lt;- new_source(name = "externalDataset",
+                   version = "0.0.1",
+                   description = "a vocabulary",
+                   homepage = "https://www.something.net",
+                   license = "CC-BY-0",
+                   ontology = onto)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>odin_validate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Validate an odin model</h2>
+
+<h3>Description</h3>
+
+<p>Validate an odin model.  This function is closer to
+odin_parse_ than odin_parse because it
+does not do any quoting of the code.  It is primarily intended for
+use within other applications.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">odin_validate(x, type = NULL, options = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An expression, character vector or filename with the odin
+code</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>An optional string indicating the the type of input -
+must be one of <code>expression</code>, <code>file</code> or <code>text</code> if
+provided.  This skips the type detection code used by odin and
+makes validating user input easier.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>odin options; see odin_options.  The
+primary options that affect the parse stage are <code>validate</code>
+and <code>pretty</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>odin_validate</code> will always return a list with the same
+elements:
+</p>
+
+<dl>
+<dt>success</dt>
+<dd>
+<p>A boolean, <code>TRUE</code> if validation was successful</p>
+</dd>
+<dt>result</dt>
+<dd>
+<p>The intermediate representation, as returned by
+odin_parse_, if the validation was successful,
+otherwise <code>NULL</code></p>
+</dd>
+<dt>error</dt>
+<dd>
+<p>An error object if the validation was unsuccessful,
+otherwise <code>NULL</code>.  This may be a classed odin error, in which
+case it will contain source location information - see the
+examples for details.</p>
+</dd>
+<dt>messages</dt>
+<dd>
+<p>A list of messages, if the validation returned
+any.  At present this is only non-fatal information about unused
+variables.</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Rich FitzJohn
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# A successful validation:
+odin::odin_validate(c("deriv(x) &lt;- 1", "initial(x) &lt;- 1"))
+
+# A complete failure:
+odin::odin_validate("")
+
+# A more interesting failure
+code &lt;- c("deriv(x) &lt;- a", "initial(x) &lt;- 1")
+res &lt;- odin::odin_validate(code)
+res
+
+# The object 'res$error' is an 'odin_error' object:
+res$error
+
+# It contains information that might be used to display to a
+# user information about the error:
+unclass(res$error)
+
+# Notes are raised in a similar way:
+code &lt;- c("deriv(x) &lt;- 1", "initial(x) &lt;- 1", "a &lt;- 1")
+res &lt;- odin::odin_validate(code)
+res$messages[[1]]
+</code></pre>
+
+
+</div>

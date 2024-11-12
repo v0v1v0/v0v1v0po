@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opticskxi_pipeline</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OPTICS k-Xi models comparison pipeline</h2>
+
+<h3>Description</h3>
+
+<p>Computes OPTICS k-Xi models based on a parameter grid, binds results in a
+data frame, and computes distance based metrics for each model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opticskxi_pipeline(m_data, df_params = expand.grid(n_xi = 1:10, pts =
+  c(20, 30, 40), dist = c("euclidean", "abscorrelation"), dim_red =
+  c("identity", "PCA", "ICA"), n_dimred_comp = c(5, 10, 20)),
+  n_cores = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>m_data</code></td>
+<td>
+<p>Data matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df_params</code></td>
+<td>
+<p>Parameter grid for the OPTICS k-Xi function call and
+optional dimension reduction.
+Required columns: n_xi, pts, dist.
+Optonal columns: dim_red, n_dim_red.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_cores</code></td>
+<td>
+<p>Number of cores</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Input parameter data frame with with results binded in columns
+optics, clusters and metrics.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>get_best_kxi, ggplot_kxi_metrics,
+gtable_kxi_profiles
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data('hla')
+m_hla &lt;- hla[-c(1:2)] %&gt;% scale
+df_params_hla &lt;- expand.grid(n_xi = 3:5, pts = c(20, 30),
+  dist = c('manhattan', 'euclidean'))
+df_kxi_hla &lt;- opticskxi_pipeline(m_hla, df_params_hla)
+ggplot_kxi_metrics(df_kxi_hla, n = 8)
+gtable_kxi_profiles(df_kxi_hla) %&gt;% plot
+
+best_kxi_hla &lt;- get_best_kxi(df_kxi_hla, rank = 2)
+clusters_hla &lt;- best_kxi_hla$clusters
+fortify_pca(m_hla, sup_vars = data.frame(Clusters = clusters_hla)) %&gt;%
+  ggpairs('Clusters', ellipses = TRUE, variables = TRUE)
+</code></pre>
+
+
+</div>

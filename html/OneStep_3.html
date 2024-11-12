@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>benchonestep</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Performing benchmark of one-step MLE against other methods
+</h2>
+
+<h3>Description</h3>
+
+<p><code>benchonestep</code> performs a benchmark of one-step MLE against other methods on a given dataset.
+<code>benchonestep.replicate</code> repeats several times the procedure: data random generation and benchmark through <code>benchonestep</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">benchonestep(data, distr, methods, init, weights=NULL,...) 
+benchonestep.replicate(nsample, nbsimu, distr, methods=NULL, echo=FALSE, ncpus=1, ...) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A numeric vector of length <code>n</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distr</code></td>
+<td>
+<p>A character string <code>"name"</code> naming a distribution for 
+which the corresponding density function dname and the 
+corresponding distribution function pname must be classically defined.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>methods</code></td>
+<td>
+<p>A vector of methods: character among
+<code>"mme"</code>, <code>"mle"</code>, <code>"onestep"</code> (can be abbreviated).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>init</code></td>
+<td>
+<p>A named list for the intial guess method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>An optional vector of weights to be used in the fitting process. 
+Should be <code>NULL</code> or a numeric vector with strictly positive integers 
+(typically the number of occurences of each observation). 
+If non-<code>NULL</code>, weighted MLE is used, otherwise ordinary MLE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>unused for <code>benchonestep</code>; true parameters passed to <code>rdistr</code>
+for <code>benchonestep.replicate</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsample</code></td>
+<td>
+<p>a numeric for the sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nbsimu</code></td>
+<td>
+<p>a numeric for the replication number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+<p>a logical to display or not some traces of benchmarking.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncpus</code></td>
+<td>
+<p>Number of processes to be used in parallel operation: 
+typically one would fix it to the number of available CPUs.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix with estimate and time in seconds per method for  <code>benchonestep</code>;
+an array with estimates, times, errors in seconds per method, per simulation for  <code>benchonestep.replicate</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alexandre Brouste, Darel Noutsa Mieniedou, Christophe Dutang
+</p>
+
+
+<h3>References</h3>
+
+<p>L. LeCam (1956). 
+<em>On the asymptotic theory of estimation and testing hypothesis</em>. 
+In: Proceedings of 3rd Berkeley Symposium I, pages 355-368.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 1000
+set.seed(1234)
+
+x &lt;- rbeta(n, 3, 2)
+benchonestep(x, "beta", c("mle", "one")) 
+</code></pre>
+
+
+</div>

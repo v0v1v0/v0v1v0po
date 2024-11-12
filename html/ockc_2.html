@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ockc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Order Contrained Solutions in k-Means Clustering
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculates an order constrained clustering solution (default k-means) on a
+data matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ockc(x, k, family = kccaFamily("kmeans"), order = NULL, control = NULL,
+     save.data = FALSE, multicore = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A numeric matrix of data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+
+<p>An integer vector of number of clusters. For each element of k a clustering
+solution is computed (reusage of intermediate results makes this more
+efficient than individual calls of ockc). 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+
+<p>Object of class <code>kccaFamily</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+
+<p>Order restriction of <code>x</code>. If <code>NULL</code> an order is caluclated with
+<code>seriate</code> from package <code>seriation</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+
+<p>An object of class <code>flexclustControl</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>save.data</code></td>
+<td>
+
+<p>Save a copy of <code>x</code> in the return object?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multicore</code></td>
+<td>
+
+<p>Use parallelization, if available. For examples and additional
+documentation see <code>bootFlexclust</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Additional options for <code>seriate</code> for <code>order</code> calculation.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Sebastian Krey, Friedrich Leisch, Sebastian Hoffmeister
+</p>
+
+
+<h3>References</h3>
+
+<p>Steinley, D. and Hubert, L. (2008).
+Order-Constrained Solutions in K-Means Clustering: Even Better Than Being
+Globally Optimal.
+Psychometrika, 73 (4), pp. 647-664.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>kcca</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- rbind(cbind(rnorm(10, mean=0), rnorm(10, mean=0,), rnorm(10, mean=0)),
+           cbind(rnorm(10, mean=10), rnorm(10, mean=10), rnorm(10, mean=0)),
+           cbind(rnorm(10, mean=10), rnorm(10, mean=0), rnorm(10, mean=10)),
+           cbind(rnorm(10, mean=10), rnorm(10, mean=10), rnorm(10, mean=10))
+           )
+
+res &lt;- ockc(x, k=4, nboot=4, order=c(1:10, 21:40, 11:20))
+res
+</code></pre>
+
+
+</div>

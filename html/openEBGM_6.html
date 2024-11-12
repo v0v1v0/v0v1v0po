@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ebgm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate EBGM scores</h2>
+
+<h3>Description</h3>
+
+<p><code>ebgm</code> calculates the Empirical Bayes Geometric Mean (<em>EBGM</em>),
+which is ‘the geometric mean of the empirical Bayes posterior
+distribution of the “true” <em>RR</em>’ (DuMouchel 1999, see Eq.11). The
+<em>EBGM</em> is essentially a version of the relative reporting ratio
+(<em>RR</em>) that uses Bayesian shrinkage.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ebgm(theta_hat, N, E, qn, digits = 2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta_hat</code></td>
+<td>
+<p>A numeric vector of hyperparameter estimates (likely from
+<code>autoHyper</code> or from directly minimizing
+<code>negLLsquash</code>) ordered as:
+<code class="reqn">\alpha_1, \beta_1, \alpha_2, \beta_2, P</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>A whole number vector of actual counts from
+<code>processRaw</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>E</code></td>
+<td>
+<p>A numeric vector of expected counts from <code>processRaw</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qn</code></td>
+<td>
+<p>A numeric vector of posterior probabilities that <code class="reqn">\lambda</code> came
+from the first component of the mixture, given <em>N = n</em> (i.e., the
+mixture fraction). See function <code>Qn</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>A scalar whole number that determines the number of decimal
+places used when rounding the results.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The hyperparameter estimates (<code>theta_hat</code>) are:
+</p>
+
+<ul>
+<li>
+<p><code class="reqn">\alpha_1, \beta_1</code>: Parameter estimates of the first
+component of the prior distribution
+</p>
+</li>
+<li>
+<p><code class="reqn">\alpha_2, \beta_2</code>: Parameter estimates of the second
+component
+</p>
+</li>
+<li>
+<p><code class="reqn">P</code>: Mixture fraction estimate of the prior distribution
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A numeric vector of EBGM scores.
+</p>
+
+
+<h3>References</h3>
+
+<p>DuMouchel W (1999). "Bayesian Data Mining in Large Frequency
+Tables, With an Application to the FDA Spontaneous Reporting System."
+<em>The American Statistician</em>, 53(3), 177-190.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>autoHyper</code>,  <code>exploreHypers</code>,
+<code>negLLsquash</code>, <code>negLL</code>,
+<code>negLLzero</code>, and <code>negLLzeroSquash</code> for
+hyperparameter estimation.
+</p>
+<p><code>processRaw</code> for finding counts.
+</p>
+<p><code>Qn</code> for finding mixture fractions.
+</p>
+<p>Other posterior distribution functions: 
+<code>Qn()</code>,
+<code>quantBisect()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data.table::setDTthreads(2)  #only needed for CRAN checks
+theta_init &lt;- data.frame(
+  alpha1 = c(0.5, 1),
+  beta1  = c(0.5, 1),
+  alpha2 = c(2,   3),
+  beta2  = c(2,   3),
+  p      = c(0.1, 0.2)
+)
+data(caers)
+proc &lt;- processRaw(caers)
+squashed &lt;- squashData(proc, bin_size = 300, keep_pts = 10)
+squashed &lt;- squashData(squashed, count = 2, bin_size = 13, keep_pts = 10)
+theta_hat &lt;- autoHyper(data = squashed, theta_init = theta_init)$estimates
+qn &lt;- Qn(theta_hat, N = proc$N, E = proc$E)
+proc$EBGM &lt;- ebgm(theta_hat, N = proc$N, E = proc$E, qn = qn)
+head(proc)
+
+</code></pre>
+
+
+</div>

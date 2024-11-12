@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>moment.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>test whether the k-th moment exists</h2>
+
+<h3>Description</h3>
+
+<p>This function tests the existence of k-th moment by randomized method in
+Trapani (2016).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">moment.test(x, k = 16, R = 400)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector of data samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>a number no smaller than 4, indicating that the procedure will test
+the existence of the k-th moment when k is even. Otherwise, the procedure
+will test the existence of the <code class="reqn">k'</code>-th moment, with
+<code class="reqn">k'=round(k/2,0)\times 2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>the number of standard Gaussian variables generated in the
+randomized test; see more details in Trapani (2016).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The procedure is adapted from Trapani (2016) with <code class="reqn">\psi=2</code>, where
+<code class="reqn">\psi</code> is a tuning parameter to scale the sample moments defined
+in Section 3.1 of Trapani (2016). For simplicity, we only test the 4th, 6th,
+... 2c-th moments.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a scalar in <code class="reqn">[0,1]</code>, indicating the p-value
+of the test. The null hypothese is that the k-th moment doesn't exist.
+Therefore, a small p-value indicates the existense of the k-th moment.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Yong He, Xinbing Kong, Lorenzo Trapani, Long Yu
+</p>
+
+
+<h3>References</h3>
+
+<p>Trapani, L. (2016). Testing for (in) finite moments.
+<em>Journal of Econometrics</em>, 191(1), 57-68.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x=rt(10000,5)
+moment.test(x,4)
+
+x=rt(10000,4)
+moment.test(x,4)
+
+</code></pre>
+
+
+</div>

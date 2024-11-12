@@ -1,0 +1,156 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>test.once.psi</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>test single change point for matrix-valued online data given rolling
+eigenvalue series</h2>
+
+<h3>Description</h3>
+
+<p>This function tests single change point for matrix-valued online time
+series, under a two-way factor structure, given the transformed eigenvalue
+series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">test.once.psi(m = 20, psi, method = "ps", eta = 0.25, cv = 2.386)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>a positive integer (<code class="reqn">&gt;1</code>) indicating the bandwidth of the
+rolling windom.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>psi</code></td>
+<td>
+<p>the transformed eigenvalue series, produced by gen.psi.tau.flat
+or gen.psi.tau.proj, with length <code class="reqn">T-m</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>indicating the test statistic, “ps” for the partial-sum
+method, while others for the worst-case method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>a number between <code class="reqn">[0,1)</code>, indicating the parameter <code class="reqn">\eta</code>
+used in the partial-sum statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cv</code></td>
+<td>
+<p>critical value, related to the significance level and test
+statistic. The default cv is from Horvath et al. (2004), and only works for
+<code class="reqn">\eta=0.25</code> or <code class="reqn">\eta=0.75</code>. For other cases, generate the critical
+value first by function <code>getcv</code>. Note that for the partial-sum
+statistic with <code class="reqn">\eta</code> not equal to 0.5, the critical values are
+approximated by simulated data, thus can be slightly different from those in
+Horvath et al. (2004).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See He et al. (2021).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list containing:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>test</code></td>
+<td>
+<p>a logical value. 1 indicating the existence of change point, 0
+indicating no change point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loc</code></td>
+<td>
+<p>an integer larger than m, indicating
+the location of change point; or <code class="reqn">NA</code> when no change point is reported.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Yong He, Xinbing Kong, Lorenzo Trapani, Long Yu
+</p>
+
+
+<h3>References</h3>
+
+<p>Horvath L, Huskova M, Kokoszka P, et al (2004). Monitoring
+changes in linear models. <em>Journal of statistical Planning and
+Inference</em>, 126(1): 225-251.
+</p>
+<p>He Y, Kong X, Trapani L, &amp; Yu L(2021). Online change-point detection for
+matrix-valued time series with latent two-way factor structure. <em>arXiv
+preprint</em>, arXiv:2112.13479.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+k1=3
+k2=3
+epsilon=0.05
+Sample_T=50
+p1=40
+p2=20
+kmax=8
+r=8
+m=p2
+
+# generate data
+Y=gen.data(Sample_T,p1,p2,k1,k2,tau=0.5,change=1,pp=0.5)
+
+# calculate delta
+temp=log(p1)/log(m*p2)
+delta=epsilon*(temp&lt;=0.5)+(epsilon+1-1/(2*temp))*(temp&gt;0.5)
+
+# calculate psi.tau
+psi1=gen.psi.tau.proj(Y,k1+1,m,delta,r,kmax)
+psi2=gen.psi.tau.flat(Y,k1+1,m,delta,r)
+
+# calculate cv for "ps" with eta=0.45 and "wc"
+cv1=getcv(0.05,method="ps",eta=0.45)
+cv2=getcv(0.05,method="wc")
+
+
+# test with psi1
+test.once.psi(m,psi1[,3],method="ps",eta=0.45,cv1)
+
+test.once.psi(m,psi1[,3],method="wc",eta=0.5,cv2)
+
+
+# test with psi2
+test.once.psi(m,psi2[,3],method="ps",eta=0.45,cv1)
+
+test.once.psi(m,psi2[,3],method="wc",eta=0.5,cv2)
+
+
+</code></pre>
+
+
+</div>

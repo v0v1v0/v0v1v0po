@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otp_isochrone</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get the Isochrones from a location</h2>
+
+<h3>Description</h3>
+
+<p>Get the Isochrones from a location
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otp_isochrone(
+  otpcon = NA,
+  fromPlace = NA,
+  fromID = NULL,
+  mode = "CAR",
+  date_time = Sys.time(),
+  arriveBy = FALSE,
+  maxWalkDistance = 1000,
+  routingOptions = NULL,
+  cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600),
+  ncores = max(round(parallel::detectCores() * 1.25) - 1, 1),
+  timezone = otpcon$timezone
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otpcon</code></td>
+<td>
+<p>OTP connection object produced by otp_connect()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fromPlace</code></td>
+<td>
+<p>Numeric vector, Longitude/Latitude pair,
+e.g. 'c(-0.134649,51.529258)',
+or 2 column matrix of Longitude/Latitude pairs, or sf
+data frame of POINTS</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fromID</code></td>
+<td>
+<p>character vector same length as fromPlace</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>character vector of one or more modes of travel valid values
+"TRANSIT","BUS", "RAIL", "SUBWAY","TRAM", "FERRY", "GONDOLA", "FUNICULAR",
+"AIRPLANE", "CABLE_CAR", "WALK", "BICYCLE", "BICYCLE_RENT", "BICYCLE_PARK",
+"CAR", "CAR_PARK", "CAR_HAIL", "CARPOOL", "CAR_DROPOFF", "CAR_PICKUP", default
+CAR. Not all combinations are valid e.g. c("WALK","BUS") is valid but
+c("WALK","CAR") is not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_time</code></td>
+<td>
+<p>POSIXct, a date and time, defaults to current
+date and time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arriveBy</code></td>
+<td>
+<p>Logical, Whether the trip should depart or
+arrive at the specified date and time, default FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxWalkDistance</code></td>
+<td>
+<p>maximum distance to walk in metres</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>routingOptions</code></td>
+<td>
+<p>named list passed to OTP see 'otp_routing_options()'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutoffSec</code></td>
+<td>
+<p>Numeric vector, number of seconds to define
+the break points of each Isochrone</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p>number of cores to use in parallel processing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timezone</code></td>
+<td>
+<p>character, timezone to use, default from otpcon</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Isochrones are maps of equal travel time,
+for a given location a map is produced showing how long it takes to reach
+each location.
+</p>
+<p>Isochrones are only available from OTP v1.x and will not work with v2.0
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a SF data.frame of POLYGONs
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other routing: 
+<code>otp_geocode()</code>,
+<code>otp_plan()</code>,
+<code>otp_pointset()</code>,
+<code>otp_routing_options()</code>,
+<code>otp_validate_routing_options()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+isochrone1 &lt;- otp_isochrone(otpcon, fromPlace = c(-0.1346, 51.5292))
+isochrone2 &lt;- otp_isochrone(otpcon,
+  fromPlace = c(-0.1346, 51.5292),
+  mode = c("WALK", "TRANSIT"), cutoffSec = c(600, 1200, 1800)
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

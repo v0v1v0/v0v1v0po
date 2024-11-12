@@ -1,0 +1,162 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ORKMeans</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Online regularized K-means clustering algorithm for online multi-view data</h2>
+
+<h3>Description</h3>
+
+<p>For the online clustering problem, this function proposes the Online Regularized K-means Clustering (ORKMC) method to deal with online multi-view data. Firstly, for the clustering problem of multi-view data, a non-negative matrix decomposition is used as the starting point of the model to find the indicator matrix and cluster centres of each cluster; for online updating, a projected gradient descent method is proposed to perform online updating to improve the accuracy and speed of data clustering; for the overfitting phenomenon, regularisation is proposed to avoid the above problem. In addition, since the choice of regularization parameters is extremely important to the effectiveness of the ORKMC algorithm, the choice of regularization parameters varies in different datasets. In this paper, a suitable range of regularisation parameters and model parameters is given. The effectiveness of the ORKMC algorithm is tested through an extensive study of multi-view/single-view data. The validity of the ORKMC algorithm is tested through an extensive study of multi-view/single-view data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ORKMeans(X,K,V,chushi,r,yita,gamma,alpha,epsilon,truere,max.iter,method=0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>is the online single/multi-view data matrix
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+
+<p>is the number of cluster 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>V</code></td>
+<td>
+
+<p>is the view of X
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chushi</code></td>
+<td>
+
+<p>is the initial value for online
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yita</code></td>
+<td>
+
+<p>is the regularized parameter
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+
+<p>is the banlance parameter
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+
+<p>is the step size 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+
+<p>is the caculated the weight of view 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+
+<p>is the epsilon 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truere</code></td>
+<td>
+
+<p>is the ture label in data set
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iter</code></td>
+<td>
+
+<p>is the max iter
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+
+<p>is the caluate the NMI
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>NMI,weight,center,result
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Miao Yu
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(MASS) 
+library(Matrix)  
+  yita=0.5;V=2;chushi=100;K=3;r=0.5;max.iter=10;n1=n2=n3=70;gamma=0.1;alpha=0.98;epsilon=1
+  X1&lt;-rnorm(n1,20,2);X2&lt;-rnorm(n2,25,1.5);X3&lt;-rnorm(n3,30,2) 
+  Xv&lt;-c(X1,X2,X3)
+  data&lt;-matrix(Xv,n1+n2+n3,2)
+  data[1:70,2]&lt;-1;data[71:140,2]&lt;-2;data[141:210,2]&lt;-3
+  truere=data[,2]
+  X&lt;-matrix(data[,1],n1+n2+n3,1) 
+  lamda1&lt;-0.2;lamda2&lt;-0.8
+  lamda&lt;-matrix(c(lamda1,lamda2),nrow=1,ncol=2)
+  sol.svd &lt;- svd(lamda)
+  U1&lt;-sol.svd$u
+  D1&lt;-sol.svd$d
+  V1&lt;-sol.svd$v
+  C1&lt;-t(U1)
+  Y1&lt;-C1/D1
+  view&lt;-V1
+  view1&lt;-matrix(view[1,])
+  view2&lt;-matrix(view[2,])
+  X1&lt;-matrix(view1,n1+n2+n3,1)
+  X2&lt;-matrix(view2,n1+n2+n3,1)
+  ORKMeans(X=X1,K=K,V=V,r=r,chushi=chushi,yita=yita,gamma=gamma,epsilon=epsilon,
+max.iter=max.iter,truere=truere,method=0)
+</code></pre>
+
+
+</div>

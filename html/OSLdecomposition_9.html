@@ -1,0 +1,231 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>RLum.OSL_decomposition</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Separate CW-OSL components in RLum.Analysis data sets</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the CW-OSL signal component intensities for each CW-OSL measurement
+under the requirement that the decay rates are already given. The signal decomposition
+process uses an analytical approach described in detail in Mittelstrass (2019) and
+Mittelstrass et al. (in preparation). This function processes RLum.Analysis data sets created within
+the Luminescence-package (Kreutzer et al. 2012).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">RLum.OSL_decomposition(
+  object,
+  record_type = "OSL",
+  K = 3,
+  decay_rates = NULL,
+  report = FALSE,
+  report_dir = NULL,
+  image_format = "pdf",
+  open_report = TRUE,
+  rmd_path = NULL,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>RLum.Analysis or list of RLum.Analysis (<strong>required</strong>):
+Data set of one or multiple CW-OSL measured aliquots. The data set must either
+contain a list element <code style="white-space: pre;">⁠$OSL_COMPONENTS⁠</code> or the parameter <code>decay_rates</code> must
+be defined.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>record_type</code></td>
+<td>
+<p>character (<em>with default</em>):
+Type of records, selected by the RLum.Analysis attribute <code style="white-space: pre;">⁠@recordType⁠</code>.
+Common are: <code>"OSL"</code>,<code>"SGOSL"</code> or <code>"IRSL"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Number of components. Selects the according result table in the <code style="white-space: pre;">⁠$OSL_COMPONENTS⁠</code> list item of the data set <code>object</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>decay_rates</code></td>
+<td>
+<p>numeric vector or data.frame (<em>optional</em>):
+User-defined component decay rates. If this parameter is defined, the parameter <code>K</code> will ignored.
+If the input object is a data.frame, then the decay rates must be stored in the column <code style="white-space: pre;">⁠$lambda⁠</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>report</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Creates a <code>html</code> report, saves it in the <code>report_dir</code> directory.
+The report contains the results and detailed information on the data processing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>report_dir</code></td>
+<td>
+<p>character (<em>optional</em>):
+Path of output directory if <code>report = TRUE</code>. If <code>report_dir = NULL</code> (default),
+a temporary folder is used which is deleted when the R session is closed.
+File paths are also allowed as parameter, then a new directory named after the OSL data file
+will be created.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>image_format</code></td>
+<td>
+<p>character (<em>with default</em>):
+Image format of the automatically saved graphs if <code>report = TRUE</code> and <code>report_dir</code> is set.
+Allowed are <code>.pdf</code>, <code>.eps</code>, <code>.svg</code> (vector graphics), <code>.jpg</code>, <code>.png</code>, <code>.bmp</code> (pixel graphics)
+and more, see ggplot2::ggsave. The images are saved in the <code>report_dir</code> subfolder <code style="white-space: pre;">⁠/report_figures⁠</code>.
+Set <code>image_format = NULL</code> if no images shall be saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>open_report</code></td>
+<td>
+<p>logical (<em>with default</em>):
+If set to <code>TRUE</code> a browser window displaying the report will be opened automatically.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rmd_path</code></td>
+<td>
+<p>character (<em>with default</em>):
+<strong>For advanced users:</strong> File path to the rmarkdown source code file of the report.
+This allows to execute a manipulated version of the report.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Enables console text output.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The workflow of this function is as follows:
+</p>
+
+<ol>
+<li> <p>optimise_OSLintervals: Approximates the optimal integration intervals. Uses the global
+average curve as time axis template. If none global average curve is given, one is automatically created using sum_OSLcurves.
+</p>
+</li>
+<li> <p>decompose_OSLcurve: Calculates component intensities for <strong>all</strong> <code>record_type</code> measurements.
+Uses the <code>"det"</code> algorithm if a background correction was performed with RLum.OSL_correction or the
+<code>"det+nls"</code> algorithm if no background correction was performed. For error estimation, the <code>"empiric"</code> approach is used.
+</p>
+</li>
+<li>
+<p> Creates a <code>html</code> report to summarize the results (<em>optional</em>).
+</p>
+</li>
+</ol>
+<p>Data sets must be formatted as RLum.Analysis objects and
+should have been processed with RLum.OSL_correction and RLum.OSL_global_fitting beforehand.
+Output objects are also RLum.Analysis objects and are
+meant for equivalent dose determination with Luminescence::analyse_SAR.CWOSL.
+</p>
+<p>If <code>report = TRUE</code>, a <code>html</code> report of the results is rendered by the rmarkdown-package
+and saved in the working directory, which is usually the directory of the data file.
+This report can be displayed, shared and published online without any requirements regarding
+the operation system or installed software. However, an internet connection is needed to display
+the <em>MathJax</em> encoded equations and special characters.
+The <em>Rmarkdown</em> source code of the report can be found with the following command:
+</p>
+<p><code>system.file("rmd", "report_Step2.Rmd", package = "OSLdecomposition")</code>
+</p>
+
+
+<h3>Value</h3>
+
+<p>The input <code>object</code>, a list of RLum.Analysis objects is returned but with
+a new list element <code>object[["DECOMPOSITION"]]</code>, containing:
+</p>
+
+<ul>
+<li> <p><code style="white-space: pre;">⁠$decompositon.input⁠</code> data.frame: Set of input components. Relevant is just the column <code style="white-space: pre;">⁠$lambda⁠</code>
+</p>
+</li>
+<li> <p><code style="white-space: pre;">⁠$results⁠</code> data.frame: Overview table of decomposition
+</p>
+</li>
+<li> <p><code style="white-space: pre;">⁠$parameters⁠</code> list: Input and algorithm parameters
+</p>
+</li>
+</ul>
+<p>The RLum.Data.Curve attribute <code style="white-space: pre;">⁠@info⁠</code> of each CW-OSL record contains the
+new entry <code style="white-space: pre;">⁠$COMPONENTS⁠</code> with the curve-individual signal component parameters.
+It can be read for example by:
+</p>
+<p><code>object[[i]]@records[[j]]@info[["COMPONENTS"]]</code>
+</p>
+
+
+<h3>Last updates</h3>
+
+<p>2022-05-02, DM: Added new parameter <code>open_report</code> to give control over automatic browser opening
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dirk Mittelstrass, <a href="mailto:dirk.mittelstrass@luminescence.de">dirk.mittelstrass@luminescence.de</a>
+</p>
+<p>Please cite the package the following way:
+</p>
+<p>Mittelstraß, D., Schmidt, C., Beyer, J., Heitmann, J. and Straessner, A.:
+R package OSLdecomposition: Automated identification and separation of quartz CW-OSL signal components, <em>in preparation</em>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kreutzer, S., Schmidt, C., Fuchs, M.C., Dietze, M., Fischer, M., Fuchs, M., 2012.
+Introducing an R package for luminescence dating analysis. Ancient TL, 30 (1), 1-8.
+</p>
+<p>Mittelstraß, D., 2019. Decomposition of weak optically stimulated luminescence signals and
+its application in retrospective dosimetry at quartz (Master thesis). TU Dresden, Dresden.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>RLum.OSL_global_fitting, decompose_OSLcurve, optimise_OSLintervals, Luminescence::analyse_SAR.CWOSL
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+#'FB_10Gy' is a dose recovery test with the Fontainebleau quartz
+# measured in a lexsyg research with green LED stimulation
+data_path &lt;- system.file("examples", "FB_10Gy_SAR.bin", package = "OSLdecomposition")
+data_set &lt;- Luminescence::read_BIN2R(data_path, fastForward = TRUE)
+
+# Separate components
+data_set_decomposed &lt;- RLum.OSL_decomposition(
+data_set, decay_rates = c(0.8, 0.05))
+
+</code></pre>
+
+
+</div>

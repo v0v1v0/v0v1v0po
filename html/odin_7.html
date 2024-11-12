@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>odin_options</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Odin options</h2>
+
+<h3>Description</h3>
+
+<p>For lower-level odin functions odin_parse,
+odin_validate we only accept a list of options rather
+than individually named options.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">odin_options(verbose = NULL, target = NULL, workdir = NULL,
+  validate = NULL, pretty = NULL, skip_cache = NULL,
+  compiler_warnings = NULL, no_check_unused_equations = NULL,
+  rewrite_dims = NULL, rewrite_constants = NULL, substitutions = NULL,
+  options = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical scalar indicating if the compilation should
+be verbose.  Defaults to the value of the option
+<code>odin.verbose</code> or <code>FALSE</code> otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+<p>Compilation target.  Options are "c" and "r",
+defaulting to the option <code>odin.target</code> or "c" otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>workdir</code></td>
+<td>
+<p>Directory to use for any generated files.  This is
+only relevant for the "c" target.  Defaults to the value of the
+option <code>odin.workdir</code> or <code>tempdir()</code> otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validate</code></td>
+<td>
+<p>Validate the model's intermediate representation
+against the included schema.  Normally this is not needed and is
+intended primarily for development use.  Defaults to the value
+of the option <code>odin.validate</code> or <code>FALSE</code> otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretty</code></td>
+<td>
+<p>Pretty-print the model's intermediate
+representation.  Normally this is not needed and is intended
+primarily for development use.  Defaults to the value of the
+option <code>odin.pretty</code> or <code>FALSE</code> otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip_cache</code></td>
+<td>
+<p>Skip odin's cache.  This might be useful if the
+model appears not to compile when you would expect it to.
+Hopefully this will not be needed often.  Defaults to the option
+<code>odin.skip_cache</code> or <code>FALSE</code> otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compiler_warnings</code></td>
+<td>
+<p>Previously this attempted detection of
+compiler warnings (with some degree of success), but is
+currently ignored. This may become supported again in a future
+version depending on underlying support in pkgbuild.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no_check_unused_equations</code></td>
+<td>
+<p>If <code>TRUE</code>, then don't print
+messages about unused variables.  Defaults to the option
+<code>odin.no_check_unused_equations</code> or <code>FALSE</code> otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rewrite_dims</code></td>
+<td>
+<p>Logical, indicating if odin should try and
+rewrite your model dimensions (if using arrays). If <code>TRUE</code> then
+we replace dimensions known at compile-time with literal
+integers, and those known at initialisation with simplified and
+shared expressions. You may get less-comprehensible error
+messages with this option set to <code>TRUE</code> because parts of the
+model have been effectively evaluated during processing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rewrite_constants</code></td>
+<td>
+<p>Logical, indicating if odin should try
+and rewrite <em>all</em> constant scalars. This is a superset of
+<code>rewrite_dims</code> and may be slow for large models. Doing this will
+make your model less debuggable; error messages will reference
+expressions that have been extensively rewritten, some variables
+will have been removed entirely or merged with other identical
+expressions, and the generated code may not be obviously
+connected to the original code.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>substitutions</code></td>
+<td>
+<p>Optionally, a list of values to substitute
+into model specification as constants, even though they are
+declared as <code>user()</code>. This will be most useful in conjunction
+with <code>rewrite_dims</code> to create a copy of your model with
+dimensions known at compile time and all loops using literal
+integers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>Named list of options.  If provided, then all other
+options are ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of parameters, of class <code>odin_options</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">odin_options()
+</code></pre>
+
+
+</div>

@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulate_antecedent_conditions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>simulate_antecedent_conditions</h2>
+
+<h3>Description</h3>
+
+<p>Simulate heterogenous pattern
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulate_antecedent_conditions(x, i, j, nsim, heterogenous = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ppp</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i</code></td>
+<td>
+<p>Mark of points that are not not changed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+<p>Mark of points that are randomized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>Number of patterns to simulate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>heterogenous</code></td>
+<td>
+<p>If TRUE, points with the mark j are randomized using a heterogeneous
+Poisson process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed to <code>spatstat.explore::density.ppp()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Simulate point patterns as null model data for <code>spatstat.explore::envelope()</code> using
+antecedent conditions as null model. <code>x</code> must be a marked point pattern with
+two types of marks. Antecedent conditions are suitable as a null model if points
+of type i may influence points of type j, but not the other way around (Velazquez et al 2016).
+One example are the positions of seedlings that may be influenced by the position
+of mature trees.
+</p>
+<p>Returns a <code>list</code> with <code>ppp</code> objects.
+</p>
+
+
+<h3>Value</h3>
+
+<p>list
+</p>
+
+
+<h3>References</h3>
+
+<p>Velázquez, E., Martínez, I., Getzin, S., Moloney, K.A., Wiegand, T., 2016. An evaluation
+of the state of spatial point pattern analysis in ecology. Ecography 39, 1–14.
+&lt;https://doi.org/10.1111/ecog.01579&gt;
+</p>
+<p>Wiegand, T., Moloney, K.A., 2014. Handbook of spatial point-pattern analysis in
+ecology. Chapman and Hall/CRC Press, Boca Raton, USA. &lt;isbn:978-1-4200-8254-8&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>envelope</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(42)
+pattern_a &lt;- spatstat.random::runifpoint(n = 20)
+spatstat.geom::marks(pattern_a) &lt;- "a"
+pattern_b &lt;- spatstat.random::runifpoint(n = 100)
+spatstat.geom::marks(pattern_b) &lt;- "b"
+pattern &lt;- spatstat.geom::superimpose(pattern_a, pattern_b)
+
+null_model &lt;- simulate_antecedent_conditions(x = pattern, i = "a", j = "b", nsim = 19)
+spatstat.explore::envelope(Y = pattern, fun = spatstat.explore::pcf,
+nsim = 19, simulate = null_model)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>irt_ensemble</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes an ensemble score using Item Response Theory</h2>
+
+<h3>Description</h3>
+
+<p>This function computes an ensemble score using Item Response Theory (IRT). This was proposed as an ensemble method for anomaly/outlier detection in  Kandanaarachchi (2021) &lt;doi:10.13140/RG.2.2.18355.96801&gt;.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">irt_ensemble(X)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>The input data containing the outlier scores in a dataframe, matrix or tibble format. Rows contain observations and columns contain outlier detection methods.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>For outlier detection, higher ensemble scores indicate higher levels of anomalousness. This ensemble uses IRT's latent trait to uncover  the hidden ground truth, which is used as the ensemble score. It uses the R packages airt and EstCRM to fit the IRT models. It can also be used for other ensembling tasks.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>scores</code></td>
+<td>
+<p>The ensemble scores.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>The IRT model. </p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+X &lt;- data.frame(x1 = rnorm(200), x2 = rnorm(200))
+X[199, ] &lt;- c(4, 4)
+X[200, ] &lt;- c(-3, 5)
+y1 &lt;- DDoutlier::KNN_AGG(X)
+y2 &lt;- DDoutlier::LOF(X)
+y3 &lt;- DDoutlier::COF(X)
+y4 &lt;- DDoutlier::INFLO(X)
+y5 &lt;- DDoutlier::KDEOS(X)
+y6 &lt;- DDoutlier::LDF(X)
+y7 &lt;- DDoutlier::LDOF(X)
+Y &lt;- cbind.data.frame(y1, y2, y3, y4, y5, y6, y7)
+ens &lt;- irt_ensemble(Y)
+ens$scores
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>set_outlier_threshold</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set a threshold for outlier detection</h2>
+
+<h3>Description</h3>
+
+<p>This function forecasts a boundary for the typical behaviour using a representative sample
+of the typical behaviour of a given system. An approach based on extreme value theory is used for this boundary
+prediction process.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">set_outlier_threshold(pc_pcnorm, p_rate = 0.001, trials = 500)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pc_pcnorm</code></td>
+<td>
+<p>The scores of the first two pricipal components returned by <code>get_pc_space</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p_rate</code></td>
+<td>
+<p>False positive rate. Default value is set to 0.001</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trials</code></td>
+<td>
+<p>Number of trials to generate the extreme value distirbution. Default value is set to 500.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a threshold to determine outlying series in the next window  consists with a collection of
+time series.
+</p>
+
+
+<h3>References</h3>
+
+<p>Clifton, D. A., Hugueny, S., &amp; Tarassenko, L. (2011). Novelty detection with multivariate extreme value statistics.
+Journal of signal processing systems, 65 (3),371-389.
+</p>
+<p>Talagala, P., Hyndman, R., Smith-Miles, K., Kandanaarachchi, S., &amp; Munoz, M. (2018).
+Anomaly detection in streaming nonstationary temporal data (No. 4/18).
+Monash University, Department of Econometrics and Business Statistics.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>find_odd_streams</code>,  <code>extract_tsfeatures</code>, <code>get_pc_space</code>,
+<code>gg_featurespace</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Generate training dataset
+set.seed(123)
+nobs &lt;- 500
+nts &lt;- 50
+train_data &lt;- ts(apply(matrix(ncol = nts, nrow = nobs), 2, function(nobs){10 + rnorm(nobs, 0, 3)}))
+features &lt;- extract_tsfeatures(train_data)
+pc &lt;- get_pc_space(features)
+threshold &lt;- set_outlier_threshold(pc$pcnorm)
+threshold$threshold_fnx
+
+
+</code></pre>
+
+
+</div>

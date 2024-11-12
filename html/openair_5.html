@@ -1,0 +1,417 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calcFno2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate NO2/NOX emission ratios from monitoring data</h2>
+
+<h3>Description</h3>
+
+<p>Given hourly NOX and NO2 from a roadside site and hourly NOX, NO2 and O3 from
+a background site the function will estimate the emissions ratio of NO2/NOX
+— the level of primary NO2
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calcFno2(input, tau = 60, user.fno2, main = "", xlab = "year", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>A data frame with the following fields. <code>nox</code> and<code>no2</code>
+(roadside NOX and NO2 concentrations), <code>back_nox</code>, <code>back_no2</code> and
+<code>back_o3</code> (hourly background concentrations of each pollutant). In
+addition <code>temp</code> (temperature in degrees Celsius) and <code>cl</code> (cloud
+cover in Oktas). Note that if <code>temp</code> and <code>cl</code> are not available,
+typical means values of 11 deg. C and cloud = 3.5 will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>Mixing time scale. It is unlikely the user will need to adjust
+this. See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user.fno2</code></td>
+<td>
+<p>User-supplied f-NO2 fraction e.g. 0.1 is a NO2/NOX ratio of
+10% by volume. <code>user.no2</code> will be applied to the whole time series and
+is useful for testing "what if" questions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>Title of plot if required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>x-axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code>scatterPlot</code>
+</p>
+
+<dl>
+<dt><code>mydata</code></dt>
+<dd>
+<p>A data frame containing at least two numeric variables to plot.</p>
+</dd>
+<dt><code>x</code></dt>
+<dd>
+<p>Name of the x-variable to plot. Note that x can be a date field or a
+factor. For example, <code>x</code> can be one of the <code>openair</code> built in
+types such as <code>"year"</code> or <code>"season"</code>.</p>
+</dd>
+<dt><code>y</code></dt>
+<dd>
+<p>Name of the numeric y-variable to plot.</p>
+</dd>
+<dt><code>z</code></dt>
+<dd>
+<p>Name of the numeric z-variable to plot for <code>method = "scatter"</code>
+or <code>method = "level"</code>. Note that for <code>method = "scatter"</code> points
+will be coloured according to a continuous colour scale, whereas for
+<code>method = "level"</code> the surface is coloured.</p>
+</dd>
+<dt><code>method</code></dt>
+<dd>
+<p>Methods include “scatter” (conventional scatter plot),
+“hexbin” (hexagonal binning using the <code>hexbin</code> package).
+“level” for a binned or smooth surface plot and “density” (2D
+kernel density estimates).</p>
+</dd>
+<dt><code>group</code></dt>
+<dd>
+<p>The grouping variable to use, if any. Setting this to a variable
+in the data frame has the effect of plotting several series in the same
+panel using different symbols/colours etc. If set to a variable that is a
+character or factor, those categories or factor levels will be used
+directly. If set to a numeric variable, it will split that variable in to
+quantiles.</p>
+</dd>
+<dt><code>avg.time</code></dt>
+<dd>
+<p>This defines the time period to average to. Can be
+“sec”, “min”, “hour”, “day”, “DSTday”,
+“week”, “month”, “quarter” or “year”. For much
+increased flexibility a number can precede these options followed by a
+space. For example, a timeAverage of 2 months would be <code>period = "2
+  month"</code>. See function <code>timeAverage</code> for further details on this. This
+option se useful as one method by which the number of points plotted is
+reduced i.e. by choosing a longer averaging time.</p>
+</dd>
+<dt><code>data.thresh</code></dt>
+<dd>
+<p>The data capture threshold to use (\
+the data using <code>avg.time</code>. A value of zero means that all available
+data will be used in a particular period regardless if of the number of
+values available. Conversely, a value of 100 will mean that all data will
+need to be present for the average to be calculated, else it is recorded as
+<code>NA</code>. Not used if <code>avg.time = "default"</code>.</p>
+</dd>
+<dt><code>statistic</code></dt>
+<dd>
+<p>The statistic to apply when aggregating the data; default is
+the mean. Can be one of "mean", "max", "min", "median", "frequency", "sd",
+"percentile". Note that "sd" is the standard deviation and "frequency" is
+the number (frequency) of valid records in the period. "percentile" is the
+percentile level (\
+"percentile" option - see below. Not used if <code>avg.time = "default"</code>.</p>
+</dd>
+<dt><code>percentile</code></dt>
+<dd>
+<p>The percentile level in percent used when <code>statistic =
+  "percentile"</code> and when aggregating the data with <code>avg.time</code>. The
+default is 95. Not used if <code>avg.time = "default"</code>.</p>
+</dd>
+<dt><code>type</code></dt>
+<dd>
+<p><code>type</code> determines how the data are split i.e. conditioned,
+and then plotted. The default is will produce a single plot using the
+entire data. Type can be one of the built-in types as detailed in
+<code>cutData</code> e.g. “season”, “year”, “weekday” and so
+on. For example, <code>type = "season"</code> will produce four plots — one for
+each season.
+</p>
+<p>It is also possible to choose <code>type</code> as another variable in the data
+frame. If that variable is numeric, then the data will be split into four
+quantiles (if possible) and labelled accordingly. If type is an existing
+character or factor variable, then those categories/levels will be used
+directly. This offers great flexibility for understanding the variation of
+different variables and how they depend on one another.
+</p>
+<p>Type can be up length two e.g. <code>type = c("season", "weekday")</code> will
+produce a 2x2 plot split by season and day of the week. Note, when two
+types are provided the first forms the columns and the second the rows.</p>
+</dd>
+<dt><code>smooth</code></dt>
+<dd>
+<p>A smooth line is fitted to the data if <code>TRUE</code>; optionally
+with 95 percent confidence intervals shown. For <code>method = "level"</code> a
+smooth surface will be fitted to binned data.</p>
+</dd>
+<dt><code>spline</code></dt>
+<dd>
+<p>A smooth spline is fitted to the data if <code>TRUE</code>. This is
+particularly useful when there are fewer data points or when a connection
+line between a sequence of points is required.</p>
+</dd>
+<dt><code>linear</code></dt>
+<dd>
+<p>A linear model is fitted to the data if <code>TRUE</code>; optionally
+with 95 percent confidence intervals shown. The equation of the line and R2
+value is also shown.</p>
+</dd>
+<dt><code>ci</code></dt>
+<dd>
+<p>Should the confidence intervals for the smooth/linear fit be shown?</p>
+</dd>
+<dt><code>mod.line</code></dt>
+<dd>
+<p>If <code>TRUE</code> three lines are added to the scatter plot to
+help inform model evaluation. The 1:1 line is solid and the 1:0.5 and 1:2
+lines are dashed. Together these lines help show how close a group of
+points are to a 1:1 relationship and also show the points that are within a
+factor of two (FAC2). <code>mod.line</code> is appropriately transformed when x
+or y axes are on a log scale.</p>
+</dd>
+<dt><code>cols</code></dt>
+<dd>
+<p>Colours to be used for plotting. Options include
+“default”, “increment”, “heat”, “jet” and
+<code>RColorBrewer</code> colours — see the <code>openair</code> <code>openColours</code>
+function for more details. For user defined the user can supply a list of
+colour names recognised by R (type <code>colours()</code> to see the full list).
+An example would be <code>cols = c("yellow", "green", "blue")</code></p>
+</dd>
+<dt><code>plot.type</code></dt>
+<dd>
+<p><code>lattice</code> plot type. Can be “p” (points —
+default), “l” (lines) or “b” (lines and points).</p>
+</dd>
+<dt><code>key</code></dt>
+<dd>
+<p>Should a key be drawn? The default is <code>TRUE</code>.</p>
+</dd>
+<dt><code>key.title</code></dt>
+<dd>
+<p>The title of the key (if used).</p>
+</dd>
+<dt><code>key.columns</code></dt>
+<dd>
+<p>Number of columns to be used in the key. With many
+pollutants a single column can make to key too wide. The user can thus
+choose to use several columns by setting <code>columns</code> to be less than the
+number of pollutants.</p>
+</dd>
+<dt><code>key.position</code></dt>
+<dd>
+<p>Location where the scale key is to plotted.  Allowed
+arguments currently include “top”, “right”, “bottom”
+and “left”.</p>
+</dd>
+<dt><code>strip</code></dt>
+<dd>
+<p>Should a strip be drawn? The default is <code>TRUE</code>.</p>
+</dd>
+<dt><code>log.x</code></dt>
+<dd>
+<p>Should the x-axis appear on a log scale? The default is
+<code>FALSE</code>. If <code>TRUE</code> a well-formatted log10 scale is used. This can
+be useful for checking linearity once logged.</p>
+</dd>
+<dt><code>log.y</code></dt>
+<dd>
+<p>Should the y-axis appear on a log scale? The default is
+<code>FALSE</code>. If <code>TRUE</code> a well-formatted log10 scale is used. This can
+be useful for checking linearity once logged.</p>
+</dd>
+<dt><code>x.inc</code></dt>
+<dd>
+<p>The x-interval to be used for binning data when <code>method =
+"level"</code>.</p>
+</dd>
+<dt><code>y.inc</code></dt>
+<dd>
+<p>The y-interval to be used for binning data when <code>method =
+"level"</code>.</p>
+</dd>
+<dt><code>limits</code></dt>
+<dd>
+<p>For <code>method = "level"</code> the function does its best to
+choose sensible limits automatically. However, there are circumstances when
+the user will wish to set different ones. The limits are set in the form
+<code>c(lower, upper)</code>, so <code>limits = c(0, 100)</code> would force the plot
+limits to span 0-100.</p>
+</dd>
+<dt><code>windflow</code></dt>
+<dd>
+<p>This option allows a scatter plot to show the wind
+speed/direction shows as an arrow. The option is a list e.g. <code>windflow
+  = list(col = "grey", lwd = 2, scale = 0.1)</code>. This option requires wind
+speed (<code>ws</code>) and wind direction (<code>wd</code>) to be available.
+</p>
+<p>The maximum length of the arrow plotted is a fraction of the plot dimension
+with the longest arrow being <code>scale</code> of the plot x-y dimension. Note,
+if the plot size is adjusted manually by the user it should be re-plotted
+to ensure the correct wind angle. The list may contain other options to
+<code>panel.arrows</code> in the <code>lattice</code> package. Other useful options
+include <code>length</code>, which controls the length of the arrow head and
+<code>angle</code>, which controls the angle of the arrow head.
+</p>
+<p>This option works best where there are not too many data to ensure
+over-plotting does not become a problem.</p>
+</dd>
+<dt><code>y.relation</code></dt>
+<dd>
+<p>This determines how the y-axis scale is plotted.
+“same” ensures all panels use the same scale and “free” will
+use panel-specific scales. The latter is a useful setting when plotting
+data with very different values.</p>
+</dd>
+<dt><code>x.relation</code></dt>
+<dd>
+<p>This determines how the x-axis scale is plotted.
+“same” ensures all panels use the same scale and “free” will
+use panel-specific scales. The latter is a useful setting when plotting
+data with very different values.</p>
+</dd>
+<dt><code>ref.x</code></dt>
+<dd>
+<p>See <code>ref.y</code> for details.</p>
+</dd>
+<dt><code>ref.y</code></dt>
+<dd>
+<p>A list with details of the horizontal lines to be added
+representing reference line(s). For example, <code>ref.y = list(h = 50, lty
+  = 5)</code> will add a dashed horizontal line at 50. Several lines can be plotted
+e.g. <code>ref.y = list(h = c(50, 100), lty = c(1, 5), col = c("green",
+  "blue"))</code>. See <code>panel.abline</code> in the <code>lattice</code> package for more
+details on adding/controlling lines.</p>
+</dd>
+<dt><code>k</code></dt>
+<dd>
+<p>Smoothing parameter supplied to <code>gam</code> for fitting a smooth
+surface when <code>method = "level"</code>.</p>
+</dd>
+<dt><code>dist</code></dt>
+<dd>
+<p>When plotting smooth surfaces (<code>method = "level"</code> and
+<code>smooth = TRUE</code>, <code>dist</code> controls how far from the original data
+the predictions should be made. See <code>exclude.too.far</code> from the
+<code>mgcv</code> package. Data are first transformed to a unit square. Values
+should be between 0 and 1.</p>
+</dd>
+<dt><code>map</code></dt>
+<dd>
+<p>Should a base map be drawn? This option is under development.</p>
+</dd>
+<dt><code>auto.text</code></dt>
+<dd>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code>
+titles and axis labels will automatically try and format pollutant names
+and units properly e.g.  by subscripting the ‘2’ in NO2.</p>
+</dd>
+<dt><code>plot</code></dt>
+<dd>
+<p>Should a plot be produced? <code>FALSE</code> can be useful when
+analysing data to extract plot components and plotting them in other ways.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The principal purpose of this function is to estimate the level of primary
+(or direct) NO2 from road vehicles. When hourly data of NOX, NO2 and O3 are
+available, the total oxidant method of Clapp and Jenkin (2001) can be used.
+If roadside O3 measurements are available see <code>linearRelation()</code> for details
+of how to estimate the primary NO2 fraction.
+</p>
+<p>In the absence of roadside O3 measurements, it is rather more problematic to
+calculate the fraction of primary NO2. Carslaw and Beevers (2005c) developed
+an approach based on <code>linearRelation()</code> the analysis of roadside and
+background measurements. The increment in roadside NO2 concentrations is
+primarily determined by direct emissions of NO2 and the availability of One
+to react with NO to form NO2. The method aims to quantify the amount of NO2
+formed through these two processes by seeking the optimum level of primary
+NO2 that gives the least error.
+</p>
+<p>Test data is provided at <a href="https://davidcarslaw.github.io/openair/">https://davidcarslaw.github.io/openair/</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an openair object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>References</h3>
+
+<p>Clapp, L.J., Jenkin, M.E., 2001. Analysis of the relationship
+between ambient levels of O3, NO2 and NO as a function of NOX in the UK.
+Atmospheric Environment 35 (36), 6391-6405.
+</p>
+<p>Carslaw, D.C. and N Carslaw (2007).  Detecting and characterising small
+changes in urban nitrogen dioxide concentrations.  Atmospheric Environment.
+Vol. 41, 4723-4733.
+</p>
+<p>Carslaw, D.C., Beevers, S.D. and M.C. Bell (2007). Risks of exceeding the
+hourly EU limit value for nitrogen dioxide resulting from increased road
+transport emissions of primary nitrogen dioxide. Atmospheric Environment 41
+2073-2082.
+</p>
+<p>Carslaw, D.C. (2005a). Evidence of an increasing NO2/NOX emissions ratio
+from road traffic emissions. Atmospheric Environment, 39(26) 4793-4802.
+</p>
+<p>Carslaw, D.C. and Beevers, S.D. (2005b). Development of an urban inventory
+for road transport emissions of NO2 and comparison with estimates derived
+from ambient measurements. Atmospheric Environment, (39): 2049-2059.
+</p>
+<p>Carslaw, D.C. and Beevers, S.D. (2005c). Estimations of road vehicle
+primary NO2 exhaust emission fractions using monitoring data in London.
+Atmospheric Environment, 39(1): 167-177.
+</p>
+<p>Carslaw, D. C. and S. D. Beevers (2004). Investigating the Potential
+Importance of Primary NO2 Emissions in a Street Canyon. Atmospheric
+Environment 38(22): 3585-3594.
+</p>
+<p>Carslaw, D. C. and S. D. Beevers (2004). New Directions: Should road
+vehicle emissions legislation consider primary NO2? Atmospheric Environment
+38(8): 1233-1234.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>linearRelation</code> if you have roadside ozone
+measurements.
+</p>
+
+
+</div>

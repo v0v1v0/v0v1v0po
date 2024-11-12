@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>update_job</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modifies a job with given parameter</h2>
+
+<h3>Description</h3>
+
+<p>The function modifies a stores a job with a given parameter. The dot parameter contains all the values
+that will be replaced or removed. The return shows a message of result or failure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">update_job(
+  id,
+  title = NULL,
+  description = NULL,
+  process = NULL,
+  plan = NULL,
+  budget = NULL,
+  con = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>the job id of a created job</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>update title for the job</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>description</code></td>
+<td>
+<p>update description</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>process</code></td>
+<td>
+<p>A <code>Graph()</code>, a function returning a <code>ProcessNode()</code> as an endpoint, the <code>ProcessNode()</code>
+will return the results or a self defined <code>Process()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plan</code></td>
+<td>
+<p>replaces plan with the set value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>budget</code></td>
+<td>
+<p>replaces or sets the credits that can be spent at maximum</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>con</code></td>
+<td>
+<p>connected and authenticated openEO client (optional) otherwise <code>active_connection()</code>
+is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional parameters passed to jsonlite::toJSON() (like 'digits')</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The '...' operator shall contain all the values that are to be replaced in the job. There are some reserved
+keys.
+The 'process_graph' option will replace the process graph with a newly defined one, therefore the process graph needs to be a Graph object.
+The 'format' option will change the desired output format.
+All other parameter will be assumed to be special output parameter. Remember, you don't need to specify a process graph or graph_id,
+e.g. if you just want to update the output format.
+To leave parameter unchanged, then don't mention it. If you want to delete some, then set them to NA.
+</p>
+
+
+</div>

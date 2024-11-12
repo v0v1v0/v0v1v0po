@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_PIN</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Efficient saturated exact design
+</h2>
+
+<h3>Description</h3>
+
+<p>Use a fast greedy method to compute an efficient saturated subset (saturated exact design).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_PIN(Fx, alg.PIN="KYM", echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> is the number of parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alg.PIN</code></td>
+<td>
+
+<p>the method used (either <code>"KYM"</code> or <code>"GKM"</code>). KYM is randomized, faster but provides somewhat less efficient subsets/designs. GKM is deterministic, slower, but tends to give more efficient subsets/designs.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function is developed with the criterion of D-optimality in mind, but it also gives reasonably efficient subset/designs with respect to other criteria. The main purpose of <code>od_PIN</code> is to initialize algorithms for computing optimal approximate and exact designs. It can also be used to verify whether a model, represented by a matrix <code>Fx</code> of candidate regressors, permits a non-singular design.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Output is the list with components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the call of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.pin</code></td>
+<td>
+<p>the resulting exact design</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supp</code></td>
+<td>
+<p>the indices of the support of w.pin</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M.pin</code></td>
+<td>
+<p>the information matrix of w.pin</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phi.D</code></td>
+<td>
+<p>the D-criterion value of w.pin</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.act</code></td>
+<td>
+<p>the actual time of the computation</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Samuel Rosa, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Harman R, Rosa S (2019): On greedy heuristics for computing D-efficient saturated subsets, (submitted to Operations Research Letters), <a href="https://arxiv.org/abs/1905.07647">https://arxiv.org/abs/1905.07647</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compute a saturated subset of a random Fx
+Fx &lt;- matrix(rnorm(10000), ncol = 5)
+w.KYM &lt;- od_PIN(Fx)$w.pin
+w.GKM &lt;- od_PIN(Fx, alg.PIN = "GKM")$w.pin
+w.REX &lt;- 5*od_REX(Fx)$w.best
+optcrit(Fx, w.KYM)
+optcrit(Fx, w.GKM)
+optcrit(Fx, w.REX)
+
+</code></pre>
+
+
+</div>

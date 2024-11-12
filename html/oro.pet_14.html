@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simplifiedReferenceTissueModel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The Simplified Reference Tissue Model</h2>
+
+<h3>Description</h3>
+
+<p>The simplified reference tissue model (SRTM) estimates the binding potential
+from an observed time activity curve without the need for aterial sampling.
+It assumes a one-tissue compartment model to describe the influx and efflux
+in the tissue region of interest and the reference region.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simplifiedReferenceTissueModel(
+  tac,
+  ref,
+  time,
+  SRTM2 = TRUE,
+  k2prime = NULL,
+  guess = c(R1 = 0.5, k2 = 0.01),
+  control = minpack.lm::nls.lm.control()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tac</code></td>
+<td>
+<p>a vector corresponding to the time activity curve from the tissue
+(in Bq/mL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>a vector corresponding to the time activity curve from the
+reference region (in Bq/mL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>a vector of average frame times (in minutes).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SRTM2</code></td>
+<td>
+<p>a logical value that selects the three-parameter model (SRTM)
+or the two-parameter model (SRTM2), where k2prime is fixed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2prime</code></td>
+<td>
+<p>the value of k2prime that has been fixed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>guess</code></td>
+<td>
+<p>values for the inital parameter estimates for R1 and k2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>a list of parameters used by <code>nls.lm.control</code> that are
+set by default, but may be customized by the user.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See the references.
+</p>
+<p>The model has been parameterized in the manner of Wu and Carson (2002).
+That is, the nonlinear regression estimates R1, k2 and k'2 for the
+three-parameter model (SRTM) and R1 and k2 for the two-parameter model
+(SRTM2).
+</p>
+<p>The convolution is performed after interpolating the time activity curves,
+both for the tissue and the reference region, to one-second resolution then
+downsampling them back to the original sampling rate.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>BP</code></td>
+<td>
+<p>Binding potential</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R1</code></td>
+<td>
+<p>Ratio of the volumes of
+distrubution for the tissue and reference region</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2</code></td>
+<td>
+<p>Clearance rate
+constant from the tissue to plasma</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BP.error</code></td>
+<td>
+<p>Approximate standard
+error of the binding potential</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R1.error</code></td>
+<td>
+<p>Approximate standard error
+for the ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2.error</code></td>
+<td>
+<p>Approximate standard error for k2</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:b.whitcher@gmail.com">b.whitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Lammertsma, A.A. and Hume, S.P. (1996) Simplified reference
+tissue model for PET receptor studies, <em>NeuroImage</em>, <b>4</b>, 153-158.
+</p>
+<p>Wu, Y. and Carson, R.E. (2002) Noise reduction in the simplified reference
+tissue model for neuroreceptor functional imaging, <em>Journal of Cerebral
+Blood Flow &amp; Metabolism</em>, <b>22</b>, 1440-1452.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>deltamethod</code>, <code>expConv</code>,
+<code>nls.lm</code>
+</p>
+
+
+</div>

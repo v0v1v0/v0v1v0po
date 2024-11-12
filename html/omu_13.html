@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>omu_summary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>omu_summary
+Performs comparison of means between two independent variables, standard deviation, standard error, FDR correction, fold change, log2FoldChange.
+The order effects the fold change values</h2>
+
+<h3>Description</h3>
+
+<p>omu_summary
+Performs comparison of means between two independent variables, standard deviation, standard error, FDR correction, fold change, log2FoldChange.
+The order effects the fold change values
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">omu_summary(
+  count_data,
+  metadata,
+  numerator,
+  denominator,
+  response_variable = "Metabolite",
+  Factor,
+  log_transform = FALSE,
+  p_adjust = "BH",
+  test_type = "welch",
+  paired = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>count_data</code></td>
+<td>
+<p>should be a metabolomics count data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata</code></td>
+<td>
+<p>is meta data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numerator</code></td>
+<td>
+<p>is the variable you wish to compare against the denominator, in quotes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>denominator</code></td>
+<td>
+<p>see above, in quotes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_variable</code></td>
+<td>
+<p>the name of the column with your response variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Factor</code></td>
+<td>
+<p>the column name for your independent variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log_transform</code></td>
+<td>
+<p>TRUE or FALSE value for whether or not log transformation of data is performed
+before the t test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p_adjust</code></td>
+<td>
+<p>Method for adjusting the p value, i.e. "BH"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test_type</code></td>
+<td>
+<p>One of "mwu", "students", or "welch" to determine which model to use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paired</code></td>
+<td>
+<p>A boolean of TRUE or FALSE. If TRUE, performs a paired sample test. To perform a paired sample test,
+metadata must have a column named 'ID' containing the subject IDs.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+omu_summary(count_data = c57_nos2KO_mouse_countDF, metadata = c57_nos2KO_mouse_metadata,
+numerator = "Strep", denominator = "Mock", response_variable = "Metabolite", Factor = "Treatment",
+log_transform = TRUE, p_adjust = "BH", test_type = "welch")
+</code></pre>
+
+
+</div>

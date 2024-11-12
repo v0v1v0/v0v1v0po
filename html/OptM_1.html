@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>optM function</h2>
+
+<h3>Description</h3>
+
+<p>Load a folder of .llik files from the program Treemix and determine the optimal number of migration edges to include
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optM(
+  folder,
+  orientagraph = F,
+  tsv = NULL,
+  method = "Evanno",
+  ignore = NULL,
+  thresh = 0.05,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>folder</code></td>
+<td>
+<p>A character string of the path to a directory containing .llik, .cov.gz and .modelcov.gz files produced by Treemix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>orientagraph</code></td>
+<td>
+<p>A logical indicating whether the files were produced from Treemix (FALSE) or OrientAGraph (TRUE). Default = F</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tsv</code></td>
+<td>
+<p>a string defining the name of the tab-delimited output file.
+If NULL (default), then no data file is produced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a string containing the method to use, either "Evanno", "linear", or "SiZer".  Default is "Evanno".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore</code></td>
+<td>
+<p>a numeric vector of whole numbers indicating migration edges to ignore.  Useful when running Treemix on a prebuilt tree (ignore = 0).  Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresh</code></td>
+<td>
+<p>a numeric value between 0 and 1 for the threshold to use for the proportion of increase
+in likelihood that defines when a plateau is reached.  Default is 0.05 (5%), only applicable for method = "linear".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other options sent to the function "SiZer" - see the R package 'SiZer'</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If method = "Evanno": A data frame with 17 columns summarizing the results for each migration edge (rows).
+</p>
+<p>The columns are: "m" - number of migration edges from the model; "runs" = number of iterations for "m";
+"mean(Lm)" - mean log likelihood across runs; "sd(Lm)" - standard deviation of log likelihood across runs;
+"min(Lm)" - minimum log likelihood across runs; "max(Lm)" - maximum log likelihood across runs;
+"L'(m)" - first-order rate of change in log likelihood; "sdL'(m)" - standard deviation of first-order rate of change in log likelihood;
+"minL'(m)" - minimum first-order rate of change in log likelihood; "maxL'(m)" - maximum first-order rate of change in log likelihood;
+"L”(m)" - second-order rate of change in log likelihood; "sdL”(m)" - standard deviation of the second-order rate of change in log likelihood;
+"minL”(m)" - minimum second-order rate of change in log likelihood; "maxL”(m)" - maximum second-order rate of change in log likelihood;
+"Deltam" - the ad hoc deltaM statistic (secord order rate of change in log likelihood);
+"mean(f)" - mean proportion of variation explained by the models; "sd(f)" - standard deviation of the proportion of variation explained by the models
+</p>
+<p>If method = "linear": A list containing 5 elements:
+</p>
+<p>$out - a data frame with the name of each model, the degrees of freedom (df), the Akaike information criterion (AIC), the deltaAIC, and the optimal estimate for m based on the model.
+</p>
+<p>$PiecewiseLinear - the piecewise linear model object
+</p>
+<p>$BentCable - the bent cable model object
+</p>
+<p>$SimpleExponential - the simple exponential model object
+</p>
+<p>$NonLinearLeastSquares - the NLS model object
+</p>
+<p>If method = "SiZer": an object of class "SiZer" (see the R package 'SiZer' for more information)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Load a folder of simulated test data for m = 3
+folder &lt;- system.file("extdata", package = "OptM")
+test.optM = optM(folder)
+
+# To view the various linear modeling estimates:
+   # test.linear = optM(folder, method = "linear")
+
+# To view the results from the SiZer package:
+   # test.sizer = optM(folder, method = "SiZer")
+</code></pre>
+
+
+</div>

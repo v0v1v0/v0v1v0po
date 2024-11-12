@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_posterior</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract posterior samples or summary of parameters from a model-fit object.</h2>
+
+<h3>Description</h3>
+
+<p><code>get_post_samples()</code> extracts posterior samples of the specified
+parameters from a model-fit object.
+</p>
+<p><code>get_post_summary()</code> extracts posterior summary of the specified
+parameters from a model-fit object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_post_samples(
+  fit,
+  parameter = c("z", "pi", "phi", "theta", "psi", "alpha", "beta", "gamma",
+    "alpha_shared", "beta_shared", "gamma_shared", "Mu", "sigma", "rho")
+)
+
+get_post_summary(
+  fit,
+  parameter = c("z", "pi", "phi", "theta", "psi", "alpha", "beta", "gamma",
+    "alpha_shared", "beta_shared", "gamma_shared", "Mu", "sigma", "rho")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p>An <code>occumbFit</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter</code></td>
+<td>
+<p>A string of parameter name. See Details for possible choices
+and corresponding parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The functions return posterior samples or a summary of one of the
+following parameters in the model, stored in the model-fit object
+<code>fit</code>:
+</p>
+
+<dl>
+<dt><code>z</code></dt>
+<dd>
+<p>Site occupancy status of species.</p>
+</dd>
+<dt><code>pi</code></dt>
+<dd>
+<p>Multinomial probabilities of species sequence read counts.</p>
+</dd>
+<dt><code>phi</code></dt>
+<dd>
+<p>Sequence relative dominance of species.</p>
+</dd>
+<dt><code>theta</code></dt>
+<dd>
+<p>Sequence capture probabilities of species.</p>
+</dd>
+<dt><code>psi</code></dt>
+<dd>
+<p>Site occupancy probabilities of species.</p>
+</dd>
+<dt><code>alpha</code></dt>
+<dd>
+<p>Species-specific effects on sequence relative dominance
+(<code>phi</code>).</p>
+</dd>
+<dt><code>beta</code></dt>
+<dd>
+<p>Species-specific effects on sequence capture
+probabilities (<code>theta</code>).</p>
+</dd>
+<dt><code>gamma</code></dt>
+<dd>
+<p>Species-specific effects on site occupancy
+probabilities (<code>psi</code>).</p>
+</dd>
+<dt><code>alpha_shared</code></dt>
+<dd>
+<p>Effects on sequence relative dominance
+(<code>phi</code>) common across species.</p>
+</dd>
+<dt><code>beta_shared</code></dt>
+<dd>
+<p>Effects on sequence capture probabilities
+(<code>theta</code>) that are common across species.</p>
+</dd>
+<dt><code>gamma_shared</code></dt>
+<dd>
+<p>Effects on site occupancy probabilities
+(<code>psi</code>) that are common across species.</p>
+</dd>
+<dt><code>Mu</code></dt>
+<dd>
+<p>Community-level averages of species-specific effects
+(<code>alpha</code>, <code>beta</code>, <code>gamma</code>).</p>
+</dd>
+<dt><code>sigma</code></dt>
+<dd>
+<p>Standard deviations of species-specific effects
+(<code>alpha</code>, <code>beta</code>, <code>gamma</code>).</p>
+</dd>
+<dt><code>rho</code></dt>
+<dd>
+<p>Correlation coefficients of the species-specific effects
+(<code>alpha</code>, <code>beta</code>, <code>gamma</code>).</p>
+</dd>
+</dl>
+<p>See <a href="https://fukayak.github.io/occumb/articles/model_specification.html">the package vignette</a>
+for details of these parameters.
+</p>
+<p>The parameter may have dimensions corresponding to species, sites,
+replicates, and effects (covariates) and the <code>dimension</code> and <code>label</code>
+attributes are added to the output object to inform these dimensions.
+If the sequence read count data <code>y</code> have species, site, or replicate
+names appended as the <code>dimnames</code> attribute (see Details in
+<code>occumbData()</code>), they are copied into the <code>label</code>
+attribute of the returned object.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>get_post_samples()</code> returns a vector, matrix, or array of posterior
+samples for a selected parameter.
+</p>
+<p><code>get_post_summary()</code> returns a table (matrix) of the posterior summary
+of the selected parameters. The elements of the posterior summary are the
+same as those obtained with the <code>jags()</code> function in the
+<code>jagsUI</code> package: they include the mean, standard deviation, percentiles
+of posterior samples; the <code>Rhat</code> statistic; the effective sample size,
+<code>n.eff</code>; <code>overlap0</code>, which checks if 0 falls in the parameter's 95%
+credible interval; and the proportion of the posterior with the same sign
+as the mean, <code>f</code>.
+</p>
+<p>The <code>dimension</code> and <code>label</code> attributes of the output object
+provide information regarding the dimensions of the parameter.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Generate the smallest random dataset (2 species * 2 sites * 2 reps)
+I &lt;- 2 # Number of species
+J &lt;- 2 # Number of sites
+K &lt;- 2 # Number of replicates
+y_named &lt;- array(sample.int(I * J * K), dim = c(I, J, K))
+dimnames(y_named) &lt;- list(c("species 1", "species 2"),
+                          c("site 1", "site 2"), NULL)
+data_named &lt;- occumbData(y = y_named)
+
+# Fitting a null model
+fit &lt;- occumb(data = data_named, n.iter = 10100)
+
+# Extract posterior samples
+(post_sample_z &lt;- get_post_samples(fit, "z"))
+# Look dimensions of the parameter
+attributes(post_sample_z)
+
+# Extract posterior summary
+(post_summary_z &lt;- get_post_summary(fit, "z"))
+# Look dimensions of the parameter
+attributes(post_summary_z)
+
+</code></pre>
+
+
+</div>

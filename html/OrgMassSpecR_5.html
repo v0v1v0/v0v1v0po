@@ -1,0 +1,217 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Digest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict Peptides Resulting from Enzymatic Digest</h2>
+
+<h3>Description</h3>
+
+<p>Cleave an amino acid sequence (a protein or peptide) according to enzyme specific rules and calculate the precursor ion <em>m/z</em> values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Digest(sequence, enzyme = "trypsin", missed = 0, IAA = TRUE, 
+       N15 = FALSE, custom = list())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sequence</code></td>
+<td>
+<p>a character string representing the amino acid sequence to be cleaved by the enzyme.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enzyme</code></td>
+<td>
+<p>a character string specifying the rules for cleavage.  Options are <code>"trypsin"</code> (default),                    <code>"trypsin.strict"</code> (see details), or <code>"pepsin"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>missed</code></td>
+<td>
+<p>the maximum number of missed cleavages.  Must be an integer of 0 (default) or greater.  An error will result if the specified number of missed cleavages is greater than the maximum possible number of missed cleavages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>IAA</code></td>
+<td>
+<p>logical. <code>TRUE</code> specifies iodoacetylated cysteine and <code>FALSE</code> specifies unmodified cystine.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N15</code></td>
+<td>
+<p>logical indicating if the nitrogen-15 isotope should be used in place of the default nitrogen-14 isotope.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>custom</code></td>
+<td>
+<p>a list specifying user defined residues as <code>custom = list(code, mass)</code>, where <code>code</code> is a vector of one letter characters and <code>mass</code> is a vector of the respective monoisotopic masses.  See Details and Examples.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The amino acid residues must be specified by one letter codes.  The predefined residues are: 
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+A = alanine         </td>
+<td style="text-align: left;"> L = leucine</td>
+</tr>
+<tr>
+<td style="text-align: left;"> 
+R = arginine        </td>
+<td style="text-align: left;"> K = lysine</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+N = asparagine      </td>
+<td style="text-align: left;"> M = methionine</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+D = aspartic acid   </td>
+<td style="text-align: left;"> F = phenylalanine</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+C = cysteine        </td>
+<td style="text-align: left;"> P = proline</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+E = glutamic acid   </td>
+<td style="text-align: left;"> S = serine</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Q = glutamine       </td>
+<td style="text-align: left;"> T = threonine</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+G = glycine         </td>
+<td style="text-align: left;"> W = tryptophan</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+H = histidine       </td>
+<td style="text-align: left;"> Y = tyrosine</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+I = isoleucine      </td>
+<td style="text-align: left;"> V = valine
+</td>
+</tr>
+</table>
+<p>If <code>"trypsin"</code> is specified, the sequence is cleaved on the c-terminal side of K and R residues, except if K or R is followed by P.  If <code>"trypsin.strict"</code> is specified, the sequence is cleaved on the c-terminal side of K and R residues. If <code>"pepsin"</code> is specified, the sequence is cleaved on the c-terminal side of F, L, W, Y, A, E, and Q residues.  This rule is specific to pepsin at pH <code class="reqn">&gt;</code> 2, as used in hydrogen-deuterium exchange experiments.
+</p>
+<p>When <code>"trypsin"</code> is specified, KP and RP are not considered missed cleavages when <code>missed</code> is <code class="reqn">&gt;</code> 0.
+</p>
+<p>The argument <code>IAA</code> specifies treatment of the protein with iodoacetamide.  This treatment produces iodoacetylated cysteine residues (elemental formula C5H8N2O2S).
+</p>
+<p>If <code>TRUE</code>, the argument <code>N15</code> specifies 100% nitrogen-15 incorporation.  It is intended for proteins grown with a nitrogen-15 labeled food source.  (Although the experiment itself may grow a protein with less than 100% nitrogen-15 incorporation).  Setting <code>N15 = TRUE</code> does not modify the mass of a custom residue, or the mass of the nitrogen(s) added if <code>IAA = TRUE</code>.
+</p>
+<p>If a custom residue code is identical to a predefined residue code, the custom residue mass will be used in place of the predefined mass.  
+</p>
+<p>The error message “<code>object "mass" not found</code>” indicates the input sequence contains an undefined residue(s).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the following column names.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>peptide</code></td>
+<td>
+<p>resulting peptides.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>beginning residue positions in the the original sequence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end</code></td>
+<td>
+<p>ending residue positions in the the original sequence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mc</code></td>
+<td>
+<p>number of missed cleavages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mz1</code></td>
+<td>
+<p>monoisotopic <em>m/z</em> values for the <code class="reqn">[M + H]^{1+}</code> ions (where M is the precursor mass).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mz2</code></td>
+<td>
+<p>monoisotopic <em>m/z</em> values for the <code class="reqn">[M + 2H]^{2+}</code> ions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mz3</code></td>
+<td>
+<p>monoisotopic <em>m/z</em> values for the <code class="reqn">[M + 3H]^{3+}</code> ions.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Nathan G. Dodder</p>
+
+
+<h3>References</h3>
+
+<p>The relative atomic masses of the isotopes are from the NIST Physical Reference Data Website <a href="http://physics.nist.gov/PhysRefData/Compositions/">http://physics.nist.gov/PhysRefData/Compositions/</a>.  The molar mass of a proton (H+) is from the NIST CODATA Website <a href="http://physics.nist.gov/cuu/Constants/index.html">http://physics.nist.gov/cuu/Constants/index.html</a>.  
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>MonoisotopicMass</code>, <code>FragmentPeptide</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## digest human serum albumin with 0 and 1 missed cleavages
+Digest(example.sequence, missed = 1)
+
+## digest human serum albumin with a phosphoserine at position 58
+## and all methionines oxidized
+modifiedHsaSequence &lt;- strsplit(example.sequence, split = "")[[1]]
+modifiedHsaSequence[58] &lt;- "s"   # insert code for phosphoserine  
+modifiedHsaSequence &lt;- paste(modifiedHsaSequence, collapse = "")
+Digest(modifiedHsaSequence, custom = list(code = c("s","M"), 
+       mass = c(MonoisotopicMass(list(C=3, H=6, N=1, O=5, P=1)),
+                MonoisotopicMass(list(C=5, H=9, N=1, O=2, S=1)))))
+                
+## digest human serum albumin with strict rules
+Digest(example.sequence, enzyme = "trypsin.strict")
+</code></pre>
+
+
+</div>

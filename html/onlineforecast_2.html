@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>%**%</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multiplication of list with y, elementwise</h2>
+
+<h3>Description</h3>
+
+<p>Multiplication of each element in a list (x) with y
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">x %**% y
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a list of matrices, data.frames, etc.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a vector, data.frame or matrix</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Each element of x is multiplied with y using the usual elementwise '*' operator.
+</p>
+<p>Typical use is when a function, e.g. <code>bspline()</code>, returns a list of matrices (e.g. one for each base spline) and they should individually be multiplied with y (a vector, matrix, etc.).
+</p>
+<p>Since this is intended to be used for forecast models in the transformation stage 
+then there are some percularities:
+</p>
+<p>If the number of columns or the names of the columns are not equal for one element in x
+and y, then only the columns with same names are used, hence the resulting matrices can be
+of lower dimensions.
+</p>
+<p>See the example <a href="https://onlineforecasting.org/examples/solar-power-forecasting.html">https://onlineforecasting.org/examples/solar-power-forecasting.html</a> where the operator is used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of same length of x
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- list(matrix(1:9,3), matrix(9:1,3))
+x
+
+y &lt;- matrix(2,3,3)
+y
+
+x %**% y
+
+y &lt;- 1:3
+
+x %**% y
+
+# Naming percularity
+nams(x[[1]]) &lt;- c("k1","k2","k3")
+nams(x[[2]]) &lt;- c("k2","k3","k4")
+y &lt;- matrix(2,3,3)
+nams(y) &lt;- c("k1","k3","k7")
+
+# Now the only the horizons matching will be used
+x %**% y
+
+</code></pre>
+
+
+</div>

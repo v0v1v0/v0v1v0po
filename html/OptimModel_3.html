@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>exp_decay</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Three-parameter exponential decay, gradient, starting values, and back-calculation functions</h2>
+
+<h3>Description</h3>
+
+<p> Three-parameter exponential decay, gradient, starting values, and back-calculation functions.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> 
+        exp_decay(theta, x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p> Vector of three parameters:  (A, B, k).  See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Vector of concentrations. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The three-parameter exponential decay model is given by:
+</p>
+<p style="text-align: center;"><code class="reqn">y = A + B \times \exp(-Kx).</code>
+</p>
+
+<p>The parameter vector is (A, B, k) where
+<code class="reqn">A =\min y</code> ( minimum y value), <code class="reqn">A + B = \max y</code> (maximum y value), and <code class="reqn">K = \exp(k)</code> whichi is the shape parameter.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Let N = length(x).  Then
+</p>
+
+<ul>
+<li>
+<p> exp_decay(theta, x) returns a numeric vector of length N.
+</p>
+</li>
+<li>
+<p> attr(exp_decay, "gradient")(theta, x) returns an N x 3 matrix.
+</p>
+</li>
+<li>
+<p> attr(exp_decay, "start")(x, y) returns a numeric vector of length 3 with starting values for
+(A, B, k).
+</p>
+</li>
+<li>
+<p> attr(exp_decay, "backsolve")(theta, y) returns a numeric vector of length=length(y).
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_fit</code>, <code>rout_fitter</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123L)
+x = 2^(-4:4)
+theta = c(25, 75, log(3))
+y = exp_decay(theta, x)  + rnorm( length(x), mean=0, sd=1 )
+attr(exp_decay, "gradient")(theta, x)
+attr(exp_decay, "start")(x, y)
+attr(exp_decay, "backsolve")(theta, 38)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>alignByLoadings</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Align constructs by loadings on first principal component.</h2>
+
+<h3>Description</h3>
+
+<p>In case a construct loads negatively on the first principal component, the function <code>alignByLoadings()</code> will reverse
+it so that all constructs have positive loadings on the first principal component (see detail section for more).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">alignByLoadings(x, trim = 20, index = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>The number of characters a construct is trimmed to (default is <code>10</code>). If <code>NA</code> no trimming is done.
+Trimming simply saves space when displaying the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>Whether to print the number of the construct (e.g. for correlation matrices). The default is <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The direction of the constructs in a grid is arbitrary and a reflection of a scale does not affect the information
+contained in the grid. Nonetheless, the direction of a scale has an effect on inter-element correlations (Mackay,
+1992) and on the spatial representation and clustering of the grid (Bell, 2010). Hence, it is desirable to follow a
+protocol to align constructs that will render unique results. A common approach is to align constructs by pole
+preference, but this information is not always accessible. Bell (2010) proposed another solution for the problem of
+construct alignment. As a unique protocol he suggests to align constructs in a way so they all have positive
+loadings on the first component of a grid PCA.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>alignByLoadings</code> containing a list of calculations with the following entries:
+</p>
+
+<ul>
+<li> <p><code>cor.before</code>: Construct correlation matrix before reversal
+</p>
+</li>
+<li> <p><code>loadings.before</code>: Loadings on PCs before reversal
+</p>
+</li>
+<li> <p><code>reversed</code>: Constructs that have been reversed
+</p>
+</li>
+<li> <p><code>cor.after</code>: Construct correlation matrix after reversal
+</p>
+</li>
+<li> <p><code>loadings.after</code>: Loadings on PCs after reversal
+</p>
+</li>
+</ul>
+<h3>Note</h3>
+
+<p>Bell (2010) proposed a solution for the problem of construct alignment. As construct reversal has an effect on
+element correlation and thus on any measure that based on element correlation (Mackay, 1992), it is desirable to
+have a standard method for construct alignment independently from its semantics (preferred pole etc.). Bell (2010)
+proposes to align constructs in a way so they all have positive loadings on the first component of a grid PCA.
+</p>
+
+
+<h3>References</h3>
+
+<p>Bell, R. C. (2010). A note on aligning constructs. <em>Personal Construct Theory &amp; Practice, 7</em>, 42-48.
+</p>
+<p>Mackay, N. (1992). Identification, Reflection, and Correlation: Problems in the bases of repertory grid measures.
+<em>International Journal of Personal Construct Psychology, 5</em>(1), 57-75.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>alignByIdeal()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# reproduction of the example in the Bell (2010)
+# constructs aligned by loadings on PC 1
+bell2010
+alignByLoadings(bell2010)
+
+# save results
+a &lt;- alignByLoadings(bell2010)
+
+# modify printing of resukts
+print(a, digits = 5)
+
+# access results for further processing
+names(a)
+a$cor.before
+a$loadings.before
+a$reversed
+a$cor.after
+a$loadings.after
+
+</code></pre>
+
+
+</div>

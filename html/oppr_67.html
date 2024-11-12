@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>constraints</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Project prioritization problem constraints</h2>
+
+<h3>Description</h3>
+
+<p>A constraint can be added to a project prioritization <code>problem()</code>
+to ensure that solutions exhibit a specific characteristic.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The following constraints can be added to a project prioritization
+<code>problem()</code>:
+</p>
+
+<dl>
+<dt><code>add_locked_in_constraints()</code></dt>
+<dd>
+<p>Add constraints to ensure
+that certain actions are prioritized for funding.</p>
+</dd>
+<dt><code>add_locked_out_constraints()</code></dt>
+<dd>
+<p>Add constraints to ensure
+that certain actions are not prioritized for funding.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>decisions, objectives,
+<code>problem()</code>, solvers, targets,
+weights.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem with maximum richness objective and $150 budget
+p1 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 150) %&gt;%
+     add_binary_decisions()
+
+# print problem
+print(p1)
+
+# build another problem, and lock in the third action
+p2 &lt;- p1 %&gt;%
+      add_locked_in_constraints(c(3))
+
+# print problem
+print(p2)
+
+# build another problem, and lock out the second action
+p3 &lt;- p1 %&gt;%
+      add_locked_out_constraints(c(2))
+
+# print problem
+print(p3)
+
+## Not run: 
+# solve problems
+s1 &lt;- solve(p1)
+s2 &lt;- solve(p2)
+s3 &lt;- solve(p3)
+
+# print the actions selected for funding in each of the solutions
+print(s1[, sim_actions$name])
+print(s2[, sim_actions$name])
+print(s3[, sim_actions$name])
+
+## End(Not run)
+</code></pre>
+
+
+</div>

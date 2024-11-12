@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_poly2line</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert osmdata polygons into lines</h2>
+
+<h3>Description</h3>
+
+<p>Street networks downloaded with <code>add_osm_object(key = "highway")</code> will
+store any circular highways in <code>osm_polygons</code>. this function combines
+those with the <code>osm_lines</code> component to yield a single <span class="pkg">sf</span>
+<code>data.frame</code> of all highways, whether polygonal or not.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_poly2line(osmdat)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>osmdat</code></td>
+<td>
+<p>An osmdata object.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Modified version of same object with all <code>osm_polygons</code>
+objects merged into <code>osm_lines</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The <code>osm_polygons</code> field is retained, with those features also
+repeated as <code>LINESTRING</code> objects in <code>osm_lines</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other transform: 
+<code>osm_elevation()</code>,
+<code>trim_osmdata()</code>,
+<code>unique_osmdata()</code>,
+<code>unname_osmdata_sf()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+dat &lt;- opq ("colchester uk") %&gt;%
+    add_osm_feature (key = "highway") %&gt;%
+    osmdata_sf ()
+# colchester has lots of roundabouts, and these are stored in 'osm_polygons'
+# rather than 'osm_lines'. The former can be merged with the latter by:
+dat2 &lt;- osm_poly2line (dat)
+# 'dat2' will have more lines than 'dat', but the same number of polygons
+# (they are left unchanged.)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

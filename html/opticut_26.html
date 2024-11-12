@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dolina</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Land Snail Data Set
+</h2>
+
+<h3>Description</h3>
+
+<p>A comprehensive and micro-scale land snail data set from 16 dolinas of the
+Aggtelek Karst Area, Hungary.
+Data set containing land snail counts as described in Kemecei et al. 2014.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data("dolina")</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A list with 3 elements: <code>xtab</code> is a sample x species matrix with counts,
+<code>samp</code> is a data frame with sample level attributes,
+<code>taxa</code> is a data frame with scientific names and families for the species.
+</p>
+<p>Land snails were sampled during daylight hours between
+16 and 18 of August, 2007. Samples were taken from four
+microhabitat types (<code>dolina$samp$microhab</code>, <code>dolina$samp$mhab</code>):
+litter (LI), trunks of live trees (TL), dead
+wood (also known as coarse woody debris; DW), and rock (RO).
+In each of the 16 dolina (<code>dolina$samp$dolina</code>),
+seven samples were collected in the litter microhabitat
+along a north-south transect. In the case of the other three
+microhabitat types, samples were collected from three random
+locations per microhabitat type in each dolina.
+A total of 256 samples (<code>dolina$samp$sample</code>) were
+collected, each consisting 2 sub-samples collected
+by 2 sampling methods (<code>dolina$samp$method</code>):
+litter samples (Q) and timed search (T).
+</p>
+<p>One liter of litter samples including topsoil were collected
+to be examined later in the laboratory. Litter samples were
+collected adjacent to live wood, dead wood and rocks, and
+not from the wood or rocks themselves. Litter samples in the
+litter microhabitat were not collected near wood or rocks
+(minimum distance of 2 meters). During 5 minutes per site of
+time-restricted direct search we investigated microhabitats in
+a 1 meter radius circle around the litter sample location, but
+also including tree or rock surfaces for those microhabitats.
+</p>
+<p>The vertical zone (<code>dolina$samp$stratum</code>,
+bottom, middle or edge of the dolinas),
+aspect of these sample locations (<code>dolina$samp$aspect</code>),
+along with litter depth (<code>dolina$samp$lthick</code>, cm),
+and litter moisture (<code>dolina$samp$lmoist</code>,
+scored on an ordinal scale: 1=dry,
+2=fresh, 3=moist) were also recorded.
+</p>
+<p>Distinction of live animals versus fresh
+empty shells was not feasible due to the
+method of sorting dry material and the delay in litter sample
+processing, so these were combined and constituted the
+'fresh' group. Whitened, disintegrating and broken shells
+constituted the 'broken' group. This 'broken' group was
+excluded from the data set presented here.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Solymos et al. 2016 and Kemencei et al. 2014.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kemencei, Z., Farkas, R., Pall-Gergely, B., Vilisics, F., Nagy, A., Hornung,
+E. &amp; Solymos, P., 2014. Microhabitat associations of land snails in
+forested dolinas: implications for coarse filter conservation.
+Community Ecology 15:180–186.
+&lt;doi:10.1556/ComEc.15.2014.2.6&gt;
+</p>
+<p>Solymos, P., Kemencei, Z. Pall-Gergely, B., Farkas, R., Vilisics, F., Nagy, A., Kisfali, M. &amp; Hornung, E., 2016. Public data from the dolina project. Version 1.0. Zenodo, &lt;doi:10.5281/zenodo.53080&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(dolina)
+str(dolina)
+
+## species richness by microhabitat and method
+Richness &lt;- rowSums(dolina$xtab &gt; 0)
+boxplot(Richness ~ mhab + method, dolina$samp,
+    ylab="Species richness", main="Dolina data set",
+    col=rep(c("#2C7BB6", "#D7191C"), each=4))
+</code></pre>
+
+
+</div>

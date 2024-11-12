@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>app</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get an instance of the interactive shiny occupation coding app.</h2>
+
+<h3>Description</h3>
+
+<p>Printing the returned instance or returning it without saving it in a
+variable will start the app.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">app(
+  questionnaire = questionnaire_web_survey(),
+  app_settings = create_app_settings(save_to_file = TRUE),
+  css_file = NULL,
+  resource_dir = system.file("www", package = "occupationMeasurement"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>questionnaire</code></td>
+<td>
+<p>The questionnaire to load.
+(Defaults to the questionnaire returned by questionnaire_web_survey().)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>app_settings</code></td>
+<td>
+<p>The app_settings to use. Check the documentation for
+create_app_settings to learn about the options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>css_file</code></td>
+<td>
+<p>Path to a CSS file to be included in the app.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resource_dir</code></td>
+<td>
+<p>From which directory to static files e.g. styles.
+If you want to load additional resources from outside the package, you
+should rather do so with shiny::addResourcePath rather than with this
+parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Any additional parameters will be forwarded to shiny::shinyApp().</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A shiny app instance.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>vignette("app")</code>, <code>questionnaire_web_survey()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+## Not run: 
+app_instance &lt;- app(
+  app_settings = create_app_settings(
+    # Important to save results from the app
+    save_to_file = TRUE
+  )
+)
+
+# Start the app
+if (interactive()) {
+  app_instance
+}
+
+## End(Not run)
+</code></pre>
+
+
+</div>

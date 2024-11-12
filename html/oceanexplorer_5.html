@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filter_ui</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>NOAA filter module</h2>
+
+<h3>Description</h3>
+
+<p>This shiny module (<code>filter_ui()</code> + <code>filter_server()</code>) allows filtering of
+the currently loaded NOAA data via shiny <code>textInput()</code> interfaces.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filter_ui(id, extended = TRUE)
+
+filter_server(
+  id,
+  NOAA,
+  external,
+  ivars = c("depth", "lon", "lat"),
+  variable,
+  extended = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Namespace id shiny module.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extended</code></td>
+<td>
+<p>Boolean whether to build the extended module
+(default = <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NOAA</code></td>
+<td>
+<p>Reactive value for the dataset containing the locations
+coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>external</code></td>
+<td>
+<p>Reactive values for latitude, longitude and depth from plot
+module.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ivars</code></td>
+<td>
+<p>Character vector for the variables for filtering.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p>Reactivevalues for selected variable information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Shiny module.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# run filter module stand-alone
+if (interactive()) {
+
+library(oceanexplorer)
+library(shiny)
+
+# data
+NOAA &lt;- get_NOAA("oxygen", 1, "annual")
+
+# gui
+ui &lt;- fluidPage(filter_ui("filter"), plot_ui("worldmap"))
+
+# server
+server &lt;-function(input, output, session) {
+ # table
+ filter &lt;- filter_server(
+  "filter",
+  reactive(NOAA),
+  external = reactiveValues(lon = 190, lat = 33, depth = 20),
+  variable = reactiveValues(variable = "temperature")
+ )
+
+ # plot data
+ output_plot &lt;- plot_server("worldmap", reactive(NOAA), filter$coord)
+ }
+
+ # run app
+ shinyApp(ui, server)
+ }
+</code></pre>
+
+
+</div>

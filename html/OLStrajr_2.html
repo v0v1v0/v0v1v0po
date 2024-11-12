@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OLStraj</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OLStraj</h2>
+
+<h3>Description</h3>
+
+<p>Implements the OLS trajectory analysis method as detailed in Carrig et al (2004).
+The method uses case-by-case ordinary least squares (OLS) regression to estimate
+individual growth curves over time. The function provides options for
+group-level and individual-level plots and accommodates linear and quadratic
+models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OLStraj(
+  data,
+  idvarname = "id",
+  predvarname = "time",
+  outvarname = "score",
+  varlist = c("anti1", "anti2", "anti3", "anti4"),
+  timepts = c(0, 1, 2, 3),
+  inclmiss = FALSE,
+  level = "both",
+  regtype = "lin",
+  numplot = NULL,
+  hist = TRUE,
+  int_bins = 30,
+  lin_bins = 30,
+  quad_bins = 30,
+  box = TRUE,
+  outds = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>idvarname</code></td>
+<td>
+<p>A quoted variable name identifying the column in data which
+serves as the case identifier</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predvarname</code></td>
+<td>
+<p>A quoted predictor variable label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outvarname</code></td>
+<td>
+<p>A quoted outcome variable label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varlist</code></td>
+<td>
+<p>A vector of quoted variable names found in data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timepts</code></td>
+<td>
+<p>A vector specifying how time points should be coded</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inclmiss</code></td>
+<td>
+<p>A logical specifying whether or not to use complete cases.
+Set inclmiss to FALSE in order to filter data down to complete cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>Control which OLS trajectory plots to show.  If level is set to
+"grp" then only group level plots will be shown, if level is set to "ind" then
+only individual level plots will be shown, and if level is set to "both" then
+both group and individual level plots will be shown.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regtype</code></td>
+<td>
+<p>Set regtype to "quad" to include quadratic term in the cbc_lm
+call or set regtype to "lin" to exclude the quadratic term.  Use regtype = "both"
+to include the quadratic term in the cbc_lm call and to include both linear
+and quadratic terms on the individual OLS-estimated trajectory plots.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numplot</code></td>
+<td>
+<p>Specify an integer to subset the number of cases used in OLStraj</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hist</code></td>
+<td>
+<p>Set hist to  TRUE to include histograms or FALSE to exclude</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>int_bins</code></td>
+<td>
+<p>Set the number of bins for the intercept term's histogram</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lin_bins</code></td>
+<td>
+<p>Set the number of bins for the linear term's histogram</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quad_bins</code></td>
+<td>
+<p>Set the number of bins for the quadratic term's histogram</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>box</code></td>
+<td>
+<p>Set box to TRUE to include boxplots or FALSE to exclude</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outds</code></td>
+<td>
+<p>Set outds to TRUE to include the output as a data frame.  Output
+will contain original data used in the OLStraj algorithm with the parameter
+estimates obtained from cbc_lm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Pass additional arguments to cbc_lm</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing an output data frame (if outds is set to TRUE), the
+selected plots, and the case-by-case regression model object.
+</p>
+
+
+<h3>References</h3>
+
+<p>Carrig, M.M., Wirth, R.J., &amp; Curran, P.J. (2004). A SAS Macro for Estimating
+and Visualizing Individual Growth Curves.  Structural Equation Modeling: A
+Multidisciplinary Journal, 11(1), 132-149.
+<a href="https://doi.org/10.1207/S15328007SEM1101_9">doi:10.1207/S15328007SEM1101_9</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  df &lt;- data.frame(id = c(1,2,3,4,5),
+                   var1 = c(3,7,4,5,8),
+                   var2 = c(7,3,9,4,7),
+                   var3 = c(8,5,3,9,7),
+                   var4 = c(1,5,3,9,30))
+
+  olstraj_out &lt;- OLStraj(data = df,
+                         varlist = c("var1", "var2", "var3", "var4"),
+                         regtype = "quad",
+                         int_bins = 5,
+                         lin_bins = 5,
+                         quad_bins = 5)
+</code></pre>
+
+
+</div>

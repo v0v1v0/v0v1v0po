@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict,occumbFit-method</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict method for occumbFit class.</h2>
+
+<h3>Description</h3>
+
+<p>Obtain predictions of parameters related to species occupancy
+and detection from an <code>occumbFit</code> model object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'occumbFit'
+predict(
+  object,
+  newdata = NULL,
+  parameter = c("phi", "theta", "psi"),
+  scale = c("response", "link"),
+  type = c("quantiles", "mean", "samples")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An <code>occumbFit</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>An optional <code>occumbData</code> object with covariates to be
+used for prediction. If omitted, the fitted covariates are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter</code></td>
+<td>
+<p>The parameter to be predicted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>The scale on which the prediction is made.
+<code>type = "response"</code> returns the prediction on the original scale of the
+parameter. <code>type = "link"</code> returns the prediction on the link scale of
+the parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of prediction.
+<code>type = "quantiles"</code> returns 50% quantile as the posterior median of
+the prediction in addition to 2.5 and 97.5% quantiles as the lower and
+upper limits of the 95% credible interval of the prediction.
+<code>type = "mean"</code> returns the posterior mean of the prediction.
+<code>type = "samples"</code> returns the posterior samples of the prediction.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Applying <code>predict()</code> to an <code>occumbFit</code> object generates predictions
+for the specified parameter (<code>phi</code>, <code>theta</code>, or <code>psi</code>) based
+on the estimated effects and the given covariates. It is important to
+recognize that the predictions are specific to the individual species being
+modeled since they depend on the estimated species-specific effects (i.e.,
+<code>alpha</code>, <code>beta</code>, and <code>gamma</code>; see
+<a href="https://fukayak.github.io/occumb/articles/model_specification.html">the package vignette</a> for details).
+When providing <code>newdata</code>, it must thus be assumed that the set of
+species contained in <code>newdata</code> is the same as that of the data being
+fitted.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Predictions are obtained as a matrix or array that can have dimensions
+corresponding to statistics (or samples), species, sites, and replicates.
+The <code>dimension</code> and <code>label</code> attributes are added to the output
+object to inform these dimensions.
+If the sequence read count data <code>y</code> has species, site, or replicate
+names appended as the <code>dimnames</code> attribute (see Details in
+<code>occumbData()</code>), they will be copied into the <code>label</code>
+attribute of the returned object.
+</p>
+
+
+</div>

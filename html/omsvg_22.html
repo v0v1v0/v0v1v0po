@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>SVG</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an <code>svg</code> object</h2>
+
+<h3>Description</h3>
+
+<p>The <code>SVG()</code> function is the entry point for building an SVG from the ground
+up. We can provide predefined <code>height</code> and <code>width</code> attributes that define
+the canvas size for the SVG. From here, we would want to use functions that
+add elements to the SVG object (e.g., <code>svg_rect()</code>, <code>svg_circle()</code>, etc.) and
+thus progressively build the graphic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">SVG(
+  width = NULL,
+  height = NULL,
+  viewbox = NULL,
+  title = NULL,
+  desc = NULL,
+  incl_xmlns = FALSE,
+  oneline = FALSE,
+  anim_iterations = "infinite"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>width, height</code></td>
+<td>
+<p>The width and height attributes on the top-level <code style="white-space: pre;">⁠&lt;svg&gt;⁠</code>
+element. Both of these attributes are optional but, if provided, take in a
+variety of dimensions and keywords. If numerical values are solely used,
+they are assumed to be 'px' length values. Dimensions can be percentage
+values (i.e., <code>"75%"</code>) or length values with the following units: <code>"em"</code>,
+<code>"ex"</code>, <code>"px"</code>, <code>"in"</code>, <code>"cm"</code>, <code>"mm"</code>, <code>"pt"</code>, and <code>"pc"</code>. Using <code>NULL</code>,
+the default, excludes the attribute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>viewbox</code></td>
+<td>
+<p>An optional set of dimensions that defines the SVG <code>viewBox</code>
+attribute. The <code>viewBox</code> for an SVG element is the position and dimension,
+in user space, of an SVG viewport. If supplied, this could either be in the
+form of a four-element, numeric vector corresponding to the <code>"min-x"</code>,
+<code>"min-y"</code>, <code>"width"</code>, and <code>"height"</code> of the rectangle, or, as <code>TRUE</code> which
+uses the vector <code>c(0, 0, width, height)</code>. Using <code>NULL</code>, the default,
+excludes this attribute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>The <code style="white-space: pre;">⁠&lt;title&gt;⁠</code> tag for the finalized SVG.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>desc</code></td>
+<td>
+<p>The <code style="white-space: pre;">⁠&lt;desc&gt;⁠</code> tag for the finalized SVG.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incl_xmlns</code></td>
+<td>
+<p>Should the <code>xmlns</code> attribute be included in the <code style="white-space: pre;">⁠&lt;svg&gt;⁠</code>
+tag? This attribute is only required on the outermost <code>svg</code> element of SVG
+documents, and, it's unnecessary for inner <code>svg</code> elements or inside of HTML
+documents. By default, this is set to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oneline</code></td>
+<td>
+<p>An option to compress the resulting SVG tags such that they
+are reduced to one line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anim_iterations</code></td>
+<td>
+<p>How many should an SVG animation (if defined by use of
+the <code>anims()</code> function) be played? By default this is <code>"infinite"</code> (i.e.,
+looped indefinitely) but we can specify the animation iteration count as
+a positive number.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>svg</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# Create an SVG with nothing drawn
+# within it
+svg &lt;- SVG(width = 200, height = 100)
+
+# Add a rectangle and then a circle
+svg &lt;-
+  svg %&gt;%
+  svg_rect(x = 20, y = 20, width = 40, height = 40) %&gt;%
+  svg_circle(x = 100, y = 40, diameter = 40)
+}
+
+</code></pre>
+
+
+</div>

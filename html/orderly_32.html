@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_migrate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Migrate an orderly archive</h2>
+
+<h3>Description</h3>
+
+<p>Migrate an orderly archive.  This is needed periodically when the
+orderly archive version changes.  If you get a message like
+<code style="white-space: pre;">⁠orderly archive needs migrating from a.b.c =&gt; x.y.z⁠</code> then
+you need to run this function.  The archive version is at most
+equal to the package version.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_migrate(
+  root = NULL,
+  locate = TRUE,
+  to = NULL,
+  dry_run = FALSE,
+  skip_failed = FALSE,
+  clean = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>The version to migrate to.  The default is the current
+archive version; this is almost always what is wanted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>Logical, indicating if we should try running the
+migration but not actually applying it.  This is intended
+primarily for developing new migrations and will probably not
+work if you are multiple archive versions behind.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip_failed</code></td>
+<td>
+<p>Logical, where <code>TRUE</code> we will skip over
+entries that failed to be migrated.  This is expected to be
+useful on local archives only because it violates the
+append-only nature of orderly.  However, if a local archive
+contains unusual copies of orderly archives that can't be
+migrated this might come in helpful.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean</code></td>
+<td>
+<p>Logical, where <code>TRUE</code> (and where the migration
+was successful and <code>dry_run</code> is <code>FALSE</code>) orderly will
+clean up all migration backup files.  Use this periodically to
+clean up the archive.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Sometimes we add change information saved out in the orderly run.
+This requires patching previously run versions of the orderly
+metadata and that's not something we want to do lightly.  This
+function uses a relatively safe, and reversible, way of migrating
+metadata.  We modify the <code>orderly_run.rds</code> files, but will
+create versioned backups as files are changed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>No return value, this function is called only for its side effects
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Without an orderly repository created by a previous version of
+# orderly, this function does nothing interesting:
+path &lt;- orderly::orderly_example("minimal")
+orderly::orderly_migrate(path)
+</code></pre>
+
+
+</div>

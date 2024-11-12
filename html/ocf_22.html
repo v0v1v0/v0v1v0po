@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mean_squared_error</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Accuracy Measures for Ordered Probability Predictions</h2>
+
+<h3>Description</h3>
+
+<p>Accuracy measures for evaluating ordered probability predictions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mean_squared_error(y, predictions, use.true = FALSE)
+
+mean_absolute_error(y, predictions, use.true = FALSE)
+
+mean_ranked_score(y, predictions, use.true = FALSE)
+
+classification_error(y, predictions)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Either the observed outcome vector or a matrix of true probabilities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predictions</code></td>
+<td>
+<p>Predictions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use.true</code></td>
+<td>
+<p>If <code>TRUE</code>, then the program treats <code>y</code> as a matrix of true probabilities.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+
+<h4>MSE, MAE, and RPS</h4>
+
+<p>When calling one of <code>mean_squared_error</code>, <code>mean_absolute_error</code>, or <code>mean_ranked_score</code>,
+<code>predictions</code> must be a matrix of predicted  class probabilities, with as many rows as observations in <code>y</code> and as
+many columns as classes of <code>y</code>.<br></p>
+<p>If <code>use.true == FALSE</code>, the mean squared error (MSE), the mean absolute error (MAE), and the mean ranked probability score
+(RPS) are computed as follows:
+</p>
+<p style="text-align: center;"><code class="reqn">MSE = \frac{1}{n} \sum_{i = 1}^n \sum_{m = 1}^M (1 (Y_i = m) - \hat{p}_m (x))^2</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">MAE = \frac{1}{n} \sum_{i = 1}^n \sum_{m = 1}^M |1 (Y_i = m) - \hat{p}_m (x)|</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">RPS = \frac{1}{n} \sum_{i = 1}^n \frac{1}{M - 1} \sum_{m = 1}^M (1 (Y_i \leq m) - \hat{p}_m^* (x))^2</code>
+</p>
+
+<p>If <code>use.true == TRUE</code>, the MSE, the MAE, and the RPS are computed as follows (useful for simulation studies):
+</p>
+<p style="text-align: center;"><code class="reqn">MSE = \frac{1}{n} \sum_{i = 1}^n \sum_{m = 1}^M (p_m (x) - \hat{p}_m (x))^2</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">MSE = \frac{1}{n} \sum_{i = 1}^n \sum_{m = 1}^M |p_m (x) - \hat{p}_m (x)|</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">RPS = \frac{1}{n} \sum_{i = 1}^n \frac{1}{M - 1} \sum_{m = 1}^M (p_m^* (x) - \hat{p}_m^* (x))^2</code>
+</p>
+
+<p>where:
+</p>
+<p style="text-align: center;"><code class="reqn">p_m (x) = P(Y_i = m | X_i = x)</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">p_m^* (x) = P(Y_i \leq m | X_i = x)</code>
+</p>
+
+
+
+
+<h4>Classification error</h4>
+
+<p>When calling <code>classification_error</code>, <code>predictions</code> must be a vector of predicted class labels.<br></p>
+<p>Classification error (CE) is computed as follows:
+</p>
+<p style="text-align: center;"><code class="reqn">CE = \frac{1}{n} \sum_{i = 1}^n 1 (Y_i \neq \hat{Y}_i)</code>
+</p>
+
+<p>where Y_i are the observed class labels.
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>The MSE, the MAE, the RPS, or the CE of the method.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Riccardo Di Francesco
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mean_ranked_score</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate synthetic data.
+set.seed(1986)
+
+data &lt;- generate_ordered_data(100)
+sample &lt;- data$sample
+Y &lt;- sample$Y
+X &lt;- sample[, -1]
+
+## Training-test split.
+train_idx &lt;- sample(seq_len(length(Y)), floor(length(Y) * 0.5))
+
+Y_tr &lt;- Y[train_idx]
+X_tr &lt;- X[train_idx, ]
+
+Y_test &lt;- Y[-train_idx]
+X_test &lt;- X[-train_idx, ]
+
+## Fit ocf on training sample.
+forests &lt;- ocf(Y_tr, X_tr)
+
+## Accuracy measures on test sample.
+predictions &lt;- predict(forests, X_test)
+
+mean_squared_error(Y_test, predictions$probabilities)
+mean_ranked_score(Y_test, predictions$probabilities)
+classification_error(Y_test, predictions$classification)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BoundedAntiMean, BoundedIsoMean</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute least square estimate of an iso- or antitonic function, bounded below and above by fixed functions</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the bounded least squares isotonic regression estimate, where the bounds
+are two functions such that the estimate is above the lower and below the upper function. To find the solution, we
+use the pool-adjacent-violaters algorithm for a suitable set function M, as discussed in Balabdaoui et al. (2009).
+The problem was initially posed in Barlow et al. (1972), including a remark (on p. 57) that the PAVA can be used to solve
+it. However, a formal proof is not given in Barlow et al. (1972). A short note detailing this proof
+is available from the authors of Balabdaoui et al. (2009) on request.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">BoundedIsoMean(y, w, a = NA, b = NA)
+BoundedAntiMean(y, w, a = NA, b = NA)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code> of measurements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code> of weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code> that gives lower bound.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code> that gives upper bound.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <em>bounded isotonic regression problem</em> is given by: For <code class="reqn">x_1 \le \ldots \le x_n</code> 
+let <code class="reqn">y_i, i = 1, \ldots, n</code> be measurements of some quantity at the <code class="reqn">x_i</code>'s, with true mean function 
+<code class="reqn">g^\circ(x)</code>.
+The goal is to estimate <code class="reqn">g^\circ</code> using least squares, i.e. to minimize
+</p>
+<p style="text-align: center;"><code class="reqn">L(a) = \sum_{i=1}^n w_i(y_i - a_i)^2</code>
+</p>
+
+<p>over the class of vectors <code class="reqn">a</code> that are isotonic and satisfy 
+</p>
+<p style="text-align: center;"><code class="reqn">a_{L, i} \le a_i \le a_{U, i} \ \ \mathrm{for} \ \ \mathrm{all} \ \ i = 1, \ldots, n</code>
+</p>
+
+<p>and two <em>fixed</em> isotonic vectors <code class="reqn">a_L</code> and <code class="reqn">a_U</code>. 
+This problem can be solved using a suitable modification of the pool-adjacent-violaters algorithm, see
+Barlow et al. (1972, p. 57) and Balabdaoui et al. (2009).
+</p>
+<p>The function <code>BoundedAntiMean</code> solves the same problem for antitonic curves, by simply invoking <code>BoundedIsoMean</code>
+flipping some of the arguments.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The bounded isotonic (antitonic) estimate <code class="reqn">(\hat g^\circ)_{i=1}^n</code>.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Fadoua Balabdaoui <a href="mailto:fadoua@ceremade.dauphine.fr">fadoua@ceremade.dauphine.fr</a>
+<br><a href="http://www.ceremade.dauphine.fr/~fadoua">http://www.ceremade.dauphine.fr/~fadoua</a>
+</p>
+<p>Kaspar Rufibach (maintainer) <a href="mailto:kaspar.rufibach@gmail.com">kaspar.rufibach@gmail.com</a>
+<br><a href="http://www.kasparrufibach.ch">http://www.kasparrufibach.ch</a>
+</p>
+<p>Filippo Santambrogio <a href="mailto:filippo.santambrogio@math.u-psud.fr">filippo.santambrogio@math.u-psud.fr</a>
+<br><a href="http://www.math.u-psud.fr/~santambr/">http://www.math.u-psud.fr/~santambr/</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Balabdaoui, F., Rufibach, K., Santambrogio, F. (2009).
+<em>Least squares estimation of two ordered monotone regression curves.</em>
+Preprint.
+</p>
+<p>Barlow, R. E., Bartholomew, D. J., Bremner, J. M., Brunk, H. D. (1972).
+<em>Statistical inference under order restrictions. The theory and application of isotonic regression</em>.
+John Wiley and Sons, London - New York - Sydney.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The functions <code>BoundedAntiMeanTwo</code> and <code>BoundedIsoMeanTwo</code> for the problem of 
+estimating <em>two</em> ordered antitonic (isotonic) regression
+functions. The function <code>BoundedIsoMean</code> depends on the function <code>MA</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## --------------------------------------------------------
+## generate data
+## --------------------------------------------------------
+set.seed(23041977)
+n &lt;- 35
+x &lt;- 1:n / n
+f0 &lt;- - 3 * x + 5
+g0 &lt;- 1 / (x + 0.5) ^ 2 + 1 
+g &lt;- g0 + 3 * rnorm(n)
+
+## --------------------------------------------------------
+## compute estimate
+## --------------------------------------------------------
+g_est &lt;- BoundedAntiMean(g, w = rep(1 / n, n), a = -rep(Inf, n), b = f0)
+
+## --------------------------------------------------------
+## plot observations and estimate
+## --------------------------------------------------------
+par(mar = c(4.5, 4, 3, 0.5))
+plot(0, 0, type = 'n', main = "Observations, upper bound and estimate 
+    for bounded antitonic regression", xlim = c(0, max(x)), ylim = 
+    range(c(f0, g)), xlab = expression(x), ylab = "observations and estimate")
+points(x, g, col = 1)
+lines(x, g0, col = 1, lwd = 2, lty = 2)
+lines(x, f0, col = 2, lwd = 2, lty = 2)
+lines(x, g_est, col = 3, lwd = 2)
+legend("bottomleft", c("truth", "data", "upper bound", "estimate"), 
+    lty = c(1, 0, 1, 1), lwd = c(2, 1, 2, 2), pch = c(NA, 1, NA, NA), 
+    col = c(1, 1:3), bty = 'n')
+    
+## Not run: 
+## --------------------------------------------------------
+## 'BoundedIsoMean' is a generalization of 'isoMean' in the 
+## package 'logcondens'
+## --------------------------------------------------------
+library(logcondens)
+n &lt;- 50
+y &lt;- sort(runif(n, 0, 1)) ^ 2 + rnorm(n, 0, 0.2)
+
+isoMean(y, w = rep(1 / n, n))
+BoundedIsoMean(y, w = rep(1 / n, n), a = -rep(Inf, n), b = rep(Inf, n))
+
+## End(Not run)    
+</code></pre>
+
+
+</div>

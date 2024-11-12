@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotVolumeMap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Visualise flashed-limit order volume.</h2>
+
+<h3>Description</h3>
+
+<p>Plots the points at which volume was added or removed from the limit order
+book.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotVolumeMap(events, action = "deleted", type = c("flashed-limit"),
+  start.time = min(events$timestamp), end.time = max(events$timestamp),
+  price.from = NULL, price.to = NULL, volume.from = NULL,
+  volume.to = NULL, volume.scale = 1, log.scale = F)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>events</code></td>
+<td>
+<p>Limit order <code>events</code> data.frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>action</code></td>
+<td>
+<p>"deleted" for cancelled volume, "added" for added volume.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>default = c("flashed-limit"). Set of types.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start.time</code></td>
+<td>
+<p>Plot events from this time onward.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end.time</code></td>
+<td>
+<p>Plot events up until this time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>price.from</code></td>
+<td>
+<p>Plot events with price levels &gt;= this value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>price.to</code></td>
+<td>
+<p>Plot events with price levels &lt;= this value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>volume.from</code></td>
+<td>
+<p>Plot events with volume &gt;= this value relevant to
+volume.scale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>volume.to</code></td>
+<td>
+<p>Plot events with volume &lt;= this value relevant to
+volume scale.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>volume.scale</code></td>
+<td>
+<p>Volume scale factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.scale</code></td>
+<td>
+<p>If true, plot volume on logarithmic scale.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A flashed limit-order is a "fleeting" limit order: an order was added,
+then removed (usually within a very short period of time). This plot is
+especially useful for identifying individual trading algorithms by price and
+volume.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# plot all fleeting limit order volume using logarithmic scale.
+with(lob.data, plotVolumeMap(events, volume.scale=10^-8, log.scale=TRUE))
+
+# "fleeting" order volume within 1 hour range up until 10 units of volume.
+with(lob.data, plotVolumeMap(events, volume.scale=10^-8,
+    start.time=as.POSIXct("2015-05-01 02:30:00.000", tz="UTC"),
+    end.time=as.POSIXct("2015-05-01 03:30:00.000", tz="UTC"),
+    volume.to=10))
+
+</code></pre>
+
+
+</div>

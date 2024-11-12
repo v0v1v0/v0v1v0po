@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>properties</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Properties signaling fileds</h2>
+
+<h3>Description</h3>
+
+<p>Convenience function for defining a set of reference class fields
+that signals when set.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">properties(fields=list(), prototype=list())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fields</code></td>
+<td>
+<p>list of names of the field and associated fields class</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prototype</code></td>
+<td>
+<p>A list of values declaring a default value for a field.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When constructing signaling fields in this way, each field has the
+ability to register its own signal and at the same time, there is
+one top level signal which could be emitted no matter which field
+changes. Please see the example to learn to register global signal
+and individual signal.</p>
+
+
+<h3>Value</h3>
+
+<p>A list that is easily concatenated into the field list</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Michael Lawrence, Tengfei Yin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## we could pass prototype as in S4
+GPars.gen &lt;- setRefClass("GraphicProperties",
+                fields = properties(fields = list(size = "numeric",
+                                                  color = "character"),
+                                    prototype = list(size =1,
+                                                     color = "red")))
+
+obj &lt;- GPars.gen$new()
+## since it's not PropertySet, no global signal
+## let's register individual signal
+obj$sizeChanged$connect(function(){
+  print("size changed")
+})
+## emit signal
+obj$size &lt;- 3
+## no signal
+obj$color &lt;- "black"</code></pre>
+
+
+</div>

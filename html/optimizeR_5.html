@@ -1,0 +1,465 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Objective</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Specify objective function</h2>
+
+<h3>Description</h3>
+
+<p>The <code>Objective</code> object specifies the framework for an objective function
+for numerical optimization.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>Objective</code> object.
+</p>
+
+
+<h3>Active bindings</h3>
+
+<div class="r6-active-bindings">
+
+<dl>
+<dt><code>objective_name</code></dt>
+<dd>
+<p>A <code>character</code>, a label for the objective function.</p>
+</dd>
+<dt><code>fixed_arguments</code></dt>
+<dd>
+<p>A <code>character</code>, the names of the fixed arguments (if any).</p>
+</dd>
+<dt><code>seconds</code></dt>
+<dd>
+<p>A <code>numeric</code>, a time limit in seconds. Computations are interrupted
+prematurely if <code>seconds</code> is exceeded.
+</p>
+<p>No time limit if <code>seconds = Inf</code> (the default).
+</p>
+<p>Note the limitations documented in <code>setTimeLimit</code>.</p>
+</dd>
+<dt><code>hide_warnings</code></dt>
+<dd>
+<p>Either <code>TRUE</code> to hide warnings when evaluating the objective function,
+or <code>FALSE</code> (default) if not.</p>
+</dd>
+<dt><code>verbose</code></dt>
+<dd>
+<p>Either <code>TRUE</code> (default) to print status messages, or <code>FALSE</code>
+to hide those.</p>
+</dd>
+<dt><code>npar</code></dt>
+<dd>
+<p>An <code>integer</code> vector, defining the length of each target argument.</p>
+</dd>
+<dt><code>output_template</code></dt>
+<dd>
+<p>A template of the expected output value, used for the <code>validate</code>
+method.</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-Objective-new"><code>Objective$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Objective-set_argument"><code>Objective$set_argument()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Objective-get_argument"><code>Objective$get_argument()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Objective-remove_argument"><code>Objective$remove_argument()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Objective-validate"><code>Objective$validate()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Objective-evaluate"><code>Objective$evaluate()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Objective-print"><code>Objective$print()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Objective-clone"><code>Objective$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-Objective-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Creates a new <code>Objective</code> object.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Objective$new(f, target = NULL, npar, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>f</code></dt>
+<dd>
+<p>A <code>function</code> to be optimized.
+</p>
+<p>It is expected that <code>f</code> has at least one <code>numeric</code> argument.
+</p>
+<p>Further, it is expected that the return value of <code>f</code> is of the
+structure <code>numeric(1)</code>, i.e. a single <code>numeric</code> value (although
+this can be altered via the <code>output_template</code> field).</p>
+</dd>
+<dt><code>target</code></dt>
+<dd>
+<p>A <code>character</code>, the argument name(s) of <code>f</code> that get optimized.
+</p>
+<p>All target arguments must receive a <code>numeric</code> <code>vector</code>.
+</p>
+<p>Can be <code>NULL</code> (default), then it is the first argument of <code>f</code>.</p>
+</dd>
+<dt><code>npar</code></dt>
+<dd>
+<p>A <code>integer</code> of the same length as <code>target</code>, defining the length
+of the respective <code>numeric</code> <code>vector</code> argument.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to <code>f</code> that are fixed during
+the optimization.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A new <code>Objective</code> object.
+</p>
+
+
+<hr>
+<a id="method-Objective-set_argument"></a>
+
+
+
+<h4>Method <code>set_argument()</code>
+</h4>
+
+<p>Set a fixed function argument.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Objective$set_argument(..., overwrite = TRUE, verbose = self$verbose)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to <code>f</code> that are fixed during
+the optimization.</p>
+</dd>
+<dt><code>overwrite</code></dt>
+<dd>
+<p>Either <code>TRUE</code> (default) to allow overwriting, or <code>FALSE</code> if not.</p>
+</dd>
+<dt><code>verbose</code></dt>
+<dd>
+<p>Either <code>TRUE</code> (default) to print status messages, or <code>FALSE</code>
+to hide those.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>Invisibly the <code>Objective</code> object.
+</p>
+
+
+<hr>
+<a id="method-Objective-get_argument"></a>
+
+
+
+<h4>Method <code>get_argument()</code>
+</h4>
+
+<p>Get a fixed function argument.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Objective$get_argument(argument_name, verbose = self$verbose)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>argument_name</code></dt>
+<dd>
+<p>A <code>character</code>, a name of an argument for <code>f</code>.</p>
+</dd>
+<dt><code>verbose</code></dt>
+<dd>
+<p>Either <code>TRUE</code> (default) to print status messages, or <code>FALSE</code>
+to hide those.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The argument value.
+</p>
+
+
+<hr>
+<a id="method-Objective-remove_argument"></a>
+
+
+
+<h4>Method <code>remove_argument()</code>
+</h4>
+
+<p>Remove a fixed function argument.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Objective$remove_argument(argument_name, verbose = self$verbose)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>argument_name</code></dt>
+<dd>
+<p>A <code>character</code>, a name of an argument for <code>f</code>.</p>
+</dd>
+<dt><code>verbose</code></dt>
+<dd>
+<p>Either <code>TRUE</code> (default) to print status messages, or <code>FALSE</code>
+to hide those.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>Invisibly the <code>Objective</code> object.
+</p>
+
+
+<hr>
+<a id="method-Objective-validate"></a>
+
+
+
+<h4>Method <code>validate()</code>
+</h4>
+
+<p>Validate an <code>Objective</code> object.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Objective$validate(.at)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>.at</code></dt>
+<dd>
+<p>A <code>numeric</code> of length <code>sum(self$npar)</code>, the values for the target
+arguments written in a single vector.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>Invisibly the <code>Objective</code> object.
+</p>
+
+
+<hr>
+<a id="method-Objective-evaluate"></a>
+
+
+
+<h4>Method <code>evaluate()</code>
+</h4>
+
+<p>Evaluate the objective function.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Objective$evaluate(.at, .negate = FALSE, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>.at</code></dt>
+<dd>
+<p>A <code>numeric</code> of length <code>sum(self$npar)</code>, the values for the target
+arguments written in a single vector.</p>
+</dd>
+<dt><code>.negate</code></dt>
+<dd>
+<p>Either <code>TRUE</code> to negate the <code>numeric</code> return value of
+<code>f</code>, or <code>FALSE</code> (default) else.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to <code>f</code> that are fixed during
+the optimization.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The objective value.
+</p>
+
+
+<hr>
+<a id="method-Objective-print"></a>
+
+
+
+<h4>Method <code>print()</code>
+</h4>
+
+<p>Print details of the <code>Objective</code> object.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Objective$print()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>Invisibly the <code>Objective</code> object.
+</p>
+
+
+<hr>
+<a id="method-Objective-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Objective$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### define log-likelihood function of Gaussian mixture model
+llk &lt;- function(mu, sd, lambda, data) {
+  sd &lt;- exp(sd)
+  lambda &lt;- plogis(lambda)
+  cluster_1 &lt;- lambda * dnorm(data, mu[1], sd[1])
+  cluster_2 &lt;- (1 - lambda) * dnorm(data, mu[2], sd[2])
+  sum(log(cluster_1 + cluster_2))
+}
+
+### the log-likelihood function is supposed to be optimized over the first
+### three arguments, the 'data' argument is constant
+objective &lt;- Objective$new(
+  f = llk, target = c("mu", "sd", "lambda"), npar = c(2, 2, 1),
+  data = faithful$eruptions
+)
+
+### evaluate the objective function at 1:5 (1:2 is passed to mu, 3:4 to sd,
+### and 5 to lambda)
+objective$evaluate(1:5)
+</code></pre>
+
+
+</div>

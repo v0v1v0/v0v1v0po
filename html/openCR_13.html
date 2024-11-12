@@ -1,0 +1,328 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Internal</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal Functions</h2>
+
+<h3>Description</h3>
+
+ 
+<p>Functions called by <code>openCR.fit</code> when <code>details$R == TRUE</code>, and some others 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+prwi (type, n, x, jj, cumss, nmix, w, fi, li, openval, PIA, PIAJ, intervals, CJSp1)
+
+prwisecr (type, n, x, nc, jj, kk, mm, nmix, cumss, w, fi, li, gk, openval, 
+    PIA, PIAJ, binomN, Tsk, intervals, h, hindex, CJSp1, moveargsi, 
+    movementcode, sparsekernel, edgecode, usermodel, kernel = NULL, 
+    mqarray = NULL, cellsize = NULL, r0)
+
+PCH1 (type, x, nc, cumss, nmix, openval0, PIA0, PIAJ, intervals)
+
+PCH1secr (type, individual, x, nc, jj, cumss, kk, mm, openval0, PIA0, PIAJ, gk0,
+    binomN, Tsk, intervals,  moveargsi, movementcode, sparsekernel, edgecode, 
+    usermodel, kernel, mqarray, cellsize, r0) 
+
+pradelloglik (type, w, openval, PIAJ, intervals)
+
+cyclic.fit (..., maxcycle = 10, tol = 1e-5, trace = FALSE) 
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>integer index of capture history</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>integer index of latent class</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jj</code></td>
+<td>
+<p>integer number of primary sessions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cumss</code></td>
+<td>
+<p>integer vector cumulative number of secondary sessions at start of 
+each primary session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nmix</code></td>
+<td>
+<p>integer number of latent classes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>array of capture histories</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fi</code></td>
+<td>
+<p>integer first primary session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>li</code></td>
+<td>
+<p>integer last primary session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>openval</code></td>
+<td>
+<p>dataframe of real parameter values (one unique combination per row)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PIA</code></td>
+<td>
+<p>parameter index array (secondary sessions)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PIAJ</code></td>
+<td>
+<p>parameter index array (primary sessions)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervals</code></td>
+<td>
+<p>integer vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>numeric 3-D array of hazard (mixture, mask position, hindex)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hindex</code></td>
+<td>
+<p>integer n x s matrix indexing h for each individual, secondary session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CJSp1</code></td>
+<td>
+<p>logical; should CJS likelihood include first primary session?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moveargsi</code></td>
+<td>
+<p>integer 2-vector for index of move.a, move.b (negative if unused)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>movementcode</code></td>
+<td>
+<p>integer 0 static, 1 uncorrelated etc.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sparsekernel</code></td>
+<td>
+<p>logical; if TRUE then only cardinal and intercardinal axes are included</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgecode</code></td>
+<td>
+<p>integer 0 none, 1 wrap, 2 truncate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>usermodel</code></td>
+<td>
+<p>function to fill kernel</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernel</code></td>
+<td>
+<p>dataframe with columns x,y relative coordinates of kernel cell centres</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mqarray</code></td>
+<td>
+<p>integer matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cellsize</code></td>
+<td>
+<p>numeric length of side of kernel cell</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r0</code></td>
+<td>
+<p>numeric; effective radius of zero cell for movement models (usually 0.5)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gk</code></td>
+<td>
+<p>real array</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Tsk</code></td>
+<td>
+<p>array detector usage</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>openval0</code></td>
+<td>
+<p>openval for naive animals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PIA0</code></td>
+<td>
+<p>PIA for naive animals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>individual</code></td>
+<td>
+<p>logical; TRUE if model uses individual covariates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gk0</code></td>
+<td>
+<p>gk for naive animals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>number of capture histories</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kk</code></td>
+<td>
+<p>number of detectors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mm</code></td>
+<td>
+<p>number of points on habitat mask</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binomN</code></td>
+<td>
+<p>code for distribution of counts (see <code>secr.fit</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>named arguments passed to <code>openCR.fit</code> or <code>predict</code> (see extractFocal)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxcycle</code></td>
+<td>
+<p>integer maximum number of cycles (maximizations of a given parameter)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>absolute tolerance for improvement in log likelihood</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+<p>logical; if TRUE a status message is given at each maximization</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>cyclic.fit</code> implements cyclic fixing more or less as described by
+Schwarz and Arnason (1996) and used by Pledger et al. (2010). The
+intention is to speed up maximization when there are many (beta)
+parameters. However, fitting is slower than with a single call to
+<code>openCR.fit</code>, and the function is here only as a curiosity
+(it is not exported in 1.2.0).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>cyclic.fit</code> returns a fitted model object of class ‘openCR’.
+</p>
+<p>Other functions return numeric components of the log likelihood.
+</p>
+
+
+<h3>References</h3>
+
+<p>Pledger, S., Pollock, K. H. and Norris, J. L. (2010) Open
+capture–recapture models with heterogeneity: II. Jolly-Seber
+model. <em>Biometrics</em> <b>66</b>, 883–890.
+</p>
+<p>Schwarz, C. J. and Arnason, A. N. (1996) A general methodology for the
+analysis of capture-recapture experiments in open
+populations. <em>Biometrics</em> <b>52</b>, 860–873.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openCR.fit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+openCR:::cyclic.fit(capthist = dipperCH, model = list(p~t, phi~t), tol = 1e-5, trace = TRUE)
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

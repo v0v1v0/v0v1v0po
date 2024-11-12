@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>operator.type</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return the type for an operator.</h2>
+
+<h3>Description</h3>
+
+<p>Given an operator or its name/symbol, return the <b>type</b> of operator.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">operator.type(op)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>op</code></td>
+<td>
+<p>An operator either as a name/symbol or function.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The operator is first checked against all operators that have been
+registered with the <code>setOperator</code> command.  If there is a match,
+its type is returned. If no matching operator is found, <code>op</code> is matched
+against unregistered operators that have been defined with the
+<code>%any%</code>-syntax. If a match is found, UNREGISTERED is returned.
+</p>
+<p>The list of operators are maintained in <code>.Options\$operators</code> and be
+altered suing the <code>setOperator</code> command.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>character</code> value.
+</p>
+<p>For registered operators, the registered type is returned.  For Base R
+operators, the types come from <code>Syntax</code>.
+</p>
+<p>For operators defined with the <code>%any%</code>-syntax but, not registered using
+<code>setOperator</code>, "UNREGISTERED" is returned.
+</p>
+<p>NULL is returned otherwise.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Christopher Brown
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>operators</code>, <code>setOperator</code>. Syntax
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+ ## Not run: 
+  operator.type( `+` )
+  operator.type( `&lt;=` )
+  
+  e &lt;- quote( A +B )
+  operator.type( e[[1]] )
+
+  operator.type( as.name('+') )
+ 
+## End(Not run)
+ 
+</code></pre>
+
+
+</div>

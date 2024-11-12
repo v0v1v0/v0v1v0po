@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onto_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get <code>ontology_plot</code> object</h2>
+
+<h3>Description</h3>
+
+<p>A convenience wrapper for the <code>get_ontology_plot</code> function, enabling functions to be passed to generate graphical parameters for <code>terms</code> automatically.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onto_plot(
+  ontology,
+  term_sets = NULL,
+  frequencies = NULL,
+  terms = remove_uninformative_terms(ontology, term_sets),
+  edge_attributes = list(color = "#000000", lty = "solid"),
+  fillcolor = "powderblue",
+  label = simple_labels,
+  color = "transparent",
+  width = 0.75,
+  fontsize = 30,
+  style = "filled",
+  fixedsize = "true",
+  shape = "circle",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p><code>ontology_index</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>term_sets</code></td>
+<td>
+<p>List of character vectors of ontological term IDs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>frequencies</code></td>
+<td>
+<p>Numeric vector of term frequencies named by term IDs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>terms</code></td>
+<td>
+<p>Character vector of ontological terms</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edge_attributes</code></td>
+<td>
+<p>List of properties to set for arrows (note, these properties will be used for all arrow).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fillcolor</code></td>
+<td>
+<p>Character vector of colours to fill nodes corresponding to <code>terms</code> with. Alternatively a function to set the colours of the nodes in the graph based on <code>term_sets</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label</code></td>
+<td>
+<p>Character vector of labels (or function to set them).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color</code></td>
+<td>
+<p>Character vector of colours for borders of nodes representing <code>terms</code> (or function to set them).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>Numeric vector of widths for nodes (of function to set them).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fontsize</code></td>
+<td>
+<p>Numeric vector of font sizes for the text to be placed in the nodes (or function to set them).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>Display style for nodes, defaults to <code>"filled"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixedsize</code></td>
+<td>
+<p>Character indicating whether nodes should be fixed size, <code>"true"</code>, or adjusted to fit around the contained text, <code>"false"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape</code></td>
+<td>
+<p>Character vector of shape names for nodes (or function to set them). Defaults to <code>"circle"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other node attributes for dot format.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>ontology_plot</code> object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>get_ontology_plot</code>, <code>write_dot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ontologyIndex)
+data(hpo)
+hpo_phenotypes &lt;- c(
+	A=c("HP:0001382","HP:0004272","HP:0007917","HP:0004912","HP:0001596"),
+	B=c("HP:0001382","HP:0004272","HP:0002165","HP:0004800","HP:0004912"),
+	C=c("HP:0004800","HP:0001382","HP:0004912","HP:0007917","HP:0008743"),
+	D=c("HP:0001257","HP:0001382","HP:0007917","HP:0012623","HP:0002165"),
+	E=c("HP:0007917","HP:0004800","HP:0004272","HP:0001596","HP:0002165")
+)
+
+onto_plot(
+	ontology=hpo,
+	term_sets=hpo_phenotypes
+)
+</code></pre>
+
+
+</div>

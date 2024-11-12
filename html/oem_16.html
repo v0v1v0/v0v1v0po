@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.oem</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prediction method for Orthogonalizing EM fitted objects</h2>
+
+<h3>Description</h3>
+
+<p>Prediction method for Orthogonalizing EM fitted objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'oem'
+predict(
+  object,
+  newx,
+  s = NULL,
+  which.model = 1,
+  type = c("link", "response", "coefficients", "nonzero", "class"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>fitted "oem" model object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newx</code></td>
+<td>
+<p>Matrix of new values for <code>x</code> at which predictions are to be made. Must be a matrix; can be sparse as in the 
+<code>CsparseMatrix</code> objects of the <span class="pkg">Matrix</span> package. 
+This argument is not used for <code>type=c("coefficients","nonzero")</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>Value(s) of the penalty parameter lambda at which predictions are required. Default is the entire sequence used to create 
+the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.model</code></td>
+<td>
+<p>If multiple penalties are fit and returned in the same oem object, the <code>which.model</code> argument is used to 
+specify which model to make predictions for. For example, if the oem object <code>oemobj</code> was fit with argument 
+<code>penalty = c("lasso", "grp.lasso")</code>, then which.model = 2 provides predictions for the group lasso model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of prediction required. <code>type = "link"</code> gives the linear predictors for the <code>"binomial"</code> model; for <code>"gaussian"</code> models it gives the fitted values. 
+<code>type = "response"</code> gives the fitted probabilities for <code>"binomial"</code>. <code>type = "coefficients"</code> computes the coefficients at the requested values for <code>s</code>.
+<code>type = "class"</code> applies only to <code>"binomial"</code> and produces the class label corresponding to the maximum probability.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not used</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object depending on the type argument
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+n.obs &lt;- 1e4
+n.vars &lt;- 100
+n.obs.test &lt;- 1e3
+
+true.beta &lt;- c(runif(15, -0.5, 0.5), rep(0, n.vars - 15))
+
+x &lt;- matrix(rnorm(n.obs * n.vars), n.obs, n.vars)
+y &lt;- rnorm(n.obs, sd = 3) + x %*% true.beta
+x.test &lt;- matrix(rnorm(n.obs.test * n.vars), n.obs.test, n.vars)
+y.test &lt;- rnorm(n.obs.test, sd = 3) + x.test %*% true.beta
+
+fit &lt;- oem(x = x, y = y, 
+           penalty = c("lasso", "grp.lasso"), 
+           groups = rep(1:10, each = 10), 
+           nlambda = 10)
+
+preds.lasso &lt;- predict(fit, newx = x.test, type = "response", which.model = 1)
+preds.grp.lasso &lt;- predict(fit, newx = x.test, type = "response", which.model = 2)
+
+apply(preds.lasso,     2, function(x) mean((y.test - x) ^ 2))
+apply(preds.grp.lasso, 2, function(x) mean((y.test - x) ^ 2))
+
+</code></pre>
+
+
+</div>

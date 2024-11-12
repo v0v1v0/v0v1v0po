@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>offsetGridText</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Insert Offset Text Annotation into <code>trellis</code> Plot</h2>
+
+<h3>Description</h3>
+
+<p>This is a wrapper function around <code>Orcs:::calcOffsetGridText</code> and <strong>grid</strong>
+based text drawing functions (currently including <code>grid::grid.text()</code> and
+<code>grid.stext()</code>) that automatically adds offset text annotations to a
+<code>trellis</code> plot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">offsetGridText(
+  x,
+  y = NULL,
+  labels,
+  xlim = NULL,
+  ylim = NULL,
+  pos = NULL,
+  stext = FALSE,
+  offset = 0.02,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>numeric</code> vector containing x coordinates, or a 2-column <code>matrix</code>
+containing x and y coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A <code>numeric</code> vector containing y coordinates, or <code>NULL</code> if 'x' is a
+two-column <code>matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>The text to be written as <code>character</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim, ylim</code></td>
+<td>
+<p>X and Y-axis limits (<code>c(min, max)</code>) of the current plot. If
+not supplied, limits are automatically calculated from supplied x and y
+coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pos</code></td>
+<td>
+<p>Text position specifier(s) as <code>integer</code> used by
+<code>graphics::text()</code>. If not supplied, optimal text positions will be
+determined with respect to neighboring locations using
+<code>plotrix::thigmophobe()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stext</code></td>
+<td>
+<p><code>logical</code>, defaults to <code>FALSE</code>. If <code>TRUE</code>, shadow text will be
+drawn around 'labels'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>A <code>numeric</code> offset in normalized parent coordinates (<code>"npc"</code>,
+see <code>grid::unit()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to the respective <strong>grid</strong> text
+drawing function (depends on 'stext').</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Florian Detsch
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">KiLi = terra::rast(system.file("extdata/KiLi.tif", package = "Orcs"))
+
+# kilimanjaro peaks
+peaks = data.frame(Peak = c("Kibo", "Mawenzi", "Shira")
+                   , Lon = c(37.359031, 37.455061, 37.210408)
+                   , Lat = c(-3.065053, -3.095436, -3.038222))
+
+peaks = sf::st_as_sf(peaks, crs = 4326, coords = c("Lon", "Lat"))
+
+# visualization
+xlim_kili &lt;- c(37.15, 37.55)
+ylim_kili &lt;- c(-3.25, -2.9)
+
+if (requireNamespace("raster", quietly = TRUE)) {
+   p = raster::spplot(KiLi[[1]], col.regions = "transparent", colorkey = FALSE, 
+              xlim = xlim_kili, ylim = ylim_kili,
+              scales = list(draw = TRUE, y = list(rot = 90)), 
+              sp.layout = rgb2spLayout(KiLi, quantiles = c(0, 1), alpha = .8)) + 
+     latticeExtra::layer(sp.points(as(peaks, "Spatial"), cex = 1.5, pch = 20, col = "black"))
+   
+   print(p)
+   
+   grid::downViewport(lattice::trellis.vpname(name = "figure"))
+   offsetGridText(x = sf::st_coordinates(peaks), labels = peaks$Peak,  
+                  xlim = xlim_kili, ylim = ylim_kili, stext = TRUE, offset = .02,
+                  gp = grid::gpar(fontsize = 16))
+}
+
+</code></pre>
+
+
+</div>

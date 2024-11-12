@@ -1,0 +1,228 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_lib</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Manage spectral libraries</h2>
+
+<h3>Description</h3>
+
+<p>These functions will import the spectral libraries from Open Specy if they
+were not already downloaded. The CRAN does not allow for deployment of large
+datasets so this was a workaround that we are using to make sure everyone can
+easily get Open Specy functionality running on their desktop. Please see the
+references when using these libraries. These libraries are the accumulation
+of a massive amount of effort from independant groups and each should be
+attributed when you are using their data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check_lib(
+  type = c("derivative", "nobaseline", "raw", "mediod", "model"),
+  path = "system",
+  condition = "warning"
+)
+
+get_lib(
+  type = c("derivative", "nobaseline", "raw", "medoid", "model"),
+  path = "system",
+  ...
+)
+
+load_lib(type, path = "system")
+
+rm_lib(
+  type = c("derivative", "nobaseline", "raw", "mediod", "model"),
+  path = "system"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>library type to check/retrieve; defaults to
+<code>c("derivative", "nobaseline", "raw", "medoid", "model")</code> which reads
+everything.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>where to save or look for local library files; defaults to
+<code>"system"</code> pointing to
+<code>system.file("extdata", package = "OpenSpecy")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condition</code></td>
+<td>
+<p>determines if <code>check_lib()</code> should warn
+(<code>"warning"</code>, the default) or throw and error (<code>"error"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to <code>osf_download()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>check_lib()</code> checks to see if the Open Specy reference library
+already exists on the users computer.
+<code>get_lib()</code> downloads the Open Specy library from OSF
+(<a href="https://doi.org/10.17605/OSF.IO/X7DPZ">doi:10.17605/OSF.IO/X7DPZ</a>).
+<code>load_lib()</code> will load the library into the global environment for use
+with the Open Specy functions.
+<code>rm_lib()</code> removes the libraries from your computer.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>check_lib()</code> and <code>get_lib()</code> return messages only;
+<code>load_lib()</code> returns an <code>OpenSpecy</code> object containing the
+respective spectral reference library.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Zacharias Steinmetz, Win Cowger
+</p>
+
+
+<h3>References</h3>
+
+<p>Bell IB, Clark RJH, Gibbs PJ (2010). “Raman Spectroscopic Library.”
+<em>Christopher Ingold Laboratories, University College London, UK</em>.
+<a href="https://www.chem.ucl.ac.uk/resources/raman/">https://www.chem.ucl.ac.uk/resources/raman/</a>.
+</p>
+<p>Berzinš K, Sales RE, Barnsley JE, Walker G, Fraser-Miller SJ, Gordon KC
+(2020). “Low-Wavenumber Raman Spectral Database of Pharmaceutical
+Excipients.” <em>Vibrational Spectroscopy</em> <strong>107</strong>, 103021.
+<a href="https://doi.org/10.5281/zenodo.3614035">doi:10.5281/zenodo.3614035</a>.
+</p>
+<p>Cabernard L, Roscher L, Lorenz C, Gerdts G, Primpke S (2018). “Comparison of
+Raman and Fourier Transform Infrared Spectroscopy for the Quantification of
+Microplastics in the Aquatic Environment.” <em>Environmental Science &amp;
+Technology</em> <strong>52</strong>(22), 13279–13288. <a href="https://doi.org/10.1021/acs.est.8b03438">doi:10.1021/acs.est.8b03438</a>.
+</p>
+<p>Caggiani MC, Cosentino A, Mangone A (2016). “Pigments Checker version 3.0, a
+handy set for conservation scientists: A free online Raman spectra database.”
+<em>Microchemical Journal</em> <strong>129</strong>, 123–132.
+<a href="https://doi.org/10.1016/j.microc.2016.06.020">doi:10.1016/j.microc.2016.06.020</a>.
+</p>
+<p>Chabuka BK, Kalivas JH (2020). “Application of a Hybrid Fusion Classification
+Process for Identification of Microplastics Based on Fourier Transform
+Infrared Spectroscopy. Applied Spectroscopy.” <em>Applied Spectroscopy</em>
+<strong>74</strong>(9), 1167–1183. <a href="https://doi.org/10.1177/0003702820923993">doi:10.1177/0003702820923993</a>.
+</p>
+<p>Cowger, W (2023). “Library data.” <em>OSF</em>. <a href="https://doi.org/10.17605/OSF.IO/X7DPZ">doi:10.17605/OSF.IO/X7DPZ</a>.
+</p>
+<p>Cowger W, Gray A, Christiansen SH, De Frond H, Deshpande AD, Hemabessiere L,
+Lee E, Mill L, et al. (2020). “Critical Review of Processing and
+Classification Techniques for Images and Spectra in Microplastic Research.”
+<em>Applied Spectroscopy</em>, <strong>74</strong>(9), 989–1010.
+<a href="https://doi.org/10.1177/0003702820929064">doi:10.1177/0003702820929064</a>.
+</p>
+<p>Cowger W, Roscher L, Chamas A, Maurer B, Gehrke L, Jebens H, Gerdts G,
+Primpke S (2023). “High Throughput FTIR Analysis of Macro and Microplastics
+with Plate Readers.” <em>ChemRxiv Preprint</em>. <a href="https://doi.org/10.26434/chemrxiv-2023-x88ss">doi:10.26434/chemrxiv-2023-x88ss</a>.
+</p>
+<p>De Frond H, Rubinovitz R, Rochman CM (2021). “µATR-FTIR Spectral Libraries of
+Plastic Particles (FLOPP and FLOPP-e) for the Analysis of Microplastics.”
+<em>Analytical Chemistry</em> <strong>93</strong>(48), 15878–15885.
+<a href="https://doi.org/10.1021/acs.analchem.1c02549">doi:10.1021/acs.analchem.1c02549</a>.
+</p>
+<p>El Mendili Y, Vaitkus A, Merkys A, Gražulis S, Chateigner D, Mathevet F,
+Gascoin S, Petit S, Bardeau JF, Zanatta M, Secchi M, Mariotto G, Kumar A,
+Cassetta M, Lutterotti L, Borovin E, Orberger B, Simon P, Hehlen B,
+Le Guen M (2019). “Raman Open Database: first interconnected Raman–X-ray
+diffraction open-access resource for material identification.” <em>Journal of
+Applied Crystallography</em>, <strong>52</strong>(3), 618–625.
+<a href="https://doi.org/10.1107/s1600576719004229">doi:10.1107/s1600576719004229</a>.
+</p>
+<p>Johnson TJ, Blake TA, Brauer CS, Su YF, Bernacki BE, Myers TL, Tonkyn RG,
+Kunkel BM, Ertel AB (2015). “Reflectance Spectroscopy for Sample
+Identification: Considerations for Quantitative Library
+Results at Infrared Wavelengths.” <em>International Conference on Advanced
+Vibrational Spectroscopy (ICAVS 8)</em>.
+<a href="https://www.osti.gov/biblio/1452877">https://www.osti.gov/biblio/1452877</a>.
+</p>
+<p>Lafuente R, Downs RT, Yang H, Stone N (2016). “The power of databases: The
+RRUFF project.” <em>Highlights in Mineralogical Crystallography</em>.
+<a href="https://doi.org/10.1515/9783110417104-003">doi:10.1515/9783110417104-003</a>.
+</p>
+<p>Munno K, De Frond H, O’Donnell B, Rochman CM (2020). “Increasing the
+Accessibility for Characterizing Microplastics: Introducing New
+Application-Based and Spectral Libraries of Plastic Particles (SLoPP and
+SLoPP-E).” <em>Analytical Chemistry</em> <strong>92</strong>(3), 2443–2451.
+<a href="https://doi.org/10.1021/acs.analchem.9b03626">doi:10.1021/acs.analchem.9b03626</a>.
+</p>
+<p>Myers TL, Brauer CS, Su YF, Blake TA, Johnson TJ, Richardson RL (2014).
+“The influence of particle size on infrared reflectance spectra.”
+<em>Proceedings Volume 9088, Algorithms and Technologies for Multispectral,
+Hyperspectral, and Ultraspectral Imagery XX</em>, 908809.
+<a href="https://doi.org/10.1117/12.2053350">doi:10.1117/12.2053350</a>.
+</p>
+<p>Myers TL, Brauer CS, Su YF, Blake TA, Tonkyn RG, Ertel AB, Johnson TJ,
+Richardson RL (2015). “Quantitative reflectance spectra of solid powders
+as a function of particle size.” <em>Applied Optics</em> <strong>54</strong>(15), 4863–4875.
+<a href="https://doi.org/10.1364/ao.54.004863">doi:10.1364/ao.54.004863</a>.
+</p>
+<p>Primpke S, Wirth M, Lorenz C, Gerdts G (2018). “Reference database design
+for the automated analysis of microplastic samples based on Fourier
+transform infrared (FTIR) spectroscopy.”
+<em>Analytical and Bioanalytical Chemistry</em> <strong>410</strong>, 5131–-5141.
+<a href="https://doi.org/10.1007/s00216-018-1156-x">doi:10.1007/s00216-018-1156-x</a>.
+</p>
+<p>Roscher L, Fehres A, Reisel L, Halbach M, Scholz-Böttcher B, Gerriets M,
+Badewien TH, Shiravani G, Wurpts A, Primpke S, Gerdts G (2021). “Abundances
+of large microplastics (L-MP, 500-5000 µm) in surface waters of the Weser
+estuary and the German North Sea.” <em>PANGAEA</em>. <a href="https://doi.org/10.1594/PANGAEA.938143">doi:10.1594/PANGAEA.938143</a>.
+</p>
+<p>“Handbook of Raman Spectra for geology” (2023).
+<a href="http://www.geologie-lyon.fr/Raman/">http://www.geologie-lyon.fr/Raman/</a>.
+</p>
+<p>“Scientific Workgroup for the Analysis of Seized Drugs.” (2023).
+https://swgdrug.org/ir.htm.
+</p>
+<p><strong>Further contribution of spectra:</strong>
+Suja Sukumaran (Thermo Fisher Scientific),
+Aline Carvalho,
+Jennifer Lynch (NIST),
+Claudia Cella and Dora Mehn (JRC),
+Horiba Scientific,
+USDA Soil Characterization Data
+(<a href="https://ncsslabdatamart.sc.egov.usda.gov">https://ncsslabdatamart.sc.egov.usda.gov</a>),
+Archaeometrielabor,
+and S.B. Engelsen (Royal Vet. and Agricultural University, Denmark).
+Kimmel Center data was collected and provided by Prof. Steven Weiner
+(Kimmel Center for Archaeological Science, Weizmann Institute of Science,
+Israel).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+check_lib("derivative")
+get_lib("derivative")
+
+spec_lib &lt;- load_lib("derivative")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

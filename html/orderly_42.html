@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_run_info</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Information on current orderly run</h2>
+
+<h3>Description</h3>
+
+<p>This function allows inspection of some of orderly's metadata
+during an orderly run.  The format returned is internal to orderly
+and subject to change.  It is designed to be used within report
+code.  To use in conjunction with
+<code>orderly_test_start()</code>, you must pass in the path to the
+report in question.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_run_info(path = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Path to the report currently being run.  This should
+be left as <code>NULL</code> when running a report, and the path to
+the report being run should be used when using
+<code>orderly_test_start()</code></p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A list of metadata about the current report
+</p>
+
+
+<h3>Warning</h3>
+
+<p>It is important that this data is treated as <em>readonly</em>!
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path &lt;- orderly::orderly_example("demo")
+
+# This example uses orderly_run_info within its script, saving the
+# output to "output.rds"
+readLines(file.path(path, "src", "use_dependency", "script.R"))
+
+# Run the dependency:
+id &lt;- orderly::orderly_run("other", list(nmin = 0), root = path)
+orderly::orderly_commit(id, root = path)
+
+# Then the report
+id &lt;- orderly::orderly_run("use_dependency", root = path)
+
+# This is the contents:
+readRDS(file.path(path, "draft", "use_dependency", id, "info.rds"))
+</code></pre>
+
+
+</div>

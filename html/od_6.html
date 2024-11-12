@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_coordinates</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create matrices representing origin-destination coordinates</h2>
+
+<h3>Description</h3>
+
+<p>This function takes an 'od data frame' with the first
+two columns matching IDs of spatial objects, and
+matches them with objects representing origins and destinations
+in wide range of input data types (spatial lines, points or text strings).
+It returns a data frame of coordinates representing movement between all origin (ox, oy) and destination (dx, dy) points.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_coordinates(x, p = NULL, pd = NULL, silent = TRUE, sfnames = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A data frame in which the first two columns are codes
+representing points/zones of origin and destination</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Points representing origins and destinations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pd</code></td>
+<td>
+<p>Points representing destinations, if different from origin points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>Hide messages? <code>FALSE</code> by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sfnames</code></td>
+<td>
+<p>Should output column names be compatible with the sf package?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See <code>points_to_od()</code> for a function that creates
+an 'od data frame' from a set (or two sets) of points.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with origin and destination coordinates
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x = od_data_df
+p = od_data_centroids
+res = od_coordinates(x, p)[1:2, ]
+class(res)
+res
+od_coordinates(x, p, sfnames = TRUE)[1:2, ]
+od_coordinates(x, p, silent = FALSE)[1:2, ]
+od_coordinates(x, p)
+x = od_data_df2[1:3, ]
+p = od_data_centroids2
+pd = od_data_destinations
+od_coordinates(x, p, pd)
+</code></pre>
+
+
+</div>

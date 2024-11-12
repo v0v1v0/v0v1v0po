@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>query_maps</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query the OS Maps API</h2>
+
+<h3>Description</h3>
+
+<p>Retrieve pre-rendered tiles from the web maps service of the Maps API in the
+Ordnance Survey Data Hub.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">query_maps(
+  x,
+  layer = c("Road_27700", "Road_3857", "Outdoor_27700", "Outdoor_3857", "Light_27700",
+    "Light_3857", "Leisure_27700"),
+  zoom,
+  output_dir,
+  overwrite = FALSE,
+  key = get_os_key(),
+  ...
+)
+
+## S3 method for class 'qExtent'
+query_maps(
+  x,
+  layer = c("Road_27700", "Road_3857", "Outdoor_27700", "Outdoor_3857", "Light_27700",
+    "Light_3857", "Leisure_27700"),
+  zoom,
+  output_dir,
+  overwrite = FALSE,
+  key = get_os_key(),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Object defining the query extent. Should be of type <code>qExtent</code>
+created by the <code>extent_from_*</code> functions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layer</code></td>
+<td>
+<p>(character) The name of the layer to query. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zoom</code></td>
+<td>
+<p>(numeric) The zoom level of the tiles to return. If omitted, a
+suitable zoom level will be estimated. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output_dir</code></td>
+<td>
+<p>(character) Path to the directory where the downloaded
+tiles will be saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>Boolean. Should existing files be overwritten? Default is
+<code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>(character) OS API key. Default action is to search for an
+environment variable using <code>get_os_key()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters (not currently used).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The OS Maps API serves pre-rendered raster tiles and is available in
+two projections; British National Grid and Web Mercator. This function
+provides basic access to download these tiles to your local machine.
+</p>
+<p>Alternatively, you can request the maps using the Open Geospatial
+Consortium Web Map Tile Service (WMTS) standard or RESTful ZXY for easy
+access/visualisation in most GIS software and web mapping applications.
+More information on the Maps API is available from:
+<a href="https://osdatahub.os.uk/docs/wmts/technicalSpecification">https://osdatahub.os.uk/docs/wmts/technicalSpecification</a>.
+</p>
+<p>The parameter <code>x</code> currently only accepts a query extent created from
+<code>extent_from_*</code> family of functions. The coordinate reference system
+of this extent must match the coordinate reference system of the returned
+tiles (i.e. only EPSG:27700 and EPSG:3857 are accepted).
+</p>
+<p>The available layers are Road, Outdoor, Light in both 27700 and 3857, plus
+Leisure in 27700. These should be specified as combined strings to the
+<code>layer</code> argument, e.g. 'Road_27700'.
+</p>
+<p>The zoom levels available vary based on the projection of the tile matrix
+set. EPSG:3857 is from 7 to 20 and EPSG:27700 is from 0 to 13. See the
+technical specifications for more information on the scale and resolution:
+<a href="https://osdatahub.os.uk/docs/wmts/technicalSpecification">https://osdatahub.os.uk/docs/wmts/technicalSpecification</a>
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of file paths to the downloaded image tiles, their bounding
+boxes, and coordinate reference system information.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>extent
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Define an extent.
+OS_ext &lt;- extent_from_bng('SU3715')
+
+# Download tiles.
+imgTile &lt;- query_maps(OS_ext,
+                      layer = 'Light_27700',
+                      output_dir = tempdir())
+
+# The tiles can be merged together and georeferenced for spatial applications.
+
+</code></pre>
+
+
+</div>

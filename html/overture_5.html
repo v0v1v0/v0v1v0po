@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Peek</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Load samples from a partial MCMC run</h2>
+
+<h3>Description</h3>
+
+<p><code>Peek</code> allows the samples from a file-backed MCMC to be loaded in
+another R session while the MCMC is still in progress.  By using <code>Peek</code>,
+the chain's convergence can be monitored before the MCMC chain has finished
+running.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Peek(backing.path)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>backing.path</code></td>
+<td>
+<p>directory path of an in-progress MCMC</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>list of big.matrix with samples from the partial MCMC run
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>InitMcmc</code>, <code>LoadMcmc</code>,
+<code>big.matrix</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+SampleSomething &lt;- function() {
+    Sys.sleep(0.1)
+    rnorm(1)
+}
+
+backing.path &lt;- tempfile()
+dir.create(backing.path)
+print(backing.path)
+
+SlowMcmc &lt;- InitMcmc(1000, backing.path=backing.path)
+SlowMcmc({
+    x &lt;- SampleSomething()
+})
+
+### In another R process, while the MCMC is still running...
+samples.so.far &lt;- Peek(backing.path)
+samples.so.far$x[,]
+
+</code></pre>
+
+
+</div>

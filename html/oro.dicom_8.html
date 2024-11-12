@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dicom2analyze</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert DICOM Header to Analyze</h2>
+
+<h3>Description</h3>
+
+<p>A subset of header information from DICOM is placed into Analyze 7.5 format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dicom2analyze(dcm, datatype = 4, reslice = TRUE, DIM = 3,
+  descrip = "SeriesDescription", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dcm</code></td>
+<td>
+<p>DICOM object containing both header and image information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datatype</code></td>
+<td>
+<p>is an integer that denotes the type of data contained in
+each voxel.  See <code>convert.datatype.anlz</code> or the ANALYZE documentation
+for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reslice</code></td>
+<td>
+<p>Logical variable (default = <code>TRUE</code>) indicating if the
+data volume should be resliced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DIM</code></td>
+<td>
+<p>The dimension of the array to be used (default = 3D).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>descrip</code></td>
+<td>
+<p>DICOM header field(s) to be included in the <code>descrip</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to <code>anlz</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See the references.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>anlz</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Analyze 7.5<br><a href="http://rportal.mayo.edu/bir/ANALYZE75.pdf">http://rportal.mayo.edu/bir/ANALYZE75.pdf</a>
+</p>
+<p>Digital Imaging and Communications in Medicine (DICOM)<br><a href="http://medical.nema.org">http://medical.nema.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>convert.datatype.anlz</code>,
+<code>dicom2nifti</code>, <code>anlz</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+dcmList &lt;- dicomSeparate(system.file("hk-40", package="oro.dicom"))
+require("oro.nifti")
+dcmAnlz &lt;- dicom2analyze(dcmList, datatype=4, mode="integer")
+image(dcmAnlz)
+orthographic(dcmAnlz)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

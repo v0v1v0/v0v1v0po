@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>kullback_leibler_disc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate a Kullback-Leibler Divergence for a Discrete Distribution</h2>
+
+<h3>Description</h3>
+
+<p>Calculate a Kullback-Leibler Divergence for a Discrete Distribution
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">kullback_leibler_disc(p, q)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>(numeric) probabilities</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>(numeric) probabilities</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Kullback-Leibler divergence for a discrete distribution
+is calculated as follows:
+</p>
+<p style="text-align: center;"><code class="reqn">\sum_{i=1}^n p_i \log\Big(\frac{p_i}{q_i}\Big)</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>Numeric vector
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate n Poisson distributed variates
+n &lt;- 1000
+dist1 &lt;- rpois(n, lambda = 1)
+dist2 &lt;- rpois(n, lambda = 5)
+dist3 &lt;- rpois(n, lambda = 20)
+
+# Generate common factor levels
+x_max &lt;- max(c(dist1, dist2, dist3))
+all_levels &lt;- 0:x_max
+
+# Estimate probability mass functions 
+pmf_dist1 &lt;- table(factor(dist1, levels = all_levels)) / n
+pmf_dist2 &lt;- table(factor(dist2, levels = all_levels)) / n
+pmf_dist3 &lt;- table(factor(dist3, levels = all_levels)) / n
+
+# Visualise PMFs
+barplot(pmf_dist1, col = "green", xlim = c(0, x_max))
+barplot(pmf_dist2, col = "red", add = TRUE)
+barplot(pmf_dist3, col = "blue", add = TRUE)
+
+# Calculate distances
+kullback_leibler_disc(pmf_dist1, pmf_dist2)
+kullback_leibler_disc(pmf_dist1, pmf_dist3)
+kullback_leibler_disc(pmf_dist2, pmf_dist3)
+</code></pre>
+
+
+</div>

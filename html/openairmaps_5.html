@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addTrajPaths</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add trajectory paths to leaflet map</h2>
+
+<h3>Description</h3>
+
+<p>This function is similar (but not identical to) the <code>leaflet::addMarkers()</code>
+function in <code>leaflet</code>, which allows users to add trajectory paths to any
+leaflet map and have more control over groups and layerIds than in
+"all-in-one" functions like <code>trajMap()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addTrajPaths(
+  map,
+  lng = "lon",
+  lat = "lat",
+  layerId = NULL,
+  group = NULL,
+  data = leaflet::getMapData(map),
+  npoints = 12,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>a map widget object created from <code>leaflet::leaflet()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng</code></td>
+<td>
+<p>The decimal longitude.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat</code></td>
+<td>
+<p>The decimal latitude.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layerId</code></td>
+<td>
+<p>The base string for the layer id. The actual layer IDs will be
+in the format "layerId-linenum" for lines and "layerId_linenum-pointnum"
+for points. For example, the first point of the first trajectory path will
+be "layerId-1-1".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>the name of the group the newly created layers should belong to
+(for <code>leaflet::clearGroup()</code> and <code>leaflet::addLayersControl()</code> purposes).
+Human-friendly group names are permitted–they need not be short,
+identifier-style names. Any number of layers and even different types of
+layers (e.g. markers and polygons) can share the same group name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Data frame, the result of importing a trajectory file using
+<code>openair::importTraj()</code>. By default, it is the data object provided to
+<code>leaflet::leaflet()</code> initially, but can be overridden.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>npoints</code></td>
+<td>
+<p>A dot is placed every <code>npoints</code> along each full trajectory.
+For hourly back trajectories points are plotted every <code>npoints</code> hours. This
+helps to understand where the air masses were at particular times and get a
+feel for the speed of the air (points closer together correspond to slower
+moving air masses). Defaults to <code>12</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments to pass to both <code>leaflet::addCircleMarkers()</code> and
+<code>leaflet::addPolylines()</code>. If you use the <code>color</code> argument, it is important
+to ensure the vector you supply is of length one to avoid issues with
+<code>leaflet::addPolylines()</code> (i.e., use <code>color = ~ pal(nox)[1]</code>). Note that
+<code>opacity</code> controls the opacity of the lines and <code>fillOpacity</code> the opacity
+of the markers.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>addTrajPaths()</code> can be a powerful way of quickly plotting
+trajectories on a leaflet map, but users should take some care due to any
+additional arguments being passed to both <code>leaflet::addCircleMarkers()</code> and
+<code>leaflet::addPolylines()</code>. In particular, users should be weary of the use
+of the <code>color</code> argument. Specifically, if <code>color</code> is passed a vector of
+length greater than one, multiple polylines will be drawn on top of one
+another. At best this will affect opacity, but at worst this will
+significantly impact the performance of R and the final leaflet map.
+</p>
+<p>To mitigate this, please ensure that any vector passed to <code>color</code> is of
+length one. This is simple if you want the whole path to be the same
+colour, but more difficult if you want to colour by a pollutant, for
+example. The easiest way to achieve this is to write a for loop or use
+another iterative approach (e.g. the <code>purrr</code> package) to add one path per
+arrival date. An example of this is provided in the Examples.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A leaflet object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>shiny::runExample(package = "openairmaps")</code> to see examples of this
+function used in a <code>shiny::shinyApp()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(leaflet)
+library(openairmaps)
+
+pal &lt;- colorNumeric(palette = "viridis", domain = traj_data$nox)
+
+map &lt;- leaflet() %&gt;%
+  addTiles()
+
+for (i in seq(length(unique(traj_data$date)))) {
+  data &lt;- dplyr::filter(traj_data, date == unique(traj_data$date)[i])
+
+  map &lt;- map %&gt;%
+    addTrajPaths(
+      data = data,
+      color = pal(data$nox)[1]
+    )
+}
+
+map
+
+## End(Not run)
+</code></pre>
+
+
+</div>

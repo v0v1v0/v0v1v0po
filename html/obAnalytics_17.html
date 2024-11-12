@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotCurrentDepth</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Visualise order book depth at any given point in time.</h2>
+
+<h3>Description</h3>
+
+<p>Plots the cumalative volume on each side of the limit order book.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotCurrentDepth(order.book, volume.scale = 1, show.quantiles = T,
+  show.volume = T)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>order.book</code></td>
+<td>
+<p>A limit <code>orderBook</code> structure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>volume.scale</code></td>
+<td>
+<p>Volume scale factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.quantiles</code></td>
+<td>
+<p>If true, highlight top 1% highest volume.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.volume</code></td>
+<td>
+<p>If true, also show non-cumulative volume.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# get a limit order book for a specific point in time, limited to +- 150bps
+# above/below best bid/ask price.
+lob &lt;- orderBook(lob.data$events,
+    tp=as.POSIXct("2015-05-01 04:38:17.429", tz="UTC"), bps.range=150)
+
+# visualise the order book liquidity.
+plotCurrentDepth(lob, volume.scale=10^-8)
+
+</code></pre>
+
+
+</div>

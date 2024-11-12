@@ -1,0 +1,194 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osf_upload</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Upload files to OSF</h2>
+
+<h3>Description</h3>
+
+<p>Upload local files to a project, component, or directory on OSF.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osf_upload(
+  x,
+  path,
+  recurse = FALSE,
+  conflicts = "error",
+  progress = FALSE,
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The upload destination on OSF. Can be one of the following:
+</p>
+
+<ul>
+<li>
+<p> An <code>osf_tbl_node</code> with a single project or component.
+</p>
+</li>
+<li>
+<p> An <code>osf_tbl_file</code> with a single directory.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>A character vector of paths pointing to existing
+local files and/directories.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recurse</code></td>
+<td>
+<p>If <code>TRUE</code>, fully recurse directories included in <code>path</code>. You
+can also control the number of levels to recurse by specifying a positive
+number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conflicts</code></td>
+<td>
+<p>This determines what happens when a file with the same name
+exists at the specified destination. Can be one of the following:
+</p>
+
+<ul>
+<li> <p><code>"error"</code> (the default): throw an error and abort the file transfer operation.
+</p>
+</li>
+<li> <p><code>"skip"</code>: skip the conflicting file(s) and continue transferring the
+remaining files.
+</p>
+</li>
+<li> <p><code>"overwrite"</code>: replace the existing file with the transferred copy.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>Logical, if <code>TRUE</code> progress bars are displayed for each file
+transfer. Mainly useful for transferring large files. For tracking lots of
+small files, setting <code>verbose = TRUE</code> is more informative.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical, indicating whether to print informative messages
+about interactions with the OSF API (default <code>FALSE</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>osf_tbl_file</code> containing the uploaded files and directories
+that were directly specified in <code>path</code>.
+</p>
+
+
+<h3>File and directory paths</h3>
+
+<p>The <code>x</code> argument indicates <em>where</em> on OSF the files will be uploaded (<em>i.e.</em>,
+the destination). The <code>path</code> argument indicates <em>what</em> will be uploaded,
+which can include a combination of files <em>and</em> directories.
+</p>
+<p>When <code>path</code> points to a local file, the file is uploaded to the <em>root</em> of the
+specified OSF destination, regardless of where it's on your local machine
+(<em>i.e.</em>, the intermediate paths are not preserved). For example, the
+following would would upload both <code>a.txt</code> and <code>b.txt</code> to the root of
+<code>my_proj</code>:
+</p>
+<div class="sourceCode"><pre>osf_upload(my_proj, c("a.txt", "subdir/b.txt"))`
+</pre></div>
+<p>When <code>path</code> points to a local directory, a corresponding directory will be
+created at the root of the OSF destination, <code>x</code>, and any files within the
+local directory are uploaded to the new OSF directory. Therefore, we could
+maintain the directory structure in the above example by passing <code>b.txt</code>'s
+parent directory to <code>path</code> instead of the file itself:
+</p>
+<div class="sourceCode"><pre>osf_upload(my_proj, c("a.txt", "subdir2"))
+</pre></div>
+<p>Likewise, <code>osf_upload(my_proj, path = ".")</code> will upload your entire current
+working directory to the specified OSF destination.
+</p>
+
+
+<h3>Uploading to subdirectories</h3>
+
+<p>In order to upload directly to an existing OSF directory you would first need
+to retrieve the directory as an <code>osf_tbl_file</code>. This can be accomplished by
+passing the directory's unique identifier to <code>osf_retrieve_file()</code>, or, if
+you don't have the ID handy, you can use <code>osf_ls_files()</code> to retrieve the
+directory by name.
+</p>
+<div class="sourceCode"><pre># search for the 'rawdata' subdirectory within top-level 'data' directory
+target_dir &lt;- osf_ls_files(my_proj, path = "data", pattern = "rawdata")
+# upload 'a.txt' to data/rawdata/ on OSF
+osf_upload(target_dir, path = "a.txt")
+</pre></div>
+
+
+<h3>A note about synchronization</h3>
+
+<p>While <code>osf_download()</code> and <code>osf_upload()</code> allow you to conveniently shuttle
+files back and forth between OSF and your local machine, it's important to
+note that <strong>they are not file synchronization functions</strong>. In contrast to
+something like <a href="https://rsync.samba.org"><code>rsync</code></a>,
+<code>osf_download()</code>/<code>osf_upload()</code> do not take into account a file's contents or
+modification time. Whether you're uploading or downloading, if <code>conflicts = "overwrite"</code>, osfr will overwrite the existing file regardless of whether it
+is the more recent copy. You have been warned.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<ul>
+<li> <p><code>osf_download()</code> for downloading files and directories from OSF.
+</p>
+</li>
+<li> <p><code>osf_ls_files()</code> for listing files and directories on OSF.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Create an example file to upload to our example project
+write.csv(iris, file = "iris.csv")
+project &lt;- osf_create_project("Flower Data")
+
+# Upload the first version
+osf_upload(project,"iris.csv")
+
+# Modify the data file, upload version 2, and view it on OSF
+write.csv(subset(iris, Species != "setosa"), file = "iris.csv")
+project %&gt;%
+  osf_upload("iris.csv", conflicts = "overwrite") %&gt;%
+  osf_open()
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

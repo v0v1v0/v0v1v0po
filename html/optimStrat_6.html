@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optiallo</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal allocation in stratified simple random sampling</h2>
+
+<h3>Description</h3>
+
+<p>Allocates a sample of size <code>n</code> using Neyman optimal allocation in Stratified Simple Random Sampling.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optiallo(n, x, stratum = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>a positive integer indicating the desired sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a positive numeric vector giving the values of the auxiliary variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratum</code></td>
+<td>
+<p>a vector indicating the stratum to which every unit belongs (see ‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>stratify</code> (see ‘Details’).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Allocates a sample of size <code>n</code> using Neyman optimal allocation in Stratified Simple Random Sampling.
+</p>
+<p>If <code>stratum==NULL</code>, the stratification is generated via <code>stratify</code>. Then at least the number of strata should be passed to <code>stratify</code> using the argument <code>H</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with two elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>stratum</code></td>
+<td>
+<p>a vector indicating the stratum to which each element belongs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nh</code></td>
+<td>
+<p>a vector indicating the sample size of the strata to which each element belongs.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>stratify</code> for defining the stratification using the cum-sqrt-rule.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x&lt;- 1 + sort( rgamma(100, shape=4/9, scale=108) )
+st1&lt;- stratify(x,H=6)
+optiallo(n=30,x,stratum=st1)
+
+optiallo(n=30,x,H=6)
+</code></pre>
+
+
+</div>

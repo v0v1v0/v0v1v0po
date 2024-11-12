@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>estimate_edge_KDE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate the normalized Markov KDE</h2>
+
+<h3>Description</h3>
+
+<p>Estimated the normalized Markov KDE for each edge averaged across all possible root-tip paths.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">estimate_edge_KDE(tree.discr, Path.data, h)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tree.discr</code></td>
+<td>
+<p>simmap or phylo object. A discretized tree using the 'discr_Simmap' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Path.data</code></td>
+<td>
+<p>numeric. A list of path data obtained from the 'make_data_NHPP_KDE_Markov_kernel' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>numeric. A value for the bandwidth calculated using the 'estimate_band_W' function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the estimated unnormalized ($Maps.mean) and normalized ($Maps.mean.norm) KDEs for each edge.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sergei Tarasov
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("hym_nhpp", "hym_tree")
+# Get reference tree.
+tree_discr &lt;- discr_Simmap(hym_tree, res = 200)
+# Make NHPP path data.
+nhpp &lt;- hym_nhpp$head
+# Add pseudo data to path data.
+psd &lt;- lapply(nhpp, function(x) -x[x &lt; 100] )
+edge_groups &lt;- as.list(1:length(hym_tree$edge.length))
+nhpp_psd &lt;- add_pseudodata(Edge.groups = edge_groups, Pseudo.data = psd, Path.data = nhpp)
+# Calculate bandwidth.
+bdw &lt;- estimate_band_W(tree_discr, nhpp_psd, band.width = "bw.nrd0")
+bdw &lt;- mean(bdw)
+# Estimate non-normalized and normalized edge KDE.
+Edge_KDE &lt;- estimate_edge_KDE(tree_discr, nhpp_psd, h = bdw)
+# Check KDE data for normalized mean rates from an arbitrary branch.
+Edge_KDE$Maps.mean.norm[[5]]
+# Check KDE data for non-normalized mean rates from an arbitrary branch.
+Edge_KDE$Maps.mean[[5]]
+
+</code></pre>
+
+
+</div>

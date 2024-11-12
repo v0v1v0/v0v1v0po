@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ox</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Short hand if-else</h2>
+
+<h3>Description</h3>
+
+<p>Short hand if-else functions for simple values switching.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ox(.f, ..., .then = list(...)[[1]], .else = rev(list(...))[[1]])
+
+xo(.f, ..., .then = list(...)[[1]], .else = rev(list(...))[[1]])
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.f</code></td>
+<td>
+<p>(<code>function</code>)<br>
+to be applied on  <code>...</code>. Must return single logical value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to the <code>.f</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.then</code></td>
+<td>
+<p>A positive-replacement. NOTE, that if <code>.then</code> is not specified
+directly by named argument then the first argument from <code>...</code> will
+be taken.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.else</code></td>
+<td>
+<p>A negative-replacement. NOTE, that if <code>.else</code> is not specified
+directly by named argument then the last argument from <code>...</code> will
+be considered as a replacement.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><img src="../help/figures/uml1.jpg" width="75%" alt="Figure: uml1.jpg"></p>
+<p><code>ox</code> evaluates function <code>.f</code> which returns a single logical value and
+depending on the result <code>ox</code> returns:
+</p>
+
+<ul>
+<li>
+<p> on <code>TRUE</code> returns <code>.then</code>.
+</p>
+</li>
+<li>
+<p> on <code>FALSE</code> returns <code>.else</code>.
+</p>
+</li>
+</ul>
+<p>It's important to note is that <code>.then</code> and <code>.else</code> have a default values set
+as the first and the last element of the <code>...</code>. This means that they don't
+have to be specified if both are arguments of <code>.f</code>.<br>
+If any of them are not arguments of <code>.f</code> then this argument should be
+specified directly as <code>.then</code> or <code>.else</code>, otherwise it will be passed to the
+function.<br><br>
+As, far as <code>.then</code> and <code>.else</code> won't be specified order of arguments in <code>...</code>
+matters for <code>ox</code> but it's up to you if they are passed in the correct order
+to the <code>.f</code>. Then one, might consider name the argument so <code>.f</code> will be
+executed as expected. Consider following example</p>
+<pre>greater_than_by &lt;- function(x, y, by) x &gt; (y + by)
+ox(greater_than_by, x = 5, by = 3, y = 3)
+</pre>
+<p>In above, one needs to move <code>y</code> to the end so that it will be considered as
+<code>.else</code>.
+</p>
+<p>To invert the switch one can use <code>xo</code> which is equivalent of
+<code>ox(Negate(.f), ..., .then, .else)</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>object identical to <code>.then</code> or <code>.else</code> depending on the condition
+result.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># if (is.null(NULL)) NULL else 1
+ox(NULL, .f = is.null, .else = 1)
+
+# if (is("text", "character")) "text" else "not a character"
+ox("text", .f = is, "character", .else = "not a character")
+
+# if (1 &gt; 2) 1 else 2
+ox(`&gt;`, 1, 2)
+# if (!is.null(NULL)) NULL else 1
+xo(NULL, .f = is.null, .else = 1)
+
+# if (!is("text", "character")) "text" else "not a character"
+xo("text", .f = is, "character", .else = "not a character")
+
+# if (!1 &gt; 2) 1 else 2
+xo(`&gt;`, 1, 2)
+</code></pre>
+
+
+</div>

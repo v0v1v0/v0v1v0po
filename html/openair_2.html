@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>aqStats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate summary statistics for air pollution data by year</h2>
+
+<h3>Description</h3>
+
+<p>Calculate a range of air pollution-relevant statistics by year.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">aqStats(
+  mydata,
+  pollutant = "no2",
+  type = "default",
+  data.thresh = 0,
+  percentile = c(95, 99),
+  transpose = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame containing a <code>date</code> field of hourly data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>The name of a pollutant e.g. <code>pollutant = c("o3",
+"pm10")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>type</code> allows <code>timeAverage()</code> to be applied to cases where
+there are groups of data that need to be split and the function applied to
+each group. The most common example is data with multiple sites identified
+with a column representing site name e.g. <code>type = "site"</code>. More
+generally, <code>type</code> should be used where the date repeats for a
+particular grouping variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.thresh</code></td>
+<td>
+<p>The data capture threshold in %. No values are calculated
+if data capture over the period of interest is less than this value.
+<code>data.thresh</code> is used for example in the calculation of daily mean
+values from hourly data. If there are less than <code>data.thresh</code>
+percentage of measurements available in a period, <code>NA</code> is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentile</code></td>
+<td>
+<p>Percentile values to calculate for each pollutant.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transpose</code></td>
+<td>
+<p>The default is to return a data frame with columns
+representing the statistics. If <code>transpose = TRUE</code> then the results
+have columns for each pollutant-site combination.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments, currently unused.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function calculates a range of common and air pollution-specific
+statistics from a data frame. The statistics are calculated on an annual
+basis and the input is assumed to be hourly data. The function can cope with
+several sites and years e.g. using <code>type = "site"</code>. The user can control
+the output by setting <code>transpose</code> appropriately.
+</p>
+<p>Note that the input data is assumed to be in mass units e.g. ug/m3 for all
+species except CO (mg/m3).
+</p>
+<p>The following statistics are calculated:
+</p>
+ <ul>
+<li> <p><b>data.capture</b> — percentage data capture over a full
+year.
+</p>
+</li>
+<li> <p><b>mean</b> — annual mean.
+</p>
+</li>
+<li> <p><b>minimum</b> — minimum hourly value.
+</p>
+</li>
+<li> <p><b>maximum</b> — maximum hourly value.
+</p>
+</li>
+<li> <p><b>median</b> — median value.
+</p>
+</li>
+<li> <p><b>max.daily</b> — maximum daily mean.
+</p>
+</li>
+<li> <p><b>max.rolling.8</b> — maximum 8-hour rolling mean.
+</p>
+</li>
+<li> <p><b>max.rolling.24</b> — maximum 24-hour rolling mean.
+</p>
+</li>
+<li> <p><b>percentile.95</b> — 95th percentile. Note that several percentiles
+can be calculated.
+</p>
+</li>
+<li> <p><b>roll.8.O3.gt.100</b> — number of days when the daily maximum
+rolling 8-hour mean ozone concentration is &gt;100 ug/m3. This is the target
+value.
+</p>
+</li>
+<li> <p><b>roll.8.O3.gt.120</b> — number of days when the daily maximum
+rolling 8-hour mean ozone concentration is &gt;120 ug/m3. This is the Limit
+Value not to be exceeded &gt; 10 days a year.
+</p>
+</li>
+<li> <p><b>AOT40</b> — is the accumulated amount of ozone over the threshold
+value of 40 ppb for daylight hours in the growing season (April to
+September). Note that <code>latitude</code> and <code>longitude</code> can also be passed
+to this calculation.
+</p>
+</li>
+<li> <p><b>hours.gt.200</b> — number of hours NO2 is more than 200 ug/m3.
+</p>
+</li>
+<li> <p><b>days.gt.50</b> — number of days PM10 is more than 50 ug/m3. </p>
+</li>
+</ul>
+<p>For the rolling means, the user can supply the option <code>align</code>, which can
+be "centre" (default), "left" or "right". See <code>rollingMean</code> for more
+details.
+</p>
+<p>There can be small discrepancies with the AURN due to the treatment of
+rounding data. The <code>aqStats</code> function does not round, whereas AURN data
+can be rounded at several stages during the calculations.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Statistics for 2004. NOTE! these data are in ppb/ppm so the
+## example is for illustrative purposes only
+aqStats(selectByDate(mydata, year = 2004), pollutant = "no2")
+
+
+</code></pre>
+
+
+</div>

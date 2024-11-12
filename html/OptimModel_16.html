@@ -1,0 +1,286 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optim_fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit Model with optim</h2>
+
+<h3>Description</h3>
+
+ 
+<p>Fit nonlinear model using the <code>optim</code> function in the <span class="pkg">stats</span> library.  This defaults to Ordinary Least Squares (OLS) The other options are Iterative Reweighted Least Squares (IRWLS), and Maximum Likelihood Estimator (MLE).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+optim_fit( theta0, f.model, gr.model=NULL, x, y, wts,
+            fit.method=c("ols", "irwls", "mle"),
+            var.method=c("hessian", "normal", "robust"),
+            phi0=NULL, phi.fixed=TRUE, conf.level = 0.95, tol = 1e-3, 
+            n.start=1000, ntry=1, start.method=c("fixed", "random"), 
+            until.converge=TRUE, check.pd.tol = 1e-8, ...)
+
+
+robust_fit(theta0, f.model, gr.model=NULL, x, y, wts=c("huber", "tukey"), 
+    var.method=c("hessian", "normal", "robust"), conf.level=.95, tol=1e-3, ...)             
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta0</code></td>
+<td>
+<p> starting values.  Alternatively, if given as NULL, theta0 can be computed within <code>optim.fit</code>()
+if a starting values function is supplied as attr(f.model, "start"), as a function of x and y.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f.model</code></td>
+<td>
+<p> Name of mean model function. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gr.model</code></td>
+<td>
+<p> If specified, name of the partial derivative of f.model with respect to its parameter argument.  If
+not specified, <code>f2djac</code> will approximate the derivative.  Alternatively, the gradient of f.model can
+be specified as attr(f.model, "gradient") </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Explanatory variable(s).  Can be <code>vector</code>, <code>matrix</code>, or <code>data.frame</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p> Response variable. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit.method</code></td>
+<td>
+<p> "ols" for ordinary least squares, "irwls" for iterative re-weighted least squares, "mle" for
+maximum likelihood. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wts</code></td>
+<td>
+<p> For <code>optim.fit</code>(), can be a numeric vector or a function.  Functions supplied in the library are <code>weights_varIdent</code>, <code>weights_tukey_bw</code>, <code>weights_huber</code>, <code>weights_varExp</code>, <code>weights_varPower</code>, and <code>weights_varConstPower</code>.  For <code>robust_fit</code>(), choices are a character string of "huber" for <code>weights_huber</code> and "tukey" for <code>weights_tukey_bw</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.method</code></td>
+<td>
+<p> Method to compute variance-covariance matrix of estimated model parameters.  Choices are "hessian" to
+use the hessian inverse, "normal" to use the so-called 'folk-lore' theorem estimator, and "robust" to use a
+sandwich-variance estimator.  When <code>fit.method = "mle"</code>, <code>var.method = "hessian"</code> and cannot be overridden. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi0</code></td>
+<td>
+<p> Not meaningful for <code>fit.method = "ols"</code>.  Starting value(s) for variance parameters (for weights). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi.fixed</code></td>
+<td>
+<p> Not meaningful for <code>fit.method = "ols"</code>.  If set to <code>TRUE</code>, the variance parameter(s) remain fixed at the given starting value, phi0.  Otherwise, the variance parameter(s) are estimated. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.level</code></td>
+<td>
+<p> Confidence level of estimated parameters. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p> Tolerance for <code>optim</code> algorithm. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.start</code></td>
+<td>
+<p> Number of starting values to generate (see details). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ntry</code></td>
+<td>
+<p> Maximum number of calls to <code>optim.fit</code>(). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start.method</code></td>
+<td>
+<p> Parameter </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>until.converge</code></td>
+<td>
+<p> Logical (<code>TRUE</code>/<code>FALSE</code>) indicating when algorithm should stop. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check.pd.tol</code></td>
+<td>
+<p>absolute tolarence for determing whether a matrix is positive definite. Refer to <code>test_fit</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> Other arguments to passed to <code>optim</code>.  See ?<code>optim</code>.  For example, lower=, upper=, method=</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>optim_fit</code>() is a wrapper for <code>stats::optim</code>(), specifically for non-linear regression.
+The Default algorithm is ordinary least squares (ols) using method="BFGS" or "L-BFGS-B", if lower= and upper=
+are specified.  These can easily be overridden.
+</p>
+<p>The assumed model is: 
+</p>
+<p style="text-align: center;"><code class="reqn">y = \text{f.model}(\theta, x) + g(\theta, \phi, x)\sigma\epsilon\text{, where }\epsilon\sim N(0, 1).</code>
+</p>
+
+<p>Usually the function <code class="reqn">g(\cdot) = 1</code>.
+</p>
+<p>With the exception of weights.tukey.bw and weights.huber, the weights functions are equivalent 
+to <code class="reqn">g(\theta, \phi, x)</code>.
+</p>
+<p>Note that <code>robust_fit</code>() is a convenience function to simplify the model call with <code>fit.method = "irwls"</code>,
+<code>phi0 = NULL</code>, and <code>phi.fixed = TRUE</code>.
+</p>
+<p><b>Algorithms</b>:
+</p>
+<p>1.  OLS.   Minimize  sum(  (y - f.model(theta, x))^2 )
+</p>
+<p>2.  IRWLS. Minimize sum( g(theta, phi, x)*(y - f.model(theta, x))^2 ), where g(theta, phi, x) act as weights.  See section
+on Variance functions below for more details on <code class="reqn">g(\cdot)</code>.
+</p>
+<p>3.  MLE.   Minimize the -log(Likelihood).  See section on Variance functions below for more details on <code class="reqn">g(\cdot)</code>.
+</p>
+<p><b>Variance functions</b>:
+</p>
+<p>Weights are given by some variance function.  Some common variance functions are supplied.
+</p>
+<p>See <code>weights_varIdent</code>, <code>weights_varExp</code>, <code>weights_varPower</code>, <code>weights_varConstPower</code>, <code>weights_tukey_bw</code>, <code>weights_huber</code>.
+</p>
+<p>User-specified variance functions can be provided for weighted regression.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The returned object is a list with the following components and attributes:
+</p>
+<p>coefficients = estimated model coefficients
+</p>
+<p>value, counts, convergence = returns from optim()
+</p>
+<p>message = character, indicating problem if any.  otherwise=NULL
+</p>
+<p>hessian = hessian matrix of the objective function (e.g., sum of squares)
+</p>
+<p>fit.method = chosen fit.method (e.g., "ols")
+</p>
+<p>var.method = chosen var.method (e.g., "hessian")
+</p>
+<p>call = optim.fit() function call
+</p>
+<p>fitted, residuals = model mean and model residuals
+</p>
+<p>r.squared, bic = model statistics
+</p>
+<p>df = error degrees of freedom = N - p, where N = # of observations and p = # of parameters
+</p>
+<p>dims = list containing the values of N and p
+</p>
+<p>sigma = estimated standard deviation parameter
+</p>
+<p>varBeta = estimated variance-covariance matrix for the coefficients
+</p>
+<p>beta = data.frame summary of the fit
+</p>
+<p>attr(object, "weights") = weights
+</p>
+<p>attr(object, "w.func") = weights model for the variance
+</p>
+<p>attr(object, "var.param") = variance parameter values
+</p>
+<p>attr(object, "converge.pls") = logical indicating if IRWLS algorithm converged.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_fit</code>, 
+<code>rout_outlier_test</code>,
+<code>beta_model</code>,
+<code>exp_2o_decay</code>,
+<code>exp_decay_pl</code>,
+<code>gompertz_model</code>, 
+<code>hill_model</code>, 
+<code>hill5_model</code>, 
+<code>hill_quad_model</code>, 
+<code>hill_switchpoint_model</code>, 
+<code>linear_model</code>,
+<code>weights_huber</code>,
+<code>weights_tukey_bw</code>,
+<code>weights_varConstPower</code>,
+<code>weights_varExp</code>,
+<code>weights_varIdent</code>,
+<code>weights_varPower</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123L)
+x = rep( c(0, 2^(-4:4)), each=4 )
+theta = c(0, 100, log(.5), 2)
+y1 = hill_model(theta, x) + rnorm( length(x), sd=2 )
+y2 = hill_model(theta, x) + rnorm( length(x), sd=.1*hill_model(theta, x) )
+wts = runif( length(y1) )
+fit1=optim_fit(theta, hill_model, x=x, y=y1)
+fit2=optim_fit(theta, hill_model, x=x, y=y1, wts=weights_varIdent)
+fit3=optim_fit(theta, hill_model, x=x, y=y1, wts=wts)
+fit4=optim_fit(theta, hill_model, attr(hill_model, "gradient"), x=x, y=y1, wts=wts)
+
+fit5=optim_fit(NULL, hill_model, x=x, y=y2, wts=weights_varPower, fit.method="irwls")
+fit6=optim_fit(theta, hill_model, x=x, y=y2, wts=weights_varPower, fit.method="mle")
+
+fit7=optim_fit(theta, hill_model, x=x, y=y2, wts=weights_varPower, fit.method="irwls", 
+               phi0=0.5, phi.fixed=FALSE)
+fit8=optim_fit(theta, hill_model, x=x, y=y2, wts=weights_varPower, fit.method="mle", 
+              phi0=0.5, phi.fixed=FALSE)
+
+fit9a=optim_fit(theta, hill_model, x=x, y=y1, wts=weights_tukey_bw, fit.method="irwls", 
+             phi0=4.685, phi.fixed=TRUE)
+
+fit9b=robust_fit(theta, hill_model, x=x, y=y1, wts="tukey")
+
+</code></pre>
+
+
+</div>

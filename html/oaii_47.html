@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>images_edit_request</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>API images: edit request</h2>
+
+<h3>Description</h3>
+
+<p>Creates an edited or extended image given an original image and a prompt. To get more details, visit
+https://platform.openai.com/docs/api-reference/images/edits
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">images_edit_request(
+  image,
+  prompt,
+  mask = NULL,
+  model = NULL,
+  n = NULL,
+  size = NULL,
+  response_format = NULL,
+  user = NULL,
+  api_key = api_get_key()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>image</code></td>
+<td>
+<p>string/raw, the image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not
+provided, image must have transparency, which will be used as the mask.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prompt</code></td>
+<td>
+<p>string, a text description of the desired image(s). The maximum length is 1000 characters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mask</code></td>
+<td>
+<p>NULL/string/raw, an additional image whose fully transparent areas (e.g. where alpha is zero) indicate
+where image should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions as 'image'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>NULL/string, the model to use for image generation. Only dall-e-2 is supported at this time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>NULL/int, the number of images to generate. Must be between 1 (default) and 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>NULL/string, the size of the generated images. Must be one of 256x256, 512x512, or 1024x1024 (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_format</code></td>
+<td>
+<p>NULL/string, the format in which the generated images are returned. Must be one of "url" or
+"b64_json".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user</code></td>
+<td>
+<p>string a unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>string, OpenAI API key
+(see https://platform.openai.com/account/api-keys)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>content of the httr response object
+or SimpleError (conditions) enhanced with
+two additional fields: 'status_code' (response$status_code)
+and 'message_long' (built on response content)
+</p>
+
+
+</div>

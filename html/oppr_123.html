@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oppr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>oppr: Optimal Project Prioritization</h2>
+
+<h3>Description</h3>
+
+<p>The <span class="pkg">oppr</span> <em>R</em> package a decision support tool for prioritizing
+conservation projects. Prioritizations can be developed by maximizing
+expected feature richness, expected
+phylogenetic diversity, the number of features that meet persistence
+targets, or identifying a set of projects that meet persistence targets
+for minimal cost. Constraints (e.g. lock in
+specific actions) and feature weights can also be specified to further
+customize prioritizations. After defining a project prioritization
+problem, solutions can be obtained using exact algorithms, heuristic
+algorithms, or random processes. In particular, it is recommended to
+install the 'Gurobi' optimizer (available from
+<a href="https://www.gurobi.com">https://www.gurobi.com</a>)
+because it can identify optimal solutions very quickly. Finally, methods
+are provided for comparing different prioritizations and evaluating their
+benefits.
+</p>
+
+
+<h3>Installation</h3>
+
+<p>To make the most of this package, the <a href="https://bioconductor.org/packages/release/bioc/html/ggtree.html"><span class="pkg">ggtree</span></a> and
+<a href="https://www.gurobi.com/documentation/8.1/refman/r_api_overview.html"><span class="pkg">gurobi</span></a> R packages will need to be installed.
+Since the <a href="https://bioconductor.org/packages/release/bioc/html/ggtree.html"><span class="pkg">ggtree</span></a> package is exclusively available
+at <a href="https://bioconductor.org">Bioconductor</a>—and is not available on
+<a href="https://cran.r-project.org/">The Comprehensive R Archive Network</a>—please
+execute the following command to install it:
+<code style="white-space: pre;">⁠source("https://bioconductor.org/biocLite.R");biocLite("ggtree")⁠</code>.
+If the installation process fails, please consult the
+<a href="https://bioconductor.org/packages/release/bioc/html/ggtree.html">package's online documentation</a>. To install the <span class="pkg">gurobi</span> package, the
+<a href="https://www.gurobi.com">Gurobi</a> optimization suite will first need to
+be installed (see instructions for <a href="https://www.gurobi.com/documentation/8.1/quickstart_linux/software_installation_guid.html">Linux</a>,
+<a href="https://www.gurobi.com/documentation/8.1/quickstart_mac/software_installation_guid.html">Mac OSX</a>, and
+<a href="https://www.gurobi.com/documentation/8.1/quickstart_windows/software_installation_guid.html">Windows</a> operating systems). Although
+<a href="https://www.gurobi.com">Gurobi</a> is a commercial software, academics
+can obtain a
+<a href="https://www.gurobi.com/downloads/end-user-license-agreement-academic/">special license for no cost</a>. After installing the
+<a href="https://www.gurobi.com">Gurobi</a> optimization suite, the <span class="pkg">gurobi</span>
+package can then be installed (see instructions for <a href="https://www.gurobi.com/documentation/8.1/quickstart_linux/r_installing_the_r_package.html">Linux</a>,
+<a href="https://www.gurobi.com/documentation/8.1/quickstart_mac/r_installing_the_r_package.html">Mac OSX</a>, and
+<a href="https://www.gurobi.com/documentation/8.1/quickstart_windows/r_installing_the_r_package.html">Windows</a> operating systems).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Please refer to the package vignette for more information and worked
+examples. This can be accessed using the code
+<code>vignette("oppr")</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# print project data
+print(sim_projects)
+
+# print action data
+print(sim_features)
+
+# print feature data
+print(sim_actions)
+
+# build problem
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 400) %&gt;%
+     add_feature_weights("weight") %&gt;%
+     add_binary_decisions()
+
+# print problem
+print(p)
+
+## Not run: 
+# solve problem
+s &lt;- solve(p)
+
+# print output
+print(s)
+
+# print which actions are funded in the solution
+s[, sim_actions$name, drop = FALSE]
+
+# print the expected probability of persistence for each feature
+# if the solution were implemented
+s[, sim_features$name, drop = FALSE]
+
+# visualize solution
+plot(p, s)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

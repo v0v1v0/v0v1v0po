@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>erank</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Expected rank under the Harville model.</h2>
+
+<h3>Description</h3>
+
+<p>Compute the expected rank of a bunch of entries based on their probability
+of winning under the Harville model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">erank(mu)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>a vector giving the probabilities. Should sum to one.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Given the vector <code class="reqn">\mu</code>, we compute the expected rank of each
+entry, under the Harville model, where tail probabilities of winning
+remain proportional.  
+</p>
+<p>Under the Harville model, the probability that the <code class="reqn">i</code>th element
+is assigned value 1 is 
+</p>
+<p style="text-align: center;"><code class="reqn">\pi_{1,i} = \frac{\mu_i}{\sum_j \mu_j}.</code>
+</p>
+
+<p>Once an element has been assigned a 1, the Harville procedure 
+removes it from the set and iterates.
+If there are <code class="reqn">k</code> elements in <code class="reqn">\mu</code>, then the <code class="reqn">i</code>th element
+can be assigned any place between <code class="reqn">1</code> and <code class="reqn">k</code>. This
+function computes the expected value of that random variable.
+</p>
+<p>While a naive implementation of this function would take
+time factorial in <code class="reqn">k</code>, this implementation takes time quadratic
+in <code class="reqn">k</code>, since it can be shown that the expected rank of the <code class="reqn">i</code>th
+element takes value
+</p>
+<p style="text-align: center;"><code class="reqn">e_i = k + \frac{1}{2} - \sum_j \frac{\mu_i}{\mu_i + \mu_j}.</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>The expected ranks, a vector.
+</p>
+
+
+<h3>Note</h3>
+
+<p>we should have the sum of ranks equal to the sum of <code>1:length(mu)</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># a garbage example
+set.seed(12345)
+mus &lt;- runif(12)
+mus &lt;- mus / sum(mus)
+erank(mus)
+
+# confirm the expected rank via simulation
+set.seed(123)
+mus &lt;- runif(6,min=0,max=2)
+mus &lt;- mus / sum(mus)
+set.seed(101)
+emp &lt;- rowMeans(replicate(200,rhenery(mu=mus,gamma=rep(1,length(mus)-1)))) 
+(emp - erank(mus)) / emp
+
+
+if (require(microbenchmark)) {
+  p10 &lt;- 1:10 / sum(1:10)
+  p16 &lt;- 1:16 / sum(1:16)
+  p24 &lt;- 1:24 / sum(1:24)
+  microbenchmark(erank(p10), erank(p16), erank(p24))
+}
+
+</code></pre>
+
+
+</div>

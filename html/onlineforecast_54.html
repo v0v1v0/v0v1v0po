@@ -1,0 +1,59 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make_input</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make a forecast matrix (as data.frame) from observations.</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a data.frame with columns for each horizon such that it can be 
+added to a data.list and used in a forecast model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">make_input(observations, kseq)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>observations</code></td>
+<td>
+<p>vector of observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kseq</code></td>
+<td>
+<p>vector of integers, respresenting the desired "k-steps ahead".</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a forecast matrix (as a data.frame) with simply the observation vector copied to each column.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Data for example
+D &lt;- subset(Dbuilding, c("2010-12-15","2010-12-20"))
+
+# Generate the input
+make_input(D$heatload, 1:4)
+
+# Set is in D, such that it can be used in input expressions (e.g. by model$add_inputs(AR = "Ar0")
+D$AR0 &lt;- make_input(D$heatload, 1:36)
+
+</code></pre>
+
+
+</div>

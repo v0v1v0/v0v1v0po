@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scalechk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check the scale of the initial parameters and bounds input to an optimization code
+used in nonlinear optimization</h2>
+
+<h3>Description</h3>
+
+<p>Nonlinear optimization problems often have different scale for different
+parameters. This function is intended to explore the differences in scale. It is, however,
+an imperfect and heuristic tool, and could be improved.
+</p>
+<p>At this time scalechk ignores parameters and bounds for fixed (masked) parameters
+for calculations of scaling measures. The rationale for this is that such parameters
+are outside the optimization process.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">   scalechk(par, lower = lower, upper = upper, bdmsk=NULL, dowarn = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>par</code></td>
+<td>
+<p>A numeric vector of starting values of the optimization function parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+<p>A vector of lower bounds on the parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+<p>A vector of upper bounds on the parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bdmsk</code></td>
+<td>
+<p>An indicator vector, having 1 for each parameter that is "free" or
+unconstrained, and 0 for any parameter that is fixed or MASKED for the
+duration of the optimization. May be NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dowarn</code></td>
+<td>
+<p>Set TRUE to issue warnings. Othwerwise this is a silent routine.
+Default TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The scalechk function will check that the bounds exist and are admissible, 
+that is, that there are no lower bounds that exceed upper bounds. 
+</p>
+<p>NOTE: Free paramters outside bounds are adjusted to the nearest bound.
+We then set parchanged = TRUE which implies the original parameters
+were infeasible.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components:
+</p>
+<p># Returns:
+#   list(lpratio, lbratio) – the log of the ratio of largest to smallest parameters
+#      and bounds intervals (upper-lower) in absolute value (ignoring Inf, NULL, NA)
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lpratio</code></td>
+<td>
+<p>The log of the ratio of largest to smallest parameters
+in absolute value (ignoring Inf, NULL, NA)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lbratio</code></td>
+<td>
+<p>The log of the ratio of largest to smallest bounds intervals 
+(upper-lower) in absolute value (ignoring Inf, NULL, NA)</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">#####################
+  par &lt;- c(-1.2, 1)
+  lower &lt;- c(-2, 0)
+  upper &lt;- c(100000, 10)
+  srat&lt;-scalechk(par, lower, upper,dowarn=TRUE)
+  print(srat)
+  sratv&lt;-c(srat$lpratio, srat$lbratio)
+  if (max(sratv,na.rm=TRUE) &gt; 3) { # scaletol from ctrldefault in optimx
+     warnstr&lt;-"Parameters or bounds appear to have different scalings.\n
+     This can cause poor performance in optimization. \n
+     It is important for derivative free methods like BOBYQA, UOBYQA, NEWUOA."
+     cat(warnstr,"\n")
+  }
+
+</code></pre>
+
+
+</div>

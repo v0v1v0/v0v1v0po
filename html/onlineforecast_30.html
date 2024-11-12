@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getse</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Getting subelement from list.</h2>
+
+<h3>Description</h3>
+
+<p>A helping function for getting subelemlts from a list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getse(L, inm = NA, depth = 2, useregex = FALSE, fun = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>The list to get sub elements from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inm</code></td>
+<td>
+<p>Either an integer index or a name of the subelements to return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>depth</code></td>
+<td>
+<p>The depth of the subelements to match names in:
+- 1: is directly in the list.
+- 2: is in list of each element in the list.
+- 3 and more: simply deeper in the sublists.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useregex</code></td>
+<td>
+<p>logical: should inm be used as regex pattern for returning elements matching, in the specified layer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>function: if given, then it will be applied to all the matched subelements before returning them.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Often it is needed to get a subelement from a list, which can be done using lapply.
+But to make life easiere here is a small function for getting subelements in a nested list at a certain debth.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of the matched elements.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Make a nested list
+L &lt;- list(x1=list(x=list("val11","val112"),
+                  y=list("val12"),
+                  test=list("testlist2")),
+          x2=list(x=list("val21","val212"),
+                  y=list("val22"),
+                  test=list("testlist2")),
+          x3=list(x=list("val31","val312"),
+                  y=list("val32"),
+                  test=list("testlist3")))
+
+# Get the subelement "x1"
+str(getse(L, "x1", depth=1))
+# Same as
+str(L[["x1"]])
+
+# Get the element named x in second layer
+str(getse(L, "x", depth=2))
+# Depth is default to 2
+str(getse(L, "y"))
+
+# Nice when splitting string
+x &lt;- strsplit(c("x.k1","y.k2"), "\\.")
+# Get all before the split "\."
+getse(x, 1)
+# Get after
+getse(x, 2)
+
+# Get an element with an integer index
+x &lt;- strsplit(c("x.k1","y.k2","x2"), "\\.")
+getse(x, 1)
+# if the element is not there, then an error is thrown
+try(getse(x, 2))
+
+# Use regex pattern for returning elements matching in the specified layer
+getse(L, "^te", depth=2, useregex=TRUE)
+
+</code></pre>
+
+
+</div>

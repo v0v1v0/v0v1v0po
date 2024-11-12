@@ -1,0 +1,194 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>kktchk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check Kuhn Karush Tucker conditions for a supposed function minimum</h2>
+
+<h3>Description</h3>
+
+<p>Provide a check on Kuhn-Karush-Tucker conditions based on quantities
+already computed. Some of these used only for reporting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">     kktchk(par, fn, gr, hess=NULL, upper=NULL, lower=NULL, 
+                 maximize=FALSE, control=list(dowarn=TRUE), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>par</code></td>
+<td>
+<p>A vector of values for the parameters which are supposedly optimal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fn</code></td>
+<td>
+<p>The objective function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gr</code></td>
+<td>
+<p>The gradient function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hess</code></td>
+<td>
+<p>The Hessian function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+<p>Upper bounds on the parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+<p>Lower bounds on the parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maximize</code></td>
+<td>
+<p>Logical TRUE if function is being maximized. Default FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of controls for the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>The dot arguments needed for evaluating the function and gradient and hessian</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>kktchk computes the gradient and Hessian measures for BOTH unconstrained and 
+bounds (and masks) constrained parameters, but the kkt measures are evaluated
+only for the constrained case.
+</p>
+<p>Note that evaluated Hessians are often not symmetric, and many, possibly most,
+examples will fail the <code>is.Symmetric()</code> function. In such cases, the 
+check on the Hessian uses the mean of the Hessian and its transpose.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The output is a list consisting of 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>gmax</code></td>
+<td>
+<p>The absolute value of the largest gradient component in magnitude.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>evratio</code></td>
+<td>
+<p>The ratio of the smallest to largest Hessian eigenvalue. Note that this
+may be negative.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kkt1</code></td>
+<td>
+<p>A logical value that is TRUE if we consider the first (i.e., gradient) 
+KKT condition to be satisfied. WARNING: The decision is dependent on tolerances and
+scaling that may be inappropriate for some problems.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kkt2</code></td>
+<td>
+<p>A logical value that is TRUE if we consider the second (i.e., positive
+definite Hessian) KKT condition to be satisfied. WARNING: The decision is dependent 
+on tolerances and scaling that may be inappropriate for some problems.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hev</code></td>
+<td>
+<p>The calculated hessian eigenvalues, sorted largest to smallest. 
+Sorting is a property of the <code>eigen()</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ngatend</code></td>
+<td>
+<p>The computed (unconstrained) gradient at the solution parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nnatend</code></td>
+<td>
+<p>The computed (unconstrained) hessian at the solution parameters.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>optim</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">cat("Show how kktc works\n")
+
+# require(optimx)
+
+jones&lt;-function(xx){
+  x&lt;-xx[1]
+  y&lt;-xx[2]
+  ff&lt;-sin(x*x/2 - y*y/4)*cos(2*x-exp(y))
+  ff&lt;- -ff
+}
+
+jonesg &lt;- function(xx) {
+  x&lt;-xx[1]
+  y&lt;-xx[2]
+  gx &lt;-  cos(x * x/2 - y * y/4) * ((x + x)/2) * cos(2 * x - exp(y)) - 
+    sin(x * x/2 - y * y/4) * (sin(2 * x - exp(y)) * 2)
+  gy &lt;- sin(x * x/2 - y * y/4) * (sin(2 * x - exp(y)) * exp(y)) - cos(x * 
+             x/2 - y * y/4) * ((y + y)/4) * cos(2 * x - exp(y))
+  gg &lt;- - c(gx, gy)
+}
+
+ans &lt;- list() # to ensure structure available
+# If optimx package available, the following can be run.
+# xx&lt;-0.5*c(pi,pi)
+# ans &lt;- optimr(xx, jones, jonesg, method="Rvmmin")
+# ans
+
+ans$par &lt;- c(3.154083, -3.689620)
+
+# 2023-8-23 need dowarn specified or get error
+# Note: may want to set control=list(dowarn=TRUE)
+kkans &lt;- kktchk(ans$par, jones, jonesg)
+kkans
+
+
+
+</code></pre>
+
+
+</div>

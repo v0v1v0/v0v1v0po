@@ -1,0 +1,198 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OUwie.boot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parametric bootstrap function</h2>
+
+<h3>Description</h3>
+
+<p>A function that performs a parametric bootstrap for a set of user-specified model parameters</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OUwie.boot(phy, data, model=c("BM1","BMS","OU1","OUM","OUMV","OUMA","OUMVA"),
+ nboot=100, alpha, sigma.sq, theta, theta0, simmap.tree=FALSE, root.age=NULL,
+ scaleHeight=FALSE, root.station=FALSE, get.root.theta=FALSE, shift.point=0.5, 
+ clade=NULL, mserr="none", algorithm=c("invert", "three.point"), 
+ diagn=FALSE, quiet=TRUE, warn=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>phy</code></td>
+<td>
+<p>a phylogenetic tree, in <code>ape</code> “phylo” format and with internal nodes labeled denoting the ancestral selective regimes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data matrix containing species information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>models to fit to comparative data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nboot</code></td>
+<td>
+<p>The number of bootstrap replicates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>a numeric vector giving the values of <code class="reqn">\alpha</code> for each selective regime.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma.sq</code></td>
+<td>
+<p>a numeric vector giving the values of <code class="reqn">\sigma^2</code> for each selective regime.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>a numeric vector giving the values of <code class="reqn">\theta</code> for each selective regime.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta0</code></td>
+<td>
+<p>a numeric indicating the starting state, <code class="reqn">\theta_0</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simmap.tree</code></td>
+<td>
+<p>a logical indicating whether the input tree is in SIMMAP format. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root.age</code></td>
+<td>
+<p>indicates the age of the tree. This is to be used in cases where the "tips" are not contemporary, such as in cases for fossil trees. Default is <code>NULL</code> meaning latest tip is modern day.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get.root.theta</code></td>
+<td>
+<p>a logical indicating whether the starting state, <code class="reqn">\theta_0</code>, should be estimated (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaleHeight</code></td>
+<td>
+<p>a logical indicating whether the total tree height should be scaled to 1 (see Details). The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root.station</code></td>
+<td>
+<p>a logical indicating whether the starting state, <code class="reqn">\theta_0</code>, should be estimated (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift.point</code></td>
+<td>
+<p>the point along a branch where a regime change is assumed to have occurred (if <code>SIMMAP=FALSE</code>. The default is set to 0.5, or halfway along a branch.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clade</code></td>
+<td>
+<p>a list containing a pair of taxa whose MRCA is the clade of interest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mserr</code></td>
+<td>
+<p>designates whether a fourth column in the data matrix contains measurement error for each species value ("known"). The measurement error is assumed to be the standard error of the species mean. The default is "none".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>algorithm</code></td>
+<td>
+<p>designates whether the standard matrix inversion ('invert') or the faster 'three-point' algorithm of Ho and Ane (2013) should be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diagn</code></td>
+<td>
+<p>a logical indicating whether the full diagnostic analysis should be carried out. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>a logical indicating whether progress should be written to the screen. The default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>a logical indicating whether a warning should be printed if the number of parameters exceeds ntips/10. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A simple function for conducting a parametric bootstrap on parameters estimated in OUwie. As before, the input is a tree and a data file. The tree must be of class “phylo” and if <code>simmap=FALSE</code> must contain the ancestral selective regimes as internal node labels. The data file is a dataframe that must have column entries in the following order: [,1] species names and [,2] their current selective regime. The user specifies the simulated parameter values (i.e. <code class="reqn">\alpha</code>, <code class="reqn">\sigma^2</code>, <code class="reqn">\theta_0</code>, <code class="reqn">\theta</code>), which is assumed to be the maximum likelihood estimates obtained from an OUwie run.
+</p>
+<p>Note that if <code>root.station</code> is <code>TRUE</code> (the default), <code class="reqn">\theta_0</code> was dropped from the model. In this case, then, <code class="reqn">\theta_0</code> should be set to the value of the selective regime mapped at the root (i.e., state 1 in the “tworegime” example dataset). 
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>OUwie.boot</code> returns an object of class <code>OUwie.boot</code>. This is a matrix of column length equal to the number of parameters, and row length of the number of bootstrap replicates specified.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jeremy M. Beaulieu</p>
+
+
+<h3>References</h3>
+
+<p>Beaulieu J.M., Jhwueng D.C., Boettiger C., and O'Meara B.C. 2012. Modeling stabilizing selection: Expanding the Ornstein-Uhlenbeck model of adaptive evolution. Evolution 66:2369-2383.
+</p>
+<p>O'Meara B.C., Ane C., Sanderson P.C., Wainwright P.C. 2006. Testing for different rates of continuous trait evolution using likelihood. Evolution 60:922-933.
+</p>
+<p>Butler M.A., King A.A. 2004. Phylogenetic comparative analysis: A modeling approach for adaptive evolution. American Naturalist 164:683-695.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+data(tworegime)
+
+##First step is estimate parameters under a particular model:
+pp &lt;- OUwie(tree,trait,model=c("OUMV"),root.station=FALSE, algorithm="three.point")
+
+##Second step is to run bootstrap replicates:
+boot.reps &lt;- OUwie.boot(tree,trait,model="OUMV", nboot=10, alpha=pp$solution[1,], 
+sigma.sq=pp$solution[2,],theta=pp$theta[,1], theta0=pp$theta[1,1], 
+algorithm="three.point")
+
+##Finally summarize to obtain the desired confidence -- here is the 95% CI:
+apply(boot.reps, 2, quantile, probs=c(0.025,0.975))
+
+
+</code></pre>
+
+
+</div>

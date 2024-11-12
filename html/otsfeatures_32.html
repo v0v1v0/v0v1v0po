@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>total_mixed_c_correlation_2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the total mixed cumulative quantile correlation (TMCQC) between an ordinal and a
+real-valued time series</h2>
+
+<h3>Description</h3>
+
+<p><code>total_mixed_c_correlation_2</code> returns the TMCQC
+between an ordinal and a real-valued time series
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">total_mixed_c_correlation_2(
+  o_series,
+  n_series,
+  lag = 1,
+  states,
+  features = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>o_series</code></td>
+<td>
+<p>An OTS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_series</code></td>
+<td>
+<p>A real-valued time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag</code></td>
+<td>
+<p>The considered lag (default is 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>states</code></td>
+<td>
+<p>A numerical vector containing the corresponding
+states.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>features</code></td>
+<td>
+<p>Logical. If <code>features = FALSE</code> (default), the value of the TMCLC is returned. Otherwise, the function
+returns a vector with the individual components of the TMCQC.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given a OTS of length <code class="reqn">T</code> with range <code class="reqn">\mathcal{S}=\{s_0, s_1, \ldots, s_n\}</code>,
+<code class="reqn">\overline{X}_t=\{\overline{X}_1,\ldots, \overline{X}_T\}</code>, and
+the cumulative binarized time series, which is defined as
+<code class="reqn">\overline{\boldsymbol Y}_t=\{\overline{\boldsymbol Y}_1, \ldots, \overline{\boldsymbol Y}_T\}</code>,
+with <code class="reqn">\overline{\boldsymbol Y}_k=(\overline{Y}_{k,0}, \ldots, \overline{Y}_{k,n-1})^\top</code>
+such that <code class="reqn">\overline{Y}_{k,i}=1</code> if <code class="reqn">\overline{X}_k \leq s_i</code> (<code class="reqn">k=1,\ldots,T
+, i=0,\ldots,n-1</code>), the function computes the estimated TMCQC given by
+</p>
+<p style="text-align: center;"><code class="reqn">\widehat{\Psi}_2^m(l)=\frac{1}{n}\sum_{i=0}^{n-1}\int_{0}^{1}\widehat{\psi}^\rho_{i}(l)^2d\rho,</code>
+</p>
+<p> where
+<code class="reqn">\widehat{\psi}_{i}^\rho(l)=\widehat{Corr}\big(Y_{t,i}, I(Z_{t-l}\leq q_{Z_t}(\rho)) \big)</code>, with
+<code class="reqn">\overline{Z}_t=\{\overline{Z}_1,\ldots, \overline{Z}_T\}</code> being a
+<code class="reqn">T</code>-length real-valued time series, <code class="reqn">\rho \in (0, 1)</code> a probability
+level, <code class="reqn">I(\cdot)</code> the indicator function and <code class="reqn">q_{Z_t}</code> the quantile
+function of the corresponding real-valued process. If <code>features = TRUE</code>, the function
+returns a vector whose components are the quantities <code class="reqn">\int_{0}^{1}\widehat{\psi}^\rho_{i}(l)^2d\rho</code>,
+<code class="reqn">i=0,1, \ldots,n-1</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>features = FALSE</code> (default), returns the value of the TMCQC. Otherwise, the function
+returns a vector of features, i.e., the vector contains the features employed to compute the
+TMCLC.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Ángel López-Oriona, José A. Vilar
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tmclc &lt;- total_mixed_c_correlation_2(o_series = SyntheticData1$data[[1]],
+n_series = rnorm(600), states = 0 : 5) # Computing the TMCQC
+# between the first series in dataset SyntheticData1 and white noise
+feature_vector &lt;- total_mixed_c_correlation_2(o_series = SyntheticData1$data[[1]],
+n_series = rnorm(600), states = 0 : 5, features = TRUE) # Computing the corresponding
+# vector of features
+</code></pre>
+
+
+</div>

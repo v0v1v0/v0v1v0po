@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>drop.coef</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Ensure Full Rank Design Matrix
+</h2>
+
+<h3>Description</h3>
+
+<p>Coefficients (columns) are dropped from a design matrix to ensure that
+it has full rank.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">drop.coef(X, silent = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>a design matrix, e.g., the result of <code>model.matrix</code>
+possibly of less than full column rank, i.e., with redundant
+parameters. Works for <code>ncol(X) &gt;= 0</code> and <code>nrow(X) &gt;= 0</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+
+<p>should a message not be issued if X is column rank deficient?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Redundant columns of the design matrix are identified with the
+LINPACK implementation of the <code>qr</code> decomposition and
+removed. The returned design matrix will have <code>qr(X)$rank</code>
+columns.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The design matrix <code>X</code> without redundant columns.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rune Haubo B Christensen
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>qr</code> and <code>lm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+X &lt;- model.matrix( ~ PRODID * DAY, data = soup)
+ncol(X)
+newX &lt;- drop.coef(X)
+ncol(newX)
+
+## Essentially this is being computed:
+qr.X &lt;- qr(X, tol = 1e-7, LAPACK = FALSE)
+newX &lt;- X[, qr.X$pivot[1:qr.X$rank], drop = FALSE]
+## is newX of full column rank?
+ncol(newX) == qr(newX)$rank
+## the number of columns being dropped:
+ncol(X) - ncol(newX)
+
+</code></pre>
+
+
+</div>

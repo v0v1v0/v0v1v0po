@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>edge_profiles4plotting</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make edge profiles for plotting</h2>
+
+<h3>Description</h3>
+
+<p>Gets the information necessary for making an edgeplot, where the tree is plotted in a space where the x axis is the time and y axis the scale of the desired statistics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">edge_profiles4plotting(tree.discr, Edge.KDE.stat)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tree.discr</code></td>
+<td>
+<p>phylo object. A discretized tree using the 'discr_Simmap' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Edge.KDE.stat</code></td>
+<td>
+<p>list. A list with the distributions of the estimated parameter of KDEs for each edge.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble with X and Y coordinates and other information necessary for making an edgeplot.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sergei Tarasov
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("hym_tree", "hym_kde")
+# Get reference tree.
+tree_discr &lt;- discr_Simmap(hym_tree, res = 200)
+# Get smoothing of normalized edge KDE data for mean rates.
+Edge_KDE &lt;- hym_kde$head
+Edge_KDE_stat &lt;- Edge_KDE$loess.lambda.mean
+# Make edgeplot nhpp data.
+stat_prof &lt;- edge_profiles4plotting(tree_discr, Edge_KDE_stat)
+
+</code></pre>
+
+
+</div>

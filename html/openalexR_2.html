@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>authors2df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert OpenAlex collection of authors' records from list format to data frame</h2>
+
+<h3>Description</h3>
+
+<p>It converts bibliographic collection of authors' records gathered from OpenAlex database <a href="https://openalex.org/">https://openalex.org/</a> into data frame.
+The function converts a list of authors' records obtained using <code>oa_request</code> into a data frame/tibble.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">authors2df(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>List. Output of <code>oa_request</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical.
+If TRUE, print information about the dataframe conversion process.
+Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Progress bar object. If verbose, computed from 'oa_progress'.
+NULL otherwise.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data.frame.
+</p>
+<p>For more extensive information about OpenAlex API, please visit: &lt;https://docs.openalex.org&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Query to search information about all authors affiliated to the University of Naples Federico II
+# which have authored at least 100 publications:
+
+# University of Naples Federico II is associated to the OpenAlex id I71267560.
+
+
+query_author &lt;- oa_query(
+  identifier = NULL,
+  entity = "authors",
+  last_known_institutions.id = "I71267560",
+  works_count = "&gt;500"
+)
+
+res &lt;- oa_request(
+  query_url = query_author,
+  count_only = FALSE,
+  verbose = FALSE
+)
+
+df &lt;- oa2df(res, entity = "authors")
+
+df
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

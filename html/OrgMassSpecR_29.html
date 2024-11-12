@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WriteMspFile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write Spectra to the NIST MSP Text Format</h2>
+
+<h3>Description</h3>
+
+<p>Writes all spectra in the OrgMassSpecR data frame format to
+a single text file in NIST MSP format. The MSP files can be imported
+into the NIST MS Search program to make a custom seachable library. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WriteMspFile(spectra, metadata, filename = "library.msp", comment = "")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>spectra</code></td>
+<td>
+<p>data frame containing the mass spectra.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata</code></td>
+<td>
+<p>data frame containing the metadata.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>character string. Name (including path if needed) of
+the MSP text file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comment</code></td>
+<td>
+<p>charater string applied to the COMMENT field of the MSP
+file. The comment is applied to all spectra.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The spectra and metadata data frame format is
+specified in the help files for the <code>LibraryReport</code> functions
+in the spectral library packages, for example see
+<code>SpecLibExample::LibraryReport</code>. The spectra data frame must
+contain at least columns: <code>filename</code>, <code>mz</code>, and
+<code>intensity</code>. The metadata data frame must contain at least columns: <code>filename</code> and <code>compound</code>.
+</p>
+<p>The NAME field for each spectrum in the MSP file is assigned
+based on <code>compound</code> in the metadata data frame. 
+</p>
+<p>Newlines are CR+LF since the NIST MS Search program is
+Windows based.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An MSP file is written using a <code>file</code> connection.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Nathan G. Dodder</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Simple example to illustrate the input data formats. 
+
+spectra &lt;- data.frame(filename = c(rep("Spectrum A", 2), rep("Spectrum B", 2)),
+                      mz = c(50, 51, 100, 101),
+                      intensity = c(70, 71, 90, 91))
+
+metadata &lt;- data.frame(filename = c("Spectrum A", "Spectrum B"),
+                       compound = c("Compound A", "Compound B"))
+
+## Not run: 
+WriteMspFile(spectra = spectra, 
+             metadata = metadata,
+             filename = "Test.txt",
+             comment = "Test Comment")
+
+## End(Not run)
+
+## Example using SpecLibExample package located at http://OrgMassSpec.github.io/libraries.html.
+## Not run: 
+library(SpecLibExample)
+WriteMspFile(spectra = spec,
+             metadata = meta,
+             comment = "example output")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

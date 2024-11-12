@@ -1,0 +1,57 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>vechs2full</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Inverse Strict Half-vectorization</h2>
+
+<h3>Description</h3>
+
+<p>This function returns the symmetric matrix constructed from a strict half-vectorization.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">vechs2full(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an input single column or single row matrix.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The strict half-vectorization of an input matrix consists of the elements in the lower triangle of the matrix, excluding the elements along the diagonal of the matrix, as a column vector.  The column vector is created by traversing the matrix in column-major order.  The inverse strict half-vectorization takes a vector and reconstructs a symmetric matrix such that <code>vechs2full(vechs(x))</code> is equal to <code>x</code> with zero along the diagonal if <code>x</code> is symmetric.
+</p>
+<p>Note that very few vectors have the correct number of elements to construct a symmetric matrix.  For example, vectors with 1, 3, 6, 10, and 15 elements can be used to make a symmetric matrix, but none of the other numbers between 1 and 15 can.  An error is thrown if the number of elements in <code>x</code> cannot be used to make a symmetric matrix.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>vech2full</code>, <code>vech</code>, <code>vechs</code>, <code>rvectorize</code>, <code>cvectorize</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+vechs2full(1:10)
+
+matrix(1:16, 4, 4)
+vechs(matrix(1:16, 4, 4))
+vechs2full(vechs(matrix(1:16, 4, 4)))
+
+
+
+</code></pre>
+
+
+</div>

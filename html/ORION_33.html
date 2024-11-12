@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.ConfusionTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary of confusion tables</h2>
+
+<h3>Description</h3>
+
+<p><code>summary.ConfusionTable</code> returns a summarizing overview.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ConfusionTable'
+summary(object = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A ConfusionTable object as it is returned by <code>confusionTable</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function gives an overview of the characteristics of the ConfusionTable object. 
+The cascade with the corresponding mean accuracy are given.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>confusionTable</code>, <code>summary.PredictionMap</code>, <code>summary.Subcascades</code>, <code>summary.Groupwise</code>, <code>summary.Conf</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+
+# Calculation of the confusion matrix for '0&gt;2&gt;3&gt;4'.
+confusionTable = confusionTable(predMap, cascade = '0&gt;2&gt;3&gt;4')
+
+summary(confusionTable)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>chisq.out.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Chi-squared test for outlier </h2>
+
+<h3>Description</h3>
+
+<p>Performs a chisquared test for detection of one outlier in a vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">chisq.out.test(x, variance=var(x), opposite = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a numeric vector for data values. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variance</code></td>
+<td>
+<p> known variance of population. if not given, estimator from sample is taken,
+but there is not so much sense in such test (it is similar to z-scores) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opposite</code></td>
+<td>
+<p>  a logical indicating whether you want to check not the value with 
+largest difference from the mean, but opposite (lowest, if most suspicious is highest etc.)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function performs a simple test for one outlier, based on chisquared distribution of squared
+differences between data and sample mean. It assumes known variance of population. 
+It is rather not recommended today for routine use, because several more powerful 
+tests are implemented (see other functions mentioned below). 
+It was discussed by Dixon (1950) for the first time, as one of the tests taken into account by him.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class <code>htest</code> containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>the value of chisquared-statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>the p-value for the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>a character string describing the alternative hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a character string indicating what type of test was performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.name</code></td>
+<td>
+<p>name of the data argument.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+ 
+<p>This test is known to reject only extreme outliers, if no known variance is specified.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Lukasz Komsta </p>
+
+
+<h3>References</h3>
+
+ 
+<p>Dixon, W.J. (1950). Analysis of extreme values. Ann. Math. Stat. 21, 4, 488-506.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>dixon.test</code>, <code>grubbs.test</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(1234)
+x = rnorm(10)
+chisq.out.test(x)
+chisq.out.test(x,opposite=TRUE)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ToMemory</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Converts matrices in a file-backed MCMC to R matrix objects</h2>
+
+<h3>Description</h3>
+
+<p><code>ToMemory</code> is a convenience method to load the samples from a
+file-backed MCMC run into memory.  Given a list of <code>big.matrix</code>
+objects, it will convert them to standard R matrix objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ToMemory(samples)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>samples</code></td>
+<td>
+<p>list of <code>big.matrix</code> objects, typically coming
+from <code>InitMcmc</code></p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>list of R <code>matrix</code> objects
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>InitMcmc</code>, <code>big.matrix</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Run a file-backed MCMC
+backing.path &lt;- tempfile()
+dir.create(backing.path)
+Mcmc &lt;- InitMcmc(1000, backing.path=backing.path)
+samples &lt;- Mcmc({
+    x &lt;- rnorm(1)
+    y &lt;- rnorm(2)
+})
+
+# Convert to standard in-memory R matrices
+samples.in.memory &lt;- ToMemory(samples)
+
+is.matrix(samples.in.memory$x)
+is.matrix(samples.in.memory$y)
+bigmemory::is.big.matrix(samples.in.memory$x)
+bigmemory::is.big.matrix(samples.in.memory$y)
+</code></pre>
+
+
+</div>

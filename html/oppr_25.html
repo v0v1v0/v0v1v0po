@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_lpsolveapi_solver</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a lp_solve solver with <span class="pkg">lpSolveAPI</span>
+</h2>
+
+<h3>Description</h3>
+
+<p>Specify that the <em>lp_solve</em> software should be used to solve a
+project prioritization <code>problem()</code> using the <span class="pkg">lpSolveAPI</span>
+package. This function can also be used to customize the behavior of the
+solver. It requires the <span class="pkg">lpSolveAPI</span> package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_lpsolveapi_solver(x, gap = 0, presolve = FALSE, verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gap</code></td>
+<td>
+<p><code>numeric</code> gap to optimality. This gap is relative
+and expresses the acceptable deviance from the optimal objective.
+For example, a value of 0.01 will result in the solver stopping when
+it has found a solution within 1% of optimality.
+Additionally, a value of 0 will result in the solver stopping
+when it has found an optimal solution.
+The default value is 0.1 (i.e. 10% from optimality).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>presolve</code></td>
+<td>
+<p><code>logical</code> indicating if attempts to should be made
+to simplify the optimization problem (<code>TRUE</code>) or not (<code>FALSE</code>).
+Defaults to <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical</code> should information be printed while solving
+optimization problems?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><a href="http://lpsolve.sourceforge.net/5.5/"><em>lp_solve</em></a> is an
+open-source integer programming solver.
+Although this solver is the slowest currently supported solver,
+it is also the only exact algorithm solver that can be installed on all
+operating systems without any manual installation steps. This solver is
+provided so that
+users can try solving small project prioritization problems, without
+needing to install additional software. When solve moderate or large
+project prioritization problems, consider using
+<code>add_gurobi_solver()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ProjectProblem object with the solver added
+to it.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>solvers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem with lpSolveAPI solver
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 200) %&gt;%
+     add_binary_decisions() %&gt;%
+     add_lpsolveapi_solver()
+
+# print problem
+print(p)
+
+# solve problem
+s &lt;- solve(p)
+
+# print solution
+print(s)
+
+# plot solution
+plot(p, s)
+</code></pre>
+
+
+</div>

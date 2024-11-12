@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>intensityAnalysis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Performs the intensity analysis based on cross-tabulation matrices of each
+time step</h2>
+
+<h3>Description</h3>
+
+<p>This function implements an Intensity Analysis (IA) according to Aldwaik &amp;
+Pontius (2012), a quantitative method to analyze time series of land use and
+cover (LUC) maps.  For IA, a cross-tabulation matrix is composed for each LUC
+transition step in time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">intensityAnalysis(dataset, category_n, category_m, area_km2 = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataset</code></td>
+<td>
+<p>list. The result object from <code>contingencyTable</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>category_n</code></td>
+<td>
+<p>character. The gaining category in the transition of interest (<em>n</em>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>category_m</code></td>
+<td>
+<p>character. The losing category in the transition of interest (<em>m</em>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>area_km2</code></td>
+<td>
+<p>logical. If TRUE the change is computed in km2, if FALSE in pixel counts.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>IA includes three levels of analysis of LUC changes. Consecutive analysis
+levels detail hereby information given by the previous analysis level
+<cite>(Aldwaik and Pontius, 2012, 2013)</cite>.
+</p>
+
+<ol>
+<li>
+<p> The <em>interval level</em> examines how the size and speed of change
+vary across time intervals.
+</p>
+</li>
+<li>
+<p> The <em>category level</em> examines how the size and intensity of gross
+losses and gross gains in each category vary across categories for each time
+interval.
+</p>
+</li>
+<li>
+<p> The <em>transition level</em> examines how the size and intensity of a
+category’s transitions vary across the other categories that are available
+for that transition.
+</p>
+</li>
+</ol>
+<p>At each analysis level, the method tests for stationarity of patterns across
+time intervals.
+</p>
+<p><b>The function returns a list with 6 objects:</b>
+</p>
+
+<ol>
+<li>
+<p> lulc_table: <code>tibble</code>. Contingency table of LUC transitions at all
+analysed time steps, containing 6 columns:
+</p>
+
+<ol>
+<li>
+<p> Period:  <code>&lt;fct&gt;</code>. Evaluated period of transition in the format
+<code>year t - year t+1</code>.
+</p>
+</li>
+<li>
+<p> From: <code>&lt;fct&gt;</code>. The category in year t.
+</p>
+</li>
+<li>
+<p> To: <code>&lt;fct&gt;</code>. The category in year t+1.
+</p>
+</li>
+<li>
+<p> km2: <code>&lt;dbl&gt;</code>. Area in square kilometers that transited from the
+category <code>From</code>.
+to the category <code>To</code> in the period.
+</p>
+</li>
+<li>
+<p> QtPixel: <code>&lt;int&gt;</code>. Number of pixels that transited from.
+the category <code>From</code> to the category <code>To</code> in the period.
+</p>
+</li>
+<li>
+<p> Interval: <code>&lt;int&gt;</code>. Interval in years of the evaluated period.
+</p>
+</li>
+</ol>
+</li>
+<li> <p><em>lv1_tbl</em>: An <code>Interval</code> object containing the
+<em>St</em> and <em>U</em> values.
+</p>
+</li>
+<li> <p><em>category_lvlGain</em>: A <code>Category</code> object
+containing the gain of the LUC category in a period (<em>Gtj</em>).
+</p>
+</li>
+<li> <p><em>category_lvlLoss</em>: A <code>Category</code> object
+containing the loss of the LUC category in a period (<em>Lti</em>).
+</p>
+</li>
+<li> <p><em>transition_lvlGain_n</em>: A <code>Transition</code> object
+containing the annualized rate of gain in <em>category n</em> (<em>Rtin</em>) and
+the respective Uniform Intensity (<em>Wtn</em>).
+</p>
+</li>
+<li> <p><em>transition_lvlLoss_m</em>: A <code>Transition</code> object
+containing the annualized rate of loss in <em>category m</em> (<em>Qtmj</em>) and
+the respective Uniform Intensity (<em>Vtm</em>).
+</p>
+</li>
+</ol>
+<h3>Value</h3>
+
+<p>Intensity object
+</p>
+
+
+<h3>References</h3>
+
+<p>Aldwaik, S. Z. and Pontius, R. G. (2012) ‘Intensity analysis to unify
+measurements of size and stationarity of land changes by interval, category, and
+transition, Landscape and Urban Planning. Elsevier B.V., 106(1), pp. 103–114.
+<a href="https://doi.org/10.1016/j.landurbplan.2012.02.010">doi:10.1016/j.landurbplan.2012.02.010</a>.
+</p>
+<p>Aldwaik, S. Z. and Pontius, R. G. (2013) ‘Map errors that could account for deviations
+from a uniform intensity of land change, International Journal of Geographical
+Information Science. Taylor &amp; Francis, 27(9), pp. 1717–1739. <a href="https://doi.org/10.1080/13658816.2013.787618">doi:10.1080/13658816.2013.787618</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# editing the category name
+
+SL_2002_2014$tb_legend$categoryName &lt;- factor(c("Ap", "FF", "SA", "SG", "aa", "SF",
+                                             "Agua", "Iu", "Ac", "R", "Im"),
+                                  levels = c("FF", "SF", "SA", "SG", "aa", "Ap",
+                                             "Ac", "Im", "Iu", "Agua", "R"))
+
+SL_2002_2014$tb_legend$color &lt;- c("#FFE4B5", "#228B22", "#00FF00", "#CAFF70",
+                                  "#EE6363", "#00CD00", "#436EEE", "#FFAEB9",
+                                  "#FFA54F", "#68228B", "#636363")
+
+intensityAnalysis(dataset = SL_2002_2014, category_n = "Ap", category_m = "SG", area_km2 = TRUE)
+
+
+</code></pre>
+
+
+</div>

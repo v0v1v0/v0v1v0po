@@ -1,0 +1,158 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>importExcel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import grid data from an Excel file.</h2>
+
+<h3>Description</h3>
+
+<p>You can define a grid using Microsoft Excel and by saving it as a
+<code>.xlsx</code> file. The <code>.xlsx</code> file has to be in a specified fixed
+format (see section Details).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">importExcel(file, dir = NULL, sheetIndex = 1, min = NULL, max = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>A vector of filenames including the full path if file is not in current working
+directory. The file suffix has to be <code>.xlsx</code> (used since Excel 2007).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dir</code></td>
+<td>
+<p>Alternative way to supply the directory where the file is located
+(default <code>NULL</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheetIndex</code></td>
+<td>
+<p>The number of the Excel sheet that contains the grid data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min</code></td>
+<td>
+<p>Optional argument (<code>numeric</code>, default <code>NULL</code>)
+for minimum rating value in grid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max</code></td>
+<td>
+<p>Optional argument (<code>numeric</code>, default <code>NULL</code>)
+for maximum rating value in grid.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Excel file structure: The first row contains the minimum of the rating scale,
+the names of the elements and the maximum of the rating scale. Below every
+row contains the left construct pole, the ratings and the right construct
+pole.
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<code>1</code>           </td>
+<td style="text-align: center;"> <code>E1</code>  </td>
+<td style="text-align: center;"> <code>E2</code> </td>
+<td style="text-align: center;"> <code>E3</code> </td>
+<td style="text-align: center;"> <code>E4</code>  </td>
+<td style="text-align: right;"> <code>5</code>        </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code style="white-space: pre;">⁠left pole 1⁠</code> </td>
+<td style="text-align: center;"> <code>1</code>   </td>
+<td style="text-align: center;"> <code>5</code>  </td>
+<td style="text-align: center;"> <code>3</code>  </td>
+<td style="text-align: center;"> <code>4</code>   </td>
+<td style="text-align: right;"> <code style="white-space: pre;">⁠right pole 1⁠</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code style="white-space: pre;">⁠left pole 2⁠</code> </td>
+<td style="text-align: center;"> <code>3</code>   </td>
+<td style="text-align: center;"> <code>1</code>  </td>
+<td style="text-align: center;"> <code>1</code>  </td>
+<td style="text-align: center;"> <code>3</code>   </td>
+<td style="text-align: right;"> <code style="white-space: pre;">⁠right pole 2⁠</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code style="white-space: pre;">⁠left pole 3⁠</code> </td>
+<td style="text-align: center;"> <code>4</code>   </td>
+<td style="text-align: center;"> <code>2</code>  </td>
+<td style="text-align: center;"> <code>5</code>  </td>
+<td style="text-align: center;"> <code>1</code>   </td>
+<td style="text-align: right;"> <code style="white-space: pre;">⁠right pole 3⁠</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>Note that the maximum and minimum value has to be defined using the
+<code>min</code> and <code>max</code> arguments if no values are supplied at the
+beginning and end of the first row. Otherwise the scaling range is inferred
+from the available data and a warning is issued as the range may be
+erroneous. This may effect other functions that depend on knowing the correct
+range and it is thus strongly recommended to set the scale range correctly.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A single <code>repgrid</code> object in case one file and
+a list of <code>repgrid</code> objects in case multiple files are imported.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>importGridcor()</code>,
+<code>importGridstat()</code>,
+<code>importScivesco()</code>,
+<code>importGridsuite()</code>,
+<code>importTxt()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Open Excel file delivered along with the package
+file &lt;- system.file("extdata", "grid_01.xlsx", package = "OpenRepGrid")
+rg &lt;- importExcel(file)
+
+# To see the structure of the Excel file try to open it as follows.
+# Requires Excel to be installed.
+system2("open", file)
+
+# Import more than one Excel file
+files &lt;- system.file("extdata", c("grid_01.xlsx", "grid_02.xlsx"), package = "OpenRepGrid")
+rg &lt;- importExcel(files)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

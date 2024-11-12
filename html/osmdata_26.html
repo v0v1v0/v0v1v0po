@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_points</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract all <code>osm_points</code> from an osmdata object</h2>
+
+<h3>Description</h3>
+
+<p>Extract all <code>osm_points</code> from an osmdata object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_points(dat, id)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>An object of class osmdata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>OSM identification of one or more objects for which points are to
+be extracted</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <span class="pkg">sf</span> Simple Features Collection of points
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other search: 
+<code>osm_lines()</code>,
+<code>osm_multilines()</code>,
+<code>osm_multipolygons()</code>,
+<code>osm_polygons()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+tr &lt;- opq ("trentham australia") %&gt;% osmdata_sf ()
+coliban &lt;- tr$osm_lines [which (tr$osm_lines$name == "Coliban River"), ]
+pts &lt;- osm_points (tr, rownames (coliban)) # all points of river
+# the waterfall point:
+waterfall &lt;- pts [which (pts$waterway == "waterfall"), ]
+
+## End(Not run)
+</code></pre>
+
+
+</div>

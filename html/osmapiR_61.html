@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tags_list2wide</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Change <code>tags</code> from a list column &lt;-&gt; columns for each key in wide format</h2>
+
+<h3>Description</h3>
+
+<p>Objects of classes <code>osmapi_objects</code> and <code>osmapi_changesets</code> can represent the tags in a column with a list with
+a data.frame for each row with 2 columns for keys and values, or by columns for each key. These functions allow
+to change the format of the tags.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tags_list2wide(x)
+
+tags_wide2list(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An <code>osmapi_objects</code> or <code>osmapi_changesets</code> objects as returned by, for example, <code>osm_get_objects()</code> or
+<code>osm_get_changesets()</code>.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Both formats have advantages. Tags in a list of data.frames is a more compact representation and there is no risk of
+clashes of column names and tag keys. Tags in columns make it easier to select rows by tags as in a regular
+data.frame. Column name clashes are resolved and the original key names restored when transformed to tags list
+format.
+</p>
+<p>By default, functions returning <code>osmapi_objects</code> or <code>osmapi_changesets</code> objects, use the the tags in a list column,
+but can return the results in a wide format using the parameter <code>tags_in_columns = TRUE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the same class and data than the original (<code>osmapi_objects</code> or <code>osmapi_changesets</code>) but with the
+specified tags' format.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other methods: 
+<code>st_as_sf</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">peaks_wide &lt;- osm_get_objects(
+  osm_type = "node", osm_id = c(35308286, 1935675367), tags_in_columns = TRUE
+)
+peaks_list &lt;- tags_wide2list(peaks_wide)
+
+# tags in list format
+peaks_list$tags
+
+# Select peaks with `prominence` tag
+peaks_wide[!is.na(peaks_wide$prominence), ]
+peaks_list[sapply(peaks_list$tags, function(x) any(x$key == "prominence")), ]
+
+cities_list &lt;- osm_get_objects(osm_type = "relation", osm_id = c("40581", "341530"))
+# Column name clash:
+cities_wide &lt;- tags_list2wide(cities_list)
+</code></pre>
+
+
+</div>

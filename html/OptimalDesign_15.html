@@ -1,0 +1,230 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_AQUA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Efficient exact design using a quadratic approximation</h2>
+
+<h3>Description</h3>
+
+<p>Computes an efficient exact design under general linear constraints via a quadratic approximation of the optimality criterion.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_AQUA(Fx, b1=NULL, A1=NULL, b2=NULL, A2=NULL, b3=NULL, A3=NULL, w0=NULL,
+      bin=FALSE, crit="D", h=NULL, M.anchor=NULL, ver.qa="+", conic=TRUE,
+      t.max=120, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of design points, and <code>m</code> (where <code>m&gt;=2</code>) is the number of parameters
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b1,A1, b2,A2, b3,A3</code></td>
+<td>
+
+<p>the real vectors and matrices that define the constraints on permissible designs <code>w</code> as follows: <code>A1 %*% w &lt;= b1</code>, <code>A2 %*% w &gt;= b2</code>, <code>A3 %*% w == b3</code>. Each of the arguments can be <code>NULL</code>, but at least one of <code>b1</code>, <code>b2</code>, <code>b3</code> must be non-<code>NULL</code>. If some <code>bi</code> is non-<code>NULL</code> and <code>Ai</code> is <code>NULL</code>, then <code>Ai</code> is set to be <code>matrix(1, nrow =1, ncol = n)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w0</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design to be augmented (i.e., the function adds the constraint <code>w &gt;= w0</code> for permissible designs <code>w</code>). This argument can also be <code>NULL</code>; in that case, <code>w0</code> is set to the vector of zeros.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bin</code></td>
+<td>
+
+<p>Should each design point be used at most once?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>The optimality criterion. Possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M.anchor</code></td>
+<td>
+
+<p>the <code>m</code> times <code>m</code> information matrix of the optimal or nearly-optimal approximate design for the design problem (for the non-normalized version of the problem and including the design constraints). The argument <code>M.anchor</code> can also be <code>NULL</code>. In that case the procedure computes <code>M.anchor</code> using an appropriate approximate design procedure from the package.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ver.qa</code></td>
+<td>
+
+<p>version of the criterion; possible values are <code>"+"</code> and <cite>"-"</cite>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conic</code></td>
+<td>
+
+<p>Should the conic reformulation be used?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.max</code></td>
+<td>
+
+<p>the time limit for the computation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>At least one of <code>b1</code>, <code>b2</code>, <code>b3</code> must be non-<code>NULL</code>.
+If <code>bi</code> is non-<code>NULL</code> and <code>Ai</code> is <code>NULL</code> for some <code>i</code> then <code>Ai</code> is set to be the vector of ones. If <code>bi</code> is <code>NULL</code> for some <code>i</code> then <code>Ai</code> is ignored.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>The call of the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.best</code></td>
+<td>
+<p>The permissible design found, or <code>NULL</code>. The value <code>NULL</code> indicates a failed computation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supp</code></td>
+<td>
+<p>The indices of the support of <code>w.best</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.supp</code></td>
+<td>
+<p>The weights of <code>w.best</code> on the support.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M.best</code></td>
+<td>
+<p>The information matrix of <code>w.best</code> or <code>NULL</code> if <code>w.best</code> is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phi.best</code></td>
+<td>
+<p>The value of the criterion of optimality of the design <code>w.best</code>. If <code>w.best</code> has a singular information matrix or if the computation fails, the value of <code>Phi.best</code> is <code>0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>The status variable of the gurobi optimization procedure; see the gurobi solver documentation for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.act</code></td>
+<td>
+<p>The actual time of the computation.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The function does not support the classical c-optimality, but it includes its regularized version referred to as C-optimality. The computation is generally stable, but it may fail for instance if the model is numerically singular, there is no exact design satisfying the constraints, no permissible exact design was found within the time limit, the set of feasible exact designs is unbounded and so on; see the <code>status</code> variable for more details. Note, however, that <code>status = "OPTIMAL"</code> indicates that the auxiliary integer programming problem was completely solved, which for this procedure does not guarantee that the result is a globally optimal design.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Harman R., Filova L. (2014): Computing efficient exact designs of experiments using integer quadratic programming, Computational Statistics &amp; Data Analysis, Volume 71, pp. 1159-1167
+</p>
+<p>Filova L., Harman R. (2018). Ascent with Quadratic Assistance for the Construction of Exact Experimental Designs. arXiv preprint arXiv:1801.09124. (Submitted to Computational Statistics)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>od_KL, od_RC, od_MISOCP</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Compute an I-efficient non-replicated exact design of size 51
+# for the "special cubic" model with 3 mixture components
+
+# Each factor has 11 levels:
+form.sc &lt;- ~x1 + x2 + x3 + I(x1*x2) + I(x1*x3) + I(x2*x3) + I(x1*x2*x3) - 1
+Fx &lt;- Fx_simplex(form.sc, 11)
+w &lt;- od_AQUA(Fx, b3 = 51, crit = "I", bin = TRUE)$w.best
+od_plot(Fx, w, Fx[, 1:3])
+
+# Each factor has 101 levels (memory intensive without the conic trick)
+Fx &lt;- Fx_simplex(form.sc, 101)
+w &lt;- od_AQUA(Fx, b3 = 51, crit = "I", bin = TRUE, t.max = 10)$w.best
+od_plot(Fx, w, Fx[, 1:3])
+
+# Find an A-efficient exact design for the spring balance model
+# with 5 items and 10 weighings
+Fx &lt;- Fx_cube(~x1 + x2 + x3 + x4 + x5 - 1, lower = rep(0, 5))
+w &lt;- od_AQUA(Fx, b3 = 10, crit = "A", t.max = 10)$w.best
+od_print(Fx, w)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

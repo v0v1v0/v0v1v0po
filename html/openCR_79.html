@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>strata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Stratum names </h2>
+
+<h3>Description</h3>
+
+<p>Extract or replace the stratum names of a <code>capthist</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">strata(object, ...)
+strata(object) &lt;- value
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p> object with ‘stratum’ attribute e.g. <code>capthist</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p> character vector or vector that may be coerced to character, one value per stratum </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> other arguments (not used) </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Replacement values will be coerced to character.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a character vector with one value for each session in <code>capthist</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p><span class="pkg">openCR</span> uses the term ‘stratum’ for an independent set of samples, 
+rather like a ‘session’ in <span class="pkg">secr</span>. Strata offer flexibility in defining 
+and evaluating between-stratum models. The log likelihood for a stratified
+model is the sum of the separate stratum log likelihoods. Although this 
+assumes independence of sampling, parameters may be shared across strata, 
+or stratum-specific parameter values may be functions of stratum-level covariates. 
+The detector array and mask can be specified separately for each stratum. 
+</p>
+<p>For open population analyses, each stratum comprises both primary and secondary 
+sessions of Pollock's robust design ‘joined’ in a single-session capthist object. 
+</p>
+<p>The function <code>stratify</code> can be useful for manipulating data into 
+multi-stratum form.
+</p>
+<p>Models are stratified only if the argument <code>stratified</code> of 
+<code>openCR.fit()</code> is set to TRUE. Strata will otherwise be treated as 
+primary sessions and concatenated as usual with <code>join()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>openCR.fit</code>, <code>session</code>, <code>stratify</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  # artificial example, treating years as strata
+  strata(ovenCH)
+</code></pre>
+
+
+</div>

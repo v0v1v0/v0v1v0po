@@ -1,0 +1,580 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>biplot2d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Draw a two-dimensional biplot.</h2>
+
+<h3>Description</h3>
+
+<p>The biplot is the central way to create a joint plot of elements and constructs. Depending on the parameters chosen
+it contains information on the distances between elements and constructs. Also the relative values the elements have
+on a construct can be read off by projection the element onto the construct vector. A lot of parameters can be
+changed rendering different types of biplots (ESA, Slater's) and different looks (colors, text size). See the
+example section below to get started.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">biplot2d(
+  x,
+  dim = c(1, 2),
+  map.dim = 3,
+  center = 1,
+  normalize = 0,
+  g = 0,
+  h = 1 - g,
+  col.active = NA,
+  col.passive = NA,
+  e.point.col = "black",
+  e.point.cex = 0.9,
+  e.label.col = "black",
+  e.label.cex = 0.7,
+  e.color.map = c(0.4, 1),
+  c.point.col = "black",
+  c.point.cex = 0,
+  c.label.col = "black",
+  c.label.cex = 0.7,
+  c.color.map = c(0.4, 1),
+  c.points.devangle = 91,
+  c.labels.devangle = 91,
+  c.points.show = TRUE,
+  c.labels.show = TRUE,
+  e.points.show = TRUE,
+  e.labels.show = TRUE,
+  inner.positioning = TRUE,
+  outer.positioning = TRUE,
+  c.labels.inside = FALSE,
+  c.lines = TRUE,
+  col.c.lines = grey(0.9),
+  flipaxes = c(FALSE, FALSE),
+  strokes.x = 0.1,
+  strokes.y = 0.1,
+  offsetting = TRUE,
+  offset.labels = 0,
+  offset.e = 1,
+  axis.ext = 0.1,
+  mai = c(0.2, 1.5, 0.2, 1.5),
+  rect.margins = c(0.01, 0.01),
+  srt = 45,
+  cex.pos = 0.7,
+  xpd = TRUE,
+  unity = FALSE,
+  unity3d = FALSE,
+  scale.e = 0.9,
+  zoom = 1,
+  var.show = TRUE,
+  var.cex = 0.7,
+  var.col = grey(0.1),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dim</code></td>
+<td>
+<p>Dimensions (i.e. principal components) to be used for biplot
+(default is <code>c(1,2)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.dim</code></td>
+<td>
+<p>Third dimension (depth) used to map aesthetic attributes to
+(default is <code>3</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>Numeric. The type of centering to be performed.
+0= no centering, 1= row mean centering (construct),
+2= column mean centering (elements), 3= double-centering (construct and element means),
+4= midpoint centering of rows (constructs).
+The default is <code>1</code> (row centering).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>A numeric value indicating along what direction (rows, columns)
+to normalize by standard deviations. <code style="white-space: pre;">⁠0 = none, 1= rows, 2 = columns⁠</code>
+(default is <code>0</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the left singular
+vectors, i.e. the constructs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the right singular
+vectors, i.e. the elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.active</code></td>
+<td>
+<p>Columns (elements) that are no supplementary points, i.e. they are used
+in the SVD to find principal components. default is to use all elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.passive</code></td>
+<td>
+<p>Columns (elements) that are supplementary points, i.e. they are NOT used
+in the SVD but projected into the component space afterwards. They do not
+determine the solution. Default is <code>NA</code>, i.e. no elements are set
+supplementary.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.point.col</code></td>
+<td>
+<p>Color of the element symbols. The default is <code>"black"</code>.
+Two values can be entered that will create a color ramp. The values of
+<code>map.dim</code> are mapped onto the ramp.
+If only one color color value is supplied (e.g. <code>"black"</code>)
+no mapping occurs and all elements will have the same color
+irrespective of their value on the <code>map.dim</code> dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.point.cex</code></td>
+<td>
+<p>Size of the element symbols. The default is <code>.9</code>.
+Two values can be entered that will create a size ramp. The values of
+<code>map.dim</code> are mapped onto the ramp.
+If only one color size value is supplied (e.g. <code>.8</code>)
+no mapping occurs and all elements will have the same size
+irrespective of their value on the <code>map.dim</code> dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.label.col</code></td>
+<td>
+<p>Color of the element label. The default is <code>"black"</code>.
+Two values can be entered that will create a color ramp. The values of
+<code>map.dim</code> are mapped onto the ramp.
+If only one color color value is supplied (e.g. <code>"black"</code>)
+no mapping occurs and all labels will have the same color
+irrespective of their value on the <code>map.dim</code> dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.label.cex</code></td>
+<td>
+<p>Size of the element labels. The default is <code>.7</code>.
+Two values can be entered that will create a size ramp. The values of
+<code>map.dim</code> are mapped onto the ramp.
+If only one color size value is supplied (e.g. <code>.7</code>)
+no mapping occurs and all labels will have the same size
+irrespective of their value on the <code>map.dim</code> dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.color.map</code></td>
+<td>
+<p>Value range to determine what range of the color ramp defined in
+<code>e.color</code> will be used for mapping the colors.
+Default is <code>c(.4, ,1)</code>. Usually not important for the user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.point.col</code></td>
+<td>
+<p>Color of the construct symbols. The default is <code>"black"</code>.
+Two values can be entered that will create a color ramp. The values of
+<code>map.dim</code> are mapped onto the ramp.
+If only one color color value is supplied (e.g. <code>"black"</code>)
+no mapping occurs and all construct will have the same color
+irrespective of their value on the <code>map.dim</code> dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.point.cex</code></td>
+<td>
+<p>Size of the construct symbols. The default is <code>.8</code>.
+Two values can be entered that will create a size ramp. The values of
+<code>map.dim</code> are mapped onto the ramp.
+If only one color size value is supplied (e.g. <code>.8</code>)
+no mapping occurs and all construct will have the same size
+irrespective of their value on the <code>map.dim</code> dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.label.col</code></td>
+<td>
+<p>Color of the construct label. The default is <code>"black"</code>.
+Two values can be entered that will create a color ramp. The values of
+<code>map.dim</code> are mapped onto the ramp.
+If only one color color value is supplied (e.g. <code>"black"</code>)
+no mapping occurs and all labels will have the same color
+irrespective of their value on the <code>map.dim</code> dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.label.cex</code></td>
+<td>
+<p>Size of the construct labels. The default is <code>.7</code>.
+Two values can be entered that will create a size ramp. The values of
+<code>map.dim</code> are mapped onto the ramp.
+If only one color size value is supplied (e.g. <code>.7</code>)
+no mapping occurs and all labels will have the same size
+irrespective of their value on the <code>map.dim</code> dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.color.map</code></td>
+<td>
+<p>Value range to determine what range of the color ramp defined in
+<code>c.color</code> will be used for mapping. Default is <code>c(.4, ,1)</code>.
+Usually not important for the user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.points.devangle</code></td>
+<td>
+<p>The deviation angle from the x-y plane in degrees. These can only be calculated
+if a third dimension <code>map.dim</code> is specified. Only the constructs
+that do not depart more than the specified degrees from the
+x-y plane will be printed. This facilitates the visual
+interpretation, as only vectors represented near the current plane
+are shown. Set the value to <code>91</code> (default)
+to show all vectors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.labels.devangle</code></td>
+<td>
+<p>The deviation angle from the x-y plane in degrees. These can only be calculated
+if a third dimension <code>map.dim</code> is specified. Only the labels of constructs
+that do not depart more than the specified degrees from the
+x-y plane will be printed. Set the value to <code>91</code> (default)
+to show all construct labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.points.show</code></td>
+<td>
+<p>Whether the constructs are printed (default is <code>TRUE</code>).
+<code>FALSE</code> will suppress the printing of the constructs.
+To only print certain constructs a numeric vector can be
+provided (e.g. <code>c(1:10)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.labels.show</code></td>
+<td>
+<p>Whether the construct labels are printed (default is <code>TRUE</code>).
+<code>FALSE</code> will suppress the printing of the labels.
+To only print certain construct labels a numeric vector can be
+provided (e.g. <code>c(1:10)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.points.show</code></td>
+<td>
+<p>Whether the elements are printed (default is <code>TRUE</code>).
+<code>FALSE</code> will suppress the printing of the elements.
+To only print certain elements a numeric vector can be
+provided (e.g. <code>c(1:10)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.labels.show</code></td>
+<td>
+<p>Whether the element labels are printed (default is <code>TRUE</code>).
+<code>FALSE</code> will suppress the printing of the labels.
+To only print certain element labels a numeric vector can be
+provided (e.g. <code>c(1:10)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inner.positioning</code></td>
+<td>
+<p>Logical. Whether to calculate positions to minimize overplotting of
+elements and construct labels (default is<code>TRUE</code>). Note that
+the positioning may slow down the plotting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outer.positioning</code></td>
+<td>
+<p>Logical. Whether to calculate positions to minimize overplotting of
+of construct labels on the outer borders (default is<code>TRUE</code>). Note that
+the positioning may slow down the plotting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.labels.inside</code></td>
+<td>
+<p>Logical. Whether to print construct labels next to the points.
+Can be useful during inspection of the plot (default <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.lines</code></td>
+<td>
+<p>Logical. Whether construct lines from the center of the biplot
+to the surrounding box are drawn (default is <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.c.lines</code></td>
+<td>
+<p>The color of the construct lines from the center to the borders
+of the plot (default is <code>gray(.9)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flipaxes</code></td>
+<td>
+<p>Logical vector of length two. Whether x and y axes are reversed
+(default is <code>c(F,F)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strokes.x</code></td>
+<td>
+<p>Length of outer strokes in x direction in NDC.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strokes.y</code></td>
+<td>
+<p>Length of outer strokes in y direction in NDC.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offsetting</code></td>
+<td>
+<p>Do offsetting? (TODO)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset.labels</code></td>
+<td>
+<p>Offsetting parameter for labels (TODO).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset.e</code></td>
+<td>
+<p>offsetting parameter for elements (TODO).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axis.ext</code></td>
+<td>
+<p>Axis extension factor (default is <code>.1</code>). A bigger value will
+zoom out the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mai</code></td>
+<td>
+<p>Margins available for plotting the labels in inch
+(default is <code>c(.2, 1.5, .2, 1.5)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rect.margins</code></td>
+<td>
+<p>Vector of length two (default is <code>c(.07, .07)</code>). Two values
+specifying the additional horizontal and vertical margin around each
+label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>srt</code></td>
+<td>
+<p>Angle to rotate construct label text. Only used in case <code>offsetting=FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.pos</code></td>
+<td>
+<p>Cex parameter used during positioning of labels if prompted. Does
+usually not have to be changed by user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xpd</code></td>
+<td>
+<p>Logical (default is <code>TRUE</code>). Whether to extend text labels
+over figure region. Usually not needed by the user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unity</code></td>
+<td>
+<p>Scale elements and constructs coordinates to unit scale in 2D (maximum of 1)
+so they are printed more neatly (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unity3d</code></td>
+<td>
+<p>Scale elements and constructs coordinates to unit scale in 3D (maximum of 1)
+so they are printed more neatly (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.e</code></td>
+<td>
+<p>Scaling factor for element vectors. Will cause element points to move a bit more
+to the center. (but only if <code>unity</code> or <code>unity3d</code> is <code>TRUE</code>).
+This argument is for visual appeal only.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zoom</code></td>
+<td>
+<p>Scaling factor for all vectors. Can be used to zoom
+the plot in and out (default <code>1</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.show</code></td>
+<td>
+<p>Show explained sum-of-squares in biplot? (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.cex</code></td>
+<td>
+<p>The cex value for the percentages shown in the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.col</code></td>
+<td>
+<p>The color value of the percentages shown in the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>parameters passed on to  come.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For the construction of a biplot the grid matrix is first centered and normalized according to the prompted options.
+</p>
+<p>Next, the matrix is decomposed by singular value decomposition (SVD)
+into </p>
+<p style="text-align: center;"><code class="reqn">X = UDV^T</code>
+</p>
+
+<p>The biplot is made up of two matrices
+</p>
+<p style="text-align: center;"><code class="reqn">X = GH^T</code>
+</p>
+
+<p>These matrices are construed on the basis of the SVD results.
+</p>
+<p style="text-align: center;"><code class="reqn">\hat{X} = UD^gD^hV^T</code>
+</p>
+
+<p>Note that the grid matrix values are only recovered and
+the projection property is only given if <code class="reqn">g + h = 1</code>
+</p>
+
+
+<h3>See Also</h3>
+
+
+<ul>
+<li>
+<p> Unsophisticated biplot: <code>biplotSimple()</code>;
+</p>
+</li>
+<li>
+<p> 2D biplots:<code>biplot2d()</code>, <code>biplotEsa2d()</code>, <code>biplotSlater2d()</code>;
+</p>
+</li>
+<li>
+<p> Pseudo 3D biplots: <code>biplotPseudo3d()</code>, <code>biplotEsaPseudo3d()</code>, <code>biplotSlaterPseudo3d()</code>;
+</p>
+</li>
+<li>
+<p> Interactive 3D biplots: <code>biplot3d()</code>, <code>biplotEsa3d()</code>, <code>biplotSlater3d()</code>;
+</p>
+</li>
+<li>
+<p> Function to set view in 3D: <code>home()</code>
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+biplot2d(boeker) # biplot of boeker data
+biplot2d(boeker, c.lines = T) # add construct lines
+biplot2d(boeker, center = 2) # with column centering
+biplot2d(boeker, center = 4) # midpoint centering
+biplot2d(boeker, normalize = 1) # normalization of constructs
+
+biplot2d(boeker, dim = 2:3) # plot 2nd and 3rd dimension
+biplot2d(boeker, dim = c(1, 4)) # plot 1st and 4th dimension
+
+biplot2d(boeker, g = 1, h = 1) # assign singular values to con. &amp; elem.
+biplot2d(boeker, g = 1, h = 1, center = 1) # row centering (Slater)
+biplot2d(boeker, g = 1, h = 1, center = 4) # midpoint centering (ESA)
+
+biplot2d(boeker, e.color = "red", c.color = "blue") # change colors
+biplot2d(boeker, c.color = c("white", "darkred")) # mapped onto color range
+
+biplot2d(boeker, unity = T) # scale con. &amp; elem. to equal length
+biplot2d(boeker, unity = T, scale.e = .5) # scaling factor for element vectors
+
+biplot2d(boeker, e.labels.show = F) # do not show element labels
+biplot2d(boeker, e.labels.show = c(1, 2, 4)) # show labels for elements 1, 2 and 4
+biplot2d(boeker, e.points.show = c(1, 2, 4)) # only show elements 1, 2 and 4
+biplot2d(boeker, c.labels.show = c(1:4)) # show constructs labels 1 to 4
+biplot2d(boeker, c.labels.show = c(1:4)) # show constructs labels except 1 to 4
+
+biplot2d(boeker, e.cex.map = 1) # change size of texts for elements
+biplot2d(boeker, c.cex.map = 1) # change size of texts for constructs
+
+biplot2d(boeker, g = 1, h = 1, c.labels.inside = T) # constructs inside the plot
+biplot2d(boeker,
+  g = 1, h = 1, c.labels.inside = T, # different margins and elem. color
+  mai = c(0, 0, 0, 0), e.color = "red"
+)
+
+biplot2d(boeker, strokes.x = .3, strokes.y = .05) # change length of strokes
+
+biplot2d(boeker, flipaxes = c(T, F)) # flip x axis
+biplot2d(boeker, flipaxes = c(T, T)) # flip x and y axis
+
+biplot2d(boeker, outer.positioning = F) # no positioning of con.-labels
+
+biplot2d(boeker, c.labels.devangle = 20) # only con. within 20 degree angle
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

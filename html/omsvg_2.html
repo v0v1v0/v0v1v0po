@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anims</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Express animations for an element</h2>
+
+<h3>Description</h3>
+
+<p>All SVG element functions in <strong>omsvg</strong> (the <code style="white-space: pre;">⁠svg_*()⁠</code> functions) are
+animatable through their <code>anims</code> argument. The <code>anims()</code> function should be
+used with that argument should we want to express animations for the element.
+Within the <code>anims()</code> function call, we can insert a list of formulas that
+incorporate calls to any of the <code style="white-space: pre;">⁠anim_*()⁠</code> functions (e.g.,
+<code>anim_position()</code>, <code>anim_rotation()</code>, etc.), and, have keyframe times as part
+of the formula.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anims(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>One or more animations that included the use of <code style="white-space: pre;">⁠anim_*()⁠</code>
+functions, expressed as two-sided formulas. The LHS provides the keyframe
+time (in units of seconds) and the RHS is the associated <code style="white-space: pre;">⁠anim_*()⁠</code> call.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>A useful template to use for an <code>anims()</code> call within an <code style="white-space: pre;">⁠svg_*()⁠</code> function
+is:
+</p>
+<pre>
+anims = anims(
+  &lt;time_i&gt; ~ &lt;anim_fn&gt;(...),
+  ...,
+  &lt;time_n&gt; ~ &lt;anim_fn&gt;(...)
+  )
+</pre>
+<p>We can also use multiple calls to <code style="white-space: pre;">⁠anim_*()⁠</code> functions for each distinct keyframe
+time by placing those calls in a list:
+</p>
+<pre>
+anims = anims(
+  &lt;time_i&gt; ~ list(
+    &lt;anim_fn_x&gt;(...),
+    &lt;anim_fn_y&gt;(...)
+    ),
+  ...,
+  &lt;time_n&gt; ~ list(
+    &lt;anim_fn_x&gt;(...),
+    &lt;anim_fn_y&gt;(...)
+    )
+  )
+</pre>
+
+
+<h3>Value</h3>
+
+<p>A tibble of animation directives.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# Basic animation of an element's
+# position (moving to a new `x` and
+# `y` position)
+svg_1 &lt;-
+  SVG(width = 300, height = 300) %&gt;%
+  svg_rect(
+    x = 50, y = 50,
+    width = 50, height = 50,
+    attrs = svg_attrs_pres(
+      stroke = "magenta",
+      fill = "lightblue"
+    ),
+    anims = anims(
+      2.0 ~ anim_position(x = 100, y = 50)
+    )
+  )
+
+# We can define multiple animations
+# for a single element: put them in a
+# `list()`; the `easing_fn` function for
+# both `anim_*()` function is no longer
+# linear but now eases in and out
+svg_2 &lt;-
+  SVG(width = 300, height = 300) %&gt;%
+  svg_rect(
+    x = 50, y = 50,
+    width = 50, height = 50,
+    attrs = svg_attrs_pres(
+      stroke = "black",
+      fill = "yellow"
+    ),
+    anims = anims(
+      0.5 ~ list(
+        anim_position(x = 50, y = 50, easing_fn = ease_in_out()),
+        anim_rotation(0, easing_fn = ease_in_out())
+      ),
+      2.0 ~ list(
+        anim_position(x = 200, y = 50, easing_fn = ease_in_out()),
+        anim_rotation(90, easing_fn = ease_in_out())
+      )
+    )
+  )
+
+# The initial state of the element
+# can be used in any `anim_*()`
+# function with `initial = TRUE`
+svg_3 &lt;-
+  SVG(width = 300, height = 300) %&gt;%
+  svg_rect(
+    x = 50, y = 50,
+    width = 50, height = 50,
+    attrs = svg_attrs_pres(
+      stroke = "black",
+      fill = "yellow"
+    ),
+    anims = anims(
+      1.0 ~ list(
+        anim_position(initial = TRUE),
+        anim_rotation(initial = TRUE)
+      ),
+      3.0 ~ list(
+        anim_position(x = 200, y = 50),
+        anim_rotation(90)
+      ),
+      5.0 ~ list(
+        anim_position(initial = TRUE),
+        anim_rotation(initial = TRUE)
+      )
+    )
+  )
+}
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oc_points</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List of points for OpenCage queries</h2>
+
+<h3>Description</h3>
+
+<p>Create a list of points (latitude/longitude coordinate pairs) for OpenCage
+queries.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oc_points(...)
+
+## S3 method for class 'numeric'
+oc_points(latitude, longitude, ...)
+
+## S3 method for class 'data.frame'
+oc_points(data, latitude, longitude, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latitude, longitude</code></td>
+<td>
+<p>Numeric vectors of latitude and longitude values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A <code>data.frame</code> containing at least 2 columns with <code>latitude</code> and
+<code>longitude</code> values.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of points. Each point is a named vector of length 2 containing
+a latitude/longitude coordinate pair.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">oc_points(-21.01404, 55.26077)
+
+xdf &lt;-
+  data.frame(
+    place = c("Hamburg", "Los Angeles"),
+    lat = c(53.5503, 34.0536),
+    lon = c(10.0006, -118.2427)
+  )
+oc_points(
+  data = xdf,
+  latitude = lat,
+  longitude = lon
+)
+
+# create a list column with points with dplyr
+library(dplyr)
+xdf %&gt;%
+  mutate(
+    points =
+      oc_points(
+        lat,
+        lon
+      )
+  )
+
+</code></pre>
+
+
+</div>

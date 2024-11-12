@@ -1,0 +1,62 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onetime_reset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reset a onetime call by ID</h2>
+
+<h3>Description</h3>
+
+<p>Reset a onetime call by ID
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onetime_reset(id = deprecate_calling_package(), path = default_lockfile_dir())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Unique ID string. If this is unset, the name of the calling
+package will be used. Since onetime 0.2.0, not setting <code>id</code> is
+deprecated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Directory to store lockfiles. The default uses a unique
+directory corresponding to the calling package, beneath
+<code>rappdirs::user_config_dir()</code>. Normally you should leave this as the
+default.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The result of <code>file.remove()</code>, invisibly.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">oo &lt;- options(onetime.dir = tempdir(check = TRUE))
+id &lt;- sample(10000L, 1)
+onetime_message("will be shown",  id = id)
+onetime_message("won't be shown", id = id)
+onetime_reset(id = id)
+onetime_message("will be shown",  id = id)
+
+onetime_reset(id = id)
+options(oo)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,220 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>write_datatable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write to a worksheet as an Excel table</h2>
+
+<h3>Description</h3>
+
+<p>Write to a worksheet and format as an Excel table. Use <code>wb_add_data_table()</code> in new code.
+This function is deprecated and may not be exported in the future.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">write_datatable(
+  wb,
+  sheet,
+  x,
+  dims = wb_dims(start_row, start_col),
+  start_col = 1,
+  start_row = 1,
+  col_names = TRUE,
+  row_names = FALSE,
+  table_style = "TableStyleLight9",
+  table_name = NULL,
+  with_filter = TRUE,
+  sep = ", ",
+  first_column = FALSE,
+  last_column = FALSE,
+  banded_rows = TRUE,
+  banded_cols = FALSE,
+  apply_cell_style = TRUE,
+  remove_cell_style = FALSE,
+  na.strings = na_strings(),
+  inline_strings = TRUE,
+  total_row = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object containing a worksheet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>The worksheet to write to. Can be the worksheet index or name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>Spreadsheet cell range that will determine <code>start_col</code> and <code>start_row</code>: "A1", "A1:B2", "A:B"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_col</code></td>
+<td>
+<p>A vector specifying the starting column to write <code>x</code> to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_row</code></td>
+<td>
+<p>A vector specifying the starting row to write <code>x</code> to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_names</code></td>
+<td>
+<p>If <code>TRUE</code>, column names of <code>x</code> are written.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row_names</code></td>
+<td>
+<p>If <code>TRUE</code>, the row names of <code>x</code> are written.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table_style</code></td>
+<td>
+<p>Any table style name or "none" (see <code>vignette("openxlsx2_style_manual")</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table_name</code></td>
+<td>
+<p>Name of table in workbook. The table name must be unique.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>with_filter</code></td>
+<td>
+<p>If <code>TRUE</code>, columns with have filters in the first row.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>Only applies to list columns. The separator used to collapse list
+columns to a character vector e.g.
+<code>sapply(x$list_column, paste, collapse = sep)</code>.
+<br><br><br><strong>The below options correspond to Excel table options:</strong>
+<br><img src="../help/figures/tableoptions.png" width="40%" alt="Figure: table\_options.png"></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first_column</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, the first column is bold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>last_column</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, the last column is bold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>banded_rows</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, rows are color banded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>banded_cols</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, the columns are color banded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>apply_cell_style</code></td>
+<td>
+<p>Should we write cell styles to the workbook</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove_cell_style</code></td>
+<td>
+<p>keep the cell style?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.strings</code></td>
+<td>
+<p>Value used for replacing <code>NA</code> values from <code>x</code>. Default
+looks if <code>options(openxlsx2.na.strings)</code> is set. Otherwise <code>na_strings()</code>
+uses the special <code style="white-space: pre;">⁠#N/A⁠</code> value within the workbook.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inline_strings</code></td>
+<td>
+<p>write characters as inline strings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>total_row</code></td>
+<td>
+<p>logical. With the default <code>FALSE</code> no total row is added.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Formulae written using <code>wb_add_formula()</code> to a Workbook object will
+not get picked up by <code>read_xlsx()</code>. This is because only the formula is written
+and left to Excel to evaluate the formula when the file is opened in Excel.
+The string <code>"_openxlsx_NA"</code> is reserved for <code>openxlsx2</code>.
+If the data frame contains this string, the output will be broken.
+</p>
+<p>Supported classes are data frames, matrices and vectors of various types and
+everything that can be converted into a data frame with <code>as.data.frame()</code>.
+Everything else that the user wants to write should either be converted into
+a vector or data frame or written in vector or data frame segments. This
+includes base classes such as <code>table</code>, which were coerced internally in the
+predecessor of this package.
+</p>
+<p>Even vectors and data frames can consist of different classes. Many base
+classes are covered, though not all and far from all third-party classes.
+When data of an unknown class is written, it is handled with <code>as.character()</code>.
+It is not possible to write character nodes beginning with <code style="white-space: pre;">⁠&lt;r&gt;⁠</code> or <code style="white-space: pre;">⁠&lt;r/&gt;⁠</code>. Both
+are reserved for internal functions. If you need these. You have to wrap
+the input string in <code>fmt_txt()</code>.
+</p>
+<p>The columns of <code>x</code> with class Date/POSIXt, currency, accounting, hyperlink,
+percentage are automatically styled as dates, currency, accounting,
+hyperlinks, percentages respectively.
+</p>
+<p>Functions <code>wb_add_data()</code> and <code>wb_add_data_table()</code> behave quite similar. The
+distinction is that the latter creates a table in the worksheet that can be
+used for different kind of formulas and can be sorted independently, though
+is less flexible than basic cell regions.
+</p>
+
+
+</div>

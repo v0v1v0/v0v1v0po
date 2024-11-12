@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>AcceptProp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Determine if a Metropolis–Hastings step should be accepted</h2>
+
+<h3>Description</h3>
+
+<p><code>AcceptProp</code> is a utility function to determine if a proposal should
+be accepted in a Metropolis or Metropolis-Hastings step.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">AcceptProp(log.curr, log.prop, log.curr.to.prop = 0,
+  log.prop.to.curr = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>log.curr</code></td>
+<td>
+<p>log density of the target at the current value,
+<code class="reqn">log(P(x))</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.prop</code></td>
+<td>
+<p>log density of the target at the proposed value,
+<code class="reqn">log(P(x'))</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.curr.to.prop</code></td>
+<td>
+<p>log of transition distribution from current value to
+proposed value, <code class="reqn">log(g(x'|x))</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.prop.to.curr</code></td>
+<td>
+<p>log of transition distribution from proposed value to
+current value, <code class="reqn">log(g(x|x'))</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function uses the Metropolis choice for a Metropolis/Metropolis-Hastings
+sampler, which accepts a proposed value <code class="reqn">x'</code> with probability </p>
+<p style="text-align: center;"><code class="reqn">
+A(x', x) = min(1, P(x')/P(x) g(x|x')/g(x'|x)) </code>
+</p>
+<p> where <code class="reqn">P(x)</code> is the
+target distribution and <code class="reqn">g(x'|x)</code> is the proposal distribution.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>TRUE/FALSE</code> for whether the proposal should be accepted or
+rejected, respectively
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Sample from triangular distribution P(x) = -2x + 2 ----------------------
+# Target distribution
+LogP &lt;- function(x) {
+    log(-2*x + 2)
+}
+
+# Generate proposals using Beta(1/2, 1/2)
+shape1 &lt;- 1/2
+shape2 &lt;- 1/2
+
+RProp &lt;- function() { # Draw proposal
+    rbeta(1, shape1, shape2)
+}
+
+DLogProp &lt;- function(x) { # Log density of proposal distribution
+    dbeta(x, shape1, shape2, log=TRUE)
+}
+
+SampleX &lt;- function(x) { # Draw once from the target distribution
+    x.prop &lt;- RProp()
+    if(AcceptProp(LogP(x), LogP(x.prop), DLogProp(x.prop), DLogProp(x))) {
+        x &lt;- x.prop
+    }
+
+    return(x)
+}
+
+# Draw from the target distribution
+n.samples &lt;- 10000
+samples &lt;- vector(length=n.samples)
+x &lt;- 0.5
+Mcmc &lt;- InitMcmc(n.samples)
+samples &lt;- Mcmc({
+    x &lt;- SampleX(x)
+})
+
+# Plot the results
+hist(samples$x, freq=FALSE, ylim=c(0, 2.5), xlim=c(0, 1), xlab="x")
+grid &lt;- seq(0, 1, length.out=500)
+lines(grid, exp(LogP(grid)), col="blue")
+legend("topright", legend="True density", lty=1, col="blue", cex=0.75)
+</code></pre>
+
+
+</div>

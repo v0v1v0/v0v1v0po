@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>alphaDiversity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculate the alpha diversity indices
+</h2>
+
+<h3>Description</h3>
+
+<p>This function will calculate the alpha diversity indices for the total, abundant and rare biospheres.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">alphaDiversity(otutab, siteInCol = FALSE, taxhead = NULL, threshold = 1,
+    percent = FALSE, write = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otutab</code></td>
+<td>
+
+<p>A OTU table of microbial community, which can contain a taxonomic column (if siteInCol) or row (if site in rows). The OTU table should be given in numeric (integer) counts.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>siteInCol</code></td>
+<td>
+
+<p>Logical, if "TRUE", the OTU table contains samples in columns and taxa in rows. By default in this function, the siteInCol is FALSE, meaning the samples in rows.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taxhead</code></td>
+<td>
+
+<p>Character, specify the header of taxonomy if there is a taxonomic column in your data. By default this argument is NULL.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+
+<p>Numeric, the threshold of relative abundance upon which the rare biosphere will be subset.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent</code></td>
+<td>
+
+<p>Logical, whether the input OTU table are given in relative abundance. FALSE means that the input OTU table is in numeric counts.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>write</code></td>
+<td>
+
+<p>Logical, if TRUE, the result will be written out in a Tab separated data frame.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>arguments to be passed to write.table().
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The rare biosphere is defined by the relative abundance cutoffs (which is the "threshold" argument in this function) (Lynch and Neufeld, 2015). This update (version 0.1.2) removed the dependencies on functions "specnumber", "diversity" and "estimateR" from the R package "vegan" (Oksanen et al, 2013), and removed the "gini" function from package 'reldist' (http://www.stat.ucla.edu/~handcock/RelDist).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function will return a list of length 3, including indices of observed, shannon, simpson, invsimpson, chao1, chao2, and evenness.
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>allBio </code></td>
+<td>
+<p>The alpha diversity indices for the whole community</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abundBio </code></td>
+<td>
+<p>The alpha diversity indices for the abundant population</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rareBio </code></td>
+<td>
+<p>The alpha diversity indices for the rare biosphere</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Sizhong Yang &lt;yanglzu@163.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Lynch MDJ, Neufeld JD (2015). Ecology and exploration of the rare biosphere. Nature Reviews Microbiology 13: 217-229.
+</p>
+<p>Oksanen J, Blanchet FG, Kindt R, Legendre P, Minchin PR, O'Hara RB et al (2013). vegan: Community Ecology Package. R package version 2.0-7. http://CRAN.R-project.org/package=vegan.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(otumothur)
+
+test1 &lt;- alphaDiversity(otutab = otumothur, siteInCol = TRUE,
+    taxhead = "taxonomy", threshold = 1, percent = FALSE, write = FALSE)
+
+test2 &lt;- alphaDiversity(otutab = otumothur[,-ncol(otumothur)], siteInCol = TRUE,
+    taxhead = NULL, threshold = 1, percent = FALSE, write = FALSE)
+</code></pre>
+
+
+</div>

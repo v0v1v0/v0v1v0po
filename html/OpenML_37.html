@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OMLDataSet</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OMLDataSet.</h2>
+
+<h3>Description</h3>
+
+<p>An <code>OMLDataSet</code> consists of an <code>OMLDataSetDescription</code>, a
+<code>data.frame</code> containing the data set, the old and new column names and,
+finally, the target features.
+</p>
+<p>The <code>OMLDataSetDescription</code> provides information on the data set,
+like the ID, name, version, etc. To see a full list of all elements, please see the
+<a href="https://docs.openml.org/">documentation</a>.
+</p>
+<p>The slot <code>colnames.old</code> contains the original names, i.e., the column names that were
+uploaded to the server, while <code>colnames.new</code> contains the names that you will see when
+working with the data in R.
+Most of the time, old and new column names are identical. Only if the original names are
+not valid, the new ones will differ.
+</p>
+<p>The slot <code>target.features</code> contains the column name(s) from the <code>data.frame</code>
+of the <code>OMLDataSet</code> that refer to the target feature(s).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">makeOMLDataSet(
+  desc,
+  data,
+  colnames.old = colnames(data),
+  colnames.new = colnames(data),
+  target.features = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>desc</code></td>
+<td>
+<p>[<code>OMLDataSetDescription</code>]<br>
+Data set description.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>[<code>data.frame</code>]<br>
+The data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colnames.old</code></td>
+<td>
+<p>[<code>character</code>]<br>
+Names of the features that were uploaded to the server.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colnames.new</code></td>
+<td>
+<p>[<code>character</code>]<br>
+Names of the features that are displayed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target.features</code></td>
+<td>
+<p>[<code>character</code>]<br>
+Name(s) of the target feature(s).
+If set, this will replace the default target in <code>desc</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>[<code>OMLDataSet</code>]
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other data set-related functions: 
+<code>OMLDataSetDescription</code>,
+<code>convertMlrTaskToOMLDataSet()</code>,
+<code>convertOMLDataSetToMlr()</code>,
+<code>deleteOMLObject()</code>,
+<code>getOMLDataSet()</code>,
+<code>listOMLDataSets()</code>,
+<code>tagOMLObject()</code>,
+<code>uploadOMLDataSet()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("airquality")
+dsc = "Daily air quality measurements in New York, May to September 1973.
+This data is taken from R."
+cit = "Chambers, J. M., Cleveland, W. S., Kleiner, B. and Tukey, P. A. (1983) Graphical
+Methods for Data Analysis. Belmont, CA: Wadsworth."
+desc_airquality = makeOMLDataSetDescription(name = "airquality",
+  description = dsc,
+  creator = "New York State Department of Conservation (ozone data) and the National
+    Weather Service (meteorological data)",
+  collection.date = "May 1, 1973 to September 30, 1973",
+  language = "English",
+  licence = "GPL-2",
+  url = "https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/00Index.html",
+  default.target.attribute = "Ozone",
+  citation = cit,
+  tags = "R")
+
+airquality_oml = makeOMLDataSet(desc = desc_airquality,
+  data = airquality,
+  colnames.old = colnames(airquality),
+  colnames.new = colnames(airquality),
+  target.features = "Ozone")
+</code></pre>
+
+
+</div>

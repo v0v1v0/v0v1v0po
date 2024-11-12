@@ -1,0 +1,414 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>report_add_doc_content</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Content to Body of a Word Document Report</h2>
+
+<h3>Description</h3>
+
+<p>Appends content to the body of a Word document
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">report_add_doc_content(
+  obnd,
+  type = NULL,
+  content = NULL,
+  fig_start_at = NULL,
+  tab_start_at = NULL,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obnd</code></td>
+<td>
+<p>onbrand report object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of content to add</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>content</code></td>
+<td>
+<p>Content to add</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fig_start_at</code></td>
+<td>
+<p>Indicates that you want to restart figure numbering at
+the specified value (e.g. 1) after adding this content a value of <code>NULL</code> (default)
+will ignore this option.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tab_start_at</code></td>
+<td>
+<p>Indicates that you want to restart figure numbering at
+the specified value (e.g. 1) after adding this content a value of <code>NULL</code> (default)
+will ignore this option.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean variable when set to TRUE (default) messages will be
+displayed on the terminal; Messages will be included in the returned onbrand
+object.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For each <code>content</code> types listed below the different <code>content</code> outlined is expected. Text
+can be specified in different formats: <code>"text"</code> indicates plain text,
+<code>"fpar"</code> is formatted text defined by the <code>fpar</code> command from the
+<code>officer</code> package, <code>"ftext"</code> is a list of formatted text defined
+by the <code>ftext</code> command, and <code>"md"</code> is text formatted in markdown
+format (<code>?md_to_officer</code> for markdown details).
+</p>
+
+<ul>
+<li> <p><code>"break"</code> page break, content is (<code>NULL</code>) and a page break will be inserted here
+</p>
+</li>
+<li> <p><code>"ph"</code> adds placeholder text substitution
+</p>
+
+<ul>
+<li> <p><code>"name"</code> placeholder name (value in body of text surrounded by three equal signs, e.g. if you have <code>"===MYPH==="</code>. in the document the name is just <code>"MYPH"</code>)
+</p>
+</li>
+<li> <p><code>"value"</code> value to be substituted into the placeholder (<code>"my text"</code>)
+</p>
+</li>
+<li> <p><code>"location"</code> document location where the placeholder will be located (either <code>"header"</code>, <code>"footer"</code>, or <code>"body"</code>)
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"toc"</code> generates the table of contents, and content is a list
+that must contain __one__ of the following. 
+</p>
+
+<ul>
+<li> <p><code>"level"</code> number indicating the depth of the contents to display (default: <code>3</code>)
+</p>
+</li>
+<li> <p><code>"style"</code> string containing the onbrand style name to use to build the TOC
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"section"</code> formats the current document section
+</p>
+
+<ul>
+<li> <p><code>"section_type"</code> type of section to apply, either <code>"columns"</code>,  <code>"continuous"</code>, <code>"landscape"</code>, <code>"portrait"</code>, <code>"columns"</code>,  or  <code>"columns_landscape"</code>
+</p>
+</li>
+<li> <p><code>"width"</code>        override the default page width with this value in inches (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>"height"</code>       override the default page height with this value in inches (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>"widths"</code>       column widths in inches, number of columns set by number of values (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>"space"</code>        space in inches between columns (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>"sep"</code>          Boolean value controlling line separating columns (<code>FALSE</code>)
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"text"</code> content is a list containing a paragraph of text with the following elements
+</p>
+
+<ul>
+<li> <p><code>"text"</code> string containing the text content either a string or the output of <code>"fpar"</code> for formatted text.
+</p>
+</li>
+<li> <p><code>"style"</code> string containing the style to use (default <code>NULL</code> will use the <code>doc_def</code>, <code>Text</code> style)
+</p>
+</li>
+<li> <p><code>"format"</code> string containing the format, either <code>"text"</code>, <code>"fpar"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"imagefile"</code> content is a list containing information describing an image file with the following elements
+</p>
+
+<ul>
+<li> <p><code>image</code> string containing path to image file
+</p>
+</li>
+<li> <p><code>caption</code> caption of the image (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>caption_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>notes</code> notes to add under the image  (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>notes_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>key</code> unique key for cross referencing e.g. "FIG_DATA" (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>height</code> height of the image (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>width</code> width of the image (<code>NULL</code>)
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"ggplot"</code> content is a list containing a ggplot object, (eg. p = ggplot() + ....) with the following elements
+</p>
+
+<ul>
+<li> <p><code>image</code> ggplot object
+</p>
+</li>
+<li> <p><code>caption</code> caption of the image (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>caption_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>notes</code> notes to add under the image  (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>notes_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>key</code> unique key for cross referencing e.g. "FIG_DATA" (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>height</code> height of the image (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>width</code> width of the image (<code>NULL</code>)
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"table"</code> content is a list containing the table content and other options with the following elements:
+</p>
+
+<ul>
+<li> <p><code>table</code> data frame containing the tabular data
+</p>
+</li>
+<li> <p><code>"style"</code> string containing the style to use (default <code>NULL</code> will use the <code>doc_def</code>, <code>Table</code> style)
+</p>
+</li>
+<li> <p><code>caption</code> caption of the table (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>caption_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>notes</code> notes to add under the image  (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>notes_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>key</code> unique key for cross referencing e.g. "TAB_DATA" (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>header</code> Boolean variable to control displaying the header (<code>TRUE</code>)
+</p>
+</li>
+<li> <p><code>first_row</code> Boolean variable to indicate that the first row contains header information (<code>TRUE</code>)
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"flextable"</code> content is a list containing flextable content and other options with the following elements (defaults in parenthesis):
+</p>
+
+<ul>
+<li> <p><code>table</code> data frame containing the tabular data
+</p>
+</li>
+<li> <p><code>caption</code> caption of the table (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>caption_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>notes</code> notes to add under the image  (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>notes_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>key</code> unique key for cross referencing e.g. "TAB_DATA" (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>header_top</code>, <code>header_middle</code>, <code>header_bottom</code> (<code>NULL</code>) a list with the same names as the data frame names containing the tabular data and values with the header text to show in the table
+</p>
+</li>
+<li> <p><code>header_format</code> string containing the format, either <code>"text"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>merge_header</code> (<code>TRUE</code>) Set to true to combine column headers with the same information
+</p>
+</li>
+<li> <p><code>table_body_alignment</code>, table_header_alignment ("center") Controls alignment
+</p>
+</li>
+<li> <p><code>table_autofit</code> (<code>TRUE</code>) Automatically fit content, or specify the cell width and height with <code>cwidth</code> (<code>0.75</code>) and <code>cheight</code> (<code>0.25</code>)
+</p>
+</li>
+<li> <p><code>table_theme</code> (<code>"theme_vanilla"</code>) Table theme
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"flextable_object"</code> content is a list specifying the a user defined flextable object with the following elements:
+</p>
+
+<ul>
+<li> <p><code>ft</code> flextable object
+</p>
+</li>
+<li> <p><code>caption</code> caption of the table (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>caption_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>notes</code> notes to add under the image  (<code>NULL</code>)
+</p>
+</li>
+<li> <p><code>notes_format</code> string containing the format, either <code>"text"</code>, <code>"ftext"</code>, or <code>"md"</code> (default <code>NULL</code> assumes <code>"text"</code> format)
+</p>
+</li>
+<li> <p><code>key</code> unique key for cross referencing e.g. "TAB_DATA" (<code>NULL</code>)
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>onbrand object with the content added to the body or isgood set
+to FALSE with any messages in the msgs field. The isgood value is a Boolean variable
+indicating the current state of the object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Read  Word template into an onbrand object
+obnd = read_template(
+ template = file.path(system.file(package="onbrand"), "templates", "report.docx"),
+ mapping  = file.path(system.file(package="onbrand"), "templates", "report.yaml"))
+
+# The examples below use the following packages
+library(ggplot2)
+library(flextable)
+library(officer)
+
+# Adding text
+obnd = report_add_doc_content(obnd,
+  type     = "text",
+  content  = list(text="Text with no style specified will use the doc_def text format."))
+
+
+# Text formatted with fpar
+fpartext = fpar(
+ftext("Formatted text can be created using the ", prop=NULL),
+ftext("fpar ", prop=fp_text(color="green")),
+ftext("command from the officer package.", prop=NULL))
+
+obnd = report_add_doc_content(obnd,
+ type     = "text",
+ content  = list(text   = fpartext,
+                 format = "fpar",
+                 style  = "Normal"))
+
+# Text formatted with markdown
+mdtext = "Formatted text can be created using
+**&lt;color:green&gt;markdown&lt;/color&gt;** formatting"
+obnd = report_add_doc_content(obnd,
+ type     = "text",
+ content  = list(text   = mdtext,
+                 format = "md",
+                 style  = "Normal"))
+
+
+# Adding figures
+p = ggplot() + annotate("text", x=0, y=0, label = "picture example")
+imgfile = tempfile(pattern="image", fileext=".png")
+ggsave(filename=imgfile, plot=p, height=5.15, width=9, units="in")
+
+# From an image file:
+obnd = report_add_doc_content(obnd,
+type     = "imagefile",
+content  = list(image   = imgfile,
+               caption = "This is an example of an image from a file."))
+
+# From a ggplot object
+obnd = report_add_doc_content(obnd,
+type     = "imagefile",
+content  = list(image   = imgfile,
+               caption = "This is an example of an image from a file."))
+
+
+#Adding tables
+tdf =    data.frame(Parameters = c("Length", "Width", "Height"),
+                Values     = 1:3,
+                Units      = c("m", "m", "m") )
+
+# Word table
+tab_cont = list(table   = tdf,
+               caption = "Word Table.")
+obnd = report_add_doc_content(obnd,
+ type     = "table",
+ content  = tab_cont)
+
+# onbrand flextable abstraction:
+tab_cont = list(table   = tdf,
+               caption = "Word Table.")
+obnd = report_add_doc_content(obnd,
+type     = "table",
+content  = tab_cont)
+
+# flextable object
+tab_fto = flextable(tdf)
+obnd = report_add_doc_content(obnd,
+ type     = "flextable_object",
+ content  = list(ft=tab_fto,
+                 caption  = "Flextable object created by the user."))
+
+# Saving the report output
+save_report(obnd, tempfile(fileext = ".docx"))
+
+</code></pre>
+
+
+</div>

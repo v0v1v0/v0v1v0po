@@ -1,0 +1,166 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+<span class="pkg">ouch</span> plotting functions</h2>
+
+<h3>Description</h3>
+
+<p>Plot phylogenetic trees, with or without regime paintings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'ouchtree'
+plot(
+  x,
+  ...,
+  regimes = NULL,
+  ladderize = TRUE,
+  node.names = FALSE,
+  legend = !is.null(regimes),
+  labels,
+  frame.plot = FALSE,
+  palette = rainbow,
+  margin = 0.1,
+  text_opts = list(),
+  legend_opts = list()
+)
+
+## S4 method for signature 'hansentree'
+plot(x, ..., regimes, legend = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>object to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments, passed to <code>plot</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regimes</code></td>
+<td>
+<p>factor or character; a vector of regime paintings.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ladderize</code></td>
+<td>
+<p>logical; should the tree be ladderized?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>node.names</code></td>
+<td>
+<p>logical; should node names be displayed?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend</code></td>
+<td>
+<p>logical; display a legend?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>character; taxon labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>frame.plot</code></td>
+<td>
+<p>a logical indicating whether a box should be drawn
+around the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette</code></td>
+<td>
+<p>function or character; specifies the colors to be used for the several regimes on the tree.
+Specified as a function, when given an integer, <code>n</code>, the function should create a vector of <code>n</code> colors.
+See, for example <code>rainbow</code>.
+One can also specify the <code>n</code> colors as a vector of color codes.
+There must be at least as many colors as levels in the <code>regimes</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margin</code></td>
+<td>
+<p>numeric; width of the right margin (as a fraction of the plot width).
+Adjust this if labels are clipped (see Examples below).
+One can also adjust the width of the left margin (for example to aid in the formatting of the figure legend).
+To do this, furnish <code>margin=c(L, R)</code>, where <code>L</code> and <code>R</code> are the widths of the right and left margins, respectively, as fractions of the plot width.
+Obviously, in this case, we must have <code>L+R&lt;1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text_opts</code></td>
+<td>
+<p>options for the labels; passed to <code>text</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend_opts</code></td>
+<td>
+<p>options for the the legend; passed to <code>legend</code>.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other methods for ouch trees: 
+<code>as_data_frame</code>,
+<code>bootstrap()</code>,
+<code>coef()</code>,
+<code>logLik</code>,
+<code>ouch-package</code>,
+<code>paint()</code>,
+<code>print()</code>,
+<code>simulate()</code>,
+<code>summary()</code>,
+<code>update()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tree &lt;- with(
+  bimac,
+  ouchtree(nodes=node,ancestors=ancestor,times=time,labels=spcode)
+)
+
+plot(tree)
+plot(tree, node.names=TRUE)    # display node names
+
+## When taxon names are long, they are cut off when the
+## default settings are used.  For example:
+tree2 &lt;- with(
+  bimac,
+  ouchtree(nodes=node,ancestors=ancestor,times=time,
+    labels=ifelse(is.na(species),NA,paste(species,island,sep=", "))
+  )
+)
+
+plot(tree2) # long species names are cut off
+## This is fixed by increasing right margin and font size:
+plot(tree2,margin=0.35,text_opts=list(cex=0.7))
+
+</code></pre>
+
+
+</div>

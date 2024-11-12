@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_any</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read spectral data from multiple files</h2>
+
+<h3>Description</h3>
+
+<p>Wrapper functions for reading files in batch.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_any(file, ...)
+
+read_many(file, ...)
+
+read_zip(file, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>file to be read from or written to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to the submethods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>read_any()</code> provides a single function to quickly read in any of the
+supported formats, it assumes that the file extension will tell it how to
+process the spectra.
+<code>read_zip()</code> provides functionality for reading in spectral map files
+with ENVI file format or as individual files in a zip folder. If individual
+files, spectra are concatenated.
+<code>read_many()</code> provides functionality for reading multiple files
+in a character vector and will return a list.
+</p>
+
+
+<h3>Value</h3>
+
+<p>All <code>read_*()</code> functions return <code>OpenSpecy</code> objects if a single
+spectrum or map is provided, otherwise the provide a list of <code>OpenSpecy</code> objects.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Zacharias Steinmetz, Win Cowger
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_spec()</code> for submethods.
+<code>c_spec()</code> for combining lists of Open Specys.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+read_extdata("raman_hdpe.csv") |&gt; read_any()
+read_extdata("ftir_ldpe_soil.asp") |&gt; read_any()
+read_extdata("testdata_zipped.zip") |&gt; read_many()
+read_extdata("CA_tiny_map.zip") |&gt; read_many()
+
+</code></pre>
+
+
+</div>

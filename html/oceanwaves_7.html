@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>waveStatsSP</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate ocean wave parameters using spectral analysis methods</h2>
+
+<h3>Description</h3>
+
+<p>Calculate ocean wave parameters using spectral analysis methods
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">waveStatsSP(
+  data,
+  Fs,
+  method = c("welchPSD", "spec.pgram"),
+  plot = FALSE,
+  kernel = NULL,
+  segments = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A vector of surface heights that constitute a time series of 
+observations. Typical units = meters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Fs</code></td>
+<td>
+<p>Sampling frequency of the surface heights data. Units = Hz, i.e.
+samples per second.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A character string indicating which spectral analysis method
+should be used. Choose one of <code>welchPSD</code> (default) or <code>spec.pgram</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>A logical value denoting whether to plot the spectrum. Defaults 
+to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernel</code></td>
+<td>
+<p>An object of class <code>tskernel</code> that defines a smoother for use
+with <code>spec.pgram</code> method. If value is <code>NULL</code>, a default Daniell kernel with 
+widths (9,9,9) is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>segments</code></td>
+<td>
+<p>Numeric value indicating the number of windowing segments to
+use with <code>welchPSD</code> method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to spectral analysis functions, 
+such as the <code>windowfun</code> option for <code>welchPSD</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Carries out spectral analysis of ocean wave height time series to estimate
+common wave height statistics, including peak period, average period, 
+and significant wave height.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of wave parameters based on spectral methods.
+</p>
+
+<ul>
+<li> <p><code>h</code> Average water depth. Same units as input surface heights 
+(typically meters).
+</p>
+</li>
+<li> <p><code>Hm0</code> Significant wave height based on spectral moment 0. Same
+units as input surface heights (typically meters).
+This is approximately equal to the average of the highest 1/3 of the waves.
+</p>
+</li>
+<li> <p><code>Tp</code> Peak period, calculated as the frequency with maximum power 
+in the power spectrum. Units of seconds.
+</p>
+</li>
+<li> <p><code>m0</code> Estimated variance of time series (moment 0).
+</p>
+</li>
+<li> <p><code>T_0_1</code> Average period calculated as <code class="reqn">m0/m1</code>, units seconds. Follows National 
+Data Buoy Center's method for average period (APD).
+</p>
+</li>
+<li> <p><code>T_0_2</code> Average period calculated as <code class="reqn">(m0/m2)^{0.5}</code>, units seconds. Follows 
+Scripps Institution of Oceanography's method for calculating average period 
+(APD) for their buoys.
+</p>
+</li>
+<li> <p><code>EPS2</code> Spectral width parameter.
+</p>
+</li>
+<li> <p><code>EPS4</code> Spectral width parameter.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Original MATLAB function by Urs Neumeier:  
+http://neumeier.perso.ch/matlab/waves.html, based on code developed by Travis 
+Mason, Magali Lecouturier and Urs Neumeier.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>waveStatsZC</code> for wave statistics determined using a 
+zero-crossing algorithm.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(wavedata)
+waveStatsSP(wavedata$swDepth.m, Fs = 4, method = 'spec.pgram', plot = TRUE)
+</code></pre>
+
+
+</div>

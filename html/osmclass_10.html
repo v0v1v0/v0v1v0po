@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_tags_df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract Tags as Columns from an OSM PBF Layer</h2>
+
+<h3>Description</h3>
+
+<p>Extract Tags as Columns from an OSM PBF Layer
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_tags_df(data, tags, na.prop = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an imported layer from an OSM PBF file. Usually has a few important tags already expanded as columns, and an 'other_tags' column which compounds less frequent tags as character strings.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tags</code></td>
+<td>
+<p>character. A vector of tags to extract as columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.prop</code></td>
+<td>
+<p>double. Proportion of features having a tag in order to keep the column.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <em>data.table</em> with the supplied <code>tags</code> as columns, and the same number of rows as the input frame.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>osmclass-package
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># See Examples at ?osmclass for full examples
+
+# Extracting tags of interest (some of which are inside 'other_tags')
+tags &lt;- c("osm_id", "highway", "man_made", "name", "alt_name",
+          "description", "wikidata", "amenity", "tourism")
+head(osm_tags_df(djibouti_points, tags))
+
+# Only keeping tags with at least 5\% non-missing
+head(osm_tags_df(djibouti_points, tags, na.prop = 0.05))
+
+</code></pre>
+
+
+</div>

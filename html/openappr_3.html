@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_nf_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get notification data from OpenAppBuilder</h2>
+
+<h3>Description</h3>
+
+<p>This function retrieves data from the <code>app_notification_interaction</code> table in OpenAppBuilder and efficiently parses the <code>notification_meta</code> column from JSON format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_nf_data(
+  site = get_app_connection(),
+  filter = FALSE,
+  filter_variable = NULL,
+  filter_variable_value = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>site</code></td>
+<td>
+<p>The name of the PostgreSQL database connection (using <code>DBI::dbConnect</code> or <code>set_app_connection()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>A logical value indicating whether to filter the data (defaults to <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter_variable</code></td>
+<td>
+<p>A character string representing the name of the column to filter if <code>filter == TRUE</code> and <code>filter_variable_value</code> is provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter_variable_value</code></td>
+<td>
+<p>A character string representing the value of the <code>filter_variable</code> column to filter if <code>filter == TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame containing notification interaction data from OpenAppBuilder, with the <code>notification_meta</code> column parsed into separate columns.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># First we need to set an app connection
+set_app_connection(
+  dbname = "vmc",
+  host = "apps-server.idems.international",
+  port = 5432,
+  user = "vmc",
+  password = "LSQkyYg5KzL747"
+)
+
+# Retrieve all notification data
+data_all_nf &lt;- get_nf_data()
+
+# Retrieve data where 'app_user_id' is '3e68fcda-d4cd-400e-8b12-6ddfabced348' 
+# or '223925c7-443a-411c-aa2a-a394f991dd52'
+valid_ids &lt;- c("3e68fcda-d4cd-400e-8b12-6ddfabced348",
+               "223925c7-443a-411c-aa2a-a394f991dd52")
+data_filtered_users &lt;- get_nf_data(
+  filter = TRUE,
+  filter_variable = "app_user_id",
+  filter_variable_value = valid_ids
+)
+</code></pre>
+
+
+</div>

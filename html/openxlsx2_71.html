@@ -1,0 +1,196 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_conditional_formatting</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add conditional formatting to cells in a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>Add conditional formatting to cells.
+You can find more details in <code>vignette("conditional-formatting")</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_conditional_formatting(
+  wb,
+  sheet = current_sheet(),
+  dims = NULL,
+  rule = NULL,
+  style = NULL,
+  type = c("expression", "colorScale", "dataBar", "iconSet", "duplicatedValues",
+    "uniqueValues", "containsErrors", "notContainsErrors", "containsBlanks",
+    "notContainsBlanks", "containsText", "notContainsText", "beginsWith", "endsWith",
+    "between", "topN", "bottomN"),
+  params = list(showValue = TRUE, gradient = TRUE, border = TRUE, percent = FALSE, rank =
+    5L),
+  ...
+)
+
+wb_remove_conditional_formatting(
+  wb,
+  sheet = current_sheet(),
+  dims = NULL,
+  first = FALSE,
+  last = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name or index of a worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>A cell or cell range like "A1" or "A1:B2"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rule</code></td>
+<td>
+<p>The condition under which to apply the formatting. See <strong>Examples</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>A name of a style to apply to those cells that satisfy the rule. See <code>wb_add_dxfs_style()</code> how to create one.
+The default style has <code>font_color = "FF9C0006"</code> and <code>bg_fill = "FFFFC7CE"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of conditional formatting rule to apply. One of <code>"expression"</code>, <code>"colorScale"</code> or others mentioned in <strong>Details</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>params</code></td>
+<td>
+<p>A list of additional parameters passed.  See <strong>Details</strong> for more.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first</code></td>
+<td>
+<p>remove the first conditional formatting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>last</code></td>
+<td>
+<p>remove the last conditional formatting</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>openxml uses the alpha channel first then RGB, whereas the usual default is RGBA.
+</p>
+<p>Conditional formatting <code>type</code> accept different parameters. Unless noted,
+unlisted parameters are ignored.
+</p>
+
+<dl>
+<dt><code>expression</code></dt>
+<dd>
+<p><code style="white-space: pre;">⁠[style]⁠</code><br> A <code>Style</code> object<br><br><code style="white-space: pre;">⁠[rule]⁠</code><br> An Excel expression (as a character). Valid operators are: <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>==</code>, <code>!=</code>
+</p>
+</dd>
+<dt><code>colorScale</code></dt>
+<dd>
+<p><code style="white-space: pre;">⁠[style]⁠</code><br> A <code>character</code> vector of valid colors with length <code>2</code> or <code>3</code><br><br><code style="white-space: pre;">⁠[rule]⁠</code><br><code>NULL</code> or a <code>character</code> vector of valid colors of equal length to <code>styles</code>
+</p>
+</dd>
+<dt><code>dataBar</code></dt>
+<dd>
+<p><code style="white-space: pre;">⁠[style]⁠</code><br> A <code>character</code> vector of valid colors with length <code>2</code> or <code>3</code><br><br><code style="white-space: pre;">⁠[rule]⁠</code><br> A <code>numeric</code> vector specifying the range of the databar colors. Must be equal length to <code>style</code><br><br><code style="white-space: pre;">⁠[params$showValue]⁠</code><br> If <code>FALSE</code> the cell value is hidden. Default <code>TRUE</code><br><br><code style="white-space: pre;">⁠[params$gradient]⁠</code><br> If <code>FALSE</code> color gradient is removed. Default <code>TRUE</code><br><br><code style="white-space: pre;">⁠[params$border]⁠</code><br> If <code>FALSE</code> the border around the database is hidden. Default <code>TRUE</code>
+</p>
+</dd>
+<dt>
+<code>duplicatedValues</code> / <code>uniqueValues</code> / <code>containsErrors</code>
+</dt>
+<dd>
+<p><code style="white-space: pre;">⁠[style]⁠</code><br> A <code>Style</code> object
+</p>
+</dd>
+<dt><code>contains</code></dt>
+<dd>
+<p><code style="white-space: pre;">⁠[style]⁠</code><br> A <code>Style</code> object<br><br><code style="white-space: pre;">⁠[rule]⁠</code><br> The text to look for within cells
+</p>
+</dd>
+<dt><code>between</code></dt>
+<dd>
+<p><code style="white-space: pre;">⁠[style]⁠</code><br> A <code>Style</code> object.<br><br><code style="white-space: pre;">⁠[rule]⁠</code><br> A <code>numeric</code> vector of length <code>2</code> specifying lower and upper bound (Inclusive)
+</p>
+</dd>
+<dt><code>topN</code></dt>
+<dd>
+<p><code style="white-space: pre;">⁠[style]⁠</code><br> A <code>Style</code> object<br><br><code style="white-space: pre;">⁠[params$rank]⁠</code><br> A <code>numeric</code> vector of length <code>1</code> indicating number of highest values. Default <code>5L</code><br><br><code style="white-space: pre;">⁠[params$percent]⁠</code> If <code>TRUE</code>, uses percentage
+</p>
+</dd>
+<dt><code>bottomN</code></dt>
+<dd>
+<p><code style="white-space: pre;">⁠[style]⁠</code><br> A <code>Style</code> object<br><br><code style="white-space: pre;">⁠[params$rank]⁠</code><br> A <code>numeric</code> vector of length <code>1</code> indicating number of lowest values. Default <code>5L</code><br><br><code style="white-space: pre;">⁠[params$percent]⁠</code><br> If <code>TRUE</code>, uses percentage
+</p>
+</dd>
+<dt><code>iconSet</code></dt>
+<dd>
+<p><code style="white-space: pre;">⁠[params$showValue]⁠</code><br> If <code>FALSE</code>, the cell value is hidden. Default <code>TRUE</code><br><br><code style="white-space: pre;">⁠[params$reverse]⁠</code><br> If <code>TRUE</code>, the order is reversed. Default <code>FALSE</code><br><br><code style="white-space: pre;">⁠[params$percent]⁠</code><br> If <code>TRUE</code>, uses percentage<br><br><code style="white-space: pre;">⁠[params$iconSet]⁠</code><br> Uses one of the implemented icon sets. Values must match the length of the icons
+in the set 3Arrows, 3ArrowsGray, 3Flags, 3Signs, 3Stars, 3Symbols, 3Symbols2, 3TrafficLights1, 3TrafficLights2,
+3Triangles, 4Arrows, 4ArrowsGray, 4Rating, 4RedToBlack, 4TrafficLights, 5Arrows, 5ArrowsGray, 5Boxes, 5Quarters, 5Rating.
+The default is 3TrafficLights1.
+</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>Other worksheet content functions: 
+<code>col_widths-wb</code>,
+<code>filter-wb</code>,
+<code>grouping-wb</code>,
+<code>named_region-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_thread()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- wb_workbook()
+wb$add_worksheet("a")
+wb$add_data(x = 1:4, col_names = FALSE)
+wb$add_conditional_formatting(dims = wb_dims(cols = "A", rows = 1:4), rule = "&gt;2")
+</code></pre>
+
+
+</div>

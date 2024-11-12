@@ -1,0 +1,254 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_config</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set and check parameter settings</h2>
+
+<h3>Description</h3>
+
+<p>This function defines settings.  It takes a list of named
+items as input, performs various checks, set defaults where arguments are
+missing, and return a correct list of settings. If no input is given, it
+returns the default settings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_config(..., data = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>a list of config items to be processed (see description)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an optional list of data items as returned by
+<code>outbreaker_data</code>; if provided, this allows for further checks of
+the outbreaker settings.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Acceptable arguments for ... are:
+</p>
+
+<dl>
+<dt>init_tree</dt>
+<dd>
+<p>the tree used to initialize the MCMC. It can be a vector of
+integers corresponding to the tree itself, where the i-th value corresponds
+to the index of case <code>i</code>. Otherwise, it should be defined as the character 
+string "star" and the function <code>create_config()</code> will generate the initial 
+tree.</p>
+</dd>
+<dt>spatial_method</dt>
+<dd>
+<p>a character string indicating the method used to
+evaluate the spatial likelihood. Can be either "exponential" or "power-law".</p>
+</dd>
+<dt>gamma</dt>
+<dd>
+<p>a double indicating the spatial threshold for pre clustering; 
+defaults to NULL.</p>
+</dd>
+<dt>delta</dt>
+<dd>
+<p>a double indicating the temporal threshold for pre clustering;  
+defaults to NULL.</p>
+</dd>
+<dt>init_kappa</dt>
+<dd>
+<p>a vector of integers indicating the initial values of kappa; 
+defaults to 1.</p>
+</dd>
+<dt>init_a</dt>
+<dd>
+<p>initial value of the first spatial parameter (population).</p>
+</dd>
+<dt>init_b</dt>
+<dd>
+<p>initial value of the second spatial parameter (distance).</p>
+</dd>
+<dt>init_alpha</dt>
+<dd>
+<p>a vector of integers indicating the initial values of
+alpha, where the i-th value indicates the ancestor of case 'i'; defaults to
+<code>NULL</code>, in which ancestries are defined from <code>init_tree</code>.</p>
+</dd>
+<dt>init_t_inf</dt>
+<dd>
+<p>a vector of integers indicating the initial values of
+<code>t_inf</code>, i.e. dates of infection; defaults to <code>NULL</code>, in which case
+the most likely <code>t_inf</code> will be determined from the delay to
+reporting/symptoms distribution, and the dates of reporting/symptoms,
+provided in <code>data</code>.</p>
+</dd>
+<dt>init_pi</dt>
+<dd>
+<p>initial value for the reporting probability.</p>
+</dd>
+<dt>n_iter</dt>
+<dd>
+<p>an integer indicating the number of iterations in the MCMC,
+including the burnin period.</p>
+</dd>
+<dt>move_alpha</dt>
+<dd>
+<p>a vector of logicals indicating, for each case, if the
+ancestry should be estimated ('moved' in the MCMC), or not, defaulting to
+TRUE; the vector is recycled if needed.</p>
+</dd>
+<dt>move_t_inf</dt>
+<dd>
+<p>a vector of logicals indicating, for each case, if the
+dates of infection should be estimated ('moved' in the MCMC), or not,
+defaulting to TRUE; the vector is recycled if needed.</p>
+</dd>
+<dt>move_pi</dt>
+<dd>
+<p>a logical indicating whether the reporting probability
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.</p>
+</dd>
+<dt>move_kappa</dt>
+<dd>
+<p>a logical indicating whether the number of generations
+between two successive cases should be estimated ('moved' in the MCMC), or
+not, all defaulting to TRUE.</p>
+</dd>
+<dt>move_a</dt>
+<dd>
+<p>a logical indicating whether the first spatial parameter
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.</p>
+</dd>
+<dt>move_b</dt>
+<dd>
+<p>a logical indicating whether the second spatial parameter
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.</p>
+</dd>
+<dt>move_swap_cases</dt>
+<dd>
+<p>a logical indicating whether the movement to swap cases
+should be used, or not, all defaulting to TRUE.</p>
+</dd>
+<dt>sample_every</dt>
+<dd>
+<p>the frequency at which MCMC samples are retained for the
+output.</p>
+</dd>
+<dt>sd_pi</dt>
+<dd>
+<p>the standard deviation for the Normal proposal for the reporting
+probability.</p>
+</dd>
+<dt>sd_a</dt>
+<dd>
+<p>the standard deviation for the Normal proposal for the first spatial 
+parameter.</p>
+</dd>
+<dt>sd_b</dt>
+<dd>
+<p>the standard deviation for the Normal proposal for the second spatial 
+parameter.</p>
+</dd>
+<dt>find_import</dt>
+<dd>
+<p>a logical indicating whether the import status of cases should
+be estimated.</p>
+</dd>
+<dt>outlier_threshold</dt>
+<dd>
+<p>a numeric value indicating the probability that should be
+used to compute the threshold when estimating the import status.</p>
+</dd>
+<dt>outlier_relative</dt>
+<dd>
+<p>a logical indicating whether the threshold is an absolute 
+or relative value, default to FALSE (absolute value).</p>
+</dd>
+<dt>outlier_plot</dt>
+<dd>
+<p>a logical indicating whether to plot the comparison between the 
+likelihoods of connection in the short run and the threshold.</p>
+</dd>
+<dt>n_iter_import</dt>
+<dd>
+<p>Number of iterations of the first short run.</p>
+</dd>
+<dt>sample_every_import</dt>
+<dd>
+<p>the frequency at which MCMC samples are retained for the
+output during the first run.</p>
+</dd>
+<dt>burnin</dt>
+<dd>
+<p>The number of iterations that should be removed when estimating import.</p>
+</dd>
+<dt>max_kappa</dt>
+<dd>
+<p>an integer indicating the largest number of generations
+between any two linked cases; defaults to 5.</p>
+</dd>
+<dt>prior_pi</dt>
+<dd>
+<p>a numeric vector of length 2 indicating the first and second
+parameter of the beta prior for the reporting probability 'pi'.</p>
+</dd>
+<dt>prior_a</dt>
+<dd>
+<p>a numeric vector of length 2 indicating the first and second
+parameter of the uniform prior for the first spatial parameter 'a'.</p>
+</dd>
+<dt>prior_b</dt>
+<dd>
+<p>a numeric vector of length 2 indicating the first and second
+parameter of the uniform prior for the second spatial parameter 'b'.</p>
+</dd>
+<dt>verbatim</dt>
+<dd>
+<p>Logical, should the number of iteration be printed.</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>A named list containing the value of each elements listed in the 'Details' section. This list describes the settings of the <code>outbreaker()</code> function. The class of this list is set to <code>outbreaker_config</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Initial version by Thibaut Jombart, rewritten by Alexis Robert (<a href="mailto:alexis.robert@lshtm.ac.uk">alexis.robert@lshtm.ac.uk</a>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>outbreaker_data</code> to check and process data for outbreaker
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## see default settings
+create_config()
+
+## change defaults
+create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
+
+
+
+</code></pre>
+
+
+</div>

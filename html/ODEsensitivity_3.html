@@ -1,0 +1,273 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ODEmorris.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Morris Screening for General ODE Models</h2>
+
+<h3>Description</h3>
+
+<p><code>ODEmorris.default</code> is the default method of <code>ODEmorris</code>. It
+performs a sensitivity analysis for general ODE models using the Morris 
+screening method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+ODEmorris(mod, pars, state_init, times, binf = 0,
+  bsup = 1, r = 500, design = list(type = "oat", levels = 10, grid.jump =
+  1), scale = TRUE, ode_method = "lsoda", parallel_eval = FALSE,
+  parallel_eval_ncores = NA, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>[<code>function(Time, State, Pars)</code>]<br>
+model to examine, supplied in the manner as needed for 
+<code>ode</code> (see example below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pars</code></td>
+<td>
+<p>[<code>character(k)</code>]<br>
+names of the parameters to be included as input variables in Morris 
+screening.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state_init</code></td>
+<td>
+<p>[<code>numeric(z)</code>]<br>
+vector of <code>z</code> initial values. Must be named (with unique names).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>[<code>numeric</code>]<br>
+points of time at which the sensitivity analysis should be executed (vector
+of arbitrary length). The first point of time must be greater than zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binf</code></td>
+<td>
+<p>[<code>character(1</code> or <code>k)</code>]<br>
+vector of lower borders of possible input parameter values.
+If they are all equal, a single value can be set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bsup</code></td>
+<td>
+<p>[<code>character(1</code> or <code>k)</code>]<br>
+vector of upper borders of possible input parameter values.
+If they are all equal, a single value can be set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>[<code>integer(1 or 2)</code>]<br>
+if of length 1, the number of repetitions of the <code>design</code>. If of 
+length 2, a space-filling optimization of the sampling design is used, see 
+<code>morris</code>. However, this space-filling optimization
+might lead to long runtimes, so length 1 is recommended for <code>r</code>. 
+Defaults to 500.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design</code></td>
+<td>
+<p>[<code>list</code>]<br>
+a list specifying the design type and its parameters,
+cf. <code>morris</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+if <code>TRUE</code>, scaling is done for the input design of experiments after 
+building the design and before calculating the elementary effects,
+cf. <code>morris</code>. Defaults to <code>TRUE</code>, which is
+highly recommended if the factors have different orders of magnitude, see
+<code>morris</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ode_method</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+method to be used for solving the differential equations, see 
+<code>ode</code>. Defaults to <code>"lsoda"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel_eval</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+logical indicating if the evaluation of the ODE model shall be performed
+parallelized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel_eval_ncores</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+number of processor cores to be used for parallelization. Only applies if
+<code>parallel_eval = TRUE</code>. If set to <code>NA</code> (as per default) and 
+<code>parallel_eval = TRUE</code>, 1 processor core is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Function <code>ode</code> from <code>deSolve</code> is 
+used to solve the ODE system.
+</p>
+<p>The sensitivity analysis is done for all state variables and all
+timepoints simultaneously using <code>morris</code> from the 
+package <code>sensitivity</code>.
+</p>
+<p>For non-ODE models, values for <code>r</code> are typically between 10 and 50.
+However, much higher values are recommended for ODE models (the default is
+<code>r = 500</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of class <code>ODEmorris</code> of length <code>length(state_init)</code> 
+containing in each element a matrix for one state variable. The
+matrices themselves contain the Morris screening results for all timepoints 
+(rows: <code>mu, mu.star</code> and <code>sigma</code> for every parameter; columns: 
+timepoints).
+</p>
+
+
+<h3>Note</h3>
+
+<p>If the evaluation of the model function takes too long, it might be helpful 
+to try another ODE-solver (argument <code>ode_method</code>). The 
+<code>ode_method</code>s <code>"vode"</code>, <code>"bdf"</code>, <code>"bdf_d"</code>, 
+<code>"adams"</code>, <code>"impAdams"</code> and <code>"impAdams_d"</code> might be faster 
+than the default <code>"lsoda"</code>.
+</p>
+<p>If <code>morris</code> throws a warning message stating
+"In ... keeping ... repetitions out of ...", try using a bigger number of 
+<code>levels</code> in the <code>design</code> argument (only possible for OAT design).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stefan Theers, Frank Weber
+</p>
+
+
+<h3>References</h3>
+
+<p>J. O. Ramsay, G. Hooker, D. Campbell and J. Cao, 2007,
+<em>Parameter estimation for differential equations: a generalized 
+smoothing approach</em>, Journal of the Royal Statistical Society, Series B, 
+69, Part 5, 741–796.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>morris, plot.ODEmorris</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##### Lotka-Volterra equations #####
+# The model function:
+LVmod &lt;- function(Time, State, Pars) {
+  with(as.list(c(State, Pars)), {
+    Ingestion    &lt;- rIng  * Prey * Predator
+    GrowthPrey   &lt;- rGrow * Prey * (1 - Prey/K)
+    MortPredator &lt;- rMort * Predator
+    
+    dPrey        &lt;- GrowthPrey - Ingestion
+    dPredator    &lt;- Ingestion * assEff - MortPredator
+    
+    return(list(c(dPrey, dPredator)))
+  })
+}
+# The parameters to be included in the sensitivity analysis and their lower 
+# and upper boundaries:
+LVpars  &lt;- c("rIng", "rGrow", "rMort", "assEff", "K")
+LVbinf &lt;- c(0.05, 0.05, 0.05, 0.05, 1)
+LVbsup &lt;- c(1.00, 3.00, 0.95, 0.95, 20)
+# The initial values of the state variables:
+LVinit  &lt;- c(Prey = 1, Predator = 2)
+# The timepoints of interest:
+LVtimes &lt;- c(0.01, seq(1, 50, by = 1))
+# Morris screening:
+set.seed(7292)
+# Warning: The following code might take very long!
+
+LVres_morris &lt;- ODEmorris(mod = LVmod,
+                          pars = LVpars,
+                          state_init = LVinit,
+                          times = LVtimes,
+                          binf = LVbinf,
+                          bsup = LVbsup,
+                          r = 500,
+                          design = list(type = "oat", 
+                                        levels = 10, grid.jump = 1),
+                          scale = TRUE,
+                          ode_method = "lsoda",
+                          parallel_eval = TRUE,
+                          parallel_eval_ncores = 2)
+
+
+##### FitzHugh-Nagumo equations (Ramsay et al., 2007) #####
+FHNmod &lt;- function(Time, State, Pars) {
+  with(as.list(c(State, Pars)), {
+    
+    dVoltage &lt;- s * (Voltage - Voltage^3 / 3 + Current)
+    dCurrent &lt;- - 1 / s *(Voltage - a + b * Current)
+    
+    return(list(c(dVoltage, dCurrent)))
+  })
+}
+# Warning: The following code might take very long!
+
+FHNres_morris &lt;- ODEmorris(mod = FHNmod,
+                           pars = c("a", "b", "s"),
+                           state_init = c(Voltage = -1, Current = 1),
+                           times = seq(0.1, 50, by = 5),
+                           binf = c(0.18, 0.18, 2.8),
+                           bsup = c(0.22, 0.22, 3.2),
+                           r = 500,
+                           design = list(type = "oat", 
+                                         levels = 50, grid.jump = 1),
+                           scale = TRUE,
+                           ode_method = "adams",
+                           parallel_eval = TRUE,
+                           parallel_eval_ncores = 2)
+
+
+</code></pre>
+
+
+</div>

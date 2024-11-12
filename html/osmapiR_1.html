@@ -1,0 +1,334 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osmapiR-package</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>osmapiR: 'OpenStreetMap' API</h2>
+
+<h3>Description</h3>
+
+<p>Interface to 'OpenStreetMap API' for fetching and saving data from/to the 'OpenStreetMap' database (<a href="https://wiki.openstreetmap.org/wiki/API_v0.6">https://wiki.openstreetmap.org/wiki/API_v0.6</a>).
+</p>
+
+
+<h3>Details</h3>
+
+<p>An R interface to <a href="https://wiki.openstreetmap.org/wiki/API_v0.6">OpenStreetMap API v0.6</a> for fetching and saving raw
+geodata from/to the OpenStreetMap database. This package allows to access OSM maps data as well as map notes, GPS
+traces, changelogs and users data. To access the OSM map data for purposes other than editing or exploring the
+history of the objects see
+<a href="https://github.com/ropensci/osmapiR/blob/main/README.md#related-packages">Related packages</a>.
+</p>
+<p>You are responsible for following the <a href="https://operations.osmfoundation.org/policies/api/">API Usage Policy</a>.
+You can modify the user agent of the requests by setting the option <code>osmapir.user_agent</code>:
+</p>
+<div class="sourceCode r"><pre>options(osmapir.user_agent = "my new user agent")
+</pre></div>
+<p>Respect and follow the
+<a href="https://wiki.openstreetmap.org/wiki/Editing_Standards_and_Conventions">standards and conventions</a> of the
+OpenStreetMap community. If you plan to do automated edits, check the
+<a href="https://wiki.openstreetmap.org/wiki/Automated_Edits_code_of_conduct">Automated Edits code of conduct</a>.
+</p>
+
+
+<h3>Overview of the functions</h3>
+
+<p>All function starting with <code style="white-space: pre;">⁠osm_*⁠</code> include calls to the server.
+</p>
+
+
+<h4>OSM objects</h4>
+
+
+
+<h5>Get OSM objects</h5>
+
+<p><code>osm_bbox_objects()</code>
+Retrieve map data by bounding box
+</p>
+<p><code>osm_get_objects()</code>
+Get OSM objects
+</p>
+<p><code>osm_history_object()</code>
+Get the history of an object
+</p>
+<p><code>osm_relations_object()</code>
+Relations of an object
+</p>
+<p><code>osm_ways_node()</code>
+Ways of a node
+</p>
+<p><code>osmapi_objects()</code>
+osmapi_objects
+</p>
+
+
+
+<h5>Edit OSM objects</h5>
+
+<p><code>osm_create_object()</code>
+Create an OSM object
+</p>
+<p><code>osm_delete_object()</code>
+Delete an OSM object
+</p>
+<p><code>osm_update_object()</code>
+Update an OSM object
+</p>
+
+
+
+
+<h4>Changesets</h4>
+
+<p>Every modification of the standard OSM elements has to reference an open changeset. A changeset may contain tags
+just like the other elements. A recommended tag for changesets is the key ”comment=*” with a short human readable
+description of the changes being made in that changeset. A new changeset can be opened at any time and a changeset
+may be referenced from multiple API calls. Because of this it can be closed manually as the server can't know when
+one changeset ends and another should begin. To avoid stale open changesets a mechanism is implemented to
+automatically close changesets. See <a href="https://wiki.openstreetmap.org/wiki/Changeset">OSM wiki</a> for details.
+</p>
+
+
+<h5>Get changesets</h5>
+
+<p><code>osm_download_changeset()</code>
+Download a changeset in OsmChange format
+</p>
+<p><code>osm_get_changesets()</code>
+Get changesets
+</p>
+<p><code>osm_query_changesets()</code>
+Query changesets
+</p>
+
+
+
+<h5>Edit changeset</h5>
+
+<p><code>osm_create_changeset()</code> <code>osm_update_changeset()</code> <code>osm_close_changeset()</code>
+Create, update, or close a changeset
+</p>
+<p><code>osm_diff_upload_changeset()</code>
+Diff (OsmChange format) upload to a changeset
+</p>
+
+
+
+<h5>Changeset's discussion"</h5>
+
+<p><code>osm_comment_changeset_discussion()</code>
+Comment a changeset
+</p>
+<p><code>osm_hide_comment_changeset_discussion()</code> <code>osm_unhide_comment_changeset_discussion()</code>
+Hide or unhide a changeset comment
+</p>
+<p><code>osm_subscribe_changeset_discussion()</code> <code>osm_unsubscribe_changeset_discussion()</code>
+Subscribe or unsubscribe to a changeset discussion
+</p>
+
+
+
+
+<h4>Map notes</h4>
+
+<p>This functions provides access to the <a href="https://wiki.openstreetmap.org/wiki/Notes">notes</a> feature, which allows users
+to add geo-referenced textual \"post-it\" notes.
+</p>
+
+
+<h5>Get map notes</h5>
+
+<p><code>osm_feed_notes()</code>
+RSS Feed of notes in a bbox
+</p>
+<p><code>osm_get_notes()</code>
+Get notes
+</p>
+<p><code>osm_read_bbox_notes()</code>
+Retrieve notes by bounding box
+</p>
+<p><code>osm_search_notes()</code>
+Search for notes
+</p>
+
+
+
+<h5>Edit map notes</h5>
+
+<p>osm_close_note()] <code>osm_reopen_note()</code>
+Close or reopen a note
+</p>
+<p><code>osm_create_comment_note()</code>
+Create a new comment in a note
+</p>
+<p><code>osm_create_note()</code>
+Create a new note
+</p>
+<p><code>osm_delete_note()</code>
+Delete a note
+</p>
+
+
+
+
+<h4>GPS' traces</h4>
+
+<p>In violation of the <a href="https://www.topografix.com/GPX/1/1/#type_trksegType">GPX standard</a> when downloading public GPX
+traces through the API, all waypoints of non-trackable traces are randomized (or rather sorted by lat/lon) and
+delivered as one trackSegment for privacy reasons. Trackable traces are delivered, sorted by descending upload time,
+before the waypoints of non-trackable traces.
+</p>
+
+
+<h5>Get GPS traces</h5>
+
+<p><code>osm_get_data_gpx()</code>
+Download GPS Track Data
+</p>
+<p><code>osm_get_gpx_metadata()</code>
+Download GPS Track Metadata
+</p>
+<p><code>osm_get_points_gps()</code>
+Get GPS Points
+</p>
+<p><code>osm_list_gpxs()</code>
+List user's GPX traces
+</p>
+
+
+
+<h5>Edit GPS traces</h5>
+
+<p><code>osm_create_gpx()</code>
+Create GPS trace
+</p>
+<p><code>osm_delete_gpx()</code>
+Delete GPS trace
+</p>
+<p><code>osm_update_gpx()</code>
+Update GPS trace
+</p>
+
+
+
+
+<h4>Users</h4>
+
+<p><code>osm_details_logged_user()</code>
+Details of the logged-in user
+</p>
+<p><code>osm_get_preferences_user()</code> <code>osm_set_preferences_user()</code>
+Get or set preferences of the logged-in user
+</p>
+<p><code>osm_get_user_details()</code>
+Details of users
+</p>
+
+
+
+<h4>OsmChange</h4>
+
+<p>The <a href="https://wiki.openstreetmap.org/wiki/OsmChange">OsmChange</a> format can be uploaded to the server. This is
+guaranteed to be running in a transaction. So either all the changes are applied or none. To avoid performance
+issues when uploading multiple objects, the use of the <code>osm_diff_upload_changeset()</code> is highly recommended.
+</p>
+<p><code>osm_diff_upload_changeset()</code>
+Diff (OsmChange format) upload to a changeset
+</p>
+<p><code>osm_download_changeset()</code>
+Download a changeset in OsmChange format
+</p>
+<p><code>osmchange_create()</code>
+osmchange to create OSM objects
+</p>
+<p><code>osmchange_delete()</code>
+osmchange to delete existing OSM objects
+</p>
+<p><code>osmchange_modify()</code>
+osmchange to modify existing OSM objects
+</p>
+
+
+
+<h4>Methods</h4>
+
+<p><code>tags_list2wide()</code> <code>tags_wide2list()</code>
+Change tags from a list column &lt;-&gt; columns for each key in wide format
+</p>
+<p><code>st_as_sf()</code>
+Convert osmapiR objects to sf objects
+</p>
+
+
+
+<h4>API</h4>
+
+<p><code>set_osmapi_connection()</code> <code>get_osmapi_url()</code> <code>set_osmapi_url()</code>
+Configure connections from osmapiR
+</p>
+<p><code>authenticate_osmapi()</code> <code>logout_osmapi()</code>
+Authenticate or logout osmapiR
+</p>
+<p><code>osm_api_versions()</code>
+Available API versions
+</p>
+<p><code>osm_capabilities()</code>
+Capabilities of the API
+</p>
+<p><code>osm_permissions()</code>
+Retrieving permissions
+</p>
+
+
+
+<h4>For moderators</h4>
+
+<p><code>osm_delete_note()</code>
+Delete a note
+</p>
+<p><code>osm_hide_comment_changeset_discussion()</code> <code>osm_unhide_comment_changeset_discussion()</code>
+Hide or unhide a changeset comment
+</p>
+<p><code>osm_redaction_object()</code>
+Redact an object version
+</p>
+
+
+
+<h3>Author(s)</h3>
+
+<p><strong>Maintainer</strong>: Joan Maspons <a href="mailto:joanmaspons@gmail.com">joanmaspons@gmail.com</a> (<a href="https://orcid.org/0000-0003-2286-8727">ORCID</a>) [copyright holder]
+</p>
+<p>Other contributors:
+</p>
+
+<ul>
+<li>
+<p> Jon Harmon (<a href="https://orcid.org/0000-0003-4781-4346">ORCID</a>) (Jon reviewed the package for rOpenSci, see https://github.com/ropensci/software-review/issues/633) [reviewer]
+</p>
+</li>
+<li>
+<p> Carlos Cámara (<a href="https://orcid.org/0000-0002-9378-0549">ORCID</a>) (Carles reviewed the package for rOpenSci, see https://github.com/ropensci/software-review/issues/633) [reviewer]
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Useful links:
+</p>
+
+<ul>
+<li> <p><a href="https://docs.ropensci.org/osmapiR/">https://docs.ropensci.org/osmapiR/</a>
+</p>
+</li>
+<li> <p><a href="https://github.com/ropensci/osmapiR">https://github.com/ropensci/osmapiR</a>
+</p>
+</li>
+<li>
+<p> Report bugs at <a href="https://github.com/ropensci/osmapiR/issues">https://github.com/ropensci/osmapiR/issues</a>
+</p>
+</li>
+</ul>
+</div>

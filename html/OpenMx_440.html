@@ -1,0 +1,202 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxRun</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run an OpenMx model</h2>
+
+<h3>Description</h3>
+
+<p>This function sends ‘model’ to the optimizer, and returns the optimized model if it ran without error.
+</p>
+<p>If  <code>intervals = TRUE</code>, then confidence intervals will be computed on
+any <code>mxCI</code>s added to the model.
+</p>
+<p>During a run, ‘mxRun’ will print the context (e.g. optimizer name or step in the analysis 
+e.g. MxComputeNumericDeriv ), followed by the current evaluation count, fit value, and the change 
+in fit compared to the last status report. e.g.: 
+</p>
+<p><code>MxComputeGradientDescent(CSOLNP) evaluations 1258 fit 37702.6 change -0.05861</code>
+</p>
+<p>This may be followed by progress on the numeric derivative
+</p>
+<p><code>MxComputeNumericDeriv 313/528</code>
+</p>
+<p><em>note</em>: For models that prove difficult to run, you might try using <code>mxTryHard</code> in place of mxRun.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxRun(model, ..., intervals = NULL, silent = FALSE, suppressWarnings = FALSE, 
+    unsafe = FALSE, checkpoint = FALSE, useSocket = FALSE, onlyFrontend = FALSE, 
+    useOptimizer = TRUE, beginMessage=!silent)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A MxModel object to be optimized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Forces remaining arguments to be specified by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervals</code></td>
+<td>
+<p>A boolean indicating whether to compute the specified confidence intervals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>A boolean indicating whether to print status to terminal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suppressWarnings</code></td>
+<td>
+<p>A boolean indicating whether to suppress warnings.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unsafe</code></td>
+<td>
+<p>A boolean indicating whether to ignore errors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkpoint</code></td>
+<td>
+<p>A boolean indicating whether to periodically write parameter values to a file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSocket</code></td>
+<td>
+<p>A boolean indicating whether to periodically write parameter values to a socket.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>onlyFrontend</code></td>
+<td>
+<p>A boolean indicating whether to run only front-end model transformations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useOptimizer</code></td>
+<td>
+<p>A boolean indicating whether to run only the
+log-likelihood of the current free parameter values but not move any
+of the free parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beginMessage</code></td>
+<td>
+<p>A boolean indicating whether to print the
+number of parameters before invoking the backend.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The mxRun function is used to optimize free parameters in MxModel objects based on an expectation function and fit function. MxModel objects included in the mxRun function must include an appropriate expectation and fit functions.
+</p>
+<p>If the ‘silent’ flag is TRUE, then model execution will not print any status messages to the terminal.
+</p>
+<p>If the ‘suppressWarnings’ flag is TRUE, then model execution will not issue a warning if NPSOL returns a non-zero status code.
+</p>
+<p>If the ‘unsafe’ flag is TRUE, then many error conditions will not
+be detected. Any error condition detected will be downgraded to warnings.  It is strongly recommended to use this feature only for debugging purposes.
+</p>
+<p>Free parameters are estimated or updated based on the expectation and fit functions. These estimated values, along with estimation information and model fit, can be found in the 'output' slot of MxModel objects after mxRun has been used.
+</p>
+<p>If a model is dependent on or shares parameters with another model, both models must be included as arguments in another MxModel object. This top-level MxModel object must include expectation and fit functions in both submodels, as well as an additional fit function describing how the results of the first two should be combined (e.g. <code>mxFitFunctionMultigroup</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an MxModel object with free parameters updated to their final values.
+The return value contains an "output" slot with the results of 
+optimization.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation">https://openmx.ssri.psu.edu/documentation</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>mxTryHard for running models which prove difficult to optimize; summary to print a summary of a run model; mxModel for more on the model itself; More information about the OpenMx package may be found here. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create and run the 1-factor CFA on the openmx.ssri.psu.edu front page
+
+# 1. Load OpenMx and the demoOneFactor dataframe
+
+library(OpenMx)
+data(demoOneFactor)  
+
+# 2. Define the manifests (5 demo variables) and latents for use in the model
+
+manifests &lt;- names(demoOneFactor) 
+latents   &lt;- c("G")
+
+# 3. Build the model, adding paths and data
+model &lt;- mxModel(model="One Factor", type="RAM",
+    manifestVars = manifests,
+    latentVars   = latents,
+    mxPath(from=latents, to=manifests, labels=paste("b", 1:5, sep="")),
+    mxPath(from=manifests, arrows=2, labels=paste("u", 1:5, sep="")),
+    mxPath(from=latents  , arrows=2, free=FALSE, values=1.0),
+    mxData(cov(demoOneFactor), type="cov", numObs=500)
+)
+
+# 4. Run the model, returning the result into model
+model &lt;- mxRun(model) 
+
+# 5. Show a summary of the fitted model and parameter values
+summary(model) 
+
+# 6. Print SE-based CIs for the fitted parameter values
+
+confint(model)
+
+# 7. Add likelihood-based CIs to the model and run these
+
+model = mxModel(model, mxCI(paste0("b", 1:5))) 
+model &lt;- mxRun(model, intervals = TRUE) 
+summary(model)$CI
+
+#       lbound  estimate    ubound note
+# b1 0.3675940 0.3967545 0.4285895     
+# b2 0.4690663 0.5031569 0.5405838     
+# b3 0.5384588 0.5766635 0.6186705     
+# b4 0.6572678 0.7020702 0.7514609     
+# b5 0.7457231 0.7954529 0.8503486     
+
+# 8. Demonstrate mxTryHard
+
+model &lt;- mxTryHard(model, intervals = TRUE) 
+
+</code></pre>
+
+
+</div>

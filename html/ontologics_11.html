@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>new_mapping</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a new mapping to an ontology</h2>
+
+<h3>Description</h3>
+
+<p>Extend an ontology by creating mappings between classes and concepts of
+external vocabularies and the harmonised classes and concepts.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">new_mapping(
+  new = NULL,
+  target,
+  source = NULL,
+  lut = NULL,
+  match = NULL,
+  certainty = NULL,
+  type = "concept",
+  ontology = NULL,
+  verbose = FALSE,
+  beep = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>new</code></td>
+<td>
+<p><code>character(.)</code><br> the english external label(s) that
+shall be mapped to labels that do already exist in the ontology.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+<p><code>data.frame(.)</code><br> the already harmonised English
+label(s) to which the external labels shall be mapped; derive with get_concept().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source</code></td>
+<td>
+<p><code>character(1)</code><br> any character uniquely
+identifying the source dataset of the new label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lut</code></td>
+<td>
+<p><code>character(.)</code><br> in case the terms used for mapping
+are from a look up table (i.e. a standardised set of terms with a
+description), provide this table with column names 'label' and
+'description' here.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p><code>character(1)</code><br> the
+<a href="https://www.w3.org/TR/skos-reference/#mapping">skos mapping property</a>
+used to describe the link, possible values are <code>"close"</code>,
+<code>"exact"</code>, <code>"broad"</code> and <code>"narrow"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>certainty</code></td>
+<td>
+<p><code>integerish(1)</code><br> the certainty of the match.
+Possible values are between 1 and 4, with meaning </p>
+<ul>
+<li>
+<p> 1 =
+probably unreliable </p>
+</li>
+<li>
+<p> 2 = unclear, assigned according to a given
+definition </p>
+</li>
+<li>
+<p> 3 = clear, assigned according to a given definition </p>
+</li>
+<li>
+<p>4 = original, harmonised term (can't be assigned by a user)</p>
+</li>
+</ul>
+<p>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>character(1)</code><br> whether the new labels are mapped
+to a <code>"concept"</code>, or to a <code>"class"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p><code>ontology(1)</code><br> either a path where the ontology is
+stored, or an already loaded ontology.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical(1)</code><br> whether or not to give detailed
+information on the process of this function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beep</code></td>
+<td>
+<p><code>integerish(1)</code><br> Number specifying what sound to be
+played to signal the user that a point of interaction is reached by the
+program, see <code>beep</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>No return value, called for the side effect of adding new mappings to
+an ontology.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ontoDir &lt;- system.file("extdata", "crops.rds", package = "ontologics")
+onto &lt;- load_ontology(path = ontoDir)
+
+mapping &lt;- data.frame(old = c("BIOENERGY CROPS", "Bioenergy woody",
+                              "Other bioenergy crops"),
+                      new = c("bioenergy plants", "Wood plantation for fuel",
+                              "Algae for bioenergy"),
+                      type = c("close", "broader", "broader"))
+
+onto &lt;- new_source(name = "externalDataset",
+                   version = "0.0.1",
+                   description = "a vocabulary",
+                   homepage = "https://www.something.net",
+                   license = "CC-BY-0",
+                   ontology = onto)
+
+onto &lt;- get_concept(label = mapping$old, ontology = onto) %&gt;%
+  new_mapping(new = mapping$new,
+              target = .,
+              match = mapping$type,
+              source = "externalDataset",
+              certainty = 3,
+              ontology = onto)
+
+</code></pre>
+
+
+</div>

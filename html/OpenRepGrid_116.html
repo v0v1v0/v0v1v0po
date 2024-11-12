@@ -1,0 +1,156 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>indexSelfConstruction</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Self construction profile</h2>
+
+<h3>Description</h3>
+
+<p>TBD
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">indexSelfConstruction(
+  x,
+  self,
+  ideal,
+  others = c(-self, -ideal),
+  method = "euclidean",
+  p = 2,
+  normalize = TRUE,
+  round = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>self</code></td>
+<td>
+<p>Numeric. Index of self element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ideal</code></td>
+<td>
+<p>Numeric. Index of ideal element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>others</code></td>
+<td>
+<p>Numeric. Index(es) of self related "other" elements (e.g. father, friend).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>The distance or correlation measure:
+</p>
+
+<ul>
+<li>
+<p> Distances:  <code>euclidean</code>, <code>manhattan</code>, <code>maximum</code>,  <code>canberra</code>, <code>binary</code>, <code>minkowski</code>
+</p>
+</li>
+<li>
+<p> Correlations: <code>pearson</code>, <code>kendall</code>, <code>spearman</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The power of the Minkowski distance, in case <code>minkowski</code> is used as argument for <code>method</code>, otherwise it is
+ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>Normalize values?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round</code></td>
+<td>
+<p>Round average rating scores for 'others' to closest integer?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>List object of class <code>indexSelfConstruction</code>, containing the results from the calculations:
+</p>
+
+<ul>
+<li> <p><code>grid</code>: Reduced grid with self, ideal and others
+</p>
+</li>
+<li> <p><code>method_type</code>: method type (correlation or distance)
+</p>
+</li>
+<li> <p><code>method</code>: correlation or distance method used
+</p>
+</li>
+<li> <p><code>self_element</code>: name of the self element
+</p>
+</li>
+<li> <p><code>ideal_element</code>: name of the ideal element
+</p>
+</li>
+<li> <p><code>other_elements</code>: name(s) of other elements
+</p>
+</li>
+<li> <p><code>self_ideal</code>: measure between self and ideal
+</p>
+</li>
+<li> <p><code>self_others</code>: measure between self and others
+</p>
+</li>
+<li> <p><code>ideal_others</code>: measure betwen ideal and others
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>TBD
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># using distance measures
+indexSelfConstruction(boeker, 1, 2, c(3:11), method = "euclidean")
+indexSelfConstruction(boeker, 1, 2, c(3:11), method = "manhattan")
+indexSelfConstruction(boeker, 1, 2, c(3:11), method = "minkowski", p = 3)
+
+# using correlation measures
+indexSelfConstruction(boeker, 1, 2, c(3:11), method = "pearson")
+indexSelfConstruction(boeker, 1, 2, c(3:11), method = "spearman")
+
+# using not-normalized distances
+indexSelfConstruction(boeker, 1, 2, c(3:11), method = "euclidean", normalize = FALSE)
+
+# printing the results (biplot only works with)
+cp &lt;- indexSelfConstruction(boeker, 1, 2, c(3:11))
+cp$grid  # grid with self, ideal and others
+biplot2d(cp$grid, center = 4)  # midopoint centering
+</code></pre>
+
+
+</div>

@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.ocf.marginal</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print Method for ocf.marginal Objects</h2>
+
+<h3>Description</h3>
+
+<p>Prints an <code>ocf.marginal</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ocf.marginal'
+print(x, latex = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An <code>ocf.marginal</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latex</code></td>
+<td>
+<p>If <code>TRUE</code>, prints LATEX code.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Compilation of the LATEX code requires the following packages: <code>booktabs</code>, <code>float</code>, <code>adjustbox</code>. If
+standard errors have been estimated, they are printed in parenthesis below each point estimate.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Prints an <code>ocf.marginal</code> object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Riccardo Di Francesco
+</p>
+
+
+<h3>References</h3>
+
+
+<ul><li>
+<p> Di Francesco, R. (2023). Ordered Correlation Forest. arXiv preprint <a href="https://arxiv.org/abs/2309.08755">arXiv:2309.08755</a>.
+</p>
+</li></ul>
+<h3>See Also</h3>
+
+<p><code>ocf</code>, <code>marginal_effects</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate synthetic data.
+set.seed(1986)
+
+data &lt;- generate_ordered_data(100)
+sample &lt;- data$sample
+Y &lt;- sample$Y
+X &lt;- sample[, -1]
+
+## Fit ocf.
+forests &lt;- ocf(Y, X)
+
+## Marginal effects at the mean.
+me &lt;- marginal_effects(forests, eval = "atmean")
+print(me)
+print(me, latex = TRUE)
+
+## Add standard errors.
+honest_forests &lt;- ocf(Y, X, n.trees = 4000, honesty = TRUE)
+honest_me &lt;- marginal_effects(honest_forests, eval = "atmean", inference = TRUE)
+print(honest_me, latex = TRUE)
+
+</code></pre>
+
+
+</div>

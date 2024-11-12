@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.table_import</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import a file as table</h2>
+
+<h3>Description</h3>
+
+<p>Import a file as a table in Opal. The file formats supported are: RDS (.rds), SPSS (.sav), 
+SPSS compressed (.zsav), SAS (.sas7bdat), SAS Transport (.xpt), Stata (.dta). 
+The RDS format is a serialized single R object (expected to be of tibble class), that can be obtained using base::saveRDS().
+The other file formats are the ones supported by the haven R package.
+This operation creates an importation task in Opal that can be followed (see tasks related functions).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.table_import(
+  opal,
+  file,
+  project,
+  table,
+  identifiers = NULL,
+  policy = "required",
+  id.name = "id",
+  type = "Participant",
+  wait = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>Path in Opal to the file that will be read as a tibble.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Name of the project into which the data are to be imported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+<p>Destination table name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>identifiers</code></td>
+<td>
+<p>Name of the identifiers mapping to use when assigning entities to Opal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>policy</code></td>
+<td>
+<p>Identifiers policy: 'required' (each identifiers must be mapped prior importation (default)), 'ignore' (ignore unknown identifiers) and 'generate' (generate a system identifier for each unknown identifier).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id.name</code></td>
+<td>
+<p>The name of the column representing the entity identifiers. Default is 'id'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Entity type (what the data are about). Default is 'Participant'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wait</code></td>
+<td>
+<p>Wait for import task completion. Default is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other table functions: 
+<code>opal.perms()</code>,
+<code>opal.resource_view_create()</code>,
+<code>opal.resource_view_reconnect()</code>,
+<code>opal.table_create()</code>,
+<code>opal.table_delete()</code>,
+<code>opal.table_dictionary_get()</code>,
+<code>opal.table_dictionary_update()</code>,
+<code>opal.table_exists()</code>,
+<code>opal.table_export()</code>,
+<code>opal.table_get()</code>,
+<code>opal.table_perm()</code>,
+<code>opal.table_perm_add()</code>,
+<code>opal.table_perm_delete()</code>,
+<code>opal.table_save()</code>,
+<code>opal.table_truncate()</code>,
+<code>opal.table_view_create()</code>,
+<code>opal.table_view_update()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+opal.table_import(o, '/home/administrator/mydataset.rds', 'test', 'mytable')
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

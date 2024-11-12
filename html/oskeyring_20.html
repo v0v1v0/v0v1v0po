@@ -1,0 +1,277 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>windows_credentials</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query and manipulate the Windows Credential Store</h2>
+
+<h3>Description</h3>
+
+<p><code style="white-space: pre;">⁠windows_item_*⁠</code> functions read, write, delete and list
+credentials.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">windows_item_types()
+
+windows_item(
+  credential_blob,
+  target_name,
+  type = "generic",
+  comment = NULL,
+  persist = c("local_machine", "session", "enterprise"),
+  attributes = list(),
+  target_alias = NULL,
+  username = NULL
+)
+
+windows_item_read(target_name, type = "generic")
+
+windows_item_write(item, preserve = FALSE)
+
+windows_item_delete(target_name, type = "generic")
+
+windows_item_enumerate(filter = NULL, all = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>credential_blob</code></td>
+<td>
+<p>The secret credential, a password,
+certificate or key. See also
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/wincred/">https://learn.microsoft.com/en-us/windows/win32/api/wincred/</a>
+This can be a raw vector, or a string. If it is a string, then it
+will be converted to Unicode, without the terminating zero.
+It can also be <code>NULL</code>, to be used with the <code>preserve = TRUE</code>
+argument of <code>windows_item_write()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target_name</code></td>
+<td>
+<p>The name of the credential. The <code>target_name</code>
+and <code>type</code> members uniquely identify the credential. This member
+cannot be changed after the credential is created. Instead, the
+credential with the old name should be deleted and the credential
+with the new name created. This member cannot be longer than
+<code>CRED_MAX_GENERIC_TARGET_NAME_LENGTH</code> (32767) characters.
+This member is case-insensitive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of the credential. This member cannot be
+changed after the credential is created. See <code>windows_item_types()</code>
+for possible values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comment</code></td>
+<td>
+<p>If not <code>NULL</code>, then a string comment from the user
+that describes this credential. This member cannot be longer than
+<code>CRED_MAX_STRING_LENGTH</code> (256) characters. It is stored as a Unicode
+string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>persist</code></td>
+<td>
+<p>Defines the persistence of this credential.
+</p>
+
+<ul>
+<li> <p><code>"local_machine"</code>: The credential persists for all subsequent
+logon sessions on this same computer. It is visible to other
+logon sessions of this same user on this same computer and not
+visible to logon sessions for this user on other computers.
+</p>
+</li>
+<li> <p><code>"session"</code>: The credential persists for the life of the logon
+session. It will not be visible to other logon sessions of this
+same user. It will not exist after this user logs off and back on.
+</p>
+</li>
+<li> <p><code>"enterprise"</code>: The credential persists for all subsequent logon
+sessions on this same computer. It is visible to other logon
+sessions of this same user on this same computer and to logon
+sessions for this user on other computers.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attributes</code></td>
+<td>
+<p>Application-defined attributes that are
+associated with the credential. This is <code>NULL</code> or a named list
+of raw or string vectors. String vectors are converted to
+Unicode, without the terminating zero. A credential can have at
+most 64 attributes, the names of the attributes cannot be
+longer than <code>CRED_MAX_STRING_LENGTH</code> (256) characters each, and
+the attributes themselves cannot be longer than
+<code>CRED_MAX_VALUE_SIZE</code> (256) bytes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target_alias</code></td>
+<td>
+<p>Alias for the <code>target_name</code> member.
+This member can be read and written. It cannot be longer than
+<code>CRED_MAX_STRING_LENGTH</code> (256) characters. It is stored in Unicode.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>username</code></td>
+<td>
+<p><code>NULL</code> or the user name of the account used to
+connect to <code>target_name</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item</code></td>
+<td>
+<p><code>oskeyring_windows_item</code> object to write.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preserve</code></td>
+<td>
+<p>The credential BLOB from an existing credential
+is preserved with the same credential name and credential type.
+The <code>credential_blob</code> of the passed <code>oskeyring_windows_item</code>
+object must be <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>If not <code>NULL</code>, then a string to filter the
+credentials. Only credentials with a <code>target_name</code> matching the
+filter will be returned. The filter specifies a name prefix
+followed by an asterisk. For instance, the filter <code>"FRED*"</code> will
+return all credentials with a <code>target_name</code> beginning with the
+string <code>"FRED"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>Whether to use the <code>CRED_ENUMERATE_ALL_CREDENTIALS</code>
+flag to enumerate all credentials. If this is <code>TRUE</code>, then <code>filter</code>
+must be <code>NULL</code>. If this is <code>TRUE</code>, then the target name of each
+credential is returned in the <code style="white-space: pre;">⁠"namespace:attribute=target⁠</code>" format.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+
+<h4><code>windows_item_types()</code></h4>
+
+<p><code>windows_item_types()</code> lists the currently supported credential
+types.
+</p>
+<div class="sourceCode r"><pre>windows_item_types()
+#&gt; [1] "generic"                 "domain_password"        
+#&gt; [3] "domain_certificate"      "domain_visible_password"
+</pre></div>
+
+
+
+<h4><code>windows_item()</code></h4>
+
+<p><code>windows_item()</code> creates a Windows credential, that can be
+then added to the credential store.
+</p>
+<div class="sourceCode r"><pre>it &lt;- windows_item("secret", "my-host-password")
+it
+#&gt; &lt;oskeyring_windows_item: generic&gt;
+#&gt;  target_name: my-host-password
+#&gt;  persist: local_machine
+#&gt;  credential_blob: &lt;-- hidden --&gt;
+</pre></div>
+
+
+
+<h4><code>windows_item_write()</code></h4>
+
+<p>Writes an item to the credential store.
+</p>
+<div class="sourceCode r"><pre>windows_item_write(it)
+</pre></div>
+
+
+
+<h4><code>windows_item_read()</code></h4>
+
+<p>Reads a credential with the specified type and <code>target_name</code>.
+</p>
+<div class="sourceCode r"><pre>windows_item_read("my-host-password")
+</pre></div>
+
+
+
+<h4><code>windows_item_enumerate()</code></h4>
+
+<p>List all credentials that match a prefix.
+</p>
+<div class="sourceCode r"><pre>windows_item_enumerate(filter = "my-*")
+</pre></div>
+
+
+
+<h4><code>windows_item_delete()</code></h4>
+
+<p>Delete a credential:
+</p>
+<div class="sourceCode r"><pre>windows_item_delete("my-host-password")
+windows_item_enumerate(filter = "my-*")
+</pre></div>
+
+
+
+<h3>Value</h3>
+
+<p><code>windows_item_types()</code> returns a character vector, the
+currently supported credential types.
+</p>
+<p><code>windows_item()</code> returns an <code>oskeyring_windows_item</code>
+object.
+</p>
+<p><code>windows_item_read()</code> returns an <code>oskeyring_windows_item</code>
+object.
+</p>
+<p><code>windows_item_write()</code> returns <code>NULL</code>, invisibly.
+</p>
+<p><code>windows_item_delete()</code> returns <code>NULL</code>, invisibly.
+</p>
+<p><code>windows_item_enumerate()</code> returns a list of
+<code>oskeyring_windows_item</code> items.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The API documentation at
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/wincred/">https://learn.microsoft.com/en-us/windows/win32/api/wincred/</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># See above
+</code></pre>
+
+
+</div>

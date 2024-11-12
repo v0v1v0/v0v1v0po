@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optmatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optmatch Class</h2>
+
+<h3>Description</h3>
+
+<p>The <code>optmatch</code> class describes the results of an optimal full matching
+(using either <code>fullmatch</code> or <code>pairmatch</code>). For the
+most part, these objects can be treated as <code>factors</code>.
+</p>
+<p>The summary function quantifies <code>optmatch</code> objects on the effective sample
+size, the distribution of distances between matched units, and how well the
+match reduces average differences.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'optmatch'
+summary(
+  object,
+  propensity.model = NULL,
+  ...,
+  min.controls = 0.2,
+  max.controls = 5,
+  quantiles = c(0, 0.5, 0.95, 1)
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>The <code>optmatch</code> object to summarize.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>propensity.model</code></td>
+<td>
+<p>An optional propensity model (the result of
+a call to <code>glm</code>) to use when summarizing the match. If the
+<span class="pkg">RItools</span> package is installed, an additional chi-squared test will
+be performed on the average differences between treated and
+control units on each variable used in the model. See the
+<code>xBalance</code> function in the <span class="pkg">RItools</span> package for more
+details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to pass to <code>xBalance</code> when
+also passing a propensity model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.controls</code></td>
+<td>
+<p>To minimize the the display of a groups with
+many treated and few controls, all groups with more than 5
+treated units will be summarized as “5+”. This is the
+reciprocal of the default value (1/5 = 0.2). Lower this value to
+see more groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.controls</code></td>
+<td>
+<p>Like <code>min.controls</code> sets maximum group
+sized displayed with respect to the number of controls. Raise
+this value to see more groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantiles</code></td>
+<td>
+<p>A points in the ECDF at which the distances
+between units will be displayed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>optmatch</code> objects descend from <code>factor</code>.
+Elements of this vector correspond to members of the treatment and control
+groups in reference to which the matching problem was posed, and are named
+accordingly; the names are taken from the row and column names of
+<code>distance</code>.  Each element of the vector is either <code>NA</code>, indicating
+unavailability of any suitable matches for that element, or the
+concatenation of: (i) a character abbreviation of the name of the subclass
+(as encoded using <code>exactMatch</code>) (ii) the string <code>.</code>; and
+(iii) a non-negative integer.  In this last place, positive whole numbers
+indicate placement of the unit into a matched set and <code>NA</code> indicates
+that all or part of the matching problem given to <code>fullmatch</code> was found
+to be infeasible.  The functions <code>matched</code>,
+<code>unmatched</code>, and <code>matchfailed</code> distinguish these
+scenarios.
+</p>
+<p>Secondarily, <code>fullmatch</code> returns various data about the matching
+process and its result, stored as attributes of the named vector which is
+its primary output.  In particular, the <code>exceedances</code> attribute gives
+upper bounds, not necessarily sharp, for the amount by which the sum of
+distances between matched units in the result of <code>fullmatch</code> exceeds
+the least possible sum of distances between matched units in a feasible
+solution to the matching problem given to <code>fullmatch</code>.  (Such a bound
+is also printed by <code>print.optmatch</code> and <code>summary.optmatch</code>.)
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>optmatch.summary</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>print.optmatch</code>
+</p>
+
+
+</div>

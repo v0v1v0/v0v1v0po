@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addEnrichmentsLinkouts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add linkouts to external resources in the enrichments table</h2>
+
+<h3>Description</h3>
+
+<p>You can provide additional information on the annotation terms in your study
+by providing linkouts to external resources. These will be embedded directly
+in the enrichments table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addEnrichmentsLinkouts(study, enrichmentsLinkouts, reset = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>study</code></td>
+<td>
+<p>An OmicNavigator study created with <code>createStudy</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enrichmentsLinkouts</code></td>
+<td>
+<p>The URL patterns that describe linkouts to
+external resources (see Details below). The input object is a named list.
+The names of the list correspond to the annotation names. Each element of
+the list is a character vector of linkouts for that annotationID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reset</code></td>
+<td>
+<p>Reset the data prior to adding the new data (default:
+<code>FALSE</code>). The default is to add to or modify any previously added data
+(if it exists). Setting <code>reset = TRUE</code> enables you to remove existing
+data you no longer want to include in the study.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For each linkout, the URL pattern you provide will be concatenated with the
+value of the termID column. As an example, if you used the annotation
+database <a href="https://amigo.geneontology.org/">AmiGO 2</a> for your enrichments
+analysis, you can provide a linkout for each termID using the following
+pattern:
+</p>
+<pre>go = "https://amigo.geneontology.org/amigo/term/"</pre>
+<p>As another example, if you used the annotation database
+<a href="https://reactome.org/">Reactome</a> for your enrichments analysis, you can
+provide a linkout for each termID using the following pattern:
+</p>
+<pre>reactome = "https://reactome.org/content/detail/"</pre>
+<p>Note that you can provide more than one linkout per termID.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the original <code>onStudy</code> object passed to the argument
+<code>study</code>, but modified to include the newly added data
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>addAnnotations</code>, <code>addEnrichments</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  study &lt;- createStudy("example")
+  enrichmentsLinkouts &lt;- list(
+    gobp = c("https://amigo.geneontology.org/amigo/term/",
+             "https://www.ebi.ac.uk/QuickGO/term/"),
+    reactome = "https://reactome.org/content/detail/"
+  )
+  study &lt;- addEnrichmentsLinkouts(study, enrichmentsLinkouts)
+
+</code></pre>
+
+
+</div>

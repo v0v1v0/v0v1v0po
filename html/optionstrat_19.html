@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>prob.above</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Probability Above</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the probability of the underlying asset value remaining above a price level in a designated time frame, given the daily standard devaiation of the underlying returns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">prob.above(spot, lower, mean = 0, asd = 0, dsd = 0, dte = 0, p,
+  quantile = FALSE, tradedays = 262)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>spot</code></td>
+<td>
+<p>Current price of the underlying asset</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+<p>Lower price of the range</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean</code></td>
+<td>
+<p>The average daily price movement, default = 0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asd</code></td>
+<td>
+<p>Annualized standard deviation of the underlying returns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dsd</code></td>
+<td>
+<p>Daily standard deviation of the underlying returns (Annual vol/sqrt(256)), used as an alternative to the asd parameter in conjuction with the dte parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dte</code></td>
+<td>
+<p>Days until expiration, designated time frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Designated probability</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantile</code></td>
+<td>
+<p>Logical. If True, calculates the price the asset will remain above, given the designated probability</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tradedays</code></td>
+<td>
+<p>Number of trade days in a year, default = 262</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function has two separate possible operations:
+1. Calculates the probability of the underlying asset value remaining above a price level in a designated time frame, given the daily standard devaiation of the underlying returns.
+2. Calculates the price the asset will remain above, given the designated probability
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a probability (if quantile = FALSE), Returns a data.frame (if quantile = TRUE)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">prob.above(spot = 100, lower = 110, mean = 0, dsd = 0.01, dte = 45)
+prob.above(spot = 100, mean = 0, dsd = 0.01, dte = 45, p = 0.75, quantile = TRUE)
+</code></pre>
+
+
+</div>

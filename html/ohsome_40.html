@@ -1,0 +1,166 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>set_endpoint</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set endpoint</h2>
+
+<h3>Description</h3>
+
+<p>Modifies the endpoint of an existing <code>ohsome_query</code> object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">set_endpoint(query, endpoint, append = FALSE, reset_format = TRUE)
+
+set_grouping(query, grouping, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>An <code>ohsome_query</code> object constructed with <code>ohsome_query()</code> or
+any of its wrapper functions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endpoint</code></td>
+<td>
+<p>The path to the
+<a href="https://docs.ohsome.org/ohsome-api/v1/endpoints.html">ohsome API endpoint</a>.
+Either a single string (e.g. <code>"elements/count"</code>) or a vector of character
+in the right order (e.g. <code>c("elements", "count")</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>append</code></td>
+<td>
+<p>logical; If <code>TRUE</code>, the provided endpoint string is appended to
+the existing endpoint definition instead of replacing it. This is
+particularly useful if you wish to add  <code>density</code>/<code>ratio</code> and/or a grouping
+to an existing aggregation query.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reset_format</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, the format parameter of the query is
+updated depending on the new endpoint.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grouping</code></td>
+<td>
+<p>character; group type(s) for grouped aggregations (only
+available for queries to aggregation endpoints). The following group types
+are available:
+</p>
+
+<ul>
+<li> <p><code>"boundary"</code> groups the result by the given boundaries that are defined
+through any of the <code>boundary</code> query parameters.
+</p>
+</li>
+<li> <p><code>"key"</code> groups the result by the given keys that are defined through the
+<code>groupByKeys</code> query parameter.
+</p>
+</li>
+<li> <p><code>"tag"</code> groups the result by the given tags that are defined through the
+<code>groupByKey</code> and <code>groupByValues</code> query parameters.
+</p>
+</li>
+<li> <p><code>"type"</code> groups the result by OSM element type.
+</p>
+</li>
+<li> <p><code>c("boundary", "tag")</code> groups the result by the given boundaries and
+tags.
+</p>
+</li>
+</ul>
+<p>Not all of these group types are accepted by all of the aggregation
+endpoints. Check
+<a href="https://docs.ohsome.org/ohsome-api/v1/group-by.html">Grouping</a>
+for available group types.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>set_endpoint()</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>set_endpoint()</code> takes an <code>ohsome_query</code> object and modifies the ohsome API
+endpoint. <code>set_grouping()</code> takes an <code>ohsome_query</code> object and modifies the
+endpoint path for grouped aggregations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>ohsome_query</code> object. The object can be sent to the ohsome API
+with <code>ohsome_post()</code>. It consists of the following elements:
+</p>
+
+<ul>
+<li> <p><code>url</code>: The URL of the endpoint.
+</p>
+</li>
+<li> <p><code>encode</code>: The way the information is encoded and then posted to the
+ohsome API. Set as <code>"form"</code>.
+</p>
+</li>
+<li> <p><code>body</code>: The parameters of the query such as <code>format</code>, <code>filter</code> or
+<code>bpolys</code>.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><a href="https://docs.ohsome.org/ohsome-api/v1/endpoints.html">ohsome API Endpoints</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Query for count of elements
+q &lt;- ohsome_elements_count(
+  boundary = "HD:8.5992,49.3567,8.7499,49.4371|HN:9.1638,49.113,9.2672,49.1766",
+  time = "2022-01-01",
+  filter = "highway=*"
+)
+
+# Modify query to aggregate length of elements instead of count
+set_endpoint(q, "elements/length")
+
+# Modify query to extract geometries instead of aggregating elements
+set_endpoint(q, "elements/geometry")
+
+# Append the endpoint path in order to group aggregation by boundary
+set_endpoint(q, "groupBy/boundary", append = TRUE)
+
+# Modify query to group aggregation by boundary
+set_grouping(q, grouping = "boundary")
+
+# Modify query to group by boundary, but keep format csv instead of geojson
+set_grouping(q, grouping = "boundary", reset_format = FALSE)
+
+# Append the endpoint path to query for element densities per boundary
+set_endpoint(q, c("density", "groupBy", "boundary"), append = TRUE)
+
+# Modify query to group aggregation by OSM element type
+set_grouping(q, grouping = "type")
+
+</code></pre>
+
+
+</div>

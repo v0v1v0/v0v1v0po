@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.optim_nmsa</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plot an optim_nmsa Object
+</h2>
+
+<h3>Description</h3>
+
+<p>Creates convergence or contour plots for visual inspection of the optimization result. Note that 'trace' must be activated for this function. <br>
+In case of a bivariate optimization, the 'contour' plot gives an overview of the parameter development over time in the entire state space. This is useful for the evaluation of the algorithm settings and therefore helps improving the performance. The development of the response can be visualized via the 'convergence' plot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'optim_nmsa'
+plot(x, type = 'convergence', lower = NA, upper = NA, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Object of type 'optim_nmsa' to be plotted. The 'trace' entry must not be empty.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+
+<p>Character string which determines the plot type. Either 'convergence' or 'contour' is possible.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+
+<p>Vector containing the lower limits of the variables in the plot. Only useful for 'contour' plots.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+
+<p>Vector containing the upper limits of the variables in the plot. Only useful for 'contour' plots.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Further arguments for the generic plot function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Kai Husmann, Alexander Lange
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_nm</code>, <code>optim_sa</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># S3 method for class 'optim_nlme'
+
+# Himmelblau's function
+hi &lt;- function(x){(x[1]**2 + x[2] - 11)**2 + (x[1] + x[2]**2 -7)**2}
+
+out_nm &lt;- optim_nm(hi, k = 2, trace = TRUE)
+out_sa &lt;- optim_sa(fun = hi, start = c(runif(2, min = -1, max = 1)),
+                   trace = TRUE, lower = c(-4, -4) ,upper=c(4, 4),
+                   control = list(t0 = 1000, nlimit = 1500,r = 0.8))
+
+# Examples for optimization results via 'Nelder-Mead' method.
+plot(out_nm)
+plot(out_nm, type = "contour", lower = c(-4, -4), upper = c(4, 4))
+
+# Examples for optimization results via 'Simulated Annealing' method.
+plot(out_sa)
+plot(out_sa, type = "contour")
+</code></pre>
+
+
+</div>

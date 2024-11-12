@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cumMove</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Probability Distribution After Movement
+</h2>
+
+<h3>Description</h3>
+
+<p>Compute the compounding effect of a random walk defined by a discrete kernel. The number of steps and the edge algorithm are specified by the user. The function was used to generate Fig. 3 of Efford (2022). The final distribution may be summed for points lying within an arbitrary polygon. This is a simple way to compute the expected proportion remaining within a particular region (i.e. not “emigrating").
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+cumMove(X, mask, kernel, edgemethod = c("truncate", "wrap", "none"), nstep = 1,
+ mqarray = NULL, settlecov = NULL)
+
+proportionInPolygon(mask, poly, cov = "pm")
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>initial location(s) (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mask</code></td>
+<td>
+<p>habitat mask</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernel</code></td>
+<td>
+<p>kernel object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgemethod</code></td>
+<td>
+<p>character</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nstep</code></td>
+<td>
+<p>non-negative integer</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mqarray</code></td>
+<td>
+<p>integer array of lookup indices</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>settlecov</code></td>
+<td>
+<p>character name of covariate of <code>mask</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>poly</code></td>
+<td>
+<p>a polygon (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov</code></td>
+<td>
+<p>character name of covariate of <code>mask</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The input <code>X</code> may be -
+</p>
+
+<ul>
+<li>
+<p> a vector of length 2 for the coordinates of a single point 
+</p>
+</li>
+<li>
+<p> a mask with covariate 'pm' representing the initial distribution
+</p>
+</li>
+<li>
+<p> a SpatialPolygons object from <span class="pkg">sp</span>. Animals are assumed initially to be distributed uniformly across mask points that lie within the polygon.
+</p>
+</li>
+</ul>
+<p>The default edgemethod truncates the kernel at the edge and re-normalizes the cell probabilities so that all destinations lie within the boundary of the mask.
+</p>
+<p><code>settlecov</code> may name a covariate of <code>mask</code> that has settlement weights in range 0–1.
+</p>
+<p>For <code>proportionInPolygon</code>, the input mask may be the output from <code>cumMove</code>. The polygon <code>poly</code> may be specified as for <code>pointsInPolygon</code> (e.g., SpatialPolygons object or 2-column matrix of coordinates) or as a list with components x and y. A list of polygon specifications is also accepted.
+</p>
+<p><code>mqarray</code> is computed automatically if not provided. Precomputing the array can save time but is undocumented.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For cumMove - a mask object with initial probability distribution in covariate 'pm0' and final distribution in covariate 'pm'.
+</p>
+<p>For proportionInPolygon - vector of the summed weights (probabilities) for cells centred in the polygon(s) as a proportion of all non-missing weights.
+</p>
+
+
+<h3>References</h3>
+
+<p>Efford, M. G. (2022) . Efficient discretization of movement kernels for 
+spatiotemporal capture–recapture. <em>Journal of Agricultural, Biological and 
+Environmental Statistics</em>. In press. https://doi.org/10.1007/s13253-022-00503-4
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>make.kernel</code>, <code>pointsInPolygon</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+sp &lt;- 10
+msk &lt;- make.mask(nx = 51, ny = 51, type = 'rect', spacing = sp, 
+    buffer = 0)
+k &lt;- make.kernel('BVN', 20, spacing = sp, move.a = 50, clip = TRUE, 
+    sparse = TRUE)
+
+# initial distribution a central point
+X &lt;- apply(msk, 2, mean)   
+par(mfrow = c(1,4), mar = c(1,1,2,1))
+for (step in 0:2) {
+    X &lt;- cumMove(X, msk, k, nstep = min(step,1))
+    plot(X, cov = 'pm', dots = FALSE, legend = FALSE, breaks = 
+        seq(0,0.006,0.0001))
+        mtext(side = 3, line = 0, paste('Step', step), cex = 0.9)
+    contour(
+        x = unique(X$x), 
+        y = unique(X$y), 
+        z = matrix(covariates(X)$pm, nrow = length(unique(X$x))), 
+        levels = c(0.0002), 
+        drawlabels = FALSE,
+        add = TRUE)
+}
+
+## Not run: 
+# initial distribution across a polygon
+X0 &lt;- matrix(c(200,200,300,300,200,200,300,300,200,200), ncol = 2)
+X &lt;- X0
+par(mfrow = c(1,4), mar = c(1,1,2,1))
+for (step in 0:3) {
+    X &lt;- cumMove(X, msk, k, nstep = min(step,1))
+    plot(X, cov = 'pm', dots = FALSE, legend = FALSE, breaks = 
+        seq(0,0.006,0.0001))
+        mtext(side = 3, line = 0, paste('Step', step), cex = 0.9)
+    contour(
+        x = unique(X$x), 
+        y = unique(X$y), 
+        z = matrix(covariates(X)$pm, nrow = length(unique(X$x))), 
+        levels = c(0.0002), 
+        drawlabels = FALSE,
+        add = TRUE)
+}
+polygon(X0)
+proportionInPolygon(X, X0)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

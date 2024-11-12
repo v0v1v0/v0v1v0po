@@ -1,0 +1,253 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>body_add</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add content into a Word document</h2>
+
+<h3>Description</h3>
+
+<p>This function add objects into a Word document. Values are added
+as new paragraphs or tables.
+</p>
+<p>This function is experimental and will replace the <code style="white-space: pre;">⁠body_add_*⁠</code> functions
+later. For now it is only to be used for successive additions and cannot
+be used in conjunction with the <code style="white-space: pre;">⁠body_add_*⁠</code> functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">body_add(x, value, ...)
+
+## S3 method for class 'character'
+body_add(x, value, style = NULL, ...)
+
+## S3 method for class 'numeric'
+body_add(x, value, style = NULL, format_fun = formatC, ...)
+
+## S3 method for class 'factor'
+body_add(x, value, style = NULL, format_fun = as.character, ...)
+
+## S3 method for class 'fpar'
+body_add(x, value, style = NULL, ...)
+
+## S3 method for class 'data.frame'
+body_add(
+  x,
+  value,
+  style = NULL,
+  header = TRUE,
+  tcf = table_conditional_formatting(),
+  alignment = NULL,
+  ...
+)
+
+## S3 method for class 'block_caption'
+body_add(x, value, ...)
+
+## S3 method for class 'block_list'
+body_add(x, value, ...)
+
+## S3 method for class 'block_toc'
+body_add(x, value, ...)
+
+## S3 method for class 'external_img'
+body_add(x, value, style = "Normal", ...)
+
+## S3 method for class 'run_pagebreak'
+body_add(x, value, style = NULL, ...)
+
+## S3 method for class 'run_columnbreak'
+body_add(x, value, style = NULL, ...)
+
+## S3 method for class 'gg'
+body_add(
+  x,
+  value,
+  width = 6,
+  height = 5,
+  res = 300,
+  style = "Normal",
+  scale = 1,
+  ...
+)
+
+## S3 method for class 'plot_instr'
+body_add(x, value, width = 6, height = 5, res = 300, style = "Normal", ...)
+
+## S3 method for class 'block_pour_docx'
+body_add(x, value, ...)
+
+## S3 method for class 'block_section'
+body_add(x, value, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rdocx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>object to add in the document. Supported objects
+are vectors, data.frame, graphics, block of formatted paragraphs,
+unordered list of formatted paragraphs,
+pretty tables with package flextable, 'Microsoft' charts with package mschart.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods. When
+adding a <code>ggplot</code> object or plot_instr, these arguments will be used
+by png function. See method signatures to see what arguments can be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>paragraph style name. These names are available with function styles_info
+and are the names of the Word styles defined in the base document (see
+argument <code>path</code> from read_docx).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format_fun</code></td>
+<td>
+<p>a function to be used to format values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header</code></td>
+<td>
+<p>display header if TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tcf</code></td>
+<td>
+<p>conditional formatting settings defined by <code>table_conditional_formatting()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alignment</code></td>
+<td>
+<p>columns alignement, argument length must match with columns length,
+values must be "l" (left), "r" (right) or "c" (center).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>height in inches</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>height in inches</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>resolution of the png image in ppi</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>Multiplicative scaling factor, same as in ggsave</p>
+</td>
+</tr>
+</table>
+<h3>Methods (by class)</h3>
+
+
+<ul>
+<li> <p><code>body_add(character)</code>: add a character vector.
+</p>
+</li>
+<li> <p><code>body_add(numeric)</code>: add a numeric vector.
+</p>
+</li>
+<li> <p><code>body_add(factor)</code>: add a factor vector.
+</p>
+</li>
+<li> <p><code>body_add(fpar)</code>: add a fpar object. These objects enable
+the creation of formatted paragraphs made of formatted chunks of text.
+</p>
+</li>
+<li> <p><code>body_add(data.frame)</code>: add a data.frame object with <code>block_table()</code>.
+</p>
+</li>
+<li> <p><code>body_add(block_caption)</code>: add a block_caption object. These objects enable
+the creation of set of formatted paragraphs made of formatted chunks of text.
+</p>
+</li>
+<li> <p><code>body_add(block_list)</code>: add a block_list object.
+</p>
+</li>
+<li> <p><code>body_add(block_toc)</code>: add a table of content (a block_toc object).
+</p>
+</li>
+<li> <p><code>body_add(external_img)</code>: add an image (a external_img object).
+</p>
+</li>
+<li> <p><code>body_add(run_pagebreak)</code>: add a run_pagebreak object.
+</p>
+</li>
+<li> <p><code>body_add(run_columnbreak)</code>: add a run_columnbreak object.
+</p>
+</li>
+<li> <p><code>body_add(gg)</code>: add a ggplot object.
+</p>
+</li>
+<li> <p><code>body_add(plot_instr)</code>: add a base plot with a plot_instr object.
+</p>
+</li>
+<li> <p><code>body_add(block_pour_docx)</code>: pour content of an external docx file with with a block_pour_docx object
+</p>
+</li>
+<li> <p><code>body_add(block_section)</code>: ends a section with a block_section object
+</p>
+</li>
+</ul>
+<h3>Illustrations</h3>
+
+<p><img src="../help/figures/body_add_doc_1.png" width="70%" alt="body_add_doc_1.png"></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">doc_1 &lt;- read_docx()
+doc_1 &lt;- body_add(doc_1, "Table of content", style = "heading 1")
+doc_1 &lt;- body_add(doc_1, block_toc())
+doc_1 &lt;- body_add(doc_1, run_pagebreak())
+doc_1 &lt;- body_add(doc_1, "A title", style = "heading 1")
+doc_1 &lt;- body_add(doc_1, head(iris), style = "table_template")
+doc_1 &lt;- body_add(doc_1, "Another title", style = "heading 1")
+doc_1 &lt;- body_add(doc_1, letters, style = "Normal")
+doc_1 &lt;- body_add(
+  doc_1,
+  block_section(prop_section(type = "continuous"))
+)
+doc_1 &lt;- body_add(doc_1, plot_instr(code = barplot(1:5, col = 2:6)))
+doc_1 &lt;- body_add(
+  doc_1,
+  block_section(prop_section(page_size = page_size(orient = "landscape")))
+)
+print(doc_1, target = tempfile(fileext = ".docx"))
+# print(doc_1, target = "test.docx")
+</code></pre>
+
+
+</div>

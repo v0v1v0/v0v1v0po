@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Predict.OTProb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prediction function for the object returned by <code>OTProb</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>This function provides prediction for test data on the trained <code>OTProb</code> object for class membership probability estimation. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Predict.OTProb(Opt.Trees, XTesting, YTesting)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Opt.Trees</code></td>
+<td>
+ 
+<p>An object of class <code>OptTreesEns</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>XTesting</code></td>
+<td>
+  
+<p>An <code>m x d</code> dimensional training data matrix/frame consiting of test observations where <code>m</code> is the number of observations and <code>d</code> is the number of features. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>YTesting</code></td>
+<td>
+  
+<p>Optional. A vector of length <code>m</code> consisting of class labels for the test data. Should be binary (0,1).
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with values
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Brier.Score </code></td>
+<td>
+<p>Brier Score based on the estimated probabilities and true class label in YTesting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Estimated.Probabilities  </code></td>
+<td>
+<p>A vector of length <code>m</code> consisting of the estimated class membership probabilities for the observation in XTesting</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Zardad Khan &lt;zkhan@essex.ac.uk&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Khan, Z., Gul, A., Perperoglou, A., Miftahuddin, M., Mahmoud, O., Adler, W., &amp; Lausen, B. (2019). Ensemble of optimal trees, random forest and random projection ensemble classification. Advances in Data Analysis and Classification, 1-20.
+</p>
+<p>Liaw, A. and Wiener, M. (2002) “Classification and regression by random forest” R news. 2(3). 18–22.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OTProb</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#load the data
+
+  data(Body)
+  data &lt;- Body
+  
+#Divide the data into training and test parts
+
+  set.seed(9123) 
+  n &lt;- nrow(data)
+  training &lt;- sample(1:n,round(2*n/3))
+  testing &lt;- (1:n)[-training]
+  X &lt;- data[,1:24]
+  Y &lt;- data[,25]
+  
+#Train OTClass on the training data
+
+  Opt.Trees &lt;- OTProb(XTraining=X[training,],YTraining = Y[training],t.initial=200)
+  
+#Predict on test data
+
+  Prediction &lt;- Predict.OTProb(Opt.Trees, X[testing,],YTesting=Y[testing])
+  
+#Objects returned
+
+  names(Prediction)
+  Prediction$Brier.Score
+  Prediction$Estimated.Probabilities
+
+  </code></pre>
+
+
+</div>

@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OOBCurve</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Out of Bag Learning curve</h2>
+
+<h3>Description</h3>
+
+<p>With the help of this function the out of bag learning curve for random forests 
+can be created for any measure that is available in the mlr package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OOBCurve(mod, measures = list(auc), task, data)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>An object of class <code>randomForest</code> or <code>ranger</code>, as that created by the 
+function <code>randomForest</code>/<code>ranger</code> with option <code>keep.inbag = TRUE</code>.
+Alternatively you can also use a randomForest or ranger model trained with <code>train</code> of <a href="https://github.com/mlr-org/mlr">mlr</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measures</code></td>
+<td>
+<p>List of performance measure(s) of mlr to evaluate. Default is auc only.
+See the <a href="https://mlr-org.github.io/mlr/articles/measures.html">mlr tutorial</a> for a list of available measures 
+for the corresponding task.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>task</code></td>
+<td>
+<p>Learning task created by the function <code>makeClassifTask</code> or <code>makeRegrTask</code> of <a href="https://github.com/mlr-org/mlr">mlr</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Original data that was used for training the random forest.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a dataframe with a column for each desired measure.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OOBCurvePars</code> for out-of-bag curves of other parameters.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(mlr)
+library(ranger)
+
+# Classification
+data = getTaskData(sonar.task)
+sonar.task = makeClassifTask(data = data, target = "Class")
+lrn = makeLearner("classif.ranger", keep.inbag = TRUE, par.vals = list(num.trees = 100))
+mod = train(lrn, sonar.task)
+
+# Alternatively use ranger directly
+# mod = ranger(Class ~., data = data, num.trees = 100, keep.inbag = TRUE)
+# Alternatively use randomForest
+# mod = randomForest(Class ~., data = data, ntree = 100, keep.inbag = TRUE)
+
+# Application of the main function
+results = OOBCurve(mod, measures = list(mmce, auc, brier), task = sonar.task, data = data)
+# Plot the generated results
+plot(results$mmce, type = "l", ylab = "oob-mmce", xlab = "ntrees")
+plot(results$auc, type = "l", ylab = "oob-auc", xlab = "ntrees")
+plot(results$brier, type = "l", ylab = "oob-brier-score", xlab = "ntrees")
+
+# Regression
+data = getTaskData(bh.task)
+bh.task = makeRegrTask(data = data, target = "medv")
+lrn = makeLearner("regr.ranger", keep.inbag = TRUE, par.vals = list(num.trees = 100))
+mod = train(lrn, bh.task)
+
+# Application of the main function
+results = OOBCurve(mod, measures = list(mse, mae, rsq), task = bh.task, data = data)
+# Plot the generated results
+plot(results$mse, type = "l", ylab = "oob-mse", xlab = "ntrees")
+plot(results$mae, type = "l", ylab = "oob-mae", xlab = "ntrees")
+plot(results$rsq, type = "l", ylab = "oob-mae", xlab = "ntrees")
+
+</code></pre>
+
+
+</div>

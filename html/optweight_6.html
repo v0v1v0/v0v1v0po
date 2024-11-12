@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optweight.svy.fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitting Function for Optweight for Survey Weights</h2>
+
+<h3>Description</h3>
+
+<p><code>optweight.svy.fit</code> performs the optimization (via <span class="pkg">osqp</span>; Anderson, 2018) for <code>optweight.svy</code> and should, in most coses, not be used directly. No processing of inputs is performed, so they must be given exactly as described below.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optweight.svy.fit(covs,
+                  tols = 0,
+                  targets,
+                  s.weights = NULL,
+                  norm = "l2",
+                  std.binary = FALSE,
+                  std.cont = TRUE,
+                  min.w = 1E-8,
+                  verbose = FALSE,
+                  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>covs</code></td>
+<td>
+
+<p>A matrix of covariates to be targeted. Should must be numeric but does not have to be full rank.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tols</code></td>
+<td>
+
+<p>A vector of target balance tolerance values.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>targets</code></td>
+<td>
+
+<p>A vector of target populaton mean values for each covariate. The resulting weights will yield sample means within <code>tols</code> units of the target values for each covariate. If any target values are <code>NA</code>, the corresponding variable will not be targeted and its weighted mean will be wherever the weights yield the smallest variance. To ensure the weighted mean for a covairate is equal to its unweighted mean (i.e., so that its orginal mean is its target mean), its original mean must be supplied as a target.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s.weights</code></td>
+<td>
+
+<p>A vector of sampling weights. Optimization occurs on the product of the sampling weights and the estimated weights.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+
+<p>A string containing the name of the norm corresponding to the objective function to minimize. The options are <code>"l1"</code> for the L1 norm, <code>"l2"</code> for the L2 norm (the default), and <code>"linf"</code> for the L<code class="reqn">\infty</code> norm. The L1 norm minimizes the average absolute distance between each weight and the mean of the weights; the L2 norm minimizes the variance of the weights; the L<code class="reqn">\infty</code> norm minimizes the largest weight. The L2 norm has a direct correspondence with the effective sample size, making it ideal if this is your criterion of interest.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>std.binary, std.cont</code></td>
+<td>
+
+<p><code>logical</code>; whether the tolerances are in standardized mean units (<code>TRUE</code>) or raw units (<code>FALSE</code>) for binary variables and continuous variables, respectively. The default is <code>FALSE</code> for <code>std.binary</code> because raw proportion differences make more sense than standardized mean difference for binary variables.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.w</code></td>
+<td>
+
+<p>A single <code>numeric</code> value between 0 and 1 for the smallest allowable weight. Some analyses require nonzero weights for all units, so a small, nonzero minimum may be desirable. Doing so will likely (slightly) increase the variance of the resulting weights depending on the magntiude of the minimum. The default is 1e-8, which does not materially change the properties of the weights from a minimum of 0 but prevents warnings in some packages that use weights to estimate treatment effects.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+
+<p>Whether information on the optimization problem solution should be printed. This information contains how many iterations it took to estimate the weights and whether the solution is optimal.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Options that are passed to <code>osqpSettings</code> for use in the <code>par</code> arguments of <code>solve_osqp</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>optweight.svy.fit</code> transforms the inputs into the required inputs for <code>solve_osqp</code>, which are (sparse) matrices and vectors, and then supplies the outputs (the weights, duals variables, and convergence information) back to <code>optweight.svy</code>. No processing of inputs is performed, as this is normally handled by <code>optweight.svy</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>optweight.svy.fit</code> object with the following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>The estimated weights, one for each unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>duals</code></td>
+<td>
+<p>A data.frame containing the dual variables for each covariate. See Zubizarreta (2015) for interpretation of these values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>info</code></td>
+<td>
+<p>The <code>info</code> component of the output of <code>solve_osqp</code>, which contains information on the performance of the optimization at termination.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Noah Greifer
+</p>
+
+
+<h3>References</h3>
+
+<p>Anderson, E. (2018). osqp: Quadratic Programming Solver using the 'OSQP' Library. R package version 0.1.0. <a href="https://CRAN.R-project.org/package=osqp">https://CRAN.R-project.org/package=osqp</a>
+</p>
+<p>Wang, Y., &amp; Zubizarreta, J. R. (2017). Approximate Balancing Weights: Characterizations from a Shrinkage Estimation Perspective. ArXiv:1705.00998 [Math, Stat]. Retrieved from <a href="http://arxiv.org/abs/1705.00998">http://arxiv.org/abs/1705.00998</a>
+</p>
+<p>Zubizarreta, J. R. (2015). Stable Weights that Balance Covariates for Estimation With Incomplete Outcome Data. Journal of the American Statistical Association, 110(511), 910–922. doi: <a href="https://doi.org/10.1080/01621459.2015.1023805">10.1080/01621459.2015.1023805</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optweight.svy</code> which you should use for estimating the balancing weights, unless you know better.
+</p>
+<p><a href="https://osqp.org/docs/index.html">https://osqp.org/docs/index.html</a> for more information on <span class="pkg">osqp</span>, the underlying solver, and the options for <code>solve_osqp</code>.
+</p>
+<p><code>osqpSettings</code> for details on options for <code>solve_osqp</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library("cobalt")
+data("lalonde", package = "cobalt")
+
+covs &lt;- splitfactor(lalonde[c("age", "educ", "race",
+                  "married", "nodegree")],
+                  drop.first = FALSE)
+
+targets &lt;- c(23, 9, .3, .3, .4, .2, .5)
+
+tols &lt;- rep(0, 7)
+
+ows.fit &lt;- optweight.svy.fit(covs,
+                             tols = tols,
+                             targets = targets,
+                             norm = "l2")
+
+#Unweighted means
+apply(covs, 2, mean)
+
+#Weighted means; same as targets
+apply(covs, 2, weighted.mean, w = ows.fit$w)
+
+</code></pre>
+
+
+</div>

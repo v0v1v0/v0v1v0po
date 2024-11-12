@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>par_ts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set parameters for <code>plot_ts()</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>Set parameters for <code>plot_ts()</code> globally
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">par_ts(fromoptions = FALSE, p = NA, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fromoptions</code></td>
+<td>
+<p>logical: Read the list of parameters set in <code>options("par_ts")$par_ts</code>, then the additional parameters set in <code>...</code> are replaced before the list is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>List of the parameters, as returned by the function itself. If given, the additional parameters set in <code>...</code> are replaced before the list is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any of the following parameters can be set replacing the default values:
+</p>
+<p><code>xnm</code> "t": The name of the time
+</p>
+<p><code>legendspace</code> 10:
+Horizontal space for the lengend in character spaces
+</p>
+<p><code>legendcex</code> 1: Scaling of the legend
+</p>
+<p><code>legendrangeshow</code> TRUE: Include the range for each variable in the legend
+</p>
+<p><code>ylimextend</code> c(lower,upper): Extend the ylim for each plot with a proportion, seperately for the lower and upper limit
+</p>
+<p><code>yaxisextend</code> c(lower,upper): Extend the yaxis for each plot with a proportion, seperately for the lower and upper limit
+</p>
+<p><code>mainsline</code> (numeric): with the <code>line</code> for the main in the plots.
+</p>
+<p><code>cex</code> (numeric): The cex to use for the <code>plot_ts</code> plots.
+</p>
+<p><code>plotfun</code>: The function used for plotting, as default <code>lines</code>.
+</p>
+<p><code>xaxisformat</code> (character): The format of the xaxis, see <code>strptime()</code>.
+</p>
+<p><code>colorramp</code> colorRampPalette: The colorramp used for setting multiple colors in each plot</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Often in a report some plot parameters must be set for all plots, which is done with <code>par()</code>.
+</p>
+<p>The parameters which are general for <code>plot_ts()</code> can be set and saved in <code>options()</code>,
+and they will then be applied as default in all calls to plot_ts(). See the examples how to do this.
+</p>
+<p>If any of these parameters are given to <code>plot_ts()</code>, then it will be used over the default.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of the parameters above, which can be set globally (see examples) or passed to <code>plot_ts</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Data for plots
+D &lt;- subset(Dbuilding, 1:192)
+
+# See the parameters which can be set
+p &lt;- par_ts()
+names(p)
+p$xnm
+
+# Using the default values
+plot_ts(D, c("heatload","Ta"), kseq=1:24)
+
+# Set the parameters directly
+plot_ts(D, c("heatload","Ta"), kseq=1:24, legendcex=0.8, legendspace=8)
+
+# Set parameters to be given in a list
+p &lt;- par_ts()
+p$legendcex &lt;- 0.8
+p$legendspace &lt;- 8
+
+# Use those parameters
+plot_ts(D, c("heatload","Ta"), kseq=1:24, p=p)
+
+# Set globally (if not set specifed the default values will be used)
+options(par_ts=p)
+
+# Now the global parameters will be used
+plot_ts(D, c("heatload","Ta"), kseq=1:24)
+
+# Still providing a parameter directly it will used, e.g. change the plotting function
+plot_ts(D, c("heatload","Ta"), kseq=1:24, plotfun=points)
+
+# Control more precisely the plotting function
+plot_ts(D, c("heatload","Ta"), kseq=1:24, plotfun=function(x, ...){ points(x, type="b", ...)})
+
+# Another colorramp function
+p$colorramp &lt;- rainbow
+options(par_ts=p)
+plot_ts(D, c("heatload","Ta"), kseq=1:24)
+
+</code></pre>
+
+
+</div>

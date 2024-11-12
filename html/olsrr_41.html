@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_plot_resid_stud_fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Deleted studentized residual vs fitted values plot</h2>
+
+<h3>Description</h3>
+
+<p>Plot for detecting violation of assumptions about residuals such as
+non-linearity, constant variances and outliers. It can also be used to
+examine model fit.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_plot_resid_stud_fit(model, threshold = NULL, print_plot = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Threshold for detecting outliers. Default is 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_plot</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, prints the plot else returns a plot object.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Studentized deleted residuals (or externally studentized residuals) is the
+deleted residual divided by its estimated standard deviation. Studentized
+residuals are going to be more effective for detecting outlying Y
+observations than standardized residuals. If an observation has an externally
+studentized residual that is larger than 2 (in absolute value) we can call
+it an outlier.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>ols_plot_resid_stud_fit</code> returns  a list containing the
+following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>outliers</code></td>
+<td>
+<p>a <code>data.frame</code> with observation number, fitted values and deleted studentized
+residuals that exceed the <code>threshold</code> for classifying observations as
+outliers/influential observations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p><code>threshold</code> for classifying an observation as an outlier/influential observation</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>ols_plot_resid_lev()</code>, <code>ols_plot_resid_stand()</code>,
+<code>ols_plot_resid_stud()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">model &lt;- lm(mpg ~ disp + hp + wt + qsec, data = mtcars)
+ols_plot_resid_stud_fit(model)
+ols_plot_resid_stud_fit(model, threshold = 3)
+
+</code></pre>
+
+
+</div>

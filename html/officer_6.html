@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>block_caption</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Caption block</h2>
+
+<h3>Description</h3>
+
+<p>Create a representation of a
+caption that can be used for cross reference.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">block_caption(label, style = NULL, autonum = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>label</code></td>
+<td>
+<p>a scalar character representing label to display</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>paragraph style name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>autonum</code></td>
+<td>
+<p>an object generated with function run_autonum</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other block functions for reporting: 
+<code>block_list()</code>,
+<code>block_pour_docx()</code>,
+<code>block_section()</code>,
+<code>block_table()</code>,
+<code>block_toc()</code>,
+<code>fpar()</code>,
+<code>plot_instr()</code>,
+<code>unordered_list()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(officer)
+
+run_num &lt;- run_autonum(seq_id = "tab", pre_label = "tab. ",
+  bkm = "mtcars_table")
+caption &lt;- block_caption("mtcars table",
+  style = "Normal",
+  autonum = run_num
+)
+
+doc_1 &lt;- read_docx()
+doc_1 &lt;- body_add(doc_1, "A title", style = "heading 1")
+doc_1 &lt;- body_add(doc_1, "Hello world!", style = "Normal")
+doc_1 &lt;- body_add(doc_1, caption)
+doc_1 &lt;- body_add(doc_1, mtcars, style = "table_template")
+
+print(doc_1, target = tempfile(fileext = ".docx"))
+</code></pre>
+
+
+</div>

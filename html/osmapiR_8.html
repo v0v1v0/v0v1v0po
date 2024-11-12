@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osmchange_delete</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+<code>osmchange</code> to delete existing OSM objects</h2>
+
+<h3>Description</h3>
+
+<p>Prepare data to delete OSM objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osmchange_delete(x, delete_if_unused = FALSE, format = c("R", "osc", "xml"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A osmapi_objects or <code>data.frame</code> with the columns <code>type</code> and <code>id</code> for the objects to delete. Other columns
+will be ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delete_if_unused</code></td>
+<td>
+<p>If <code>TRUE</code>, the <code style="white-space: pre;">⁠if-unused⁠</code> attribute will be added (see details). Can be a vector of length
+<code>nrow(x)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default), <code>"osc"</code> (<code>"xml"</code> is a synonym for <code>"osc"</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code style="white-space: pre;">⁠if-unused⁠</code> attribute is present, then the delete operation(s) in this block are conditional and will only be
+executed if the object to be deleted is not used by another object. Without the <code style="white-space: pre;">⁠if-unused⁠</code>, such a situation would
+lead to an error, and the whole diff upload would fail. Setting the attribute will also cause deletions of already
+deleted objects to not generate an error.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>format = "R"</code>, returns a <code>osmapi_OsmChange</code> data frame with one OSM edition per row.
+If <code>format = "osc"</code> or <code>format = "xml"</code>, returns a xml2::xml_document following the
+<a href="https://wiki.openstreetmap.org/wiki/OsmChange">OsmChange format</a> that can be saved with <code>xml2::write_xml()</code> and
+opened in other applications such as JOSM.
+</p>
+<p>The results are  ready to send the editions to the servers with <code>osm_diff_upload_changeset()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other OsmChange's functions: 
+<code>osm_diff_upload_changeset()</code>,
+<code>osm_download_changeset()</code>,
+<code>osmchange_create()</code>,
+<code>osmchange_modify()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">obj_id &lt;- osmapi_objects(data.frame(
+  type = c("way", "way", "relation", "node"),
+  id = c("722379703", "629132242", "8387952", "4739010921")
+))
+osmchange_del &lt;- osmchange_delete(obj_id)
+</code></pre>
+
+
+</div>

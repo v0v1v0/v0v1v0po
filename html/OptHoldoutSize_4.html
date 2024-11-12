@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>aspre_k2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cost estimating function in ASPRE simulation</h2>
+
+<h3>Description</h3>
+
+<p>Estimate cost at a given holdout set size in ASPRE model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">aspre_k2(
+  n,
+  X,
+  PRE,
+  seed = NULL,
+  pi_PRE = 1426/58974,
+  pi_intervention = 0.1,
+  alpha = 0.37
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Holdout set size at which to estimate k_2 (cost)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Matrix of predictors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PRE</code></td>
+<td>
+<p>Vector indicating PRE incidence</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Random seed; set before starting or set to NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pi_PRE</code></td>
+<td>
+<p>Population prevalence of PRE if not prophylactically treated. Defaults to empirical value 1426/58974</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pi_intervention</code></td>
+<td>
+<p>Proportion of the population on which an intervention will be made. Defaults to 0.1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Reduction in PRE risk with intervention. Defaults to empirical value 0.37</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Estimated cost
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Simulate
+set.seed(32142)
+
+N=1000; p=15
+X=matrix(rnorm(N*p),N,p); PRE=rbinom(N,1,prob=logit(X%*% rnorm(p)))
+aspre_k2(1000,X,PRE)
+</code></pre>
+
+
+</div>

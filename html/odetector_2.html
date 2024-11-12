@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>detect.outliers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Detect outliers using typicality degrees</h2>
+
+<h3>Description</h3>
+
+<p>The <code>detect.outliers</code> function finds the outliers by using four different approaches based on the typicality degrees of the data objects in a data set.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">detect.outliers (x, k, alpha=0.05, alpha2=0.2, tsc="m1")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class ‘ppclust’ containing the clustering results from a possibilistic and fuzzy clustering algorithm in the package <span class="pkg">ppclust</span>. Alternatively, a numeric data frame or matrix containing data set can be input to generate the object of class ‘ppclust’ internally.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>an integer specifying the number of cluster. If the argument <code>x</code> specified as the data frame or matrix <code>k</code> should be also specified. Its default value is 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>a number to specify the threshold typicality value to be used to detect the outliers. If the typicality value of an object is less than this value the object is determined as an outlier. The default value of <code>alpha</code> is 0.05. Although the higher value <code>alpha</code> leads to find more outliers it should not be increased more than 0.1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha2</code></td>
+<td>
+<p>a number specifying the threshold typicality value to be used with the Approach 2 in order to detect the outliers. The objects which the rows sums of their typicality degrees are less than this value are evaluated as the outliers. The default value of <code>alpha2</code> is 0.2. For more outliers the value of this argument should be increased.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tsc</code></td>
+<td>
+<p>a string specifying the method to determine the size of small clusters for finding collective outliers. The default value is <span class="option">m1</span> and the alternative is <span class="option">m2</span>. See the <em>Details</em> for the details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>detect.outliers</code> computes the outliers by using four different approaches. The first approach (Approach 1) assumes that a data object is an outlier if its average typicality is less than the <code>alpha</code>, a user-defined threshold typicality degree. If the sum of typicality degrees of an object to all clusters is less than the <code>alpha2</code>, a user-defined threshold value for typicalities row sums. In the third approach (Approach 3) an object is labeled as an outlier, if its typicality to all clusters is less than the <code>alpha</code>. The last approach (Approach 4) is that all members of a small cluster are the collective outliers and can be labeled as the outliers. 
+</p>
+<p>With Approach 4, the members of a small clusters are considered as the collective outliers. In the function <code>detect.outliers</code>, two different methods are available to compute the threshold small cluster size (<code>tsc</code>). In the following equations, the first one has been proposed by Santos-Pereira &amp; Pires(2002) and works good for the small data sets. The second is a novel method is proposed by the authors of this document and works better than the previous one for the larger data sets.
+</p>
+<p style="text-align: center;"><code class="reqn">tsc_1 = 2 p + 2</code>
+</p>
+ 
+<p style="text-align: center;"><code class="reqn">tsc_2 = \frac{log_2 n}{k} \; log_2 p</code>
+</p>
+
+<p>where:
+<code>p</code> is the number of features,
+<code>k</code> is the number of clusters,
+<code>n</code> is the number of objects.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of class ‘outliers’ containing the following items:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>a numeric data matrix containing the processed data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outliers1</code></td>
+<td>
+<p>a numeric vector containing the labels (row indexes) of outliers found by the Approach 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outliers2</code></td>
+<td>
+<p>a numeric vector containing the labels (row indexes) of outliers found by the Approach 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outliers3</code></td>
+<td>
+<p>a numeric vector containing the labels (row indexes) of outliers found by the Approach 3.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outliers4</code></td>
+<td>
+<p>a numeric vector containing the labels (row indexes) objects in the small clusters to be treated as outliers.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Zeynel Cebeci</p>
+
+
+<h3>References</h3>
+
+<p>Santos-Pereira, C.M. &amp; Pires, A.M. (2002), Detection of outliers in multivariate data: A method based on clustering and robust estimators. In <em>Haerdle W., Roenz B. (eds) Compstat. Physica</em>, Heidelberg. pp. 291-296.
+</p>
+<p>Wu, X., Wu, B., Sun, J. &amp; Fu, H. (2010). Unsupervised possibilistic fuzzy clustering. <em> J. of Information &amp; Computational Sci.</em>, 7 (5): 1075-1080.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plot.outliers</code>,
+<code>pairs.outliers</code>,
+<code>print.outliers</code>,
+<code>remove.outliers</code>,
+<code>summary.outliers</code>,
+<code>upfc</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Load the dataset x3p4c and extract the first three columns 
+data(x3p4c)
+x &lt;- x3p4c[,1:3]
+
+# For 4 clusters, run Unsupervised Possibilistic 
+# Fuzzy C-Means (UPFC) algorithm of the package ppclust 
+res.upfc &lt;- ppclust::upfc(x, centers=4)
+
+# Detect the outliers with a ppclust object
+out &lt;- detect.outliers(res.upfc)
+ 
+# Summarize and plot the outliers
+summary(out)
+plot(out)
+
+# Detect the outliers with a higher possibility 
+out &lt;- detect.outliers(res.upfc, alpha=0.1)
+ 
+# Summarize and plot the outliers
+summary(out)
+plot(out)
+
+# Detect the outliers with an original data frame or matrix
+x &lt;- x3p4c[,1:3]
+head(x)
+out &lt;- detect.outliers(x=x, k=4, alpha=0.1)
+ 
+# Summarize and plot the outliers
+summary(out)
+plot(out)
+
+# Summarize and plot the outliers
+summary(out)
+plot(out)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,56 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fallthrough</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fallthrough function</h2>
+
+<h3>Description</h3>
+
+<p>Permit a pattern matching to continue even if its argument is executed.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fallthrough(fun)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>A result function used in <code>make_opt()</code></p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p><code>fallthrough(fun)</code> can be applied to a result function <code>fun</code> inside a 
+<code>match_with()</code> pattern.
+If there is a match, this will make the pattern matching
+continue through the other conditions at the end of the result function <code>fun</code>.
+<code>match_with(variable,
+pattern, fallthrough(result-function),
+...</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+
+a &lt;- 4
+match_with(a,
+  . %&gt;% if (. %% 2 == 0)., 
+  fallthrough( function() "This number is even" ),
+  . %&gt;% if ( sqrt(.) == round(sqrt(.)) ).,  
+  function() "This number is a perfect square"
+)
+## [1] "This number is even"   "This number is a perfect square"
+</code></pre>
+
+
+</div>

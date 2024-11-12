@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.OHPL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make predictions based on the fitted OHPL model</h2>
+
+<h3>Description</h3>
+
+<p>Make predictions on new data by an OHPL model object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'OHPL'
+predict(object, newx, ncomp = NULL, type = "response", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Object of class <code>OHPL</code> fitted by <code>OHPL()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newx</code></td>
+<td>
+<p>Predictor matrix of the new data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncomp</code></td>
+<td>
+<p>Optimal number of components.
+If is <code>NULL</code>, the optimal number of components
+stored in the model object will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Prediction type.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Numeric matrix of the predicted values.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># generate simulation data
+dat &lt;- OHPL.sim(
+  n = 100, p = 100, rho = 0.8,
+  coef = rep(1, 10), snr = 3, p.train = 0.5,
+  seed = 1010
+)
+
+# split training and test set
+x &lt;- dat$x.tr
+y &lt;- dat$y.tr
+x.test &lt;- dat$x.te
+y.test &lt;- dat$y.te
+
+# fit the OHPL model
+fit &lt;- OHPL(x, y, maxcomp = 3, gamma = 0.5, G = 10, type = "max")
+# make predictions
+y.pred &lt;- predict(fit, x.test)
+y.pred
+</code></pre>
+
+
+</div>

@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>patternSubstitution</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Remove a pattern from a character vector </h2>
+
+<h3>Description</h3>
+
+<p>Removes a pattern from a character vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  txt %-~% pattern
+  txt %-~|% pattern
+  txt %o~|% pattern
+  
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>txt</code></td>
+<td>
+<p> text to manipulate </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p> regular expression </p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>%-~%</code> : Removes the pattern <code>rx</code> from the character vector <code>x</code>. 
+It is equivalent of using <code>gsub( rx, "", x )</code>.
+</p>
+<p><code>%-~|%</code> does a two-step operation. First, it selects the elements of 
+<code>x</code> that match the pattern <code>rx</code> and then it removes the pattern from the 
+rest.
+</p>
+<p><code>%o~|%</code> does a slightly more complicated two-step operation. It first 
+gets the elements of <code>txt</code> that match the <code>pattern</code> and then keeps 
+only the part that matches the pattern. Similar to the <code>grep -o</code> in recent 
+versions of unix. 
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>%-~%</code> does the substitution via the <code>gsub</code> function. One can 
+pass arguments to the <code>gsub</code> function using the <code>operators.gsub</code> option
+declared by this package. See <code>%but%</code> for a description of this 
+mechanism. 
+</p>
+<p>The filtering in <code>%-~|%</code> is performed by <code>%~|%</code> and therefore
+options can be passed to <code>regexpr</code> using the <code>operators.regexpr</code> option.
+</p>
+<p>For <code>%o~|%</code>, if the pattern given does not contain opening and closing 
+round brackets, the entire matching space is retained, otherwise only the part that
+is contained between the brackets is retained, see the example below.
+</p>
+<p><code>%s~%</code> is an attempt to provide some of the functionnality of the 
+unix's <code>sed</code>. The <code>pattern</code> is split by "/" and used as follows: 
+the first part is the regular expression to replace, the second is the 
+replacement, and the (optional) third gives modifiers to the <code>gsub</code> function
+used to perform the replacement. Modifiers are passed to <code>gsub</code> with
+the <code>%but%</code> operator. The "g" modifier can also be used in order
+to control if the <code>gsub</code> function is used for global replacement or the <code>sub</code>
+function to only replace the first match. <em>At the moment "/" cannot be used 
+in the regular expressions</em>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Romain Francois &lt;francoisromain@free.fr&gt; </p>
+
+
+<h3>See Also</h3>
+
+ <p>grep, gsub </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">                        
+  txt &lt;- c("arm","foot","lefroo", "bafoobar")
+  txt %-~% "foo"
+  txt %-~|% "foo"
+  
+  ### Email of the R core team members
+  rcore &lt;- readLines(file.path(R.home("doc"),"AUTHORS")) 
+  rcore 
+  
+  ### or this way
+  # angle brackets are retained here
+  rcore %o~|% "&lt;.*@.*&gt;"
+  rcore %o~|% "&lt;.*@.*&gt;" %-~% "[&lt;&gt;]"
+  
+  
+  # allows to perform the match using &lt; and &gt; but strips them from the result
+  rcore %o~|% "&lt;(.*@.*)&gt;"
+  
+  # really silly english to french translator
+  pinks &lt;- colors() %~|% "pink"
+  pinks %s~% "/pink/rose/"
+  gsub( "pink", "rose", pinks )
+  
+  # perl regex pink shouter
+  pinks %s~% "/(pink)/\\U\\1/p"
+  gsub( "(pink)", "\\U\\1", pinks, perl = TRUE )
+
+  # see ?gsub
+  gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", "a test of capitalizing", perl=TRUE)
+  "a test of capitalizing" %s~% "/(\\w)(\\w*)/\\U\\1\\L\\2/gp"
+  
+</code></pre>
+
+
+</div>

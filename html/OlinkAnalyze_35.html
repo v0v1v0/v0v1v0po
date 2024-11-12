@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_normalization_bridge</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bridge normalization of all proteins between two NPX projects.</h2>
+
+<h3>Description</h3>
+
+<p>Normalizes two NPX projects (data frames) using shared samples.<br><br></p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_normalization_bridge(
+  project_1_df,
+  project_2_df,
+  bridge_samples,
+  project_1_name = "P1",
+  project_2_name = "P2",
+  project_ref_name = "P1"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>project_1_df</code></td>
+<td>
+<p>Data frame of the first project (required).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project_2_df</code></td>
+<td>
+<p>Data frame of the second project (required).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bridge_samples</code></td>
+<td>
+<p>Named list of 2 arrays containing SampleID of shared
+samples to be used for the calculation of adjustment factor. The
+names of the two arrays should be DF1 and DF2 corresponding to projects 1
+and 2, respectively. Arrays should be of equal length and index of each entry
+should correspond to the same sample. (required)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project_1_name</code></td>
+<td>
+<p>Name of the first project (default: P1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project_2_name</code></td>
+<td>
+<p>Name of the second project (default: P2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project_ref_name</code></td>
+<td>
+<p>Name of the project to be used as reference set.
+Needs to be one of the project_1_name or project_2_name. It marks the
+project to which the other project will be adjusted to (default: P1).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is a wrapper of olink_normalization.<br><br></p>
+<p>In bridging normalization one of the projects is adjusted to another using
+shared samples (bridge samples). It is not necessary for the shared
+samples to be named the same in each project. Adjustment between the two
+projects is made using the median of the paired differences between the
+shared samples. The two data frames are inputs project_1_df and project_2_df,
+the one being adjusted to is specified in the input project_ref_name and the
+shared samples are specified in bridge_samples.<br><br></p>
+
+
+<h3>Value</h3>
+
+<p>A "tibble" of NPX data in long format containing normalized NPX
+values, including adjustment factors and name of project.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+npx_df1 &lt;- npx_data1 |&gt;
+  dplyr::filter(!stringr::str_detect(SampleID, "CONTROL_")) |&gt;
+  dplyr::select(-Project) |&gt;
+  dplyr::mutate(Normalization = "Intensity")
+npx_df2 &lt;- npx_data2 |&gt;
+  dplyr::filter(!stringr::str_detect(SampleID, "CONTROL_")) |&gt;
+  dplyr::select(-Project) |&gt;
+  dplyr::mutate(Normalization = "Intensity")
+
+# Find overlapping samples, but exclude Olink control
+overlap_samples &lt;- dplyr::intersect(unique(npx_df1$SampleID),
+                                    unique(npx_df2$SampleID))
+overlap_samples_list &lt;- list("DF1" = overlap_samples,
+                             "DF2" = overlap_samples)
+
+# Normalize
+olink_normalization_bridge(project_1_df = npx_df1,
+                           project_2_df = npx_df2,
+                           bridge_samples = overlap_samples_list,
+                           project_1_name = "P1",
+                           project_2_name = "P2",
+                           project_ref_name = "P1")
+
+
+</code></pre>
+
+
+</div>

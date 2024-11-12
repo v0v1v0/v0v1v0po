@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>IsotopicDistributionN</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Isotopic Distribution of a Nitrogen-15 Labeled Peptide.</h2>
+
+<h3>Description</h3>
+
+<p>Simulates the isotopic distribution of a nitrogen-15 labeled peptide.  Intended for peptides from proteins grown in media with, for example, nitrogen-15 labeled ammonium chloride as the only nitrogen source.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">IsotopicDistributionN(sequence, incorp, IAA = TRUE, charge = 1, 
+                      custom = list(code = NULL, elements = NULL))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sequence</code></td>
+<td>
+<p>character vector specifying the amino acid sequence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incorp</code></td>
+<td>
+<p>numeric value from 0 to 1, specifying the fraction of nitrogen-15.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>IAA</code></td>
+<td>
+<p>logical. <code>TRUE</code> specifies iodoacetylated cysteine and <code>FALSE</code> specifies unmodified cystine.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>charge</code></td>
+<td>
+<p>numeric value specifying the number of positive
+charges. Must be 1, 2, or 3. One proton per charge is added to the
+amino acid sequence (<code class="reqn">[M + nH]^{n+}</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>custom</code></td>
+<td>
+<p>a list specifying a user defined residue as <code>custom = list(code, elements)</code>, where <code>code</code> is a one letter character vector representing the custom residue and <code>elements</code> is a vector of the number of elements in the character vector, with the indicies equal to C,H,N,O,S,or P.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The amino acid residues must be specified by the one letter codes defined in the help for <code>Digest</code>.  If a custom residue code is identical to a predefined residue code, the custom residue will NOT be used in place of the predefined residue; doing so will cause errors.
+</p>
+<p>The natural nitrogen-15 incorporation is 0.00368. 
+</p>
+<p>The argument <code>IAA</code> specifies treatment of the protein with iodoacetamide.  This treatment produces iodoacetylated cysteine residues (elemental formula C5H8N2O2S).  The nitrogen(s) added is not labeled.
+</p>
+<p>The algorithm used in this function is based on <code>sample</code>, and will give a slightly different result each time it is run.  It is similar to the algorithm used in reference 1.  <code>IsotopicDistributionN</code> has not been tested for sequences over approximately 3000 amu and charges greater that 3+.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the following column names.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>mz</code></td>
+<td>
+<p>the <em>m/z</em> value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intensity</code></td>
+<td>
+<p>the number of counts at each <em>m/z</em> value.  The total is 10000.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent</code></td>
+<td>
+<p>the intensity at each <em>m/z</em> value, expressed as a percent of the maximum intensity.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Nathan G. Dodder</p>
+
+
+<h3>References</h3>
+
+<p>1. "Method for Estimating the Isotopic Distributions of Metabolically Labeled Proteins by MALDI-TOFMS: Application to NMR Samples." Choudhary K, Spicer VL, Donald LJ, Duckworth HW, Ens W, Loewen PC, Standing KG, <em>Analytical Chemistry</em>, 2006, 78, 5419-5423.
+</p>
+<p>2. "Perturbation and Interpretation of Nitrogen Isotope Distribution Patterns in Proteomics" Snijders APL, de Koning B, Wright PC, <em>Journal of Proteome Research</em>, 2005, 4, 2185-2191.
+</p>
+<p>3. "Measurement of the Isotope Enrichment of Stable Isotope-Labeled Proteins Using High-Resolution Mass Spectra of Peptides" MacCoss MJ, Wu CC, Matthews DE, and Yates III JR, <em>Analytical Chemistry</em>, 2005, 77, 7646-7653.
+</p>
+<p>The relative atomic masses of the isotopes are from the NIST Physical Reference Data Website <a href="http://physics.nist.gov/PhysRefData/Compositions/">http://physics.nist.gov/PhysRefData/Compositions/</a>.  The molar mass of a proton (H+) is from the NIST CODATA Website <a href="http://physics.nist.gov/cuu/Constants/index.html">http://physics.nist.gov/cuu/Constants/index.html</a>.
+</p>
+<p>Note that in reference 3 "a biologically relevant 13C/12C isotope ratio of 1.096% was used instead of the more carbonate specific ratio of 1.112%."  The 13C/12C ratio used by <code>IsotopicDistributionN</code> is 1.081%.  
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>IsotopicDistribution</code>, <code>IsotopicDistributionHDX</code>, <code>sample</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## simulate a peptide with 0.368 to 100 percent incorporation and plot
+dn &lt;- IsotopicDistributionN("NECFLQHK", incorp = 0.00368)
+dn$t &lt;- "incorp = 0.368%"
+d50 &lt;- IsotopicDistributionN("NECFLQHK", incorp = 0.5)
+d50$t &lt;- "incorp = 50%"
+d99 &lt;- IsotopicDistributionN("NECFLQHK", incorp = 0.99)
+d99$t &lt;- "incorp = 99%"
+x &lt;- rbind(dn, d50, d99)
+library(lattice)
+xyplot(percent ~ mz | t, data = x,
+    type = "h", 
+    xlab = "m/z", 
+    ylab = "intensity (%)",
+    main = "Isotopic distribution of peptide NECFLQHK with 
+            varying nitrogen-15 incorporation")
+## Not run:          
+## simulate peptide DVFLGMFLYPYAR with oxidized methionine
+IsotopicDistributionN("DVFLGmFLYPYAR", incorp = 0.5, 
+                      custom = list(code = "m", 
+                                    elements = c(C=5, H=9, N=1, O=2, S=1)))
+
+## End(Not run)
+
+
+
+
+
+
+
+</code></pre>
+
+
+</div>

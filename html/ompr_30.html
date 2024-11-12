@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_constraint</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a constraint</h2>
+
+<h3>Description</h3>
+
+<p>Add one or more constraints to the model using quantifiers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_constraint(.model, .constraint_expr, ..., .show_progress_bar = TRUE)
+
+add_constraint_(
+  .model,
+  .constraint_expr,
+  ...,
+  .dots,
+  .show_progress_bar = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.model</code></td>
+<td>
+<p>the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.constraint_expr</code></td>
+<td>
+<p>the constraint. Must be a linear (in)equality with
+operator "&lt;=", "==" or "&gt;=".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>quantifiers for the indexed variables. For all combinations of
+bound variables a new constraint is created. In addition
+you can add filter expressions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.show_progress_bar</code></td>
+<td>
+<p>displays a progressbar when adding multiple
+constraints</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.dots</code></td>
+<td>
+<p>Used to work around non-standard evaluation.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a Model with new constraints added
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+MIPModel() %&gt;%
+  add_variable(x[i], i = 1:5) %&gt;%
+  # creates 5 constraints
+  add_constraint(x[i] &gt;= 1, i = 1:5) %&gt;%
+  # you can also use filter expressions
+  add_constraint(x[i] &gt;= 1, i = 1:5, i %% 2 == 0) %&gt;%
+  # and depent on other indexes
+  add_constraint(x[j] &gt;= 1, i = 1:10, j = 1:i, j &lt;= 5)
+</code></pre>
+
+
+</div>

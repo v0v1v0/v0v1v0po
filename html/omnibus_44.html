@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>maxRuns</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Maximum number of continuous "runs" of values meeting a particular condition</h2>
+
+<h3>Description</h3>
+
+<p>Consider an ordered set of values, say 0, 4, 0, 0, 0, 2, 0, 10. We can ask, "What is the number of times in which zeros appear successively?" This function can answer this question and similar ones. What is considered a "run" is defined by a user-supplied function that must have a <code>TRUE</code>/<code>FALSE</code> output. For example, a "run" could be any succession of values less than two, in which case the criterion function would be <code>function(x) &lt; 2</code>, or any succession of values not equal to 0, in which case the function would be <code>function(x) x != 0</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">maxRuns(x, fx, args = NULL, failIfAllNA = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Vector of numeric, character, or other values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fx</code></td>
+<td>
+<p>A function that returns <code>TRUE</code>, <code>FALSE</code>, or (optionally) <code>NA</code>. The function must use <code>x</code> as its first argument. For example, <code>function(x) x == 0</code> is allowable, but <code>function(y) y == 0</code> is not. Values that count as <code>TRUE</code> will be counted toward a run.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>args</code></td>
+<td>
+<p>A <em>list</em> object with additional arguments to supply to the function <code>fx</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>failIfAllNA</code></td>
+<td>
+<p>If <code>TRUE</code>, fail if all values are <code>NA</code> after being evaluated by <code>fx</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Lengths of successive runs of elements that meet the criterion. A single value of 0 indicates no conditions meet the criterion.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- c(1, 4, 0, 0, 0, 2, 0, 10)
+fx &lt;- function(x) x == 0
+maxRuns(x, fx)
+
+fx &lt;- function(x) x &gt; 0
+maxRuns(x, fx)
+ 
+fx &lt;- function(x) x &gt; 0 &amp; x &lt; 5
+maxRuns(x, fx)
+
+x &lt;- c(1, 4, 0, 0, 0, 2, 0, 10)
+fx &lt;- function(x, th) x == th
+maxRuns(x, fx, args=list(th=0))
+
+# "count" NA as an observation 
+x &lt;- c(1, 4, 0, 0, 0, NA, 0, 10)
+fx &lt;- function(x, th) ifelse(is.na(x), FALSE, x == th)
+maxRuns(x, fx, args=list(th=0))
+ 
+# include NAs as part of a run
+x &lt;- c(1, 4, 0, 0, 0, NA, 0, 10)
+fx &lt;- function(x, th) ifelse(is.na(x), TRUE, x == th)
+maxRuns(x, fx, args=list(th=0))
+ 
+</code></pre>
+
+
+</div>

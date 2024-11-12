@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_create_gpx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create GPS trace</h2>
+
+<h3>Description</h3>
+
+<p>Use this to upload a GPX file or archive of GPX files. Requires authentication.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_create_gpx(
+  file,
+  description,
+  tags,
+  visibility = c("private", "public", "trackable", "identifiable")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>The GPX file path containing the track points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>description</code></td>
+<td>
+<p>The trace description. Cannot be empty.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tags</code></td>
+<td>
+<p>A string containing tags for the trace. Can be empty.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>visibility</code></td>
+<td>
+<p>One of the following: <code>private</code>, <code>public</code>, <code>trackable</code>, <code>identifiable</code>. For explanations see
+<a href="https://www.openstreetmap.org/traces/mine">OSM trace upload page</a> or
+<a href="https://wiki.openstreetmap.org/wiki/Visibility_of_GPS_traces">Visibility of GPS traces</a>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that for successful processing, the file must contain trackpoints (<code style="white-space: pre;">⁠&lt;trkpt&gt;⁠</code>), not only waypoints, and the
+trackpoints must have a valid timestamp. Since the file is processed asynchronously, the call will complete
+successfully even if the file cannot be processed. The file may also be a .tar, .tar.gz or .zip containing multiple
+gpx files, although it will appear as a single entry in the upload log.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A number representing the ID of the new gpx.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other edit GPS traces' functions: 
+<code>osm_delete_gpx()</code>,
+<code>osm_update_gpx()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">vignette("how_to_edit_gps_traces", package = "osmapiR")
+</code></pre>
+
+
+</div>

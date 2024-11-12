@@ -1,0 +1,156 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>birdrec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Bird Species Detections
+</h2>
+
+<h3>Description</h3>
+
+<p>Data set listing 156 species (mostly birds, few amphibians and mammals) detected
+at 127 sites (367 point locations) in Alberta, Canada in 2015,
+using autonomous recording technology (ARU; Wildlife Acoustic Song Meter)
+for sound recordings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data("birdrec")</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A list with 3 elements with matching ordering:
+<code>xtab</code> is a sample x species matrix with number of detections,
+<code>samp</code> is a data frame with sample level attributes.
+<code>taxa</code> is a data frame with species level attributes.
+</p>
+<p>Multiple random recordings at each location were selected
+according to a stratified random design
+(based on combination of <code>TOY</code> and <code>TOD</code>).
+These recordings were listened to by trained analysts
+and species were identified based on auditory cues.
+</p>
+<p>This data set lists detections from the first 1-minute segment of each
+recording. Dates for the 3967 1-minute segments
+range between 2015-03-31 and 2015-07-29.
+Variables in <code>birdrec$samp</code> are the following:
+</p>
+<p><code>PKEY</code>: primary key for location/time combinations.
+</p>
+<p><code>POINT</code>: unique spatial location IDs, each point had
+its own ARU unit.
+</p>
+<p><code>SITE</code>: site ID (1-4 ARU units deployed per site).
+</p>
+<p><code>YEAR</code>: year, 2015.
+</p>
+<p><code>MONTH</code>: month from 3 (March) to 7 (July).
+</p>
+<p><code>MDAY</code>: day of month, 1-31.
+</p>
+<p><code>HOUR</code>: 24-hour of day, values between 0-12.
+</p>
+<p><code>MINUTE</code>: minute, 0-59.
+</p>
+<p><code>YDAY</code>: ordinal day of the year, 89-209.
+</p>
+<p><code>RAIN</code>, <code>WIND</code>, <code>INDUSTRY</code>, <code>NOISE</code>:
+level of rain, wind, industrial noise, and background noise.
+0 = no; 1 = light; 2 = moderate; 3 = heavy.
+</p>
+<p><code>MICROPHONE</code>:
+Every recording contains a certain level of background static due to the
+pre-amplifiers; however, problems, such as, electrostatic discharge on the
+microphones, faulty wiring, poorly installed microphones and/or
+missing microphones can occur causing excess static or dead channels.
+0 = no microphone related issues;
+1 = left microphone cuts out intermittently;
+2 = right microphone cuts out intermittently;
+3 = both microphones cut out intermittently;
+4 = left channel failed;
+5 = right channel failed;
+6 = both channels failed (no cases in the data set);
+7 = left side extra static;
+8 = right side extra static;
+9 = both sides extra static;
+10 = other issues;
+11 = unbalanced channels.
+</p>
+<p><code>TOY</code>: time of year intervals used for stratified random
+selection of dates. 8 intervals divided into 3 major units
+(early, mid, and late breeding season; <code>YDAY</code> 140 and 180 were used
+as threshold between the major units).
+</p>
+<p><code>TOD</code>: time of day, midnight (<code>HOUR</code> = 0) or
+morning (<code>HOUR</code> &gt; 0).
+</p>
+<p>Variables in <code>birdrec$taxa</code> are the following:
+<code>Species</code>, <code>CommonName</code>, <code>ScientificName</code>,
+<code>Family</code>, <code>Order</code>, <code>Class</code>,
+and <code>MigratoryBehaviour</code>.
+</p>
+<p>Methodology and metadata is described in ABMI (2016), and Lankau et al. (2015).
+</p>
+
+
+<h3>Source</h3>
+
+<p>Alberta Biodiversity Monitoring Institute (ABMI, www.abmi.ca)
+</p>
+
+
+<h3>References</h3>
+
+<p>Alberta Biodiversity Monitoring Institute (ABMI), 2016.
+Terrestrial field data collection protocols (abridged version) 2016-05-18.
+Alberta Biodiversity Monitoring Institute; Edmonton, Alberta, Canada.
+</p>
+<p>Lankau, H.E., MacPhail, A., Knaggs, M. &amp; Bayne, E., 2015.
+Acoustic recording analysis protocol.
+Bioacoustic Unit, University of Alberta, and
+Alberta Biodiversity Monitoring Institute; Edmonton, Alberta, Canada.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(birdrec)
+str(birdrec)
+
+aggregate(rowSums(birdrec$xtab),
+    list(TOY=birdrec$samp$TOY, TOD=birdrec$samp$TOD), mean)
+boxplot(rowSums(birdrec$xtab) ~ TOD + TOY, birdrec$samp,
+    col=c("gold", "tomato"), ylab="# detections")
+
+## Not run: 
+y &lt;- ifelse(birdrec$xtab &gt; 0, 1, 0)
+g &lt;- paste0(gsub("[[:digit:]]", "", as.character(birdrec$samp$TOY)),
+    substr(as.character(birdrec$samp$TOD), 1, 4))
+g &lt;- factor(g, levels=c("EarlyMorn", "MidMorn", "LateMorn",
+    "EarlyMidn", "MidMidn", "LateMidn"))
+## binary response model
+oc &lt;- opticut(y ~ 1, strata=g, dist="binomial")
+## multi-level response model
+mc &lt;- multicut(y ~ 1, strata=g, dist="binomial")
+
+## testing equality of labels
+splito &lt;- as.character(summary(oc)$summary$split)
+splitm &lt;- as.character(summary(mc)$summary$split)
+table(splito == splitm)
+## seeing how much those differ
+bpo &lt;- summary(oc)$bestpart
+bpm &lt;- summary(mc)$bestpart
+rs &lt;- rowSums(abs(bpo-bpm))
+table(rs)
+10 * bpo[rs &gt; 0,] + bpm[rs &gt; 0,]
+
+## End(Not run)
+</code></pre>
+
+
+</div>

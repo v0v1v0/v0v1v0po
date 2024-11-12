@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_multilines</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract all <code>osm_multilines</code> from an osmdata object</h2>
+
+<h3>Description</h3>
+
+<p><code>id</code> must be of an <code>osm_points</code> or <code>osm_lines</code> object (and can
+not be the <code>id</code> of an <code>osm_polygons</code> object because multilines by
+definition contain no polygons.  <code>osm_multilines</code> returns any multiline
+object(s) which contain the object specified by <code>id</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_multilines(dat, id)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>An object of class osmdata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>OSM identification of one of more objects for which multilines are
+to be extracted</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <span class="pkg">sf</span> Simple Features Collection of multilines
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other search: 
+<code>osm_lines()</code>,
+<code>osm_multipolygons()</code>,
+<code>osm_points()</code>,
+<code>osm_polygons()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+dat &lt;- opq ("London UK") %&gt;%
+    add_osm_feature (key = "name", value = "Thames", exact = FALSE) %&gt;%
+    osmdata_sf ()
+# Get ids of lines called "The Thames":
+id &lt;- rownames (dat$osm_lines [which (dat$osm_lines$name == "The Thames"), ])
+# and find all multilinestring objects which include those lines:
+osm_multilines (dat, id)
+# Now note that
+nrow (dat$osm_multilines) # = 24 multiline objects
+nrow (osm_multilines (dat, id)) # = 1 - the recursive search selects the
+# single multiline containing "The Thames"
+
+## End(Not run)
+</code></pre>
+
+
+</div>

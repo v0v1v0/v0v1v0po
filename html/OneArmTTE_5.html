@@ -1,0 +1,62 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rpwenroll</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate Piecewise Exponential Enrollment</h2>
+
+<h3>Description</h3>
+
+<p>Generate Piecewise Exponential Enrollment
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rpwenroll(n = NULL, enrollRates = tibble(duration = c(1, 2), rate = c(2, 5)))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of observations.
+Default of <code>NULL</code> yields random enrollment size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enrollRates</code></td>
+<td>
+<p>A tibble containing period duration (<code>duration</code>) and enrollment rate (<code>rate</code>)
+for specified enrollment periods.
+If necessary, last period will be extended to ensure enrollment of specified <code>n</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector of random enrollment times following piecewise exponential distribution.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># piecewise uniform (piecewise exponential inter-arrival times) for 10k patients enrollment
+# enrollment rates of 5 for time 0-100, 15 for 100-300, and 30 thereafter
+x &lt;- rpwenroll(n=10000, enrollRates=tibble::tibble(rate = c(5, 15, 30), duration = c(100,200,100)))
+plot(x,1:10000,
+     main="Piecewise uniform enrollment simulation",xlab="Time",
+     ylab="Enrollment")
+# exponential enrollment
+x &lt;- rpwenroll(10000, enrollRates=tibble::tibble(rate = .03, duration = 1))
+plot(x,1:10000,main="Simulated exponential inter-arrival times",
+     xlab="Time",ylab="Enrollment")
+
+</code></pre>
+
+
+</div>

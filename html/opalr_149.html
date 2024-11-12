@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.project_backup</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Backup a project</h2>
+
+<h3>Description</h3>
+
+<p>The project backup task has a limited scope: tables (dictionary and data export), 
+views (either as a logical table or as an exported table), resources, files and report 
+templates. Other project elements that are not part of the backup: user and group 
+permissions, view change history, table analysis, report executions etc.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.project_backup(
+  opal,
+  project,
+  archive,
+  viewsAsTables = FALSE,
+  override = TRUE,
+  wait = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Name of the project.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>archive</code></td>
+<td>
+<p>Archive directory path in the Opal file system. If folder (and parents) does not exist, it will be created.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>viewsAsTables</code></td>
+<td>
+<p>Treat views as tables, i.e. export data instead of keeping derivation scripts. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>override</code></td>
+<td>
+<p>Overwrite an existing backup folder. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wait</code></td>
+<td>
+<p>Wait for backup task completion. Default is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The project command ID if wait parameter is FALSE. See opal.project_command to retrieve asynchronous command state.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+opal.project_backup(o, 'GREENSPACE', '/home/administrator/backup/GREENSPACE')
+opal.file_download(o, '/home/administrator/backup/GREENSPACE', 'GREENSPACE.zip')
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

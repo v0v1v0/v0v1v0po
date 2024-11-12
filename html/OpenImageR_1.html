@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Augmentation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>image augmentations of a matrix, data frame, array or a list of 3-dimensional arrays (where the third dimension is equal to 3)</h2>
+
+<h3>Description</h3>
+
+<p>image augmentations of a matrix, data frame, array or a list of 3-dimensional arrays (where the third dimension is equal to 3)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Augmentation(
+  image,
+  flip_mode = NULL,
+  crop_width = NULL,
+  crop_height = NULL,
+  resiz_width = 0,
+  resiz_height = 0,
+  resiz_method = "nearest",
+  shift_rows = 0,
+  shift_cols = 0,
+  rotate_angle = 0,
+  rotate_method = "nearest",
+  zca_comps = 0,
+  zca_epsilon = 0,
+  image_thresh = 0,
+  padded_value = 0,
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>image</code></td>
+<td>
+<p>a matrix, data frame, array or list of 3-dimensional arrays where the third dimension is equal to 3</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flip_mode</code></td>
+<td>
+<p>a character string ('horizontal', 'vertical')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crop_width</code></td>
+<td>
+<p>an integer specifying the new width of the image, after the image is cropped. Corresponds to the image-rows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crop_height</code></td>
+<td>
+<p>an integer specifying the new height of the image, after the image is cropped. Corresponds to the image-columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resiz_width</code></td>
+<td>
+<p>an integer specifying the new width of the image, after the image is resized. Corresponds to the image-rows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resiz_height</code></td>
+<td>
+<p>an integer specifying the new height of the image, after the image is resized. Corresponds to the image-columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resiz_method</code></td>
+<td>
+<p>a string specifying the interpolation method when resizing an image ('nearest', 'bilinear')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift_rows</code></td>
+<td>
+<p>a positive or negative integer specifying the direction that the rows should be shifted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift_cols</code></td>
+<td>
+<p>a positive or negative integer specifying the direction that the columns should be shifted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rotate_angle</code></td>
+<td>
+<p>an integer specifying the rotation angle of the image</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rotate_method</code></td>
+<td>
+<p>a string specifying the interpolation method when rotating an image ('nearest', 'bilinear')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zca_comps</code></td>
+<td>
+<p>an integer specifying the number of components to keep by zca whitening, when svd is performed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zca_epsilon</code></td>
+<td>
+<p>a float specifying the regularization parameter by zca whitening</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>image_thresh</code></td>
+<td>
+<p>the threshold parameter, by image thresholding, should be between 0 and 1 if the data is normalized or between 0-255 otherwise</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>padded_value</code></td>
+<td>
+<p>either a numeric value or a numeric vector of length equal to N of an N-dimensional array. If it's not equal to 0 then the values of the shifted rows or columns will be filled with the user-defined padded_value. Applies only to the shift_rows and shift_cols parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>a boolean (TRUE, FALSE). If TRUE, then the total time of the preprocessing task will be printed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function takes advantage of various methods to accomplish image augmentations. The order of the preprocessing steps, in case that all transformations are applied to an image,
+is : 1st flip image, 2nd crop image, 3rd resize image, 4th shift rows or columns, 5th rotate image, 6th zca-whitening and 7th image-thresholding.
+</p>
+
+
+<h3>Value</h3>
+
+<p>the output is of the same type with the input (in case of a data frame it returns a matrix)
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Lampros Mouselimis
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+# a matrix
+object = matrix(1, 10, 10)
+
+res = Augmentation(object, resiz_width = 8, resiz_height = 8, rotate_angle = 40)
+
+
+# an array
+object = array(0, dim = c(10, 10, 3))
+
+res = Augmentation(object, resiz_width = 8, resiz_height = 8, rotate_angle = 30)
+
+
+# an array (multiple matrices)
+object = array(0, dim = c(10, 10, 10))
+
+res = Augmentation(object, resiz_width = 8, resiz_height = 8, rotate_angle = 20)
+
+
+# a list of 3-dimensional arrays (where the third dimension is equal to 3)
+object = list(array(0, dim = c(10, 10, 3)), array(0, dim = c(10, 10, 3)))
+
+res = Augmentation(object, resiz_width = 8, resiz_height = 8, rotate_angle = 40)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

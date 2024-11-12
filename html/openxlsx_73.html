@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>removeFilter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove a worksheet filter</h2>
+
+<h3>Description</h3>
+
+<p>Removes filters from addFilter() and writeData()
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">removeFilter(wb, sheet)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A vector of names or indices of worksheets</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- createWorkbook()
+addWorksheet(wb, "Sheet 1")
+addWorksheet(wb, "Sheet 2")
+addWorksheet(wb, "Sheet 3")
+
+writeData(wb, 1, iris)
+addFilter(wb, 1, row = 1, cols = 1:ncol(iris))
+
+## Equivalently
+writeData(wb, 2, x = iris, withFilter = TRUE)
+
+## Similarly
+writeDataTable(wb, 3, iris)
+
+## remove filters
+removeFilter(wb, 1:2) ## remove filters
+removeFilter(wb, 3) ## Does not affect tables!
+## Not run: 
+saveWorkbook(wb, file = "removeFilterExample.xlsx", overwrite = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

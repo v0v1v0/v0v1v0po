@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>methods-lra</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Functionality for log-ratio analysis ('lra') objects</h2>
+
+<h3>Description</h3>
+
+<p>These methods extract data from, and attribute new data to,
+objects of class <code>"lra"</code>, a class introduced in this package to organize
+the singular value decomposition of a double-centered log-transformed data
+matrix output by <code>lra()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'lra'
+as_tbl_ord(x)
+
+## S3 method for class 'lra'
+recover_rows(x)
+
+## S3 method for class 'lra'
+recover_cols(x)
+
+## S3 method for class 'lra'
+recover_inertia(x)
+
+## S3 method for class 'lra'
+recover_coord(x)
+
+## S3 method for class 'lra'
+recover_conference(x)
+
+## S3 method for class 'lra'
+recover_aug_rows(x)
+
+## S3 method for class 'lra'
+recover_aug_cols(x)
+
+## S3 method for class 'lra'
+recover_aug_coord(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An ordination object.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>The recovery generics <code style="white-space: pre;">⁠recover_*()⁠</code> return core model components, distribution of inertia,
+supplementary elements, and intrinsic metadata; but they require methods for each model class to
+tell them what these components are.
+</p>
+<p>The generic <code>as_tbl_ord()</code> returns its input wrapped in the 'tbl_ord'
+class. Its methods determine what model classes it is allowed to wrap. It
+then provides 'tbl_ord' methods with access to the recoverers and hence to
+the model components.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other methods for singular value decomposition-based techniques: 
+<code>methods-cancor</code>,
+<code>methods-correspondence</code>,
+<code>methods-lda</code>,
+<code>methods-mca</code>,
+<code>methods-prcomp</code>,
+<code>methods-princomp</code>,
+<code>methods-svd</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># data frame of violent crime arrests in the United States
+class(USArrests)
+head(USArrests)
+# get state abbreviation data
+state &lt;- data.frame(
+  name = state.name,
+  abb = state.abb
+)
+
+# compute (non-compositional, unweighted) log-ratio analysis
+USArrests %&gt;%
+  subset(select = -UrbanPop) %&gt;%
+  lra() %&gt;%
+  as_tbl_ord() %&gt;%
+  print() -&gt; arrests_lra
+
+# augment log-ratio profiles with names and join state abbreviations
+arrests_lra %&gt;%
+  augment_ord() %&gt;%
+  left_join_rows(state, by = "name") %&gt;%
+  print() -&gt; arrests_lra
+
+# recover state and arrest profiles
+head(get_rows(arrests_lra))
+get_cols(arrests_lra)
+# initially, inertia is conferred on neither factor
+get_conference(arrests_lra)
+
+# row-principal biplot
+arrests_lra %&gt;%
+  confer_inertia("rows") %&gt;%
+  ggbiplot(aes(color = .matrix), sec.axes = "cols", scale.factor = 1/20) +
+  scale_color_manual(values = c("tomato4", "turquoise4")) +
+  theme_bw() +
+  geom_rows_text(aes(label = abb), size = 3, alpha = .75) +
+  geom_cols_polygon(fill = NA, linetype = "dashed") +
+  geom_cols_text(aes(label = name, size = weight), fontface = "bold") +
+  scale_size_area(guide = "none") +
+  ggtitle(
+    "Non-compositional LRA of violent crime arrest rates",
+    "United States, 1973"
+  ) +
+  expand_limits(x = c(-.35)) +
+  guides(color = "none")
+</code></pre>
+
+
+</div>

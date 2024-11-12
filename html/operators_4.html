@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pattern</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Pattern matching operators </h2>
+
+<h3>Description</h3>
+
+<p>Set of convenience functions to handle strings and pattern matching. 
+These are basically
+companion binary operators for the classic R function 
+<code>grep</code> and <code>regexpr</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  x %~% rx
+  x %!~% rx
+  
+  x %~*% rx
+  x %!~*% rx
+
+  x %~+% rx
+  x %!~+% rx
+  
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> text to manipulate </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rx</code></td>
+<td>
+<p> regular expression </p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>%~%</code> : gives a logical vector indicating which elements of <code>x</code> 
+match the regular expression <code>rx</code>. <code>%!~%</code> is the negation of 
+<code>%~%</code>                         
+</p>
+<p><code>%~*%</code> : gives a <em>single</em> logical indicating if <em>all</em> the elements
+of <code>x</code> are matching the regular expression <code>rx</code>. <code>%!~*%</code> is the 
+negation of <code>%~*%</code>.
+</p>
+<p><code>%~+%</code> : gives a <em>single</em> logical indicating if <em>any</em>
+element of <code>x</code> matches the regular expression <code>rx</code>. <code>%!~+%</code> 
+is the negation of <code>%~+%</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The matching is done using a modified version of the 
+<code>regexpr</code> function. 
+The modification is performed by applying the 
+<code>operators.regexpr</code> option to the <code>regexpr</code> function 
+via the <code>%but%</code> operator. 
+</p>
+<p>The default version of <code>regexpr</code> enables the <code>perl</code> and 
+<code>extended</code> options. See <code>%but%</code> for details.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Romain Francois &lt;francoisromain@free.fr&gt; </p>
+
+
+<h3>See Also</h3>
+
+ <p>grep, gsub, <code>%~|%</code> for regular expression filters </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">                        
+  txt &lt;- c("arm","foot","lefroo", "bafoobar")
+  txt %~% "foo"
+  txt %!~% "foo"
+  txt %~*% "foo"
+  txt %~+% "foo"
+  txt %!~*% "foo"
+  txt %!~+% "foo"
+  
+  txt %~%   "[a-z]"
+  txt %!~%  "[a-z]"
+  txt %~*%  "[a-z]"
+  txt %~+%  "[a-z]"
+  txt %!~*% "[a-z]"
+  txt %!~+% "[a-z]"
+  
+  
+  cols &lt;- colors()
+  cols[ cols %~% "^blue" ]
+  # see also %~|%
+  
+  
+  ## needs perl regular expression for the \\d, see %but%
+  with( options( operators.regexpr = "p" ), {
+  	cols[ cols %!~% "\\d$" ]
+  } )
+  
+</code></pre>
+
+
+</div>

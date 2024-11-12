@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matrix2raster</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Converts a matrix to a RasterLayer or arrays to a RasterStack-object</h2>
+
+<h3>Description</h3>
+
+<p><code>matrix2raster</code> Converts a matrix to a RasterLayer or arrays to a RasterStack-object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matrix2raster(z,x,y,layer,proj="+proj=longlat")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+
+<p>matrix or array to be converted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>optional x-coordinates giving the horizontal range of the raster layer, its size does not need to coincide with ncol(z)! 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>optional y-coordinates giving the verical range of the raster layer, its size does not need to coincide with nrow(z)! 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layer</code></td>
+<td>
+
+<p>layer to be selected (only valid if z is an array).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proj</code></td>
+<td>
+
+<p>optional argument, setting the coordinate reference system (CRS) of a Raster* object (default is <code>+proj=longlat</code>).
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example 1: convert a matrix
+m &lt;- matrix(3,2,2)
+matrix2raster(m)
+
+## Example 2: convert an array
+a &lt;- array(3,dim=c(2,2,2))
+matrix2raster(a)
+matrix2raster(a,layer=1)
+
+## Example 3: convert '.nc'-file to raster-object manually
+owd &lt;- getwd()
+path &lt;- system.file("test_files", package="oceanmap")
+ncfile &lt;- Sys.glob(paste0(path,'/herring*.nc')) # load sample-'.nc'-files
+
+library('ncdf4')
+library('raster')
+nc &lt;- nc_open(ncfile) # open netcdf file
+z &lt;- ncvar_get(nc,'Conc')[,,1]
+lon &lt;- as.vector(ncvar_get(nc,'lon')) # fillvalues are automatically replaced by NA
+lat &lt;- as.vector(ncvar_get(nc,'lat')) # fillvalues are automatically replaced by NA
+matrix2raster(z,x=lon,y=lat)  
+
+## Example 4: convert '.nc'-file to raster-object using nc2raster
+nc2raster(ncfile,varname='Conc',layer=1:4)
+
+</code></pre>
+
+
+</div>

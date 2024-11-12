@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.ConfusionTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extended Confusion Table Plot</h2>
+
+<h3>Description</h3>
+
+<p>Plots an extended confusion table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ConfusionTable'
+plot(
+  x = NULL,
+  classNames = NULL,
+  main = "extended confusion table",
+  xlab = "original class labels",
+  ylab = "predicted class labels",
+  cascLab = "inner classes",
+  otherLab = "outer classes",
+  digits = 3,
+  ignore = 0,
+  casc.colors = c("#f5f5f5", "#8c510a"),
+  other.colors = c("#f5f5f5", "#01665e"),
+  colSep = "#b2182b",
+  las = 1,
+  color.key = TRUE,
+  cex = 1,
+  cex.lab = 1,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A ConfusionTable object as it is returned by <code>confusionTable</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>classNames</code></td>
+<td>
+<p>Vector of the original class names. If not given the class number is used instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>See <code>plot</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A title for the x axis (see <code>plot</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A title for the y axis (see <code>plot</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cascLab</code></td>
+<td>
+<p>Character string used as header for the cascade part of the extended confusion table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>otherLab</code></td>
+<td>
+<p>Character string used as header for the other class part of the extended confusion table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>Integer indicating the number of decimal places to be used (see <code>round</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore</code></td>
+<td>
+<p>A numeric value between 0 and 1. 
+All confusion and purity values below this number are not written as string into the corresponding element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>casc.colors</code></td>
+<td>
+<p>A 2-element vector of the color for the minimal and maximal class-wise sensitivity of the first class.
+The color palette is calcuated by an interpolation between the 2 given colors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>other.colors</code></td>
+<td>
+<p>A 2-element vector of the color for the minimal and maximal class-wise sensitivity of the second class.
+The color palette is calcuated by an interpolation between the 2 given colors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colSep</code></td>
+<td>
+<p>Color, which is used for the vertical line separating the cascade classes and the other classes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>las</code></td>
+<td>
+<p>See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color.key</code></td>
+<td>
+<p>Specifies whether a color key is drawn (TRUE) or not (FALSE).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.lab</code></td>
+<td>
+<p>See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>No return value, called to generate the confusion table plot.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>confusionTable</code>, <code>plot.Subcascades</code>, <code>plot.Conf</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data &lt;- esl$data
+labels &lt;- esl$labels
+foldList &lt;- generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap &lt;- predictionMap(data, labels, foldList = foldList, 
+                        classifier = tunePareto.svm(), kernel='linear')
+# generate Subcascades object
+conf.table &lt;- confusionTable(predMap,cascade='0&gt;1&gt;3&gt;4',other.classes = 'all')
+
+plot(conf.table)
+</code></pre>
+
+
+</div>

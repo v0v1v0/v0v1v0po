@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.optim_fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predicted values for optim.fit objects</h2>
+
+<h3>Description</h3>
+
+<p> Provides predicted values, standard errors, confidence intervals and prediction intervals for <code>optim_fit</code> objects.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> 
+    ## S3 method for class 'optim_fit'
+predict(object, x, se.fit=FALSE, 
+    interval=c("none", "confidence", "prediction"), K = 1, level = 0.95,...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p> An object resulting from <code>optim_fit</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> If supplied, a vector, data.frame, or matrix of Explanatory variables. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>se.fit</code></td>
+<td>
+<p> Logical.  Should standard errors be returned?  Requires that 'x' is supplied. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+<p> If equal to 'confidence', returns a 100*level% confidence interval for the
+mean response.  If equal to 'prediction', returns a 100*level% prediction interval for the mean of the next
+K observations.  Requires that 'x' is supplied. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p> Only used for prediction interval.  Number of observations in the mean for the prediction interval. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p> Confidence/prediction interval level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>mop up additional arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a vector (if interval='none').
+Otherwise returns a data.frame with possible columns 'x', 'y.hat', 'se.fit', 'lower', and 'upper'.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_fit</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123L)
+
+x = rep( c(0, 2^(-4:4)), each=4 )
+theta = c(0, 100, log(.5), 2)
+y1 = hill_model(theta, x) + rnorm( length(x), sd=2 )
+
+
+fit1=optim_fit(theta, hill_model, x=x, y=y1)
+fitted(fit1)
+predict(fit1)
+predict(fit1, x=x)
+predict(fit1, x=seq(0, 1, by=.1), se.fit=TRUE)
+predict(fit1, x=seq(0, 1, by=.1), interval="conf")
+predict(fit1, x=seq(0, 1, by=.1), interval="pred")
+</code></pre>
+
+
+</div>

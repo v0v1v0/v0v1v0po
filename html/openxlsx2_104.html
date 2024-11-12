@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_clone_worksheet</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create copies of a worksheet within a workbook</h2>
+
+<h3>Description</h3>
+
+<p>Create a copy of a worksheet in the same <code>wbWorkbook</code> object.
+</p>
+<p>Cloning is possible only to a limited extent. References to sheet names in
+formulas, charts, pivot tables, etc. may not be updated. Some elements like
+named ranges and slicers cannot be cloned yet.
+</p>
+<p>Cloning from another workbook is still an experimental feature and might not
+work reliably. Cloning data, media, charts and tables should work. Slicers
+and pivot tables as well as everything everything relying on dxfs styles
+(e.g. custom table styles and conditional formatting) is currently not
+implemented.
+Formula references are not updated to reflect interactions between workbooks.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_clone_worksheet(wb, old = current_sheet(), new = next_sheet(), from = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A <code>wbWorkbook</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>old</code></td>
+<td>
+<p>Name of existing worksheet to copy</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new</code></td>
+<td>
+<p>Name of the new worksheet to create</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>(optional) Workbook to clone old from</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The <code>wbWorkbook</code> object, invisibly.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>grouping-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create a new workbook
+wb &lt;- wb_workbook()
+
+# Add worksheets
+wb$add_worksheet("Sheet 1")
+wb$clone_worksheet("Sheet 1", new = "Sheet 2")
+# Take advantage of waiver functions
+wb$clone_worksheet(old = "Sheet 1")
+
+## cloning from another workbook
+
+# create a workbook
+wb &lt;- wb_workbook()$
+add_worksheet("NOT_SUM")$
+  add_data(x = head(iris))$
+  add_fill(dims = "A1:B2", color = wb_color("yellow"))$
+  add_border(dims = "B2:C3")
+
+# we will clone this styled chart into another workbook
+fl &lt;- system.file("extdata", "oxlsx2_sheet.xlsx", package = "openxlsx2")
+wb_from &lt;- wb_load(fl)
+
+# clone styles and shared strings
+wb$clone_worksheet(old = "SUM", new = "SUM", from = wb_from)
+
+</code></pre>
+
+
+</div>

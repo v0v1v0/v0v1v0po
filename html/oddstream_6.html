@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_pc_space</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Define a feature space using the PCA components of the feature matrix</h2>
+
+<h3>Description</h3>
+
+<p>Define a two dimensional feature space using the first two principal components generated from
+the fetures matrix returned by <code>extract_tsfeatures</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_pc_space(features, robust = TRUE, kpc = 2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>features</code></td>
+<td>
+<p>Feature matrix returned by <code>extract_tsfeatures</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>robust</code></td>
+<td>
+<p>If TRUE, a robust PCA will be used on the feature matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kpc</code></td>
+<td>
+<p>Desired number of components to return.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>It returns a list with class 'pcattributes' containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>pcnorm</code></td>
+<td>
+<p>The scores of the firt kpc pricipal components</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center, scale</code></td>
+<td>
+<p>The centering and scaling used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rotation</code></td>
+<td>
+<p>the matrix of variable loadings (i.e., a matrix whose columns contain the eigenvectors).
+The function <code>princomp</code> returns this in the element loadings.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>PCAproj</code>, <code>prcomp</code>, <code>find_odd_streams</code>,
+<code>extract_tsfeatures</code>, <code>set_outlier_threshold</code>, <code>gg_featurespace</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">features &lt;- extract_tsfeatures(anomalous_stream[1:100, 1:100])
+pc &lt;- get_pc_space(features)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>vxapply</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Specialised vapply methods for atomic classes</h2>
+
+<h3>Description</h3>
+
+<p>Specialised <code>vapply</code> functions for scalars of each of the six atomic classes
+in R:
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">vlapply(X, FUN, ..., USE.NAMES = TRUE)
+
+viapply(X, FUN, ..., USE.NAMES = TRUE)
+
+vnapply(X, FUN, ..., USE.NAMES = TRUE)
+
+vcapply(X, FUN, ..., USE.NAMES = TRUE)
+
+vzapply(X, FUN, ..., USE.NAMES = TRUE)
+
+vrapply(X, FUN, ..., USE.NAMES = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X, ..., USE.NAMES</code></td>
+<td>
+<p>See vapply</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FUN</code></td>
+<td>
+<p>Either a function to apply to each element of <code>X</code>, as in vapply
+or the field/method name of an OOP object (see examples)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<ul>
+<li>
+<p> logical (<code>vlapply</code>)
+</p>
+</li>
+<li>
+<p> integer (<code>viapply</code>)
+</p>
+</li>
+<li>
+<p> numeric/real (<code>vnapply</code>)
+</p>
+</li>
+<li>
+<p> character/string (<code>vcapply</code>)
+</p>
+</li>
+<li>
+<p> complex (<code>vzapply</code>)
+</p>
+</li>
+<li>
+<p> raw (<code>vrapply</code>)
+</p>
+</li>
+</ul>
+<p>These are simply wrappers around vapply where <code>FUN.VALUE</code> is pre-filled
+with a scalar of the given class.
+</p>
+<p>In addition these can be applied to pull-out fields or methods from R6 or
+other OOP objects by supplying the field/method name to <code>FUN</code>. See examples.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Specialised vapply
+vlapply(logical(10), identity)
+vzapply(complex(10), identity)
+
+## For R6 objects
+objs &lt;- list(ooplah$new(), ooplah$new())
+
+# Public field
+vcapply(objs, "oop")
+
+# Public method
+vcapply(objs, "exclaim", "ARGH")
+vcapply(objs, "hello")
+vnapply(objs, "generate", 1)
+
+# Active binding
+vlapply(objs, "logically")
+</code></pre>
+
+
+</div>

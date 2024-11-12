@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>phash</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>calculation of the 'phash' of an image</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the phash of an image
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">phash(
+  gray_image,
+  hash_size = 8,
+  highfreq_factor = 4,
+  MODE = "hash",
+  resize = "nearest"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>gray_image</code></td>
+<td>
+<p>a (2-dimensional) matrix or data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hash_size</code></td>
+<td>
+<p>an integer specifying the hash size (hash_size * highfreq_factor should be less than number of rows or columns of the gray_image)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>highfreq_factor</code></td>
+<td>
+<p>an integer specyfing the highfrequency factor (hash_size * highfreq_factor should be less than number of rows or columns of the gray_image)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MODE</code></td>
+<td>
+<p>one of 'hash' (returns the hash of the image), 'binary' (returns binary identifier of the image)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resize</code></td>
+<td>
+<p>corresponds to one of 'nearest', 'bilinear' (resizing method)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function is a modification of the 'phash' function of the imagehash package [ please consult the COPYRIGHT file ]. The phash algorithm
+extends the average_hash by using the discrete cosine transform.
+</p>
+
+
+<h3>Value</h3>
+
+<p>either a hash-string or a binary vector
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+image = readImage(system.file("tmp_images", "2.jpg", package = "OpenImageR"))
+
+image = rgb_2gray(image)
+
+res_hash = phash(image, hash_size = 6, highfreq_factor = 3, MODE = 'hash')
+
+res_binary = phash(image, hash_size = 6, highfreq_factor = 3, MODE = 'binary')
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,252 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>trajCluster</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate clusters for back trajectories</h2>
+
+<h3>Description</h3>
+
+<p>This function carries out cluster analysis of HYSPLIT back trajectories. The
+function is specifically designed to work with the trajectories imported
+using the <code>openair</code> <code>importTraj</code> function, which provides
+pre-calculated back trajectories at specific receptor locations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">trajCluster(
+  traj,
+  method = "Euclid",
+  n.cluster = 5,
+  type = "default",
+  cols = "Set1",
+  split.after = FALSE,
+  map.fill = TRUE,
+  map.cols = "grey40",
+  map.alpha = 0.4,
+  projection = "lambert",
+  parameters = c(51, 51),
+  orientation = c(90, 0, 0),
+  by.type = FALSE,
+  origin = TRUE,
+  plot = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>An openair trajectory data frame resulting from the use of
+<code>importTraj</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Method used to calculate the distance matrix for the back
+trajectories. There are two methods available: “Euclid” and
+“Angle”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.cluster</code></td>
+<td>
+<p>Number of clusters to calculate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>type</code> determines how the data are split i.e. conditioned,
+and then plotted. The default is will produce a single plot using the
+entire data. Type can be one of the built-in types as detailed in
+<code>cutData</code> e.g. “season”, “year”, “weekday” and so
+on. For example, <code>type = "season"</code> will produce four plots — one for
+each season. Note that the cluster calculations are separately made of each
+level of "type".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>Colours to be used for plotting. Options include
+“default”, “increment”, “heat”, “jet” and
+<code>RColorBrewer</code> colours — see the <code>openair</code> <code>openColours</code>
+function for more details. For user defined the user can supply a list of
+colour names recognised by R (type <code>colours()</code> to see the full list).
+An example would be <code>cols = c("yellow", "green", "blue")</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split.after</code></td>
+<td>
+<p>For <code>type</code> other than “default” e.g.
+“season”, the trajectories can either be calculated for each level
+of <code>type</code> independently or extracted after the cluster calculations
+have been applied to the whole data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.fill</code></td>
+<td>
+<p>Should the base map be a filled polygon? Default is to fill
+countries.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.cols</code></td>
+<td>
+<p>If <code>map.fill = TRUE</code> <code>map.cols</code> controls the fill
+colour. Examples include <code>map.fill = "grey40"</code> and <code>map.fill =
+  openColours("default", 10)</code>. The latter colours the countries and can help
+differentiate them.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.alpha</code></td>
+<td>
+<p>The transparency level of the filled map which takes values
+from 0 (full transparency) to 1 (full opacity). Setting it below 1 can help
+view trajectories, trajectory surfaces etc. <em>and</em> a filled base map.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>projection</code></td>
+<td>
+<p>The map projection to be used. Different map projections
+are possible through the <code>mapproj</code> package. See <code>?mapproject</code> for
+extensive details and information on setting other parameters and
+orientation (see below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p>From the <code>mapproj</code> package. Optional numeric vector of
+parameters for use with the projection argument. This argument is optional
+only in the sense that certain projections do not require additional
+parameters. If a projection does not require additional parameters then set
+to null i.e. <code>parameters = NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>orientation</code></td>
+<td>
+<p>From the <code>mapproj</code> package. An optional vector
+c(latitude, longitude, rotation) which describes where the "North Pole"
+should be when computing the projection. Normally this is c(90, 0), which
+is appropriate for cylindrical and conic projections. For a planar
+projection, you should set it to the desired point of tangency. The third
+value is a clockwise rotation (in degrees), which defaults to the midrange
+of the longitude coordinates in the map.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by.type</code></td>
+<td>
+<p>The percentage of the total number of trajectories is given
+for all data by default. Setting <code>by.type = TRUE</code> will make each panel
+add up to 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>origin</code></td>
+<td>
+<p>If true a filled circle dot is shown to mark the receptor
+point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should a plot be produced? <code>FALSE</code> can be useful when
+analysing data to extract plot components and plotting them in other ways.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other graphical parameters passed onto <code>lattice:levelplot</code>
+and <code>cutData</code>. Similarly, common axis and title labelling options
+(such as <code>xlab</code>, <code>ylab</code>, <code>main</code>) are passed to
+<code>levelplot</code> via <code>quickText</code> to handle routine formatting.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Two main methods are available to cluster the back trajectories using two
+different calculations of the distance matrix. The default is to use the
+standard Euclidian distance between each pair of trajectories. Also available
+is an angle-based distance matrix based on Sirois and Bottenheim (1995). The
+latter method is useful when the interest is the direction of the
+trajectories in clustering.
+</p>
+<p>The distance matrix calculations are made in C++ for speed. For data sets of
+up to 1 year both methods should be relatively fast, although the
+<code>method = "Angle"</code> does tend to take much longer to calculate. Further
+details of these methods are given in the openair manual.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an openair object. The <code>data</code> component contains
+both <code>traj</code> (the original data appended with its cluster) and <code>results</code>
+(the average trajectory path per cluster, shown in the <code>trajCluster()</code>
+plot.)
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>References</h3>
+
+<p>Sirois, A. and Bottenheim, J.W., 1995. Use of backward trajectories to
+interpret the 5-year record of PAN and O3 ambient air concentrations at
+Kejimkujik National Park, Nova Scotia. Journal of Geophysical Research, 100:
+2867-2881.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other trajectory analysis functions: 
+<code>importTraj()</code>,
+<code>trajLevel()</code>,
+<code>trajPlot()</code>
+</p>
+<p>Other cluster analysis functions: 
+<code>polarCluster()</code>,
+<code>timeProp()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## import trajectories
+traj &lt;- importTraj(site = "london", year = 2009)
+## calculate clusters
+clust &lt;- trajCluster(traj, n.cluster = 5)
+head(clust$data) ## note new variable 'cluster'
+## use different distance matrix calculation, and calculate by season
+traj &lt;- trajCluster(traj, method = "Angle", type = "season", n.cluster = 4)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

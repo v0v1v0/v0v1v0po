@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summarize_envelope</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>summarize_envelope</h2>
+
+<h3>Description</h3>
+
+<p>Summarize simulation envelope
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">summarize_envelope(x, plot_result = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>fv</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_result</code></td>
+<td>
+<p>A plot is drawn.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The area above and below the null model envelope is divided by the total area
+under the curve. If <code>seperated = TRUE</code>, the first returning value is the
+relative area above, the second value the relative value below the envelope.
+If <code>seperated = FALSE</code> the value is the absolute sum of both ratio. If the
+value is positive, the area above the envelope is larger than the value below
+the envelope. If the value is negative, the area under the envelope is larger than
+the value above the envelope.
+</p>
+<p>The returned <code>env_summarized</code> object includes information about the area
+under the curve where the summary function observed pattern is above or below
+the null model envelopes.
+</p>
+
+
+<h3>Value</h3>
+
+<p>env_summarized
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>envelope</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(42)
+input_pattern &lt;- spatstat.random::rThomas(kappa = 15, scale = 0.05, mu = 5)
+
+cluster_env &lt;- spatstat.explore::envelope(input_pattern, fun = "pcf", nsim = 39,
+funargs = list(divisor = "d", correction = "Ripley", stoyan = 0.25))
+
+summarize_envelope(cluster_env)
+
+</code></pre>
+
+
+</div>

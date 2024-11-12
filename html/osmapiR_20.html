@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_create_object</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an OSM object</h2>
+
+<h3>Description</h3>
+
+<p>Creates a new element in an open changeset as specified.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_create_object(x, changeset_id)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The new object data. Can be the path to an xml file, a xml2::xml_document or a data.frame inheriting
+or following the structure of an <code>osmapi_objects</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>changeset_id</code></td>
+<td>
+<p>The ID of an open changeset where to create the object. If missing, <code>x</code> should define the
+changeset ID, otherwise it will be overwritten with <code>changeset_id</code>. Ignored if <code>x</code> is a path.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>x</code> is a data.frame, the columns <code>type</code>, <code>changeset</code>, <code>tags</code> must be present + column <code>members</code> for ways and
+relations + <code>lat</code> and <code>lon</code> for nodes. For the xml format, see the
+<a href="https://wiki.openstreetmap.org/wiki/API_v0.6#Create:_PUT_/api/0.6/%5Bnode%7Cway%7Crelation%5D/create">OSM wiki</a>.
+</p>
+<p>If multiple elements are provided only the first is created. The rest is discarded.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The ID of the newly created OSM object.
+</p>
+
+
+<h3>Note</h3>
+
+
+<ul>
+<li>
+<p> This updates the bounding box of the changeset.
+</p>
+</li>
+<li>
+<p> The <code>role</code> attribute for relations is optional. An empty string is the default.
+</p>
+</li>
+<li>
+<p> To avoid performance issues when uploading multiple objects, the use of the <code>osm_diff_upload_changeset()</code> is highly
+recommended.
+</p>
+</li>
+<li>
+<p> The version of the created object will be 1.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other edit OSM objects' functions: 
+<code>osm_delete_object()</code>,
+<code>osm_update_object()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">vignette("how_to_edit_osm", package = "osmapiR")
+</code></pre>
+
+
+</div>

@@ -1,0 +1,43 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_prep_dfbeta_outliers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>DFBETAs plot outliers</h2>
+
+<h3>Description</h3>
+
+<p>Data for identifying outliers in dfbetas plot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_prep_dfbeta_outliers(d)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>A <code>tibble</code> or <code>data.frame</code>.</p>
+</td>
+</tr></table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">model &lt;- lm(mpg ~ disp + hp + wt + qsec, data = mtcars)
+dfb &lt;- dfbetas(model)
+n &lt;- nrow(dfb)
+threshold &lt;- 2 / sqrt(n)
+dbetas  &lt;- dfb[, 1]
+df_data &lt;- data.frame(obs = seq_len(n), dbetas = dbetas)
+d &lt;- ols_prep_dfbeta_data(df_data, threshold)
+ols_prep_dfbeta_outliers(d)
+
+</code></pre>
+
+
+</div>

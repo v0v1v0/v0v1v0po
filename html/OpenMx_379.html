@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxGetExpected</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract the component from a model's expectation</h2>
+
+<h3>Description</h3>
+
+<p>This function extracts the expected means, covariance, or thresholds from a model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxGetExpected(model, component, defvar.row=1, subname=model$name)
+imxGetExpectationComponent(model, component, defvar.row=1, subname=model$name)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>MxModel object from which to extract the expectation component.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>component</code></td>
+<td>
+<p>Character vector. The name(s) of the component(s) to extract.  Recognized names are “covariance”, “means”, and “thresholds”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>defvar.row</code></td>
+<td>
+<p>A row index. Which row to load for definition variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subname</code></td>
+<td>
+<p>Name of the submodel to evaluate.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The expected means, covariance, or thresholds can be extracted from
+Normal (mxExpectationNormal), RAM (mxExpectationRAM), and
+LISREL (mxExpectationLISREL) models. When more than one component
+is requested, the components will be returned as a list.
+</p>
+<p>If component 'vector' is requested then the non-redundant coefficients
+of the expected manifest distribution will be returned as a vector.
+</p>
+<p>If component 'standVector' is requested then the same parameter structure as
+'vector' is returned, but it is standardized.  For Normal expectations the covariances
+are returned as correlations, the means are returned as zeros, and the
+thresholds are returned as z-scores.  For the thresholds the z-scores
+are computed by using the model-implied means and variances.
+</p>
+<p>Note that capitalization is ignored for the 'standVector' option, so 'standvector'
+is also acceptable.
+</p>
+
+
+<h3>Value</h3>
+
+<p>See details.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">   
+# ===============================================
+# = Build a 1-factor CFA, with bad start values =
+# ===============================================
+require(OpenMx)
+manifests = paste("x", 1:5, sep="")
+latents = c("G")
+factorModel = mxModel("One Factor", type="RAM",
+      manifestVars = manifests,
+      latentVars = latents,
+      mxPath(from = latents, to = manifests),
+      mxPath(from = manifests, arrows = 2),
+      mxPath(from = latents, arrows = 2, free = FALSE, values = 1.0),
+      mxPath(from = 'one', to = manifests),
+	  mxData(demoOneFactor, type = "raw")
+)
+
+# ============================================================================
+# = What do our starting values indicate about the expected data covariance? =
+# ============================================================================
+mxGetExpected(factorModel, "covariance")
+
+# Oops. Starting values indicate an expected zero-covariance matrix.
+# The model likely won't run from these start values.
+# Let's adjust them:
+
+factorModel = mxModel("One Factor", type = "RAM",
+      manifestVars = manifests, latentVars = latents,
+      # Reasonable start VALUES
+	  mxPath(from = latents, to = manifests, values = .2),
+      mxPath(from = manifests, arrows = 2),
+      mxPath(from = latents, arrows = 2, free = FALSE, values = 1.0),
+      mxPath(from = 'one', to = manifests),
+	  mxData(demoOneFactor, type = "raw")
+)
+
+mxGetExpected(factorModel, "covariance")
+#      x1   x2   x3   x4   x5
+# x1 0.04 0.04 0.04 0.04 0.04
+# x2 0.04 0.04 0.04 0.04 0.04
+# x3 0.04 0.04 0.04 0.04 0.04
+# x4 0.04 0.04 0.04 0.04 0.04
+# x5 0.04 0.04 0.04 0.04 0.04
+
+# And this version will run:
+factorModel = mxRun(factorModel)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,172 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olbm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitting OLBM to the data</h2>
+
+<h3>Description</h3>
+
+<p>It estimates the OLBM model parameters as well as the most likely posterior cluster assignments by maximum likelihood.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olbm(Y, Q, L, init = "kmeans", eps = 1e-04, it_max = 500,
+  verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>An M x P ordinal matrix, containing ordinal entries from 1 to K. Missing data are coded as zeros.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Q</code></td>
+<td>
+<p>The number of row clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>The number of column clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>init</code></td>
+<td>
+<p>A string specifying the initialisation type. It can be "kmeans" (the default) or "random" for a single random initialisation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>When the difference between two consecutive vaules of the log-likelihood is smaller than eps, the M-EM algorithms will stop.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>it_max</code></td>
+<td>
+<p>The maximum number of iterations that the M-EM algorithms will perform (although the minimum tolerance eps is not reached).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>A boolean specifying whether extended information should be displayed or not (TRUE by default).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>It returns an S3 object of class "olbm" containing 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>estR</code></td>
+<td>
+<p>the estimated row cluster memberships.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estC</code></td>
+<td>
+<p>the estimated column cluster memberships.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>likeli</code></td>
+<td>
+<p>the final value of the log-likelihood.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icl</code></td>
+<td>
+<p>the value of the ICL criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pi</code></td>
+<td>
+<p>the Q x L estimated connectivity matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>a Q x L matrix containing the estimated means of the latent Gaussian distributions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+<p>a Q x L matrix containing the estimated standard deviations of the latent Gaussian distributions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>a Q x L x K array whose entry (q,l,k) is the estimated probability that one user in the q-th row cluster assign the score k to one product in the l-th column cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>the estimated row cluster proportions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>the estimated column cluster proportions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initR</code></td>
+<td>
+<p>the initial row cluster assignments provided to the C-EM algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initC</code></td>
+<td>
+<p>the initial column cluter assignments provided to the C-EM algorigthm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>the input ordinal matrix Y.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresholds</code></td>
+<td>
+<p>the values (1.5, 2.5, ... , K-0.5) of the thresholds, defined inside the function olbm.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Corneli M.,Bouveyron C. and Latouche P. (2019) <em>Co-Clustering of ordinal data via latent continuous random variables and a classification EM algorithm. </em>(<a href="https://hal.archives-ouvertes.fr/hal-01978174">https://hal.archives-ouvertes.fr/hal-01978174</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(olbm_dat)
+res &lt;- olbm(olbm_dat$Y, Q=3, L=2)                       
+</code></pre>
+
+
+</div>

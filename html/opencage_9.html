@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oc_config</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Configure settings</h2>
+
+<h3>Description</h3>
+
+<p>Configure session settings for <span class="pkg">opencage</span>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oc_config(
+  key = Sys.getenv("OPENCAGE_KEY"),
+  rate_sec = getOption("oc_rate_sec", default = 1L),
+  no_record = getOption("oc_no_record", default = TRUE),
+  show_key = getOption("oc_show_key", default = FALSE),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>Your OpenCage API key as a character vector of length one. Do not
+pass the key directly as a parameter, though. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rate_sec</code></td>
+<td>
+<p>Numeric vector of length one. Sets the maximum number of
+requests sent to the OpenCage API per second. Defaults to the value set in
+the <code>oc_rate_sec</code> option, or, in case that does not exist, to 1L.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no_record</code></td>
+<td>
+<p>Logical vector of length one. When <code>TRUE</code>, OpenCage will not
+create log entries of the queries and will not cache the geocoding
+requests. Defaults to the value set in the <code>oc_no_record</code> option, or, in
+case that does not exist, to <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show_key</code></td>
+<td>
+<p>Logical vector of length one. This is only relevant when
+debugging <code>oc_forward()</code> or <code>oc_reverse()</code> calls with the <code>return = "url_only"</code> argument. When <code>TRUE</code>, the result will show your OpenCage API
+key in the URL as stored in the <code>OPENCAGE_KEY</code> environment variable. When
+not <code>TRUE</code>, the API key will be replaced with the string <code>OPENCAGE_KEY</code>.
+<code>show_key</code> defaults to the value set in the <code>oc_show_key</code> option, or, in
+case that does not exist, to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Set your OpenCage API key</h3>
+
+<p><span class="pkg">opencage</span> will conveniently retrieve your API key if it is saved in the
+environment variable <code>"OPENCAGE_KEY"</code>. <code>oc_config()</code> will help to set that
+environment variable. Do not pass the key directly as a parameter to the
+function, though, as you risk exposing it via your script or your history.
+There are three safer ways to set your API key instead:
+</p>
+
+<ol>
+<li>
+<p> Save your API key as an environment variable in
+<code>.Renviron</code> as described in <a href="https://rstats.wtf/r-startup.html#renviron">What They Forgot to Teach You About R</a> or <a href="https://csgillespie.github.io/efficientR/set-up.html#renviron">Efficient R Programming</a>.
+From there it will be fetched by all functions that call the OpenCage API.
+You do not even have to call <code>oc_config()</code> to set your key; you can start
+geocoding right away. If you have the <span class="pkg">usethis</span> package installed, you
+can edit your <code>.Renviron</code> with <code>usethis::edit_r_environ()</code>.
+We strongly recommend storing your API key in the user-level .Renviron, as
+opposed to the project-level. This makes it less likely you will share
+sensitive information by mistake.
+</p>
+</li>
+<li>
+<p> If you use a package like <span class="pkg">keyring</span> to store your credentials, you can
+safely pass your key in a script with a function call like this
+<code>oc_config(key = keyring::key_get("opencage"))</code>.
+</p>
+</li>
+<li>
+<p> If you call <code>oc_config()</code> in an <code>base::interactive()</code> session and the
+<code>OPENCAGE_KEY</code> environment variable is not set, it will prompt you to enter
+the key in the console.
+</p>
+</li>
+</ol>
+<h3>Set your OpenCage API rate limit</h3>
+
+<p>The rate limit allowed by the API depends on the OpenCage plan you purchased
+and ranges from 1 request/sec for the "Free Trial" plan to 15 requests/sec
+for the "Medium" or "Large" plans, see <a href="https://opencagedata.com/pricing">https://opencagedata.com/pricing</a> for
+details and up-to-date information. You can set the rate limit persistently
+across sessions by setting an <code>oc_rate_sec</code> option in your
+<code>.Rprofile</code>. If you have the <span class="pkg">usethis</span> package
+installed, you can edit your <code>.Rprofile</code> with
+<code>usethis::edit_r_profile()</code>.
+</p>
+
+
+<h3>Prevent query logging and caching</h3>
+
+<p>By default, OpenCage will store your queries in its server logs and will
+cache the forward geocoding requests on their side. They do this in order to
+speed up response times and to be able to debug errors and improve their
+service. Logs are automatically deleted after six months according to
+OpenCage's <a href="https://opencagedata.com/gdpr">page on data protection and GDPR</a>.
+</p>
+<p>If you set <code>no_record</code> to <code>TRUE</code>, the query contents are not logged nor
+cached. OpenCage still records that you made a request, but not the specific
+query you made. <code>oc_config(no_record = TRUE)</code> sets the <code>oc_no_record</code>
+option for the active R session, so it will be used for all
+subsequent OpenCage queries. You can set the <code>oc_no_record</code>
+option persistently across sessions in your
+<code>.Rprofile</code>.
+</p>
+<p>For increased privacy <span class="pkg">opencage</span> sets <code>no_record</code> to <code>TRUE</code>, by default.
+Please note, however, that <span class="pkg">opencage</span> always caches the data it receives
+from the OpenCage API locally, but only for as long as your R session is
+alive.
+</p>
+<p>For more information on OpenCage's policies on privacy and data protection
+see <a href="https://opencagedata.com/faq#legal">their FAQs</a>, their <a href="https://opencagedata.com/gdpr">GDPR page</a>, and, for the <code>no_record</code> parameter, see
+the relevant <a href="https://blog.opencagedata.com/post/145602604628/more-privacy-with-norecord-parameter">blog post</a>.
+</p>
+
+
+</div>

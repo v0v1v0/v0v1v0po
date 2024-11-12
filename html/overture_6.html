@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Resume</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Resumes an interrupted file-backed MCMC</h2>
+
+<h3>Description</h3>
+
+<p><code>Resume</code> will finish a file-backed MCMC that was interrupted.  To resume
+an MCMC run, specify the MCMC's backing path and the sampling will continue
+from the last completed sample in the chain.  Note, however, that the random
+number generator state from when the MCMC was interrupted is <em>not</em>
+restored, so the resulting chain my not be reproducible, even if a seed was
+specified before the sampling was interrupted.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Resume(backing.path)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>backing.path</code></td>
+<td>
+<p>directory path where the (partially completed) MCMC
+samples were saved</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A list of either <code>matrix</code> or <code>big.matrix</code>
+with the MCMC samples.  Each row in the matrices corresponds to one sample
+from the MCMC chain.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>InitMcmc</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Setup the MCMC
+n.iter &lt;- 5
+SampleX &lt;- function(x) x + 1
+backing.path &lt;- tempfile()
+dir.create(backing.path)
+x &lt;- 0
+interrupt.mcmc &lt;- TRUE
+Mcmc &lt;- InitMcmc(n.iter, backing.path=backing.path)
+
+# Interrupt the MCMC during the third iteration
+try({
+    samps &lt;- Mcmc({
+        x &lt;- SampleX(x)
+        if(x==3 &amp;&amp; interrupt.mcmc) break
+    })
+}, silent=TRUE)
+
+# The sampling is incomplete
+samps &lt;- LoadMcmc(backing.path)
+samps$x[,]
+rm(samps)
+
+# Resume the MCMC
+interrupt.mcmc &lt;- FALSE
+samps &lt;- Resume(backing.path)
+
+# All samples are available
+samps$x[,]
+</code></pre>
+
+
+</div>

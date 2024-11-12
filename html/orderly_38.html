@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_remote</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get a remote</h2>
+
+<h3>Description</h3>
+
+<p>Get a remote, based on the configuration in
+<code>orderly_config.yml</code> - different remote drivers have
+different methods, and this function gives you access to these
+lower-level objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_remote(remote = NULL, root = NULL, locate = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>remote</code></td>
+<td>
+<p>Description of the location.  Typically this is a
+character string indicating a remote specified in the
+<code>remotes</code> block of your <code>orderly_config.yml</code>.  It is
+also possible to pass in a directly created remote object (e.g.,
+using <code>orderly_remote_path()</code>, or one provided by
+another package).  If left <code>NULL</code>, then the default remote
+for this orderly repository is used - by default that is the
+first listed remote.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The orderly remote, as described in
+<code>orderly_config.yml</code> - if no remotes are configured, or if
+the requested remote does not exist, an error will be thrown.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>orderly_pull_dependencies()</code> which provides a
+higher-level interface to pulling from a remote (including
+adding the downloaded archive into your orderly repository), and
+see the documentation underlying the orderly remote driver that
+your <code>orderly_config.yml</code> declares for information about
+using that remote.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## We need two orderly repositories here - one as a "local" and one as
+## a "remote" (see ?orderly_pull_archive)
+path_remote &lt;- orderly::orderly_example("demo")
+path_local &lt;- orderly::orderly_example("demo")
+
+## Configure our remote:
+path_config &lt;- file.path(path_local, "orderly_config.yml")
+txt &lt;- readLines(path_config)
+writeLines(c(
+  txt,
+  "remote:",
+  "  default:",
+  "    driver: orderly::orderly_remote_path",
+  "    args:",
+  paste("      path:", path_remote)),
+  path_config)
+
+## Get our remote:
+remote &lt;- orderly::orderly_remote(root = path_local)
+
+## Can use the remote's methods to interact directly - actual methods
+## depend on the remote driver being used.
+remote$list_reports()
+</code></pre>
+
+
+</div>

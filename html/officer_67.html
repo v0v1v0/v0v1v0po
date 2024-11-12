@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>docx_comments</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get comments in a Word document as a data.frame</h2>
+
+<h3>Description</h3>
+
+<p>return a data.frame representing the comments in a Word document.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">docx_comments(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rdocx object</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Each row of the returned data frame contains data for one comment. The
+columns contain the following information:
+</p>
+
+<ul>
+<li>
+<p> "comment_id" - unique comment id
+</p>
+</li>
+<li>
+<p> "author" - name of the comment author
+</p>
+</li>
+<li>
+<p> "initials" - initials of the comment author
+</p>
+</li>
+<li>
+<p> "date" - timestamp of the comment
+</p>
+</li>
+<li>
+<p> "text" - a list column of characters containing the comment text. Elements can
+be vectors of length &gt; 1 if a comment contains multiple paragraphs,
+blocks or runs or of length 0 if the comment is empty.
+</p>
+</li>
+<li>
+<p> "para_id" - a list column of characters containing the parent paragraph IDs.
+Elememts can be vectors of length &gt; 1 if a comment spans multiple paragraphs
+or of length 0 if the comment has no parent paragraph.
+</p>
+</li>
+<li>
+<p> "commented_text" - a list column of characters containing the
+commented text. Elememts can be vectors of length &gt; 1 if a comment
+spans multiple paragraphs or runs or of length 0 if the commented text is empty.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">bl &lt;- block_list(
+  fpar("Comment multiple words."),
+  fpar("Second line")
+)
+
+a_par &lt;- fpar(
+  "This paragraph contains",
+  run_comment(
+    cmt = bl,
+    run = ftext("a comment."),
+    author = "Author Me",
+    date = "2023-06-01"
+  )
+)
+
+doc &lt;- read_docx()
+doc &lt;- body_add_fpar(doc, value = a_par, style = "Normal")
+
+docx_file &lt;- print(doc, target = tempfile(fileext = ".docx"))
+
+docx_comments(read_docx(docx_file))
+</code></pre>
+
+
+</div>

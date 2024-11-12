@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_instr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wrap plot instructions for png plotting in Powerpoint or Word</h2>
+
+<h3>Description</h3>
+
+<p>A simple wrapper to capture
+plot instructions that will be executed and copied in a document. It produces
+an object of class 'plot_instr' with a corresponding method <code>ph_with()</code> and
+<code>body_add_plot()</code>.
+</p>
+<p>The function enable usage of any R plot with argument <code>code</code>. Wrap your code
+between curly bracket if more than a single expression.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_instr(code)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p>plotting instructions</p>
+</td>
+</tr></table>
+<h3>See Also</h3>
+
+<p><code>ph_with()</code>, <code>body_add_plot()</code>
+</p>
+<p>Other block functions for reporting: 
+<code>block_caption()</code>,
+<code>block_list()</code>,
+<code>block_pour_docx()</code>,
+<code>block_section()</code>,
+<code>block_table()</code>,
+<code>block_toc()</code>,
+<code>fpar()</code>,
+<code>unordered_list()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># plot_instr demo ----
+
+anyplot &lt;- plot_instr(code = {
+  barplot(1:5, col = 2:6)
+  })
+
+doc &lt;- read_docx()
+doc &lt;- body_add(doc, anyplot, width = 5, height = 4)
+print(doc, target = tempfile(fileext = ".docx"))
+
+
+doc &lt;- read_pptx()
+doc &lt;- add_slide(doc)
+doc &lt;- ph_with(
+  doc, anyplot,
+  location = ph_location_fullsize(),
+  bg = "#00000066", pointsize = 12)
+print(doc, target = tempfile(fileext = ".pptx"))
+</code></pre>
+
+
+</div>

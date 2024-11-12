@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get.cb.pos</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Returns additional colorbar placement information</h2>
+
+<h3>Description</h3>
+
+<p>Returns colorbar ticks length, label-, cb.title- and cb.xlab-position. ticks.lab, cb.title and cb.lab are horizontally centered, so only the y-value is returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get.cb.pos(cbx,cby,oticks)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cbx</code></td>
+<td>
+
+<p>the horizontal limits (x1, x2) of the colorbar.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cby</code></td>
+<td>
+
+<p>the vertical limits (y1, y2) of the colorbar.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oticks</code></td>
+<td>
+
+<p>letter defining alignment of colorbar ticks and labels. Allowed values are: <code>'b'</code> for bottom, <code>'l'</code> for left and <code>'r'</code> for right alignment. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code> set.colorbar, cust.colorbar, region_definitions</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path &lt;- system.file("test_files", package="oceanmap")
+gz.files &lt;- Sys.glob(paste0(path,'/*.gz')) # load sample-'.gz'-files
+
+obj &lt;- readbin(gz.files[2],area='lion')
+ncorse &lt;- crop(obj,extent(6,9,40,42))
+cbx &lt;-c(8.3,8.9)
+cby &lt;- c(40.7,40.8)
+v(ncorse,zlim=c(20,30),cbx=cbx,cby=cby) # skipping colorbar widget
+
+get.cb.pos(cbx=cbx,cby=cby,oticks="b") 
+
+#dev.new()
+#image(obj)
+#align &lt;- set.colorbar()
+#get.cb.pos(cbx=align$cbx,cby=align$cby,oticks=align$oticks)
+</code></pre>
+
+
+</div>

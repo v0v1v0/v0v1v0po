@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>occ</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimates PET neuroreceptor occupancies</h2>
+
+<h3>Description</h3>
+
+<p>This function estimates positron emission tomography (PET) neuroreceptor occupancies from the total volumes of distribution (VT) of a set of regions of interest (ROI). Fittings methods include the simple 'reference region' ("ref"), 'ordinary least squares' ("ols", sometimes known as occupancy plot), and 'restricted maximum likelihood' estimation ("reml").</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">occ(VT, method = "reml")</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>VT</code></td>
+<td>
+<p>matrix of total volumes of distribution (VT). Each row must have the VT values of an ROI. The first column must have the baseline VT values, the second column must have the first-postdose VT values, the third column must have the second-postdose VT values, etc. See "occ.example" example below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>one of either "ref" (reference region), "ols" (ordinary least squares), or "reml" (restricted maximum likelihood estimation). Please read the assumptions of each method below in Details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The reference region ("ref") method assumes that: a) neuroreceptor occupancy is different in each ROI; b) non-displaceable volume of distribution (VND) is different in each scan; c) specific volumes of distribution (VS) are the same in all scans; d) VS of the first ROI is null; and e) all measurement errors are negligible. Assumptions d) and e) may be unrealistic in many cases.
+</p>
+<p>The ordinary least squares ("ols") method assumes that: a) neuroreceptor occupancy is the same in all ROIs; b) VND is different in each postdose scan; c) baseline VND is equal to all postdose VND; d) VS are different in each postdose scan; e) baseline VS are equal to all postdose VS; f) measurement errors are different in each scan; and g) measurement error of baseline scan is null. Assumptions c) and e) may lead to multiple (i.e., mathematically impossible) baseline estimates in studies with more than one postdose scan. Also, note that assumption g) may be unrealistic in many cases.
+</p>
+<p>The restricted likelihood estimation ("reml") method assumes that: a) neuroreceptor occupancy is the same in all ROIs; b) VND is the same in all scans; c) VS are the same in all scans; and d) measurement error is the same in all scans.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>occ</code>, basically a list including the following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>VT</code></td>
+<td>
+<p>the observed total volumes of distribution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coefficients</code></td>
+<td>
+<p>the neuroreceptor occupancy coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>VND</code></td>
+<td>
+<p>the non-displaceable volumes of distribution of each scan</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>VS</code></td>
+<td>
+<p>the specific volumes of distribution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>the measurement error in each scan</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.values</code></td>
+<td>
+<p>the fitted VT</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals</code></td>
+<td>
+<p>the residuals, that is, observed VT minus fitted VT</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Joaquim Radua</p>
+
+
+<h3>References</h3>
+
+<p>Radua J, Bullich S, Lopez N and Catafau AM. Restricted maximum likelihood estimation of PET neuroreceptor occupancy in the absence of a reference region. Medical Physics 2011;38:2558.
+</p>
+<p>Doi: 10.1118/1.3578606 ( http://dx.doi.org/10.1118/1.3578606 )</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Total volumes of distribution (VT) from a simulated PET study
+## including a baseline scan, as well as two other scans after
+## administration of a drug. Note that each row in the matrix
+## represents an ROI, while each column represents a scan.
+
+data(occ.example)
+occ.example
+
+#                  Baseline 1st postdose 2nd postdose
+# Cerebellum           0.39         0.28         0.30
+# Frontal cortex       0.72         0.35         0.47
+# Occipital cortex     0.96         0.43         0.62
+# Parietal cortex      0.75         0.34         0.50
+# Temporal cortex      0.44         0.26         0.31
+
+
+## Default REML fitting of these simulated data:
+
+m = occ(occ.example)
+
+print(m)     # Prints the neuroreceptor occupancy coefficients
+
+summary(m)   # Also prints the non-displaceable volume of
+             # distribution (VND), the specific volumes of
+             # distribution (VS) and the measurement error
+
+fitted(m)    # Prints the fitted values
+
+residuals(m) # Prints the residuals
+
+plot(m)      # Plots the estimated and observed volumes of
+             # distribution
+</code></pre>
+
+
+</div>

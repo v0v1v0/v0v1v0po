@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>negLLsquash</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Likelihood with data squashing and no zero counts</h2>
+
+<h3>Description</h3>
+
+<p><code>negLLsquash</code> computes the negative log-likelihood based on the
+conditional marginal distribution of the counts, <em>N</em>, given that
+<em>N &gt;= N*</em>, where <em>N*</em> is the smallest count used for estimating the
+hyperparameters. This function is minimized to estimate the hyperparameters
+of the prior distribution. Use this function when zero counts are not used
+and data squashing is used as described by DuMouchel et al. (2001). This
+function is the likelihood function that should usually be chosen.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">negLLsquash(theta, ni, ei, wi, N_star = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>A numeric vector of hyperparameters ordered as:
+<code class="reqn">\alpha_1, \beta_1, \alpha_2, \beta_2, P</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ni</code></td>
+<td>
+<p>A whole number vector of squashed actual counts from
+<code>squashData</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ei</code></td>
+<td>
+<p>A numeric vector of squashed expected counts from
+<code>squashData</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wi</code></td>
+<td>
+<p>A whole number vector of bin weights from <code>squashData</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N_star</code></td>
+<td>
+<p>A scalar whole number for the minimum count size used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The conditional marginal distribution for the counts, <em>N</em>,
+given that <em>N &gt;= N*</em>, is based on a mixture of two negative binomial
+distributions. The hyperparameters for the prior distribution (mixture of
+gammas) are estimated by optimizing the likelihood equation from this
+conditional marginal distribution. It is recommended to use <code>N_star =
+  1</code> when practical.
+</p>
+<p>The hyperparameters are:
+</p>
+
+<ul>
+<li>
+<p><code class="reqn">\alpha_1, \beta_1</code>: Parameters of the first component of the
+marginal distribution of the counts (also the prior distribution)
+</p>
+</li>
+<li>
+<p><code class="reqn">\alpha_2, \beta_2</code>: Parameters of the second component
+</p>
+</li>
+<li>
+<p><code class="reqn">P</code>: Mixture fraction
+</p>
+</li>
+</ul>
+<p>This function will not need to be called directly if using
+<code>exploreHypers</code> or <code>autoHyper</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A scalar negative log-likelihood value
+</p>
+
+
+<h3>Warnings</h3>
+
+<p>Make sure <em>N_star</em> matches the smallest actual count in <em>ni</em>
+before using this function. Filter <em>ni</em>, <em>ei</em>, and <em>wi</em> if
+needed.
+</p>
+<p>Make sure the data were actually squashed (see <code>squashData</code>)
+before using this function.
+</p>
+
+
+<h3>References</h3>
+
+<p>DuMouchel W, Pregibon D (2001). "Empirical Bayes Screening for
+Multi-item Associations." In <em>Proceedings of the Seventh ACM SIGKDD
+International Conference on Knowledge Discovery and Data Mining</em>, KDD '01,
+pp. 67-76. ACM, New York, NY, USA. ISBN 1-58113-391-X.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>nlm</code>, <code>nlminb</code>, and
+<code>optim</code> for optimization and <code>squashData</code>
+for data squashing
+</p>
+<p>Other negative log-likelihood functions: 
+<code>negLLzeroSquash()</code>,
+<code>negLLzero()</code>,
+<code>negLL()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data.table::setDTthreads(2)  #only needed for CRAN checks
+theta_init &lt;- c(1, 1, 3, 3, .2)  #initial guess
+data(caers)
+proc &lt;- processRaw(caers)
+squashed &lt;- squashData(proc, bin_size = 300, keep_pts = 10)
+squashed &lt;- squashData(squashed, count = 2, bin_size = 13, keep_pts = 10)
+negLLsquash(theta = theta_init, ni = squashed$N, ei = squashed$E,
+            wi = squashed$weight)
+#For hyperparameter estimation...
+stats::nlminb(start = theta_init, objective = negLLsquash, ni = squashed$N,
+              ei = squashed$E, wi = squashed$weight)
+
+</code></pre>
+
+
+</div>

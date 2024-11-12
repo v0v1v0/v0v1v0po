@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.orf.prediction</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print of the Ordered Forest Prediction</h2>
+
+<h3>Description</h3>
+
+<p>print of Ordered Forest predictions of class <code>orf.prediction</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'orf.prediction'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>predicted Ordered Forest object of class <code>orf.prediction</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments (currently ignored)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>print.orf.prediction</code> provides a first glimpse of the Ordered Forest
+prediction, printed directly to the <code>R</code> console. The printed information
+contains the main inputs of the <code>predict.orf</code> function.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gabriel Okasa
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Ordered Forest
+require(orf)
+
+# load example data
+data(odata)
+
+# specify response and covariates for train and test
+idx &lt;- sample(seq(1, nrow(odata), 1), 0.8*nrow(odata))
+
+# train set
+Y_train &lt;- as.numeric(odata[idx, 1])
+X_train &lt;- as.matrix(odata[idx, -1])
+
+# test set
+Y_test &lt;- as.numeric(odata[-idx, 1])
+X_test &lt;- as.matrix(odata[-idx, -1])
+
+# estimate Ordered Forest
+orf_fit &lt;- orf(X_train, Y_train)
+
+# predict the probabilities with the estimated orf
+orf_pred &lt;- predict(orf_fit, newdata = X_test)
+
+# print the prediction object
+print(orf_pred)
+
+</code></pre>
+
+
+</div>

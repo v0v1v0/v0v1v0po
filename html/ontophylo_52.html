@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>paramo.list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Stack multiple discrete stochastic character map lists</h2>
+
+<h3>Description</h3>
+
+<p>Performs the final stacking of maps for a set of stochastic character maps stored in a list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">paramo.list(cc, tree.list, ntrees = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cc</code></td>
+<td>
+<p>character. Characters IDs to stack.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tree.list</code></td>
+<td>
+<p>multiSimmap or multiPhylo object. Named list with stochastic character maps.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ntrees</code></td>
+<td>
+<p>integer. Number of trees to stack.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of stacked stochastic character maps.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sergei Tarasov
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("hym_stm")
+# Select the first five characters.
+tree_list &lt;- hym_stm[1:5]
+tree_list &lt;- lapply(tree_list, function(x) discr_Simmap_all(x, res = 100))
+tree_list_amalg &lt;- paramo.list(names(tree_list), tree_list, ntrees = 50)
+tree_list_amalg &lt;- do.call(c, tree_list_amalg)
+# Plot one amalgamated stochastic map.
+phytools::plotSimmap(tree_list_amalg[[1]], get_rough_state_cols(tree_list_amalg[[1]]),  
+lwd = 3, pts = FALSE,ftype = "off")
+
+</code></pre>
+
+
+</div>

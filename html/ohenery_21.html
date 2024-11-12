@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rhenery</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Random generation under the Henery (or Harville) softmax model.</h2>
+
+<h3>Description</h3>
+
+<p>Given base probabilities, and Henery gamma coefficients,
+performs random generation, using R's built in rand seed,
+of the final outcome of a race for each participant.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rhenery(mu, gamma = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>a vector of the probabilities of taking first place.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p>a vector of the gamma coefficients. Should have length
+one less than <code>mu</code>, but if longer the unused elements are ignored.
+If shorter, we reserve the right to either throw an error or extend out
+the last gamma element. If not given, the coefficients are assumed
+to be all one, which is the Harville model.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given vectors <code class="reqn">\mu</code> and <code class="reqn">\gamma</code>, first computes
+</p>
+<p style="text-align: center;"><code class="reqn">\pi_{1,i} = \frac{\mu_i^{\gamma_1}}{\sum_j \mu_j^{\gamma_1}},</code>
+</p>
+
+<p>then assigns a <code class="reqn">1</code> to participant <code class="reqn">i</code> with probability
+<code class="reqn">\pi_{1,i}</code>. The ‘winning’ participant is then removed
+from consideration, and the process is repeated using the remaining
+<code class="reqn">\mu</code> and <code class="reqn">\gamma</code> vectors.
+</p>
+<p>Typically one has that <code class="reqn">\mu_i = \exp{\eta_i}</code>, for some
+‘odds’, <code class="reqn">\eta_i</code>.
+</p>
+<p>When the <code class="reqn">\gamma</code> are all one, you recover the Harville softmax
+model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector, of the same length as the probabilities, giving
+the entry of each horse. Note that the expected value of this
+returned thing makes sense, it is <em>not</em> the finished rank ordering
+of a race.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rsm</code>
+</p>
+
+
+</div>

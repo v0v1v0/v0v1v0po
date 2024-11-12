@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fMargalef</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate the Margalef's diversity index </h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the Margalef's diversity index which is a species diversity index developed by Ramon Margalef Lopez during the 1950s. It is a method for quantifying species biodiversity that can be adapted to the context of onomastic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fMargalef(x, s, n, location)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> dataframe which contains the number of species and population for each location.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p> name of a variable which represents number of species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p> name of a variable which represents total number of individuals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p>  name of a variable which represents represents the grouping element. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a community <code class="reqn">i</code>, the Margalef's diversity index is defined by
+<code class="reqn">R_1 = \frac{S_i-1}{\ln(N_i)}</code>, where <code class="reqn">S_i</code> represents the number of species (richness) and <code class="reqn">N_i</code> represents the total number of  individuals in all <code class="reqn">S_i</code>.
+</p>
+<p>In onomastic context, <code class="reqn">N_i</code> denotes the number of  individuals in region  (<code class="reqn">\approx</code> community diversity context) <code class="reqn">i</code> and <code class="reqn">S_i</code> represents the total number of surnames.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element, for example the communities / regions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margalef</code></td>
+<td>
+<p> the value of the Margalef's diversity index.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Margalef D.R., (1958), Information theory in ecology. <em>International Journal of General Systems</em>, <b>3</b>, 36–71.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fMenhinick</code>,
+<code>fPielou</code>,
+<code>fShannon</code>,
+<code>fSheldon</code>,
+<code>fSimpson</code>,
+<code>fSimpsonInf</code>,
+<code>fGeneralisedMean</code>, <code>fGeometricMean</code>,
+<code>fHeip</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(sqldf)
+data(surnamesgal14)
+
+apes2=sqldf('select  muni, count(surname) as ni,
+sum(number) as population from surnamesgal14
+group by muni;')
+
+result = fMargalef (x= apes2, s="ni", n="population", location  = "muni")
+result
+
+data(namesmengal16)
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from namesmengal16
+group by muni;')
+
+result = fMargalef (x= names2, s="ni", n="population", location  = "muni")
+result
+
+data(nameswomengal16)
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from nameswomengal16
+group by muni;')
+
+result = fMargalef (x= names2, s="ni", n="population", location  = "muni")
+result
+</code></pre>
+
+
+</div>

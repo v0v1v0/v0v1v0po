@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>raster2matrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Convert Raster layer to a matrix or array</h2>
+
+<h3>Description</h3>
+
+<p><code>raster2matrix</code> converts a raster layer to a matrix or array. Used by readbin and writebin.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">raster2matrix(RasterLayer)
+
+raster2array(RasterLayer)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>RasterLayer</code></td>
+<td>
+
+<p>raster layer to be converted.
+</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library('raster')
+path &lt;- system.file("test_files", package="oceanmap")
+gz.files &lt;- Sys.glob(paste0(path,'/*.gz')) # load sample-'.gz'-files
+check_gzfiles(folder=path) # return file summary-table
+
+raster.file &lt;- readbin(gz.files[1]) # loading gz-file as raster-layer
+image(raster.file)
+
+## Example 1: converting single raster layer to matrix
+image(as.matrix(raster.file)) # unflipped conversion
+m &lt;- raster2matrix(raster.file) # converting raster-layer to matrix
+image(m)
+
+## Example 2: converting double raster layer to an array
+stack.file &lt;- stack(raster.file,raster.file)
+image(as.array(stack.file)[,,1]) # unflipped conversion
+a &lt;- raster2array(stack.file) # converting raster-layer to array (works also with raster2matrix)
+image(a[,,1])
+</code></pre>
+
+
+</div>

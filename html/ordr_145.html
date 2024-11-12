@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>qswur_usa</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>U.S. university rankings</h2>
+
+<h3>Description</h3>
+
+<p>Classifications and rankings of U.S. universities for the years
+2017–2020.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(qswur_usa)
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A tibble of 13 variables on 612 cases:
+</p>
+
+<dl>
+<dt>year</dt>
+<dd>
+<p>year of rankings</p>
+</dd>
+<dt>institution</dt>
+<dd>
+<p>institution of higher learning</p>
+</dd>
+<dt>size</dt>
+<dd>
+<p>size category of institution</p>
+</dd>
+<dt>focus</dt>
+<dd>
+<p>subject range of institution</p>
+</dd>
+<dt>res</dt>
+<dd>
+<p>research intensity of institution</p>
+</dd>
+<dt>age</dt>
+<dd>
+<p>age classification of institution</p>
+</dd>
+<dt>status</dt>
+<dd>
+<p>status of institution</p>
+</dd>
+<dt>rk_academic</dt>
+<dd>
+<p>rank by academic reputation</p>
+</dd>
+<dt>rk_employer</dt>
+<dd>
+<p>rank by employer reputation</p>
+</dd>
+<dt>rk_ratio</dt>
+<dd>
+<p>rank by faculty–student ratio</p>
+</dd>
+<dt>rk_citations</dt>
+<dd>
+<p>rank by citations per faculty</p>
+</dd>
+<dt>rk_intl_faculty</dt>
+<dd>
+<p>rank by international faculty ratio</p>
+</dd>
+<dt>rk_intl_students</dt>
+<dd>
+<p>rank by international student ratio</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>Ranking data were obtained from the public QS website.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Quacquarelli Symonds (2021).
+</p>
+
+
+<h3>References</h3>
+
+<p>Quacquarelli Symonds (2021) "University Rankings". TopUniversities.com
+<a href="https://www.topuniversities.com/university-rankings">https://www.topuniversities.com/university-rankings</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># subset QS data to rank variables
+head(qswur_usa)
+qs_ranks &lt;- subset(
+  qswur_usa,
+  complete.cases(qswur_usa),
+  select = 8:13
+)
+# calculate Kendall correlation matrix
+qs_cor &lt;- cor(qs_ranks, method = "kendall")
+
+# calculate eigendecomposition
+qs_eigen &lt;- eigen_ord(qs_cor)
+# view correlations as cosines of biplot vectors
+biplot(x = qs_eigen$vectors, y = qs_eigen$vectors, col = c(NA, "black"))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.Groupwise</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prints all details about a Groupwise object.</h2>
+
+<h3>Description</h3>
+
+<p>Prints all details about a Groupwise object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'Groupwise'
+print(x, printSizes = length(x), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A Groupwise object as it is returned by <code>groupwise</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printSizes</code></td>
+<td>
+<p>Integer that specifies how many of the cascade sizes (starting with the largest cascades) 
+should be printed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further parameters</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Prints all details about a given Groupwise object. 
+A Groupwise object re-sorts a Subcascades object 
+in a way that the cascades made up of the same classes are grouped. 
+The printSizes parameter can be used to control the cascade sizes to be printed.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+
+# generate Subcascades object
+subc = subcascades(predMap,thresh=0.7)
+
+#create a Groupwise object
+groupwise = groupwise(subc)
+
+print(groupwise, printSizes = 2)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>effbound</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Lower bound on efficiency
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes a lower bound on the efficiency of a design <code>w</code> in the class of all approximate designs of the same size as <code>w</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">effbound(Fx, w, crit="D", h=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> matrix of candidate regressors (as rows), where <code>n</code> is the number of candidate design points and <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) is the number of parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>the criterion; possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code> and <code>"c"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> nor <code>"c"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> or <code>"c"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The lower bounds are based on the standard methods of convex analysis. See the reference paper at <a href="http://www.iam.fmph.uniba.sk/design/">http://www.iam.fmph.uniba.sk/design/</a> for mathematical details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A lower bound on the D-, A-, I-, c-, or C-efficiency of <code>w</code> in the class of all approximate designs of the same size as <code>w</code> at the set of candidate regressors given by <code>Fx</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The design <code>w</code> should have a non-singular information matrix. Occasionally, the lower bound is very conservative. The exact value of the efficiency of <code>w</code> is the ratio of the criterion value of <code>w</code> and the criterion value of the optimal design.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>varfun</code>, <code>dirder</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># A lower bound on the D-efficiencies of the uniform designs
+# for the quadratic regression on a line grid
+
+Fx &lt;- Fx_cube(~x1 + I(x1^2), n.levels = 101)
+effbound(Fx, rep(1/101, 101))
+
+# The precise value of the D-efficiency
+# requires computing the D-optimal design:
+
+w.opt &lt;- od_REX(Fx)$w.best
+optcrit(Fx, rep(1/101, 101)) / optcrit(Fx, w.opt)
+
+## Not run: 
+# Let us do this for polynomial regressions of various degrees:
+
+n &lt;- 101; d.max &lt;- 10; x &lt;- seq(-1, 1, length = n)
+effs &lt;- matrix(0, ncol = 2, nrow = d.max)
+Fx &lt;- matrix(1, ncol = 1, nrow = n)
+for(d in 1:d.max) {
+  Fx &lt;- cbind(Fx, x^d)
+  effs[d, 1] &lt;- effbound(Fx, rep(1/n, n))
+  w.opt &lt;- od_REX(Fx)$w.best
+  effs[d, 2] &lt;- optcrit(Fx, rep(1/n, n)) / optcrit(Fx, w.opt)
+}
+print(effs)
+
+# We see that the lower bound becomes more and more conservative
+# compared to the real efficiency which actually increases with d.
+
+
+# Compute a D-optimal design for the main effects model
+# on a random subsample of a 6D cube
+
+n &lt;- 1000000; m &lt;- 6
+Fx &lt;- cbind(1, matrix(runif(n*m), ncol = m))
+w &lt;- od_REX(Fx, eff = 0.99)$w.best
+Fx &lt;- od_DEL(Fx, w)$Fx.keep
+w &lt;- od_REX(Fx)$w.best
+
+# Now we will compute a lower bound on efficiency of such design
+# on the entire (continuous) cube:
+Fx &lt;- rbind(Fx, Fx_cube(~x1 + x2 + x3 + x4 + x5 + x6, lower = rep(0, 6)))
+w &lt;- c(w, rep(0, 2^6))
+effbound(Fx, w)
+
+# The real D-efficiency of w on the entire cube is
+optcrit(Fx, w)/od_REX(Fx)$Phi.best
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>glssoln</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generalized least-squares solver</h2>
+
+<h3>Description</h3>
+
+<p>Solves the generalized least squares problem.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">glssoln(a, x, v, tol = sqrt(.Machine$double.eps))
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>Given matrices <code class="reqn">a</code>, <code class="reqn">x</code>, <code class="reqn">v</code>, <code>glssoln</code> computes <code class="reqn">y</code> such that
+</p>
+<p style="text-align: center;"><code class="reqn">(x-ay)^T v^{-1} (x-ay)</code>
+</p>
+
+<p>is minimized.
+This is accomplished by first computing the Choleski decomposition of <code class="reqn">v</code>:
+</p>
+<p style="text-align: center;"><code class="reqn">v=LL^T.</code>
+</p>
+
+<p>One then solves for <code class="reqn">y</code> in the equation
+</p>
+<p style="text-align: center;"><code class="reqn">L^{-1}ay=L^{-1}x.</code>
+</p>
+
+<p>This is accomplished by means of a singular-value decomposition of <code class="reqn">L^{-1} a</code>.
+</p>
+<p>The resulting <code class="reqn">y</code> then satisfies
+</p>
+<p style="text-align: center;"><code class="reqn">x=ay+e,</code>
+</p>
+
+<p>where the entries of <code class="reqn">e</code> are the residuals.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>glssoln</code> returns a list of two named components:
+</p>
+
+<ul>
+<li> <p><code>coeff</code> is <code class="reqn">y</code> as above.
+</p>
+</li>
+<li> <p><code>residuals</code> is <code class="reqn">e</code> as above.
+</p>
+</li>
+</ul>
+</div>

@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_zeros</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check data for zeros across samples within factor levels.
+Will determine if there are more zeros than a user specified threshold within any given factor level(s). Returns
+a vector of Metabolites that are 0 above the threshold in any given factor level.</h2>
+
+<h3>Description</h3>
+
+<p>Check data for zeros across samples within factor levels.
+Will determine if there are more zeros than a user specified threshold within any given factor level(s). Returns
+a vector of Metabolites that are 0 above the threshold in any given factor level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check_zeros(
+  count_data,
+  metadata,
+  numerator = NULL,
+  denominator = NULL,
+  threshold = 25,
+  response_variable = "Metabolite",
+  Factor
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>count_data</code></td>
+<td>
+<p>A metabolomics count data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata</code></td>
+<td>
+<p>Metadata dataframe for the metabolomics count data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numerator</code></td>
+<td>
+<p>String of the first independent variable you wish to test. Defualt is NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>denominator</code></td>
+<td>
+<p>String of the second independent variable you wish to test. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Integer. A percentage threshold for the number of zeros in a Metabolite. Default is 25.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_variable</code></td>
+<td>
+<p>String of the column header for the response variables,
+usually "Metabolite"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Factor</code></td>
+<td>
+<p>A factor with levels to test for zeros.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+check_zeros(count_data = c57_nos2KO_mouse_countDF, metadata = c57_nos2KO_mouse_metadata,
+Factor = "Treatment")
+
+check_zeros(count_data = c57_nos2KO_mouse_countDF, metadata = c57_nos2KO_mouse_metadata,
+Factor = "Treatment",numerator = "Strep", denominator = "Mock", threshold = 10)
+</code></pre>
+
+
+</div>

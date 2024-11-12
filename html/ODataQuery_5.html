@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>and_query</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a combined filter</h2>
+
+<h3>Description</h3>
+
+<p>Create a combined filter
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">and_query(...)
+
+or_query(...)
+
+not_query(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Raw odata queries or query options.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This function can be used with raw values or query options
+</p>
+
+<ol>
+<li>
+<p> Raw odata queries
+Raw OData can be passed as string.
+It's the responsibility of the caller that the argument is valid syntax
+and values are escaped.
+</p>
+</li>
+<li>
+<p> Query options
+Query options can be passed as named parameters.
+</p>
+</li>
+</ol>
+<p>Query options should be of the following form: <code>property.operator = value</code>
+</p>
+
+<ul>
+<li>
+<p> Property should be a property of the entity or individual.
+</p>
+</li>
+<li>
+<p> Operation can have any of the following values:
+</p>
+
+<ul>
+<li>
+<p> eq Whether property is equal to value.
+</p>
+</li>
+<li>
+<p> ne Whether property is not equal to value.
+</p>
+</li>
+<li>
+<p> gt Whether property is greater than value.
+</p>
+</li>
+<li>
+<p> ge Whether property is greater than or equal to value.
+</p>
+</li>
+<li>
+<p> lt Whether property is lower than value.
+</p>
+</li>
+<li>
+<p> le Whether property is lower than or equal to value.
+</p>
+</li>
+<li>
+<p> has Whether property has value as enumeration property.
+</p>
+</li>
+<li>
+<p> startswith Whether property starts with value.
+</p>
+</li>
+<li>
+<p> endswith Whether property ends with value.
+</p>
+</li>
+<li>
+<p> contains Whether property contains value.
+</p>
+</li>
+</ul>
+</li>
+<li>
+<p> Value should be a string, double or boolean
+and will be escaped automatically.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><a href="https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/">https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">and_query("Column eq OtherColumn",
+          FirstName.startswith = 'A',
+          LastName.eq = 'Scott')
+
+or_query("ExpireDate eq null",
+         ExpireDate.lt = "2020-07-07")
+
+not_query(or_query(Age.lt = 21, Age.gt = 65))
+
+</code></pre>
+
+
+</div>

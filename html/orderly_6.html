@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_bundle_pack_remote</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pack and import bundles with remotes</h2>
+
+<h3>Description</h3>
+
+<p>Pack a bundle on a remote. This is like calling
+<code>orderly_bundle_pack()</code> on the remote and can be used to
+extract a long-running report from a server to run (say) on an HPC
+system.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_bundle_pack_remote(
+  name,
+  parameters = NULL,
+  instance = NULL,
+  root = NULL,
+  locate = TRUE,
+  remote = NULL,
+  dest = tempdir()
+)
+
+orderly_bundle_import_remote(path, root = NULL, locate = TRUE, remote = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>Name of the report to pack (see
+<code>orderly_list()</code>.  A leading <code style="white-space: pre;">⁠src/⁠</code> will be removed if
+provided, allowing easier use of autocomplete.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p>Parameters passed to the report. A named list of
+parameters declared in the <code>orderly.yml</code>.  Each parameter
+must be a scalar character, numeric, integer or logical.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instance</code></td>
+<td>
+<p>Select instance of the source database to be used,
+where multiple instances are configured.  Use a single
+<em>unnamed</em> character string to indicate an instance to
+match.  If given, then this name must be present in all
+databases where instances are listed in
+<code>orderly_config.yml</code>, and will be ignored by all database
+where instances are not given.  See the "orderly" vignette for
+further information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remote</code></td>
+<td>
+<p>The remote to pack the bundle from, or import into</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dest</code></td>
+<td>
+<p>Optional path to write bundle to (a directory
+name). By default we use the temporary directory and return the
+full path to the created file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>The path to unpack and import
+(a zip file created by <code>orderly_bundle_run</code>)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The workflow here will typically be:
+</p>
+
+<ol>
+<li>
+<p> Use <code>orderly_bundle_pack_remote()</code> to create a local
+copy of a bundle, extracted from a remote. Typically this will
+be run from the system where the bundle will be run (an HPC
+head-node or another powerful computer).
+</p>
+</li>
+<li>
+<p> Run the bundle using <code>orderly_bundle_run()</code>
+</p>
+</li>
+<li>
+<p> Re-import the completed bundle using
+<code>orderly_bundle_import_remote</code> which sends the zip
+file to the remote and adds it to the archive.
+</p>
+</li>
+</ol>
+<p>Typically these commands will <em>not</em> be run from the orderly
+root. However, the <code>root</code> argument may still be used to find
+your remote configuration. Alternatively, if your <code>remote</code>
+argument is an orderly remote (e.g.,
+<code>orderly_remote_path()</code>, or <code>orderlyweb</code>'s
+<code>orderlyweb::orderlyweb_remote</code>) then the <code>root</code> and
+<code>locate</code> arguments will be ignored and this command can be
+run from anywhere. This is the recommended configuration for
+running on a HPC system.
+</p>
+
+
+</div>

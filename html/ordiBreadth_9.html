@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordi.focal.drop</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+ordi.focal.drop
+</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the ordinated host breadth based on ordination where each herbivore is excluded from the ordination.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordi.focal.drop(dat, dist.method = "jaccard")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+
+<p>A matrix of diet associations. Rows are herbivores and columns are diet items.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.method</code></td>
+<td>
+
+<p>Dissimilarity index passed on to vegdist in the vegan package.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing the following:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>species</code></td>
+<td>
+<p>Name of herbivore species (row name of <code>dat</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ODB</code></td>
+<td>
+<p>Ordinated diet breadth</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ODB.scaled</code></td>
+<td>
+<p>Scaled ordinated diet breadth</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>focal.distances</code></td>
+<td>
+<p>Distance to each diet item from herbivore centroid based on ordination excluding focal herbivore</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>focal.breadth</code></td>
+<td>
+<p>Ordinated diet breadth of herbivore based on ordination where focal herbivore is excluded</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>focal.scale.factor</code></td>
+<td>
+<p>The ordinated diet breadth of an extreme generalist in the ordinated space when focal herbivore is excluded from the ordination</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>focal.scale.breadth</code></td>
+<td>
+<p>Scaled ordinated diet breadth of herbivore based on ordination where focal herbivore is excluded</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>James Fordyce
+</p>
+
+
+<h3>References</h3>
+
+<p>Fordyce, J.A., C.C. Nice, C.A. Hamm, &amp; M.L. Forister. Quantifying diet breadth through ordination of host association. Ecology
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">testdata&lt;-	
+	c(		
+			0,0,0,0,1,0,0,0,0,0,
+			0,0,0,0,0,0,1,1,0,0,
+			1,1,1,0,0,0,0,0,0,0,
+			0,0,0,0,1,1,0,1,0,1,
+			1,1,1,0,0,0,1,0,0,0,
+			1,1,0,0,1,0,1,0,0,0,
+			0,0,0,1,0,0,1,0,1,1,
+			1,0,1,0,1,1,0,0,0,1, 
+			1,1,0,0,1,0,0,1,1,1,
+			1,1,1,0,1,1,0,1,1,1) 
+
+
+dat&lt;-array(dim=c(10,10),data=testdata)
+dat&lt;-t(dat)
+colnames(dat)&lt;-paste("",LETTERS[1:10],sep="")
+rownames(dat)&lt;-paste("bug",1:10,sep="")
+
+
+ordi.focal.drop(dat)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,221 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>smlik</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Softmax log likelihood under Harville and Henery Models.</h2>
+
+<h3>Description</h3>
+
+<p>Compute the softmax log likelihood and gradient of the same.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">harsmlik(g, idx, eta, wt = NULL, deleta = NULL)
+
+hensmlik(g, idx, eta, gamma, wt = NULL, deleta = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>a vector giving the group indices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>idx</code></td>
+<td>
+<p>a vector of integers, the same length as <code>g</code>, which
+describes the reverse sort order on the observations, first by group,
+then by place within the group. That is, the element <code>idx[0]</code> is the
+index of the last place finisher in the group <code>g[0]</code>; then
+<code>idx[1]</code> is the index of the next-to-last place finisher in
+<code>g[1]</code> (assuming it equals <code>g[0]</code>), and so on.
+The <code>idx</code> shall be zero based.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>a vector of the odds.
+Must be the same length as <code>g</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>an optional vector of non-negative elements, the same length
+as <code>g</code>, giving the observation level weights. We then compute a 
+weighted log likelihood, where the weights are in each summand.
+The weights should probably have mean 1, but that's just, like, my
+opinion, man. Negative weights throw an error. Note that the weights
+for the last place in each group have no effect on the computation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deleta</code></td>
+<td>
+<p>an optional matrix whose row count equals the number of elements
+of <code>g</code>, <code>idx</code>, and <code>eta</code>. The rows of <code>deleta</code> are the derivatives of
+eta with respect to some <code class="reqn">z</code>. This is used to then maximize
+likelihood with respect to <code class="reqn">z</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p>a vector of the gamma parameters. It is assumed that the
+first element is <code class="reqn">\gamma_2</code>, while the last element is applied
+to all higher order tie breaks.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given vectors <code class="reqn">g</code>, <code class="reqn">\eta</code> and optionally the gradient of <code class="reqn">\eta</code>
+with respect to some coefficients, computes the log likelihood under the
+softmax. The user must provide a reverse ordering as well, which is sorted
+first by the groups, <code class="reqn">g</code>, and then, within a group, in increasing
+quality order. For a race, this means that the index is in order from the
+last place to the first place in that race, where the group numbers
+correspond to one race.
+</p>
+<p>Under the Harville model, the log likelihood on a given group, where we are indexing
+in <em>forward</em> order, is 
+</p>
+<p style="text-align: center;"><code class="reqn">\left(\eta_1 - \log \sum_{j \ge 1} \mu_j\right) + \left(\eta_2 - \log \sum_{j \ge 2} \mu_j\right) + ...</code>
+</p>
+
+<p>where <code class="reqn">\mu_i = \exp{\eta_i}</code>.
+By “forward order”, we mean that <code class="reqn">\eta_1</code> corresponds to the
+participant taking first place within that group, <code class="reqn">\eta_2</code> took second
+place, and so on.
+</p>
+<p>The Henery model log likelihood takes the form
+</p>
+<p style="text-align: center;"><code class="reqn">\left(\eta_1 - \log \sum_{j \ge 1} \mu_j\right) + \left(\gamma_2 \eta_2 - \log \sum_{j \ge 2} \mu_j^{\gamma_2}\right) + ...</code>
+</p>
+
+<p>for gamma parameters, <code class="reqn">\gamma</code>.
+The Henery model corresponds to the Harville model where all the gammas equal 1.
+</p>
+<p>Weights in weighted estimation apply to each summand.
+The weight for the last place participant in a group is irrelevant.
+The weighted log likelihood under the Harville model is
+</p>
+<p style="text-align: center;"><code class="reqn">w_1\left(\eta_1 - \log \sum_{j \ge 1} \mu_j\right) + w_2\left(\eta_2 - \log \sum_{j \ge 2} \mu_j\right) + ...</code>
+</p>
+
+<p>One should think of the weights as applying to the outcome,
+not the participant.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The log likelihood. If <code>deleta</code> is given, we add an attribute
+to the scalar number, called <code>gradient</code> giving the derivative.
+For the Henery model we also include a term of <code>gradgamma</code> which is
+the gradient of the log likelihood with respect to the gamma vector.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The likelihood function does not yet support ties.
+</p>
+<p>To avoid incorrect inference when only the top
+performers are recorded, and all others are 
+effectively tied, one should use weighting.
+Set the weights to zero for participants who
+are tied non-winners, and one for the rest
+So for example, if you observe the Gold, Silver,
+and Bronze medal winners of an Olympic event
+that had a starting field of 12 participants,
+set weights to 1 for the medal winners, and 0
+for the others. Note that the weights do not
+attach to the participants, they attach to
+the place they took.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Harville, D. A. "Assigning probabilities to the outcomes of multi-entry competitions." 
+Journal of the American Statistical Association 68, no. 342 (1973): 312-316.
+<a href="http://dx.doi.org/10.1080/01621459.1973.10482425">http://dx.doi.org/10.1080/01621459.1973.10482425</a>
+</p>
+<p>Henery, R. J. "Permutation probabilities as models for horse races." 
+Journal of the Royal Statistical Society: Series B (Methodological) 43, no. 1 (1981): 86-91.
+<a href="http://dx.doi.org/10.1111/j.2517-6161.1981.tb01153.x">http://dx.doi.org/10.1111/j.2517-6161.1981.tb01153.x</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># a garbage example
+set.seed(12345)
+g &lt;- as.integer(sort(ceiling(20 * runif(100))))
+idx &lt;- as.integer(rev(1:length(g)) - 1L)
+eta &lt;- rnorm(length(g))
+foo &lt;- harsmlik(g=g,idx=idx,eta=eta,deleta=NULL)
+
+# an example with a real idx
+nfeat &lt;- 5
+set.seed(1234)
+g &lt;- ceiling(seq(0.1,1000,by=0.1))
+X &lt;- matrix(rnorm(length(g) * nfeat),ncol=nfeat)
+beta &lt;- rnorm(nfeat)
+eta &lt;- X %*% beta
+y &lt;- rsm(eta,g)
+
+idx &lt;- order(g,y,decreasing=TRUE) - 1
+foores &lt;- harsmlik(g,idx,eta,deleta=X)
+
+# now reweight them
+wt &lt;- runif(length(g))
+wt &lt;- wt / mean(wt)   # mean 1 is recommended
+foores &lt;- harsmlik(g,idx,eta,wt=wt)
+
+# try hensmlik 
+foores &lt;- hensmlik(g,idx,eta,gamma=c(0.9,0.8,1),wt=wt)
+
+# check the value of the gradient by numerical approximation
+
+ nfeat &lt;- 8
+ set.seed(321)
+ g &lt;- ceiling(seq(0.1,1000,by=0.1))
+ X &lt;- matrix(rnorm(length(g) * nfeat),ncol=nfeat)
+ beta &lt;- rnorm(nfeat)
+ eta &lt;- X %*% beta
+ y &lt;- rsm(eta,g)
+ 
+ idx &lt;- order(g,y,decreasing=TRUE) - 1
+ if (require(numDeriv)) {
+ 
+ 	fastval &lt;- attr(harsmlik(g,idx,eta,deleta=X),'gradient')
+ 	numap &lt;- grad(function(beta,g,idx,X) { 
+ 			 eta &lt;- X %*% beta
+ 			 as.numeric(harsmlik(g,idx,eta))
+ 			 },
+ 			 x=beta,g=g,idx=idx,X=X)
+ 	rbind(fastval,numap)
+ }
+
+</code></pre>
+
+
+</div>

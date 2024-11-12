@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Fx_simplex</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Matrix of candidate regressors for a regression model on a simplex grid
+</h2>
+
+<h3>Description</h3>
+
+<p>Creates the matrix of all candidate regressors for a mixture regression model on a regular simplex grid (up to 9 factors).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Fx_simplex(formula, n.levels.mix=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+
+<p>the formula of the model. The rules for creating the formula are standard for R but: 1) the formula must not contain the dependent variable (it is one-sided); 2) the <code>d</code> factors (variables) must be labeled <code>x1,x2,x3,</code>...
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.levels.mix</code></td>
+<td>
+
+<p>the number of levels of each factor (each factor has the same number of levels). If <code>n.levels=NULL</code>, the program sets <code>n.levels &lt;- 2*d + 1</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The <code>n</code> times <code>m</code> matrix of all candidate regressors of a mixture regression model on a regular simplex grid.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Note that <code>Fx</code> is <em>not</em> the design matrix (which is also sometimes called the regression matrix, or the model matrix). The design matrix depends on <code>Fx</code> as well as on the exact experimental design <code>w</code>. For this package, an exact experimental design is formalized as the vector of non-negative integer values corresponding to the replication of trials (observations) in individual design points. Thus, if <code>Fx</code> is the matrix of all candidate regressors and <code>w</code> is the exact design then <code>Fx[rep(1:nrow(Fx), w),]</code> is the actual design matrix for the experiment.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Fx_cube, Fx_glm, Fx_dose, Fx_survival, Fx_blocks</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# The Fx of the Scheffe quadratic mixture model
+# with 3 mixture components, each with 21 levels.
+Fx &lt;- Fx_simplex(~x1 + x2 + x3 + I(x1*x2) + I(x1*x3) + I(x2*x3) - 1, 21)
+
+# The approximate I-optimal design of size 20
+# bound by 1 at each design point
+w &lt;- od_MISOCP(Fx, b3=20, bin=TRUE, crit="I", type="approximate")$w.best
+od_plot(Fx, w, Fx[, 2:3])
+
+# As above, with constraints on the proportions
+r &lt;- c(); for (i in 1:nrow(Fx)) if (max(Fx[i, 2:4]) &gt; 0.7) r &lt;- c(r, i)
+w &lt;- od_MISOCP(Fx[-r, ], b3=20, bin=TRUE, crit="I", type="approximate")$w.best
+od_plot(Fx[-r, ], w, Fx[-r, 2:3])
+
+# Note that one must be careful when choosing a model for a mixture experiment:
+# Let us compute the matrix of regressors of the simple linear mixture model
+# with 4 mixture components, each with levels {0, 0.5, 1}.
+
+Fx &lt;- Fx_simplex(~x1 + x2 + x3 + x4, 3)
+
+# The model has only 5 parameters and as many as 10 design points,
+# but there is no design that guarantees estimability of the parameters.
+# This can be shown by evaluating:
+det(infmat(Fx, rep(1, 10)))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

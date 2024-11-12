@@ -1,0 +1,228 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dumpers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Result dumpers</h2>
+
+<h3>Description</h3>
+
+<p>Result dumpers are functions allowing to handle the chunks of results from
+OAI-PMH service "on the fly". Handling can include processing, writing to
+files, databases etc.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dump_raw_to_txt(
+  res,
+  args,
+  as,
+  file_pattern = "oaidump",
+  file_dir = ".",
+  file_ext = ".xml"
+)
+
+dump_to_rds(
+  res,
+  args,
+  as,
+  file_pattern = "oaidump",
+  file_dir = ".",
+  file_ext = ".rds"
+)
+
+dump_raw_to_db(res, args, as, dbcon, table_name, field_name, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>results, depends on <code>as</code>, not to be specified by the user</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>args</code></td>
+<td>
+<p>list, query arguments, not to be specified by the user</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as</code></td>
+<td>
+<p>character, type of result to return, not to be specified by the
+user</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_pattern, file_dir, file_ext</code></td>
+<td>
+<p>character respectively: initial part of
+the file name, directory name, and file extension used to create file
+names. These arguments are passed to <code>tempfile()</code> arguments
+<code>pattern</code>, <code>tmpdir</code>, and <code>fileext</code> respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dbcon</code></td>
+<td>
+<p><span class="pkg">DBI</span>-compliant database connection</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table_name</code></td>
+<td>
+<p>character, name of the database table to write into</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>field_name</code></td>
+<td>
+<p>character, name of the field in database table to write
+into</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to/from other functions</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Often the result of a request to a OAI-PMH service are so large that it is
+split into chunks that need to be requested separately using
+<code>resumptionToken</code>. By default functions like
+<code>list_identifiers()</code> or <code>list_records()</code> request these
+chunks under the hood and return all concatenated in a single R object. It
+is convenient but insufficient when dealing with large result sets that
+might not fit into RAM. A result dumper is a function that is called on
+each result chunk. Dumper functions can write chunks to files or databases,
+include initial pre-processing or extraction, and so on.
+</p>
+<p>A result dumper needs to be function that accepts at least the arguments:
+<code>res</code>, <code>args</code>, <code>as</code>. They will get values by the enclosing
+function internally. There may be additional arguments, including <code>...</code>.
+Dumpers should return <code>NULL</code> or a value that will
+be collected and returned by the function calling the dumper (e.g.
+<code>list_records()</code>).
+</p>
+<p>Currently result dumpers can be used with functions:
+<code>list_identifiers()</code>, <code>list_records()</code>, and <code>list_sets()</code>.
+To use a dumper with one of these functions you need to:
+</p>
+
+<ul>
+<li>
+<p> Pass it as an additional argument <code>dumper</code>
+</p>
+</li>
+<li>
+<p> Pass optional addtional arguments to the dumper function in a list
+as the <code>dumper_args</code> argument
+</p>
+</li>
+</ul>
+<p>See Examples. Below we provide more details on the dumpers currently
+implemented.
+</p>
+<p><code>dump_raw_to_txt</code> writes raw XML to text files. It requires
+<code>as=="raw"</code>. File names are created using <code>tempfile()</code>. By
+default they are written in the current working directory and have a format
+<code>oaidump*.xml</code> where <code>*</code> is a random string in hex.
+</p>
+<p><code>dump_to_rds</code> saves results in an <code>.rds</code> file via <code>saveRDS()</code>.
+Type of object being saved is determined by the <code>as</code> argument. File names
+are generated in the same way as by <code>dump_raw_to_txt</code>, but with default
+extension <code>.rds</code>
+</p>
+<p><code>dump_xml_to_db</code> writes raw XML to a single text column of a table in a
+database. Requires <code>as == "raw"</code>. Database connection <code>dbcon</code>
+should be a connection object as created by <code>DBI::dbConnect()</code> from
+package <span class="pkg">DBI</span>. As such, it can connect to any database supported by
+<span class="pkg">DBI</span>. The records are written to a field <code>field_name</code> in a table
+<code>table_name</code> using <code>DBI::dbWriteTable()</code>. If the table does not
+exist, it is created. If it does, the records are appended. Any additional
+arguments are passed to <code>DBI::dbWriteTable()</code>
+</p>
+
+
+<h3>Value</h3>
+
+<p>Dumpers should return <code>NULL</code> or a value that will be collected
+and returned by the function using the dumper.
+</p>
+<p><code>dump_raw_to_txt</code> returns the name of the created file.
+</p>
+<p><code>dump_to_rds</code> returns the name of the created file.
+</p>
+<p><code>dump_xml_to_db</code> returns <code>NULL</code>
+</p>
+
+
+<h3>References</h3>
+
+<p>OAI-PMH specification
+<a href="https://www.openarchives.org/OAI/openarchivesprotocol.html">https://www.openarchives.org/OAI/openarchivesprotocol.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Functions supporting the dumpers:
+<code>list_identifiers()</code>, <code>list_sets()</code>, and <code>list_records()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+### Dumping raw XML to text files
+
+# This will write a set of XML files to a temporary directory
+fnames &lt;- list_identifiers(from="2018-06-01T",
+                           until="2018-06-14T",
+                           as="raw",
+                           dumper=dump_raw_to_txt,
+                           dumper_args=list(file_dir=tempdir()))
+# vector of file names created
+str(fnames)
+all( file.exists(fnames) )
+# clean-up
+unlink(fnames)
+
+
+### Dumping raw XML to a database
+
+# Connect to in-memory SQLite database
+con &lt;- DBI::dbConnect(RSQLite::SQLite(), dbname=":memory:")
+# Harvest and dump the results into field "bar" of table "foo"
+list_identifiers(from="2018-06-01T",
+                 until="2018-06-14T",
+                 as="raw",
+                 dumper=dump_raw_to_db,
+                 dumper_args=list(dbcon=con,
+                                  table_name="foo",
+                                  field_name="bar") )
+# Count records, should be 101
+DBI::dbGetQuery(con, "SELECT count(*) as no_records FROM foo")
+
+DBI::dbDisconnect(con)
+
+
+
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

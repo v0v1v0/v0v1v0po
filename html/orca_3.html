@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Orbit counting</h2>
+
+<h3>Description</h3>
+
+<p>Count the node or edge orbits in 4- or 5- node graphlets for all nodes (edges) in the given graph.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">count4(graph)
+count5(graph)
+ecount4(graph)
+ecount5(graph)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>graph</code></td>
+<td>
+<p>A graph given as a nx2 edge matrix, a data frame with edges or a graph object from the package 'graph'. The nodes in the matrix or data frame are given by integer indices that start with 1.
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A numeric matrix or orbit counts. Rows correspond to graph nodes or edges in the same order as on the input, and the columns corresponding to orbits.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tomaz Hocevar and Janez Demsar</p>
+
+
+<h3>References</h3>
+
+<p>Tomaz Hocevar, Janez Demsar (2016): Computation of Graphlet Orbits for Nodes and Edges in Sparse Graphs. Journal of Statistical Software, 71(10), pp. 1-24.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(orca)
+
+# Load and show the orbit counts for the Karate graph
+data("karate")
+count4(karate)
+
+
+## Not run: 
+# Simple analysis of School Wikipedia network: find the most similar
+# nodes with respect to the local network topology
+# Requires data from http://www.biolab.si/supp/Rorca/_downloads/schools-wiki.zip
+
+library("FNN")
+
+nodes &lt;- scan("schools-wiki-nodes.txt", what="", sep="\n")
+edges &lt;- read.table("schools-wiki-edges.txt")
+
+orbits &lt;- count4(edges)
+nn &lt;- get.knn(orbits, k=10)
+neighbours &lt;- nn$nn.index
+distances &lt;- nn$nn.dist
+
+check &lt;- c("Canada", "Germany", "Isaac Newton", "Albert Einstein",
+           "Mahatma Gandhi", "Mahabharata")
+node_indices &lt;- match(check, nodes)
+for (i in 1:length(check)) {
+    cat("\n\n", check[i], ": ", sep="")
+    cat(nodes[neighbours[node_indices[i], ]], sep=", ")
+    cat("\n")
+    cat(round(distances[node_indices[i], ]), sep=", ")
+}
+
+## End(Not run)
+</code></pre>
+
+
+</div>

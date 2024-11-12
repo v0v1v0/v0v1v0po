@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>levitus</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Annually-averaged sea-surface temperature and salinity</h2>
+
+<h3>Description</h3>
+
+<p>Sea-surface temperature and salinity from the 2013 version of the World
+Ocean Atlas (WOA), commonly referred to as the Levitus atlas, in the form of
+a list containing <code>longitude</code>, <code>latitude</code>, and sea-surface
+salinity <code>SSS</code> and temperature <code>SST</code>.  See References 2 and 3
+for more information about the dataset.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(levitus, package="ocedata")
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>The <code>levitus</code> dataset was constructed from the World Ocean Atlas as of
+2013, downloaded from Reference 1.  The data were read with
+<a href="https://CRAN.R-project.org/package=ncdf4"><span class="pkg">ncdf4</span></a>, and the top layers of temperature and salinity were
+selected.  Then longitude was shifted from (0,360) notation to the
+(-180,180) notation used by <a href="https://CRAN.R-project.org/package=oce"><span class="pkg">oce</span></a>.
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li> <p><a href="https://www.nodc.noaa.gov/OC5/woa13/">https://www.nodc.noaa.gov/OC5/woa13/</a>
+</p>
+</li>
+<li>
+<p> Locarnini, R. A., A. V. Mishonov, J. I. Antonov, T. P. Boyer, H. E. Garcia,
+O. K. Baranova, M. M. Zweng, C. R. Paver, J. R. Reagan, D. R. Johnson, M.
+Hamilton, and D. Seidov, 2013. World Ocean Atlas 2013, Volume 1: Temperature.
+S. Levitus, Ed., A. Mishonov Technical Ed.; NOAA Atlas NESDIS 73, 40 pp.
+</p>
+</li>
+<li>
+<p> Zweng, M.M, J.R. Reagan, J.I. Antonov, R.A. Locarnini, A.V. Mishonov, T.P.
+Boyer, H.E. Garcia, O.K. Baranova, D.R. Johnson, D.Seidov, M.M. Biddle, 2013.
+World Ocean Atlas 2013, Volume 2: Salinity. S. Levitus, Ed., A. Mishonov
+Technical Ed.; NOAA Atlas NESDIS 74, 39 pp.
+</p>
+</li>
+</ol>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(levitus, package="ocedata")
+attach(levitus)
+## Not run: 
+oce::imagep(longitude, latitude, SST, col=oceColorsTemperature, zlim=c(-2, 30))
+oce::imagep(longitude, latitude, SSS, col=oceColorsSalinity, zlim=c(20, 40))
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

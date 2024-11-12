@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>distanceSlater</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Slater distances (standardized Euclidean distances).</h2>
+
+<h3>Description</h3>
+
+<p>The euclidean distance is often used as a measure of similarity between elements (see <code>distance()</code>. A drawback of
+this measure is that it depends on the range of the rating scale and the number of constructs used, i. e. on the
+size of a grid. <br> An approach to standardize the euclidean distance to make it independent from size and range of
+ratings and was proposed by Slater (1977, pp. 94). The 'Slater distance' is the Euclidean distance divided by the
+expected distance. Slater distances bigger than 1 are greater than expected, lesser than 1 are smaller than
+expected. The minimum value is 0 and values bigger than 2 are rarely found. Slater distances have been be used to
+compare inter-element distances between different grids, where the grids do not need to have the same constructs or
+elements. Hartmann (1992) showed that Slater distance is not independent of grid size. Also the distribution of the
+Slater distances is asymmetric. Hence, the upper and lower limit to infer 'significance' of distance is not
+symmetric. The practical relevance of Hartmann's findings have been demonstrated by Schoeneich and Klapp (1998). To
+calculate Hartmann's version of the standardized distances see <code>distanceHartmann()</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">distanceSlater(x, trim = 20, index = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>The number of characters a construct or element is trimmed to (default is
+<code>20</code>). If <code>NA</code> no trimming occurs. Trimming
+simply saves space when displaying correlation of constructs
+with long names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>Whether to print the number of the construct or element
+in front of the name (default is <code>TRUE</code>). This is useful to avoid
+identical row names, which may cause an error.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix with Slater distances.
+</p>
+
+
+<h3>Calculation</h3>
+
+<p>The Slater distance is calculated as follows.
+For a derivation see Slater (1977, p.94).       <br>
+Let matrix <code class="reqn">D</code> contain the row centered ratings. Then
+</p>
+<p style="text-align: center;"><code class="reqn">P = D^TD</code>
+</p>
+<p> and
+</p>
+<p style="text-align: center;"><code class="reqn">S = tr(P)</code>
+</p>
+
+<p>The expected 'unit of expected distance' results as     <br></p>
+<p style="text-align: center;"><code class="reqn">U = (2S/(m-1))^{1/2}</code>
+</p>
+
+<p>where <code class="reqn">m</code> denotes the number of elements of the grid.
+The standardized Slater distances is the matrix of Euclidean distances
+<code class="reqn">E</code> divided by the expected distance <code class="reqn">U</code>.
+</p>
+<p style="text-align: center;"><code class="reqn">E/U</code>
+</p>
+
+
+
+<h3>References</h3>
+
+<p>Hartmann, A. (1992). Element comparisons in repertory grid technique: Results and consequences of a
+Monte Carlo study. <em>International Journal of Personal Construct Psychology, 5</em>(1), 41-56.
+</p>
+<p>Schoeneich, F., &amp; Klapp, B. F. (1998). Standardization of interelement distances in repertory grid technique and
+its consequences for psychological interpretation of self-identity plots: An empirical study.
+<em>Journal of Constructivist Psychology, 11</em>(1), 49-58.
+</p>
+<p>Slater, P. (1977). <em>The measurement of intrapersonal space by Grid technique.</em> Vol. II. London: Wiley.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>distanceHartmann()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+distanceSlater(bell2010)
+distanceSlater(bell2010, trim = 40)
+
+d &lt;- distanceSlater(bell2010)
+print(d)
+print(d, digits = 4)
+
+# using Norris and Makhlouf-Norris (problematic) cutoffs
+print(d, cutoffs = c(.8, 1.2))
+
+</code></pre>
+
+
+</div>

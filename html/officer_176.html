@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>run_comment</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Comment for 'Word'</h2>
+
+<h3>Description</h3>
+
+<p>Add a comment on a run object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">run_comment(
+  cmt,
+  run = ftext(""),
+  author = "",
+  date = "",
+  initials = "",
+  prop = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cmt</code></td>
+<td>
+<p>a set of blocks to be used as comment content returned by
+function <code>block_list()</code>.
+the "run functions for reporting".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run</code></td>
+<td>
+<p>a run object, made with a call to one of</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>author</code></td>
+<td>
+<p>comment author.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p>comment date</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initials</code></td>
+<td>
+<p>comment initials</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prop</code></td>
+<td>
+<p>formatting text properties returned by
+<code>fp_text_lite()</code> or <code>fp_text()</code>. It also can be NULL in
+which case, no formatting is defined (the default is applied).</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other run functions for reporting: 
+<code>external_img()</code>,
+<code>ftext()</code>,
+<code>hyperlink_ftext()</code>,
+<code>run_autonum()</code>,
+<code>run_bookmark()</code>,
+<code>run_columnbreak()</code>,
+<code>run_footnote()</code>,
+<code>run_footnoteref()</code>,
+<code>run_linebreak()</code>,
+<code>run_pagebreak()</code>,
+<code>run_reference()</code>,
+<code>run_tab()</code>,
+<code>run_word_field()</code>,
+<code>run_wordtext()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fp_bold &lt;- fp_text_lite(bold = TRUE)
+fp_red &lt;- fp_text_lite(color = "red")
+
+bl &lt;- block_list(
+  fpar(ftext("Comment multiple words.", fp_bold)),
+  fpar(
+    ftext("Second line.", fp_red)
+  )
+)
+
+comment1 &lt;- run_comment(
+  cmt = bl,
+  run = ftext("with a comment"),
+  author = "Author Me",
+  date = Sys.Date(),
+  initials = "AM"
+)
+par1 &lt;- fpar("A paragraph ", comment1)
+
+bl &lt;- block_list(
+  fpar(ftext("Comment a paragraph."))
+)
+
+comment2 &lt;- run_comment(
+  cmt = bl, run = ftext("A commented paragraph"),
+  author = "Author You",
+  date = Sys.Date(),
+  initials = "AY"
+)
+par2 &lt;- fpar(comment2)
+
+doc &lt;- read_docx()
+doc &lt;- body_add_fpar(doc, value = par1, style = "Normal")
+doc &lt;- body_add_fpar(doc, value = par2, style = "Normal")
+
+print(doc, target = tempfile(fileext = ".docx"))
+</code></pre>
+
+
+</div>

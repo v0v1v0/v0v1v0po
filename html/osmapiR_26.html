@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_download_changeset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download a changeset in <code>OsmChange</code> format</h2>
+
+<h3>Description</h3>
+
+<p>Returns the <a href="https://wiki.openstreetmap.org/wiki/OsmChange">OsmChange</a> document describing all changes associated with the changeset.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_download_changeset(changeset_id, format = c("R", "osc", "xml"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>changeset_id</code></td>
+<td>
+<p>The id of the changeset represented by a numeric or a character value for which the OsmChange is
+requested.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default) or <code>"osc"</code> (<code>"xml"</code> is a synonym for <code>"osc"</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<ul>
+<li>
+<p> The result of calling this may change as long as the changeset is open.
+</p>
+</li>
+<li>
+<p> The elements in the OsmChange are sorted by timestamp and version number.
+</p>
+</li>
+<li>
+<p> There is <code>osm_get_changesets()</code> to get only information about the changeset itself.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>If <code>format = "R"</code>, returns a data frame with one row for each edit action in the changeset. If <code>format = "osc"</code>,
+returns a xml2::xml_document in the <a href="https://wiki.openstreetmap.org/wiki/OsmChange">OsmChange</a> format.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other get changesets' functions: 
+<code>osm_get_changesets()</code>,
+<code>osm_query_changesets()</code>
+</p>
+<p>Other OsmChange's functions: 
+<code>osm_diff_upload_changeset()</code>,
+<code>osmchange_create()</code>,
+<code>osmchange_delete()</code>,
+<code>osmchange_modify()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">chaset &lt;- osm_download_changeset(changeset_id = 137003062)
+chaset
+</code></pre>
+
+
+</div>

@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.ODT</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>making predict based on ODT objects</h2>
+
+<h3>Description</h3>
+
+<p>Prediction of ODT for an input matrix or data frame.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ODT'
+predict(object, Xnew, leafnode = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object of class ODT, the same as that created by the function <code>ODT</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xnew</code></td>
+<td>
+<p>An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
+Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>leafnode</code></td>
+<td>
+<p>If or not output the leaf node sequence number that <code>Xnew</code> is partitioned. (default FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector of the following:
+</p>
+
+<ul>
+<li>
+<p> prediction: the prediced response of the new data.
+</p>
+</li>
+<li>
+<p> leafnode: the leaf node sequence number that the new data is partitioned.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Zhan, H., Liu, Y., &amp; Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ODT</code> <code>predict.ODRF</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Classification with Oblique Decision Tree.
+data(seeds)
+set.seed(221212)
+train &lt;- sample(1:209, 100)
+train_data &lt;- data.frame(seeds[train, ])
+test_data &lt;- data.frame(seeds[-train, ])
+
+tree &lt;- ODT(varieties_of_wheat ~ ., train_data, split = "entropy")
+pred &lt;- predict(tree, test_data[, -8])
+# classification error
+(mean(pred != test_data[, 8]))
+
+# Regression with Oblique Decision Tree.
+data(body_fat)
+set.seed(221212)
+train &lt;- sample(1:252, 100)
+train_data &lt;- data.frame(body_fat[train, ])
+test_data &lt;- data.frame(body_fat[-train, ])
+
+tree &lt;- ODT(Density ~ ., train_data, split = "mse")
+pred &lt;- predict(tree, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
+
+</code></pre>
+
+
+</div>

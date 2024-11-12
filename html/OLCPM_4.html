@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gen.psi.tau.proj</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>calculate eigenvalue series by projected method</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the rolling eigenvalue series for the monitoring
+process, based on the projected version of sample covanriance matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gen.psi.tau.proj(
+  Y,
+  k,
+  m = ceiling(max(20, (dim(Y)[3])^(r/(r + 2)))),
+  delta,
+  r = 8,
+  kmax = 3
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>the observed <code class="reqn">T\times p1\times p2</code> array. <code class="reqn">T</code> is the
+sample size, <code class="reqn">p1</code> and <code class="reqn">p2</code> are the row and column dimensions,
+respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>a positive integer determining which eigenvalue to monitor.
+<code class="reqn">k=1</code> for the largest eigenvalue.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>a positive integer (<code class="reqn">&gt;1</code>) indicating the bandwidth of the
+rolling windom.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>a number in <code class="reqn">(0,1)</code> indicating the rescaling parameter for
+the eigenvalue. The default approach to calcualte delta is in the paper He
+et al. (2021).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>a positive integer indicating the order of the transformation
+function <code class="reqn">g(x)=|x|^r</code>. Motivated by the paper, <code class="reqn">r</code> should be chosen
+according to the moments of the data; see more details in He et al. (2021).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kmax</code></td>
+<td>
+<p>a positive integer indicating the column number of the
+projection matrix, should be larger than 0 but smaller than <code class="reqn">p2</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The rolling eigenvalue series will start at the stage <code class="reqn">m+1</code>, with length
+<code class="reqn">T-m</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code class="reqn">(T-m)\times 3</code> matrix, whose three columns are the original,
+rescaled, and transformed eigenvalue series, respectively.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Yong He, Xinbing Kong, Lorenzo Trapani, Long Yu
+</p>
+
+
+<h3>References</h3>
+
+<p>He Y, Kong X, Trapani L, &amp; Yu L(2021). Online change-point
+detection for matrix-valued time series with latent two-way factor
+structure. <em>arXiv preprint</em>, arXiv:2112.13479.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## generate data
+k1=3
+k2=3
+epsilon=0.05
+Sample_T=50
+p1=40
+p2=20
+kmax=8
+r=8
+m=p2
+
+# generate data
+Y=gen.data(Sample_T,p1,p2,k1,k2,tau=0.5,change=1,pp=0.3)
+
+# calculate delta
+temp=log(p1)/log(m*p2)
+delta=epsilon*(temp&lt;=0.5)+(epsilon+1-1/(2*temp))*(temp&gt;0.5)
+
+# calculate psi.tau
+psi2=gen.psi.tau.proj(Y,k1+1,m,delta,r,kmax)
+print(psi2)
+
+</code></pre>
+
+
+</div>

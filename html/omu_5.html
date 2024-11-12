@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>count_fold_changes</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get counts for significant fold changes by metabolite class.</h2>
+
+<h3>Description</h3>
+
+<p>Takes an input data frame from the output of omu_summary and creates a
+data frame of counts for significantly changed metabolites by class hierarchy data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">count_fold_changes(count_data, column, sig_threshold, keep_unknowns)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>count_data</code></td>
+<td>
+<p>Output dataframe from the omu_summary function or omu_anova.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>column</code></td>
+<td>
+<p>Metabolite metadata you want to group by, i.e. "Class", "Subclass_1".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig_threshold</code></td>
+<td>
+<p>Significance threshold for compounds that go towars the count,
+sig_threshold = 0.05</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_unknowns</code></td>
+<td>
+<p>TRUE or FALSE for whether to drop compounds that weren't assigned
+hierarchy metadata</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">c57_nos2KO_mouse_countDF &lt;- assign_hierarchy(c57_nos2KO_mouse_countDF, TRUE, "KEGG")
+
+t_test_df &lt;- omu_summary(count_data = c57_nos2KO_mouse_countDF,
+metadata = c57_nos2KO_mouse_metadata,
+numerator = "Strep", denominator = "Mock", response_variable = "Metabolite",
+Factor = "Treatment", log_transform = TRUE, p_adjust = "BH", test_type = "welch")
+
+fold_change_counts &lt;- count_fold_changes(count_data = t_test_df,
+column = "Class", sig_threshold = 0.05, keep_unknowns = "FALSE")
+</code></pre>
+
+
+</div>

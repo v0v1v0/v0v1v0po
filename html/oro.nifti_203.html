@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dropImageDimension</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Drop Image Dimension</h2>
+
+<h3>Description</h3>
+
+<p>Drops a dimension of an image that has one-dimension and 
+sets respective values to 0 in <code>pixdim</code> or 1 in <code>dim</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dropImageDimension(img, onlylast = TRUE, warn = TRUE)
+
+drop_img_dim(img, onlylast = TRUE, warn = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>img</code></td>
+<td>
+<p>nifti object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>onlylast</code></td>
+<td>
+<p>is a logical variable (default = <code>TRUE</code>).  Drop the 
+dimension only if it is the last dimension.  For example, if <code>dim</code> is 
+10x10x1x10 then no dimension is dropped, but if <code>dim</code> is 10x10x10x1 then 
+it will be changed to 10x10x10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>produces a text output if the number of dimensions is under 
+three.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Object of class nifti
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+nim &lt;- nifti(array(rnorm(10^3), dim = rep(10, 3)))
+nim2 &lt;- nifti(array(rnorm(10^3), dim = c(10, 10, 1, 10)))
+dropImageDimension(nim2)
+dropImageDimension(nim2, onlylast = FALSE)
+nim3 &lt;- nifti(array(rnorm(10^3), dim = c(10, 10, 10, 1)))
+dropImageDimension(nim3)
+dropImageDimension(nim3, onlylast = FALSE) # the same as above
+nim4 &lt;- nifti(array(rnorm(10^3), dim = c(10, 10, 10, 1, 10)))
+dim(nim4[,,,1,])
+dim(nim4[,,,1,,drop=TRUE])
+dropImageDimension(nim4)
+
+nim5 &lt;- nifti(array(rnorm(10^4), dim = c(1, 10, 10, 10, 1, 10)))
+dropImageDimension(nim5)
+dropImageDimension(nim5, onlylast = FALSE)
+
+nim6 &lt;- nifti(array(rnorm(10^3), dim = c(1, 10, 10, 10, 1, 1)))
+dropImageDimension(nim6)
+## Not run: 
+## 27 scans of Colin Holmes (MNI) brain co-registered and averaged
+## NIfTI two-file format
+URL &lt;- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
+urlfile &lt;- file.path(tempdir(), "colin_1mm.tgz")
+download.file(URL, dest=urlfile, quiet=TRUE)
+untar(urlfile, exdir=tempdir())
+colin &lt;- readNIfTI(file.path(tempdir(), "colin_1mm"))
+dim(colin)
+dim_(colin)
+pixdim(colin)
+# this will error
+writeNIfTI(colin, filename = tempfile())
+colin &lt;- dropImageDimension(colin)
+writeNIfTI(colin, filename = tempfile())
+
+## End(Not run)
+</code></pre>
+
+
+</div>

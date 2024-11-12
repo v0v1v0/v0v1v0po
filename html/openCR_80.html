@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stratify</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Stratify Capture-Recapture Data</h2>
+
+<h3>Description</h3>
+
+<p>Arrange existing capthist data in stratified form.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stratify(..., intervals = NULL, MoreArgs = list(), covariate = NULL, bytraps = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>one or more multi-session capthist objects, or a list of such objects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervals</code></td>
+<td>
+<p>list of intervals vectors, one for each multi-session capthist in ...</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MoreArgs</code></td>
+<td>
+<p>list of other arguments passed to <code>join</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covariate</code></td>
+<td>
+<p>character; name of individual or trap covariate to stratify by</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bytraps</code></td>
+<td>
+<p>logical; if TRUE then covariate is interpreted as the name of a detector covariate</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The argument ... may be
+</p>
+
+<ol>
+<li>
+<p>a list of single-session capthist, one for each stratum (sessions already joined)
+</p>
+</li>
+<li>
+<p>a list of multi-session capthist, one for each stratum (sessions will be joined)
+</p>
+</li>
+<li>
+<p>one single-session capthist, to split by <code>covariate</code> (sessions already joined)
+</p>
+</li>
+<li>
+<p>one multi-session capthist, to be joined as one then split by <code>covariate</code>
+</p>
+</li>
+</ol>
+<p>Cases 1 and 2 result in one stratum for each component of the input list. 
+Cases 3 and 4 result in one stratum for each level of <code>covariate</code>.
+</p>
+<p>The result in Case 1 is identical to <code>MS.capthist(...)</code>.
+</p>
+<p>The argument <code>intervals</code> refers to the intervals between primary sessions 
+before joining (Cases 2,4 only) (see Examples).
+</p>
+<p>MoreArgs may include the arguments remove.dupl.sites, tol, sites.by.name or drop.sites of <code>join</code>; these otherwise take their default values.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Multi-stratum (multi-session) capthist object for which each component has been ‘join’ed.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>join</code>, 
+<code>MS.capthist</code>, 
+<code>openCR.fit</code>, 
+<code>strata</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# FebpossumCH comprises 9 annual February sessions.
+# The individual covariate 'sex' takes values 'F' and 'M', resulting in two strata.
+# 'intervals' can be omitted as the default does the same job.
+ch &lt;- stratify(FebpossumCH, covariate = 'sex', intervals = rep(list(rep(1,8)),2))
+summary(ch, terse = TRUE)
+
+</code></pre>
+
+
+</div>

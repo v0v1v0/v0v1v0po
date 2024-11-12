@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readAFNI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>readAFNI</h2>
+
+<h3>Description</h3>
+
+<p>These functions read in the header information and
+multidimensional array from a binary file in AFNI format into a
+<code>afni</code>-class object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readAFNI(fname, vol = NULL, verbose = FALSE, warn = -1, call = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fname</code></td>
+<td>
+<p>is the file name of the AFNI file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vol</code></td>
+<td>
+<p>vector of brick numbers to be read from file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) that allows
+text-based feedback during execution of the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>is a number to regulate the display of warnings (default
+= -1).  See <code>options</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>keeps track of the current function call for use in the AFNI
+extension.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>readAFNI</code> function utilizes internal methods <code>readBin</code> and
+<code>readLines</code> to efficiently extract information from the header and
+binary file(s).  Compression is allowed on the BRIK file using gzip.
+</p>
+<p>Current acceptable data types include </p>
+ <dl>
+<dt>list("INT16")</dt>
+<dd>
+<p>DT
+SIGNED SHORT (16 bits per voxel)</p>
+</dd> <dt>list("FLOAT32")</dt>
+<dd>
+<p>DT FLOAT (32 bits
+per voxel)</p>
+</dd> <dt>list("COMPLEX128")</dt>
+<dd>
+<p>DT COMPLEX (128 bits per voxel)</p>
+</dd> </dl>
+<h3>Value</h3>
+
+<p>object of class <code>afni</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Karsten Tabelow <a href="mailto:karsten.tabelow@wias-berlin.de">karsten.tabelow@wias-berlin.de</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>AFNI<br><a href="http://afni.nimh.nih.gov/pub/dist/src/README.attributes">http://afni.nimh.nih.gov/pub/dist/src/README.attributes</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>readANALYZE</code>, <code>readNIfTI</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## Taken from the AFNI Matlab Library
+## http://afni.nimh.nih.gov/pub/dist/data/afni_matlab_data.tgz
+afni.path &lt;- system.file("afni", package="oro.nifti")
+orig &lt;- readAFNI(file.path(afni.path, "ARzs_CW_avvr.DEL+orig"))
+image(orig, zlim=c(0.5,256), oma=rep(2,4))
+orthographic(orig, zlim=c(0.5,256), oma=rep(2,4))
+## Taken from the AFNI installation
+TT &lt;- readAFNI(file.path(afni.path, "TT_N27_EZ_LR+tlrc"))
+image(TT, zlim=c(0.5,256), oma=rep(2,4))
+orthographic(TT, zlim=c(0.5,256), oma=rep(2,4))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

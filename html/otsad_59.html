@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ReduceAnomalies</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reduce Anomalies</h2>
+
+<h3>Description</h3>
+
+<p><code>ReduceAnomalies</code> It reduces the number of detected anomalies. This function is
+designed to reduce the number of false positives keeping only the first detection of all those
+that are close to each other. This proximity distance is defined by a window
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ReduceAnomalies(data, windowLength, incremental = FALSE,
+  last.res = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Numerical vector with anomaly labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>windowLength</code></td>
+<td>
+<p>Window length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incremental</code></td>
+<td>
+<p>TRUE for incremental processing and FALSE for classic processing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>last.res</code></td>
+<td>
+<p>Last result returned by the algorithm.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If <code>incremental</code> = FALSE,  new Numerical vector with reduced anomaly labels. Else,
+a list of the following items.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>New Numerical vector with reduced anomaly labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>last.res</code></td>
+<td>
+<p>Last result returned by the algorithm. It is a list with <code>pointer</code>,
+the index of the last anomaly and <code>index</code>, the index number of the last point in the data</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## EXAMPLE 1: Classic Processing ----------------------
+
+## Generate data
+set.seed(100)
+n &lt;- 350
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[320] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+## Calculate anomalies
+result &lt;- IpSdEwma(
+  data = df$value,
+  n.train = 5,
+  threshold = 0.01,
+  l = 2
+)
+res &lt;- cbind(df, result$result)
+
+## Plot results
+PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
+
+## Reduce anomalies
+res$is.anomaly &lt;- ReduceAnomalies(res$is.anomaly, windowLength = 5)
+
+## Plot results
+PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
+
+
+## EXAMPLE 2: Incremental Processing ----------------------
+
+
+  # install.packages("stream")
+  library("stream")
+
+  # Generate data
+  set.seed(100)
+  n &lt;- 350
+  x &lt;- sample(1:100, n, replace = TRUE)
+  x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+  x[25] &lt;- 200
+  x[320] &lt;- 170
+  df &lt;- data.frame(timestamp = 1:n, value = x)
+  dsd_df &lt;- DSD_Memory(df)
+
+  # Initialize parameters for the loop
+  last.res &lt;- NULL
+  red.res &lt;- NULL
+  res &lt;- NULL
+  nread &lt;- 100
+  numIter &lt;- ceiling(n/nread)
+
+  # Calculate anomalies
+  for(i in 1:numIter) {
+    # read new data
+    newRow &lt;- get_points(dsd_df, n = nread, outofpoints = "ignore")
+    # calculate if it's an anomaly
+    last.res &lt;- IpSdEwma(
+      data = newRow$value,
+      n.train = 5,
+      threshold = 0.01,
+      l = 2,
+      last.res = last.res$last.res
+    )
+
+    if(!is.null(last.res$result)){
+      # reduce anomalies
+      red.res &lt;- ReduceAnomalies(last.res$result$is.anomaly,
+                                 windowLength = 5, incremental = TRUE, last.res = red.res$last.res)
+      last.res$result$is.anomaly &lt;- red.res$result
+
+      # prepare the result
+      res &lt;- rbind(res, cbind(newRow, last.res$result))
+    }
+  }
+
+  # Plot results
+  PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
+
+</code></pre>
+
+
+</div>

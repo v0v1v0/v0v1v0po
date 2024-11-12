@@ -1,0 +1,161 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_quantums</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>plot_quantums</h2>
+
+<h3>Description</h3>
+
+<p>Plot simulation envelopes
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_quantums(
+  input,
+  labels = NULL,
+  color_scale = NULL,
+  legend_position = "bottom",
+  quantum_position = NULL,
+  title = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  line_size = 0.5,
+  base_size = 15,
+  full_fun = TRUE,
+  quantum = TRUE,
+  standarized = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>envelope.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>Name of the labels. See details for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color_scale</code></td>
+<td>
+<p>Colors used with labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend_position</code></td>
+<td>
+<p>The position of legends ("none", "left", "right", "bottom", "top", or two-element numeric vector)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantum_position</code></td>
+<td>
+<p>Vector with minimum and maximum y value of the quantum bar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>Plot title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab, ylab</code></td>
+<td>
+<p>axis labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line_size</code></td>
+<td>
+<p>Size of the lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_size</code></td>
+<td>
+<p>Base font size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>full_fun</code></td>
+<td>
+<p>If true observed value and envelope is plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantum</code></td>
+<td>
+<p>If true quantums bars are plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>standarized</code></td>
+<td>
+<p>If true observed value is standardized. See details for more details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This functions provides a plotting style for envelope objects of the spatstat
+package (for more information please see <code>spatstat.explore::envelope</code>). The location of the
+observed value in relation to the simulation envelope of the null model input is
+indicated by an additional colour bar at the bottom of the plot. If <code>standarized = TRUE</code>,
+all values are standarized by subtracting the theoretical value for CSR
+</p>
+<p>Labels must be a vector including labels for the following three cases. The color
+scale vector is used in the same order.
+<br> 1 = observed &gt; high
+<br> 2 = low &lt; observed &lt; high
+<br> 3 = observed &lt; low
+</p>
+<p>To adjust the position of the quantum bar, use <code>quantum_position</code>.
+</p>
+<p>Returns a <code>ggplot</code> object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ggplot
+</p>
+
+
+<h3>References</h3>
+
+<p>Esser, D.S., Leveau, J.H.J., Meyer, K.M., Wiegand, K., 2015. Spatial scales of
+interactions among bacteria and between bacteria and the leaf surface.
+FEMS Microbiology Ecology 91, 1–13. &lt;https://doi.org/10.1093/femsec/fiu034&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>envelope</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(42)
+pattern &lt;- spatstat.random::rThomas(kappa = 50, scale = 0.025, mu = 5)
+csr_envelope &lt;- spatstat.explore::envelope(pattern, fun = spatstat.explore::pcf, nsim = 19)
+plot_quantums(csr_envelope, ylab = "g(r)")
+
+</code></pre>
+
+
+</div>

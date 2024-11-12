@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calcPercentile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate percentile values from a time series</h2>
+
+<h3>Description</h3>
+
+<p>Calculates multiple percentile values from a time series, with flexible time
+aggregation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calcPercentile(
+  mydata,
+  pollutant = "o3",
+  avg.time = "month",
+  percentile = 50,
+  data.thresh = 0,
+  start = NA
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame of data with a <code>date</code> field in the format
+<code>Date</code> or <code>POSIXct</code>. Must have one variable to apply calculations
+to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>Name of variable to process. Mandatory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>avg.time</code></td>
+<td>
+<p>Averaging period to use. See <code>timeAverage()</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentile</code></td>
+<td>
+<p>A vector of percentile values. For example <code>percentile
+  = 50</code> for median values, <code>percentile = c(5, 50, 95</code> for multiple
+percentile values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.thresh</code></td>
+<td>
+<p>Data threshold to apply when aggregating data. See
+<code>timeAverage()</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>Start date to use - see <code>timeAverage()</code> for details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a utility function to calculate percentiles and is used in, for
+example, <code>timePlot</code>. Given a data frame with a <code>date</code> field and one
+other numeric variable, percentiles are calculated.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a data frame with new columns for each percentile level. New
+columns are given names like percentile.95 e.g. when percentile = 95 is
+chosen. See examples below.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>timePlot</code>, <code>timeAverage()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># 95th percentile monthly o3 concentrations
+percentiles &lt;- calcPercentile(mydata, pollutant ="o3",
+avg.time = "month", percentile = 95)
+
+head(percentiles)
+
+# 5, 50, 95th percentile monthly o3 concentrations
+## Not run: 
+percentiles &lt;- calcPercentile(mydata, pollutant ="o3",
+avg.time = "month", percentile = c(5, 50, 95))
+
+head(percentiles)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,156 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxComputeGradientDescent</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimize parameters using a gradient descent optimizer</h2>
+
+<h3>Description</h3>
+
+<p>This optimizer does not require analytic derivatives of the fit
+function. The fully open-source CRAN version of OpenMx offers 2 choices,
+CSOLNP and SLSQP (from the NLOPT collection).  The OpenMx Team's version of
+OpenMx offers the choice of three optimizers: CSOLNP, SLSQP, and NPSOL.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxComputeGradientDescent(
+  freeSet = NA_character_,
+  ...,
+  engine = NULL,
+  fitfunction = "fitfunction",
+  verbose = 0L,
+  tolerance = NA_real_,
+  useGradient = deprecated(),
+  warmStart = NULL,
+  nudgeZeroStarts = mxOption(NULL, "Nudge zero starts"),
+  maxMajorIter = NULL,
+  gradientAlgo = deprecated(),
+  gradientIterations = deprecated(),
+  gradientStepSize = deprecated()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>freeSet</code></td>
+<td>
+<p>names of matrices containing free parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Forces remaining arguments to be specified by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>engine</code></td>
+<td>
+<p>specific 'CSOLNP', 'SLSQP', or 'NPSOL'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitfunction</code></td>
+<td>
+<p>name of the fitfunction (defaults to 'fitfunction')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>integer. Level of run-time diagnostic output. Set to zero to disable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolerance</code></td>
+<td>
+<p>how close to the optimum is close enough (also known as the optimality tolerance)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useGradient</code></td>
+<td>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warmStart</code></td>
+<td>
+<p>a Cholesky factored Hessian to use as the NPSOL Hessian starting value (preconditioner)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nudgeZeroStarts</code></td>
+<td>
+<p>whether to nudge any zero starting values prior to optimization (default TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxMajorIter</code></td>
+<td>
+<p>maximum number of major iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gradientAlgo</code></td>
+<td>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gradientIterations</code></td>
+<td>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gradientStepSize</code></td>
+<td>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>All three optimizers can use analytic gradients, and only NPSOL
+uses <code>warmStart</code>. To customize more options, see
+mxOption.
+</p>
+
+
+<h3>References</h3>
+
+<p>Luenberger, D. G. &amp; Ye, Y. (2008). <em>Linear and nonlinear programming.</em> Springer.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(demoOneFactor)
+factorModel &lt;- mxModel(name ="One Factor",
+  mxMatrix(type="Full", nrow=5, ncol=1, free=FALSE, values=0.2, name="A"),
+    mxMatrix(type="Symm", nrow=1, ncol=1, free=FALSE, values=1, name="L"),
+    mxMatrix(type="Diag", nrow=5, ncol=5, free=TRUE, values=1, name="U"),
+    mxAlgebra(expression=A %*% L %*% t(A) + U, name="R"),
+  mxExpectationNormal(covariance="R", dimnames=names(demoOneFactor)),
+  mxFitFunctionML(),
+    mxData(observed=cov(demoOneFactor), type="cov", numObs=500),
+     mxComputeSequence(steps=list(
+     mxComputeGradientDescent(),
+     mxComputeNumericDeriv(),
+     mxComputeStandardError(),
+     mxComputeHessianQuality()
+    )))
+factorModelFit &lt;- mxRun(factorModel)
+factorModelFit$output$conditionNumber # 29.5
+</code></pre>
+
+
+</div>

@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>best_split</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find the best split for a stratum</h2>
+
+<h3>Description</h3>
+
+<p>Runs <code>split_stratum()</code> many times and selects the best result.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">best_split(
+  z,
+  X,
+  strata,
+  ist,
+  nc_list,
+  nt_list,
+  wMax = 5,
+  wEach = 1,
+  solver = "Rglpk",
+  integer = FALSE,
+  min_split = 10,
+  threads = threads
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>Vector of treatment assignment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Covariate matrix or data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strata</code></td>
+<td>
+<p>vector of initial strata assignments; only used if <code>object</code> is not supplied.
+Can be <code>NULL</code>, in which case an initial stratification using the quintiles of the
+propensity score is generated using <code>prop_strat()</code> and the generated
+propensity score is also added to the X matrix as an extra covariate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ist</code></td>
+<td>
+<p>the stratum to be split</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nc_list</code></td>
+<td>
+<p>a list of choices for the <code>nc</code> parameter in <code>split_stratum()</code>.
+Each element is a vector with entries corresponding to the number of control
+units that should be placed in each new stratum</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nt_list</code></td>
+<td>
+<p>a list of choices for the <code>nt</code> parameter in <code>split_stratum()</code>.
+Each element is a vector with entries corresponding to the number of treated
+units that should be placed in each new stratum</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wMax</code></td>
+<td>
+<p>the weight the objective places on the maximum epsilon</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wEach</code></td>
+<td>
+<p>the weight the objective places on each epsilon</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solver</code></td>
+<td>
+<p>character specifying the optimization software to use.
+Options are "Rglpk" or "gurobi". The default is "gurobi"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>integer</code></td>
+<td>
+<p>boolean whether to use integer programming instead of randomized rounding.
+Default is <code>FALSE</code>. It is not recommended to set this to <code>TRUE</code> as the problem may never finish</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_split</code></td>
+<td>
+<p>a numeric specifying the minimum number of each control and treated units
+to be tolerated in a stratum. Any combination of elements
+from <code>nc_list</code> and <code>nt_list</code> that violate this are skipped</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threads</code></td>
+<td>
+<p>how many threads to use in the optimization if using "gurobi" as the solver. Default will use all available threads</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing the following elements:
+</p>
+
+<ul>
+<li>
+<p>valuesIP, valuesLP: matrices containing integer and linear programming
+scaled objective values for each sample size tried, with rows corresponding to the
+elements of <code>nc_list</code> and columns corresponding to the elements of <code>nt_list</code>
+</p>
+</li>
+<li>
+<p>besti, bestj: indices of the best sample sizes in <code>nc_list</code> and in <code>nt_list</code>, respectively
+</p>
+</li>
+<li>
+<p>n_smds: number of standardized mean differences contributing to the objective values
+(multiply the scaled objective values by this number to get the true objective values)
+</p>
+</li>
+<li>
+<p>n_fracs: number of units with fractional LP solutions in the best split
+</p>
+</li>
+<li>
+<p>rand_c_prop, rand_t_prop: proportions of the control and treated units in each
+stratum that were selected with randomness for the best split
+</p>
+</li>
+<li>
+<p>pr: linear programming solution for the best split,
+with rows corresponding to the strata and columns to the units
+</p>
+</li>
+<li>
+<p>selection: vector of selected strata for each unit
+in the initial stratum to be split for the best split
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Generate a small data set
+set.seed(25)
+samp &lt;- sample(1:nrow(rhc_X), 1000)
+cov_samp &lt;- sample(1:26, 10)
+
+# Create some strata
+ps &lt;- prop_strat(z = rhc_X[samp, "z"],
+                 X = rhc_X[samp, cov_samp], nstrata = 5)
+
+# Save the sample sizes
+tab &lt;- table(ps$z, ps$base_strata)
+
+# Choose the best sample sizes among the options provided
+best_split(z = ps$z, X = ps$X, strata = ps$base_strata, ist = 1,
+           nc_list = list(c(floor(tab[1, 1] * 0.25), ceiling(tab[1, 1] * 0.75)),
+                          c(floor(tab[1, 1] * 0.4), ceiling(tab[1, 1] * 0.6))),
+           nt_list = list(c(floor(tab[2, 1] * 0.3), ceiling(tab[2, 1] * 0.7))),
+           min_split = 5)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>setEvents</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Setting Events</h2>
+
+<h3>Description</h3>
+
+<p>Sets different types of events for the given <code>ODEnetwork</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">setEvents(odenet, events, type = "dirac")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>odenet</code></td>
+<td>
+<p>[<code>ODEnetwork</code>]<br>
+List of class <code>ODEnetwork</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>events</code></td>
+<td>
+<p>[<code>data.frame</code>]<br>
+Data frame with a time base and named column per variable.
+See <code>events</code> for detailed definition of <code>events</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>[<code>character</code>]<br>
+The type of the events to use.
+Possible values are <code>dirac</code>, <code>constant</code> or <code>linear</code>.<br>
+Type <code>dirac</code> sets the current state at a given time point to a new value.
+<code>Constant</code> sets the state to the given value and the state does not change until
+setting new value or the end of <code>events</code>.
+<code>Linear</code> interpolates linear between <code>events</code> and sets the state variables
+to this value.<br>
+Default is <code>dirac</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>an extended list of class [<code>ODEnetwork</code>].
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">masses &lt;- 1
+dampers &lt;- as.matrix(1.5)
+springs &lt;- as.matrix(4)
+odenet &lt;- ODEnetwork(masses, dampers, springs)
+eventdat &lt;- data.frame(  var = c("x.1", "x.1")
+                       , time = c(1, 3)
+                       , value = c(1, 3)
+                       , stringsAsFactors = TRUE
+                       )
+odenet &lt;- setState(odenet, 0, 0)
+odenet &lt;- setEvents(odenet, eventdat)
+odenet &lt;- simuNetwork(odenet, seq(0, 10, by = 0.1))
+plot(odenet)
+</code></pre>
+
+
+</div>

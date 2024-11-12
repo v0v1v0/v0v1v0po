@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osf_ls_files</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List files and directories on OSF</h2>
+
+<h3>Description</h3>
+
+<p>List the files and directories in the top-level of an OSF project, component,
+or directory. Specify a <code>path</code> to list the contents of a particular
+subdirectory.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osf_ls_files(
+  x,
+  path = NULL,
+  type = "any",
+  pattern = NULL,
+  n_max = 10,
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>One of the following:
+</p>
+
+<ul>
+<li>
+<p> An <code>osf_tbl_node</code> with a single project or component.
+</p>
+</li>
+<li>
+<p> An <code>osf_tbl_file</code> with a single directory.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>List files within the specified subdirectory path.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Filter query by type. Set to <code>"file"</code> to list only files, or
+<code>"folder"</code>to list only folders</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p>Character string used to filter for results that contain the
+substring <code>"pattern"</code> in their name. <em>Note:</em> this is a fixed, case-insensitive
+search.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_max</code></td>
+<td>
+<p>Maximum number of results to return from OSF (default is 10).
+Set to <code>Inf</code> to return <em>all</em> results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical, indicating whether to print informative messages
+about interactions with the OSF API (default <code>FALSE</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>osf_tbl_file</code> with one row for each file or directory, ordered
+by modification time.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>osf_ls_nodes()</code> to generate a list of projects and components.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Retrieve the Psychology Reproducibility Project from OSF
+psych_rp &lt;- osf_retrieve_node("ezum7")
+
+# List all files and directories
+osf_ls_files(psych_rp)
+
+# ...only the directories
+osf_ls_files(psych_rp, type = "folder")
+
+# ...only PDF files
+osf_ls_files(psych_rp, type = "file", pattern = "pdf")
+
+# List the contents of the first directory
+osf_ls_files(psych_rp, path = "RPP_SI_Figures")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

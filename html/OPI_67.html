@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiPresent_for_O600</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Implementation of opiPresent for the O600 machine.</h2>
+
+<h3>Description</h3>
+
+<p>This is for internal use only. Use <code>opiPresent()</code> with the same arguments.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stim</code></td>
+<td>
+<p>Stimulus to present which is a list with the following elements:
+</p>
+
+<ul>
+<li> <p><code>x</code>  positionX (in 1/10deg)
+</p>
+</li>
+<li> <p><code>y</code>  positionY (in 1/10deg)
+</p>
+</li>
+<li> <p><code>level</code> dLog (intensity; 0dB is 4000 apostilbs) (in 1/10 dB)
+</p>
+</li>
+<li> <p><code>duration</code> Stimulus presentation duration in ms, for W/W 100ms, for pulsar 500ms
+</p>
+</li>
+<li> <p><code>responseWindow</code> Maximal allowed reaction time in ms, &gt;=500ms and &lt;4s
+</p>
+</li>
+<li> <p><code>sound</code> # Bit 1 = sound for patient response button ON; Bit2=1 sound for fixation lost ON
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nextStim</code></td>
+<td>
+<p>The stimulus to present after stim
+(it is not presented, but projector can move to it during response window)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing
+</p>
+
+<ul>
+<li> <p><code>err</code>  String message or NULL for no error.
+</p>
+</li>
+<li> <p><code>seen</code> 1 if seen, 0 otherwise.
+</p>
+</li>
+<li> <p><code>time</code> Reaction time (if seen).
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+  chooseOpi("O600")
+  if (!is.null(opiInitialize()$err))
+      stop("opiInitialize failed")
+  s &lt;- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
+            duration=200, responseWindow=1500, checkFixationOK=NULL)
+  print(opiPresent(s, NULL))
+
+## End(Not run)
+
+
+</code></pre>
+
+
+</div>

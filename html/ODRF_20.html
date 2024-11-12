@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.VarImp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Variable Importance Plot</h2>
+
+<h3>Description</h3>
+
+<p>Dotchart of variable importance as measured by an Oblique Decision Random Forest.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'VarImp'
+plot(x, nvar = min(30, nrow(x$varImp)), digits = NULL, main = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class <code>VarImp</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nvar</code></td>
+<td>
+<p>number of variables to show.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>Integer indicating the number of decimal places (round) or significant digits (signif) to be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>plot title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The horizontal axis is the increased error of ODRF after replacing the variable, the larger the increased error the more important the variable is.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ODRF</code> <code>VarImp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(breast_cancer)
+set.seed(221212)
+train &lt;- sample(1:569, 200)
+train_data &lt;- data.frame(breast_cancer[train, -1])
+forest &lt;- ODRF(train_data[, -1], train_data[, 1], split = "gini",
+  parallel = FALSE)
+varimp &lt;- VarImp(forest, train_data[, -1], train_data[, 1])
+plot(varimp)
+</code></pre>
+
+
+</div>

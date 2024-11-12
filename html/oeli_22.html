@@ -1,0 +1,302 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Dictionary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Dictionary R6 Object</h2>
+
+<h3>Description</h3>
+
+<p>Provides a simple key-value interface based on R6.
+</p>
+
+
+<h3>Active bindings</h3>
+
+<div class="r6-active-bindings">
+
+<dl>
+<dt><code>keys</code></dt>
+<dd>
+<p>[<code>character()</code>]<br>
+Available keys.</p>
+</dd>
+<dt><code>alias</code></dt>
+<dd>
+<p>[<code>list()</code>]<br>
+Available keys per alias value.</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-Dictionary-new"><code>Dictionary$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Dictionary-add"><code>Dictionary$add()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Dictionary-get"><code>Dictionary$get()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Dictionary-remove"><code>Dictionary$remove()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Dictionary-print"><code>Dictionary$print()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-Dictionary-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Initializing a new <code>Dictionary</code> object.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Dictionary$new(
+  key_name,
+  alias_name = NULL,
+  value_names = character(),
+  value_assert = alist(),
+  allow_overwrite = TRUE,
+  keys_reserved = character(),
+  alias_choices = NULL,
+  dictionary_name = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>key_name</code></dt>
+<dd>
+<p>[<code>character(1)</code>]<br>
+The name for the key variable.</p>
+</dd>
+<dt><code>alias_name</code></dt>
+<dd>
+<p>[<code>NULL</code> | <code>character(1)</code>]<br>
+Optionally the name for the alias variable.</p>
+</dd>
+<dt><code>value_names</code></dt>
+<dd>
+<p>[<code>character(0)</code>]<br>
+The names of the values connected to a key.</p>
+</dd>
+<dt><code>value_assert</code></dt>
+<dd>
+<p>[<code>alist(1)</code>]<br>
+For each element in <code>value_names</code>, <code>values_assert</code> <em>can</em> have an
+identically named element of the form <code>checkmate::assert_*(...)</code>, where
+<code>...</code> can be any argument for the assertion function except for the
+<code>x</code> argument.</p>
+</dd>
+<dt><code>allow_overwrite</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+Allow overwriting existing keys with new values?
+Duplicate keys are never allowed.</p>
+</dd>
+<dt><code>keys_reserved</code></dt>
+<dd>
+<p>[<code>character()</code>]<br>
+Names that must not be used as keys.</p>
+</dd>
+<dt><code>alias_choices</code></dt>
+<dd>
+<p>[<code>NULL</code> or <code>character()</code>]<br>
+Optionally possible values for the alias. Can also be <code>NULL</code>, then all
+alias values are allowed.</p>
+</dd>
+<dt><code>dictionary_name</code></dt>
+<dd>
+<p>[<code>NULL</code> or <code>character()</code>]<br>
+Optionally the name for the dictionary.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Dictionary-add"></a>
+
+
+
+<h4>Method <code>add()</code>
+</h4>
+
+<p>Adding an element to the dictionary.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Dictionary$add(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Values for
+</p>
+
+<ul>
+<li>
+<p> the key variable <code>key_name</code> (must be a single <code>character</code>),
+</p>
+</li>
+<li>
+<p> the alias variable <code>alias_name</code> (optionally, must then be a
+<code>character</code> <code>vector</code>),
+</p>
+</li>
+<li>
+<p> all the variables specified for <code>value_names</code> (if any, they must
+comply to the <code>value_assert</code> checks).
+</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Dictionary-get"></a>
+
+
+
+<h4>Method <code>get()</code>
+</h4>
+
+<p>Getting elements from the dictionary.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Dictionary$get(key, value = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>key</code></dt>
+<dd>
+<p>[<code>character(1)</code>]<br>
+A value for the key variable <code>key_name</code>. Use the <code>$keys</code> method for
+available keys.</p>
+</dd>
+<dt><code>value</code></dt>
+<dd>
+<p>[<code>NULL</code> | <code>character(1)</code>]<br>
+One of the elements in <code>value_names</code>, selecting the required value.
+Can also be <code>NULL</code> (default) for all values connected to the
+<code>key</code>, returned as a <code>list</code>.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Dictionary-remove"></a>
+
+
+
+<h4>Method <code>remove()</code>
+</h4>
+
+<p>Removing elements from the dictionary (and associated alias, if any).
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Dictionary$remove(key)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>key</code></dt>
+<dd>
+<p>[<code>character(1)</code>]<br>
+A value for the key variable <code>key_name</code>. Use the <code>$keys</code> method for
+available keys.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Dictionary-print"></a>
+
+
+
+<h4>Method <code>print()</code>
+</h4>
+
+<p>Printing details of the dictionary.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Dictionary$print()</pre></div>
+
+
+
+
+<h3>See Also</h3>
+
+<p>Other package helpers: 
+<code>Storage</code>,
+<code>identical_structure()</code>,
+<code>input_check_response()</code>,
+<code>match_arg()</code>,
+<code>package_logo()</code>,
+<code>print_matrix()</code>,
+<code>renv_development_packages()</code>,
+<code>system_information()</code>,
+<code>unexpected_error()</code>,
+<code>user_confirm()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># TODO
+</code></pre>
+
+
+</div>

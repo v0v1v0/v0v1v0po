@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>selectRunning</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function to extract run lengths greater than a threshold</h2>
+
+<h3>Description</h3>
+
+<p>Utility function to extract user-defined run lengths (durations) above a
+threshold
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">selectRunning(
+  mydata,
+  pollutant = "nox",
+  criterion = "&gt;",
+  run.len = 5,
+  threshold = 500,
+  result = c("yes", "no")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame with a <code>date</code> field and at least one numeric
+<code>pollutant</code> field to analyse.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>Name of variable to process. Mandatory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>criterion</code></td>
+<td>
+<p>Condition to select run lengths e.g. <code>"&gt;"</code> with select
+data more than <code>threshold</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run.len</code></td>
+<td>
+<p>Run length for extracting contiguous values of
+<code>pollutant</code> above the <code>threshold</code> value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>The threshold value for <code>pollutant</code> above which data
+should be extracted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>A new column <code>criterion</code> is returned with string to
+identity whether condition was met.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a utility function to extract runs of values above a certain
+threshold. For example, for a data frame of hourly NOx values we would like
+to extract all those hours where the concentration is at least 500ppb for
+contiguous periods of 5 or more hours.
+</p>
+<p>This function is useful, for example, for selecting pollution episodes from
+a data frame i.e. where concentrations remain elevated for a certain period
+of time. It may also be of more general use when analysing air pollution
+data. For example, <code>selectRunning</code> could be used to extract continuous
+periods of rainfall — which could be important for particle
+concentrations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a data frame that meets the chosen criteria. See examples
+below.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## extract those hours where there are at least 5 consecutive NOx
+## concentrations above 500ppb
+
+mydata &lt;- selectRunning(mydata, run.len = 5, threshold = 500)
+
+## make a polar plot of those conditions...shows that those
+## conditions are dominated by low wind speeds, not
+## in-canyon recirculation
+## Not run: polarPlot(mydata, pollutant = "nox", type = "criterion")
+
+</code></pre>
+
+
+</div>

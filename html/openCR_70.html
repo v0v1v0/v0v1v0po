@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read.inp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Import Data from RMark Input Format </h2>
+
+<h3>Description</h3>
+
+<p><code>read.inp</code> forms a capthist object from a MARK input (.inp) file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+read.inp(filename, ngroups = 1, grouplabel = 'group', grouplevels = NULL, 
+    covnames = NULL, skip = 0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>character file name including ‘.inp’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ngroups</code></td>
+<td>
+<p>integer number of group columns in input </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grouplabel</code></td>
+<td>
+<p>character</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grouplevels</code></td>
+<td>
+<p>vector with length equal to number of groups</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covnames</code></td>
+<td>
+<p>character vector of additional covariates names, one per covariate column </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip</code></td>
+<td>
+<p>integer number of lines to skip at start of file </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Comments bracketed with ‘/*' and '*/’ will be removed automatically.
+</p>
+<p>If <code>grouplevels</code> is specified then <code>ngroups</code> is taken from the number of levels (<code>ngroups</code> is overridden). An individual covariate is output, named according to <code>grouplabel</code>. The order of levels in <code>grouplevels</code> should match the order of the group frequency columns in the input. This also determines the ordering of levels in the resulting covariate.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A single-session capthist object with no traps attribute.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>RMarkInput</code>, <code>unRMarkInput</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+datadir &lt;- system.file('extdata', package = 'openCR')
+dipperCH &lt;- read.inp(paste0(datadir, '/ed.inp'), ngroups = 2)
+summary(dipperCH)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,478 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>importTraj</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import pre-calculated HYSPLIT 96-hour back trajectories</h2>
+
+<h3>Description</h3>
+
+<p>Function to import pre-calculated back trajectories using the NOAA HYSPLIT
+model. The trajectories have been calculated for a select range of locations
+which will expand in time. They cover the last 20 years or so and can be used
+together with other <code>openair</code> functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">importTraj(site = "london", year = 2009, local = NA, progress = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>site</code></td>
+<td>
+<p>Site code of the network site to import e.g. "london". Only one
+site can be imported at a time. The following sites are typically available
+from 2000-2012, although some UK ozone sites go back to 1988 (code,
+location, lat, lon, year):
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+abudhabi   </td>
+<td style="text-align: left;"> Abu Dhabi                    </td>
+<td style="text-align: right;">  24.43000 </td>
+<td style="text-align: right;">  54.408000 </td>
+<td style="text-align: left;"> 2012-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+ah         </td>
+<td style="text-align: left;"> Aston Hill                   </td>
+<td style="text-align: right;">  52.50385 </td>
+<td style="text-align: right;">  -3.041780 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+auch       </td>
+<td style="text-align: left;"> Auchencorth Moss             </td>
+<td style="text-align: right;">  55.79283 </td>
+<td style="text-align: right;">  -3.242568 </td>
+<td style="text-align: left;"> 2006-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+berlin     </td>
+<td style="text-align: left;"> Berlin, Germany              </td>
+<td style="text-align: right;">  52.52000 </td>
+<td style="text-align: right;">  13.400000 </td>
+<td style="text-align: left;"> 2000-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+birm       </td>
+<td style="text-align: left;"> Birmigham Centre             </td>
+<td style="text-align: right;">  52.47972 </td>
+<td style="text-align: right;">  -1.908078 </td>
+<td style="text-align: left;"> 1990-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+boston     </td>
+<td style="text-align: left;"> Boston, USA                  </td>
+<td style="text-align: right;">  42.32900 </td>
+<td style="text-align: right;"> -71.083000 </td>
+<td style="text-align: left;"> 2008-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+bot        </td>
+<td style="text-align: left;"> Bottesford                   </td>
+<td style="text-align: right;">  52.93028 </td>
+<td style="text-align: right;">  -0.814722 </td>
+<td style="text-align: left;"> 1990-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+bukit      </td>
+<td style="text-align: left;"> Bukit Kototabang, Indonesia  </td>
+<td style="text-align: right;">  -0.19805 </td>
+<td style="text-align: right;"> 100.318000 </td>
+<td style="text-align: left;"> 1996-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+chittagong </td>
+<td style="text-align: left;"> Chittagong, Bangladesh       </td>
+<td style="text-align: right;">  22.37000 </td>
+<td style="text-align: right;">  91.800000 </td>
+<td style="text-align: left;"> 2010-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+dhaka      </td>
+<td style="text-align: left;"> Dhaka, Bangladesh            </td>
+<td style="text-align: right;">  23.70000 </td>
+<td style="text-align: right;">  90.375000 </td>
+<td style="text-align: left;"> 2010-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+ed         </td>
+<td style="text-align: left;"> Edinburgh                    </td>
+<td style="text-align: right;">  55.95197 </td>
+<td style="text-align: right;">  -3.195775 </td>
+<td style="text-align: left;"> 1990-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+elche      </td>
+<td style="text-align: left;"> Elche, Spain                 </td>
+<td style="text-align: right;">  38.27000 </td>
+<td style="text-align: right;">  -0.690000 </td>
+<td style="text-align: left;"> 2004-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+esk        </td>
+<td style="text-align: left;"> Eskdalemuir                  </td>
+<td style="text-align: right;">  55.31530 </td>
+<td style="text-align: right;">  -3.206110 </td>
+<td style="text-align: left;"> 1998-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+gibraltar  </td>
+<td style="text-align: left;"> Gibraltar                    </td>
+<td style="text-align: right;">  36.13400 </td>
+<td style="text-align: right;">  -5.347000 </td>
+<td style="text-align: left;"> 2005-2010</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+glaz       </td>
+<td style="text-align: left;"> Glazebury                    </td>
+<td style="text-align: right;">  53.46008 </td>
+<td style="text-align: right;">  -2.472056 </td>
+<td style="text-align: left;"> 1998-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+groningen  </td>
+<td style="text-align: left;"> Groningen                    </td>
+<td style="text-align: right;">  53.40000 </td>
+<td style="text-align: right;">   6.350000 </td>
+<td style="text-align: left;"> 2007-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+har        </td>
+<td style="text-align: left;"> Harwell                      </td>
+<td style="text-align: right;">  51.57108 </td>
+<td style="text-align: right;">  -1.325283 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+hk         </td>
+<td style="text-align: left;"> Hong Kong                    </td>
+<td style="text-align: right;">  22.29000 </td>
+<td style="text-align: right;"> 114.170000 </td>
+<td style="text-align: left;"> 1998-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+hm         </td>
+<td style="text-align: left;"> High Muffles                 </td>
+<td style="text-align: right;">  54.33500 </td>
+<td style="text-align: right;">  -0.808600 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+kuwait     </td>
+<td style="text-align: left;"> Kuwait City                  </td>
+<td style="text-align: right;">  29.36700 </td>
+<td style="text-align: right;">  47.967000 </td>
+<td style="text-align: left;"> 2008-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+lb         </td>
+<td style="text-align: left;"> Ladybower                    </td>
+<td style="text-align: right;">  53.40337 </td>
+<td style="text-align: right;">  -1.752006 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+london     </td>
+<td style="text-align: left;"> Central London               </td>
+<td style="text-align: right;">  51.50000 </td>
+<td style="text-align: right;">  -0.100000 </td>
+<td style="text-align: left;"> 1990-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+lh         </td>
+<td style="text-align: left;"> Lullington Heath             </td>
+<td style="text-align: right;">  50.79370 </td>
+<td style="text-align: right;">   0.181250 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+ln         </td>
+<td style="text-align: left;"> Lough Navar                  </td>
+<td style="text-align: right;">  54.43951 </td>
+<td style="text-align: right;">  -7.900328 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+mh         </td>
+<td style="text-align: left;"> Mace Head                    </td>
+<td style="text-align: right;">  53.33000 </td>
+<td style="text-align: right;">  -9.900000 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+ny-alesund </td>
+<td style="text-align: left;"> Ny-Alesund, Norway           </td>
+<td style="text-align: right;">  78.91763 </td>
+<td style="text-align: right;">  11.894653 </td>
+<td style="text-align: left;"> 2009-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+oslo       </td>
+<td style="text-align: left;"> Oslo                         </td>
+<td style="text-align: right;">  59.90000 </td>
+<td style="text-align: right;">  10.750000 </td>
+<td style="text-align: left;"> 2010-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+paris      </td>
+<td style="text-align: left;"> Paris, France                </td>
+<td style="text-align: right;">  48.86200 </td>
+<td style="text-align: right;">   2.339000 </td>
+<td style="text-align: left;"> 2000-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+roch       </td>
+<td style="text-align: left;"> Rochester Stoke              </td>
+<td style="text-align: right;">  51.45617 </td>
+<td style="text-align: right;">   0.634889 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+rotterdam  </td>
+<td style="text-align: left;"> Rotterdam                    </td>
+<td style="text-align: right;">  51.91660 </td>
+<td style="text-align: right;">   4.475000 </td>
+<td style="text-align: left;"> 2010-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+saopaulo   </td>
+<td style="text-align: left;"> Sao Paulo                    </td>
+<td style="text-align: right;"> -23.55000 </td>
+<td style="text-align: right;"> -46.640000 </td>
+<td style="text-align: left;"> 2000-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+sib        </td>
+<td style="text-align: left;"> Sibton                       </td>
+<td style="text-align: right;">  52.29440 </td>
+<td style="text-align: right;">   1.463970 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+sv         </td>
+<td style="text-align: left;"> Strath Vaich                 </td>
+<td style="text-align: right;">  57.73446 </td>
+<td style="text-align: right;">  -4.776583 </td>
+<td style="text-align: left;"> 1988-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+wuhan      </td>
+<td style="text-align: left;"> Wuhan, China                 </td>
+<td style="text-align: right;">  30.58300 </td>
+<td style="text-align: right;"> 114.280000 </td>
+<td style="text-align: left;"> 2008-2013</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+yw         </td>
+<td style="text-align: left;"> Yarner Wood                  </td>
+<td style="text-align: right;">  50.59760 </td>
+<td style="text-align: right;">  -3.716510 </td>
+<td style="text-align: left;"> 1988-2013
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>Year or years to import. To import a sequence of years from
+1990 to 2000 use <code>year = 1990:2000</code>. To import several specific years
+use <code>year = c(1990, 1995, 2000)</code> for example.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>local</code></td>
+<td>
+<p>File path to .RData trajectory files run by user and
+not stored on the Ricardo web server. These files would have been
+generated from the Hysplit trajectory code shown in the appendix
+of the openair manual. An example would be <code>local =
+'c:/users/david/TrajFiles/'</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>Show a progress bar when many receptors/years are being
+imported? Defaults to <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function imports pre-calculated back trajectories using the HYSPLIT
+trajectory model (Hybrid Single Particle Lagrangian Integrated Trajectory
+Model. Back trajectories provide some very useful information for air quality
+data analysis. However, while they are commonly calculated by researchers it
+is generally difficult for them to be calculated on a routine basis and used
+easily. In addition, the availability of back trajectories over several years
+can be very useful, but again difficult to calculate.
+</p>
+<p>Trajectories are run at 3-hour intervals and stored in yearly files (see
+below). The trajectories are started at ground-level (10m) and propagated
+backwards in time.
+</p>
+<p>These trajectories have been calculated using the Global NOAA-NCEP/NCAR
+reanalysis data archives. The global data are on a latitude-longitude grid
+(2.5 degree). Note that there are many different meteorological data sets
+that can be used to run HYSPLIT e.g. including ECMWF data. However, in order
+to make it practicable to run and store trajectories for many years and
+sites, the NOAA-NCEP/NCAR reanalysis data is most useful. In addition, these
+archives are available for use widely, which is not the case for many other
+data sets e.g. ECMWF. HYSPLIT calculated trajectories based on archive data
+may be distributed without permission. For those wanting, for example, to
+consider higher resolution meteorological data sets it may be better to run
+the trajectories separately.
+</p>
+<p>We are extremely grateful to NOAA for making HYSPLIT available to produce
+back trajectories in an open way. We ask that you cite HYSPLIT if used in
+published work.
+</p>
+<p>Users can supply their own trajectory files to plot in openair. These files
+must have the following fields: date, lat, lon and hour.inc (see details
+below).
+</p>
+<p>The files consist of the following information:
+</p>
+ <dl>
+<dt>date</dt>
+<dd>
+<p>This is the arrival point time and is repeated the
+number of times equal to the length of the back trajectory — typically 96
+hours (except early on in the file). The format is <code>POSIXct</code>. It is this
+field that should be used to link with air quality data. See example below.</p>
+</dd>
+<dt>receptor</dt>
+<dd>
+<p>Receptor number, currently only 1.</p>
+</dd> <dt>year</dt>
+<dd>
+<p>The year</p>
+</dd>
+<dt>month</dt>
+<dd>
+<p>Month 1-12</p>
+</dd> <dt>day</dt>
+<dd>
+<p>Day of the month 1-31</p>
+</dd> <dt>hour</dt>
+<dd>
+<p>Hour
+of the day 0-23 GMT</p>
+</dd> <dt>hour.inc</dt>
+<dd>
+<p>Number of hours back in time e.g. 0 to
+-96.</p>
+</dd> <dt>lat</dt>
+<dd>
+<p>Latitude in decimal format.</p>
+</dd>  <dt>lon</dt>
+<dd>
+<p>Longitude in
+decimal format.</p>
+</dd>  <dt>height</dt>
+<dd>
+<p>Height of trajectory (m).</p>
+</dd>
+<dt>pressure</dt>
+<dd>
+<p>Pressure of trajectory (kPa).</p>
+</dd>  </dl>
+<h3>Value</h3>
+
+<p>Returns a data frame with pre-calculated back trajectories.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The trajectories were run using the February 2011 HYSPLIT model.
+The function is primarily written to investigate a single
+site at a time for a single year. The trajectory files are quite
+large and care should be exercised when importing several years and/or sites.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other import functions: 
+<code>importADMS()</code>,
+<code>importAURN()</code>,
+<code>importEurope()</code>,
+<code>importKCL()</code>,
+<code>importMeta()</code>,
+<code>importUKAQ()</code>
+</p>
+<p>Other trajectory analysis functions: 
+<code>trajCluster()</code>,
+<code>trajLevel()</code>,
+<code>trajPlot()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## import trajectory data for London in 2009
+## Not run: mytraj &lt;- importTraj(site = "london", year = 2009)
+
+## combine with measurements
+## Not run: theData &lt;- importAURN(site = "kc1", year = 2009)
+mytraj &lt;- merge(mytraj, theData, by = "date")
+## End(Not run)
+</code></pre>
+
+
+</div>

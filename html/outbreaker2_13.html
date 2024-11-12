@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>outbreaker_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Process input data for outbreaker</h2>
+
+<h3>Description</h3>
+
+<p>This function performs various checks on input data given to outbreaker.  It
+takes a list of named items as input, performs various checks, set defaults
+where arguments are missing, and return a correct list of data input. If no
+input is given, it returns the default settings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">outbreaker_data(..., data = list(...))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>a list of data items to be processed (see description)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>optionally, an existing list of data item as returned by <code>outbreaker_data</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Acceptables arguments for ... are:
+</p>
+
+<dl>
+<dt>dates</dt>
+<dd>
+<p>dates a vector indicating the collection dates, provided either as
+integer numbers or in a usual date format such as <code>Date</code> or
+<code>POSIXct</code> format. By convention, zero will indicate the oldest date. If
+the vector is named, the vector names will be used for matching cases to
+contact tracing data and labelled DNA sequences.</p>
+</dd>
+<dt>dna</dt>
+<dd>
+<p>the DNA sequences in <code>DNAbin</code> format (see
+<code>read.dna</code> in the ape package); this can be imported from a
+fasta file (extension .fa, .fas, or .fasta) using <code>adegenet</code>'s function
+fasta2DNAbin.</p>
+</dd>
+<dt>ctd</dt>
+<dd>
+<p>the contact tracing data provided as a matrix/dataframe of two
+columns, indicating a reported contact between the two individuals whose ids
+are provided in a given row of the data, or an epicontacts object. In the case
+of the latter, linelist IDs will be used for matching dates and DNA
+sequences</p>
+</dd>
+<dt>w_dens</dt>
+<dd>
+<p>a vector of numeric values indicating the generation time
+distribution, reflecting the infectious potential of a case t = 1, 2, ...
+time steps after infection. By convention, it is assumed that
+newly infected patients cannot see new infections on the same time step. If not
+standardized, this distribution is rescaled to sum to 1.</p>
+</dd>
+<dt>f_dens</dt>
+<dd>
+<p>similar to <code>w_dens</code>, except that this is the distribution
+of the colonization time, i_e. time interval during which the pathogen can
+be sampled from the patient.</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Thibaut Jombart (<a href="mailto:thibautjombart@gmail.com">thibautjombart@gmail.com</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- fake_outbreak
+outbreaker_data(dates = x$sample, dna = x$dna, w_dens = x$w)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>moving.fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Moving Window Functions</h2>
+
+<h3>Description</h3>
+
+ 
+<p>Apply a function to successive multi-session windows from a capthist object. The default function is <code>openCR.fit</code>, but any function may be used whose first argument accepts a capthist object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+moving.fit (..., width = 3, centres = NULL, filestem = NULL, 
+    trace = FALSE, FUN = openCR.fit)
+
+extractFocal (ocrlist, ...) 
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>named arguments passed to <code>openCR.fit</code> (see Details) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>integer; moving window width (number of primary sessions)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centres</code></td>
+<td>
+<p>integer; central sessions of windows to consider</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filestem</code></td>
+<td>
+<p>character or NULL; stem used to form filenames for optional  intermediate output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+<p>logical; if TRUE a status message is given at each call of FUN</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FUN</code></td>
+<td>
+<p>function to be applied to successive capthist objects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ocrlist</code></td>
+<td>
+<p>openCRlist object returned by <code>moving.fit</code> when FUN = openCR.fit</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>moving.fit</code> applies <code>FUN</code> to successive multi-session subsets
+of the data in the <code>capthist</code> argument. <code>width</code> should be an odd integer. 
+<code>centres</code> may be used to restrict the range of windows considered; 
+the default is to use all complete windows (width%/%2 + 1)...).
+</p>
+<p>If a <code>filestem</code>
+is specified then each result is output to a file that may be loaded with
+<code>load</code>. This is useful if fitting takes a long time and analyses
+may be terminated before completion. 
+</p>
+<p><code>extractFocal</code> returns the focal-session (central) estimates from a <code>moving.fit</code> 
+with <code>FUN = openCR.fit</code>. The ... argument is passed to <code>predict.openCR</code>; 
+it may be used, for example, to choose a different alpha level for confidence intervals.
+</p>
+<p><code>extractFocal</code> is untested for complex models (e.g. finite mixtures).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list in which each component is the output from FUN applied to one subset. The window width is saved as attribute ‘width’.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openCR.fit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## number of individuals detected
+moving.fit(capthist = OVpossumCH, FUN = nrow)
+
+## Not run: 
+
+## if package R2ucare installed
+if (requireNamespace("R2ucare"))
+    moving.fit(capthist = OVpossumCH, FUN = ucare.cjs, width = 5, tests = "overall_CJS")
+
+## using default FUN = openCR.fit
+
+mf1 &lt;- moving.fit(capthist = OVpossumCH, type = 'JSSAfCL', 
+     model = list(p~t, phi~t))
+lapply(mf1, predict)
+extractFocal(mf1)
+     
+msk &lt;- make.mask(traps(OVpossumCH[[1]]), nx = 32)
+mf2 &lt;- moving.fit(capthist = OVpossumCH, mask = msk, type = 'JSSAsecrfCL')
+extractFocal(mf2)
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

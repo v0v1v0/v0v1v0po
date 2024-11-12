@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>okriging</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run omic kriging on a set of correlation matrices and a given phenotype.</h2>
+
+<h3>Description</h3>
+
+<p>Universal kriging formula:
+lambda' = ( c + X m )' iSig
+m' = ( x - X' iSig c )' ( X' iSig X )^-1
+m' = ( t(x) - c' iSig X ) ( X' iSig X )^-1
+lambda' = (c' + m' X) iSig
+x: #covariates x ntest
+X: ntrain x #cov
+c: ntrain x ntest
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">okriging(idtest, idtrain = NULL, corlist, H2vec, pheno, phenoname,
+  Xcova = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>idtest</code></td>
+<td>
+<p>A vector of sample IDs which constitute the test set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>idtrain</code></td>
+<td>
+<p>A vector of sample IDs which constitute the training set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corlist</code></td>
+<td>
+<p>A list of correlation matrices used in Kriging. rownames and colnames
+of cor should be IID list and include idtest and idtrain.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H2vec</code></td>
+<td>
+<p>has weights for each RM relatednes matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pheno</code></td>
+<td>
+<p>A data frame with rownames set as sample IDs and a column containing phenotype data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phenoname</code></td>
+<td>
+<p>The name of the column in pheno which contains phenotype data to test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xcova</code></td>
+<td>
+<p>Data frame of covariates with rownames() set to sample IDs.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A dataframe with three columns: sample ID, observed phenotype Ytest, and predicted phenotype Ypred
+</p>
+
+
+<h3>References</h3>
+
+<p>Cressie 1993 Statistics for Spatial Data p.154
+</p>
+
+
+</div>

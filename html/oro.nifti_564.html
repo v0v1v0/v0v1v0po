@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>quaternion2rotation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Quaternion into a Rotation Matrix</h2>
+
+<h3>Description</h3>
+
+<p>The affine/rotation matrix <code class="reqn">R</code> is calculated from the quaternion
+parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">quaternion2rotation(b, c, d, tol = 1e-07)
+
+quaternion2mat44(nim, tol = 1e-07)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>is the quaternion <code class="reqn">b</code> parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c</code></td>
+<td>
+<p>is the quaternion <code class="reqn">c</code> parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>is the quaternion <code class="reqn">d</code> parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>is a very small value used to judge if a number is essentially
+zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nim</code></td>
+<td>
+<p>is an object of class <code>nifti</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The quaternion representation is chosen for its compactness in representing
+rotations.  The orientation of the <code class="reqn">(x,y,z)</code> axes relative to the
+<code class="reqn">(i,j,k)</code> axes in 3D space is specified using a unit quaternion
+<code class="reqn">[a,b,c,d]</code>, where <code class="reqn">a^2+b^2+c^2+d^2=1</code>.  The
+<code class="reqn">(b,c,d)</code> values are all that is needed, since we require that
+<code class="reqn">a=[1-(b^2+c^2+d^2)]^{1/2}</code> be non-negative.
+The <code class="reqn">(b,c,d)</code> values are stored in the (<code>quatern_b</code>,
+<code>quatern_c</code>, <code>quatern_d</code>) fields.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The (proper) <code class="reqn">3{\times}3</code> rotation matrix or
+<code class="reqn">4{\times}4</code> affine matrix.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>NIfTI-1<br><a href="http://nifti.nimh.nih.gov/">http://nifti.nimh.nih.gov/</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## This R matrix is represented by quaternion [a,b,c,d] = [0,1,0,0]
+## (which encodes a 180 degree rotation about the x-axis).
+(R &lt;- quaternion2rotation(1, 0, 0))
+</code></pre>
+
+
+</div>

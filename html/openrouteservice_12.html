@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ors_snap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Openrouteservice Snapping</h2>
+
+<h3>Description</h3>
+
+<p>Snap coordinates to road network
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ors_snap(
+  locations,
+  profile = ors_profile(),
+  radius,
+  format = c("geojson", "json"),
+  ...,
+  api_key = ors_api_key(),
+  output = c("parsed", "text", "sf")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>locations</code></td>
+<td>
+<p>List of <code style="white-space: pre;">⁠longitude, latitude⁠</code> coordinate pairs, alternatively a two column <code>matrix</code> or <code>data.frame</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>profile</code></td>
+<td>
+<p>Route profile, defaults to <code>"driving-car"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>radius</code></td>
+<td>
+<p>Maximum radius in meters around given coordinates to search for graph edges</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Response format, defaults to <code>"geojson"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional parameters as described <a href="https://openrouteservice.org/dev/#/api-docs/v2/snap/%7Bprofile%7D/post">here</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>Character scalar containing openrouteservice API key</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Output format. By default the response is being parsed to a list-based R object</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Coordinates of snapped location(s) and distance to the original point(s) structured according to <code>output</code>:
+</p>
+
+<ul><li>
+<p> for <code>"text"</code>, a character vector of length 1 re-encoded to UTF-8.
+</p>
+</li></ul>
+<ul><li>
+<p> for <code>"parsed"</code>, a parsed R object.
+</p>
+</li></ul>
+<ul><li>
+<p> for <code>"sf"</code>, a simple features <code>sf</code> object.
+</p>
+</li></ul>
+<h3>Author(s)</h3>
+
+<p>Andrzej Oleś <a href="mailto:andrzej.oles@gmail.com">andrzej.oles@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">locations &lt;- list(
+  c(8.669629, 49.413025),
+  c(8.675841, 49.418532),
+  c(8.665144, 49.415594)
+)
+
+# query for locations snapped onto the OpenStreetMap road network
+res &lt;- ors_snap(locations, radius = 350)
+</code></pre>
+
+
+</div>

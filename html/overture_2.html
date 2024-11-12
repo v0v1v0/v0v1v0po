@@ -1,0 +1,247 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Amwg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Turn a non-adaptive Metropolis sampler into an adaptive Metropolis sampler</h2>
+
+<h3>Description</h3>
+
+<p>Given a non-adaptive sampler of the form f(..., s), <code>Amwg</code> will return a
+function g(...) that automatically adapts the Metropolis proposal standard
+deviation s to try and achieve a target acceptance rate.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Amwg(f, s, batch.size = 50, target = 0.44, DeltaN, stop.after = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>non-adaptive Metropolis sampler of the form f(..., s)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>initial value for the Metropolis proposal SD</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>batch.size</code></td>
+<td>
+<p>number of iterations before proposal SD is adapted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+<p>target acceptance rate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DeltaN</code></td>
+<td>
+<p>function of the form f(n) which returns the adaptation amount
+based on the number of elapsed iterations, n.  Defaults to <code class="reqn">\delta(n) =
+min(0.01, n^{-1/2})</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stop.after</code></td>
+<td>
+<p>stop adapting proposal SD after this many iterations</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>Amwg</code> uses the Adaptive Metropolis-Within-Gibbs algorithm from Roberts
+&amp; Rosenthal (2009), which re-scales the proposal standard deviation after a
+fixed number of MCMC iterations have elapsed.  The goal of the algorithm is
+to achieve a target acceptance rate for the Metropolis step.  After the
+n<em>th</em> batch of MCMC iterations the log of the proposal standard
+deviation, <code class="reqn">log(s)</code>, is increased/decreased by <code class="reqn">\delta(n)</code>.
+<code class="reqn">log(s)</code> is increased by <code class="reqn">\delta(n)</code> if the observed acceptance rate
+is more than the target acceptance rate, or decreased by <code class="reqn">\delta(n)</code> if
+the observed acceptance rate is less than the target acceptance rate.
+<code>Amwg</code> keeps track of the the acceptance rate by comparing the
+previously sampled value from <code>f</code> to the next value.  If the two values
+are equal, the proposal is considered to be rejected, whereas if the two
+values are different the proposal is considered accepted.  <code>Amwg</code> will
+optionally stop adapting the proposal standard deviation after
+<code>stop.after</code> iterations.  Setting <code>stop.after</code> can be used, for
+example, to stop adapting the proposal standard deviation after some burn-in
+period.  If <code>stop.after=NA</code> (the default), <code>Amwg</code> will continue to
+modify the proposal standard deviation throughout the entire MCMC.
+</p>
+<p><code>DeltaN</code> is set to <code class="reqn">\delta(n) = min(0.01, n^{-1/2})</code> unless
+re-specified in the function call. Some care should be taken if re-specifying
+<code>DeltaN</code>, as the ergodicity of the chain may not be preserved if certain
+conditions aren't met.  See Roberts &amp; Rosenthal (2009) in the references for
+details.
+</p>
+<p>The proposal standard deviation <code>s</code> can be either a vector or a scalar.
+If the initial value of <code>s</code> is a scalar, <code class="reqn">f</code> will be treated as a
+sampler for a scalar, a random vector, or a joint parameter update.
+Alternatively, if the dimension of <code class="reqn">s</code> is equal to the dimension of the
+parameters returned by <code class="reqn">f</code>, the individual elements <code class="reqn">s</code> will be
+treated as individual proposal standard deviations for the elements returned
+by <code class="reqn">f</code>.  This functionality can be used, for example, if <code class="reqn">f</code> samples
+each of its returned elements individually, updating each element using a
+Metropolis step.  See the examples for an illustration of this use case.  In
+such settings, <code class="reqn">f</code> should be constructed to receive <code class="reqn">s</code> as a vector
+argument.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Adaptive Metropolis sampler function of the form g(...).
+</p>
+
+
+<h3>References</h3>
+
+<p>Gareth O. Roberts &amp; Jeffrey S. Rosenthal (2009) Examples of
+Adaptive MCMC, Journal of Computational and Graphical Statistics, 18:2,
+349-367, doi: <a href="http://doi.org/10.1198/jcgs.2009.06134">10.1198/jcgs.2009.06134</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Sample from N(1, 2^2) ---------------------------------------------------
+LogP &lt;- function(x) dnorm(x, 1, 2, log=TRUE) # Target distribution
+
+f &lt;- function(x, s) { # Non-adaptive Metropolis sampler
+    x.prop &lt;- x + rnorm(1, 0, s)
+    if(AcceptProp(LogP(x), LogP(x.prop))) {
+        x &lt;- x.prop
+    }
+
+    return(x)
+}
+
+s.start &lt;- 0.1
+g &lt;- Amwg(f, s.start, batch.size=25)
+
+n.save &lt;- 10000
+Mcmc &lt;- InitMcmc(n.save)
+y &lt;- 0
+x &lt;- 0
+samples &lt;- Mcmc({
+    y &lt;- f(y, s.start) # Non-adaptive
+    x &lt;- g(x) # Adaptive
+})
+
+plot(1:n.save, samples$x, ylim=c(-10, 10), main="Traceplots", xlab="Iteration",
+     ylab="Value", type='l')
+lines(1:n.save, samples$y, col="red")
+legend("bottomleft", legend=c("Adaptive", "Non-adaptive"),
+       col=c("black", "red"), lty=1, cex=0.8)
+
+# Sample from Gamma(10, 5) ------------------------------------------------
+LogP &lt;- function(x) dgamma(x, 10, 5, log=TRUE) # Target distribution
+
+f &lt;- function(x, s) { # Non-adaptive Metropolis sampler
+    x.prop &lt;- x + rnorm(1, 0, s)
+    if(AcceptProp(LogP(x), LogP(x.prop))) {
+        x &lt;- x.prop
+    }
+
+    return(x)
+}
+
+s.start &lt;- 10
+stop.after &lt;- 5000 # Stop changing the proposal SD after 5000 iterations
+g &lt;- Amwg(f, s.start, batch.size=25, stop.after=stop.after)
+
+n.save &lt;- 10000
+Mcmc &lt;- InitMcmc(n.save)
+x &lt;- 1
+samples &lt;- Mcmc({
+    x &lt;- g(x)
+})
+hist(samples$x[stop.after:n.save,], xlab="x", main="Gamma(10, 5)", freq=FALSE)
+curve(dgamma(x, 10, 5), from=0, to=max(samples$x), add=TRUE, col="blue")
+
+# Overdispersed Poisson ---------------------------------------------------
+## Likelihood:
+## y_i|theta_i ~ Pois(theta_i), i=1,...,n
+## Prior:
+## theta_i ~ Log-Normal(mu, sigma^2)
+## mu ~ Normal(m, v^2), m and v^2 fixed
+## sigma^2 ~ InverseGamma(a, b), a and b fixed
+
+
+SampleSigma2 &lt;- function(theta.vec, mu, a, b, n.obs) {
+    1/rgamma(1, a + n.obs/2, b + (1/2)*sum((log(theta.vec) - mu)^2))
+}
+
+SampleMu &lt;- function(theta.vec, sigma.2, m, v.2, n.obs) {
+    mu.var &lt;- (1/v.2 + n.obs/sigma.2)^(-1)
+    mu.mean &lt;- (m/v.2 + sum(log(theta.vec))/sigma.2) * mu.var
+
+    return(rnorm(1, mu.mean, sqrt(mu.var)))
+}
+
+LogDTheta &lt;- function(theta, mu, sigma.2, y) {
+    dlnorm(theta, mu, sqrt(sigma.2), log=TRUE) + dpois(y, theta, log=TRUE)
+}
+
+# Non-adaptive Metropolis sampler
+SampleTheta &lt;- function(theta.vec, mu, sigma.2, y.vec, n.obs, s) {
+    theta.prop &lt;- exp(log(theta.vec) + rnorm(n.obs, 0, s))
+
+    # Jacobians, because proposals are made on the log scale
+    j.curr &lt;- log(theta.vec)
+    j.prop &lt;- log(theta.prop)
+
+    log.curr &lt;- LogDTheta(theta.vec, mu, sigma.2, y.vec) + j.curr
+    log.prop &lt;- LogDTheta(theta.prop, mu, sigma.2, y.vec) + j.prop
+    theta.vec &lt;- ifelse(AcceptProp(log.curr, log.prop), theta.prop, theta.vec)
+
+    return(theta.vec)
+}
+
+## Data
+y.vec &lt;- warpbreaks$breaks
+n.obs &lt;- length(y.vec)
+
+## Setup adaptive Metropolis sampler
+s &lt;- rep(1, n.obs)
+# s is a vector, so the acceptance rate of each component will be tracked
+# individually in the adaptive Metropolis sampler
+SampleThetaAdapative &lt;- Amwg(SampleTheta, s)
+
+## Set prior
+v.2 &lt;- 0.05
+m &lt;- log(30) - v.2/2
+a &lt;- 1
+b &lt;- 2
+
+## Initialize parameters
+theta.vec &lt;- y.vec
+mu &lt;- m
+
+## MCMC
+Mcmc &lt;- InitMcmc(10000)
+samples &lt;- Mcmc({
+    sigma.2 &lt;- SampleSigma2(theta.vec, mu, a, b, n.obs)
+    mu &lt;- SampleMu(theta.vec, sigma.2, m, v.2, n.obs)
+    theta.vec &lt;- SampleThetaAdapative(theta.vec, mu, sigma.2, y.vec, n.obs)
+})
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_hyperlink</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create Excel hyperlink string</h2>
+
+<h3>Description</h3>
+
+<p>Wrapper to create internal hyperlink string to pass to <code>wb_add_formula()</code>.
+Either link to external URLs or local files or straight to cells of local Excel sheets.
+</p>
+<p>Note that for an external URL, only <code>file</code> and <code>text</code> should be supplied.
+You can supply <code>dims</code> to <code>wb_add_formula()</code> to control the location of the link.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_hyperlink(sheet, row = 1, col = 1, text = NULL, file = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>Name of a worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row</code></td>
+<td>
+<p>integer row number for hyperlink to link to</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>column number of letter for hyperlink to link to</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>Display text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>Hyperlink or Excel file name to point to. If <code>NULL</code>, hyperlink is internal.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- wb_workbook()$
+  add_worksheet("Sheet1")$add_worksheet("Sheet2")$add_worksheet("Sheet3")
+
+## Internal Hyperlink - create hyperlink formula manually
+x &lt;- '=HYPERLINK(\"#Sheet2!B3\", "Text to Display - Link to Sheet2")'
+wb$add_formula(sheet = "Sheet1", x = x, dims = "A1")
+
+## Internal - No text to display using create_hyperlink() function
+x &lt;- create_hyperlink(sheet = "Sheet3", row = 1, col = 2)
+wb$add_formula(sheet = "Sheet1", x = x, dims = "A2")
+
+## Internal - Text to display
+x &lt;- create_hyperlink(sheet = "Sheet3", row = 1, col = 2,text = "Link to Sheet 3")
+wb$add_formula(sheet = "Sheet1", x = x, dims = "A3")
+
+## Link to file - No text to display
+fl &lt;- system.file("extdata", "openxlsx2_example.xlsx", package = "openxlsx2")
+x &lt;- create_hyperlink(sheet = "Sheet1", row = 3, col = 10, file = fl)
+wb$add_formula(sheet = "Sheet1", x = x, dims = "A4")
+
+## Link to file - Text to display
+fl &lt;- system.file("extdata", "openxlsx2_example.xlsx", package = "openxlsx2")
+x &lt;- create_hyperlink(sheet = "Sheet2", row = 3, col = 10, file = fl, text = "Link to File.")
+wb$add_formula(sheet = "Sheet1", x = x, dims = "A5")
+
+## Link to external file - Text to display
+x &lt;- '=HYPERLINK("[C:/Users]", "Link to an external file")'
+wb$add_formula(sheet = "Sheet1", x = x, dims = "A6")
+
+x &lt;- create_hyperlink(text = "test.png", file = "D:/somepath/somepicture.png")
+wb$add_formula(x = x, dims = "A7")
+
+
+## Link to an URL.
+x &lt;- create_hyperlink(text = "openxlsx2 website", file = "https://janmarvin.github.io/openxlsx2/")
+
+wb$add_formula(x = x, dims = "A8")
+# if (interactive()) wb$open()
+
+</code></pre>
+
+
+</div>

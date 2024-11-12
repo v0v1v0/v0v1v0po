@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>table_ui</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>NOAA table module</h2>
+
+<h3>Description</h3>
+
+<p>This shiny module (<code>table_ui()</code> + <code>table_server()</code>) visualizes the loaded
+and filtered data in a table format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">table_ui(id, download = NULL)
+
+table_server(id, NOAA, variable)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Namespace id shiny module.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>download</code></td>
+<td>
+<p>Add download button.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NOAA</code></td>
+<td>
+<p>Reactive value for the dataset containing the locations
+coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p>Reactivevalues for selected variable information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Shiny module.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (interactive()) {
+# run table module stand-alone
+
+library(oceanexplorer)
+library(shiny)
+
+# data
+NOAA &lt;- get_NOAA("oxygen", 1, "annual")
+
+# coordinates
+points &lt;- filter_NOAA(NOAA, 1, list(lon = c(-160, -120), lat =  c(11, 12)))
+
+# gui
+ui &lt;- fluidPage(table_ui("table"))
+
+# server
+server &lt;-function(input, output, session) {
+ # table
+ output_table &lt;- table_server(
+  "table",
+  reactive(points),
+  reactiveValues(parm = "temperature", spat = 1, temp = "annual")
+  )
+}
+
+# run app
+shinyApp(ui, server)
+
+}
+
+</code></pre>
+
+
+</div>

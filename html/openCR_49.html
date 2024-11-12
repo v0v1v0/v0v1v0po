@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>derived</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Derived Parameters From openCR Models
+</h2>
+
+<h3>Description</h3>
+
+<p>For ..CL openCR models, compute the superpopulation size or density. 
+For all openCR models, compute the
+time-specific population size or density from the estimated
+superpopulation size and the turnover parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+## S3 method for class 'openCR'
+derived(object, newdata = NULL, all.levels = FALSE, Dscale = 1, 
+    HTbysession = FALSE, ...)
+## S3 method for class 'openCRlist'
+derived(object, newdata = NULL, all.levels = FALSE, Dscale = 1, 
+    HTbysession = FALSE, ...)
+openCR.esa(object, bysession = FALSE, stratum = 1)
+openCR.pdot(object, bysession = FALSE, stratum = 1)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>fitted openCR model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>optional dataframe of values at which to evaluate model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all.levels</code></td>
+<td>
+<p>logical; passed to <code>makeNewData</code> if newdata not specified</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Dscale</code></td>
+<td>
+<p>numeric to scale density</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>HTbysession</code></td>
+<td>
+<p>logical; Horvitz-Thompson estimates by session (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments (not used)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bysession</code></td>
+<td>
+<p>logical; if TRUE then esa or pdot is computed separately for each session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratum</code></td>
+<td>
+<p>integer</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Derived estimates of density and superD are multiplied by <code>Dscale</code>. Use <code>Dscale = 1e4</code> for animals per 100 sq. km.
+<code>openCR.esa</code> and <code>openCR.pdot</code> are used internally by <code>derived.openCR</code>.
+</p>
+<p>If <code>HTbysession</code> then a separate H-T estimate is derived for each primary session; otherwise a H-T estimate of the superpopulation is used in combination with turnover parameters (phi, beta) to obtain session-specific estimates. Results are often identical.
+</p>
+<p>The output is an object with its own print method (see <code>print.derivedopenCR</code>).
+</p>
+<p>The code does not yet allow user-specified newdata.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>derived</code> returns an object of class c(“derivedopenCR",“list"), list with these components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>totalobserved</code></td>
+<td>
+<p>number of different individuals detected</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p>character vector; names of parameters in model (excludes derived parameters)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>superN </code></td>
+<td>
+<p>superpopulation size (non-spatial models only)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>superD</code></td>
+<td>
+<p>superpopulation density (spatial models only)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimates</code></td>
+<td>
+<p>data frame of counts and estimates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Dscale</code></td>
+<td>
+<p>numeric multiplier for printing densities</p>
+</td>
+</tr>
+</table>
+<p>If <code>newdata</code> has multiple levels then the value is a list of such objects, one for each level.
+</p>
+<p><code>openCR.pdot</code> returns a vector of experiment-wide detection
+probabilities under the fitted model (one for each detected animal).
+</p>
+<p><code>openCR.esa</code> returns a vector of effective sampling areas under
+the fitted model (one for each detected animal). If 'bysession = TRUE' the 
+result is a list with one component per session.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Prior to 1.4.5, openCR.esa did not expand the result for squeezed capture 
+histories (freq&gt;1) and did not return a list when bysession = TRUE.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openCR.fit</code>, <code>print.derivedopenCR</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+# override default method to get true ML for L1
+L1CL &lt;- openCR.fit(ovenCH, type = 'JSSAlCL', method = 'Nelder-Mead')
+predict(L1CL)
+derived(L1CL)
+
+## compare to above
+L1 &lt;- openCR.fit(ovenCH, type = 'JSSAl', method = 'Nelder-Mead')
+predict(L1)
+derived(L1)
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oscai</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Score with an AI
+A basic function to score the creativity with an AI.
+See <a href="https://openscoring.du.edu/scoringllm">the OpenScoring site</a>
+for more information. Requires an internet connection.</h2>
+
+<h3>Description</h3>
+
+<p>Score with an AI
+A basic function to score the creativity with an AI.
+See <a href="https://openscoring.du.edu/scoringllm">the OpenScoring site</a>
+for more information. Requires an internet connection.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oscai(
+  df,
+  item,
+  answer,
+  model = c("1.6", "1-4o", "davinci3", "chatgpt2", "1.5", "chatgpt", "babbage2",
+    "davinci2"),
+  language = "English",
+  scores_col = ".originality",
+  quiet = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>A data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item</code></td>
+<td>
+<p>The column name of the items or other kind of prompt.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>answer</code></td>
+<td>
+<p>The column name of the responses. Commas will be replaced with spaces for scoring.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>The model to use. Should be one of "1.6", "1-4o", "davinci3", "chatgpt2". Deprecated models are kept for compatibility.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language of the input. Only works for the 1.5 model upwards. Should be one of "Arabic", "Chinese", "Dutch", "English", "French", "German", "Hebrew", "Italian", "Polish", "Russian", "Spanish".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scores_col</code></td>
+<td>
+<p>The column name to store the scores in. Defaults to ".originality".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>Whether to print the citation reminder.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Available models:
+</p>
+
+<ul>
+<li>
+<p> ocsai-1.6: Update to the multi-lingual, multi-task 1.5 model, trained on GPT 4o instead of 3.5.
+</p>
+</li>
+<li>
+<p> ocsai1-4o: GPT-4o-based model, trained with more data and supporting multiple tasks. Last update to the Ocsai 1 models (i.e. the original ones).
+</p>
+</li>
+<li>
+<p> ocsai-chatgpt2: GPT-3.5-size chat-based model, trained with more data and supporting multiple tasks. Scoring is slower, with slightly better performance than ocsai-davinci.
+</p>
+</li>
+<li>
+<p> ocsai-davinci3: GPT-3 Davinci-size model. Trained with the method from Organisciak et al. 2023, but with the additional tasks (uses, consequences, instances, complete the sentence) from Acar et al 2023, and trained with more data.
+</p>
+</li>
+<li>
+<p> ocsai-1.5: Beta version of new multi-lingual, multi-task model, trained on GPT 3.5.
+</p>
+</li>
+<li>
+<p> ocsai-chatgpt: GPT-3.5-size chat-based model, trained with same format and data as original models. Scoring is slower, with slightly better performance than ocsai-davinci2. For more tasks and trained on more data, use davinci-ocsai2
+</p>
+</li>
+<li>
+<p> ocsai-babbage2: GPT-3 Babbage-size model from the paper, retrained with new model API. Deprecated, mainly because other models work better.
+</p>
+</li>
+<li>
+<p> ocsai-davinci2: GPT-3 Davinci-size model from the paper, retrained with a new model API.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>The input data frame with the scores added.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">df &lt;- data.frame(
+  stimulus = c("brick", "hammer", "sponge"),
+  response = c("butter for trolls", "make Thor jealous", "make it play in a kids show")
+)
+
+df &lt;- oscai(df, stimulus, response, model = "davinci3")
+
+# The 1.5 model and upwards works for multiple languages
+df_polish &lt;- data.frame(
+  stimulus = c("cegła", "młotek", "gąbka"),
+  response = c("masło dla trolli", "wywoływanie zazdrości u Thora", "postać w programie dla dzieci")
+)
+
+df_polish &lt;- oscai(df_polish, stimulus, response, model = "1.5", language = "Polish")
+
+</code></pre>
+
+
+</div>

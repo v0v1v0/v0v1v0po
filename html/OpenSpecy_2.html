@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>adj_intens</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adjust spectral intensities to absorbance units.</h2>
+
+<h3>Description</h3>
+
+<p>Converts reflectance or transmittance intensity units to absorbance units.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">adj_intens(x, ...)
+
+## Default S3 method:
+adj_intens(x, ...)
+
+## S3 method for class 'OpenSpecy'
+adj_intens(x, type = "none", make_rel = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a list object of class <code>OpenSpecy</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>a character string specifying whether the input spectrum is
+in absorbance units (<code>"none"</code>, default) or needs additional conversion
+from <code>"reflectance"</code> or <code>"transmittance"</code> data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>make_rel</code></td>
+<td>
+<p>logical; if <code>TRUE</code> spectra are automatically normalized
+with <code>make_rel()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to submethods; this is
+to <code>adj_neg()</code> for <code>adj_intens()</code> and
+to <code>conform_res()</code> for <code>conform_intens()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Many of the Open Specy functions will assume that the spectrum is in
+absorbance units. For example, see <code>subtr_baseline()</code>.
+To run those functions properly, you will need to first convert any spectra
+from transmittance or reflectance to absorbance using this function.
+The transmittance adjustment uses the <code class="reqn">log(1 / T)</code>
+calculation which does not correct for system and particle characteristics.
+The reflectance adjustment uses the Kubelka-Munk equation
+<code class="reqn">(1 - R)^2 / 2R</code>. We assume that the reflectance intensity
+is a percent from 1-100 and first correct the intensity by dividing by 100
+so that it fits the form expected by the equation.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>adj_intens()</code> returns a data frame containing two columns
+named <code>"wavenumber"</code> and <code>"intensity"</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>subtr_baseline()</code> for spectral background correction.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("raman_hdpe")
+
+adj_intens(raman_hdpe)
+
+</code></pre>
+
+
+</div>

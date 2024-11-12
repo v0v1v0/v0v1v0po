@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ore_ismatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Does text match a regex?</h2>
+
+<h3>Description</h3>
+
+<p>These functions test whether the elements of a character vector match a
+Oniguruma regular expression. The actual match can be retrieved using
+<code>ore_lastmatch</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ore_ismatch(regex, text, keepNA = getOption("ore.keepNA", FALSE), ...)
+
+X %~% Y
+
+X %~~% Y
+
+X %~|% Y
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>regex</code></td>
+<td>
+<p>A single character string or object of class <code>"ore"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>A character vector of strings to search.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepNA</code></td>
+<td>
+<p>If <code>TRUE</code>, <code>NA</code>s will be propagated from <code>text</code>
+into the return value. Otherwise, they evaluate <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments to <code>ore_search</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>A character vector or <code>"ore"</code> object. See Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>A character vector. See Details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>%~%</code> infix shorthand corresponds to <code>ore_ismatch(..., 
+all=FALSE)</code>, while <code>%~~%</code> corresponds to <code>ore_ismatch(...,
+all=TRUE)</code>. Either way, the first argument can be an <code>"ore"</code> object,
+in which case the second is the text to search, or a character vector, in
+which case the second argument is assumed to contain the regex. The
+<code>%~|%</code> shorthand returns just those elements of the text vector which
+match the regular expression.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A logical vector, indicating whether elements of <code>text</code> match
+<code>regex</code>, or not.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ore_search</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Test for the presence of a vowel
+ore_ismatch("[aeiou]", c("sky","lake"))  # =&gt; c(FALSE,TRUE)
+
+# The same thing, in shorter form
+c("sky","lake") %~% "[aeiou]"
+
+# Same again: the first argument must be an "ore" object this way around
+ore("[aeiou]") %~% c("sky","lake")
+</code></pre>
+
+
+</div>

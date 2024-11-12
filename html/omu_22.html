@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_boxplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a box plot</h2>
+
+<h3>Description</h3>
+
+<p>Takes a metabolomics count data frame and creates boxplots. It is recommended to
+either subset, truncate, or agglomerate by hierarchical metadata.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_boxplot(
+  count_data,
+  metadata,
+  aggregate_by,
+  log_transform = FALSE,
+  Factor,
+  response_variable = "Metabolite",
+  fill_list
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>count_data</code></td>
+<td>
+<p>A metabolomics count data frame, either from read_metabo or omu_summary</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata</code></td>
+<td>
+<p>The descriptive meta data for the samples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aggregate_by</code></td>
+<td>
+<p>Hierarchical metadata value to sum metabolite values by, i.e. "Class"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log_transform</code></td>
+<td>
+<p>TRUE or FALSE. Recommended for visualization purposes. If true data is
+transformed by the natural log</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Factor</code></td>
+<td>
+<p>The column name for the experimental variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_variable</code></td>
+<td>
+<p>The response variable for the data, i.e. "Metabolite"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fill_list</code></td>
+<td>
+<p>Colors for the plot which is colored by Factor, in the form of c("")</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">c57_nos2KO_mouse_countDF &lt;- c57_nos2KO_mouse_countDF[1:5,]
+c57_nos2KO_mouse_countDF &lt;- assign_hierarchy(c57_nos2KO_mouse_countDF, TRUE, "KEGG")
+
+plot_boxplot(count_data = c57_nos2KO_mouse_countDF, metadata = c57_nos2KO_mouse_metadata,
+log_transform = TRUE, Factor = "Treatment", response_variable = "Metabolite",
+aggregate_by = "Subclass_2", fill_list = c("darkgoldenrod1", "dodgerblue2"))
+</code></pre>
+
+
+</div>

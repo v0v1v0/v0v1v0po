@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>connect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Connect to a openEO service</h2>
+
+<h3>Description</h3>
+
+<p>Connects to openEO service. If the back-end provides a well-known endpoint that allows redirecting to
+specific versions you should provide the version parameter.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">connect(host, version = NULL, exchange_token = "access_token", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>host</code></td>
+<td>
+<p>URL pointing to the openEO server service host</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p>the openEO API version number as string (optional), see also <code>api_versions()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exchange_token</code></td>
+<td>
+<p>'access_token' or 'id_token' defines in the OIDC case the bearer token use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>parameters that are passed on to <code>login()</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>You can explore several already available openEO web services by using the openEO hub (<a href="https://hub.openeo.org/">https://hub.openeo.org/</a>). There you
+have an overview about their status and connection details like the URL and supported features. You can explore the
+service for free through the access to publicly available metadata of data collections as well as the offered
+processing functions. For any computation and the creation of web services, you need to register the openEO partner of
+your choice. There you will get further information on credentials and the log in procedure.
+</p>
+<p>The <code>...</code> parameter allows you to pass on arguments directly for <code>login()</code>. If they are omitted the
+client will only connect to the back-end, but does not do authentication. The user must do that manually afterwards.
+Based on the provided login parameters user / password or OIDC provider the appropriate login procedure for basic authentication
+or OIDC authentication will be chosen.
+</p>
+<p>The parameter <code>version</code> is not required. If the service offers a well-known document of the
+service the client will choose an appropriate version (default the most recent production ready version).
+</p>
+<p>When calling this function the <code>OpenEOClient()</code> is also stored in a variable in the package
+which marks the latest service that was connected to.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>active_connection()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# The following examples show different configuration settings and point 
+# to imaginary URLs. Please obtain a valid URL via the openEO hub and 
+# register with one of the provider if required.
+
+# connect to a host of the latest version and without authentication
+con = connect(host='http://example.openeo.org')
+
+# connect to a host by direct URL and basic log in
+con = connect(host='http://example.openeo.org/v1.0',
+              user='user',
+             password='password')
+
+# connect to a host with open id connect authentication
+con = connect(host='http://example.openeo.org')
+
+# connect and login with a named and valid oidc provider
+con = connect(host='http://example.openeo.org',
+              provider='your_named_provider')
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

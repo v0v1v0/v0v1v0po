@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oe_download</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download a file given a url</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to download a file given a URL. It focuses on OSM
+extracts with <code>.osm.pbf</code> format stored by one of the providers implemented in
+the package. The URL is specified through the parameter <code>file_url</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oe_download(
+  file_url,
+  provider = NULL,
+  file_basename = basename(file_url),
+  download_directory = oe_download_directory(),
+  file_size = NA,
+  force_download = FALSE,
+  max_file_size = 5e+08,
+  quiet = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file_url</code></td>
+<td>
+<p>A URL pointing to a <code>.osm.pbf</code> file that should be
+downloaded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>provider</code></td>
+<td>
+<p>Which provider stores the file? If <code>NULL</code> (the default), it
+may be inferred from the URL, but it must be specified for non-standard
+cases. See details and examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_basename</code></td>
+<td>
+<p>The basename of the file. The default behaviour is to
+auto-generate it from the URL using <code>basename()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>download_directory</code></td>
+<td>
+<p>Where to download the file containing the OSM data?
+By default this is equal to <code>oe_download_directory()</code>, which is equal to
+<code>tempdir()</code> and it changes each time you restart R. You can set a
+persistent <code>download_directory</code> by adding the following to your <code>.Renviron</code>
+file (e.g. with <code>edit_r_environ</code> function in <code>usethis</code> package):
+<code style="white-space: pre;">⁠OSMEXT_DOWNLOAD_DIRECTORY=/path/to/osm/data⁠</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_size</code></td>
+<td>
+<p>How big is the file? Optional. <code>NA</code> by default. If it's
+bigger than <code>max_file_size</code> and the function is run in interactive mode,
+then an interactive menu is displayed, asking for permission for
+downloading the file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force_download</code></td>
+<td>
+<p>Should the <code>.osm.pbf</code> file be updated if it has already
+been downloaded? <code>FALSE</code> by default. This parameter is used to update old
+<code>.osm.pbf</code> files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_file_size</code></td>
+<td>
+<p>The maximum file size to download without asking in
+interactive mode. Default: <code>5e+8</code>, half a gigabyte.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>Boolean. If <code>FALSE</code>, the function prints informative messages.
+Starting from <code>sf</code> version
+<a href="https://r-spatial.github.io/sf/news/index.html#version-0-9-6-2020-09-13">0.9.6</a>,
+if <code>quiet</code> is equal to <code>FALSE</code>, then vectortranslate operations will
+display a progress bar.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function runs several checks before actually downloading a new
+file to avoid overloading the OSM providers. The first step is the
+definition of the file's path associated to the input <code>file_url</code>. The path
+is created by pasting together the <code>download_directory</code>, the name of chosen
+provider (which may be inferred from the URL) and the <code>basename()</code> of the
+URL. For example, if <code>file_url</code> is equal to
+<code>"https://download.geofabrik.de/europe/italy-latest.osm.pbf"</code>, and
+<code>download_directory = "/tmp"</code>, then the path is built as
+<code>"/tmp/geofabrik_italy-latest.osm.pbf"</code>. Thereafter, the function checks
+the existence of that file and, if it founds it, then it returns the path.
+The parameter <code>force_download</code> is used to modify this behaviour. If there
+is no file associated with the new path, then the function downloads a new
+file using <code>download.file()</code> with <code>mode = "wb"</code>, and, again, it returns the
+path.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character string representing the file's path.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">(its_match = oe_match("ITS Leeds", quiet = TRUE))
+
+## Not run: 
+oe_download(
+  file_url = its_match$url,
+  file_size = its_match$file_size,
+  provider = "test",
+  download_directory = tempdir()
+)
+iow_url = oe_match("Isle of Wight")
+oe_download(
+  file_url = iow_url$url,
+  file_size = iow_url$file_size,
+  download_directory = tempdir()
+)
+Sucre_url = oe_match("Sucre", provider = "bbbike")
+oe_download(
+  file_url = Sucre_url$url,
+  file_size = Sucre_url$file_size,
+  download_directory = tempdir()
+)
+## End(Not run)
+</code></pre>
+
+
+</div>

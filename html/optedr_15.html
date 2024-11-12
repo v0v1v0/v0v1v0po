@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>DsWFMult</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cocktail Algorithm implementation for Ds-Optimality</h2>
+
+<h3>Description</h3>
+
+<p>Function that calculates the Ds-Optimal designs for the interest parameters given by <code>intPar</code>. The
+rest of the parameters can help the convergence of the algorithm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">DsWFMult(
+  init_design,
+  grad,
+  par_int,
+  min,
+  max,
+  grid.length,
+  join_thresh,
+  delete_thresh,
+  delta_weights,
+  tol,
+  tol2
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>init_design</code></td>
+<td>
+<p>optional dataframe with the initial design for the algorithm. A dataframe with two columns:
+</p>
+
+<ul>
+<li> <p><code>Point</code> contains the support points of the design.
+</p>
+</li>
+<li> <p><code>Weight</code> contains the corresponding weights of the <code>Point</code>s.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grad</code></td>
+<td>
+<p>function of partial derivatives of the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>par_int</code></td>
+<td>
+<p>numeric vector with the index of the <code>parameters</code> of interest. Only necessary when
+the <code>Criterion</code> chosen is 'Ds-Optimality'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min</code></td>
+<td>
+<p>numeric value with the inferior bound of the space of the design.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max</code></td>
+<td>
+<p>numeric value with the upper bound of the space of the design.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grid.length</code></td>
+<td>
+<p>numeric value that gives the grid to evaluate the sensitivity function when looking for a
+maximum.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>join_thresh</code></td>
+<td>
+<p>numeric value that states how close, in real units, two points must be in order to
+be joined together by the join heuristic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delete_thresh</code></td>
+<td>
+<p>numeric value with the minimum weight, over 1 total, that a point needs to have
+in order to not be deleted from the design.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta_weights</code></td>
+<td>
+<p>numeric value in (0, 1), parameter of the algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>numeric value for the convergence of the weight optimizing algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol2</code></td>
+<td>
+<p>numeric value for the stop condition of the algorithm.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list correspondent to the output of the correspondent algorithm called, dependent on the criterion.
+A list of two objects:
+</p>
+
+<ul>
+<li>
+<p> optdes: a dataframe with the optimal design in two columns, <code>Point</code> and <code>Weight</code>.
+</p>
+</li>
+<li>
+<p> sens: a plot with the sensitivity function to check for optimality of the design.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other cocktail algorithms: 
+<code>DWFMult()</code>,
+<code>IWFMult()</code>,
+<code>WFMult()</code>
+</p>
+
+
+</div>

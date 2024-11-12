@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extract_meta</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract meta fields from a tag</h2>
+
+<h3>Description</h3>
+
+<p>Extract meta fields from a tag
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extract_meta(tags)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>tags</code></td>
+<td>
+<p>A single tag or vector of tags to extract the fields from.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A named vector indicating the field and entry associated with it.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+### Simple example
+tag &lt;- "{quiz, id: quiz_name_here, attempts: 10}"
+
+# Extract metadata tags
+meta &lt;- extract_meta(tag)
+
+### Example using a file
+quiz_path &lt;- good_quiz_path()
+quiz_lines &lt;- readLines(quiz_path)
+
+# Put this in a data.frame so we can identify the content
+quiz_df &lt;- parse_quiz_df(quiz_lines)
+
+# Extract the tags
+tags &lt;- quiz_df %&gt;%
+  dplyr::filter(type == "tag") %&gt;%
+  dplyr::pull("original")
+
+# Extract metadata tags
+meta &lt;- extract_meta(tags)
+</code></pre>
+
+
+</div>

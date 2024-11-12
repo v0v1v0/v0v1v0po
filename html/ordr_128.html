@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordinate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit an ordination model to a data object</h2>
+
+<h3>Description</h3>
+
+<p>This is a convenience function to fit an ordination model to a
+data object, wrap the result as a tbl_ord, and annotate this output with
+metadata from the model and possibly from the data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordinate(x, model, ...)
+
+## Default S3 method:
+ordinate(x, model, ...)
+
+## S3 method for class 'array'
+ordinate(x, model, ...)
+
+## S3 method for class 'table'
+ordinate(x, model, ...)
+
+## S3 method for class 'data.frame'
+ordinate(x, model, cols, augment, ...)
+
+## S3 method for class 'dist'
+ordinate(x, model, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A data object to be passed to the <code>model</code>, such as an array,
+table, data.frame, or stats::dist.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An ordination function whose output is coercible to class
+'tbl_ord', or a symbol or character string (handled by <code>match.fun()</code>).
+Alternatively, a formula <code>~ fun(., ...)</code> where <code>fun</code> is such a function and
+other arguments are explicit, which will be evaluated with <code>x</code> in place of
+<code>.</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>model</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>&lt;<code>tidy-select</code>&gt; If <code>x</code> is a data
+frame, columns to pass to <code>model</code>. If missing, all columns are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>augment</code></td>
+<td>
+<p>&lt;<code>tidy-select</code>&gt; If <code>x</code> is a data frame,
+columns to augment to the row data of the ordination. If missing, all
+columns not included in <code>cols</code> will be augmented.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The default method fits the specified model to the provided data object,
+wraps the result as a tbl_ord, and augments this output with any intrinsic
+metadata from the model via <code>augment_ord()</code>.
+</p>
+<p>The default method is used for most classes, though this may change in
+future. The data.frame method allows the user to specify what columns to
+include in the model and what columns with which to annotate the output.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An augmented tbl_ord.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># LRA of arrest data
+ordinate(USArrests, cols = c(Murder, Rape, Assault), lra)
+
+# CMDS of inter-city distance data
+ordinate(UScitiesD, cmdscale_ord, k = 3L)
+
+# PCA of iris data
+ordinate(iris, princomp, cols = -Species, augment = c(Sepal.Width, Species))
+ordinate(iris, cols = 1:4, ~ prcomp(., center = TRUE, scale. = TRUE))
+
+# CA of hair &amp; eye color data
+haireye &lt;- as.data.frame(rowSums(HairEyeColor, dims = 2L))
+ordinate(haireye, MASS::corresp, cols = everything())
+
+# FA of Swiss social data
+ordinate(swiss, model = factanal, factors = 2L, scores = "Bartlett")
+
+# LDA of iris data
+ordinate(iris, ~ lda_ord(.[, 1:4], .[, 5], ret.x = TRUE))
+
+# CCA of savings data
+ordinate(
+  LifeCycleSavings[, c("pop15", "pop75")],
+  # second data set must be handled as an additional parameter to `model`
+  y = LifeCycleSavings[, c("sr", "dpi", "ddpi")],
+  model = cancor_ord, scores = TRUE
+)
+</code></pre>
+
+
+</div>

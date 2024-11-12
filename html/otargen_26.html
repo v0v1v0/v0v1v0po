@@ -1,0 +1,251 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>studiesAndLeadVariantsForGeneByL2G</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve "locus-to-gene" (L2G) model summary data for a gene.</h2>
+
+<h3>Description</h3>
+
+<p>The "locus-to-gene" (L2G) model derives features to prioritize likely causal genes at each GWAS
+locus based on genetic and functional genomics features. The main categories of predictive features are:
+</p>
+
+<ul>
+<li>
+<p> Distance: Distance from credible set variants to the gene.
+</p>
+</li>
+<li>
+<p> Molecular QTL colocalization: Colocalization with molecular QTLs.
+</p>
+</li>
+<li>
+<p> Chromatin interaction: Interactions, such as promoter-capture Hi-C.
+</p>
+</li>
+<li>
+<p> Variant pathogenicity: Pathogenicity scores from VEP (Variant Effect Predictor).
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">studiesAndLeadVariantsForGeneByL2G(gene, l2g = NA, pvalue = NA, vtype = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>gene</code></td>
+<td>
+<p>Character: Gene ENSEMBL ID (e.g. ENSG00000169174) or gene symbol (e.g. PCSK9). This argument can take a list of genes too.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l2g</code></td>
+<td>
+<p>Numeric: Locus-to-gene (L2G) cutoff score. (Default: NA)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalue</code></td>
+<td>
+<p>Character: P-value cutoff. (Default: NA)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vtype</code></td>
+<td>
+<p>Character: Most severe consequence to filter the variant types, including "intergenic_variant",
+"upstream_gene_variant", "intron_variant", "missense_variant", "5_prime_UTR_variant",
+"non_coding_transcript_exon_variant", "splice_region_variant". (Default: NULL)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function also provides additional filtering parameters to narrow the results based following parameters (see below)
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a data frame containing the input gene ID and its data for the L2G model. The table consists of the following columns:
+</p>
+
+<ul>
+<li>
+<p><code>yProbaModel</code>: <em>Numeric</em>. L2G score.
+</p>
+</li>
+<li>
+<p><code>yProbaDistance</code>: <em>Numeric</em>. Distance.
+</p>
+</li>
+<li>
+<p><code>yProbaInteraction</code>: <em>Numeric</em>. Chromatin interaction.
+</p>
+</li>
+<li>
+<p><code>yProbaMolecularQTL</code>: <em>Numeric</em>. Molecular QTL.
+</p>
+</li>
+<li>
+<p><code>yProbaPathogenicity</code>: <em>Numeric</em>. Pathogenicity.
+</p>
+</li>
+<li>
+<p><code>pval</code>: <em>Numeric</em>. P-value.
+</p>
+</li>
+<li>
+<p><code>beta.direction</code>: <em>Character</em>. Beta direction.
+</p>
+</li>
+<li>
+<p><code>beta.betaCI</code>: <em>Numeric</em>. Beta confidence interval.
+</p>
+</li>
+<li>
+<p><code>beta.betaCILower</code>: <em>Numeric</em>. Lower bound of the beta confidence interval.
+</p>
+</li>
+<li>
+<p><code>beta.betaCIUpper</code>: <em>Numeric</em>. Upper bound of the beta confidence interval.
+</p>
+</li>
+<li>
+<p><code>odds.oddsCI</code>: <em>Numeric</em>. Odds ratio confidence interval.
+</p>
+</li>
+<li>
+<p><code>odds.oddsCILower</code>: <em>Numeric</em>. Lower bound of the odds ratio confidence interval.
+</p>
+</li>
+<li>
+<p><code>odds.oddsCIUpper</code>: <em>Numeric</em>. Upper bound of the odds ratio confidence interval.
+</p>
+</li>
+<li>
+<p><code>study.studyId</code>: <em>Character</em>. Study ID.
+</p>
+</li>
+<li>
+<p><code>study.traitReported</code>: <em>Character</em>. Reported trait.
+</p>
+</li>
+<li>
+<p><code>study.traitCategory</code>: <em>Character</em>. Trait category.
+</p>
+</li>
+<li>
+<p><code>study.pubDate</code>: <em>Character</em>. Publication date.
+</p>
+</li>
+<li>
+<p><code>study.pubTitle</code>: <em>Character</em>. Publication title.
+</p>
+</li>
+<li>
+<p><code>study.pubAuthor</code>: <em>Character</em>. Publication author.
+</p>
+</li>
+<li>
+<p><code>study.pubJournal</code>: <em>Character</em>. Publication journal.
+</p>
+</li>
+<li>
+<p><code>study.pmid</code>: <em>Character</em>. PubMed ID.
+</p>
+</li>
+<li>
+<p><code>study.hasSumstats</code>: <em>Logical</em>. Indicates if the study has summary statistics.
+</p>
+</li>
+<li>
+<p><code>study.nCases</code>: <em>Integer</em>. Number of cases in the study.
+</p>
+</li>
+<li>
+<p><code>study.numAssocLoci</code>: <em>Integer</em>. Number of associated loci.
+</p>
+</li>
+<li>
+<p><code>study.nTotal</code>: <em>Integer</em>. Total number of samples in the study.
+</p>
+</li>
+<li>
+<p><code>study.traitEfos</code>: <em>Character</em>. Trait EFOs.
+</p>
+</li>
+<li>
+<p><code>variant.id</code>: <em>Character</em>. Variant ID.
+</p>
+</li>
+<li>
+<p><code>variant.rsId</code>: <em>Character</em>. Variant rsID.
+</p>
+</li>
+<li>
+<p><code>variant.chromosome</code>: <em>Character</em>. Variant chromosome.
+</p>
+</li>
+<li>
+<p><code>variant.position</code>: <em>Integer</em>. Variant position.
+</p>
+</li>
+<li>
+<p><code>variant.refAllele</code>: <em>Character</em>. Variant reference allele.
+</p>
+</li>
+<li>
+<p><code>variant.altAllele</code>: <em>Character</em>. Variant alternate allele.
+</p>
+</li>
+<li>
+<p><code>variant.nearestCodingGeneDistance</code>: <em>Integer</em>. Distance to the nearest coding gene.
+</p>
+</li>
+<li>
+<p><code>variant.nearestGeneDistance</code>: <em>Integer</em>. Distance to the nearest gene.
+</p>
+</li>
+<li>
+<p><code>variant.mostSevereConsequence</code>: <em>Character</em>. Most severe consequence.
+</p>
+</li>
+<li>
+<p><code>variant.nearestGene.id</code>: <em>Character</em>. Nearest gene ID.
+</p>
+</li>
+<li>
+<p><code>variant.nearestCodingGene.id</code>: <em>Character</em>. Nearest coding gene ID.
+</p>
+</li>
+<li>
+<p><code>ensembl_id</code>: <em>Character</em>. Ensembl ID.
+</p>
+</li>
+<li>
+<p><code>gene_symbol</code>: <em>Character</em>. Gene symbol.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+result &lt;- studiesAndLeadVariantsForGeneByL2G(genes = c("ENSG00000163946",
+     "ENSG00000169174", "ENSG00000143001"), l2g = 0.7)
+result &lt;- studiesAndLeadVariantsForGeneByL2G(genes = "ENSG00000169174",
+     l2g = 0.6, pvalue = 1e-8, vtype = c("intergenic_variant", "intron_variant"))
+result &lt;- studiesAndLeadVariantsForGeneByL2G(genes = "TMEM61")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

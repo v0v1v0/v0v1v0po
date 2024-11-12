@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>par.openCR.fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit Multiple openCR Models</h2>
+
+<h3>Description</h3>
+
+<p>This function is a wrapper for <code>openCR.fit</code>. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+par.openCR.fit (arglist, ncores = 1, seed = 123, trace = FALSE, logfile = NULL, 
+    prefix = "")
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>arglist</code></td>
+<td>
+<p>list of argument lists for <code>secr.fit</code> or a character
+vector naming such lists</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p> integer number of cores used by parallel::makeClusters() </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>integer pseudorandom number seed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+<p>logical; if TRUE intermediate output may be logged</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logfile</code></td>
+<td>
+<p>character name of file to log progress reports</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefix</code></td>
+<td>
+<p>character prefix for names of output</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In openCR &gt;= 1.5.0, setting ncores &gt; 1 is deprecated and triggers a warning: multithreading makes it faster to set ncores = 1 in par.secr.fit.
+</p>
+<p><code>trace</code> overrides any settings in <code>arglist</code>.
+</p>
+<p>It is convenient to provide the names of the capthist and mask arguments
+in each component of arglist as character values (i.e. in quotes); objects thus
+named are exported from the workspace to each worker process (see Examples).
+</p>
+<p>Using <code>ncores</code>&gt;1 is obsolete under the multithreading regime in <span class="pkg">openCR</span> &gt;= 1.5.0. 
+It is usually slower than <code>ncores</code> = 1. If used it has these effects:
+</p>
+<p>– worker processes are generated using the <span class="pkg">parallel</span> package,
+</p>
+<p>– one model is fitted on each worker, and
+</p>
+<p>– if no logfile name is provided then a temporary file name will be generated in tempdir().
+</p>
+
+
+<h3>Value</h3>
+
+<p>For <code>par.openCR.fit</code> - openCRlist of model fits (see
+<code>openCR.fit</code> and <code>openCRlist</code>). Names are created by prefixing <code>prefix</code> to the
+names of <code>argslist</code>. If <code>trace</code> is TRUE then the total
+execution time and finish time are displayed.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Any attempt in <code>arglist</code> to set <code>ncores &gt; 1</code> for a particular 
+openCR fit was ignored in <span class="pkg">openCR</span> &lt; 1.5.0. Now it is allowed.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openCR.fit</code>,
+Parallel,
+<code>make.table</code>,
+<code>openCRlist</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+m1 &lt;- list(capthist = ovenCH, model = list(p~1, phi~1)) 
+m2 &lt;- list(capthist = ovenCH, model = list(p~session, phi~1))
+m3 &lt;- list(capthist = ovenCH, model = list(p~session, phi~session) )
+setNumThreads(7)  # on quadcore Windows PC
+fits &lt;- par.openCR.fit (c('m1','m2','m3'), ncores = 1)
+AIC(fits)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

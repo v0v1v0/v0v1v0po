@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+<strong>ordr</strong> package</h2>
+
+<h3>Description</h3>
+
+<p>This is a <strong><a href="https://www.tidyverse.org/">tidyverse</a></strong> extension
+for handling, manipulating, and visualizing ordination models with
+consistent conventions and in a tidy workflow.
+</p>
+
+
+<h3>Details</h3>
+
+<p>This package is designed to integrate ordination analysis and biplot
+visualization into a <strong>tidyverse</strong> workflow. It is inspired in particular by
+the extensions <strong>ggbiplot</strong> and <strong>tidygraph</strong>.
+</p>
+<p>The package consists in several modules:
+</p>
+
+<ul>
+<li>
+<p> the 'tbl_ord' class, a wrapper for various ordination object classes
+</p>
+</li>
+<li>
+<p> extracting augmentation for the factors of an ordination
+</p>
+</li>
+<li>
+<p> using dplyr-verbs to add annotation to the factors
+</p>
+</li>
+<li>
+<p> adjusting the conference of inertia between the factors
+</p>
+</li>
+<li>
+<p> methods of the above generics for several widely-used object classes
+</p>
+</li>
+<li>
+<p> convenient formatting of ordination objects
+</p>
+</li>
+<li> <p><code>ggbiplot()</code>, a <strong>ggplot2</strong> extension for rendering biplots
+</p>
+</li>
+<li>
+<p> additional stats and geoms for biplots
+</p>
+</li>
+</ul>
+<h3>Ordinations and biplots</h3>
+
+<p><em>Ordination</em> encompasses a variety of techniques for data compression,
+dimension reduction, feature extraction, and visualization. Well-known
+ordination techniques are predominantly unsupervised and include principal
+components analysis, multidimensional scaling, and correspondence analyis
+(Podani, 2000, Chapter 7; Palmer, n.d.). These methods are theoretically
+grounded in geometric data analysis (Le Roux &amp; Rouanet, 2004) and powered by
+the matrix factorizations described below. A variety of other techniques may
+also be viewed, or treated using the same tools, as ordination, including
+linear regression, linear discriminant analysis, k-means clustering, and
+non-negative matrix factorization.
+</p>
+<p><em>Biplots</em> are two-layered scatterplots widely used to visualize unsupervised
+SVD-based ordinations. Gabriel (1971) introduced biplots to represent the
+scores and loadings of PCA on a single set of axes. They have also been used
+to visualize generalized linear regression and linear discriminant analysis
+(Greenacre, 2010) and can adapted to any 2-factor matrix decomposition.
+</p>
+
+
+<h3>Singular value decomposition</h3>
+
+<p>The most popular ordination techniques use singular value decomposition (SVD)
+to factor a data matrix <code class="reqn">X</code> into a product <code class="reqn">X=UDV'</code> of two orthogonal
+(rotation) matrices <code class="reqn">U</code> and <code class="reqn">V</code> and a diagonal (scaling) matrix
+<code class="reqn">D</code>, with <code class="reqn">V'</code> the transpose of <code class="reqn">V</code>. In most cases, the data
+matrix <code class="reqn">X</code> is transformed from an original data matrix, e.g. by
+centering, scaling, double-centering, or log-transforming. The SVD introduces
+a set of shared orthogonal coordinates in which <code class="reqn">U</code> encodes the rows of
+<code class="reqn">X</code> and <code class="reqn">V</code> encodes the columns of <code class="reqn">X</code>. The singular values in
+<code class="reqn">D</code> are the variances of <code class="reqn">X</code> along each of these coordinates, and
+they proceed in decreasing order, so that the first <code class="reqn">r</code> (for "rank")
+columns of <code class="reqn">U</code> and of <code class="reqn">V</code> produce a geometrically optimized
+approximation to <code class="reqn">X</code>.
+</p>
+<p>Biplots of SVD-based ordinations usually plot the rows and columns of <code class="reqn">X</code>
+on these <code class="reqn">r</code> coordinate axes. For an SVD-based biplot to be truly
+geometric, the total variance contained in <code class="reqn">D</code> must be conferred onto
+<code class="reqn">U</code> or <code class="reqn">V</code>, or distributed over both (Orlov, 2015). When <code class="reqn">D</code> is
+conferred onto <code class="reqn">U</code>, the rows of <code class="reqn">X</code> are represented by the rows of
+<code class="reqn">UD</code>, and their distances in the biplot approximate their distances in
+the original column space of <code class="reqn">X</code>. Meanwhile, the columns of <code class="reqn">X</code> are
+represented by the rows of <code class="reqn">V</code>. These are unit vectors in the full space
+of shared coordinates, so their squared lengths in the biplot indicate the
+proportion of their variance captured by the biplot axes and their cosines
+with each other approximate the correlations between the columns. Finally,
+the projection of a row's coordinates (point) onto a column's coordinates
+(vector) approximates the corresponding entry of <code class="reqn">X</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Podani J (2000) "Ordination". <em>Introduction to the Exploration of
+Multivariate Biological Data</em> Chapter 7, 215–284. Backhuys Publishers, ISBN
+90-5782-067-6.
+<a href="https://web.archive.org/web/20200221000313/http://ramet.elte.hu/~podani/books.html">https://web.archive.org/web/20200221000313/http://ramet.elte.hu/~podani/books.html</a>
+</p>
+<p>Palmer M <em>Ordination Methods for Ecologists</em>. Website, accessed 2019-07-12.
+<a href="http://ordination.okstate.edu/">http://ordination.okstate.edu/</a>
+</p>
+<p>Le Roux B &amp; Rouanet H (2004) <em>Geometric Data Analysis: From Correspondence
+Analysis to Stsructured Data Analysis</em>. Springer Dordrecht, ISBN:
+978-1-4020-2236-4. <a href="https://doi.org/10.1007/1-4020-2236-0">doi:10.1007/1-4020-2236-0</a>
+<a href="https://link.springer.com/book/10.1007/1-4020-2236-0">https://link.springer.com/book/10.1007/1-4020-2236-0</a>
+</p>
+<p>Gabriel KR (1971) "The biplot graphic display of matrices with application to
+principal component analysis". <em>Biometrika</em> 58(3), 453–467.
+<a href="https://doi.org/10.1093/biomet/58.3.453">doi:10.1093/biomet/58.3.453</a>
+</p>
+<p>Greenacre MJ (2010) <em>Biplots in Practice</em>. Fundacion BBVA, ISBN:
+978-84-923846.
+<a href="https://www.fbbva.es/microsite/multivariate-statistics/biplots.html">https://www.fbbva.es/microsite/multivariate-statistics/biplots.html</a>
+</p>
+<p>Orlov K (2015) <em>Answer to</em> "PCA and Correspondence analysis in their relation
+to Biplot". CrossValidated, accessed 2019-07-12.
+<a href="https://stats.stackexchange.com/a/141755/68743">https://stats.stackexchange.com/a/141755/68743</a>
+</p>
+
+
+</div>

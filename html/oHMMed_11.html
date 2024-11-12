@@ -1,0 +1,221 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hmm_mcmc_gamma_poisson</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>MCMC Sampler sampler for the Hidden Markov with Gamma-Poisson emission densities</h2>
+
+<h3>Description</h3>
+
+<p>MCMC Sampler sampler for the Hidden Markov with Gamma-Poisson emission densities
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hmm_mcmc_gamma_poisson(
+  data,
+  prior_T,
+  prior_betas,
+  prior_alpha = 1,
+  iter = 5000,
+  warmup = floor(iter/1.5),
+  thin = 1,
+  seed = sample.int(.Machine$integer.max, 1),
+  init_T = NULL,
+  init_betas = NULL,
+  init_alpha = NULL,
+  print_params = TRUE,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>(numeric) data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior_T</code></td>
+<td>
+<p>(matrix) prior transition matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior_betas</code></td>
+<td>
+<p>(numeric) prior beta parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior_alpha</code></td>
+<td>
+<p>(numeric) a single prior alpha parameter. By default, <code>prior_alpha=1</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>(integer) number of MCMC iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warmup</code></td>
+<td>
+<p>(integer) number of warmup iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thin</code></td>
+<td>
+<p>(integer) thinning parameter. By default, <code>1</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>(integer) seed parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>init_T</code></td>
+<td>
+<p>(matrix) <code>optional parameter</code>; initial transition matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>init_betas</code></td>
+<td>
+<p>(numeric) <code>optional parameter</code>; initial beta parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>init_alpha</code></td>
+<td>
+<p>(numeric) <code>optional parameter</code>; initial alpha parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_params</code></td>
+<td>
+<p>(logical) <code>optional parameter</code>; print estimated parameters every iteration. By default, <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>(logical) <code>optional parameter</code>; print additional messages. By default, <code>TRUE</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Please see <a href="https://static-content.springer.com/esm/art%3A10.1186%2Fs12859-024-05751-4/MediaObjects/12859_2024_5751_MOESM1_ESM.pdf">supplementary information</a> at <a href="https://doi.org/10.1186/s12859-024-05751-4">doi:10.1186/s12859-024-05751-4</a> for more details on the algorithm.
+</p>
+<p>For usage recommendations please see <a href="https://github.com/LynetteCaitlin/oHMMed/blob/main/UsageRecommendations.pdf">https://github.com/LynetteCaitlin/oHMMed/blob/main/UsageRecommendations.pdf</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with following elements:
+</p>
+
+<ul>
+<li> <p><code>data</code>: data used for simulation
+</p>
+</li>
+<li> <p><code>samples</code>: list with samples
+</p>
+</li>
+<li> <p><code>estimates</code>: list with various estimates
+</p>
+</li>
+<li> <p><code>idx</code>: indices with iterations after the warmup period
+</p>
+</li>
+<li> <p><code>priors</code>: prior parameters
+</p>
+</li>
+<li> <p><code>inits</code>: initial parameters
+</p>
+</li>
+<li> <p><code>last_iter</code>: list with samples from the last MCMC iteration
+</p>
+</li>
+<li> <p><code>info</code>: list with various meta information about the object
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Claus Vogl, Mariia Karapetiants, Burçin Yıldırım, Hrönn Kjartansdóttir, Carolin Kosiol, Juraj Bergman, Michal Majka, Lynette Caitlin Mikula.
+Inference of genomic landscapes using ordered Hidden Markov Models with emission densities (oHMMed).
+BMC Bioinformatics 25, 151 (2024). <a href="https://doi.org/10.1186/s12859-024-05751-4">doi:10.1186/s12859-024-05751-4</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate Poisson-Gamma data
+N &lt;- 2^10
+true_T &lt;- rbind(c(0.95, 0.05, 0),
+                c(0.025, 0.95, 0.025),
+                c(0.0, 0.05, 0.95))
+
+true_betas &lt;- c(2, 1, 0.1)
+true_alpha &lt;- 1
+
+simdata_full &lt;- hmm_simulate_gamma_poisson_data(L = N,
+                                                mat_T = true_T,
+                                                betas = true_betas,
+                                                alpha = true_alpha)
+simdata &lt;- simdata_full$data
+hist(simdata, breaks = 40, probability = TRUE,  
+     main = "Distribution of the simulated Poisson-Gamma data")
+lines(density(simdata), col = "red")
+
+# Set numbers of states to be inferred
+n_states_inferred &lt;- 3
+
+# Set priors
+prior_T &lt;- generate_random_T(n_states_inferred)
+prior_betas &lt;- c(1, 0.5, 0.1)
+prior_alpha &lt;- 3
+
+# Simmulation settings
+iter &lt;- 50
+warmup &lt;- floor(iter / 5) # 20 percent
+thin &lt;- 1
+seed &lt;- sample.int(10000, 1)
+print_params &lt;- FALSE # if TRUE then parameters are printed in each iteration
+verbose &lt;- FALSE # if TRUE then the state of the simulation is printed
+
+# Run MCMC sampler
+res &lt;- hmm_mcmc_gamma_poisson(data = simdata,
+                              prior_T = prior_T,
+                              prior_betas = prior_betas,
+                              prior_alpha = prior_alpha,
+                              iter = iter,
+                              warmup = warmup,  
+                              thin = thin,
+                              seed = seed,
+                              print_params = print_params,
+                              verbose = verbose)
+res
+
+summary(res)# summary output can be also assigned to a variable
+
+coef(res) # extract model estimates
+
+# plot(res) # MCMC diagnostics
+</code></pre>
+
+
+</div>

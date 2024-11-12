@@ -1,0 +1,270 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pseudodata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pseudodata for Likelihood-Based Continual Reassessment Method (CRM) Dose Finding Designs</h2>
+
+<h3>Description</h3>
+
+<p>This function creates 2 pseudodata vectors (toxicity and dose levels) necessary to run any of the
+3 variations of the likelihood-based CRM design. If using the ordinal POM or CR model design,
+ordinal toxicity grades are specified by CTCAEv4.0. This function also specifies the starting dose
+for a trial with the choice of continuous or discrete dose levels for a specified target dose limiting
+toxicity (DLT) rate.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pseudodata(design, dose10, dose90, percentagegradedose10 = c(45, 35, 10, 8,
+  2), percentagegradedose90 = c(2, 3, 5, 40, 50), targetDLT = 0.3,
+  stabilize = TRUE, discrete = FALSE, discretedoses = NA,
+  rounddown = FALSE, combine01 = FALSE, plotit = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>design</code></td>
+<td>
+<p>Specifies which dose finding design you are running simulations on.
+Choices are: POM, CR, or CRM.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dose10</code></td>
+<td>
+<p>Hypothesized dose level for a 10 percent dose limiting toxicity (DLT) rate as specified
+by clinical investigators prior to the start of the trial.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dose90</code></td>
+<td>
+<p>Hypothesized dose level for a 90 percent dose limiting toxicity (DLT) rate as specified
+by clinical investigators prior to the start of the trial.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentagegradedose10</code></td>
+<td>
+<p>Only applicable if using ordinal POM or CR model designs.
+Expected percentage of toxicity grades at the specified dose10 in the form
+c(percent grade 0, percent grade 1, grade 2, grade 3, grade 4) or
+c(percent grades 0 and 1, grade 2, grade 3, grade 4) if combining grades 0 and 1 into one category.
+The percentages must be specified between 0 and 100. If not specified,
+it will default to c(45, 35, 10, 8, 2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentagegradedose90</code></td>
+<td>
+<p>Only applicable if using ordinal POM or CR model designs.
+Expected percentage of toxicity grades at the specified dose90. This is also in the form:
+c(percent grade 0, percent grade 1, grade 2, grade 3, grade 4) or
+c(percent grades 0 and 1, grade 2, grade 3, grade 4) if combining grades 0 and 1 into one category.
+The percentages must be specified between 0 and 100. If not specified,
+it will default to c(2, 3, 5, 40, 50).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>targetDLT</code></td>
+<td>
+<p>Target dose limiting toxicity (DLT) rate pre-specified by clinical investigators
+prior to the start of the trial. Must be specified between 0 and 1.
+Defaults to 0.30.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stabilize</code></td>
+<td>
+<p>True/False. If stabilize = TRUE, expected dose levels for 30 percent
+and 50 percent DLT rates will be estimated from the initialized CR model and these levels will be
+added into the pseudodata to help stabilize the model. This is particularly helpful when
+collected data is initially sparse at the beginning of a trial. Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>discrete</code></td>
+<td>
+<p>True/False. If discrete = TRUE, this allows for discrete dose levels to be
+specified prior to the start of the trial. Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>discretedoses</code></td>
+<td>
+<p>Specified discrete dose levels if desired. They must be specified if discrete is equal to TRUE.
+It is written for j dose levels as: c(d1, d2,..., dj).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rounddown</code></td>
+<td>
+<p>True/False. Only applicable when using discrete dose levels.<br>
+If rounddown = TRUE, the estimate dose from specified model will round down to the more conservative discrete dose level.<br>
+If rounddown = FALSE, it will select the discrete dose closest to the estimated model selection. Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>combine01</code></td>
+<td>
+<p>True/False. If combine01 = TRUE, toxicity grades 0 and 1 are combined into 1 category.
+Therefore all toxicities must be coded: 0 (grades 0 and 1), 1 (grade2), 2 (grade 3),
+and 3 (grade 4) according to CTCAEv4.0. Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotit</code></td>
+<td>
+<p>True/False. If plotit = TRUE, returns a plot of the continuation ratio model estimated by
+the pseudodata with the starting dose for a specified target DLT rate.
+Also identifies dose10 and dose90 on the figure. Defaults to TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Fits a POM, CR model, or 2-parameter logistic model based on the dose where 10
+This outputs a vector of doses and toxicities to use as the starting model for this design (required to run
+<code>nextdose</code> and <code>crmsimulations</code>)
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Pseudodata Toxicities</code></td>
+<td>
+<p>A vector of toxicity grades as classified by CTCAEv4.0
+created from the initialized model. If using a binary CRM this will be a vector of 0 (non-DLT) and
+1 (DLT) outcomes. This will be the pseudodata toxicity grades used for the rest of trial.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pseudodata Doses</code></td>
+<td>
+<p>A vector of dose levels created from the initialized model.
+This will be the pseudodata dose levels used for the rest of the trial.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Starting Dose</code></td>
+<td>
+<p>The starting dose for this trial given the specified target DLT rate assuming
+continuous dose levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Starting Discrete Dose</code></td>
+<td>
+<p>The starting dose for this trial given the specified
+target DLT rate assuming discrete dose levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Estimated Toxicity at Discrete Doses</code></td>
+<td>
+<p>Only applicable if using specified discrete dose levels.
+Returns the expected probability of
+a dose-limiting toxicity (DLT) at each discrete dose level given the initialized model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>discretedoses</code></td>
+<td>
+<p>Returns the possible ordered discrete doses if applicable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Regression Model</code></td>
+<td>
+<p>Returns parameter estimates for the newly estimated model.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Emily V. Dressler, PhD <br>
+Markey Cancer Center <br>
+Division of Cancer Biostatistics <br>
+University of Kentucky <br><a href="mailto:EmilyVDressler@gmail.com">EmilyVDressler@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>1. Van Meter EM, Garrett-Mayer E, Bandyopadhyay D. Proportional odds model for dose finding clinical trial designs with ordinal toxicity grading. Statistics in Medicine 2011; 30: 2070-2080. <br>
+2. Van Meter EM, Garrett-Mayer E, Bandyopadhyay. Dose finding clinical trial design for ordinal toxicity grades using the continuation ratio model: an extension of the continual reassessment method. Clinical Trials 2012; 9(3): 303-313. <br>
+3. Garrett-Mayer E. The continual reassessment method for dose-finding studies: a tutorial. Clinical Trials 2006; 3: 57-71. <br>
+4. Piantadosi S, Fisher JD, Grossman S. Practical implementation of a modified continual reassessment method for dose-finding trials. Cancer Chemother Pharmacol 1998; 41: 429-436. <br>
+5. Harrell FE, Jr. Regression Modeling Strategies with Application to Linear Models, Logistic Regression, and Survival Analysis. Springer: New York, NY, 2001. <br>
+6. McCullagh P. Regression Models for Ordinal Data. Journal of the Royal Statistical Society. Series B (Methodological). 1980; 42: 109-142. <br>
+7. CTCAE. Cancer Therapy Evaluation Program, Common Terminology Criteria for Adverse Events, Version 4.0, DCTD, NCI, NIH, DHHS (http://ctep/cancer.gov). In Cancer Therapy Evaluation Program, 2010.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>nextdose</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+######################
+###For POM Model######
+######################
+#Creates pseudodata with no stabilization and continuous dose levels
+pseudodata(design='POM', dose10 = 200, dose90 = 3600, targetDLT = 0.3,
+           stabilize = TRUE, discrete = FALSE, discretedoses = NA,
+           percentagegradedose10 = c(45, 35, 10, 8, 2),
+           percentagegradedose90 = c(2, 3, 5, 40, 50), combine01 = FALSE)
+#Creates pseudodata with stabilize=T and discrete dose levels
+pseudodata(design='POM', dose10 = 500, dose90 = 2000, targetDLT = 0.3,
+           stabilize = TRUE, discrete = TRUE,
+           discretedoses = c(200, 500, 1000, 1200, 1500, 1800))
+#Creates pseudodata when toxicity grades 0 and 1 are one category
+pseudodata(design='POM', dose10 = 200, dose90 = 1000, targetDLT = 0.3,
+           stabilize = TRUE, discrete = FALSE, discretedoses = NA,
+           percentagegradedose10 = c(80, 10, 8, 2),
+           percentagegradedose90 = c(5, 5, 40, 50), combine01 = TRUE)
+
+######################
+###For CR Model#######
+######################
+#Creates pseudodata with no stabilization and continuous dose levels
+pseudodata(design='CR', dose10 = 200, dose90 = 3600, targetDLT = 0.3,
+           stabilize = TRUE, discrete = FALSE, discretedoses = NA,
+           percentagegradedose10 = c(45, 35, 10, 8, 2),
+           percentagegradedose90 = c(2, 3, 5, 40, 50), combine01 = FALSE)
+#Creates pseudodata with stabilize=T and discrete dose levels
+pseudodata(design='CR', dose10 = 500, dose90 = 2000, targetDLT = 0.3,
+           stabilize = TRUE, discrete = TRUE,
+           discretedoses = c(200, 500, 1000, 1200, 1500, 1800))
+#Creates pseudodata when toxicity grades 0 and 1 are one category
+pseudodata(design='CR', dose10 = 200, dose90 = 1000, targetDLT = 0.3,
+           stabilize = TRUE, discrete = FALSE, discretedoses = NA,
+           percentagegradedose10 = c(80, 10, 8, 2),
+           percentagegradedose90=c(5, 5, 40, 50), combine01 = TRUE)
+
+######################
+###For Binary CRM#####
+######################
+#Creates pseudodata with no stabilization and continuous dose levels
+pseudodata(design='CRM', dose10 = 200, dose90 = 3600, targetDLT = 0.3,
+           stabilize = TRUE, discrete = FALSE, discretedoses = NA)
+#Creates pseudodata with stabilize=T and discrete dose levels
+pseudodata(design='CRM', dose10 = 200, dose90 = 3000, targetDLT = 0.3,
+           stabilize = TRUE, discrete = TRUE,
+           discretedoses = c(200, 500, 1000, 1200, 1500, 1800))
+</code></pre>
+
+
+</div>

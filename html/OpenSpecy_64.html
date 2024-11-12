@@ -1,0 +1,241 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotly_spec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Interactive plots for OpenSpecy objects</h2>
+
+<h3>Description</h3>
+
+<p>These functions generate heatmaps, spectral plots, and interactive plots for
+OpenSpecy data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotly_spec(x, ...)
+
+## Default S3 method:
+plotly_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+plotly_spec(
+  x,
+  x2 = NULL,
+  line = list(color = "rgb(255, 255, 255)"),
+  line2 = list(dash = "dot", color = "rgb(255,0,0)"),
+  font = list(color = "#FFFFFF"),
+  plot_bgcolor = "rgba(17, 0, 73, 0)",
+  paper_bgcolor = "rgb(0, 0, 0)",
+  showlegend = FALSE,
+  make_rel = TRUE,
+  ...
+)
+
+heatmap_spec(x, ...)
+
+## Default S3 method:
+heatmap_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+heatmap_spec(
+  x,
+  z = NULL,
+  sn = NULL,
+  cor = NULL,
+  min_sn = NULL,
+  min_cor = NULL,
+  select = NULL,
+  font = list(color = "#FFFFFF"),
+  plot_bgcolor = "rgba(17, 0, 73, 0)",
+  paper_bgcolor = "rgb(0, 0, 0)",
+  colorscale = "Viridis",
+  showlegend = FALSE,
+  type = "interactive",
+  ...
+)
+
+interactive_plot(x, ...)
+
+## Default S3 method:
+interactive_plot(x, ...)
+
+## S3 method for class 'OpenSpecy'
+interactive_plot(
+  x,
+  x2 = NULL,
+  select = NULL,
+  line = list(color = "rgb(255, 255, 255)"),
+  line2 = list(dash = "dot", color = "rgb(255,0,0)"),
+  font = list(color = "#FFFFFF"),
+  plot_bgcolor = "rgba(17, 0, 73, 0)",
+  paper_bgcolor = "rgb(0, 0, 0)",
+  colorscale = "Viridis",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>OpenSpecy</code> object containing metadata and spectral data for
+the first group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x2</code></td>
+<td>
+<p>an optional second <code>OpenSpecy</code> object containing metadata and
+spectral data for the second group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line</code></td>
+<td>
+<p>list; <code>line</code> parameter for <code>x</code>; passed to
+<code>add_trace()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line2</code></td>
+<td>
+<p>list; <code>line</code> parameter for <code>x2</code>; passed to</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font</code></td>
+<td>
+<p>list; passed to <code>layout()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_bgcolor</code></td>
+<td>
+<p>color value; passed to <code>layout()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paper_bgcolor</code></td>
+<td>
+<p>color value; passed to <code>layout()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showlegend</code></td>
+<td>
+<p>whether to show the legend passed to</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>make_rel</code></td>
+<td>
+<p>logical, whether to make the spectra relative or use the raw values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>optional numeric vector specifying the intensity values for the
+heatmap. If not provided, the function will use the intensity values from the
+<code>OpenSpecy</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sn</code></td>
+<td>
+<p>optional numeric value specifying the signal-to-noise ratio
+threshold. If provided along with <code>min_sn</code>, regions with SNR below the
+threshold will be excluded from the heatmap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor</code></td>
+<td>
+<p>optional numeric value specifying the correlation threshold. If
+provided along with <code>min_cor</code>, regions with correlation below the
+threshold will be excluded from the heatmap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_sn</code></td>
+<td>
+<p>optional numeric value specifying the minimum signal-to-noise
+ratio for inclusion in the heatmap. Regions with SNR below this threshold
+will be excluded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_cor</code></td>
+<td>
+<p>optional numeric value specifying the minimum correlation for
+inclusion in the heatmap. Regions with correlation below this threshold
+will be excluded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>select</code></td>
+<td>
+<p>optional index of the selected spectrum to highlight on the
+heatmap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorscale</code></td>
+<td>
+<p>colorscale passed to <code>add_trace()</code> can
+be an array or one of <code>"Blackbody"</code>, <code>"Bluered"</code>, <code>"Blues"</code>, <code>"Cividis"</code>,
+<code>"Earth"</code>, <code>"Electric"</code>, <code>"Greens"</code>, <code>"Greys"</code>, <code>"Hot"</code>, <code>"Jet"</code>, <code>"Picnic"</code>,
+<code>"Portland"</code>, <code>"Rainbow"</code>, <code>"RdBu"</code>, <code>"Reds"</code>, <code>"Viridis"</code>, <code>"YlGnBu"</code>,
+<code>"YlOrRd"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>specification for plot type either interactive or static
+<code>plot_ly()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to <code>plot_ly()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plotly heatmap object displaying the OpenSpecy data. A subplot
+containing the heatmap and spectra plot. A plotly object displaying the
+spectra from the <code>OpenSpecy</code> object(s).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("raman_hdpe")
+tiny_map &lt;- read_extdata("CA_tiny_map.zip") |&gt; read_zip()
+plotly_spec(raman_hdpe)
+
+heatmap_spec(tiny_map, z = tiny_map$metadata$y, showlegend = TRUE)
+
+sample_spec(tiny_map, size = 12) |&gt;
+  interactive_plot(select = 2, x2 = raman_hdpe)
+
+</code></pre>
+
+
+</div>

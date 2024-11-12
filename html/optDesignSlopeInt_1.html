@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>design_bakeoff</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A visualiation for comparing slope-divided-by-intercept estimates
+for a number of designs</h2>
+
+<h3>Description</h3>
+
+<p>A visualiation for comparing slope-divided-by-intercept estimates
+for a number of designs
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">design_bakeoff(
+  xmin,
+  xmax,
+  designs,
+  gen_resp = function(xs) {
+     1 + 2 * xs + rnorm(length(xs), 0, 1)
+ },
+  Nsim = 1000,
+  l_quantile_display = 0.01,
+  u_quantile_display = 0.99,
+  error_est = function(est) {
+     quantile(est, 0.99) - quantile(est, 0.01)
+ },
+  num_digits_round = 3,
+  draw_theta_at = NULL,
+  xlab_names = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xmin</code></td>
+<td>
+<p>The minimum value of the independent variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmax</code></td>
+<td>
+<p>The maximum value of the independent variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>designs</code></td>
+<td>
+<p>A d x n matrix where each of the d rows is a design (the x values
+used to run the experiment).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gen_resp</code></td>
+<td>
+<p>A model for the response which takes the design as its parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Nsim</code></td>
+<td>
+<p>The number of estimates per design. Default is <code>1000</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l_quantile_display</code></td>
+<td>
+<p>The lowest quantile of the simulation estimates displayed. Default is <code>0.025</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>u_quantile_display</code></td>
+<td>
+<p>The highest quantile of the simulation estimates displayed. Default is <code>0.975</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error_est</code></td>
+<td>
+<p>The error metric for the estimates. The sample standard deviation (i.e. <code>sd</code>) 
+is unstable at low sample sizes. The default is the 90 percentile minus the 10 percentile.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_digits_round</code></td>
+<td>
+<p>The number of digits to round the error results. Default is 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draw_theta_at</code></td>
+<td>
+<p>If the user wishes to draw a horizontal line marking theta (to checked biasedness)
+it is specified here. The default is <code>NULL</code> with no line being drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab_names</code></td>
+<td>
+<p>Text for the x-grid labels. This vector's size should equal <code>lenth(designs)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to the <code>boxplot</code> function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the simulated estimates and error estimates for each design.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adam Kapelner
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">xmin = 5 / 15
+xmax = 19 / 1
+n = 10 #must be even for this demo
+designs = rbind(
+  c(rep(xmin, n / 2), rep(xmax, n / 2)),       #design A
+  seq(from = xmin, to = xmax, length.out = n)  #design B
+)
+design_bakeoff_info = design_bakeoff(xmin, xmax, designs) #design A wins
+</code></pre>
+
+
+</div>

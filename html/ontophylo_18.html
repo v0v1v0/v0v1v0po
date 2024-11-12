@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_vector_ids_list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wrapper for getting vector layer IDs for multiple terms</h2>
+
+<h3>Description</h3>
+
+<p>Given an ontology_index object, data.frame with ontology term labels, and data.frame with picture information (see examples),
+produces a named vector with layer IDs to be used in the 'make_pic' function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_vector_ids_list(terms_list, ONT, GR)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>terms_list</code></td>
+<td>
+<p>list. A named list with ontology terms to get layer IDs for.
+The first column corresponds to the ontology term labels, the second to the ontology IDs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ONT</code></td>
+<td>
+<p>ontology_index object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>GR</code></td>
+<td>
+<p>data.frame. A data.frame with the picture information. It contains the matches between all ontology term labels and layer IDs in the Picture object.
+The first column corresponds to the ontology term labels, the second to the ontology IDs, and the third to the layer IDs in the Picture object.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A named vector with the layer IDs corresponding to or descending from the ontology term label queried.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Diego S. Porto
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("HAO", "hym_graph")
+# Get picture layers from three anatomical regions.
+terms_list &lt;- as.list(c("HAO:0000397", "HAO:0000576", "HAO:0000626"))
+terms_list &lt;- setNames(terms_list, c("head", "mesosoma", "metasoma"))
+get_vector_ids_list(terms = terms_list , ONT = HAO, GR = hym_graph)
+
+</code></pre>
+
+
+</div>

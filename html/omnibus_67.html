@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stretchMinMax</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rescale values</h2>
+
+<h3>Description</h3>
+
+<p>This function rescales a vector of numeric values to an arbitrary range. Optionally, after the stretch values equal to the lowest value can be "nudged" slightly higher to half the minimum value across the rescaled vector of values &gt; 0.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stretchMinMax(
+  x,
+  lower = 0,
+  upper = 1,
+  nudgeUp = FALSE,
+  nudgeDown = FALSE,
+  na.rm = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Numeric list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+<p>Numeric, low end of range to which to stretch.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+<p>Numeric, high end of range to which to stretch.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nudgeUp, nudgeDown</code></td>
+<td>
+<p>Logical, if <code>FALSE</code> (default) then do nothing. If <code>TRUE</code> then *after* rescaling to [0, 1], a small value will be added to all values of <code>x</code> equal to 0. This value is equal to <code>0.5 * min(x[x &gt; 0])</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>Logical, if <code>FALSE</code> (default) then if any values of <code>x</code> are <code>NA</code> then the returned value will be <code>NA</code>. If <code>TRUE</code> then <code>NA</code>'s are ignored in calculation.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Numeric value.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>scale</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- 1:10
+stretchMinMax(x)
+stretchMinMax(x, lower=2, upper=5)
+stretchMinMax(x, nudgeUp=TRUE)
+stretchMinMax(x, lower=2, upper=5, nudgeUp=TRUE)
+stretchMinMax(x, nudgeDown=TRUE)
+stretchMinMax(x, lower=2, upper=5, nudgeUp=TRUE, nudgeDown=TRUE)
+x &lt;- c(1:5, NA)
+stretchMinMax(x)
+stretchMinMax(x, na.rm=TRUE)
+
+</code></pre>
+
+
+</div>

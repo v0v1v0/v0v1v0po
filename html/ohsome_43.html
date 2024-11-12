@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>set_parameters</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set parameters</h2>
+
+<h3>Description</h3>
+
+<p>Sets or modifies parameters of an existing <code>ohsome_query</code> object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">set_parameters(query, ...)
+
+set_time(query, time = query$body$time)
+
+set_filter(query, filter = query$body$filter, filter2 = query$body$filter2)
+
+set_groupByKeys(query, groupByKeys = query$body$groupByKeys)
+
+set_groupByKey(query, groupByKey = query$body$groupByKey)
+
+set_groupByValues(query, groupByValues = query$body$groupByValues)
+
+set_properties(query, properties = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>An <code>ohsome_query</code> object constructed with <code>ohsome_query()</code> or
+any of its wrapper functions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Parameters of the request to the ohsome API endpoint.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>character; <code>time</code> parameter of the query (see
+<a href="https://docs.ohsome.org/ohsome-api/v1/time.html">Supported time formats</a>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>character; <code>filter</code> parameter of the query (see
+<a href="https://docs.ohsome.org/ohsome-api/v1/filter.html">Filter</a>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter2</code></td>
+<td>
+<p>character; <code>filter2</code> parameter of a ratio query</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupByKeys</code></td>
+<td>
+<p>character; <code>groupByKeys</code> parameter of a <code>groupBy/key</code> query</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupByKey</code></td>
+<td>
+<p>character; <code>groupByKey</code> parameter of a <code>groupBy/tag</code> query</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupByValues</code></td>
+<td>
+<p>character; <code>groupByValues</code> parameter of a <code>groupBy/tag</code>
+query</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>properties</code></td>
+<td>
+<p>character; properties to be extracted with extraction
+queries:
+</p>
+
+<ul>
+<li> <p><code>"tags"</code>, and/or
+</p>
+</li>
+<li> <p><code>"metadata"</code> (i.e. <code style="white-space: pre;">⁠@changesetId⁠</code>, <code style="white-space: pre;">⁠@lastEdit⁠</code>, <code style="white-space: pre;">⁠@osmType⁠</code>,
+<code style="white-space: pre;">⁠@version⁠</code>), and/or
+</p>
+</li>
+<li> <p><code>"contributionTypes"</code> (i.e. <code style="white-space: pre;">⁠@creation⁠</code>, <code style="white-space: pre;">⁠@tagChange⁠</code>, <code style="white-space: pre;">⁠@deletion⁠</code>, and
+<code style="white-space: pre;">⁠@geometryChange⁠</code>; only for contributions extraction)
+</p>
+</li>
+</ul>
+<p>Multiple values can be provided as comma-separated character or as
+character vector. This defaults to <code>NULL</code> (removes <code>properties</code> parameter
+from the query body).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>set_parameters()</code> takes an <code>ohsome_query</code> object and an arbitrary number of
+named parameters as an input. It sets or modifies these parameters in the
+<code>ohsome_query</code> and returns the modified object. <code>set_time()</code>, <code>set_filter()</code>,
+<code>set_groupByKeys()</code>, <code>set_groupByKey()</code>, <code>set_groupByValues()</code> and
+<code>set_properties()</code> are wrapper functions to set specific parameters. By
+default, an unmodified <code>ohsome_query</code> object is returned. In order to remove
+a parameter from the query object, you can set the respective argument
+explicitly to <code>NULL</code> (e.g. <code>set_filter(query, filter = NULL)</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>ohsome_query</code> object. The object can be sent to the ohsome API
+with <code>ohsome_post()</code>. It consists of the following elements:
+</p>
+
+<ul>
+<li> <p><code>url</code>: The URL of the endpoint.
+</p>
+</li>
+<li> <p><code>encode</code>: The way the information is encoded and then posted to the
+ohsome API. Set as <code>"form"</code>.
+</p>
+</li>
+<li> <p><code>body</code>: The parameters of the query such as <code>format</code>, <code>filter</code> or
+<code>bpolys</code>.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><a href="https://docs.ohsome.org/ohsome-api/v1/">https://docs.ohsome.org/ohsome-api/v1/</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Query ratio grouped by boundary
+q1 &lt;- ohsome_query(
+     endpoint = "elements/count/ratio/groupBy/boundary",
+     boundary = "HD:8.5992,49.3567,8.7499,49.4371|HN:9.1638,49.113,9.2672,49.1766"
+)
+
+# Add time, filter and format parameters
+q1 |&gt;
+    set_time("2021/2022/P3M") |&gt;
+    set_filter("building=*", filter2 = "building=* and building:levels=3") |&gt;
+    set_parameters(format = "csv")
+
+# Query elements area grouped by tag
+q2 &lt;- ohsome_query(
+    endpoint = "elements/area/groupBy/tag",
+    boundary = "HD:8.5992,49.3567,8.7499,49.4371"
+)
+
+# Add time, filter and groupByKey parameters
+q2 |&gt;
+    set_time("2021/2022/P3M") |&gt;
+    set_filter("building=*") |&gt;
+    set_groupByKey("building:levels")
+
+</code></pre>
+
+
+</div>

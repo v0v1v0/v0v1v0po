@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get class(es) in an ontology</h2>
+
+<h3>Description</h3>
+
+<p>Get class(es) in an ontology
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_class(..., regex = FALSE, external = FALSE, ontology = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>combination of column name and value to filter that column by. The
+value to filter by can be provided as regular expression, if <code>regex =
+  TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regex</code></td>
+<td>
+<p><code>logical(1)</code><br> whether or not the value in
+<code>...</code> shall be matched in full, or whether any partial match should be
+returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>external</code></td>
+<td>
+<p><code>logical(1)</code><br> whether or not the external
+classes (TRUE), or the harmonized classes should be returned (FALSE,
+default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p><code>ontology(1)</code><br> either a path where the ontology is
+stored, or an already loaded ontology.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A table of the class(es) in the ontology according to the values in
+<code>...</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ontoDir &lt;- system.file("extdata", "crops.rds", package = "ontologics")
+onto &lt;- load_ontology(path = ontoDir)
+
+# exact classes from a loaded ontology ...
+get_class(label = "class", ontology = onto)
+
+# ... or one stored on the harddisc
+get_class(id = ".xx.xx", ontology = ontoDir)
+
+# use regular expressions ...
+get_class(label = "ro", regex = TRUE, ontology = onto)
+
+# get all sources
+get_class(ontology = onto)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>uniboot_dep</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Univariate Bootstrap</h2>
+
+<h3>Description</h3>
+
+<p>WARNING: This function can't be used with data that is already fed through the RK function. The correlation matrix will not be positive definite.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">uniboot_dep(
+  data,
+  B = 1000,
+  groups = NULL,
+  keepgroups = F,
+  size = 1,
+  HIcor = NULL,
+  samplefrom = "group",
+  use = "everything"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data frame to be resampled</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>The number of bootstrap samples. Alternatively "sampleframe" which will return the univariate sampling frame. "samplefrom" is not advised when there are many observations and/or many variables as the returned dataframe will be quite large.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groups</code></td>
+<td>
+<p>A grouping variable name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepgroups</code></td>
+<td>
+<p>Should the grouping variable be kept in the final datasets?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>The size of the bootstrap sample to be returned. Should be as a proportion and must be evenly divided into nrow(data).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>HIcor</code></td>
+<td>
+<p>If a hypothesis imposed correlation matrix is to be used, this argument takes a list of hypothesized correlation matrices. IT MUST BE A LIST OF ONE OR MORE MATRICES. Multiple matrices can be entered in the case of grouped data (one for each group). If the nil-null correlation is to be used an identity matrix can be entered here (the same size as the appropriate correlation matrix).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>samplefrom</code></td>
+<td>
+<p>Takes one of either "group" or "whole". When doing bootstrapping of grouped data this tells uniboot if the whole sample should be used as the sampling frame for each group (whole), or not (group). "group" should be used unless it is believed that all groups share the same underlying marginal distribution for each variable (e.g., the same mean and variance in the case of normally distributed data).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use</code></td>
+<td>
+<p>The missing data method for cor. Default is R's default "everything".</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of bootstrap samples
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data&lt;-TestData()
+X&lt;-uniboot(data,1000)
+</code></pre>
+
+
+</div>

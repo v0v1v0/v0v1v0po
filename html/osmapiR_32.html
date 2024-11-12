@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_get_objects</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get OSM objects</h2>
+
+<h3>Description</h3>
+
+<p>Retrieve objects by <code>type</code>, <code>id</code> and <code>version</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_get_objects(
+  osm_type,
+  osm_id,
+  version,
+  full_objects = FALSE,
+  format = c("R", "xml", "json"),
+  tags_in_columns = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>osm_type</code></td>
+<td>
+<p>A vector with the type of the objects (<code>"node"</code>, <code>"way"</code> or <code>"relation"</code>). Recycled if it has a
+different length than <code>osm_id</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osm_id</code></td>
+<td>
+<p>Object ids represented by a numeric or a character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p>An optional vector with the version number for each object. If missing, the last version will be
+retrieved. Recycled if it has different length than <code>osm_id</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>full_objects</code></td>
+<td>
+<p>If <code>TRUE</code>, retrieves all other objects referenced by ways or relations. Not compatible with
+<code>version</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default), <code>"xml"</code>, or <code>"json"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tags_in_columns</code></td>
+<td>
+<p>If <code>FALSE</code> (default), the tags of the objects are saved in a single list column <code style="white-space: pre;">⁠tags``` containing a ⁠</code>data.frame<code style="white-space: pre;">⁠for each OSM object with the keys and values. If⁠</code>TRUE<code style="white-space: pre;">⁠, add a column for each key. Ignored if ⁠</code>format != "R"'.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>full_objects = TRUE</code> does not support specifying <code>version</code>.
+For ways, <code>full_objects = TRUE</code> implies that it will return the way specified plus all nodes referenced by the way.
+For a relation, it will return the following:
+</p>
+
+<ul>
+<li>
+<p> The relation itself
+</p>
+</li>
+<li>
+<p> All nodes, ways, and relations that are members of the relation
+</p>
+</li>
+<li>
+<p> Plus all nodes used by ways from the previous step
+</p>
+</li>
+<li>
+<p> The same recursive logic is not applied to relations. This means: If relation r1 contains way w1 and relation r2,
+and w1 contains nodes n1 and n2, and r2 contains node n3, then a "full" request for r1 will give you r1, r2, w1,
+n1, and n2. Not n3.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>If <code>format = "R"</code>, returns a data frame with one OSM object per row. If <code>format = "xml"</code>, returns a
+xml2::xml_document following the
+<a href="https://wiki.openstreetmap.org/wiki/OSM_XML#OSM_XML_file_format_notes">OSM_XML format</a>. If <code>format = "json"</code>,
+returns a list with a json structure following the <a href="https://wiki.openstreetmap.org/wiki/OSM_JSON">OSM_JSON format</a>.
+</p>
+<p>Objects are sorted in the same order than <code>osm_id</code> except for <code>full_objects = TRUE</code>, where the nodes comes first,
+then ways, and relations at the end as specified by
+<a href="https://wiki.openstreetmap.org/wiki/OSM_XML#OSM_XML_file_format_notes">OSM_XML format</a>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>For downloading data for purposes other than editing or exploring the history of the objects, perhaps is better to
+use the Overpass API. A similar function to download OSM objects by <code>type</code> and <code>id</code> using Overpass, is implemented in
+the <span class="pkg">osmdata</span> function <code>opq_osm_id()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other get OSM objects' functions: 
+<code>osm_bbox_objects()</code>,
+<code>osm_history_object()</code>,
+<code>osm_relations_object()</code>,
+<code>osm_ways_node()</code>,
+<code>osmapi_objects()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">obj &lt;- osm_get_objects(
+  osm_type = c("node", "way", "way", "relation", "relation", "node"),
+  osm_id = c("35308286", "13073736", "235744929", "40581", "341530", "1935675367"),
+  version = c(1, 3, 2, 5, 7, 1)
+)
+obj
+</code></pre>
+
+
+</div>

@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oii.xtab</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A cross-tabulation with measures of association</h2>
+
+<h3>Description</h3>
+
+<p>This function prints a 2-way table with optional cell statistics 
+and measures of association
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oii.xtab(r, c = NULL, s = NULL, row = FALSE, col = FALSE,
+  pctcell = FALSE, stats = FALSE, rescell = FALSE, chistd = FALSE,
+  expcell = FALSE, chicell = FALSE, warnings = FALSE, varnames = NULL,
+  include.missing = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>the row variable. If <code>r</code> is a <code>table</code>, <code>data.frame</code>, or <code>matrix</code>, then <code>c</code> and <code>s</code> are ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c</code></td>
+<td>
+<p>the column variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>the split variable. The <code>r</code> and <code>c</code> will be separately tabulated for each unique value of <code>s</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row</code></td>
+<td>
+<p>Show row percentages? Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Show column percentages? Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pctcell</code></td>
+<td>
+<p>Print cell percentages? Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stats</code></td>
+<td>
+<p>Print measures of association? Defaults to FALSE. This parameter is ignored either <code>r</code> or <code>c</code> has only one value. See <code>association.measures</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rescell</code></td>
+<td>
+<p>Print residual cell count under the null hypothesis?  Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chistd</code></td>
+<td>
+<p>Print cell standardized residuals to pearson chi-square? Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expcell</code></td>
+<td>
+<p>Print expected cell count under the null hypothesis? Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chicell</code></td>
+<td>
+<p>Print cell contribution to pearson chi-square? Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warnings</code></td>
+<td>
+<p>a logical value indicating whether warnings should be shown (defaults to FALSE, no warnings).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varnames</code></td>
+<td>
+<p>Names used to refer to <code>r</code>, <code>c</code>, and <code>s</code> in the printed output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include.missing</code></td>
+<td>
+<p>Set to TRUE to include factor levels with no instances in the output. Default (FALSE) excludes them.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to be passed to <code>CrossTable</code>.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>association.measures</code>, <code>CrossTable</code>, <code>likelihood.test</code>, <code>lambda.test</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#Create var1 as 200 A's, B's, and C's
+var1&lt;-sample(LETTERS[1:3],size=200,replace=TRUE)
+#Create var2 as 200 numbers in the range 1 to 4
+var2&lt;-sample(1:4,size=200,replace=TRUE)
+
+#Print a simple 2-way table of var1 and var2
+oii.xtab(var1,var2)
+
+#Print the row and column percents
+oii.xtab(var1,var2,row=TRUE,col=TRUE)
+
+#Print measures of association statistics
+oii.xtab(var1,var2,stats=TRUE)
+
+#If the variables are part of a data.frame
+my.data.frame&lt;-data.frame(var1,var2)
+#We can use the $ to get the variables
+oii.xtab(my.data.frame$var1,my.data.frame$var2)
+#or use the with(...) command to save some typing
+with(my.data.frame,oii.xtab(var1,var2))
+
+#Three-way tables are also possible
+#Create var3 as 200 "I"'s, "II"'s, and "III"'s
+var3&lt;-sample(c("I","II","III"),size=200,replace=TRUE)
+oii.xtab(var1,var2,var3)
+
+#We can also pass in a data.frame directly as the first argument
+my.data.frame&lt;-data.frame(var1,var2,var3)
+oii.xtab(my.data.frame,stats=TRUE)
+#The variables in the data.frame are used in order;
+#so, sometimes it is useful to re-order them. For example,
+oii.xtab(my.data.frame[,c("var3","var1","var2")],stats=TRUE)
+#Of course, it is also possible to pass in the variables one 
+#at a time or use with(...) as shown above.
+
+</code></pre>
+
+
+</div>

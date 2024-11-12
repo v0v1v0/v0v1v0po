@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>loess_smoothing_KDE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get loess smoothing for the unnormalized Markov KDE</h2>
+
+<h3>Description</h3>
+
+<p>Calculates loess smoothing for the unnormalized Markov KDE obtained from the 'estimate_edge_KDE_Markov_kernel_unnorm' function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">loess_smoothing_KDE(tree.discr, Edge.KDE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tree.discr</code></td>
+<td>
+<p>simmap or phylo object. A discretized tree using the 'discr_Simmap' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Edge.KDE</code></td>
+<td>
+<p>list. A list with the estimated unnormalized KDEs ($Maps.mean) for each edge.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the loess smoothing calculated for each edge.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sergei Tarasov
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("hym_kde", "hym_tree")
+# Get reference tree.
+tree_discr &lt;- discr_Simmap(hym_tree, res = 200)
+# Get non-normalized and normalized edge KDE data.
+Edge_KDE &lt;- hym_kde$head
+# Calculate smoothing of edge KDE data.
+Edge_KDE$Maps.mean.loess &lt;- suppressWarnings(loess_smoothing_KDE(tree_discr, Edge_KDE))
+# Check smoothing of KDE data for normalized mean rates from an arbitrary branch.
+Edge_KDE$Maps.mean.loess.norm[[5]]
+# Check smoothing of KDE data for non-normalized mean rates from an arbitrary branch.
+Edge_KDE$Maps.mean.loess[[5]]
+
+</code></pre>
+
+
+</div>

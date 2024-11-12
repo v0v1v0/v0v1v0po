@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Overbeck2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Overbeck type II Allocation Principle</h2>
+
+<h3>Description</h3>
+
+<script id="MathJax-script" async src="../../mathjaxr/doc/mathjax/es5/tex-chtml-full.js"></script><p>This function implements the Overbeck type II allocation principle for optimal capital allocation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Overbeck2(
+  Loss,
+  Capital,
+  alpha = 0.95,
+  model = c("normal", "t-student", "both"),
+  df = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Loss</code></td>
+<td>
+<p>Either a scalar or a vector of size <em>N</em> containing the mean losses.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Capital</code></td>
+<td>
+<p>A scalar representing the capital to be allocated to each loss.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>A numeric value (either a single one or a vector) consisting of the significance
+level at which the allocation has to be computed, it can either be a single numeric value or a
+vector of numeric values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A character string indicating which distribution is to be used for computing the
+VaR underlying the Overbeck type II principle, the default value is the <code>normal</code> distribution,
+the other alternative is <code>t-student</code> distribution with <i>υ</i> degrees of freedom.
+When <code>model='both'</code> <code>'normal'</code> as well as <code>'t-student'</code> are used when computing the
+allocations, see examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>An integer indicating the degrees of freedom for the t-student distribution when setting
+<code>model='t-student'</code> and <code>model='both'</code>. <code>df</code> must be greater than 2.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>Overbeck2</code> computes the  capital allocation based on the following formulation:
+</p>
+\[K_{i} = \frac{K}{CTE_{p}[S]} E \left[ X_{i}|S &gt; F_{X_{S}}^{-1}(p) \right], \quad i=1, \ldots, n.\]
+<p>Where \(K\) is the aggregate capital to be allocated, \(CTE_p[S] \) is the
+Conditional Tail Expectation of the aggregate loss at level \(p\), \(X_i\) is the
+individual loss, \(S\) is the aggregate loss and \( F_X^-1(p)\) is the quantile
+function of \(X\) at level  \(p.\)
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector containing the optimal capital allocation,
+if <code>Capital</code> is set to 1, then the returned matrix will consist of the proportions of capital
+each individual loss needs to be optimally faced.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jilber Urbina
+</p>
+
+
+<h3>References</h3>
+
+<p>Dhaene J., Tsanakas A., Valdez E. and Vanduffel S. (2011). <em>Optimal Capital Allocation Principles</em>. The Journal of Risk and Insurance. Vol. 00, No. 0, 1-28.
+</p>
+<p>Urbina, J. (2013) <em>Quantifying Optimal Capital Allocation Principles based on Risk Measures.</em> Master Thesis, Universitat Politècnica de Catalunya.
+</p>
+<p>Urbina, J. and Guillén, M. (2014). <em>An application of capital allocation principles to operational risk and the cost of fraud</em>. Expert Systems with Applications. 41(16):7023-7031.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>hap</code>, <code>cap</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(dat1, dat2)
+Loss &lt;- cbind(Loss1=dat1[1:400, ], Loss2=unname(dat2))
+# Proportions of capital to be allocated to each bussines unit
+Overbeck2(Loss, Capital=1)
+
+# Capital allocation,
+# capital is determined as the empirical VaR of the losses at 99\%
+K &lt;- quantile(rowSums(Loss),  probs = 0.99)
+Overbeck2(Loss, Capital=K)
+</code></pre>
+
+
+</div>

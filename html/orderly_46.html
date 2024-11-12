@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_test_start</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prepare a directory for orderly to use</h2>
+
+<h3>Description</h3>
+
+<p>For interactive testing of orderly code.  This runs through and
+sets everything up as orderly would (creates a new working
+directory and copies files into it, pulls data from the database,
+copies over any dependent reports) but then rather than running
+the report hands back to the user.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_test_start(
+  name,
+  parameters = NULL,
+  envir = parent.frame(),
+  root = NULL,
+  locate = TRUE,
+  instance = NULL,
+  use_draft = FALSE,
+  remote = NULL
+)
+
+orderly_test_check(path = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>Name of the report to run (see
+<code>orderly_list()</code>).  A leading <code style="white-space: pre;">⁠src/⁠</code> will be
+removed if provided, allowing easier use of autocomplete.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p>Parameters passed to the report. A named list of
+parameters declared in the <code>orderly.yml</code>.  Each parameter
+must be a scalar character, numeric, integer or logical.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envir</code></td>
+<td>
+<p>The parent of the environment that will be used to
+evaluate the report script; by default a new environment will be
+made with the global environment as the parent.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instance</code></td>
+<td>
+<p>Select instance of the source database to be used,
+where multiple instances are configured.  Use a single
+<em>unnamed</em> character string to indicate an instance to
+match.  If given, then this name must be present in all
+databases where instances are listed in
+<code>orderly_config.yml</code>, and will be ignored by all database
+where instances are not given.  See the "orderly" vignette for
+further information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_draft</code></td>
+<td>
+<p>Should draft reports be used for dependencies?
+This should be used only in development.  Valid values are
+logical (<code>TRUE</code>, <code>FALSE</code>) or use the string
+<code>newer</code> to use draft reports where they are newer than
+archive reports.  For consistency, <code>always</code> and
+<code>never</code> are equivalent to <code>TRUE</code> and <code>FALSE</code>,
+respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remote</code></td>
+<td>
+<p>Remote to use to resolve dependencies.  Use this in
+order to run a report with the same dependencies as are
+available on a remote server, particularly when using <code>id = "latest"</code>.  Note that this is not the same as running
+<code>orderly_pull_dependencies()</code>, then <code>orderly_run</code>
+with <code>remote = NULL</code>, as the pull/run approach will use the
+latest report in <em>your</em> archive but the <code>remote = "remote"</code> approach will use the latest approach in the
+<em>remote</em> archive (which might be less recent).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Path to the report that is currently being run</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Previous versions of orderly changed into the created directory
+when using <code>orderly::orderly_test_start</code>, which allowed
+interactive testing of a report, including ensuring that it has
+created all expected outputs.  However, CRAN rules do not allow
+changing the working directory, which significantly reduces the
+usefulness of this function - as such we may remove it entirely in
+a future version of orderly if it does not prove useful in this
+more limited form.
+</p>
+<p>The new suggested workflow is:
+</p>
+
+<ol>
+<li>
+<p> run <code>orderly_test_start(...)</code> to prepare a report directory
+</p>
+</li>
+<li>
+<p> manually change into that directory following the printed
+instructions
+</p>
+</li>
+<li>
+<p> use <code>orderly_test_check</code> to check that your report has created
+the expected artefacts
+</p>
+</li>
+<li>
+<p> manually change back to your original directory
+</p>
+</li>
+</ol>
+<h3>Value</h3>
+
+<p>The path to the report directory
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+path &lt;- orderly::orderly_example("minimal")
+p &lt;- orderly::orderly_test_start("example", root = path)
+
+# The data in the orderly example is now available to use
+dat
+
+# Check to see which artefacts have been created so far:
+orderly::orderly_test_check(p)
+
+# Manually the code that this report has in its script
+png(file.path(p, "mygraph.png"))
+barplot(setNames(dat$number, dat$name), las = 2)
+dev.off()
+
+# We now confirm that the artefact has been created:
+orderly::orderly_test_check(p)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,150 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gen.data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>generate data</h2>
+
+<h3>Description</h3>
+
+<p>This function generates matrix-valued time series under a two-way factor
+structure with/without a change point.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gen.data(
+  Sample_T,
+  p1,
+  p2,
+  k1,
+  k2,
+  tau = 0.5,
+  change = 0,
+  pp = 0.3,
+  a = 0,
+  cc = 0
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Sample_T</code></td>
+<td>
+<p>positive integer indicating the length of series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p1</code></td>
+<td>
+<p>positive integer indicating the row dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p2</code></td>
+<td>
+<p>positive integer indicating the column dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k1</code></td>
+<td>
+<p>positive integer indicating the number of row factors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2</code></td>
+<td>
+<p>positive integer indicating the number of column factors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>a real number in <code class="reqn">(0,1)</code>, indicating the location of change
+point, i.e., (<code class="reqn">\tau T</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change</code></td>
+<td>
+<p>the type of change, taking 0 for no change point, taking 1 for
+the case that the loading matrix <b>R</b> changes, taking other values for the case
+that a new row factor occurs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pp</code></td>
+<td>
+<p>a number in <code class="reqn">(0,1]</code>, indicating the magnitude of the break.
+When <code class="reqn">change=1</code>, <em>pp</em> is the proportion of entries in <b>R</b> that changes;
+when <em>change</em> is not equal to 0 or 1, <em>pp</em> is the proportion of non-zero entries in the new factor
+loading.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>a number in <code class="reqn">[0,min(p_1,p_2))</code>, indicating the
+cross-sectional correlations of the idiosyncratic errors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cc</code></td>
+<td>
+<p>a number in <code class="reqn">[0,1)</code>, indicating the AR(1) coefficient of the
+factor and error processes.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See the paper He et al. (2021).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code class="reqn">T\times p1 \times p2</code> array.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Yong He, Xinbing Kong, Lorenzo Trapani, Long Yu
+</p>
+
+
+<h3>References</h3>
+
+<p>He Y, Kong X, Trapani L, &amp; Yu L(2021). Online change-point
+detection for matrix-valued time series with latent two-way factor
+structure. <em>arXiv preprint</em>, arXiv:2112.13479.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># set parameters
+k1=3
+k2=3
+epsilon=0.05
+Sample_T=50
+p1=40
+p2=20
+
+
+# generate data
+Y=gen.data(Sample_T,p1,p2,k1,k2,tau=0.5,change=1,pp=0.3)
+print("the dimension of Y is:")
+print(dim(Y))
+
+</code></pre>
+
+
+</div>

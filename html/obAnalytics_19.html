@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotEventsHistogram</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a histogram given event data.</h2>
+
+<h3>Description</h3>
+
+<p>Convenience function for plotting event price and volume histograms.
+Will plot ask/bid bars side by side.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotEventsHistogram(events, start.time = min(events$timestamp),
+  end.time = max(events$timestamp), val = "volume", bw = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>events</code></td>
+<td>
+<p>Limit order <code>events</code> data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start.time</code></td>
+<td>
+<p>Include event data &gt;= this time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end.time</code></td>
+<td>
+<p>Include event data &lt;= this time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>val</code></td>
+<td>
+<p>"volume" or "price".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bw</code></td>
+<td>
+<p>Bar width (for price, 0.5 = 50 cent buckets.)</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# necessary columns from event data.
+events &lt;- lob.data$events[, c("timestamp", "direction", "price", "volume")]
+
+# re-scale volume (if needed)
+events$volume &lt;- events$volume * 10^-8
+
+# histogram of all volume aggregated into 5 unit buckets.
+plotEventsHistogram(events[events$volume &lt; 50, ], val="volume", bw=5)
+
+# histogram of 99% of limit prices during a 1 hour time frame.
+# bar width set to 0.25: counts are aggregated into 25 cent buckets. 
+plotEventsHistogram(events[events$price &lt;= quantile(events$price, 0.99)
+                    &amp; events$price &gt;= quantile(events$price, 0.01), ],
+    start.time=as.POSIXct("2015-05-01 02:15:00.000", tz="UTC"),
+    end.time=as.POSIXct("2015-05-01 03:15:00.000", tz="UTC"),
+    val="price", bw=0.25)
+
+</code></pre>
+
+
+</div>

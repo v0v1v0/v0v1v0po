@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>solve_osqp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Sparse Quadratic Programming Solver</h2>
+
+<h3>Description</h3>
+
+<p>Solves </p>
+<p style="text-align: center;"><code class="reqn">arg\min_x 0.5 x'P x + q'x</code>
+</p>
+
+<p>s.t. </p>
+<p style="text-align: center;"><code class="reqn">l_i &lt; (A x)_i &lt; u_i</code>
+</p>
+
+<p>for real matrices P (nxn, positive semidefinite) and A (mxn) with m number of constraints
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">solve_osqp(
+  P = NULL,
+  q = NULL,
+  A = NULL,
+  l = NULL,
+  u = NULL,
+  pars = osqpSettings()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>P, A</code></td>
+<td>
+<p>sparse matrices of class dgCMatrix or coercible into such, with P positive semidefinite.
+Only the upper triangular part of P will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q, l, u</code></td>
+<td>
+<p>Numeric vectors, with possibly infinite elements in l and u</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pars</code></td>
+<td>
+<p>list with optimization parameters, conveniently set with the function <code>osqpSettings</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with elements x (the primal solution), y (the dual solution), prim_inf_cert,
+dual_inf_cert, and info.
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Stellato, B., Banjac, G., Goulart, P., Bemporad, A., Boyd and S. (2018).
+“OSQP: An Operator Splitting Solver for Quadratic Programs.”
+<em>ArXiv e-prints</em>.
+1711.08013.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>osqp</code>. The underlying OSQP documentation: <a href="https://osqp.org/">https://osqp.org/</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(osqp)
+## example, adapted from OSQP documentation
+library(Matrix)
+
+P &lt;- Matrix(c(11., 0.,
+              0., 0.), 2, 2, sparse = TRUE)
+q &lt;- c(3., 4.)
+A &lt;- Matrix(c(-1., 0., -1., 2., 3.,
+              0., -1., -3., 5., 4.)
+              , 5, 2, sparse = TRUE)
+u &lt;- c(0., 0., -15., 100., 80)
+l &lt;- rep_len(-Inf, 5)
+
+settings &lt;- osqpSettings(verbose = TRUE)
+
+# Solve with OSQP
+res &lt;- solve_osqp(P, q, A, l, u, settings)
+res$x
+
+</code></pre>
+
+
+</div>

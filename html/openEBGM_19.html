@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>quantBisect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find quantiles of the posterior distribution</h2>
+
+<h3>Description</h3>
+
+<p><code>quantBisect</code> finds the desired quantile of the posterior distribution
+using the bisection method. Used to create credibility limits.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">quantBisect(
+  percent,
+  theta_hat,
+  N,
+  E,
+  qn,
+  digits = 2,
+  limits = c(-1e+05, 1e+05),
+  max_iter = 2000
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>percent</code></td>
+<td>
+<p>A numeric scalar between 1 and 99 for the desired
+percentile (e.g., 5 for 5th percentile).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta_hat</code></td>
+<td>
+<p>A numeric vector of hyperparameter estimates (likely from
+<code>autoHyper</code> or from directly minimizing
+<code>negLLsquash</code>) ordered as:
+<code class="reqn">\alpha_1, \beta_1, \alpha_2, \beta_2, P</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>A whole number vector of actual counts from
+<code>processRaw</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>E</code></td>
+<td>
+<p>A numeric vector of expected counts from <code>processRaw</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qn</code></td>
+<td>
+<p>A numeric vector of posterior probabilities that <code class="reqn">\lambda</code> came
+from the first component of the mixture, given <em>N = n</em> (i.e., the
+mixture fraction). See function <code>Qn</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>A scalar whole number that determines the number of decimal
+places used when rounding the results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits</code></td>
+<td>
+<p>A whole number vector of length 2 for the upper and lower
+bounds of the search space.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_iter</code></td>
+<td>
+<p>A whole number scalar for the maximum number of iterations.
+Used to prevent infinite loops.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The hyperparameter estimates (<code>theta_hat</code>) are:
+</p>
+
+<ul>
+<li>
+<p><code class="reqn">\alpha_1, \beta_1</code>: Parameter estimates of the first
+component of the prior distribution
+</p>
+</li>
+<li>
+<p><code class="reqn">\alpha_2, \beta_2</code>: Parameter estimates of the second
+component
+</p>
+</li>
+<li>
+<p><code class="reqn">P</code>: Mixture fraction estimate of the prior distribution
+</p>
+</li>
+</ul>
+<p>Although this function can find any quantile of the posterior
+distribution, it will often be used to calculate the 5th and 95th
+percentiles to create a 90% credibility interval.
+</p>
+<p>The quantile is calculated by solving for <code class="reqn">x</code> in the general
+equation <code class="reqn">F(x) = cutoff</code>, or equivalently, <code class="reqn">F(x) - cutoff = 0</code>,
+where <code class="reqn">F(x)</code> is the cumulative distribution function of the posterior
+distribution and <code class="reqn">cutoff</code> is the appropriate cutoff level (e.g., 0.05
+for the 5th percentile).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector of quantile estimates.
+</p>
+
+
+<h3>Warning</h3>
+
+<p>The <code>digits</code> argument determines the tolerance for the bisection
+algorithm. The more decimal places you want returned, the longer the run
+time.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="https://en.wikipedia.org/wiki/Bisection_method">https://en.wikipedia.org/wiki/Bisection_method</a>
+</p>
+<p><code>autoHyper</code>,  <code>exploreHypers</code>,
+<code>negLLsquash</code>, <code>negLL</code>,
+<code>negLLzero</code>, and <code>negLLzeroSquash</code> for
+hyperparameter estimation.
+</p>
+<p><code>processRaw</code> for finding counts.
+</p>
+<p><code>Qn</code> for finding mixture fractions.
+</p>
+<p>Other posterior distribution functions: 
+<code>Qn()</code>,
+<code>ebgm()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data.table::setDTthreads(2)  #only needed for CRAN checks
+theta_init &lt;- data.frame(
+  alpha1 = c(0.5, 1),
+  beta1  = c(0.5, 1),
+  alpha2 = c(2,   3),
+  beta2  = c(2,   3),
+  p      = c(0.1, 0.2)
+)
+data(caers)
+proc &lt;- processRaw(caers)
+squashed &lt;- squashData(proc, bin_size = 300, keep_pts = 10)
+squashed &lt;- squashData(squashed, count = 2, bin_size = 13, keep_pts = 10)
+theta_hat &lt;- autoHyper(data = squashed, theta_init = theta_init)$estimates
+qn &lt;- Qn(theta_hat, N = proc$N, E = proc$E)
+proc$QUANT_05 &lt;- quantBisect(percent = 5, theta = theta_hat, N = proc$N,
+                             E = proc$E, qn = qn)
+## Not run: proc$QUANT_95 &lt;- quantBisect(percent = 95, theta = theta_hat,
+                                      N = proc$N, E = proc$E, qn = qn)
+## End(Not run)
+head(proc)
+
+</code></pre>
+
+
+</div>

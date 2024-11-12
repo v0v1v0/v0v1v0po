@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>selectByDate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Subset a data frame based on date</h2>
+
+<h3>Description</h3>
+
+<p>Utility function to make it easier to select periods from a data frame
+before sending to a function
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">selectByDate(
+  mydata,
+  start = "1/1/2008",
+  end = "31/12/2008",
+  year = 2008,
+  month = 1,
+  day = "weekday",
+  hour = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame containing a <code>date</code> field in hourly or high
+resolution format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>A start date string in the form d/m/yyyy e.g. “1/2/1999”
+or in ‘R’ format i.e. “YYYY-mm-dd”, “1999-02-01”</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end</code></td>
+<td>
+<p>See <code>start</code> for format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>A year or years to select e.g. <code>year = 1998:2004</code> to select
+1998-2004 inclusive or <code>year = c(1998, 2004)</code> to select 1998 and
+2004.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>month</code></td>
+<td>
+<p>A month or months to select. Can either be numeric e.g.
+<code>month = 1:6</code> to select months 1-6 (January to June), or by name e.g.
+<code>month = c("January", "December")</code>. Names can be abbreviated to 3
+letters and be in lower or upper case.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>day</code></td>
+<td>
+<p>A day name or or days to select. <code>day</code> can be numeric (1 to
+31) or character. For example <code>day = c("Monday", "Wednesday")</code> or
+<code>day = 1:10</code> (to select the 1st to 10th of each month). Names can be
+abbreviated to 3 letters and be in lower or upper case. Also accepts
+“weekday” (Monday - Friday) and “weekend” for convenience.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hour</code></td>
+<td>
+<p>An hour or hours to select from 0-23 e.g. <code>hour = 0:12</code> to
+select hours 0 to 12 inclusive.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function makes it much easier to select periods of interest from a data
+frame based on dates in a British format. Selecting date/times in R format
+can be intimidating for new users. This function can be used to select quite
+complex dates simply - see examples below.
+</p>
+<p>Dates are assumed to be inclusive, so <code>start = "1/1/1999"</code> means that
+times are selected from hour zero. Similarly, <code>end = "31/12/1999"</code> will
+include all hours of the 31st December. <code>start</code> and <code>end</code> can also
+be in standard R format as a string i.e. "YYYY-mm-dd", so <code>start =
+"1999-01-01"</code> is fine.
+</p>
+<p>All options are applied in turn making it possible to select quite complex
+dates
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## select all of 1999
+data.1999 &lt;- selectByDate(mydata, start = "1/1/1999", end = "31/12/1999")
+head(data.1999)
+tail(data.1999)
+
+# or...
+data.1999 &lt;- selectByDate(mydata, start = "1999-01-01", end = "1999-12-31")
+
+# easier way
+data.1999 &lt;- selectByDate(mydata, year = 1999)
+
+
+# more complex use: select weekdays between the hours of 7 am to 7 pm
+sub.data &lt;- selectByDate(mydata, day = "weekday", hour = 7:19)
+
+# select weekends between the hours of 7 am to 7 pm in winter (Dec, Jan, Feb)
+sub.data &lt;- selectByDate(mydata, day = "weekend", hour = 7:19, month =
+c("dec", "jan", "feb"))
+
+</code></pre>
+
+
+</div>

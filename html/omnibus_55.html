@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pmatchSafe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Partial matching of strings with error checking</h2>
+
+<h3>Description</h3>
+
+<p>This function is the same as <code>pmatch</code>, but it can throw an error instead of <code>NA</code> if not match is found, and can be forced to throw the error if more than the desired number of matches is found.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pmatchSafe(
+  x,
+  table,
+  useFirst = FALSE,
+  error = TRUE,
+  ignoreCase = TRUE,
+  nmax = length(x),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Character: String to match.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+<p>Character vector: Values to which to match.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useFirst</code></td>
+<td>
+<p>Logical: If <code>TRUE</code>, and there is more than one match for a given <code>x</code>, then the first value in <code>table</code> that matches <code>x</code> will be returned (without an error or warning).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error</code></td>
+<td>
+<p>Logical: If no match is found, return an error?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignoreCase</code></td>
+<td>
+<p>Logical: If <code>TRUE</code> (default), ignore the case of values in <code>x</code> and <code>table</code> when checking for matches.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nmax</code></td>
+<td>
+<p>Positive numeric integer: Maximum allowable number of matches. If more than this number of matches is found, an error will be thrown (regardless of the value of <code>error</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to pass to <code>pmatch</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>One or more of the values in <code>table</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+pmatchSafe('ap', c('apples', 'oranges', 'bananas'))
+
+pmatchSafe('AP', c('apples', 'oranges', 'bananas'))
+
+pmatchSafe('AP', c('apples', 'oranges', 'bananas'),
+    ignoreCase = FALSE, error = FALSE)
+
+pmatchSafe(c('ba', 'ap'), c('apples', 'oranges', 'bananas'))
+
+# No match:
+tryCatch(
+    pmatchSafe('kumquats', c('apples', 'oranges', 'bananas')),
+	error = function(cond) FALSE
+)
+
+pmatchSafe('kumquats', c('apples', 'oranges', 'bananas'), error = FALSE)
+
+pmatchSafe(c('ap', 'corn'), c('apples', 'oranges', 'bananas'), error = FALSE)
+
+# Too many matches:
+tryCatch(
+    pmatchSafe(c('ap', 'ba'), c('apples', 'oranges', 'bananas'), nmax = 1),
+	error=function(cond) FALSE
+)
+
+</code></pre>
+
+
+</div>

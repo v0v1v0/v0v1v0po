@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_opus_raw</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read a Bruker OPUS spectrum binary raw string</h2>
+
+<h3>Description</h3>
+
+<p>Read single binary acquired with an Bruker Vertex FTIR Instrument
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_opus_raw(rw, type = "spec", atm_comp_minus4offset = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rw</code></td>
+<td>
+<p>a raw vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character vector of spectra types to extract from OPUS binary
+file. Default is <code>"spec"</code>, which will extract the final spectra, e.g.
+expressed in absorbance (named <code>AB</code> in Bruker OPUS programs). Possible
+additional values for the character vector supplied to <code>type</code> are
+<code>"spec_no_atm_comp"</code> (spectrum of the sample without compensation for
+atmospheric gases, water vapor and/or carbon dioxide),
+<code>"sc_sample"</code> (single channel spectrum of the sample measurement),
+<code>"sc_ref"</code> (single channel spectrum of the reference measurement),
+<code>"ig_sample"</code> (interferogram of the sample measurement) and <code>"ig_ref"</code>
+(interferogram of the reference measurement).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>atm_comp_minus4offset</code></td>
+<td>
+<p>logical; whether spectra after atmospheric
+compensation are read with an offset of -4 bytes from Bruker OPUS
+files. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The type of spectra returned by the function when using
+<code>type = "spec"</code> depends on the setting of the Bruker instrument: typically,
+it can be either absorbance or reflectance.
+</p>
+<p>The type of spectra to extract from the file can also use Bruker's OPUS
+software naming conventions, as follows:
+</p>
+
+<ul>
+<li> <p><code>ScSm</code> corresponds to <code>sc_sample</code>
+</p>
+</li>
+<li> <p><code>ScRf</code> corresponds to <code>sc_ref</code>
+</p>
+</li>
+<li> <p><code>IgSm</code> corresponds to <code>ig_sample</code>
+</p>
+</li>
+<li> <p><code>IgRf</code> corresponds to <code>ig_ref</code>
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A list of 10 elements:
+</p>
+
+<dl>
+<dt><code>metadata</code></dt>
+<dd>
+<p>a <code>data.frame</code> containing metadata from the OPUS file.</p>
+</dd>
+<dt><code>spec</code></dt>
+<dd>
+<p>if <code>"spec"</code> was requested in the <code>type</code> option, a matrix of
+the spectrum of the sample (otherwise set to <code>NULL</code>).</p>
+</dd>
+<dt><code>spec_no_atm_comp</code></dt>
+<dd>
+<p>if <code>"spec_no_atm_comp"</code> was requested in the
+<code>type</code> option, a matrix of the spectrum of the sample without atmospheric
+compensation (otherwise set to <code>NULL</code>).</p>
+</dd>
+<dt><code>sc_sample</code></dt>
+<dd>
+<p>if <code>"sc_sample"</code> was requested in the <code>type</code> option, a
+matrix of the single channel spectrum of the sample (otherwise set to
+<code>NULL</code>).</p>
+</dd>
+<dt><code>sc_ref</code></dt>
+<dd>
+<p>if <code>"sc_ref"</code> was requested in the <code>type</code> option, a matrix
+of the single channel spectrum of the reference (otherwise set to <code>NULL</code>).</p>
+</dd>
+<dt><code>ig_sample</code></dt>
+<dd>
+<p>if <code>"ig_sample"</code> was requested in the <code>type</code> option, a
+matrix of the interferogram of the sample (otherwise set to <code>NULL</code>).</p>
+</dd>
+<dt><code>ig_ref</code></dt>
+<dd>
+<p>if <code>"ig_ref"</code> was requested in the <code>type</code> option, a matrix
+of the interferogram of the reference (otherwise set to <code>NULL</code>).</p>
+</dd>
+<dt><code>wavenumbers</code></dt>
+<dd>
+<p>if <code>"spec"</code> or <code>"spec_no_atm_comp"</code> was requested in
+the <code>type</code> option, a numeric vector of the wavenumbers of the spectrum of
+the sample (otherwise set to <code>NULL</code>).</p>
+</dd>
+<dt><code>wavenumbers_sc_sample</code></dt>
+<dd>
+<p>if <code>"sc_sample"</code> was requested in the <code>type</code>
+option, a numeric vector of the wavenumbers of the single channel spectrum
+of the sample (otherwise set to <code>NULL</code>).</p>
+</dd>
+<dt><code>wavenumbers_sc_ref</code></dt>
+<dd>
+<p>if <code>"sc_ref"</code> was requested in the <code>type</code>
+option, a numeric vector of the wavenumbers of the single channel spectrum
+of the reference (otherwise set to <code>NULL</code>).</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Philipp Baumann and Pierre Roudier
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_opus()</code>
+</p>
+
+
+</div>

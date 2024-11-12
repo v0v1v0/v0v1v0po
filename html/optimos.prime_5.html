@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>op_calculate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>This function of Optimos Prime calculates optima and tolerance for a data frame of species and environmental factors</h2>
+
+<h3>Description</h3>
+
+<p>You will need two data frames. If they are not specified as arguments, you will be prompted to import them from CSV format.
+The resulting data frame from the op_calculate() function will be a data frame of species (rows) and the optima and tolerance range (+ and -) of the environmental variables (columns)
+</p>
+
+<ul>
+<li>
+<p> Matrix 1: Species (rows) by Sampling sites (columns).
+First row needs to be the sampling sites names.
+First column needs to be the species' names.
+Values in cells therefore need to be the density of each species at each site.
+</p>
+</li>
+<li>
+<p> Matrix 2: Environmental variables (rows) by Sampling sites (columns).
+First row needs to be the sampling sites names.
+First column needs to be the names of the environmental variables (i.e. physical-chemical parameters).
+Values in cells therefore need to be the value of each environmental variable at each site.
+</p>
+</li>
+</ul>
+<p>The calculations for optima and tolerance ranges is conducted according to the article by Potapova &amp; Charles (2003):
+</p>
+
+<ul><li>
+<p> Potapova, M., &amp; Charles, D. F. (2003). Distribution of benthic diatoms in US rivers in relation to conductivity and ionic composition. Freshwater Biology, 48(8), 1311-1328.
+</p>
+</li></ul>
+<p>Sample data is taken from:
+</p>
+
+<ul><li>
+<p> Sathicq, María Belén. (2017). Empleo de descriptores fitoplanctónicos como biomonitores en la evaluación de la calidad del agua en la costa del río de la Plata (Franja Costera Sur). PhD thesis. http://hdl.handle.net/10915/58915
+</p>
+</li></ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">op_calculate(environmental_df, species_df, isRelAb = TRUE,
+  islog10 = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>environmental_df</code></td>
+<td>
+<p>The data frame with your environmental data. Variables as rows, Sites as columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>species_df</code></td>
+<td>
+<p>The data frame with your species densities. Species as rows, Sites as columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isRelAb</code></td>
+<td>
+<p>Boolean. If set to 'TRUE' it means that your species' data is the relative abundance of each species per site. If FALSE, it means that it the data corresponds to absolute densities. Default = TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>islog10</code></td>
+<td>
+<p>Boolean. If set to 'TRUE' it means that your environmental data is already transformed to log10. Default = FALSE</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># EXAMPLE 1: Loads sample data where species are in relative abundance (percent)
+data("environmental_data")
+data("species_data")
+# EXAMPLE 2: Loads sample data where species are in absolute densities
+data("environmental_data_example2")
+data("species_data_example2")
+# Calculates the autoecological data
+optimos.prime::op_calculate(environmental_df, species_df)
+</code></pre>
+
+
+</div>

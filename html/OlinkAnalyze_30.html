@@ -1,0 +1,209 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_lmer_posthoc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function which performs a linear mixed model posthoc per protein.</h2>
+
+<h3>Description</h3>
+
+<p>Similar to olink_lmer but performs a post hoc analysis based on a linear mixed model effects model using lmerTest::lmer and emmeans::emmeans on proteins.
+See <code>olink_lmer</code> for details of input notation. <br><br>
+The function handles both factor and numerical variables and/or covariates.
+Differences in estimated marginal means are calculated for all pairwise levels of a given variable.
+Degrees of freedom are estimated using Satterthwaite’s approximation.
+The posthoc test for a numerical variable compares the difference in means of the outcome variable (default: NPX) for 1 standard deviation difference in the numerical variable, e.g.
+mean NPX at mean(numerical variable) versus mean NPX at mean(numerical variable) + 1*SD(numerical variable).
+The output tibble is arranged by ascending Tukey adjusted p-values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_lmer_posthoc(
+  df,
+  olinkid_list = NULL,
+  variable,
+  outcome = "NPX",
+  random,
+  model_formula,
+  effect,
+  effect_formula,
+  covariates = NULL,
+  mean_return = FALSE,
+  post_hoc_padjust_method = "tukey",
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>NPX data frame in long format with at least protein name (Assay), OlinkID, UniProt, 1-2 variables with at least 2 levels and subject ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>olinkid_list</code></td>
+<td>
+<p>Character vector of OlinkID's on which to perform post hoc analysis. If not specified, all assays in df are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p>Single character value or character array.
+Variable(s) to test. If length &gt; 1, the included variable names will be used in crossed analyses .
+Also takes ':' or '*' notation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>Character. The dependent variable. Default: NPX.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>random</code></td>
+<td>
+<p>Single character value or character array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model_formula</code></td>
+<td>
+<p>(optional) Symbolic description of the model to be fitted in standard formula notation (e.g. "NPX~A*B + (1|ID)"). If provided, this will override the <code>outcome</code>, <code>variable</code> and <code>covariates</code> arguments. Can be a string or of class <code>stats::formula()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effect</code></td>
+<td>
+<p>Term on which to perform post-hoc. Character vector. Must be subset of or identical to variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effect_formula</code></td>
+<td>
+<p>(optional) A character vector specifying the names of the predictors over which estimated marginal means are desired as defined in the <code>emmeans</code> package. May also be a formula. If provided, this will override the <code>effect</code> argument. See <code>?emmeans::emmeans()</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covariates</code></td>
+<td>
+<p>Single character value or character array. Default: NULL. Covariates to include. Takes ':' or '*' notation. Crossed analysis will not be inferred from main effects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean_return</code></td>
+<td>
+<p>Boolean. If true, returns the mean of each factor level rather than the difference in means (default). Note that no p-value is returned for mean_return = TRUE and no adjustment is performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>post_hoc_padjust_method</code></td>
+<td>
+<p>P-value adjustment method to use for post-hoc comparisons within an assay. Options include <code>tukey</code>, <code>sidak</code>, <code>bonferroni</code> and <code>none</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A "tibble" containing the results of the pairwise comparisons between given variable levels for proteins specified in olinkid_list (or full df).
+Columns include:
+</p>
+
+<ul>
+<li>
+<p>Assay: "character" Protein symbol
+</p>
+</li>
+<li>
+<p>OlinkID: "character" Olink specific ID
+</p>
+</li>
+<li>
+<p>UniProt: "character" UniProt ID
+</p>
+</li>
+<li>
+<p>Panel: "character" Name of Olink Panel
+</p>
+</li>
+<li>
+<p>term: "character" term in model
+</p>
+</li>
+<li>
+<p>contrast: "character" the groups that were compared
+</p>
+</li>
+<li>
+<p>estimate: "numeric" difference in mean NPX between groups
+</p>
+</li>
+<li>
+<p>conf.low: "numeric" confidence interval for the mean (lower end)
+</p>
+</li>
+<li>
+<p>conf.high: "numeric" confidence interval for the mean (upper end)
+</p>
+</li>
+<li>
+<p>Adjusted_pval: "numeric" adjusted p-value for the test
+</p>
+</li>
+<li>
+<p>Threshold: "character" if adjusted p-value is significant or not (&lt; 0.05)
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(dplyr)
+if (requireNamespace("lme4", quietly = TRUE) &amp; requireNamespace("lmerTest", quietly = TRUE)){
+
+lmer_results &lt;- olink_lmer(df = npx_data1,
+                           variable=c("Time", 'Treatment'),
+                           random = c('Subject'))
+
+assay_list &lt;- lmer_results %&gt;%
+    filter(Threshold == 'Significant' &amp; term == 'Time:Treatment') %&gt;%
+    select(OlinkID) %&gt;%
+    distinct() %&gt;%
+    pull()
+
+results_lmer_posthoc &lt;- olink_lmer_posthoc(df = npx_data1,
+                                           olinkid_list = assay_list,
+                                           variable=c("Time", 'Treatment'),
+                                           effect = 'Time:Treatment',
+                                           random = 'Subject',
+                                           verbose = TRUE)
+
+#Estimate treated vs untreated at each timepoint
+
+
+results_lmer_posthoc &lt;- olink_lmer_posthoc(df = npx_data1,
+                                           olinkid_list = assay_list,
+                                           model_formula = "NPX~Time*Treatment+(1|Subject)",
+                                           effect_formula = "pairwise~Treatment|Time",
+                                           verbose = TRUE)
+}
+
+
+</code></pre>
+
+
+</div>

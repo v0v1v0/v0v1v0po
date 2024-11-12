@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opq_csv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Transform an Overpass query to return the result in a csv format</h2>
+
+<h3>Description</h3>
+
+<p>Transform an Overpass query to return the result in a csv format
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opq_csv(q, fields, header = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>A opq string or an object of class <code>overpass_query</code> constructed with
+opq or alternative opq builders (+ add_osm_feature/s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fields</code></td>
+<td>
+<p>a character vector with the field names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header</code></td>
+<td>
+<p>if <code>FALSE</code>, do not ask for column names.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The output format <code>csv</code>, ask for results in csv. See
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#CSV_output_mode">CSV output mode</a>
+for details. To get the data, use osmdata_data_frame.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code>overpass_query</code> or string with the prefix changed to
+return a csv.
+</p>
+
+
+<h3>Note</h3>
+
+<p>csv queries that reach the timeout will return a 0 row data.frame
+without any warning. Increase <code>timeout</code> in <code>q</code> if you don't see the
+expected result.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other queries: 
+<code>add_osm_features()</code>,
+<code>add_osm_feature()</code>,
+<code>bbox_to_string()</code>,
+<code>getbb()</code>,
+<code>opq_around()</code>,
+<code>opq_enclosing()</code>,
+<code>opq_osm_id()</code>,
+<code>opq_string()</code>,
+<code>opq()</code>,
+<code>overpass_status()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+q &lt;- getbb ("Catalan Countries", format_out = "osm_type_id") %&gt;%
+    opq (out = "tags center", osm_type = "relation", timeout = 100) %&gt;%
+    add_osm_feature ("admin_level", "7") %&gt;%
+    add_osm_feature ("boundary", "administrative") %&gt;%
+    opq_csv (fields = c("name", "::type", "::id", "::lat", "::lon"))
+comarques &lt;- osmdata_data_frame (q) # without timeout parameter, 0 rows
+
+qid&lt;- opq_osm_id (
+    type = "relation",
+    id = c ("341530", "1809102", "1664395", "343124"),
+    out = "tags"
+) %&gt;%
+    opq_csv (fields = c ("name", "name:ca"))
+cities &lt;- osmdata_data_frame (qid)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

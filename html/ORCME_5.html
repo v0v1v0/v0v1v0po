@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotCluster</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plotting the gene specific profiles for one given cluster of genes</h2>
+
+<h3>Description</h3>
+
+<p>The function is plotting the profiles of the genes that belongs to the same cluster. It is not providing the clustering itself, just plotting the results of clustering from input. Optionally, the function can center the profiles around the gene-specific means. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotCluster(DRdata, doseData, ORCMEoutput, clusterID, 
+zeroMean=FALSE, xlabel, ylabel, main="")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>DRdata</code></td>
+<td>
+<p>the microarray data with rows corresponding to genes and columns 
+corresponding to time points or different doses</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doseData</code></td>
+<td>
+<p>indicates the dose levels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ORCMEoutput</code></td>
+<td>
+<p>the matrix of classification into clusters: each row represents one gene and columns found clusters. The matrix consist of the Booleans values, in each row there is only one of them TRUE which means that the gene was classified into the respective gene</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clusterID</code></td>
+<td>
+<p>id of the cluster to be plotted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zeroMean</code></td>
+<td>
+<p>if TRUE, it centers the gene profiles around the gene-specific means, default is FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlabel</code></td>
+<td>
+<p>a title for the x axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylabel</code></td>
+<td>
+<p>a title for the y axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>an overall title for the plot</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Plot of the gene specific profiles dependent one the dose level (or time point) that are classified into the given cluster. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adetayo Kasim, Martin Otava and Tobias Verbeke</p>
+
+
+<h3>References</h3>
+
+<p>Lin D., Shkedy Z., Yekutieli D., Amaratunga D., and Bijnens, 
+L. (editors). (2012) Modeling Dose-response Microarray
+Data in Early   Drug Development Experiments Using 
+R. Springer.
+</p>
+<p>Cheng, Y. and Church, G. M. (2000). Biclustering of expression data. In:
+Proceedings of the Eighth International Conference on Intelligent Systems for
+Molecular Biology, 1, 93-103.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ORCME</code>, <code>plotIsomeans</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  data(doseData)
+  data(geneData)
+
+  
+  dirData &lt;- monotoneDirection(geneData = geneData,doseData = doseData)
+  incData &lt;- as.data.frame(dirData$incData)
+  ORCMEoutput &lt;- ORCME(DRdata=incData,lambda=0.15,phi=2)
+  
+  plotCluster(DRdata=incData,doseData=doseData, ORCMEoutput=ORCMEoutput,
+  clusterID=4,zeroMean=FALSE, xlabel="Dose",ylabel="Gene Expression")
+  
+</code></pre>
+
+
+</div>

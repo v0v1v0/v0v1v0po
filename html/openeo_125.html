@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_sample</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get sample data</h2>
+
+<h3>Description</h3>
+
+<p>In order to inspect data locally a very small spatial extent will be processed, downloaded and made available in R.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_sample(
+  graph,
+  replace_aoi = TRUE,
+  spatial_extent = NULL,
+  execution = "sync",
+  immediate = TRUE,
+  con = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>graph</code></td>
+<td>
+<p>a ProcessGraph, a Process or the final node in a process for which the sample shall be calculated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replace_aoi</code></td>
+<td>
+<p>a logical flag to indicate whether or not the original spatial extent shall be substituted with a different one, default TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spatial_extent</code></td>
+<td>
+<p>a bounding box or a spatial feature from which to derive a bounding box</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>execution</code></td>
+<td>
+<p><code>sync</code> or <code>async</code> which indicates the processing chain, a not "async" value results in a synchronous processing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>immediate</code></td>
+<td>
+<p>flag to be considered if the retrieval shall be immediately queued on the back-end</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>con</code></td>
+<td>
+<p>connected and authenticated openEO client (optional) otherwise <code>active_connection()</code>
+is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional parameters that are passed to <code>compute_result()</code> or <code>create_job()</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In order to get a better understanding about the processing mechanisms and the data structures used in the openEO back-end,
+it helps to check the actual data from time to time. This function aids the user in doing to. It replaces all spatial
+extents of the derived process graph with a new spatial extent which is calculated by the first spatial extent of the
+mandatory openEO process 'load_collection'. We take the center of the extent and add 0.0003 degrees to it. In case the
+coordinate reference system is not in WGS84, then the bounding box will be transformed into geodetic WGS84 beforehand, if
+the package 'sf' is present.
+</p>
+<p>If the spatial extent was explicitly set to a small custom extent, then you can disable the replacement of the area of
+interest with <code>replace_aoi = FALSE</code>.
+</p>
+
+
+</div>

@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OBMb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Objective Bayesian Analysis for the Mb Capture-Recapture Model</h2>
+
+<h3>Description</h3>
+
+<p>Applies an objective Bayesian method on to the Mb capturere-capture model to estimate the population size N.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OBMb(k, n, M, x, CI1 = 0.025, CI2 = 0.975, max = 10000, IFMLE = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Number of sampling occasions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Total number of distinct animals captured</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>Number of marked animals captured in all sampling occasions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The number of new animals captured at each sampling occasion</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CI1</code></td>
+<td>
+<p>Lower confidence level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CI2</code></td>
+<td>
+<p>Upper confidence level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max</code></td>
+<td>
+<p>The maximum of function evaluations used for computing the integrated likelihood L(N|X)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>IFMLE</code></td>
+<td>
+<p>Logical, will also print MLE results if TRUE</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+
+<ul>
+<li>
+<p>EMEAN: Posterior mean for N
+</p>
+</li>
+<li>
+<p>EMEDIAN: Posterior median for N
+</p>
+</li>
+<li> <p>OBCI: Credible interval values based on the quantiles specified by CI1 and CI2
+</p>
+</li>
+<li> <p>MLE: If IFMLE==TRUE, this is the frequentist MLE for N
+</p>
+</li>
+<li> <p>Ep: If IFMLE==TRUE, the frequentist estimate of the initial capture probability p
+</p>
+</li>
+<li> <p>MLECI: If IFMLE==TRUE, confidence interval for the MLE quantile specified by CI2
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Data simulation example
+k=10
+tN=600   #True N
+p=0.06
+JN=rep(0,k+1)
+
+N=rep(0,k)
+x=rep(0,k)
+for (j in 1:k){
+  N[j]=tN-JN[j]
+  x[j]=rbinom(1,N[j],p)
+  JN[j+1]=JN[j]+x[j]
+}
+M=sum(JN[1:k])
+n=JN[k+1]
+
+OBMb(k=k,n=n,M=M,x=x)
+
+#Deer mouse example from Otis et al 1978
+Data&lt;-c(15, 8, 6, 3, 3, 3)   #new animals captured at each sampling occasion
+
+OBMb(k=6,n=38,M=134,x=Data)
+</code></pre>
+
+
+</div>

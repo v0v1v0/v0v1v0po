@@ -1,0 +1,180 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opencage_reverse</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reverse geocoding</h2>
+
+<h3>Description</h3>
+
+<p><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="Soft-deprecated lifecycle"></p>
+<p>Soft deprecated: use <code>oc_reverse</code> or <code>oc_reverse_df</code> for reverse geocoding.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opencage_reverse(
+  latitude,
+  longitude,
+  key = opencage_key(),
+  bounds = NULL,
+  countrycode = NULL,
+  language = NULL,
+  limit = 10,
+  min_confidence = NULL,
+  no_annotations = FALSE,
+  no_dedupe = FALSE,
+  no_record = FALSE,
+  abbrv = FALSE,
+  add_request = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>latitude</code></td>
+<td>
+<p>Numeric vectors of latitude and longitude values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>longitude</code></td>
+<td>
+<p>Numeric vectors of latitude and longitude values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>Your OpenCage API key as a character vector of length one. By
+default, <code>opencage_key()</code> will attempt to retrieve the key from the
+environment variable <code>OPENCAGE_KEY</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bounds</code></td>
+<td>
+<p>Bounding box, ignored for reverse geocoding.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>countrycode</code></td>
+<td>
+<p>Country code, ignored for reverse geocoding.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>An <a href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF BCP 47 language tag</a> (such as "es" for
+Spanish or "pt-BR" for Brazilian Portuguese). OpenCage will attempt to
+return results in that language. Alternatively you can specify the "native"
+tag, in which case OpenCage will attempt to return the response in the
+"official" language(s). In case the <code>language</code> parameter is set to <code>NULL</code>
+(which is the default), the tag is not recognized, or OpenCage does not
+have a record in that language, the results will be returned in English.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>How many results should be returned (1-100), ignored for reverse
+geocoding.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_confidence</code></td>
+<td>
+<p>Numeric vector of integer values between 0 and 10
+indicating the precision of the returned result as defined by its
+geographical extent, (i.e. by the extent of the result's bounding box). See
+the <a href="https://opencagedata.com/api#confidence">API documentation</a> for
+details. Only results with at least the requested confidence will be
+returned. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no_annotations</code></td>
+<td>
+<p>Logical vector indicating whether additional
+information about the result location should be returned. <code>TRUE</code> by
+default, which means that the results will not contain annotations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no_dedupe</code></td>
+<td>
+<p>Logical vector (default <code>FALSE</code>), when <code>TRUE</code> the results
+will not be deduplicated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no_record</code></td>
+<td>
+<p>Logical vector of length one (default <code>FALSE</code>), when <code>TRUE</code>
+no log entry of the query is created, and the geocoding request is not
+cached by OpenCage.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abbrv</code></td>
+<td>
+<p>Logical vector (default <code>FALSE</code>), when <code>TRUE</code> addresses in the
+<code>formatted</code> field of the results are abbreviated (e.g. "Main St." instead
+of "Main Street").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_request</code></td>
+<td>
+<p>Logical vector (default <code>FALSE</code>) indicating whether the
+request is returned again with the results. If the <code>return</code> value is a
+<code>df_list</code>, the query text is added as a column to the results. <code>json_list</code>
+results will contain all request parameters, including the API key used!
+This is currently ignored by OpenCage if return value is <code>geojson_list</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with
+</p>
+
+<ul>
+<li>
+<p> results as a tibble with one line per result,
+</p>
+</li>
+<li>
+<p> the number of results as an integer,
+</p>
+</li>
+<li>
+<p> the timestamp as a POSIXct object,
+</p>
+</li>
+<li>
+<p> rate_info tibble/data.frame with the maximal number of API calls  per
+day for the used key, the number of remaining calls for the day and the time
+at which the number of remaining calls will be reset.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+opencage_reverse(
+  latitude = 0, longitude = 0,
+  limit = 2
+)
+
+</code></pre>
+
+
+</div>

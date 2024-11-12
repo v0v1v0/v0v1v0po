@@ -1,0 +1,318 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordSmooth</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Smoothing dummy coefficients of ordinal predictors</h2>
+
+<h3>Description</h3>
+
+<p>Fits dummy coefficients of ordinally scaled independent variables
+with the sum of squared differences of adjacent dummy coefficients being penalized.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordSmooth(x, y, u = NULL, z = NULL, offset = rep(0,length(y)), lambda, 
+  model = c("linear", "logit", "poisson"), restriction = c("refcat", "effect"),
+  penscale = identity, scalex = TRUE, nonpenx = NULL, eps = 1e-3, delta = 1e-6, 
+  maxit = 25, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the matrix (or <code>data.frame</code>) of ordinal predictors, with each 
+column corresponding to one predictor and containing numeric values from 
+{1,2,...}; for each covariate, category 1 is taken as reference category 
+with zero dummy coefficient.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>the response vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>u</code></td>
+<td>
+<p>a matrix (or <code>data.frame</code>) of additional categorical (nominal) 
+predictors, with each column corresponding to one (additional) predictor 
+and containing numeric values {1,2,...}; corresponding dummy coefficients
+will not be penalized, and for each covariate category 1 is taken as reference category.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>a matrix (or <code>data.frame</code>) of additional metric predictors, with 
+each column corresponding to one (additional) predictor; corresponding
+coefficients will not be penalized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>vector of offset values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>vector of penalty parameters (in decreasing order).
+Optimization starts with the first component. See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>the model which is to be fitted. Possible choices are "linear"
+(default), "logit" or "poisson". See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>restriction</code></td>
+<td>
+<p>identifiability restriction for dummy coding. "reference" takes category 1 is as reference category (default), while with "effect" dummy coefficients sum up to 0 (known as effect coding).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penscale</code></td>
+<td>
+<p>rescaling function to adjust the value of the penalty
+parameter to the degrees of freedom of the parameter group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scalex</code></td>
+<td>
+<p>logical. Should (split-coded) design matrix corresponding to <code>x</code> be scaled to have unit variance over columns before fitting? See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nonpenx</code></td>
+<td>
+<p>vector of indices indicating columns of
+<code>x</code> whose regression coefficients are not penalized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>a (small) constant to be added to the columnwise standard
+deviations when scaling the design matrix, to control the effect of very small
+stds. See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>a small positive convergence tolerance which is used as stopping
+criterion for the penalized Fisher scoring when a logit or poisson model
+is fitted. See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>integer given the maximal number of (penalized) Fisher scoring
+iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The method assumes that categorical covariates (contained in <code>x</code> and 
+<code>u</code>) take values 1,2,...,max, where max denotes the (columnwise) highest 
+level observed in the data. If any level between 1 and max is not observed for an ordinal predictor, 
+a corresponding (dummy) coefficient is fitted anyway. If any level &gt; max is 
+not observed but possible, and a corresponding coefficient is to 
+be fitted, the easiest way is to add a corresponding row to <code>x</code> (and 
+<code>u</code>,<code>z</code>) with corresponding <code>y</code> value being <code>NA</code>.
+</p>
+<p>If a linear regression model is fitted, response vector <code>y</code> may contain 
+any numeric values; if a logit model is fitted, <code>y</code> has to be 0/1 coded;
+if a poisson model is fitted, <code>y</code> has to contain count data. 
+</p>
+<p>If <code>scalex</code> is <code>TRUE</code>, (split-coded) design matrix constructed from <code>x</code> is scaled to have 
+unit variance over columns. If a certain <code>x</code>-category, 
+however, is observed only a few times, variances may become very small and
+scaling has enormous effects on the result and may cause numerical problems.
+Hence a small constant <code>eps</code> can be added to each standard deviation 
+when used for scaling. 
+</p>
+<p>A logit or poisson model is fitted by penalized Fisher scoring. For stopping 
+the iterations the criterion <code>sqrt(sum((b.new-b.old)^2)/sum(b.old^2)) &lt; delta</code>
+is used. 
+</p>
+<p>Please note, <code>ordSmooth</code> is intended for use with high-dimensional ordinal predictors; more precisely, if the number of ordinal predictors is large. Package <code>ordPens</code>, however, also includes auxiliary functions such that <code>gam</code> from <code>mgcv</code> can be used for fitting generalized linear and additive models with first- and second-order ordinal smoothing penalty as well as built-in smoothing parameter selection. In addition, <code>mgcv</code> tools for further statistical inference can be used. Note, however, significance of smooth (ordinal) terms is only reliable in case of the second-order penalty. Also note, if using <code>gam</code>, dummy coefficients/fitted functions are centered over the data observed. For details, please see Gertheiss et al. (2021) and examples below.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>ordPen</code> object, which is a list containing:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>fitted</code></td>
+<td>
+<p>the matrix of fitted response values of the training data. 
+Columns correspond to different <code>lambda</code> values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coefficients</code></td>
+<td>
+<p>the matrix of fitted coefficients with respect to 
+dummy-coded (ordinal or nominal) categorical input variables (including the
+reference category) as well as metric predictors. Columns correspond to 
+different lambda values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>the type of the fitted model: "linear", "logit", or "poisson".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>restriction</code></td>
+<td>
+<p>the type of restriction used for identifiability.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>the used lambda values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fraction</code></td>
+<td>
+<p>the used fraction values (<code>NULL</code> in case of <code>ordSmooth</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlevels</code></td>
+<td>
+<p>a vector giving the number of levels of the ordinal predictors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ulevels</code></td>
+<td>
+<p>a vector giving the number of levels of the nominal predictors (if any).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zcovars</code></td>
+<td>
+<p>the number of metric covariates (if any).</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Jan Gertheiss, Aisouda Hoshiyar</p>
+
+
+<h3>References</h3>
+
+<p>Gertheiss, J., F. Scheipl, T. Lauer, and H. Ehrhardt (2022). <em>Statistical 
+inference for ordinal predictors in generalized linear and additive models with
+application to bronchopulmonary dysplasia</em>. BMC research notes, 15, 112.
+</p>
+<p>Gertheiss, J. and G. Tutz (2009). <em>Penalized regression with ordinal 
+predictors</em>. International Statistical Review, 77, 345-365.
+</p>
+<p>Tutz, G. and J. Gertheiss (2014). <em>Rating scales as predictors – the old
+question of scale level and some answers</em>. Psychometrica, 79, 357-376.
+</p>
+<p>Tutz, G. and J. Gertheiss (2016). <em>Regularized regression for categorical data</em>. Statistical Modelling, 16, 161-200. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plot.ordPen</code>, <code>predict.ordPen</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># smooth modeling of a simulated dataset
+set.seed(123)
+
+# generate (ordinal) predictors
+x1 &lt;- sample(1:8,100,replace=TRUE)
+x2 &lt;- sample(1:6,100,replace=TRUE)
+x3 &lt;- sample(1:7,100,replace=TRUE)
+
+# the response
+y &lt;- -1 + log(x1) + sin(3*(x2-1)/pi) + rnorm(100)
+
+# x matrix
+x &lt;- cbind(x1,x2,x3)
+
+# lambda values
+lambda &lt;- c(1000,500,200,100,50,30,20,10,1)
+
+# smooth modeling
+osm1 &lt;- ordSmooth(x = x, y = y, lambda = lambda)
+
+# results
+round(osm1$coef,digits=3)
+plot(osm1)
+
+# If for a certain plot the x-axis should be annotated in a different way,
+# this can (for example) be done as follows:
+plot(osm1, whx = 1, xlim = c(0,9), xaxt = "n")
+axis(side = 1, at = c(1,8), labels = c("no agreement","total agreement"))
+
+# add a nominal covariate to control for
+u1 &lt;- sample(1:8,100,replace=TRUE)
+u &lt;- cbind(u1)
+osm2 &lt;- ordSmooth(x = x, y = y, u = u, lambda = lambda)
+round(osm2$coef,digits=3)
+
+
+## Use gam() from mgcv for model fitting:
+# ordinal predictors need to be ordered factors
+x1 &lt;- as.ordered(x1)
+x2 &lt;- as.ordered(x2)
+x3 &lt;- as.ordered(x3)
+
+# model fitting with first-order penalty and smoothing parameter selection by REML
+gom1 &lt;- gam(y ~ s(x1, bs = "ordinal", m = 1) + s(x2, bs = "ordinal", m = 1) + 
+s(x3, bs = "ordinal", m = 1) + factor(u1), method = "REML")
+
+# plot with confidence intervals
+plot(gom1)
+
+# use second-order penalty instead
+gom2 &lt;- gam(y ~ s(x1, bs = "ordinal", m = 2) + s(x2, bs = "ordinal", m = 2) + 
+s(x3, bs = "ordinal", m = 2) + factor(u1), method = "REML")
+
+# summary including significance of smooth terms
+# please note, the latter is only reliable for m = 2
+summary(gom2)
+
+# plotting
+plot(gom2)
+</code></pre>
+
+
+</div>

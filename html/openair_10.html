@@ -1,0 +1,242 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>corPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Correlation matrices with conditioning</h2>
+
+<h3>Description</h3>
+
+<p>Function to to draw and visualise correlation matrices using lattice. The
+primary purpose is as a tool for exploratory data analysis. Hierarchical
+clustering is used to group similar variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">corPlot(
+  mydata,
+  pollutants = NULL,
+  type = "default",
+  cluster = TRUE,
+  method = "pearson",
+  use = "pairwise.complete.obs",
+  dendrogram = FALSE,
+  lower = FALSE,
+  cols = "default",
+  r.thresh = 0.8,
+  text.col = c("black", "black"),
+  auto.text = TRUE,
+  plot = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame which should consist of some numeric columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutants</code></td>
+<td>
+<p>the names of data-series in <code>mydata</code> to be plotted by
+<code>corPlot</code>. The default option <code>NULL</code> and the alternative
+“all” use all available valid (numeric) data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>type</code> determines how the data are split i.e. conditioned,
+and then plotted. The default is will produce a single plot using the
+entire data. Type can be one of the built-in types as detailed in
+<code>cutData</code> e.g. “season”, “year”, “weekday” and so
+on. For example, <code>type = "season"</code> will produce four plots — one for
+each season.
+</p>
+<p>It is also possible to choose <code>type</code> as another variable in the data
+frame. If that variable is numeric, then the data will be split into four
+quantiles (if possible) and labelled accordingly. If type is an existing
+character or factor variable, then those categories/levels will be used
+directly. This offers great flexibility for understanding the variation of
+different variables and how they depend on one another.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>Should the data be ordered according to cluster analysis. If
+<code>TRUE</code> hierarchical clustering is applied to the correlation matrices
+using <code>hclust</code> to group similar variables together. With many
+variables clustering can greatly assist interpretation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>The correlation method to use. Can be “pearson”,
+“spearman” or “kendall”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use</code></td>
+<td>
+<p>How to handle missing values in the <code>cor</code> function. The default is
+"pairwise.complete.obs". Care should be taken with the choice of how to
+handle missing data when considering pair-wise correlations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dendrogram</code></td>
+<td>
+<p>Should a dendrogram be plotted? When <code>TRUE</code> a
+dendrogram is shown on the right of the plot. Note that this will only work
+for <code>type = "default"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+<p>Should only the lower triangle be plotted?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>Colours to be used for plotting. Options include
+“default”, “increment”, “heat”, “spectral”,
+“hue”, “greyscale” and user defined (see <code>openColours</code>
+for more details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.thresh</code></td>
+<td>
+<p>Values of greater than <code>r.thresh</code> will be shown in bold
+type. This helps to highlight high correlations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text.col</code></td>
+<td>
+<p>The colour of the text used to show the correlation values.
+The first value controls the colour of negative correlations and the second
+positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.text</code></td>
+<td>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code>
+titles and axis labels will automatically try and format pollutant names
+and units properly e.g.  by subscripting the ‘2’ in NO2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should a plot be produced? <code>FALSE</code> can be useful when
+analysing data to extract corPlot components and plotting them in other
+ways.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other graphical parameters passed onto <code>lattice:levelplot</code>,
+with common axis and title labelling options (such as <code>xlab</code>,
+<code>ylab</code>, <code>main</code>) being passed via <code>quickText</code> to handle
+routine formatting.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>corPlot</code> function plots correlation matrices. The implementation
+relies heavily on that shown in Sarkar (2007), with a few extensions.
+</p>
+<p>Correlation matrices are a very effective way of understating relationships
+between many variables. The <code>corPlot</code> shows the correlation coded in
+three ways: by shape (ellipses), colour and the numeric value. The ellipses
+can be thought of as visual representations of scatter plot. With a perfect
+positive correlation a line at 45 degrees positive slope is drawn. For zero
+correlation the shape becomes a circle. See examples below.
+</p>
+<p>With many different variables it can be difficult to see relationships
+between variables, i.e., which variables tend to behave most like one
+another. For this reason hierarchical clustering is applied to the
+correlation matrices to group variables that are most similar to one another
+(if <code>cluster = TRUE</code>).
+</p>
+<p>If clustering is chosen it is also possible to add a dendrogram using the
+option <code>dendrogram = TRUE</code>. Note that dendrogramscan only be plotted for
+<code>type = "default"</code> i.e. when there is only a single panel. The
+dendrogram can also be recovered from the plot object itself and plotted more
+clearly; see examples below.
+</p>
+<p>It is also possible to use the <code>openair</code> type option to condition the
+data in many flexible ways, although this may become difficult to visualise
+with too many panels.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an openair object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw — but mostly based on code contained in Sarkar (2007)
+</p>
+
+
+<h3>References</h3>
+
+<p>Sarkar, D. (2007). Lattice Multivariate Data Visualization with
+R. New York: Springer.
+</p>
+<p>Friendly, M. (2002). Corrgrams : Exploratory displays for correlation
+matrices. American Statistician, 2002(4), 1-16. doi:10.1198/000313002533
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>taylor.diagram</code> from the <code>plotrix</code> package from which
+some of the annotation code was used.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## basic corrgram plot
+corPlot(mydata)
+## plot by season ... and so on
+corPlot(mydata, type = "season")
+## recover dendrogram when cluster = TRUE and plot it
+res &lt;-corPlot(mydata)
+plot(res$clust)
+## Not run: 
+## a more interesting are hydrocarbon measurements
+hc &lt;- importAURN(site = "my1", year = 2005, hc = TRUE)
+## now it is possible to see the hydrocarbons that behave most
+## similarly to one another
+corPlot(hc)
+
+## End(Not run)
+
+
+</code></pre>
+
+
+</div>

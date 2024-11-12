@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mds_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot morphospace from MDS</h2>
+
+<h3>Description</h3>
+
+<p>Wrapper function for plotting morphospaces obtained using the MultiScale.simmap' function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mds_plot(MD, Tslice = max(MD$Points$time))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>MD</code></td>
+<td>
+<p>list. A list with the morphospace information obtained using the 'MultiScale.simmap' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Tslice</code></td>
+<td>
+<p>numeric. The value for the temporal slices to be plotted, from root to tip. For example, if Tslice = 25, then all points in the morphospaces from time 0 (root) to 25 will be plotted.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class ggplot with the morphospace to be plotted.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Diego Porto
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Select a few taxa from main lineages of Hymenoptera.
+tax &lt;- c("Xyela", "Tenthredo", "Orussus", "Pimpla",
+         "Ceraphron", "Evania", "Pison",
+         "Ibalia", "Proctotrupes", "Chiloe") 
+drop_tax &lt;- hym_stm_mds$tip.label[!hym_stm_mds$tip.label %in% tax]
+hym_stm_mds &lt;- phytools::drop.tip.simmap(hym_stm_mds, drop_tax)
+# Get a sample of amalgamated stochastic map (phenome).
+tree &lt;- merge_tree_cat(hym_stm_mds)
+
+ 
+  # Multidimensional scaling for an arbitrary tree.
+  MD &lt;- suppressWarnings(MultiScale.simmap(tree))
+
+  MD_plot &lt;- mds_plot(MD, Tslice = 10)
+  MD_plot
+  MD_plot &lt;- mds_plot(MD, Tslice = 50)
+  MD_plot
+  MD_plot &lt;- mds_plot(MD, Tslice = 200)
+  MD_plot
+  MD_plot &lt;- mds_plot(MD, Tslice = 280)
+  MD_plot
+
+
+
+</code></pre>
+
+
+</div>

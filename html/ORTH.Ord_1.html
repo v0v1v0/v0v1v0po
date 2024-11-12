@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ORTH.Ord</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>function: ORTH.Ord</h2>
+
+<h3>Description</h3>
+
+<p>This function is designed for analyzing correlated ordinal data with ability to correct small-sample bias.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ORTH.Ord(
+  formula_mean,
+  data_mean,
+  cluster,
+  formula_por = NULL,
+  data_por = NULL,
+  MMORTH = FALSE,
+  BC = NULL,
+  init_beta = NULL,
+  init_alpha = NULL,
+  miter = 30,
+  crit_level = 1e-04
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula_mean</code></td>
+<td>
+<p>the symbolic description of the marginal mean model that contains the ordinal outcome and marginal mean covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_mean</code></td>
+<td>
+<p>the data set containing the ordinal outcome and marginal mean covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>cluster ID (consecutive integers) in data_mean.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula_por</code></td>
+<td>
+<p>the symbolic description of marginal association model in the form of a one-sided formula, default is NULL. When leaving formula_por as default, independence working correlation will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_por</code></td>
+<td>
+<p>a data set for marginal association model, default is NULL. When leaving data_por as default, independence working correlation will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MMORTH</code></td>
+<td>
+<p>a logical value to indicate if matrix-adjusted estimating equations will be applied for the association estimation, default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BC</code></td>
+<td>
+<p>an option to apply bias-correction on covariance estimation, default is NULL. Possible values are "BC1", "BC2", or "BC3".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>init_beta</code></td>
+<td>
+<p>pre-specified starting values for parameters in the mean model, default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>init_alpha</code></td>
+<td>
+<p>pre-specified starting values for parameters in the association model, default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>miter</code></td>
+<td>
+<p>maximum number of iterations for Fisher scoring, default is 30.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit_level</code></td>
+<td>
+<p>tolerance for convergence, default is 0.0001.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The method is a modified version of alternating logistic regressions with estimation based on orthogonalized residuals (ORTH).
+The within-cluster association between ordinal responses is modeled by global pairwise odds ratios (POR).
+A small-sample bias correction to POR parameter estimates based on matrix multiplicative adjusted orthogonalized residuals (MMORTH)
+for correcting estimating equations, and bias-corrected sandwich estimators with different options for covariance estimation,
+i.e. BC1 (Kauermann &amp; Zeger (1986)), BC2 (Mancl &amp; DeRouen (2001)), and BC3 (Fay &amp; Graubard (2001)).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list is returned. The first element is a matrix for model parameter estimates; the second element is a variance-covariance matrix for model parameters without bias correction (BC0). Additional variance-covarianc matrices will be added if argument BC is specified.
+</p>
+
+
+<h3>References</h3>
+
+<p>Can Meng, Mary Ryan, Paul Rathouz, Elizabeth Turner, John S Preisser, and Fan Li. 2023. ORTH.Ord: An R package for analyzing correlated ordinal outcomes using alternating logistic regressions with orthogonalized residuals. <em>Computer Methods and Programs in Biomedicine</em>, 237, <a href="https://doi.org/10.1016/j.cmpb.2023.107567">doi:10.1016/j.cmpb.2023.107567</a>.
+</p>
+
+
+</div>

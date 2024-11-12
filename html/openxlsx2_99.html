@@ -1,0 +1,244 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_worksheet</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a worksheet to a workbook</h2>
+
+<h3>Description</h3>
+
+<p>Add a worksheet to a wbWorkbook is the first step to build a workbook.
+With the function, you can also set the sheet view with <code>zoom</code>, set headers
+and footers as well as other features. See the function arguments.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_worksheet(
+  wb,
+  sheet = next_sheet(),
+  grid_lines = TRUE,
+  row_col_headers = TRUE,
+  tab_color = NULL,
+  zoom = 100,
+  header = NULL,
+  footer = NULL,
+  odd_header = header,
+  odd_footer = footer,
+  even_header = header,
+  even_footer = footer,
+  first_header = header,
+  first_footer = footer,
+  visible = c("true", "false", "hidden", "visible", "veryhidden"),
+  has_drawing = FALSE,
+  paper_size = getOption("openxlsx2.paperSize", default = 9),
+  orientation = getOption("openxlsx2.orientation", default = "portrait"),
+  hdpi = getOption("openxlsx2.hdpi", default = getOption("openxlsx2.dpi", default = 300)),
+  vdpi = getOption("openxlsx2.vdpi", default = getOption("openxlsx2.dpi", default = 300)),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A <code>wbWorkbook</code> object to attach the new worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name for the new worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grid_lines</code></td>
+<td>
+<p>A logical. If <code>FALSE</code>, the worksheet grid lines will be
+hidden.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row_col_headers</code></td>
+<td>
+<p>A logical. If <code>FALSE</code>, the worksheet colname and rowname will be
+hidden.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tab_color</code></td>
+<td>
+<p>Color of the sheet tab. A  <code>wb_color()</code>,  a valid color (belonging to
+<code>grDevices::colors()</code>) or a valid hex color beginning with "#".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zoom</code></td>
+<td>
+<p>The sheet zoom level, a numeric between 10 and 400 as a
+percentage. (A zoom value smaller than 10 will default to 10.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header, odd_header, even_header, first_header, footer, odd_footer, even_footer, first_footer</code></td>
+<td>
+<p>Character vector of length 3 corresponding to positions left, center,
+right.  <code>header</code> and <code>footer</code> are used to default additional arguments.
+Setting <code>even</code>, <code>odd</code>, or <code>first</code>, overrides <code>header</code>/<code>footer</code>. Use <code>NA</code> to
+skip a position.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>visible</code></td>
+<td>
+<p>If <code>FALSE</code>, sheet is hidden else visible.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>has_drawing</code></td>
+<td>
+<p>If <code>TRUE</code> prepare a drawing output (TODO does this work?)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paper_size</code></td>
+<td>
+<p>An integer corresponding to a paper size. See <code>wb_page_setup()</code> for
+details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>orientation</code></td>
+<td>
+<p>One of "portrait" or "landscape"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hdpi, vdpi</code></td>
+<td>
+<p>Horizontal and vertical DPI. Can be set with <code>options("openxlsx2.dpi" = X)</code>,
+<code>options("openxlsx2.hdpi" = X)</code> or <code>options("openxlsx2.vdpi" = X)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Headers and footers can contain special tags
+</p>
+
+<ul>
+<li> <p><strong>&amp;[Page]</strong> Page number
+</p>
+</li>
+<li> <p><strong>&amp;[Pages]</strong> Number of pages
+</p>
+</li>
+<li> <p><strong>&amp;[Date]</strong> Current date
+</p>
+</li>
+<li> <p><strong>&amp;[Time]</strong> Current time
+</p>
+</li>
+<li> <p><strong>&amp;[Path]</strong> File path
+</p>
+</li>
+<li> <p><strong>&amp;[File]</strong> File name
+</p>
+</li>
+<li> <p><strong>&amp;[Tab]</strong> Worksheet name
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>The <code>wbWorkbook</code> object, invisibly.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>grouping-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Create a new workbook
+wb &lt;- wb_workbook()
+
+## Add a worksheet
+wb$add_worksheet("Sheet 1")
+## No grid lines
+wb$add_worksheet("Sheet 2", grid_lines = FALSE)
+## A red tab color
+wb$add_worksheet("Sheet 3", tab_color = wb_color("red"))
+## All options combined with a zoom of 40%
+wb$add_worksheet("Sheet 4", grid_lines = FALSE, tab_color = wb_color(hex = "#4F81BD"), zoom = 40)
+
+## Headers and Footers
+wb$add_worksheet("Sheet 5",
+  header = c("ODD HEAD LEFT", "ODD HEAD CENTER", "ODD HEAD RIGHT"),
+  footer = c("ODD FOOT RIGHT", "ODD FOOT CENTER", "ODD FOOT RIGHT"),
+  even_header = c("EVEN HEAD LEFT", "EVEN HEAD CENTER", "EVEN HEAD RIGHT"),
+  even_footer = c("EVEN FOOT RIGHT", "EVEN FOOT CENTER", "EVEN FOOT RIGHT"),
+  first_header = c("TOP", "OF FIRST", "PAGE"),
+  first_footer = c("BOTTOM", "OF FIRST", "PAGE")
+)
+
+wb$add_worksheet("Sheet 6",
+  header = c("&amp;[Date]", "ALL HEAD CENTER 2", "&amp;[Page] / &amp;[Pages]"),
+  footer = c("&amp;[Path]&amp;[File]", NA, "&amp;[Tab]"),
+  first_header = c(NA, "Center Header of First Page", NA),
+  first_footer = c(NA, "Center Footer of First Page", NA)
+)
+
+wb$add_worksheet("Sheet 7",
+  header = c("ALL HEAD LEFT 2", "ALL HEAD CENTER 2", "ALL HEAD RIGHT 2"),
+  footer = c("ALL FOOT RIGHT 2", "ALL FOOT CENTER 2", "ALL FOOT RIGHT 2")
+)
+
+wb$add_worksheet("Sheet 8",
+  first_header = c("FIRST ONLY L", NA, "FIRST ONLY R"),
+  first_footer = c("FIRST ONLY L", NA, "FIRST ONLY R")
+)
+
+## Need data on worksheet to see all headers and footers
+wb$add_data(sheet = 5, 1:400)
+wb$add_data(sheet = 6, 1:400)
+wb$add_data(sheet = 7, 1:400)
+wb$add_data(sheet = 8, 1:400)
+</code></pre>
+
+
+</div>

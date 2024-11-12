@@ -1,0 +1,188 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stat_rows</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Render plot elements for one matrix of an ordination</h2>
+
+<h3>Description</h3>
+
+<p>These stats merely tell <code>ggplot2::ggplot()</code> which factor of an
+ordination to pull data from for a plot layer. They are invoked internally
+by the various <code>geom_*_*()</code> layers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stat_rows(
+  mapping = NULL,
+  data = data,
+  geom = "point",
+  position = "identity",
+  subset = NULL,
+  elements = "all",
+  ...,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+
+stat_cols(
+  mapping = NULL,
+  data = data,
+  geom = "axis",
+  position = "identity",
+  subset = NULL,
+  elements = "all",
+  ...,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mapping</code></td>
+<td>
+<p>Set of aesthetic mappings created by <code>aes()</code>. If specified and
+<code>inherit.aes = TRUE</code> (the default), it is combined with the default mapping
+at the top level of the plot. You must supply <code>mapping</code> if there is no plot
+mapping.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data to be displayed in this layer. There are three
+options:
+</p>
+<p>If <code>NULL</code>, the default, the data is inherited from the plot
+data as specified in the call to <code>ggplot()</code>.
+</p>
+<p>A <code>data.frame</code>, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+<code>fortify()</code> for which variables will be created.
+</p>
+<p>A <code>function</code> will be called with a single argument,
+the plot data. The return value must be a <code>data.frame</code>, and
+will be used as the layer data. A <code>function</code> can be created
+from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geom</code></td>
+<td>
+<p>The geometric object to use to display the data, either as a
+<code>ggproto</code> <code>Geom</code> subclass or as a string naming the geom stripped of the
+<code>geom_</code> prefix (e.g. <code>"point"</code> rather than <code>"geom_point"</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>position</code></td>
+<td>
+<p>Position adjustment, either as a string naming the adjustment
+(e.g. <code>"jitter"</code> to use <code>position_jitter</code>), or the result of a call to a
+position adjustment function. Use the latter if you need to change the
+settings of the adjustment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p>An integer, logical, or character vector indicating a subset of
+rows or columns for which to render graphical elements. NB: Internally, the
+<code>subset</code> will be taken from the rows of the fortified
+'tbl_ord' comprising rows from only one of the matrix factors. It is still
+possible to pass a formula to the <code>data</code> parameter, but it will act on the
+fortified data <em>before</em> it has been restricted to one matrix factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>elements</code></td>
+<td>
+<p>Character vector; which elements of each factor for which to
+render graphical elements. One of <code>"all"</code> (the default), <code>"active"</code>, or any
+supplementary element type defined by the specific class methods (e.g.
+<code>"score"</code> for 'factanal', 'lda_ord', and 'cancord_ord' and <code>"intraset"</code> and
+<code>"interset"</code> for 'cancor_ord').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>ggplot2::layer()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.legend</code></td>
+<td>
+<p>logical. Should this layer be included in the legends?
+<code>NA</code>, the default, includes if any aesthetics are mapped.
+<code>FALSE</code> never includes, and <code>TRUE</code> always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inherit.aes</code></td>
+<td>
+<p>If <code>FALSE</code>, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. <code>borders()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A ggproto layer.
+</p>
+
+
+<h3>Biplot layers</h3>
+
+<p><code>ggbiplot()</code> uses <code>ggplot2::fortify()</code> internally to produce a single data
+frame with a <code>.matrix</code> column distinguishing the subjects (<code>"rows"</code>) and
+variables (<code>"cols"</code>). The stat layers <code>stat_rows()</code> and <code>stat_cols()</code> simply
+filter the data frame to one of these two.
+</p>
+<p>The geom layers <code style="white-space: pre;">⁠geom_rows_*()⁠</code> and <code style="white-space: pre;">⁠geom_cols_*()⁠</code> call the corresponding
+stat in order to render plot elements for the corresponding factor matrix.
+<code style="white-space: pre;">⁠geom_dims_*()⁠</code> selects a default matrix based on common practice, e.g.
+points for rows and arrows for columns.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other biplot layers: 
+<code>biplot-geoms</code>,
+<code>biplot-stats</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># FA of Swiss social data
+swiss_fa &lt;-
+  ordinate(swiss, model = factanal, factors = 2L, scores = "regression")
+# active and supplementary elements
+get_rows(swiss_fa, elements = "active")
+head(get_rows(swiss_fa, elements = "score"))
+
+# biplot using element filters and selection
+# (note that filter precedes selection)
+ggbiplot(swiss_fa) +
+  geom_rows_point(elements = "score") +
+  geom_rows_text(aes(label = name), elements = "score", subset = c(1, 4, 18)) +
+  scale_alpha_manual(values = c(0, 1), guide = "none") +
+  geom_cols_vector() +
+  geom_cols_text_radiate(aes(label = name))
+</code></pre>
+
+
+</div>

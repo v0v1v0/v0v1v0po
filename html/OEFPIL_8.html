@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ortresiduals.OEFPIL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Orthogonal residuals from an OEFPIL object</h2>
+
+<h3>Description</h3>
+
+<p>Function for calculating orthogonal residuals of an <code>"OEFPIL"</code> object (i.e. the shortest Euclidean distance between data points and the estimated function from OEFPIL).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ortresiduals.OEFPIL(object, min.c)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>"OEFPIL"</code> (a result of a call to <code>OEFPIL</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.c</code></td>
+<td>
+<p>a numeric value, for defining minimization interval for the <code>optimize</code> function (if not defined, default value 0.05 * range(x) is used). Must be positive.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an object of type list containing following components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>x.ores</code></td>
+<td>
+<p>a numerical vector of x coordinates of points, where the minimal distance is realized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>o.resid</code></td>
+<td>
+<p>a numerical vector of orthogonal residuals (minimal Euclidean distances between data points and estimated function).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SSort</code></td>
+<td>
+<p>the orthogonal sum of squares.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The value <code>min.c</code> should not be too small. In that case the minimization interval is too narrow and the result can be misleading (see Example 3).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OEFPIL</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+##-- Continuing the coef.OEFPIL(.) example:
+
+##Example 1 Use ortresiduals.OEFPIL function on the OEFPIL object, with specified value 'min.c'
+ortresiduals.OEFPIL(st1,5)
+
+##Example 2 Use ortresiduals.OEFPIL function without value 'min.c' (defaut.value = 0.05 * range(x))
+ortresiduals.OEFPIL(st1)
+
+##Example 3 Choice of too narrow interval. Misleading result!
+ortresiduals.OEFPIL(st1,0.5)
+</code></pre>
+
+
+</div>

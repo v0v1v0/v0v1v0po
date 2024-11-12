@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>serialize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Serialization for OAI-PMH Objects</h2>
+
+<h3>Description</h3>
+
+<p>Functions to write a single OAI-PMH object to a file, and to restore
+it, and to perform the necessary conversions of XML objects to and
+from strings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oaih_read_RDS(file, ...)
+oaih_save_RDS(x, ...)
+oaih_str_to_xml(x)
+oaih_xml_to_str(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>a connection or the name of the file where the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> object is 
+saved to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to be passed to
+<code>readRDS</code> (<code>oaih_read_RDS</code>)
+<code>saveRDS</code> (<code>oaih_save_RDS</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The OAI-PMH objects obtained by OAI-PMH requests (e.g.,
+<code>oaih_list_records</code>) and 
+subsequent transformations (<code>oaih_transform</code>) are 
+made up of both character vectors and XML nodes from package
+<a href="https://CRAN.R-project.org/package=xml2"><span class="pkg">xml2</span></a>, with the latter lists of external pointers.  Thus,
+serialization does not work “out of the box”, and in fact using
+refhooks in calls to <code>readRDS</code> or <code>saveRDS</code> does not work
+either (as one needs to (de)serialize a list of pointers, and not a
+single one).  We thus provide helper functions to (recursively)
+(de)serialize the XML objects to/from strings, and to pre-process <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>
+objects before saving to a file and post-process after restoring from
+a file.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tryCatch({
+## Run inside tryCatch() so that checks fail gracefully if OAI-PMH
+## requests time out or fail otherwise.
+baseurl &lt;- "https://research.wu.ac.at/ws/oai"
+x &lt;- oaih_identify(baseurl)
+## Now 'x' is a list of character vectors and XML nodes:
+x
+## To save to a file and restore:
+f &lt;- tempfile()
+oaih_save_RDS(x, file = f)
+y &lt;- oaih_read_RDS(f)
+all.equal(x, y)
+## Equivalently, we can directly pre-process before saving and
+## post-process after restoring:
+saveRDS(oaih_xml_to_str(x), f)
+z &lt;- oaih_str_to_xml(readRDS(f))
+all.equal(y, z)
+##
+}, error = identity)
+</code></pre>
+
+
+</div>

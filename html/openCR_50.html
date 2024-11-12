@@ -1,0 +1,858 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>openCR.fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Fit Open Population Capture–Recapture Model </h2>
+
+<h3>Description</h3>
+
+<p>Nonspatial or spatial open-population analyses are performed on data
+formatted for ‘secr’. Several parameterisations are provided for the
+nonspatial Jolly-Seber Schwarz-Arnason model (‘JSSA’, also known as
+‘POPAN’). Corresponding spatial models are designated
+‘JSSAsecr’. The prefix ‘PLB’ (Pradel-Link-Barker) is used for versions of the 
+JSSA models that are conditional on the number observed. Cormack-Jolly-Seber 
+(CJS) models are also fitted.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+openCR.fit (capthist, type = "CJS", model = list(p~1, phi~1, sigma~1), 
+    distribution = c("poisson", "binomial"), mask = NULL, 
+    detectfn = c("HHN", "HHR", "HEX", "HAN", "HCG", "HVP", "HPX"), binomN = 0, 
+    movementmodel = c('static', 'BVN', 'BVE', 'BVT', 'RDE', 'RDG','RDL','IND', 'UNI',
+      'BVNzi', 'BVEzi', 'RDEzi', 'INDzi', 'UNIzi'), edgemethod = 
+    c("truncate", "wrap", "none"), kernelradius = 30, sparsekernel = TRUE, 
+    start = NULL, link = list(), fixed = list(), stratumcov = NULL, 
+    sessioncov = NULL, timecov = NULL, agecov = NULL, dframe = NULL, 
+    dframe0 = NULL, details = list(), method = "Newton-Raphson", trace = NULL, 
+    ncores = NULL, stratified = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>capthist</code></td>
+<td>
+ <p><code>capthist</code> object from ‘secr’</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character string for type of analysis (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p> list with optional components, each symbolically
+defining a linear predictor for the relevant real parameter using
+<code>formula</code> notation. See Details for names of real parameters. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>character distribution of number of individuals detected</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mask</code></td>
+<td>
+<p> single-session <code>mask</code> object; required for spatial (secr) models </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detectfn</code></td>
+<td>
+<p>character code</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binomN</code></td>
+<td>
+<p> integer code for distribution of counts (see <code>secr.fit</code>) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>movementmodel</code></td>
+<td>
+<p>character; model for movement between primary sessions (see Details) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgemethod</code></td>
+<td>
+<p>character; method for movement at edge of mask (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernelradius</code></td>
+<td>
+<p>integer; radius in mask cells of discretized kernel (movement models only)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sparsekernel</code></td>
+<td>
+<p>logical; if TRUE then only cardinal and intercardinal axes are included</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p> vector of initial values for beta parameters, or fitted
+model(s) from which they may be derived </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p> list with named components, each a character string in
+{"log", "logit", "loglog", "identity", "sin", "mlogit"} for the link function
+of the relevant real parameter </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixed</code></td>
+<td>
+<p> list with optional components corresponding to each
+‘real’ parameter, the scalar value to which parameter is to be fixed </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratumcov</code></td>
+<td>
+<p> optional dataframe of values of stratum-specific
+covariate(s). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sessioncov</code></td>
+<td>
+<p> optional dataframe of values of session-specific
+covariate(s). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timecov</code></td>
+<td>
+<p> optional dataframe of values of occasion-specific
+covariate(s). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>agecov</code></td>
+<td>
+<p> optional dataframe of values of age-specific covariate(s) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dframe</code></td>
+<td>
+<p> optional data frame of design data for detection
+parameters (seldom used) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dframe0</code></td>
+<td>
+<p> optional data frame of design data for detection
+parameters of naive (undetected) animals (seldom used) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p> list of additional settings (see Details) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p> character string giving method for maximizing log
+likelihood </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+<p> logical or integer; output log likelihood at each evaluation, 
+or at some lesser frequency as given</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p>integer number of cores for parallel processing (see Details) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratified</code></td>
+<td>
+<p>logical; if TRUE then sessions of capthist interpreted 
+as indpendent strata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> other arguments passed to join() </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The permitted nonspatial models are CJS, Pradel, Pradelg, JSSAbCL = PLBb, JSSAfCL = PLBf, JSSAgCL = PLBg, JSSAlCL = PLBl, JSSAb, JSSAf, JSSAg, JSSAl, JSSAB and JSSAN. 
+</p>
+<p>The permitted spatial models are CJSsecr, JSSAsecrbCL = PLBsecrb, JSSAsecrfCL = PLBsecrf, JSSAsecrgCL = PLBsecrg, JSSAsecrlCL = PLBsecrl, JSSAsecrb, JSSAsecrf, JSSAsecrg, JSSAsecrl, JSSAsecrB, JSSAsecrN, secrCL, and secrD. 
+</p>
+<p>See <a href="../doc/openCR-vignette.pdf">openCR-vignette.pdf</a> for a table of the ‘real’ parameters associated with each model type.
+</p>
+<p>Parameterisations of the JSSA models differ in how they include
+recruitment: the core parameterisations express recruitment either as a
+per capita rate (‘f’), as a finite rate of increase for the population
+(‘l’ for lambda) or as per-occasion entry probability (‘b’ for the
+classic JSSA beta parameter, aka PENT in MARK). Each of these models may
+be fitted by maximising either the full likelihood, or the likelihood
+conditional on capture in the Huggins (1989) sense, distinguished by the
+suffix ‘CL’. Full-likelihood JSSA models may also be parameterized in
+terms of the time-specific absolute recruitment (BN, BD) or the
+time-specific population size(N) or density (D).
+</p>
+<p>‘secrCL’ and ‘secrD’ are closed-population spatial models.
+</p>
+<p>Data are provided as <span class="pkg">secr</span> ‘capthist’ objects, with some
+restrictions. For nonspatial analyses, ‘capthist’ may be
+single-session or multi-session, with any of the main detector types. For
+spatial analyses ‘capthist’ should be a single-session dataset of a point 
+detector type (‘multi’, ‘proximity’ or ‘count’) (see also
+details$distribution below). In openCR the occasions of a single-session
+dataset are treated as open-population temporal samples except that occasions 
+separated by an interval of zero (0) are from the same primary session (multi-session
+input is collapsed to single-session if necessary).
+</p>
+<p><code>model</code> formulae may include the pre-defined terms
+‘session’,‘Session’, ‘h2’, and ‘h3’ as in <span class="pkg">secr</span>. ‘session’
+is the name given to primary sampling times in ‘secr’, so a fully
+time-specific CJS model is <code>list(p ~ session, phi
+~ session)</code>. ‘t’ is a synonym of ‘session’. ‘Session’ is for a
+trend over sessions. ‘h2’ and ‘h3’ allow finite mixture models. 
+</p>
+<p>Learned (behavioural) responses (‘b’, ‘B’, etc.) were redefined and extended in 
+version 1.3.0. The <a href="../doc/openCR-vignette.pdf">vignette</a> should be consulted 
+for current definitions.
+</p>
+<p>Formulae may also include named occasion-specific and session-specific 
+covariates in the dataframe arguments ‘timecov’ and ‘sessioncov’ 
+(occasion = secondary session of robust design). Named age-specific covariates 
+in 'agecov' are treated similarly. Individual covariates present as an attribute of
+the ‘capthist’ input may be used in CJS and ..CL models. Groups are not
+supported in this version, but may be implemented via a factor-level
+covariate in ..CL models.
+</p>
+<p><code>distribution</code> specifies the distribution of the number of
+individuals detected; this may be conditional on the population size (or number in the
+masked area) ("binomial") or unconditional ("poisson").
+<code>distribution</code> affects the sampling variance of the estimated
+density. The default is "poisson" as in <span class="pkg">secr</span>.
+</p>
+<p>Movement models are list at Movement models. Their use is described in the <a href="../doc/openCR-vignette.pdf">vignette</a>. 
+</p>
+<p><code>edgemethod</code> controls movement probabilities at the mask edge in spatial models that include movement. "none" typically causes bias in estimates; "wrap" wraps kernel probabilities to the opposing edge of a rectangular mask; "truncate" scales the values of an edge-truncated kernel so that they always sum to 1.0 (safer and more general than "wrap").
+</p>
+<p>The mlogit link function is used for the JSSA (POPAN) entry parameter 
+‘b’ (PENT in MARK) and for mixture proportions, regardless of <code>link</code>.
+</p>
+<p>Spatial models use one of the hazard-based detection functions (see <code>detectfn</code>) and require data
+from independent point detectors (<span class="pkg">secr</span> detector types ‘multi’, ‘proximity’ or ‘count’).
+</p>
+<p>Code is executed in multiple threads unless the user specifies <code>ncores = 1</code> or there is only one core available or <code>details$R == TRUE</code>. Setting <code>ncores = NULL</code> uses the existing value from the environment variable RCPP_PARALLEL_NUM_THREADS (see <code>setNumThreads</code>) or 2 if that has not been set. 
+</p>
+<p>Optional stratification was introduced in <span class="pkg">openCR</span> 2.0.0. See <a href="../doc/openCR-vignette.pdf">openCR-vignette.pdf</a> for details.
+</p>
+<p>The ... argument may be used to pass a vector of unequal intervals to 
+join (<code>interval</code>), or to vary the tolerance for merging detector sites (<code>tol</code>).
+</p>
+<p>The <code>start</code> argument may be 
+</p>
+
+<dl>
+<dt>- a vector of beta parameter values, one for each of the NP beta parameters in the model</dt>
+<dd></dd>
+<dt>- a named vector of beta parameter values in any order</dt>
+<dd></dd>
+<dt>- a named list of one or more real parameter values</dt>
+<dd></dd>
+<dt>- a single fitted secr or openCR model whose real parameters overlap with the current model</dt>
+<dd></dd>
+<dt>- a list of two fitted models</dt>
+<dd></dd>
+</dl>
+<p>In the case of two fitted models, the values are melded. This is handy for initialising an 
+open spatial model from a closed spatial model and an open non-spatial model. If a beta 
+parameter appears in both models then the first is used.
+</p>
+<p><code>details</code> is a list used for various specialized settings –
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+Component </td>
+<td style="text-align: left;"> Default </td>
+<td style="text-align: left;"> Description </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>agebreaks</code> </td>
+<td style="text-align: left;"> minimumage:maximumage </td>
+<td style="text-align: left;"> Limits of age classes (vector passed to <code>cut</code>) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>autoini</code> </td>
+<td style="text-align: left;"> 1 </td>
+<td style="text-align: left;"> Number of the session used to determine 
+initial values of D, lambda0 and sigma (secr types only) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>CJSp1</code> </td>
+<td style="text-align: left;"> FALSE </td>
+<td style="text-align: left;"> Modified CJS model including initial detection 
+(estimable with robust design and many spatial models) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>contrasts</code> </td>
+<td style="text-align: left;"> NULL </td>
+<td style="text-align: left;"> Value suitable for the `contrasts.arg' argument 
+of <code>model.matrix</code> used to specify the coding of factor predictors </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>control</code> </td>
+<td style="text-align: left;"> list() </td>
+<td style="text-align: left;"> Components may be named arguments of <code>nlm</code>, or passed intact as argument `control' of <code>optim</code> - useful for increasing maxit for <code>method = Nelder-Mead</code> (see vignette) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>debug</code> </td>
+<td style="text-align: left;"> 0 </td>
+<td style="text-align: left;"> debug=1 prints various intermediate values; debug&gt;=2 interrupts execution by calling browser() (position variable) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>fixedbeta</code> </td>
+<td style="text-align: left;"> NULL </td>
+<td style="text-align: left;"> Vector with one element for each coefficient (beta parameter) in the model. Only 'NA' coefficients will be estimated; others will be fixed at the value given (coefficients define a linear predictor on the link scale). The number and order of coefficients may be determined by calling <code>openCR.fit</code> with trace = TRUE and interrupting execution after the first likelihood evaluation. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>grain</code> </td>
+<td style="text-align: left;"> 1 </td>
+<td style="text-align: left;"> Obscure setting for multithreading - see <span class="pkg">RcppParallel</span> package </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>hessian</code> </td>
+<td style="text-align: left;"> "auto" </td>
+<td style="text-align: left;"> Computation of the Hessian matrix from which 
+variances and covariances are obtained. Options are "none" (no variances), 
+"auto" or "fdhess" (use the function fdHess in <span class="pkg">nlme</span>).  If "auto" then 
+the Hessian from the optimisation function is used. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>ignoreusage</code> </td>
+<td style="text-align: left;"> FALSE </td>
+<td style="text-align: left;"> Overrides usage in traps object of capthist </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>initialage</code> </td>
+<td style="text-align: left;"> 0 </td>
+<td style="text-align: left;"> Numeric (uniform age at first capture) 
+or character value naming an individual covariate; see <code>age.matrix</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>initialstratum</code> </td>
+<td style="text-align: left;"> 1 </td>
+<td style="text-align: left;"> Number of stratum to use for finding default starting values (cf autoini in <span class="pkg">secr</span>) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>LLonly</code> </td>
+<td style="text-align: left;"> FALSE </td>
+<td style="text-align: left;"> TRUE causes the function to return a single
+evaluation of the log likelihood at the initial values, followed by the 
+initial values </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>minimumage</code> </td>
+<td style="text-align: left;"> 0 </td>
+<td style="text-align: left;"> Sets a minimum age; see <code>age.matrix</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>maximumage</code> </td>
+<td style="text-align: left;"> 1 </td>
+<td style="text-align: left;"> Sets a maximum age; older animals are recycled into 
+this age class; see <code>age.matrix</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>multinom</code> </td>
+<td style="text-align: left;"> FALSE </td>
+<td style="text-align: left;"> Include the multinomial constant in the 
+reported log-likelihood. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>r0</code> </td>
+<td style="text-align: left;"> 0.5 </td>
+<td style="text-align: left;"> effective radius of zero cell in movement kernel (multiple of cell width) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>R</code> </td>
+<td style="text-align: left;"> FALSE </td>
+<td style="text-align: left;"> Switch from the default C++ code to 
+slower functions in native R (useful for debugging; not all models) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>squeeze</code> </td>
+<td style="text-align: left;"> TRUE </td>
+<td style="text-align: left;">  Apply <code>squeeze</code> to capthist before analysis. Non-spatial models fit faster, because histories often non-unique.</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>userdist</code> </td>
+<td style="text-align: left;"> NULL </td>
+<td style="text-align: left;"> Function to compute distances (see <span class="pkg">secr</span>) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+<code>stepmax</code> </td>
+<td style="text-align: left;"> NULL </td>
+<td style="text-align: left;"> stepmax argument of <code>nlm</code> (step on link scale) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+</td>
+</tr>
+</table>
+<p>If <code>method = "Newton-Raphson"</code> then <code>nlm</code> is
+used to maximize the log likelihood (minimize the negative log
+likelihood); otherwise <code>optim</code> is used with the
+chosen method ("BFGS", "Nelder-Mead", etc.).  If maximization fails a
+warning is given appropriate to the method. <code>method = "none"</code> may 
+be used to compute or re-compute the variance-covariance matrix at 
+given starting values (i.e. providing a previously fitted model as 
+the value of <code>start</code>).
+</p>
+<p>Parameter redundancies are common in open-population models. The output
+from <code>openCR.fit</code> includes the singular values (eigenvalues) of the
+Hessian - a useful post-hoc indicator of redundancy (e.g., Gimenez et
+al. 2004). Eigenvalues are scaled so the largest is 1.0. Very small
+scaled values represent redundant parameters - in my experience with
+simple JSSA models a threshold of 0.00001 seems effective.
+</p>
+<p>[There is an undocumented option to fix specific ‘beta’ parameters.]
+</p>
+<p>Numeric ages may be grouped into age classes by providing ‘agebreaks’. 
+In models, ~age then refers to the age-class factor. See the 
+<a href="../doc/openCR-vignette.pdf">vignette</a> for more detail.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>details$LLonly == TRUE</code> then a numeric vector is returned with logLik in 
+position 1, followed by the named coefficients.
+</p>
+<p>Otherwise, an object of class ‘openCR’ with components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call </code></td>
+<td>
+<p>function call </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>capthist </code></td>
+<td>
+<p>saved input (unique histories; see covariates(capthist)$freq for frequencies)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mask </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detectfn </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binomN </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>movementmodel </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgemethod </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>usermodel </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moveargsi </code></td>
+<td>
+<p>relative positions of move.a and move.b arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernel</code></td>
+<td>
+<p>coordinates of kernel (movement models only)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start </code></td>
+<td>
+<p>vector of starting values for beta parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixed </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timecov </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sessioncov </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>agecov </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dframe </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dframe0 </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method </code></td>
+<td>
+<p>saved input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores </code></td>
+<td>
+<p>saved input (NULL replaced with default)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design </code></td>
+<td>
+<p>reduced design matrices, parameter table and parameter
+index array for actual animals (see <code>openCR.design</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design0 </code></td>
+<td>
+<p>reduced design matrices, parameter table and parameter
+index array for ‘naive’ animal (see <code>openCR.design</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parindx </code></td>
+<td>
+<p>list with one component for each real parameter giving
+the indices of the ‘beta’ parameters associated with each real
+parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>primaryintervals</code></td>
+<td>
+<p>intervals between primary sessions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars </code></td>
+<td>
+<p>vector of unique variable names in <code>model</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betanames </code></td>
+<td>
+<p>names of beta parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>realnames </code></td>
+<td>
+<p>names of fitted (real) parameters </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sessionlabels</code></td>
+<td>
+<p>name of each primary session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p>list describing the fit (output from <code>nlm</code> or
+<code>optim</code>) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta.vcv </code></td>
+<td>
+<p>variance-covariance matrix of beta parameters </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eigH </code></td>
+<td>
+<p>vector of eigenvalue corresponding to each beta parameter </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version </code></td>
+<td>
+<p>openCR version number </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>starttime </code></td>
+<td>
+<p>character string of date and time at start of fit </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proctime </code></td>
+<td>
+<p>processor time for model fit, in seconds </p>
+</td>
+</tr>
+</table>
+<p>The environment variable RCPP_PARALLEL_NUM_THREADS is updated with the 
+value of <code>ncores</code> if provided.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Different parameterisations lead to different model fits when used with
+the default ‘model’ argument in which each real parameter is constrained
+to be constant over time.
+</p>
+<p>The JSSA implementation uses summation over feasible 'birth' and 'death'
+times for each capture history, following Pledger et al. (2010). This
+enables finite mixture models for individual capture probability (not
+fully tested), flexible handling of additions and losses on capture (aka
+removals) (not yet programmed), and ultimately the extension to 'unknown
+age' as in Pledger et al. (2009).
+</p>
+<p>openCR uses the generalized matrix inverse ‘ginv’ from the MASS
+package rather than ‘solve’ from base R, as this seems more robust to
+singularities in the Hessian. Also, the default maximization method is ‘BFGS’
+rather than ‘Newton-Raphson’ as BFGS appears more robust in the presence
+of redundant parameters.
+</p>
+<p>Earlier versions of <code>openCR.fit</code> computed latent class membership 
+probabilities for each individual in finite mixture models and saved them in 
+component ‘posterior’. Now see <code>classMembership</code> for that functionality.
+</p>
+<p>From 1.5.0 onwards the number of threads uses the environment variable 
+RCPP_PARALLEL_NUM_THREADS, as in <code>secr.fit</code>. This may be set once
+in a session with <code>secr::setNumThreads</code>.
+</p>
+<p>The default movement arguments changed in <span class="pkg">openCR</span> 2.1.1. Now 
+<code>kernelradius = 30, sparsekernel = TRUE</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Gimenez, O., Viallefont, A., Catchpole, E. A., Choquet, R. and Morgan,
+B. J. T. (2004) Methods for investigating parameter redundancy. 
+<em>Animal Biodiversity and Conservation</em> <b>27</b>, 561–572.
+</p>
+<p>Huggins, R. M. (1989) On the statistical analysis of capture
+experiments. <em>Biometrika</em> <b>76</b>, 133–140.
+</p>
+<p>Pledger, S., Efford, M., Pollock. K., Collazo, J. and Lyons, J. (2009)
+Stopover duration analysis with departure probability dependent on
+unknown time since arrival. In: D. L. Thompson, E. G. Cooch and
+M. J. Conroy (eds) <em>Modeling Demographic Processes in Marked
+Populations</em>. Springer. Pp. 349–363.
+</p>
+<p>Pledger, S., Pollock, K. H. and Norris, J. L. (2010) Open
+capture–recapture models with heterogeneity: II. Jolly-Seber
+model. <em>Biometrics</em> <b>66</b>, 883–890.
+</p>
+<p>Pradel, R. (1996) Utilization of capture-mark-recapture for the study
+of recruitment and population growth rate. <em>Biometrics</em>
+<b>52</b>, 703–709.
+</p>
+<p>Schwarz, C. J. and Arnason, A. N. (1996) A general methodology for the
+analysis of capture-recapture experiments in open
+populations. <em>Biometrics</em> <b>52</b>, 860–873.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>classMembership.openCR</code>, 
+<code>derived.openCR</code>,  
+<code>openCR.design</code>, 
+<code>par.openCR.fit</code>, 
+<code>predict.openCR</code>, 
+<code>summary.openCR</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+## CJS default
+openCR.fit(ovenCH)
+
+## POPAN Jolly-Seber Schwarz-Arnason, lambda parameterisation
+L1 &lt;- openCR.fit(ovenCH, type = 'JSSAl')
+predict(L1)
+
+JSSA1 &lt;- openCR.fit(ovenCH, type = 'JSSAf')
+JSSA2 &lt;- openCR.fit(ovenCH, type = 'JSSAf', model = list(phi~t))
+JSSA3 &lt;- openCR.fit(ovenCH, type = 'JSSAf', model = list(p~t,phi~t))
+AIC (JSSA1, JSSA2, JSSA3)
+predict(JSSA1)
+
+RMdata &lt;- RMarkInput (join(reduce(ovenCH, by = "all")))
+if (require(RMark)) {
+    MarkPath &lt;- 'c:/Mark/'
+    if (!all (nchar(Sys.which(c('mark.exe', 'mark64.exe', 'mark32.exe'))) &lt; 2)) {
+        openCHtest &lt;- process.data(RMdata, model = 'POPAN')
+        openCHPOPAN &lt;- mark(data = openCHtest, model = 'POPAN',
+            model.parameters = list(p = list(formula = ~1),
+            pent = list(formula = ~1),
+            Phi = list(formula = ~1)))
+        popan.derived(openCHtest, openCHPOPAN)
+        cleanup(ask = FALSE)
+    } else message ("mark.exe not found")
+} else message ("RMark not found")
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>secularRpca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Recursive PCA Using Secular Equations</h2>
+
+<h3>Description</h3>
+
+<p>The PCA is recursively updated after observation of a new vector
+(rank one modification of the covariance matrix). Eigenvalues are computed as roots of a secular equation. Eigenvectors (principal components) are deduced by explicit calculation (Bunch et al., 1978) or approximated with the method of Gu and Eisenstat (1994).  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">secularRpca(lambda, U, x, n, f = 1/n, center, tol = 1e-10, reortho = FALSE) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>vector of eigenvalues.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>matrix of eigenvectors (PCs) stored in columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>new data vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>sample size before observing <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>forgetting factor: a number in (0,1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>centering vector for <code>x</code> (optional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>tolerance for the computation of eigenvalues.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reortho</code></td>
+<td>
+<p>if FALSE, eigenvectors are explicitly computed using the method of Bunch et al. (1978). If TRUE, they are approximated with the method of Gu and Eisenstat (1994).
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The method of secular equations provides accurate eigenvalues in all but pathological cases. On the other hand, the perturbation method implemented by <code>perturbationRpca</code> typically runs much faster but is only accurate for a large sample size <code>n</code>. <br>
+The default eigendecomposition method is that of Bunch et al. (1978). This algorithm consists in three stages: initial deflation, nonlinear solution of secular equations, and calculation of eigenvectors.  
+The calculation of eigenvectors (PCs) is accurate for the first few eigenvectors but loss of accuracy and orthogonality may occur for the next ones. In contrast the method of Gu and Eisenstat (1994) is robust against small errors in the computation of eigenvalues. It provides eigenvectors that may be less accurate than the default method but for which strict orthogonality is guaranteed. <br>
+The forgetting factor <code>f</code> can be interpreted as the inverse of the number of observation vectors effectively used in the PCA: the "memory" of the PCA algorithm goes back <code>1/f</code> observations in the past. For larger values of <code>f</code>, the PCA update gives more relative weight to the new data <code>x</code> and less to the current PCA (<code>lambda,U</code>). For nonstationary processes, <code>f</code> should be closer to 1.<br>
+Only one of the arguments <code>n</code> and <code>f</code> needs being specified. If it is <code>n</code>, then <code>f</code> is set to <code>1/n</code> by default (usual PCA of sample covariance matrix where all data points have equal weight). If <code>f</code> is specified, its value overrides any eventual specification of <code>n</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components  
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>updated eigenvalues in decreasing order.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vectors</code></td>
+<td>
+<p>updated eigenvectors (PCs).</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Bunch, J.R., Nielsen, C.P., and Sorensen, D.C. (1978). Rank-one modification of the symmetric eigenproblem. <em>Numerische Mathematik.</em><br>
+Gu, M. and Eisenstat, S.C. (1994). A stable and efficient algorithm for the rank-one modification of the symmetric eigenproblem. <em>SIAM Journal of Matrix Analysis and Applications.</em>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>perturbationRpca</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Initial data set
+n &lt;- 100	
+d &lt;- 50
+x &lt;- matrix(runif(n*d),n,d)
+xbar &lt;- colMeans(x)
+pca0 &lt;- eigen(cov(x))
+
+# New observation
+newx &lt;- runif(d)
+
+# Recursive PCA with secular equations
+xbar &lt;- updateMean(xbar, newx, n)
+pca &lt;- secularRpca(pca0$values, pca0$vectors, newx, n, center = xbar)
+</code></pre>
+
+
+</div>

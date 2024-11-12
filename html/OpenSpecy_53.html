@@ -1,0 +1,364 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as_OpenSpecy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create <code>OpenSpecy</code> objects</h2>
+
+<h3>Description</h3>
+
+<p>Functions to check if an object is an OpenSpecy, or coerce it if
+possible.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as_OpenSpecy(x, ...)
+
+## S3 method for class 'OpenSpecy'
+as_OpenSpecy(x, session_id = FALSE, ...)
+
+## S3 method for class 'list'
+as_OpenSpecy(x, ...)
+
+## S3 method for class 'hyperSpec'
+as_OpenSpecy(x, ...)
+
+## S3 method for class 'data.frame'
+as_OpenSpecy(x, colnames = list(wavenumber = NULL, spectra = NULL), ...)
+
+## Default S3 method:
+as_OpenSpecy(
+  x,
+  spectra,
+  metadata = list(file_name = NULL, user_name = NULL, contact_info = NULL, organization =
+    NULL, citation = NULL, spectrum_type = NULL, spectrum_identity = NULL, material_form
+    = NULL, material_phase = NULL, material_producer = NULL, material_purity = NULL,
+    material_quality = NULL, material_color = NULL, material_other = NULL, cas_number =
+    NULL, instrument_used = NULL, instrument_accessories = NULL, instrument_mode = NULL,
+    intensity_units = NULL, spectral_resolution = NULL, laser_light_used = NULL,
+    number_of_accumulations = NULL, 
+     total_acquisition_time_s = NULL,
+    data_processing_procedure = NULL, level_of_confidence_in_identification = NULL,
+    other_info = NULL, license = "CC BY-NC"),
+  attributes = list(intensity_unit = NULL, derivative_order = NULL, baseline = NULL,
+    spectra_type = NULL),
+  coords = "gen_grid",
+  session_id = FALSE,
+  ...
+)
+
+is_OpenSpecy(x)
+
+check_OpenSpecy(x)
+
+OpenSpecy(x, ...)
+
+gen_grid(n)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>depending on the method, a list with all OpenSpecy parameters,
+a vector with the wavenumbers for all spectra, or a data.frame with a full
+spectrum in the classic Open Specy format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>session_id</code></td>
+<td>
+<p>logical. Whether to add a session ID to the metadata.
+The session ID is based on current session info so metadata of the same
+spectra will not return equal if session info changes. Sometimes that is
+desirable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colnames</code></td>
+<td>
+<p>names of the wavenumber column and spectra column, makes
+assumptions based on column names or placement if <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spectra</code></td>
+<td>
+<p>spectral intensities formatted as a data.table with one column
+per spectrum.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata</code></td>
+<td>
+<p>metadata for each spectrum with one row per spectrum,
+see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attributes</code></td>
+<td>
+<p>a list of attributes describing critical aspects for interpreting the spectra.
+see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>spatial coordinates for the spectra.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>number of spectra to generate the spatial coordinate grid with.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to submethods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>as_OpenSpecy()</code> converts spectral datasets to a three part list;
+the first with a vector of the wavenumbers of the spectra,
+the second with a <code>data.table</code> of all spectral intensities ordered as
+columns,
+the third item is another <code>data.table</code> with any metadata the user
+provides or is harvested from the files themselves.
+</p>
+<p>The <code>metadata</code> argument may contain a named list with the following
+details (<code>*</code> = minimum recommended).
+</p>
+
+<dl>
+<dt><code style="white-space: pre;">⁠file_name*⁠</code></dt>
+<dd>
+<p>The file name, defaults to
+<code>basename()</code> if not specified</p>
+</dd>
+<dt><code style="white-space: pre;">⁠user_name*⁠</code></dt>
+<dd>
+<p>User name, e.g. "Win Cowger"</p>
+</dd>
+<dt><code>contact_info</code></dt>
+<dd>
+<p>Contact information, e.g. "1-513-673-8956,
+wincowger@gmail.com"</p>
+</dd>
+<dt><code>organization</code></dt>
+<dd>
+<p>Affiliation, e.g. "University of California,
+Riverside"</p>
+</dd>
+<dt><code>citation</code></dt>
+<dd>
+<p>Data citation, e.g. "Primpke, S., Wirth, M., Lorenz, C.,
+&amp; Gerdts, G. (2018). Reference database design for the automated analysis
+of microplastic samples based on Fourier transform infrared (FTIR)
+spectroscopy. <em>Analytical and Bioanalytical Chemistry</em>.
+<a href="https://doi.org/10.1007/s00216-018-1156-x">doi:10.1007/s00216-018-1156-x</a>"</p>
+</dd>
+<dt><code style="white-space: pre;">⁠spectrum_type*⁠</code></dt>
+<dd>
+<p>Raman or FTIR</p>
+</dd>
+<dt><code style="white-space: pre;">⁠spectrum_identity*⁠</code></dt>
+<dd>
+<p>Material/polymer analyzed, e.g.
+"Polystyrene"</p>
+</dd>
+<dt><code>material_form</code></dt>
+<dd>
+<p>Form of the material analyzed, e.g. textile fiber,
+rubber band, sphere, granule </p>
+</dd>
+<dt><code>material_phase</code></dt>
+<dd>
+<p>Phase of the material analyzed (liquid, gas, solid) </p>
+</dd>
+<dt><code>material_producer</code></dt>
+<dd>
+<p>Producer of the material analyzed, e.g. Dow </p>
+</dd>
+<dt><code>material_purity</code></dt>
+<dd>
+<p>Purity of the material analyzed, e.g. 99.98%</p>
+</dd>
+<dt><code>material_quality</code></dt>
+<dd>
+<p>Quality of the material analyzed, e.g.
+consumer product, manufacturer material, analytical standard,
+environmental sample </p>
+</dd>
+<dt><code>material_color</code></dt>
+<dd>
+<p>Color of the material analyzed,
+e.g. blue, #0000ff, (0, 0, 255) </p>
+</dd>
+<dt>material_other</dt>
+<dd>
+<p>Other material description, e.g. 5 µm diameter
+fibers, 1 mm spherical particles </p>
+</dd>
+<dt><code>cas_number</code></dt>
+<dd>
+<p>CAS number, e.g. 9003-53-6 </p>
+</dd>
+<dt><code>instrument_used</code></dt>
+<dd>
+<p>Instrument used, e.g. Horiba LabRam </p>
+</dd>
+<dt>instrument_accessories</dt>
+<dd>
+<p>Instrument accessories, e.g.
+Focal Plane Array, CCD</p>
+</dd>
+<dt><code>instrument_mode</code></dt>
+<dd>
+<p>Instrument modes/settings, e.g.
+transmission, reflectance </p>
+</dd>
+<dt><code style="white-space: pre;">⁠intensity_units*⁠</code></dt>
+<dd>
+<p>Units of the intensity values for the spectrum,
+options transmittance, reflectance, absorbance </p>
+</dd>
+<dt><code>spectral_resolution</code></dt>
+<dd>
+<p>Spectral resolution, e.g. 4/cm </p>
+</dd>
+<dt><code>laser_light_used</code></dt>
+<dd>
+<p>Wavelength of the laser/light used, e.g.
+785 nm </p>
+</dd>
+<dt><code>number_of_accumulations</code></dt>
+<dd>
+<p>Number of accumulations, e.g 5 </p>
+</dd>
+<dt><code>total_acquisition_time_s</code></dt>
+<dd>
+<p>Total acquisition time (s), e.g. 10 s</p>
+</dd>
+<dt><code>data_processing_procedure</code></dt>
+<dd>
+<p>Data processing procedure,
+e.g. spikefilter, baseline correction, none </p>
+</dd>
+<dt><code>level_of_confidence_in_identification</code></dt>
+<dd>
+<p>Level of confidence in
+identification, e.g. 99% </p>
+</dd>
+<dt><code>other_info</code></dt>
+<dd>
+<p>Other information </p>
+</dd>
+<dt><code>license</code></dt>
+<dd>
+<p>The license of the shared spectrum; defaults to
+<code>"CC BY-NC"</code> (see <a href="https://creativecommons.org/licenses/by-nc/4.0/">https://creativecommons.org/licenses/by-nc/4.0/</a>
+for details). Any other creative commons license is allowed, for example,
+CC0 or CC BY</p>
+</dd>
+<dt><code>session_id</code></dt>
+<dd>
+<p>A unique user and session identifier; populated
+automatically with <code>paste(digest(Sys.info()), digest(sessionInfo()),
+  sep = "/")</code></p>
+</dd>
+<dt><code>file_id</code></dt>
+<dd>
+<p>A unique file identifier; populated automatically
+with <code>digest(object[c("wavenumber", "spectra")])</code></p>
+</dd>
+</dl>
+<p>The <code>attributes</code> argument may contain a named list with the following
+details, when set, they will be used to automate transformations and warning messages:
+</p>
+
+<dl>
+<dt><code>intensity_units</code></dt>
+<dd>
+<p>supported options include <code>"absorbance"</code>,
+<code>"transmittance"</code>, or <code>"reflectance"</code></p>
+</dd>
+<dt><code>derivative_order</code></dt>
+<dd>
+<p>supported options include <code>"0"</code>, <code>"1"</code>, or
+<code>"2"</code></p>
+</dd>
+<dt><code>baseline</code></dt>
+<dd>
+<p>supported options include <code>"raw"</code> or <code>"nobaseline"</code></p>
+</dd>
+<dt><code>spectra_type</code></dt>
+<dd>
+<p>supported options include <code>"ftir"</code> or <code>"raman"</code></p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p><code>as_OpenSpecy()</code> and <code>OpenSpecy()</code> returns three part lists
+described in details.
+<code>is_OpenSpecy()</code> returns <code>TRUE</code> if the object is an OpenSpecy and
+<code>FALSE</code> if not.
+<code>gen_grid()</code> returns a <code>data.table</code> with <code>x</code> and <code>y</code>
+coordinates to use for generating a spatial grid for the spectra if one is
+not specified in the data.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Zacharias Steinmetz, Win Cowger
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_spec()</code> for reading <code>OpenSpecy</code> objects.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("raman_hdpe")
+
+# Inspect the spectra
+raman_hdpe # see how OpenSpecy objects print.
+raman_hdpe$wavenumber # look at just the wavenumbers of the spectra.
+raman_hdpe$spectra # look at just the spectral intensities data.table.
+raman_hdpe$metadata # look at just the metadata of the spectra.
+
+# Creating a list and transforming to OpenSpecy
+as_OpenSpecy(list(wavenumber = raman_hdpe$wavenumber,
+                  spectra = raman_hdpe$spectra,
+                  metadata = raman_hdpe$metadata[,-c("x", "y")]))
+
+# If you try to produce an OpenSpecy using an OpenSpecy it will just return
+# the same object.
+as_OpenSpecy(raman_hdpe)
+
+# Creating an OpenSpecy from a data.frame
+as_OpenSpecy(x = data.frame(wavenumber = raman_hdpe$wavenumber,
+                            spectra = raman_hdpe$spectra$intensity))
+
+# Test that the spectrum is formatted as an OpenSpecy object.
+is_OpenSpecy(raman_hdpe)
+is_OpenSpecy(raman_hdpe$spectra)
+
+</code></pre>
+
+
+</div>

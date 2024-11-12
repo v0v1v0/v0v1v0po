@@ -1,0 +1,249 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Estimate_PLMODS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Partial linear model for ODS data</h2>
+
+<h3>Description</h3>
+
+<p><code>Estimate_PLMODS</code> computes the estimate of parameters in a partial
+linear model in the setting of outcome-dependent sampling. See details in
+Zhou, Qin and Longnecker (2011).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Estimate_PLMODS(X, Y, Z, n_f, eta00, q_s, Cpt, mu_Y, sig_Y, degree, nknots,
+  tol, iter)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>n by 1 matrix of the observed exposure variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>n by 1 matrix of the observed outcome variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>n by p matrix of the other covariates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_f</code></td>
+<td>
+<p>n_f = c(n0, n1, n2), where n0 is the SRS sample size, n1 is the
+size of the supplemental sample chosen from (-infty, mu_Y-a*sig_Y), n2 is
+the size of the supplemental sample chosen from (mu_Y+a*sig_Y, +infty).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta00</code></td>
+<td>
+<p>a column matrix. eta00 = (theta^T pi^T v^T sig0_sq)^T where
+theta=(alpha^T, gamma^T)^T. We refer to Zhou, Qin and Longnecker (2011) for
+details of these notations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q_s</code></td>
+<td>
+<p>smoothing parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Cpt</code></td>
+<td>
+<p>cut point a</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu_Y</code></td>
+<td>
+<p>mean of Y in the population</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig_Y</code></td>
+<td>
+<p>standard deviation of Y in the population</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>degree</code></td>
+<td>
+<p>degree of the truncated power spline basis, default value is 2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nknots</code></td>
+<td>
+<p>number of knots of the truncated power spline basis, default
+value is 10</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>convergence criteria, the default value is 1e-6</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>maximum iteration number, the default value is 30</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>We assume that in the population, the primary outcome variable Y follows the
+following partial linear model:
+</p>
+<p style="text-align: center;"><code class="reqn">E(Y|X,Z)=g(X)+Z^{T}\gamma</code>
+</p>
+<p> where X is the
+expensive exposure, Z are other covariates. In ODS design, a simple random
+sample is taken from the full cohort, then two supplemental samples are taken
+from two tails of Y, i.e. (-Infty, mu_Y - a*sig_Y) and (mu_Y + a*sig_Y,
++Infty). Because ODS data has biased sampling nature, naive regression
+analysis will yield biased estimates of the population parameters. Zhou, Qin
+and Longnecker (2011) describes a semiparametric empirical likelihood
+estimator for estimating the parameters in the partial linear model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Parameter estimates and standard errors for the partial linear model:
+</p>
+<p style="text-align: center;"><code class="reqn">E(Y|X,Z)=g(X)+Z^{T}\gamma</code>
+</p>
+<p> where the
+unknown smooth function g is approximated by a spline function with fixed
+knots. The results contain the following components: </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>spline
+coefficient</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gam</code></td>
+<td>
+<p>other linear regression coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>std_gam</code></td>
+<td>
+<p>standard error of gam</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov_mtxa</code></td>
+<td>
+<p>covariance matrix of
+alpha</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>step</code></td>
+<td>
+<p>numbers of iteration requied to acheive convergence</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pi0</code></td>
+<td>
+<p>estimated notation pi</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v0</code></td>
+<td>
+<p>estimated notation vtheta</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig0_sq0</code></td>
+<td>
+<p>estimated variance of error</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(ODS)
+# take the example data from the ODS package
+# please see the documentation for details about the data set ods_data
+
+nknots = 10
+degree = 2
+
+# get the initial value of the parameters from standard linear regression based on SRS data #
+dataSRS = ods_data[1:200,]
+YS = dataSRS[,1]
+XS = dataSRS[,2]
+ZS = dataSRS[,3:5]
+
+knots = quantileknots(XS, nknots, 0)
+# the power basis spline function
+MS = Bfct(as.matrix(XS), degree, knots)
+DS = cbind(MS, ZS)
+theta00 = as.numeric(lm(YS ~ DS -1)$coefficients)
+sig0_sq00 = var(YS - DS %*% theta00)
+pi00 = c(0.15, 0.15)
+v00 = c(0, 0)
+eta00 = matrix(c(theta00, pi00, v00, sig0_sq00), ncol=1)
+mu_Y = mean(YS)
+sig_Y = sd(YS)
+
+Y = matrix(ods_data[,1])
+X = matrix(ods_data[,2])
+Z = matrix(ods_data[,3:5], nrow=400)
+
+# In this ODS data, the supplemental samples are taken from (-Infty, mu_Y-a*sig_Y) #
+# and (mu_Y+a*sig_Y, +Infty), where a=1 #
+n_f = c(200, 100, 100)
+Cpt = 1
+
+# GCV selection to find the optimal smoothing parameter #
+q_s1 = logspace(-6, 7, 10)
+gcv1 = rep(0, 10)
+
+for (j in 1:10) {
+
+  result = Estimate_PLMODS(X,Y,Z,n_f,eta00,q_s1[j],Cpt,mu_Y,sig_Y)
+  etajj = matrix(c(result$alpha, result$gam, result$pi0, result$v0, result$sig0_sq0), ncol=1)
+  gcv1[j] = gcv_ODS(X,Y,Z,n_f,etajj,q_s1[j],Cpt,mu_Y,sig_Y)
+}
+
+b = which(gcv1 == min(gcv1))
+q_s = q_s1[b]
+q_s
+
+# Estimation of the partial linear model in the setting of outcome-dependent sampling #
+result = Estimate_PLMODS(X, Y, Z, n_f, eta00, q_s, Cpt, mu_Y, sig_Y)
+result
+
+</code></pre>
+
+
+</div>

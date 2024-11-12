@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.optimx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarize optimx object</h2>
+
+<h3>Description</h3>
+
+<p>Summarize an <code>"optimx"</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  ## S3 method for class 'optimx'
+summary(object, order = NULL, par.select = TRUE, ...) 
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Object returned by <code>optimx</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>A column name, character vector of columns names, R 
+expression in terms of column names or a list of R expressions in terms of
+column names.   <code>NULL</code>, the default, means no re-ordering.
+<code>rownames</code> can be used to 
+alphabetic ordering by method name.
+<code>NULL</code>, the default, causes
+it not to be reordered.  Note that if 
+<code>follow.on</code> is TRUE re-ordering likely makes no sense. 
+The result is ordered by the <code>order</code>
+specification, each specified column in ascending order (except for 
+<code>value</code> which is in descending order if the optimization problem is a 
+maximization problem).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>par.select</code></td>
+<td>
+<p>a numeric, character or logical vector selecting
+those <code>par</code> values to display. For example, <code>par=1:5</code> means
+display only the first 5 parameters.  Recycled so <code>par.select=FALSE</code>
+selects no parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments to be passed to the function. Currently not
+used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>order</code> is specified then the result is reordered by the specified
+columns, each in ascending order (except possibly for the
+<code>value</code> column which is re-ordered in descending order for
+maximization problems).</p>
+
+
+<h3>Value</h3>
+
+<p><code>summary.optimx</code> returns <code>object</code> with the rows ordered according
+to <code>order</code> and with those parameters selected by <code>par.select</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ans &lt;- optimx(fn = function(x) sum(x*x), par = 1:2)
+
+# order by method name.
+summary(ans, order = rownames)
+
+# order by objective value. Do not show parameter values.
+summary(ans, order = value, par.select = FALSE)
+
+# order by objective value and then number of function evaluations
+# such that objectives that are the same to 3 decimals are 
+# considered the same.  Show only first parameter.
+summary(ans, order = list(round(value, 3), fevals), par.select = 1)
+</code></pre>
+
+
+</div>

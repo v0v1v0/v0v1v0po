@@ -1,0 +1,196 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readOrg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Read Org Tables
+</h2>
+
+<h3>Description</h3>
+
+<p>Read an Org table from a file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readOrg(file, header = TRUE, dec = ".", comment.char = "",
+        encoding = "", strip.white = TRUE,
+        stringsAsFactors = FALSE,
+        table.name = NULL, text,
+        table.missing = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+
+<p>character
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header</code></td>
+<td>
+
+<p>logical
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dec</code></td>
+<td>
+
+<p>character
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comment.char</code></td>
+<td>
+
+<p>character
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encoding</code></td>
+<td>
+
+<p>the encoding of the file
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strip.white</code></td>
+<td>
+
+<p>logical
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stringsAsFactors</code></td>
+<td>
+
+<p>logical: note that the default <code>FALSE</code> differs
+from read.csv
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table.name</code></td>
+<td>
+
+<p>character: the name of the table to read (a regular
+expression)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+
+<p>character: if <code>file</code> is not supplied,
+<code>text</code> is read via
+<code>textConnection</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table.missing</code></td>
+<td>
+
+<p>what to do if a table specified by
+<code>table.name</code> is not found.  Default is to
+return <code>NULL</code>. Set to string <code>"stop"</code> to
+throw an error.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>further arguments
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When <code>header</code> is <code>TRUE</code>, <code>readOrg</code> will read the first
+10 lines of the file (or the table, when <code>table.name</code> is
+specified) and try to find an org table header. Formating instructions
+such as <code>&lt;5&gt;</code> are discarded. Then the function uses
+<code>read.csv</code> to read the remainder of the file/table.
+</p>
+<p>When <code>table.name</code> is specified, the function looks for a line that
+starts with <code>#+NAME: &lt;table.name&gt;</code> and reads the table that
+follows that line.
+</p>
+<p>For empty files, <code>readOrg</code> behaves like read.csv:
+when completely empty, it fails; when headers are found, a zero-row
+data.frame is returned.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Enrico Schumann
+</p>
+
+
+<h3>References</h3>
+
+<p>Org manual <a href="https://orgmode.org/manual/index.html">https://orgmode.org/manual/index.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read.csv</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## create an Org file with a table and read the table
+tmp &lt;-
+"#+TITLE: A Table
+
+Next comes a table.
+
+#+name: test_table
+| a | b |
+|---+---|
+| 1 | 2 |
+| 3 | 4 |
+
+That was a table.
+"
+
+fname &lt;- tempfile("testfile", fileext = ".org")
+writeLines(tmp, fname)
+
+require("org")
+readOrg(fname, table.name = "test_table")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

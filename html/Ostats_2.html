@@ -1,0 +1,180 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>community_overlap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Community Overlap Calculation</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the median or mean of pairwise overlaps between density
+estimates of trait distributions of all species within a community, which can
+be weighted by species abundances.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">community_overlap(
+  traits,
+  sp,
+  discrete = FALSE,
+  circular = FALSE,
+  normal = TRUE,
+  output = "median",
+  weight_type = "hmean",
+  randomize_weights = FALSE,
+  unique_values = NULL,
+  raw = FALSE,
+  circular_args = list(),
+  density_args = list(),
+  hypervolume_set_args = list()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traits</code></td>
+<td>
+<p>a vector of trait measurements in the univariate case, or a
+matrix in the multivariate case where each column is a trait.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sp</code></td>
+<td>
+<p>a vector with length equal to length(traits) that indicates the
+taxon of each individual.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>discrete</code></td>
+<td>
+<p>whether trait data may take continuous or discrete values. Defaults to
+<code>FALSE</code> (all traits continuous). A single logical value or a logical
+vector with length equal to the number of columns in traits.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>circular</code></td>
+<td>
+<p>whether trait data are circular (e.g., hours or angles). Defaults to
+<code>FALSE</code> (all traits non-circular). A single logical value or a logical
+vector with length equal to the number of columns in traits.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normal</code></td>
+<td>
+<p>if TRUE, the area under all density functions is normalized to 1,
+if FALSE, the area under all density functions is proportional to the number of
+observations in that group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>specifies whether median or mean is calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight_type</code></td>
+<td>
+<p>specifies weights to be used to calculate the median or mean.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>randomize_weights</code></td>
+<td>
+<p>If TRUE, randomize weights given to pairwise overlaps
+within a community. This can be used to generate null models.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unique_values</code></td>
+<td>
+<p>Vector of all possible discrete values that <code>traits</code>
+can take. Only used if <code>discrete = TRUE</code> and <code>circular = TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>raw</code></td>
+<td>
+<p>If <code>TRUE</code>, also return the raw individual pairwise overlaps
+used to calculate the community-level statistic. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>circular_args</code></td>
+<td>
+<p>optional list of additional arguments to pass to
+<code>circular</code>. Only used if <code>circular = TRUE</code> and
+<code>discrete = FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>density_args</code></td>
+<td>
+<p>list of additional arguments to be passed to
+<code>density</code> if univariate, or
+<code>hypervolume</code> if multivariate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hypervolume_set_args</code></td>
+<td>
+<p>list of additional arguments to be passed to
+<code>hypervolume_set</code>. Used only in multivariate case.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function evaluates weighted mean or median of overlaps of density
+estimates of all species in a community taking complete cases with species abundances
+greater than 1 from the dataset. The default calculates the median of pairwise overlaps
+for the whole community using the harmonic means of abundances of the species pairs as
+weights, which minimizes the effect of outliners and rare species.If the argument
+<code>weight_type = "none"</code>, no weights are used for the calculation of mean/median. If
+<code>weight_type = "mean"</code>, arithmetic means of abundances are used as weights. To change the
+output to mean, specify the argument <code>output = "mean"</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns the O-statistic for the community as a numeric value. If
+<code>raw = TRUE</code>, instead a list is returned, where the first element <code>value</code> is
+the numeric value, and the second element <code>raw</code> is a data frame with all the raw
+pairwise overlaps.
+</p>
+
+
+<h3>References</h3>
+
+<p>Read, Q. D. et al. Among-species overlap in rodent body size
+distributions predicts species richness along a temperature gradient.
+Ecography 41, 1718-1727 (2018).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Keep only the relevant part of small mammal data
+dat &lt;- small_mammal_data[small_mammal_data$siteID %in% c('HARV','JORN'), ]
+dat &lt;- dat[!is.na(dat$weight), ]
+dat$log_weight &lt;- log10(dat$weight)
+
+# Calculate median of pairwise overlaps for the community,weighted by harmonic means
+# of abundances
+community_overlap(traits = as.matrix(dat$log_weight),
+   sp = factor(dat$taxonID))
+
+</code></pre>
+
+
+</div>

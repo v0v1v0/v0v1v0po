@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>docx_summary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Word content in a data.frame</h2>
+
+<h3>Description</h3>
+
+<p>read content of a Word document and
+return a data.frame representing the document.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">docx_summary(x, preserve = FALSE, remove_fields = FALSE, detailed = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rdocx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preserve</code></td>
+<td>
+<p>If <code>FALSE</code> (default), text in table cells is collapsed into a
+single line. If <code>TRUE</code>, line breaks in table cells are preserved as a "\n"
+character. This feature is adapted from <code>docxtractr::docx_extract_tbl()</code>
+published under a <a href="https://github.com/hrbrmstr/docxtractr/blob/master/LICENSE">MIT licensed</a> in
+the <code>{docxtractr}</code> package by Bob Rudis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove_fields</code></td>
+<td>
+<p>if TRUE, prevent field codes from appearing in the
+returned data.frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detailed</code></td>
+<td>
+<p>Should information on runs be included in summary dataframe?
+Defaults to <code>FALSE</code>. If <code>TRUE</code> a list column <code>run</code> is added to the summary
+containing a summary of formatting properties of runs as a dataframe with
+rows corresponding to a single run and columns containing the information
+on formatting properties.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Documents included with <code>body_add_docx()</code> will
+not be accessible in the results.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">example_docx &lt;- system.file(
+  package = "officer",
+  "doc_examples/example.docx"
+)
+doc &lt;- read_docx(example_docx)
+
+docx_summary(doc)
+
+docx_summary(doc, preserve = TRUE)[28, ]
+</code></pre>
+
+
+</div>

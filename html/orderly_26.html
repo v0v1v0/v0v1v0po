@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_list_drafts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List draft and archived reports</h2>
+
+<h3>Description</h3>
+
+<p>List draft and archived reports.  This returns a data.frame with
+columns <code>name</code> (see <code>orderly_list()</code>) and <code>id</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_list_drafts(root = NULL, locate = TRUE, include_failed = FALSE)
+
+orderly_list_archive(root = NULL, locate = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_failed</code></td>
+<td>
+<p>Logical, indicating if failed drafts should
+be listed (only has an effect for <code>orderly_list_drafts</code> as
+no failed run should make it into the archive).  A failed report
+is one that lacks an <code>orderly_run.rds</code> file.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> with columns <code>name</code> and
+<code>id</code>, containing character vectors of report names and
+versions, respectively.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>orderly_list()</code>, which lists the names of
+source reports that can be run, and <code>orderly_latest()</code>
+which returns the id of the most recent report.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The orderly demo, with lots of potential reports:
+path &lt;- orderly::orderly_example("demo")
+
+# Reports that _could_ be run:
+orderly::orderly_list(path)
+
+# Run a report twice:
+id1 &lt;- orderly::orderly_run("minimal", root = path)
+id2 &lt;- orderly::orderly_run("minimal", root = path)
+
+# We can see both drafts:
+orderly::orderly_list_drafts(path)
+
+# Nothing is in the archive:
+orderly::orderly_list_archive(path)
+
+# Commit a report:
+orderly::orderly_commit(id2, root = path)
+
+# Only one draft now
+orderly::orderly_list_drafts(path)
+
+# And the second report is in the archive:
+orderly::orderly_list_archive(path)
+</code></pre>
+
+
+</div>

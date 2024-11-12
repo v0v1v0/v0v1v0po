@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.ocf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prediction Method for ocf Objects</h2>
+
+<h3>Description</h3>
+
+<p>Prediction method for class <code>ocf</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ocf'
+predict(object, data = NULL, type = "response", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An <code>ocf</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Data set of class <code>data.frame</code>. It must contain at least the same covariates used to train the forests. If <code>data</code> is <code>NULL</code>, then <code>object$full_data</code> is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of prediction. Either <code>"response"</code> or <code>"terminalNodes"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>type == "response"</code>, the routine returns the predicted conditional class probabilities and the predicted class 
+labels. If forests are honest, the predicted probabilities are honest.<br></p>
+<p>If <code>type == "terminalNodes"</code>, the IDs of the terminal node in each tree for each observation in <code>data</code> are returned.<br></p>
+
+
+<h3>Value</h3>
+
+<p>Desired predictions.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Riccardo Di Francesco
+</p>
+
+
+<h3>References</h3>
+
+
+<ul><li>
+<p> Di Francesco, R. (2023). Ordered Correlation Forest. arXiv preprint <a href="https://arxiv.org/abs/2309.08755">arXiv:2309.08755</a>.
+</p>
+</li></ul>
+<h3>See Also</h3>
+
+<p><code>ocf</code>, <code>marginal_effects</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate synthetic data.
+set.seed(1986)
+
+data &lt;- generate_ordered_data(100)
+sample &lt;- data$sample
+Y &lt;- sample$Y
+X &lt;- sample[, -1]
+
+## Training-test split.
+train_idx &lt;- sample(seq_len(length(Y)), floor(length(Y) * 0.5))
+
+Y_tr &lt;- Y[train_idx]
+X_tr &lt;- X[train_idx, ]
+
+Y_test &lt;- Y[-train_idx]
+X_test &lt;- X[-train_idx, ]
+
+## Fit ocf on training sample.
+forests &lt;- ocf(Y_tr, X_tr)
+
+## Predict on test sample.
+predictions &lt;- predict(forests, X_test)
+head(predictions$probabilities)
+predictions$classification
+
+## Get terminal nodes.
+predictions &lt;- predict(forests, X_test, type = "terminalNodes")
+predictions$forest.1[1:10, 1:20] # Rows are observations, columns are forests.
+
+</code></pre>
+
+
+</div>

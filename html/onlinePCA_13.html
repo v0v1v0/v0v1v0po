@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perturbationRpca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Recursive PCA using a rank 1 perturbation method</h2>
+
+<h3>Description</h3>
+
+<p>This function recursively updates the PCA with respect to a single new data vector, using the (fast) perturbation method of Hegde et al. (2006).</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perturbationRpca(lambda, U, x, n, f = 1/n, center, sort = TRUE)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>vector of eigenvalues.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>matrix of eigenvectors (PC) stored in columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>new data vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>sample size before observing <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>forgetting factor: a number between 0 and 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>optional centering vector for <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>Should the eigenpairs be sorted?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The forgetting factor <code>f</code> can be interpreted as the inverse of the number of observation vectors effectively used in the PCA: the "memory" of the PCA algorithm goes back <code>1/f</code> observations in the past. For larger values of <code>f</code>, the PCA update gives more relative weight to the new data <code>x</code> and less to the current PCA (<code>lambda,U</code>). For nonstationary processes, <code>f</code> should be closer to 1.<br>
+Only one of the arguments <code>n</code> and <code>f</code> needs being specified. If it is <code>n</code>, then <code>f</code> is set to <code>1/n</code> by default (usual PCA of sample covariance matrix where all data points have equal weight). If <code>f</code> is specified, its value overrides any eventual specification of <code>n</code>. 
+<br>
+If <code>sort</code> is TRUE, the updated eigenpairs are sorted by decreasing eigenvalue. Otherwise, they are not sorted.  
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>updated eigenvalues.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vectors</code></td>
+<td>
+<p>updated eigenvectors.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>This perturbation method is based on large sample approximations. It tends to be highly inaccurate for small/medium sized samples and should not be used in this case.</p>
+
+
+<h3>References</h3>
+
+<p>Hegde et al. (2006) Perturbation-Based Eigenvector Updates for On-Line Principal Components Analysis and Canonical Correlation Analysis. <em>Journal of VLSI Signal Processing</em>.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>secularRpca</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 1e3
+n0 &lt;- 5e2
+d &lt;- 10
+x &lt;- matrix(runif(n*d), n, d)
+ x &lt;- x %*% diag(sqrt(12*(1:d)))
+# The eigenvalues of cov(x) are approximately equal to 1, 2, ..., d
+# and the corresponding eigenvectors are approximately equal to 
+# the canonical basis of R^d
+
+## Perturbation-based recursive PCA
+# Initialization: use factor 1/n0 (princomp) rather 
+# than factor 1/(n0-1) (prcomp) in calculations
+pca &lt;- princomp(x[1:n0,], center=FALSE)
+xbar &lt;- pca$center
+pca &lt;- list(values=pca$sdev^2, vectors=pca$loadings) 
+
+for (i in (n0+1):n) {
+	xbar &lt;- updateMean(xbar, x[i,], i-1)
+	pca &lt;- perturbationRpca(pca$values, pca$vectors, x[i,], 
+		i-1, center=xbar) }
+</code></pre>
+
+
+</div>

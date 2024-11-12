@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OmegaG</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Composite Reliability Coefficient Omega-Generic</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to estimate the composite reliability coefficient Omega-generic (<cite>Mai, Srivastava, &amp; Krull, 2021</cite>), given factor loadings, factor covariance matrix, and covariance matrix of item residuals.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OmegaG(
+  Lambda = NULL,
+  Phi = NULL,
+  Psi = NULL,
+  items.index = NULL,
+  factor.index = NULL,
+  scale.structure = NULL,
+  modeltype = c("correlated-factor", "bi-factor")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Lambda</code></td>
+<td>
+<p>The input factor lading matrix. Each row contains the loadings of one item on factors. Each column includes the loadings of one factor. In the case of bi-factor structure, the first column of loadings is on the global factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phi</code></td>
+<td>
+<p>The input factor covariance matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Psi</code></td>
+<td>
+<p>The input covariance matrix of item residuals. Typically, <code>Psi</code> is a diagonal matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>items.index</code></td>
+<td>
+<p>The vector indexing the items of which the composite reliability is being estimated. It is an optional argument. If it is specified, the argument <code>scale.structure</code> is not effective. If it is not specified, the the argument <code>scale.structure</code> is expected to be specified and effective.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>factor.index</code></td>
+<td>
+<p>The vector indexing the factor(s)/construct(s) regarding which the composite reliability is being estimated. It is an optional argument. If it is not specified, the function will estimate the composite reliability regarding each factor/construct.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.structure</code></td>
+<td>
+<p>The scale structure in a list or a Boolean matrix form. In a list form, each element is a vector of items (names) of a subscale. If in a boolean form, the element on the i-th row and the j-th column indicates whether the i-th item is within the j-th subscale. If both the argument <code>scale.structure</code> and <code>Lambda</code> include colnames and rownames, the names must be match with each other. This argument <code>scale.structure</code> is optional. Only when <code>item-index</code> is not specified, this argument is effective.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modeltype</code></td>
+<td>
+<p>The type of factor structure (<code>"corr-factor"</code> or <code>"bi-factor"</code>). The current version supports correlated-factor structure and bi-factor structure. A bi-factor model typically assumes factors are uncorrelated. The default is correlated-factor structure.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The estimated composite reliability coefficient OmegaG.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Yujiao Mai, Deo Kumar Srivastava, and Kevin R Krull
+</p>
+
+
+<h3>References</h3>
+
+<p>Mai, Y., Srivastava, D.K., &amp; Krull, K.R. (2021). Estimating Composite reliability of Multidimensional Measurement with Overlapping Items. Present at the 2021 Eastern North American Region (ENAR) Spring Virtual Meeting.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+#### Example 1:
+OmegaG(Lambda = PedsQLMFS$ESEM$Lambda,
+                       Phi = PedsQLMFS$ESEM$Phi,
+                        Psi = PedsQLMFS$ESEM$Psi,
+                        modeltype = "correlated-factor",
+                        scale.structure = PedsQLMFS$ScaleStructure
+                        )
+
+#  Model type = correlated-factor
+#
+#  CR of each subscale:
+#       GeneralFatigue :    0.770
+#         SleepFatigue :    0.690
+#     CognitiveFatigue :    0.777
+
+
+#### Example 2:
+ OmegaG(Lambda = PedsQLMFS$biESEM$Lambda,
+                Phi = PedsQLMFS$biESEM$Phi,
+                Psi = PedsQLMFS$biESEM$Psi,
+                modeltype = "bi-factor",
+                scale.structure = PedsQLMFS$ScaleStructure
+ )
+
+# Model type = bi-factor
+#
+# Hierarchy and Hierarchical-subscale CR:
+#                          GlobalFatigue :    0.806
+#                         GeneralFatigue :    0.174
+#                           SleepFatigue :    0.361
+#                       CognitiveFatigue :    0.190
+#
+# Scale Total and Subscale CR:
+#   GlobalFatigue + all sepcific factors :    0.926
+#         GlobalFatigue + GeneralFatigue :    0.859
+#           GlobalFatigue + SleepFatigue :    0.758
+#       GlobalFatigue + CognitiveFatigue :    0.839
+
+
+# Example 3:
+ OmegaG::OmegaG(Lambda = PedsQLMFS$biESEM$Lambda,
+       Phi = PedsQLMFS$biESEM$Phi,
+       Psi = PedsQLMFS$biESEM$Psi,
+       modeltype = "bi-factor",
+       items.index = 1:6,factor.index = 2
+ )
+
+# Model type = bi-factor
+#
+# CR of Items 1 2 3 4 5 6 regarding factor 2:
+#                      GeneralFatigue :    0.174
+
+
+# Example 4:
+  OmegaG::OmegaG(Lambda = PedsQLMFS$ESEM$Lambda,
+                 Phi = PedsQLMFS$ESEM$Phi,
+                  Psi = PedsQLMFS$ESEM$Psi,
+                 modeltype = "correlated-factor",
+                  items.index = 7:12,factor.index = 2
+   )
+
+# Model type = correlated-factor
+#
+# CR of Items 7 8 9 10 11 12 regarding factor 2:
+#   SleepFatigue :    0.690
+
+
+
+</code></pre>
+
+
+</div>

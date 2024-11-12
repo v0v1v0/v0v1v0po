@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tbl_ord</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A unified ordination object class</h2>
+
+<h3>Description</h3>
+
+<p>These functions wrap ordination objects in the class tbl_ord,
+create tbl_ords directly from matrices, and test for the class and basic
+structure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as_tbl_ord(x)
+
+## S3 method for class 'tbl_ord'
+as_tbl_ord(x)
+
+make_tbl_ord(rows = NULL, cols = NULL, ...)
+
+is_tbl_ord(x)
+
+is.tbl_ord(x)
+
+valid_tbl_ord(x)
+
+un_tbl_ord(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An ordination object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows, cols</code></td>
+<td>
+<p>Matrices to be used as factors of a tbl_ord.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional elements of a custom tbl_ord.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The tbl_ord class wraps around a range of ordination classes, making
+available a suite of ordination tools that specialize to each original object
+class. These tools include <code>format()</code> and <code>fortify()</code> methods, which
+facilitate the <code>print()</code> method and the <code>ggbiplot()</code> function.
+</p>
+<p>No default method is provided for <code>as_tbl_ord()</code>, despite most defined
+methods being equivalent (simply appending 'tbl_ord' to the vector of object
+classes). This prevents objects for which other methods are not defined from
+being re-classed as tbl_ords.
+</p>
+<p>The function <code>make_tbl_ord()</code> creates a tbl_ord structured as a list of two
+matrices, <code>u</code> and <code>v</code>, which must have the same number of columns and the
+same column names.
+</p>
+<p><code>is_tbl_ord()</code> checks an object <code>x</code> for the tbl_ord class; <code>valid_tbl_ord()</code>
+additionally checks for consistency between <code>recover_coord(x)</code> and the
+columns of <code>recover_rows(x)</code> and <code>recover_cols(x)</code>, using the recoverers.
+<code>un_tbl_ord()</code> removes attributes associated with the tbl_ord class in order
+to restore an object that was originally passed to <code>as_tbl_ord</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tbl_ord (<code style="white-space: pre;">⁠as*()⁠</code>, <code style="white-space: pre;">⁠make*()⁠</code>), an S3-class model object that can be
+wrapped as one (<code style="white-space: pre;">⁠un*()⁠</code>), or a logical value (<code style="white-space: pre;">⁠is*()⁠</code>, <code style="white-space: pre;">⁠value*()⁠</code>).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># illustrative ordination: FA of Swiss social data
+swiss_fa &lt;- factanal(swiss, factors = 3L, scores = "regression")
+print(swiss_fa)
+
+# add the 'tbl_ord' wrapper
+swiss_fa_ord &lt;- as_tbl_ord(swiss_fa)
+# inspect wrapped model
+is_tbl_ord(swiss_fa_ord)
+print(swiss_fa_ord)
+valid_tbl_ord(swiss_fa_ord)
+# unwrap the model
+un_tbl_ord(swiss_fa_ord)
+
+# create a 'tbl_ord' directly from row and column factors
+# (missing inertia &amp; other attributes)
+swiss_fa_ord2 &lt;- make_tbl_ord(rows = swiss_fa$scores, cols = swiss_fa$loadings)
+# inspect wrapped factors
+is_tbl_ord(swiss_fa_ord2)
+print(swiss_fa_ord2)
+valid_tbl_ord(swiss_fa_ord2)
+# unwrap factors
+un_tbl_ord(swiss_fa_ord2)
+</code></pre>
+
+
+</div>

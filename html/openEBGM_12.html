@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>negLLzero</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Likelihood with zero counts</h2>
+
+<h3>Description</h3>
+
+<p><code>negLLzero</code> computes the negative log-likelihood based on the
+unconditional marginal distribution of <em>N</em> (equation 12 in DuMouchel
+1999, except taking negative natural log). This function is minimized to
+estimate the hyperparameters of the prior distribution. Use this function if
+including zero counts but not squashing data. Generally this function is not
+recommended (<code>negLLsquash</code> is typically more efficient).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">negLLzero(theta, N, E)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>A numeric vector of hyperparameters ordered as:
+<code class="reqn">\alpha_1, \beta_1, \alpha_2, \beta_2, P</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>A whole number vector of actual counts from
+<code>processRaw</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>E</code></td>
+<td>
+<p>A numeric vector of expected counts from <code>processRaw</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The marginal distribution of the counts, <em>N</em>, is a mixture of
+two negative binomial distributions. The hyperparameters for the prior
+distribution (mixture of gammas) are estimated by optimizing the likelihood
+equation from this marginal distribution.
+</p>
+<p>The hyperparameters are:
+</p>
+
+<ul>
+<li>
+<p><code class="reqn">\alpha_1, \beta_1</code>: Parameters of the first component of the
+marginal distribution of the counts (also the prior distribution)
+</p>
+</li>
+<li>
+<p><code class="reqn">\alpha_2, \beta_2</code>: Parameters of the second component
+</p>
+</li>
+<li>
+<p><code class="reqn">P</code>: Mixture fraction
+</p>
+</li>
+</ul>
+<p>This function will not need to be called directly if using
+<code>exploreHypers</code> or <code>autoHyper</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A scalar negative log-likelihood value.
+</p>
+
+
+<h3>Warnings</h3>
+
+<p>Make sure <em>N</em> actually contains zeroes before using this function. You
+should have used the <code>zeroes = TRUE</code> option when calling the
+<code>processRaw</code> function.
+</p>
+<p>Make sure the data were not squashed before using this function.
+</p>
+
+
+<h3>References</h3>
+
+<p>DuMouchel W (1999). "Bayesian Data Mining in Large Frequency
+Tables, With an Application to the FDA Spontaneous Reporting System."
+<em>The American Statistician</em>, 53(3), 177-190.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>nlm</code>, <code>nlminb</code>, and
+<code>optim</code> for optimization
+</p>
+<p>Other negative log-likelihood functions: 
+<code>negLLsquash()</code>,
+<code>negLLzeroSquash()</code>,
+<code>negLL()</code>
+</p>
+
+
+</div>

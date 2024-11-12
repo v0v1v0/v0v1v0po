@@ -1,0 +1,246 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_max_phylo_div_objective</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add maximum phylogenetic diversity objective</h2>
+
+<h3>Description</h3>
+
+<p>Set the objective of a project prioritization <code>problem()</code> to
+maximize the phylogenetic diversity that is expected to persist into the
+future, whilst ensuring that the cost of the solution is within a
+pre-specified budget (Bennett <em>et al.</em> 2014, Faith 2008).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_max_phylo_div_objective(x, budget, tree)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>budget</code></td>
+<td>
+<p><code>numeric</code> budget for funding actions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tree</code></td>
+<td>
+<p><code>ape::phylo()</code> phylogenetic tree describing the
+evolutionary relationships between the features. Note that the
+argument to <code>tree</code> must contain every feature, and only the
+features, present in the argument to <code>x</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A problem objective is used to specify the overall goal of the
+project prioritization problem.
+Here, the maximum phylogenetic diversity objective seeks to find the set
+of actions that maximizes the expected amount of evolutionary history
+that is expected to persist into the future given the evolutionary
+relationships between the features (e.g. populations, species).
+Let <code class="reqn">I</code> represent the set of conservation actions (indexed by
+<code class="reqn">i</code>). Let <code class="reqn">C_i</code> denote the cost for funding action <code class="reqn">i</code>, and
+let <code class="reqn">m</code> denote the maximum expenditure (i.e. the budget). Also,
+let <code class="reqn">F</code> represent each feature (indexed by <code class="reqn">f</code>), <code class="reqn">W_f</code>
+represent the weight for each feature <code class="reqn">f</code> (defaults to zero for
+each feature unless specified otherwise), and <code class="reqn">E_f</code>
+denote the probability that each feature will go extinct given the funded
+conservation projects.
+</p>
+<p>To describe the
+evolutionary relationships between the features <code class="reqn">f \in F</code>,
+consider a phylogenetic tree that contains features <code class="reqn">f \in F</code>
+with branches of known lengths. This tree can be described using
+mathematical notation by letting <code class="reqn">B</code> represent the branches (indexed by
+<code class="reqn">b</code>) with lengths <code class="reqn">L_b</code> and letting <code class="reqn">T_{bf}</code> indicate which
+features <code class="reqn">f \in F</code> are associated with which phylogenetic
+branches <code class="reqn">b \in B</code> using zeros and ones. Ideally, the set of
+features <code class="reqn">F</code> would contain all of the species in the study
+area—including non-threatened species—to fully account for the benefits
+for funding different actions.
+</p>
+<p>To guide the prioritization, the conservation actions are organized into
+conservation projects. Let <code class="reqn">J</code> denote the set of conservation projects
+(indexed by <code class="reqn">j</code>), and let <code class="reqn">A_{ij}</code> denote which actions
+<code class="reqn">i \in I</code> comprise each conservation project
+<code class="reqn">j \in J</code> using zeros and ones. Next, let <code class="reqn">P_j</code> represent
+the probability of project <code class="reqn">j</code> being successful if it is funded. Also,
+let <code class="reqn">B_{fj}</code> denote the enhanced probability that each feature
+<code class="reqn">f \in F</code> associated with the project <code class="reqn">j \in J</code>
+will persist if all of the actions that comprise project <code class="reqn">j</code> are funded
+and that project is allocated to feature <code class="reqn">f</code>.
+For convenience,
+let <code class="reqn">Q_{fj}</code> denote the actual probability that each
+<code class="reqn">f \in F</code> associated with the project <code class="reqn">j \in J</code>
+is expected to persist if the project is funded. If the argument
+to <code>adjust_for_baseline</code> in the <code>problem</code> function was set to
+<code>TRUE</code>, and this is the default behavior, then
+<code class="reqn">Q_{fj} = (P_{j} \times B_{fj}) + \bigg(\big(1 - (P_{j} B_{fj})\big)
+  \times (P_{n} \times B_{fn})\bigg)</code>, where <code>n</code> corresponds to the
+baseline "do nothing" project. This means that the probability
+of a feature persisting if a project is allocated to a feature
+depends on (i) the probability of the project succeeding, (ii) the
+probability of the feature persisting if the project does not fail,
+and (iii) the probability of the feature persisting even if the project
+fails. Otherwise, if the argument is set to <code>FALSE</code>, then
+<code class="reqn">Q_{fj} = P_{j} \times B_{fj}</code>.
+</p>
+<p>The binary control variables <code class="reqn">X_i</code> in this problem indicate whether
+each project <code class="reqn">i \in I</code> is funded or not. The decision
+variables in this problem are the <code class="reqn">Y_{j}</code>, <code class="reqn">Z_{fj}</code>, <code class="reqn">E_f</code>,
+and <code class="reqn">R_b</code> variables.
+Specifically, the binary <code class="reqn">Y_{j}</code> variables indicate if project <code class="reqn">j</code>
+is funded or not based on which actions are funded; the binary
+<code class="reqn">Z_{fj}</code> variables indicate if project <code class="reqn">j</code> is used to manage
+feature <code class="reqn">f</code> or not; the semi-continuous <code class="reqn">E_f</code> variables
+denote the probability that feature <code class="reqn">f</code> will go extinct; and
+the semi-continuous <code class="reqn">R_b</code> variables denote the probability that
+phylogenetic branch <code class="reqn">b</code> will remain in the future.
+</p>
+<p>Now that we have defined all the data and variables, we can formulate
+the problem. For convenience, let the symbol used to denote each set also
+represent its cardinality (e.g. if there are ten features, let <code class="reqn">F</code>
+represent the set of ten features and also the number ten).
+</p>
+<p style="text-align: center;"><code class="reqn">
+  \mathrm{Maximize} \space (\sum_{b = 0}^{B} L_b R_b) + \sum_{f}^{F}
+  (1 - E_f) W_f \space \mathrm{(eqn \space 1a)} \\
+  \mathrm{Subject \space to} \space
+  \sum_{i = 0}^{I} C_i \leq m \space \mathrm{(eqn \space 1b)} \\
+  R_b = 1 - \prod_{f = 0}^{F} ifelse(T_{bf} == 1, \space E_f, \space
+  1) \space \forall \space b \in B \space \mathrm{(eqn \space 1c)} \\
+  E_f = 1 - \sum_{j = 0}^{J} Z_{fj} Q_{fj} \space \forall \space f \in F
+  \space \mathrm{(eqn \space 1d)} \\
+  Z_{fj} \leq Y_{j} \space \forall \space j \in J \space \mathrm{(eqn \space
+  1e)} \\
+  \sum_{j = 0}^{J} Z_{fj} \times \mathrm{ceil}(Q_{fj}) = 1 \space \forall
+  \space f \in F \space \mathrm{(eqn \space 1f)} \\
+  A_{ij} Y_{j} \leq X_{i} \space \forall \space i \in I, j \in J \space
+  \mathrm{(eqn \space 1g)} \\
+  E_{f}, R_{b} \geq 0, E_{f}, R_{b} \leq 1 \space \forall \space b \in B
+   \space f \in F \space \mathrm{(eqn \space 1h)} \\
+  X_{i}, Y_{j}, Z_{fj} \in [0, 1] \space \forall \space i \in I, j \in J, f
+  \in F \space \mathrm{(eqn \space 1i)}
+  </code>
+</p>
+
+<p>The objective (eqn 1a) is to maximize the expected phylogenetic diversity
+(Faith 2008) plus the probability each feature will remain multiplied
+by their weights (noting that the feature weights default to zero).
+Constraint (eqn 1b) limits the maximum expenditure (i.e.
+ensures that the cost of the funded actions do not exceed the budget).
+Constraints (eqn 1c) calculate the probability that each branch
+(including tips that correspond to a single feature) will go extinct
+according to the probability that the features which share a given
+branch will go extinct.
+Constraints (eqn 1d) calculate the probability that each feature
+will go extinct according to their allocated project.
+Constraints (eqn 1e) ensure that feature can only be allocated to projects
+that have all of their actions funded. Constraints (eqn 1f) state that each
+feature can only be allocated to a single project. Constraints (eqn 1g)
+ensure that a project cannot be funded unless all of its actions are funded.
+Constraints (eqns 1h) ensure that the probability variables
+(<code class="reqn">E_f</code>) are bounded between zero and one. Constraints (eqns 1i) ensure
+that the action funding (<code class="reqn">X_i</code>), project funding (<code class="reqn">Y_j</code>), and
+project allocation (<code class="reqn">Z_{fj}</code>) variables are binary.
+</p>
+<p>Although this formulation is a mixed integer quadratically constrained
+programming problem (due to eqn 1c), it can be approximated using
+linear terms and then solved using commercial mixed integer programming
+solvers. This can be achieved by substituting the product of the feature
+extinction probabilities (eqn 1c) with the sum of the log feature extinction
+probabilities and using piecewise linear approximations (described in
+Hillier &amp; Price 2005 pp. 390–392) to approximate the exponent of this term.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ProjectProblem object with the objective
+added to it.
+</p>
+
+
+<h3>References</h3>
+
+<p>Bennett JR, Elliott G, Mellish B, Joseph LN, Tulloch AI,
+Probert WJ, Di Fonzo MMI, Monks JM, Possingham HP &amp; Maloney R (2014)
+Balancing phylogenetic diversity
+and species numbers in conservation prioritization, using a case study of
+threatened species in New Zealand. <em>Biological Conservation</em>,
+<strong>174</strong>: 47–54.
+</p>
+<p>Faith DP (2008) Threatened species and the potential loss of
+phylogenetic diversity: conservation scenarios based on estimated extinction
+probabilities and phylogenetic risk analysis. <em>Conservation Biology</em>,
+<strong>22</strong>: 1461–1470.
+</p>
+<p>Hillier FS &amp; Price CC (2005) <em>International series in operations
+research &amp; management science</em>. Springer.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>objectives.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions, sim_tree)
+
+# plot tree
+plot(sim_tree)
+
+# build problem with maximum phylogenetic diversity objective and $200 budget
+p1 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+      add_max_phylo_div_objective(budget = 200, tree = sim_tree) %&gt;%
+      add_binary_decisions()
+
+## Not run: 
+# solve problem
+s1 &lt;- solve(p1)
+
+# print solution
+print(s1)
+
+# plot solution
+plot(p1, s1)
+
+# build another problem that includes feature weights
+p2 &lt;- p1 %&gt;%
+      add_feature_weights("weight")
+
+# solve problem with feature weights
+s2 &lt;- solve(p2)
+
+# print solution based on feature weights
+print(s2)
+
+# plot solution based on feature weights
+plot(p2, s2)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

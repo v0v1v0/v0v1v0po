@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>name_split</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Returns a summary data frame of <code>'.gz'</code> encoded oceanography files by splitting their name
+</h2>
+
+<h3>Description</h3>
+
+<p>Returns a summary data.frame of <code>'.gz'</code> encoded oceanography files by splitting their name
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">name_split(gz.files)
+get.gz.info(gz.files)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>gz.files</code></td>
+<td>
+
+<p>Optional character vector or search criteria for .gz-encoded oceanography files. 
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Returns a summary data.frame of <code>'.gz'</code> encoded oceanography files by splitting their name
+</p>
+<p><code>area source parameter resolution timestep date1 date2 option</code>
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>area</code></td>
+<td>
+
+<p>region keyword
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source</code></td>
+<td>
+
+<p>data source
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>param</code></td>
+<td>
+
+<p>the parameter saved in the <code>'.gz'</code>-file. Can only be one value!
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resolution</code></td>
+<td>
+
+<p>the spatial resolution
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timestep</code></td>
+<td>
+
+<p>the temporal resolution
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td>
+<code>date1</code> &amp; <code>date2</code>
+</td>
+<td>
+
+<p>the time interval covered in date format
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>option</code></td>
+<td>
+
+<p>a character string holding supplmentary information of <code>'.gz'</code>-file treatment
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See check_gzfiles to return summary of available <code>'.gz'</code>-files and name_join to create <code>'.gz'</code>-filenames from splitted names (name_split)-calls</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example: read and plot '.gz'-file
+path &lt;- system.file("test_files", package="oceanmap")
+gz.files &lt;- Sys.glob(paste0(path,'/*.gz')) # load sample-'.gz'-files
+check_gzfiles(folder=path) # return file summary-table
+
+# return summary of availble '.gz'-files
+# suffix-column corresponds to option column of the name_split-call
+# addition n-column returns the number of available files per filetype
+check_gzfiles(gz.files)
+
+## Example: split and rejoin '.gz'-filenames
+gz.files
+name_split(gz.files) # return summary-table per file
+name_split() # return summary-table of all gz-file in current folder
+name_join(name_split(gz.files))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OHPL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Ordered Homogeneity Pursuit Lasso</h2>
+
+<h3>Description</h3>
+
+<p>Fits the ordered homogeneity pursuit lasso (OHPL) model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OHPL(
+  x,
+  y,
+  maxcomp,
+  gamma,
+  cv.folds = 5L,
+  G = 30L,
+  type = c("max", "median"),
+  scale = TRUE,
+  pls.method = "simpls"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Predictor matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Response matrix with one column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxcomp</code></td>
+<td>
+<p>Maximum number of components for PLS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p>A number between (0, 1) for generating the gamma sequence.
+An usual choice for gamma could be <code>n * 0.05</code>, where <code>n</code> is a number
+in 2, 3, ..., 19.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cv.folds</code></td>
+<td>
+<p>Number of cross-validation folds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+<p>Maximum number of variable groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Find the maximum absolute correlation (<code>"max"</code>)
+or find the median of absolute correlation (<code>"median"</code>).
+Default is <code>"max"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>Should the predictor matrix be scaled? Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pls.method</code></td>
+<td>
+<p>Method for fitting the PLS model. Default is <code>"simpls"</code>.
+See the details section in <code>pls::plsr()</code> for all possible options.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of fitted OHPL model object with performance metrics.
+</p>
+
+
+<h3>References</h3>
+
+<p>You-Wu Lin, Nan Xiao, Li-Li Wang, Chuan-Quan Li, and Qing-Song Xu (2017).
+Ordered homogeneity pursuit lasso for group variable selection with
+applications to spectroscopic data.
+<em>Chemometrics and Intelligent Laboratory Systems</em> 168, 62–71.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate simulation data
+dat &lt;- OHPL.sim(
+  n = 100, p = 100, rho = 0.8,
+  coef = rep(1, 10), snr = 3, p.train = 0.5,
+  seed = 1010
+)
+
+# Split training and test set
+x &lt;- dat$x.tr
+y &lt;- dat$y.tr
+x.test &lt;- dat$x.te
+y.test &lt;- dat$y.te
+
+# Fit the OHPL model
+fit &lt;- OHPL(x, y, maxcomp = 3, gamma = 0.5, G = 10, type = "max")
+
+# Selected variables
+fit$Vsel
+
+# Make predictions
+y.pred &lt;- predict(fit, x.test)
+
+# Compute evaluation metric RMSEP, Q2 and MAE for the test set
+perf &lt;- OHPL.RMSEP(fit, x.test, y.test)
+perf$RMSEP
+perf$Q2
+perf$MAE
+</code></pre>
+
+
+</div>

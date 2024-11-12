@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>keygen</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate Key pair</h2>
+
+<h3>Description</h3>
+
+<p>The <code>keygen</code> functions generate a random private key. Use <code>as.list(key)$pubkey</code>
+to derive the corresponding public key. Use write_pem to save a private key
+to a file, optionally with a password.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rsa_keygen(bits = 2048)
+
+dsa_keygen(bits = 1024)
+
+ec_keygen(curve = c("P-256", "P-384", "P-521"))
+
+x25519_keygen()
+
+ed25519_keygen()
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bits</code></td>
+<td>
+<p>bitsize of the generated RSA/DSA key</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>curve</code></td>
+<td>
+<p>which NIST curve to use</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate keypair
+key &lt;- rsa_keygen()
+pubkey &lt;- as.list(key)$pubkey
+
+# Write/read the key with a passphrase
+write_pem(key, "id_rsa", password = "supersecret")
+read_key("id_rsa", password = "supersecret")
+unlink("id_rsa")
+</code></pre>
+
+
+</div>

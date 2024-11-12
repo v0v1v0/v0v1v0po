@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>eligibility_rate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Survey Eligibility Rate</h2>
+
+<h3>Description</h3>
+
+<p>Provides an estimate for the proportion of cases of unknown eligibility
+that are eligible, as described by (Valliant et al. 2013). The
+rate is typically (but not necessarily) calculated on the screener data
+or other sources depending on the type of survey, and approaches to
+calculating 'e' may therefore differ from one survey to the next.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">eligibility_rate(x, weight = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a character vector of disposition outcomes (I, P, R, NC, O, UH, UO,
+U, or NE). Alternatively, a named vector/table of (weighted) disposition
+counts.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>an optional numeric vector that specifies the weight of each
+element in 'x' if x is a character vector. If none is provided (the
+default), an unweighted estimate is returned.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The present implementation follows the default used in the Excel-based <em>AAPOR
+Outcome Rate Calculator (Version 4.0, May, 2016)</em> on the basis of
+known ineligibles being coded as "NE".
+</p>
+<p>The eligibility rate (ELR) is defined as
+</p>
+
+<ul><li>
+<p> ELR = (I + P + R + NC + O) / (I + P + R + NC + O + NE)
+</p>
+</li></ul>
+<h3>References</h3>
+
+<p>The American Association for Public Opinion Research (2016).
+“Standard Definitions: Final Dispositions of Case Codes and Outcome Rates for Surveys.”
+<a href="https://www.aapor.org/Standards-Ethics/Standard-Definitions-(1).aspx">https://www.aapor.org/Standards-Ethics/Standard-Definitions-(1).aspx</a>. Valliant R, Dever J, Kreuter F (2013).
+<em>Practical Tools for Designing and Weighting Survey Samples</em>,  series Statistics for Social and Behavioral Sciences.
+Springer New York.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>outcomerate
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load the outcomerate package
+library(outcomerate)
+
+# Create a vector of survey dispositions
+#
+# I  = Complete interview
+# P  = Partial interview
+# R  = Refusal and break-off
+# NC = Non-contact
+# O  = Other
+# UH = Unknown if household/occupied housing unit
+# UO = Unknown, other
+# NE = Not eligible
+x &lt;- c("I", "P", "I", "NE", "NC", "UH", "I", "R", "UO", "I", "O", "P", "I")
+
+# calculate all rates, assume 80% of unknown cases are elligble
+eligibility_rate(x)
+
+# calculate weighted rates
+w &lt;- runif(13, 0, 5)
+eligibility_rate(x, weight = w)
+
+# alternatively, provide input as counts
+freq &lt;- c(I = 6, P = 2, NC = 3, NE = 1)
+eligibility_rate(freq)
+
+</code></pre>
+
+
+</div>

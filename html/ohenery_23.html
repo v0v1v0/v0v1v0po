@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>smax</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The softmax function.</h2>
+
+<h3>Description</h3>
+
+<p>The softmax function: exponentiate a vector and then
+normalize.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">smax(eta, g = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>numeric array of the odds.
+The odds are de-meaned within each group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>a vector giving the group indices. If <code>NULL</code>,
+then we assume only one group is in consideration.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given vector <code class="reqn">\eta</code> for a single group, essentially
+computes vector <code class="reqn">\mu</code> defined by 
+</p>
+<p style="text-align: center;"><code class="reqn">\mu_i = \frac{\exp{\eta_i}}{\sum_j \exp{\eta_j}}.</code>
+</p>
+
+<p>Note that this computation should be invariant with respect
+to level shifts of the <code class="reqn">\eta</code>, and thus we de-mean
+the odds first.
+</p>
+
+
+<h3>Value</h3>
+
+<p>the exponentiated data normalized.
+For the row-wise version, each row is soft maxed.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function can deal with overflow in a semi-coherent way.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>normalize</code>, <code>inv_smax</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># we can deal with large values:
+set.seed(2345)
+eta &lt;- rnorm(12,sd=1000)
+smax(eta)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>SplineBasis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Creating <code>SplineBasis</code> Objects.</h2>
+
+<h3>Description</h3>
+
+<p>The function to create <code>SplineBasis</code> and <code>OrthogonalSplineBasis</code> Objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">	SplineBasis(knots, order=4, keep.duplicates=FALSE)
+	OrthogonalSplineBasis(knots, ...)
+	OBasis(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>knots</code></td>
+<td>
+<p>The full set of knots used to define the basis functions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>Order of the spline fit.(degree= order-1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep.duplicates</code></td>
+<td>
+<p>Should duplicate interior knots that could cause computation problem be kept or removed.  Defaults to false, which removes duplicate knots with a warning if duplicate interior knots are found.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments either ignored or passed onto other functions.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>SplineBasis</code> produces an object representing the basis functions used in spline fitting.  Provides a compact easily evaluated representation of the functions.  Produces a class of object <code>SplineBasis</code>.
+<code>OrthogonalSplineBasis</code> is a shortcut to obtain a set of orthogonalized basis functions from the knots. <code>OBasis</code> is an alias for <code>OrthogonalSplineBasis</code>. Both provide an object of class <code>OrthogonalSplineBasis</code>.  The class <code>OrthogonalSplineBasis</code> inherits directly from <code>SplineBasis</code> meaning all functions that apply to <code>SplineBasis</code> functions also apply to the orthogonalized version.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>SplineBasis</code> or <code>OrthogonalSplineBasis</code>
+</p>
+
+
+<h3>References</h3>
+
+<p><em>General matrix representations for B-splines</em> Kaihuai, Qin, The Visual Computer 2000 16:177–186
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>SplineBasis</code>, <code>spline</code>, orthogonalsplinebasis-package
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">knots&lt;-c(0,0,0,0:10,10,10,10)
+plot(SplineBasis(knots))
+obase&lt;-OBasis(knots)
+plot(obase)
+dim(obase)[2] #number of functions
+evaluate(obase, 1:10-.5)
+</code></pre>
+
+
+</div>

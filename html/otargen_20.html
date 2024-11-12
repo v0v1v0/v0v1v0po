@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_l2g</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Radar plot for L2G partial scores from <code>studiesAndLeadVariantsForGeneByL2G()</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>This function returns a radar plot to compare the partial scores,
+important for prioritising the causal genes that are obtained
+from the <code>studiesAndLeadVariantsForGeneByL2G()</code> function. The user can
+decide to plot only for a specific disease by specifying an <code>EFO</code> ID
+for the <code>disease</code> argument, otherwise the returned plot will will facet
+based on existing traits/diseases in the outputs from <code>studiesAndLeadVariantsForGeneByL2G()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_l2g(data, disease_efo = NULL, l2g_cutoff = 0.5, top_n_disease = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Data frame: result of <code>studiesAndLeadVariantsForGeneByL2G</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disease_efo</code></td>
+<td>
+<p>Character: Input EFO id to filter the L2G data for a particular disease.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l2g_cutoff</code></td>
+<td>
+<p>Numeric: Sets the minimum L2G score threshold for diseases to be considered in the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top_n_disease</code></td>
+<td>
+<p>Numeric: Determines the number of top diseases to plot for each gene, ranked by L2G score.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A radar plot for the input disease and the genes associated with that disease.
+The variables shown include L2G score, chromatin interaction, variant pathogenicity and distance.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+p &lt;- studiesAndLeadVariantsForGeneByL2G(list("ENSG00000167207","ENSG00000096968",
+  "ENSG00000138821", "ENSG00000125255")) %&gt;% plot_l2g(disease = "EFO_0003767")
+p
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

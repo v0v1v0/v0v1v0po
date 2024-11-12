@@ -1,0 +1,56 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fingerprint</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OpenSSH fingerprint</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the OpenSSH fingerprint of a public key. This value should
+match what you get to see when connecting with SSH to a server. Note
+that some other systems might use a different algorithm to derive a
+(different) fingerprint for the same keypair.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fingerprint(key, hashfun = sha256)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>a public or private key</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hashfun</code></td>
+<td>
+<p>which hash function to use to calculate the fingerprint</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">mykey &lt;- rsa_keygen()
+pubkey &lt;- as.list(mykey)$pubkey
+fingerprint(mykey)
+fingerprint(pubkey)
+
+# Some systems use other hash functions
+fingerprint(pubkey, sha1)
+fingerprint(pubkey, sha256)
+
+# Other key types
+fingerprint(dsa_keygen())
+</code></pre>
+
+
+</div>

@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetNullAndPerfectScores</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Null And Perfect Scores</h2>
+
+<h3>Description</h3>
+
+<p><code>GetNullAndPerfectScores</code> Calculates the score of Perfect and Null
+detectors scores. Perfect detector is one that outputs all true positives and no false
+positives. And Null detector is one that outputs no anomaly detections.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetNullAndPerfectScores(data)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>All dataset with training and test datasets and with at least <code>timestamp</code>,
+<code>value</code> and <code>is.real.anomaly</code> columns.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This function calculates the scores based on three different profiles. Each tp,
+fp, tn, fn label is associated with a weight to give a more realistic score.
+For the standard profile weights are tp = 1, tn = 1, fp, = 0.11, and fn = 1.
+For the reward_low_FP_rate profile weights are tp = 1, tn = 1, fp, = 0.22, and fn = 1.
+For the reward_low_FN_rate profile weights are tp = 1, tn = 1, fp, = 0.11, and fn = 2.
+</p>
+
+
+<h3>Value</h3>
+
+<p>data.frame with null and perfect detectors scores for each profile.
+</p>
+
+
+<h3>References</h3>
+
+<p>A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
+Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
+Applications (IEEE ICMLA’15), 2015.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 180
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+# Add is.real.anomaly column
+df$is.real.anomaly &lt;- 0
+df[c(25,80,150), "is.real.anomaly"] &lt;- 1
+
+# Get null and perfect scores
+GetNullAndPerfectScores(df)
+</code></pre>
+
+
+</div>

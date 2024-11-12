@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>align</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal Transport Alignment</h2>
+
+<h3>Description</h3>
+
+<p>This function aligns an ensemble of partitions with a reference partition by optimal transport.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">align(data)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>– a numeric matrix of horizontally stacked cluster labels. Each column contains cluster labels for all the data points according to one clustering result. The reference clustering result is put in the first column, and the first cluster must be labeled as 1.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>a list of alignment result.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+<p>Wasserstein distances between the reference partition and the others.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numcls</code></td>
+<td>
+<p>the number of clusters for each partition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistics</code></td>
+<td>
+<p>average tightness ratio, average coverage ratio, 1-average jaccard distance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cap</code></td>
+<td>
+<p>cluster alignment and points based (CAP) separability.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>switched labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cps</code></td>
+<td>
+<p>covering point set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>topological relationship statistics between the reference partition and the others.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Weight</code></td>
+<td>
+<p>weight matrix.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sim1)
+# the number of clusters.
+C = 4
+# calculate baseline method for comparison.
+kcl = kmeans(sim1$X,C)
+# align clustering results for convenience of comparison.
+compar = align(cbind(sim1$z,kcl$cluster))
+</code></pre>
+
+
+</div>

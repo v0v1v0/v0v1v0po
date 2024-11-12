@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ors_pois</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Openrouteservice POIs</h2>
+
+<h3>Description</h3>
+
+<p>Search for points of interest around points or in geometries.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ors_pois(
+  request = c("pois", "stats", "list"),
+  geometry,
+  ...,
+  api_key = ors_api_key(),
+  output = c("parsed", "text", "sf")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>request</code></td>
+<td>
+<p>One of the following: <code>"pois"</code>, <code>"stats"</code> or <code>"list"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geometry</code></td>
+<td>
+<p>named list containing either a <code>geojson</code> geometry object
+(GeoJSON Point, LineString or Polygon) or a <code>bbox</code>, optionally buffered by
+a value provided  <code>buffer</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional request attributes as described <a href="https://openrouteservice.org/dev/#/api-docs/pois/post">here</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>Character scalar containing openrouteservice API key</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Output format. By default the response is being parsed to a list-based R object</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>There are three different request types: <code>pois</code>, <code>stats</code> and <code>list</code>.
+</p>
+<p><code>pois</code> returns a GeoJSON FeatureCollection in the bounding box specified in
+<code>geometry$bbox</code> or a GeoJSON geometry provided in <code>geometry$geojson</code>. <code>stats</code>
+does the same but groups by categories, ultimately returning a JSON object
+with the absolute numbers of POIs of a certain group.
+</p>
+<p><code>list</code> returns a list of category groups and their ids.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of points of interest in the area specified in <code>geometry</code> structured according to <code>output</code>:
+</p>
+
+<ul><li>
+<p> for <code>"text"</code>, a character vector of length 1 re-encoded to UTF-8.
+</p>
+</li></ul>
+<ul><li>
+<p> for <code>"parsed"</code>, a parsed R object.
+</p>
+</li></ul>
+<ul><li>
+<p> for <code>"sf"</code>, a simple features <code>sf</code> object. Valid only for argument <code>request = "pois"</code>.
+</p>
+</li></ul>
+<h3>Author(s)</h3>
+
+<p>Andrzej Oleś <a href="mailto:andrzej.oles@gmail.com">andrzej.oles@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># POI categories list
+ors_pois('list')
+
+# POIs around a buffered point
+geometry &lt;- list(geojson = list(type = "Point",
+                                coordinates = c(8.8034, 53.0756)),
+                buffer = 100)
+ors_pois(geometry = geometry)
+
+# alternative specification via bounding box
+ors_pois(geometry = list(bbox = list(c(8.8034, 53.0756), c(8.8034, 53.0756)),
+                         buffer = 100))
+
+# POIs of given categories
+ors_pois(geometry = geometry,
+         limit = 200,
+         sortby = "distance",
+         filters = list(
+           category_ids = c(180, 245)
+         ))
+
+# POIs of given category groups
+ors_pois(geometry = geometry,
+         limit = 200,
+         sortby = "distance",
+         filters = list(
+           category_group_ids = 160
+         ))
+
+# POI Statistics
+ors_pois("stats", geometry = geometry)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otuCollap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+collapse a OTU table at given level.
+</h2>
+
+<h3>Description</h3>
+
+<p>The function will collapse a structured OTU table at given taxonomic level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otuCollap(otutab, taxto, siteInCol = TRUE, taxhead = "taxonomy",
+    pattern = ";", collap = ";")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otutab</code></td>
+<td>
+
+<p>A OTU table of microbial community, which must contain a taxonomic column (if siteInCol) or row (if site in rows). The otu table can be given in numeric counts or in relative abundance.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taxto</code></td>
+<td>
+
+<p>numeric, collapse the otutable at the taxonomic level which start position (index) from the left  of taxonomy. For example, in "Archaea; Euryarchaeota; Methanomicrobia; Methanomicrobiales; Methanoregulaceae", the indices of "Euryarchaeota" and "Methanomicrobiales" are 2 and 4, respectively.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>siteInCol</code></td>
+<td>
+
+<p>Logical, if "TRUE", the OTU table contains samples in columns and taxa in rows. The function will decide whether to transpose the otu table based on this parameter.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taxhead</code></td>
+<td>
+
+<p>Character, specify the header of taxonomy. By default we assume your taxonomic column is entitled "taxonomy".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+
+<p>Character, specify the separation of taxonomy. By default, the taxonomy is separated by semicolon (";").
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collap</code></td>
+<td>
+
+<p>Character, tell the function about the separation for the hierarchical order in the output.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function will directly collapse the otu table according to numeric position of structured taxonony. This function can also collapse data with structured format like the example OTU table.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function will return a collapsed OTU table.
+
+
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sizhong Yang &lt;yanglzu@163.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>otuReport
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(otuqiime)
+dim(otuqiime)
+
+result &lt;- otuCollap(otutab = otuqiime, taxto = 2, siteInCol = TRUE,
+    taxhead = "taxonomy", pattern = ";")
+
+dim(result)
+
+</code></pre>
+
+
+</div>

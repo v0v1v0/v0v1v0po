@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fCressieRead</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>  Cressie and Read </h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the Cressie and Read statistics introduced by Noel Cressie and Timothy Read. It is a method for quantifying species biodiversity that can be adapted to the context of onomastics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fCressieRead(x, number, population, ni, location, lambda)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> dataframe of the data values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>number</code></td>
+<td>
+<p> name of a variable which represents  number of individuals of each species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>population</code></td>
+<td>
+<p> name of variable which represents total number of individuals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ni</code></td>
+<td>
+<p> name of variable which represent number of species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> name of variable which represent represents the grouping element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p> free parameter.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a community <code class="reqn">i</code>, Cressie and Read (1984) introduced the following parametric form for a generalised statistic
+<code class="reqn">I_n (\lambda) = \frac{2}{\lambda(\lambda+1)}  \sum_{k\in S_i} { n_{ki} \left[ \left(\frac{n_{ki}}{n/S_i}\right)^\lambda-1\right]}</code>, where <code class="reqn">n_{ki}</code> represents the number of individuals of species <code class="reqn">k</code> in a sample (in the population is <code class="reqn">N_{ki}</code>), <code class="reqn">S_i</code> represents all species at the community, species richness, and <code class="reqn">\lambda</code> is a free parameter.
+</p>
+<p>Varying the value of <code class="reqn">\lambda</code> gets different statistics. 
+If <code class="reqn">\lambda= -1</code> and <code class="reqn">\lambda= 0</code>, <code class="reqn">I_n(\lambda)</code> is not defined, but in any case, limits <code class="reqn">\lambda = -1</code> and <code class="reqn">\lambda = 0</code> can be taken.
+</p>
+<p>In onomastic context, <code class="reqn">n_{ki}</code> (<code class="reqn">\approx N_{ki}</code>) denotes the absolute frequency of surname <code class="reqn">k</code> in region <code class="reqn">i</code> (<code class="reqn">\approx</code> community diversity context <code class="reqn">i</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element, for example the communities / regions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cressieRead</code></td>
+<td>
+<p> the value of Cressie and Read statistics.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Cressie, Noel and Read, Timothy RC (1984) Multinomial goodness-of-fit tests. <em>Computational Statistics and Data Analysis</em>, <b>46</b>(3), 440–464.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fHill</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(surnamesgal14)
+result = fCressieRead(x= surnamesgal14 , number="number",
+population="population", location = "muni", ni="ni",
+lambda = 2)
+result
+</code></pre>
+
+
+</div>

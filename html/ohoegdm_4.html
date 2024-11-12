@@ -1,0 +1,357 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ohoegdm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Ordinal Higher-Order General Diagnostic Model under the
+Exploratory Framework (OHOEGDM)</h2>
+
+<h3>Description</h3>
+
+<p>Performs the Gibbs sampling routine for an ordinal higher-order EGDM.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ohoegdm(
+  y,
+  k,
+  m = 2,
+  order = k,
+  sd_mh = 0.4,
+  burnin = 1000L,
+  chain_length = 10000L,
+  l0 = c(1, rep(100, sum(choose(k, seq_len(order))))),
+  l1 = c(1, rep(1, sum(choose(k, seq_len(order))))),
+  m0 = 0,
+  bq = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Ordinal Item Matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Dimension to estimate for Q matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Number of Item Categories. Default is <code>2</code> matching the binary case.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>Highest interaction order to consider. Default model-specified <code>k</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd_mh</code></td>
+<td>
+<p>Metropolis-Hastings standard deviation tuning parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>burnin</code></td>
+<td>
+<p>Amount of Draws to Burn</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chain_length</code></td>
+<td>
+<p>Number of Iterations for chain.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l0</code></td>
+<td>
+<p>Spike parameter. Default 1 for intercept and 100
+coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l1</code></td>
+<td>
+<p>Slab parameter. Default 1 for all values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m0, bq</code></td>
+<td>
+<p>Additional tuning parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <strong><code>estimates</code></strong> list contains the mean information from the sampling
+procedure. Meanwhile, the <strong><code>chain</code></strong> list contains full MCMC values. Moreover,
+the <strong><code>details</code></strong> list provides information regarding the estimation call.
+Lastly, the <strong><code>recovery</code></strong> list stores values that can be used when
+assessing the method under a simulation study.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>ohoegdm</code> object containing four named lists:
+</p>
+
+<ul>
+<li> <p><strong><code>estimates</code></strong>: Averaged chain iterations
+</p>
+
+<ul>
+<li> <p><code>thetas</code>: Average theta coefficients
+</p>
+</li>
+<li> <p><code>betas</code>: Average beta coefficients
+</p>
+</li>
+<li> <p><code>deltas</code>: Average activeness of coefficients
+</p>
+</li>
+<li> <p><code>classes</code>: Average class membership
+</p>
+</li>
+<li> <p><code>m2lls</code>: Average negative two times log-likelihood
+</p>
+</li>
+<li> <p><code>omegas</code>: Average omega
+</p>
+</li>
+<li> <p><code>kappas</code> : Average category threshold parameter
+</p>
+</li>
+<li> <p><code>taus</code>: Average <code class="reqn">K</code>-vectors of factor intercept
+</p>
+</li>
+<li> <p><code>lambdas</code>: Average <code class="reqn">K</code>-vectors of factor loadings
+</p>
+</li>
+<li> <p><code>guessing</code>: Average guessing item parameter
+</p>
+</li>
+<li> <p><code>slipping</code>: Average slipping item parameter
+</p>
+</li>
+<li> <p><code>QS</code>: Average activeness of Q matrix entries
+</p>
+</li>
+</ul>
+</li>
+<li> <p><strong><code>chain</code></strong>: Chain iterations from the underlying <em>C++</em> rountine.
+</p>
+
+<ul>
+<li> <p><code>thetas</code>: Theta coefficients iterations
+</p>
+</li>
+<li> <p><code>betas</code>:  Beta coefficients iterations
+</p>
+</li>
+<li> <p><code>deltas</code>: Activeness of coefficients iterations
+</p>
+</li>
+<li> <p><code>classes</code>:  Class membership iterations
+</p>
+</li>
+<li> <p><code>m2lls</code>: Negative two times log-likelihood iterations
+</p>
+</li>
+<li> <p><code>omegas</code>:  Omega iterations
+</p>
+</li>
+<li> <p><code>kappas</code> : Category threshold parameter iterations
+</p>
+</li>
+<li> <p><code>taus</code>: <code class="reqn">K</code>-vector of factor intercept iterations
+</p>
+</li>
+<li> <p><code>lambdas</code>: <code class="reqn">K</code>-vector of factor loadings iterations
+</p>
+</li>
+<li> <p><code>guessing</code>: Guessing item parameter iterations
+</p>
+</li>
+<li> <p><code>slipping</code>: Slipping item parameter iterations
+</p>
+</li>
+</ul>
+</li>
+<li> <p><strong><code>details</code></strong>: Properties used to estimate the model
+</p>
+
+<ul>
+<li> <p><code>n</code>: Number of Subjects
+</p>
+</li>
+<li> <p><code>j</code>: Number of Items
+</p>
+</li>
+<li> <p><code>k</code>: Number of Traits
+</p>
+</li>
+<li> <p><code>m</code>: Number of Item Categories.
+</p>
+</li>
+<li> <p><code>order</code>: Highest interaction order to consider. Default model-specified <code>k</code>.
+</p>
+</li>
+<li> <p><code>sd_mh</code>: Metropolis-Hastings standard deviation tuning parameter.
+</p>
+</li>
+<li> <p><code>l0</code>: Spike parameter
+</p>
+</li>
+<li> <p><code>l1</code>: Slab parameter
+</p>
+</li>
+<li> <p><code>m0</code>, <code>bq</code>: Additional tuning parameters
+</p>
+</li>
+<li> <p><code>burnin</code>: Number of Iterations to discard
+</p>
+</li>
+<li> <p><code>chain_length</code>: Number of Iterations to keep
+</p>
+</li>
+<li> <p><code>runtime</code>: Elapsed time algorithm run time in the <em>C++</em> code.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><strong><code>recovery</code></strong>: Assess recovery metrics under a simulation study.
+</p>
+
+<ul>
+<li> <p><code>Q_item_encoded</code>: Per-iteration item encodings from Q matrix.
+</p>
+</li>
+<li> <p><code>MHsum</code>: Average acceptance from metropolis hastings sampler
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulation Study
+if (requireNamespace("edmdata", quietly = TRUE)) {
+# Q and Beta Design ----
+
+# Obtain the full K3 Q matrix from edmdata
+data("qmatrix_oracle_k3_j20", package = "edmdata")
+Q_full = qmatrix_oracle_k3_j20
+
+# Retain only a subset of the original Q matrix
+removal_idx = -c(3, 5, 9, 12, 15, 18, 19, 20)
+Q = Q_full[removal_idx, ]
+
+# Construct the beta matrix by-hand
+beta = matrix(0, 20, ncol = 8)
+
+# Intercept
+beta[, 1] = 1
+
+# Main effects
+beta[1:3, 2] = 1.5
+beta[4:6, 3] = 1.5
+beta[7:9, 5] = 1.5
+
+# Setup two-way effects
+beta[10, c(2, 3)] = 1
+beta[11, c(3, 4)] = 1
+
+beta[12, c(2, 5)] = 1
+beta[13, c(2, 5)] = 1
+beta[14, c(2, 6)] = 1
+
+beta[15, c(3, 5)] = 1
+beta[16, c(3, 5)] = 1
+beta[17, c(3, 7)] = 1
+
+# Setup three-way effects
+beta[18:20, c(2, 3, 5)] = 0.75
+
+# Decrease the number of Beta rows
+beta = beta[removal_idx,]
+
+# Construct additional parameters for data simulation
+Kappa = matrix(c(0, 1, 2), nrow = 20, ncol = 3, byrow =TRUE) # mkappa
+lambda = c(0.25, 1.5, -1.25) # mlambdas
+tau = c(0, -0.5, 0.5) # mtaus
+
+
+# Simulation conditions ---- 
+N = 100        # Number of Observations
+J = nrow(beta) # Number of Items
+M = 4          # Number of Response Categories
+Malpha = 2     # Number of Classes
+K = ncol(Q)    # Number of Attributes
+order = K      # Highest interaction to consider
+sdmtheta = 1   # Standard deviation for theta values
+
+# Simulate data ---- 
+
+# Generate theta values
+theta = rnorm(N, sd = sdmtheta)
+
+# Generate alphas 
+Zs = matrix(1, N, 1) %*% tau + 
+     matrix(theta, N, 1) %*% lambda + 
+     matrix(rnorm(N * K), N, K)
+Alphas = 1 * (Zs &gt; 0)
+
+vv = gen_bijectionvector(K, Malpha)
+CLs = Alphas %*% vv
+Atab = GenerateAtable(Malpha ^ K, K, Malpha, order)$Atable
+
+# Simulate item-level data
+Ysim = sim_slcm(N, J, M, Malpha ^ K, CLs, Atab, beta, Kappa)
+
+# Establish chain properties 
+# Standard Deviation of MH. Set depending on sample size.
+# If sample size is:
+#  - small, allow for larger standard deviation
+#  - large, allow for smaller standard deviation.
+sd_mh = .4 
+burnin = 50        # Set for demonstration purposes, increase to at least 5,000 in practice.
+chain_length = 100 # Set for demonstration purposes, increase to at least 40,000 in practice.
+
+# Setup spike-slab parameters
+l0s = c(1, rep(100, Malpha ^ K - 1))
+l1s = c(1, rep(1, Malpha ^ K - 1))
+
+my_model = ohoegdm::ohoegdm(
+  y = Ysim,
+  k = K,
+  m = M,
+  order = order,
+  l0 = l0s,
+  l1 = l1s,
+  m0 = 0,
+  bq = 1,
+  sd_mh = sd_mh,
+  burnin = burnin,
+  chain_length = chain_length
+)
+}
+</code></pre>
+
+
+</div>

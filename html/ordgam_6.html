@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lpost.gamma</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Posterior density function for the non-penalized parameters in an ordgam model</h2>
+
+<h3>Description</h3>
+
+<p>Posterior density function for the non-penalized parameters in an ordgam model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lpost.gamma(model)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An <code>ordgam.object</code></p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Log joint posterior density function for the non-penalized regression parameters.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Philippe Lambert <a href="mailto:p.lambert@uliege.be">p.lambert@uliege.be</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Lambert, P. and Gressani, 0. (2023) Penalty parameter selection and asymmetry corrections
+to Laplace approximations in Bayesian P-splines models. Statistical Modelling. &lt;doi:10.1177/1471082X231181173&gt;. Preprint: &lt;arXiv:2210.01668&gt;.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ordgam</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ordgam)
+data(freehmsData)
+mod = ordgam(freehms ~ s(eduyrs) + s(age), data=freehmsData, descending=TRUE)
+print(mod$theta) ## Model regression parameters
+gam.hat = mod$theta[1:4] ## Non-penalized parameter estimates
+ordgam::lpost.gamma(mod)(gam.hat)
+
+</code></pre>
+
+
+</div>

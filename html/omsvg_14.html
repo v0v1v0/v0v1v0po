@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filter_gaussian_blur</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter: add a gaussian blur to an element</h2>
+
+<h3>Description</h3>
+
+<p>A gaussian blur effectively blurs an input image or shape by the amount
+specified in <code>stdev</code>. The standard deviation of <code>stdev</code> is in direct
+reference to the gaussian distribution that governs the extent of blurring.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filter_gaussian_blur(stdev = 1, what = "source")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stdev</code></td>
+<td>
+<p>The number of standard deviations for the blur effect.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>what</code></td>
+<td>
+<p>What exactly should be blurred? By default, it is the <code>"source"</code>
+image.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>svg</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# Add a green ellipse to an SVG and
+# then apply the `filter_gaussian_blur()`
+# filter to blur the edges
+SVG(width = 200, height = 100) %&gt;%
+  svg_filter(
+    id = "blur",
+    filters = list(
+      filter_gaussian_blur(stdev = 2)
+    )
+  ) %&gt;%
+  svg_ellipse(
+    x = 40, y = 40,
+    width = 50, height = 30,
+    attrs = svg_attrs_pres(
+      fill = "green",
+      filter = "blur"
+    )
+  )
+}
+
+</code></pre>
+
+
+</div>

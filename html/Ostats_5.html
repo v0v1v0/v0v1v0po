@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Ostats_multivariate_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot multivariate community overlap</h2>
+
+<h3>Description</h3>
+
+<p>This function plots the overlap of traits among
+species for each community in multivariate space, showing
+projections of trait hypervolumes into two-dimensional space for
+all pairs of traits.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Ostats_multivariate_plot(
+  plots,
+  sp,
+  traits,
+  overlap_dat = NULL,
+  use_plots = NULL,
+  colorvalues = NULL,
+  plot_points = TRUE,
+  contour_level,
+  axis_expansion = 0.01,
+  contour_buffer_factor = 0.25,
+  panel_height = 3,
+  panel_width = 3,
+  units = "cm",
+  hypervolume_args = list()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>plots</code></td>
+<td>
+<p>Site identity: a vector of names of each community.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sp</code></td>
+<td>
+<p>Taxon identity: a vector of species or taxa names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traits</code></td>
+<td>
+<p>A matrix or data frame with rows representing individuals
+and columns representing traits.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overlap_dat</code></td>
+<td>
+<p>Optional: an object containing the output of
+<code>Ostats_multivariate</code>.
+If provided, overlap statistics will be displayed in the plot panels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_plots</code></td>
+<td>
+<p>a vector of sites to plot. If NULL, the function will plot all the sites.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorvalues</code></td>
+<td>
+<p>Vector of color values for the density polygons.
+Defaults to a viridis palette if none provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_points</code></td>
+<td>
+<p>whether to plot individual data points in addition to
+the hypervolume slices. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contour_level</code></td>
+<td>
+<p>level at which to plot contour lines. If not provided
+by the user, a message is issued stating the default plotting level is 0.01.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axis_expansion</code></td>
+<td>
+<p>multiplicative expansion factor by which to expand the x and y axes around
+the hypervolume contours before plotting. Default is 0.01.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contour_buffer_factor</code></td>
+<td>
+<p>multiplicative expansion factor by which to expand the x and y axes in all directions,
+relative to the range of the axis, before calculating the hypervolume contours for plotting.
+If this is not set to a sufficiently large value, the contour lines of the hypervolumes will be cut off.
+Default value is 0.25 (25% expansion of the axis limits in all directions).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>panel_height</code></td>
+<td>
+<p>height of the individual plot panels, in units given by <code>units</code>. Default is 3 cm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>panel_width</code></td>
+<td>
+<p>height of the individual plot panels, in units given by <code>units</code>. Default is 3 cm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>units</code></td>
+<td>
+<p>units for panel height and width. Default is centimeters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hypervolume_args</code></td>
+<td>
+<p>additional arguments to pass to <code>hypervolume</code>,
+such as <code>method</code>. If none are provided, default values are used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Some of the code for generating contour lines is modified from
+<code>plot.HypervolumeList</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Two-dimensional projections of species trait hypervolumes for each pair of traits,
+plotted together for each community to show how they overlap each other.
+The overlap value obtained as output from <code>Ostats_multivariate</code>
+is labelled on each community graph, if provided by the user.
+</p>
+<p>The class of the returned object is <code>Ostats_plot_object</code>. Calling
+<code>print</code> on this object will invoke a method to draw the plot using
+<code>grid.draw</code>.
+</p>
+<p>If more than one community is provided, a list of objects of class
+<code>Ostats_plot_object</code> will be returned.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Ostats_multivariate</code> for generating multivariate O-statistics
+</p>
+
+
+</div>

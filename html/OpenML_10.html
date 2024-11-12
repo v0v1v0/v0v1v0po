@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convertOMLTaskToMlr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert an OpenML task to mlr.</h2>
+
+<h3>Description</h3>
+
+<p>Converts an <code>OMLTask</code> to a list of <code>Task</code>,
+<code>ResampleInstance</code> and <code>Measure</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convertOMLTaskToMlr(
+  obj,
+  measures = NULL,
+  mlr.task.id = "&lt;oml.data.name&gt;",
+  ignore.flagged.attributes = TRUE,
+  drop.levels = TRUE,
+  verbosity = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+<p>[<code>OMLTask</code>]<br>
+The OML task object that should be converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measures</code></td>
+<td>
+<p>[<code>Measure</code>]<br>
+Additional measures that should be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mlr.task.id</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+Id string for <code>Task</code> object.
+The strings <code>&lt;oml.data.name&gt;</code>, <code>&lt;oml.data.id&gt;</code>, <code>&lt;oml.data.version&gt;</code>
+and <code>&lt;oml.task.id&gt;</code> will be replaced by their respective values contained
+in the <code>OMLTask</code> object.
+Default is <code>&lt;oml.data.name&gt;</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore.flagged.attributes</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+Should those features that are listed in the data set description slot “ignore.attribute”
+be removed?
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop.levels</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+Should empty factor levels be dropped in the data?
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbosity</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+Print verbose output on console? Possible values are:<br><code>0</code>: normal output,<br><code>1</code>: info output,<br><code>2</code>: debug output.<br>
+Default is set via <code>setOMLConfig</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>[list] A list with the following objects:
+</p>
+
+<dl>
+<dt>mlr.task</dt>
+<dd>
+<p>[<code>Task</code>]</p>
+</dd>
+<dt>mlr.rin</dt>
+<dd>
+<p>[<code>ResampleInstance</code>]</p>
+</dd>
+<dt>mlr.measures</dt>
+<dd>
+<p>[list of <code>Measures</code> to optimize for.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>Other task-related functions: 
+<code>deleteOMLObject()</code>,
+<code>getOMLTask()</code>,
+<code>listOMLTaskTypes()</code>,
+<code>listOMLTasks()</code>,
+<code>makeOMLTask()</code>,
+<code>tagOMLObject()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># \dontrun{
+# 	library("mlr")
+# 	vinnieOML = getOMLTask(task.id = 4845)
+# 	vinnieMlr = convertOMLTaskToMlr(vinnieOML)
+# }
+</code></pre>
+
+
+</div>

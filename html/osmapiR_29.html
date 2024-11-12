@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_get_data_gpx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download GPS Track Data</h2>
+
+<h3>Description</h3>
+
+<p>Use this to download the full GPX file. Private and trackable traces are only available by the owner account.
+Requires authentication.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_get_data_gpx(gpx_id, format)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>gpx_id</code></td>
+<td>
+<p>The track id represented by a numeric or a character value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. If missing (default), the response will be the exact file that was uploaded.
+If <code>"R"</code>, a <code>data.frame</code>.
+If <code>"sf_lines"</code> (<code>"sf"</code> is a synonym for <code>"sf_lines"</code>) or <code>"sf_points"</code>,  a <code>sf</code> object  from package <span class="pkg">sf</span>.
+If <code>"gpx"</code>, the response will always be a GPX format file.
+If <code>"xml"</code>, a <code>xml</code> file in an undocumented format.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If missing <code>format</code>, returns a xml2::xml_document with the original file data.
+If <code>format = "R"</code>, returns a data frame with one point per row and the attributes extracted from the xml response.
+If <code>format = "sf*"</code>, returns a <code>sf</code> object from <span class="pkg">sf</span> (see <code>st_as_sf()</code> for details).
+If <code>format = "gpx"</code>, returns a xml2::xml_document in the GPX format.
+If <code>format = "xml"</code>, returns a xml2::xml_document in an undocumented format.
+</p>
+
+
+<h3>Note</h3>
+
+<p>If you request refers to a multi-file archive the response when you force <code>gpx</code> or <code>xml</code> format will consist of
+a non-standard simple concatenation of the files.
+</p>
+<p>Extended data following schema <a href="https://www8.garmin.com/xmlschemas/GpxExtensions/v3/GpxExtensionsv3.xsd"><code style="white-space: pre;">⁠http://www.garmin.com/xmlschemas/TrackPointExtension/v1⁠</code></a>
+in gpx files will be extracted for <code>format = "R"</code> and <code>format = "sf_points"</code>, but lost for <code>format = "sf_line"</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other get GPS' functions: 
+<code>osm_get_gpx_metadata()</code>,
+<code>osm_get_points_gps()</code>,
+<code>osm_list_gpxs()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+trk_data &lt;- osm_get_data_gpx(gpx_id = 3498170, format = "R")
+trk_data
+
+## get attributes
+attr(trk_data, "track")
+attr(trk_data, "gpx_attributes")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

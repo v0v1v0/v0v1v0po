@@ -1,0 +1,200 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getbb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get bounding box for a given place name</h2>
+
+<h3>Description</h3>
+
+<p>This function uses the free Nominatim API provided by OpenStreetMap to find
+the bounding box (bb) associated with place names.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getbb(
+  place_name,
+  display_name_contains = NULL,
+  viewbox = NULL,
+  format_out = "matrix",
+  base_url = "https://nominatim.openstreetmap.org",
+  featuretype = "settlement",
+  limit = 10,
+  key = NULL,
+  silent = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>place_name</code></td>
+<td>
+<p>The name of the place you're searching for</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>display_name_contains</code></td>
+<td>
+<p>Text string to match with display_name field
+returned by <a href="https://wiki.openstreetmap.org/wiki/Nominatim">https://wiki.openstreetmap.org/wiki/Nominatim</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>viewbox</code></td>
+<td>
+<p>The bounds in which you're searching</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format_out</code></td>
+<td>
+<p>Character string indicating output format: <code>matrix</code>
+(default), <code>string</code> (see <code>bbox_to_string()</code>), <code>data.frame</code> (all 'hits' returned
+by Nominatim), <code>sf_polygon</code> (for polygons that work with the sf package),
+<code>polygon</code> (full polygonal bounding boxes for each match) or <code>osm_type_id</code> (
+string for quering inside deffined OSM areas <code>bbox_to_string()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_url</code></td>
+<td>
+<p>Base website from where data is queried</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>featuretype</code></td>
+<td>
+<p>The type of OSM feature (settlement is default; see Note)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>How many results should the API return?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>The API key to use for services that require it</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>Should the API be printed to screen? TRUE by default</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It was inspired by the functions
+<code>bbox</code> from the <span class="pkg">sp</span> package,
+<code>bb</code> from the <span class="pkg">tmaptools</span> package and
+<code>bb_lookup</code> from the github package <span class="pkg">nominatim</span> package,
+which can be found at <a href="https://github.com/hrbrmstr/nominatim">https://github.com/hrbrmstr/nominatim</a>.
+</p>
+<p>See <a href="https://wiki.openstreetmap.org/wiki/Nominatim">https://wiki.openstreetmap.org/wiki/Nominatim</a> for details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Defaults to a matrix in the form:
+<code>
+  min   max
+x ...   ...
+y ...   ...
+</code>
+</p>
+<p>If <code>format_out = "polygon"</code>, one or more two-columns matrices of polygonal
+longitude-latitude points. Where multiple <code>place_name</code> occurrences are found
+within <code>nominatim</code>, each item of the list of coordinates may itself contain
+multiple coordinate matrices where multiple exact matches exist. If one
+exact match exists with potentially multiple polygonal boundaries (for
+example, "london uk" is an exact match, but can mean either greater London or
+the City of London), only the first is returned. See examples below for
+illustration.
+</p>
+<p>For <code>format_out = "osm_type_id"</code>, a character string representing an OSM object in overpass query
+language. For example: <code>"relation(id:11747082)"</code> represents the area of
+the Catalan Countries. If one exact match exists with potentially multiple
+polygonal boundaries, only the first relation or way is returned. A set of
+objects can also be represented for multiple results (e.g.
+<code style="white-space: pre;">⁠relation(id:11747082,307833); way(id:22422490)⁠</code>). See examples below for
+illustration. The OSM objects that can be used as
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Map_way/relation_to_area_(map_to_area)">areas in overpass queries</a>
+<em>must be closed rings</em> (ways or relations).
+</p>
+
+
+<h3>Note</h3>
+
+<p>Specific values of <code>featuretype</code> include "street", "city",
+<a href="https://wiki.openstreetmap.org/wiki/Nominatim">https://wiki.openstreetmap.org/wiki/Nominatim</a> for details). The default
+<code>featuretype = "settlement"</code> combines results from all intermediate
+levels below "country" and above "streets". If the bounding box or polygon of
+a city is desired, better results will usually be obtained with
+<code>featuretype = "city"</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other queries: 
+<code>add_osm_features()</code>,
+<code>add_osm_feature()</code>,
+<code>bbox_to_string()</code>,
+<code>opq_around()</code>,
+<code>opq_csv()</code>,
+<code>opq_enclosing()</code>,
+<code>opq_osm_id()</code>,
+<code>opq_string()</code>,
+<code>opq()</code>,
+<code>overpass_status()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+getbb ("Salzburg")
+# select based on display_name, print query url
+getbb ("Hereford", display_name_contains = "United States", silent = FALSE)
+# top 3 matches as data frame
+getbb ("Hereford", format_out = "data.frame", limit = 3)
+
+# Examples of polygonal boundaries
+bb &lt;- getbb ("london uk", format_out = "polygon") # single match
+dim (bb [[1]] [[1]]) # matrix of longitude/latitude pairs
+bb_sf &lt;- getbb ("kathmandu", format_out = "sf_polygon")
+# sf:::plot.sf(bb_sf) # can be plotted if sf is installed
+getbb ("london", format_out = "sf_polygon")
+getbb ("accra", format_out = "sf_polygon") # rectangular bb
+
+area &lt;- getbb ("València", format_out = "osm_type_id")
+# select multiple areas with format_out = "osm_type_id"
+areas &lt;- getbb ("València", format_out = "data.frame")
+bbox_to_string (areas [areas$osm_type != "node", ])
+
+# Using an alternative service (locationiq requires an API key)
+# add LOCATIONIQ=type_your_api_key_here to .Renviron:
+key &lt;- Sys.getenv ("LOCATIONIQ")
+if (nchar (key) == 32) {
+    getbb (place_name,
+        base_url = "https://locationiq.org/v1/search.php",
+        key = key
+    )
+}
+
+## End(Not run)
+</code></pre>
+
+
+</div>

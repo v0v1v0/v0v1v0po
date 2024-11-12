@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oe_find</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get the path of .pbf and .gpkg files associated with an input OSM extract</h2>
+
+<h3>Description</h3>
+
+<p>This function takes a <code>place</code> name and returns the path of <code>.pbf</code>/<code>.gpkg</code>
+files associated with it.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oe_find(
+  place,
+  provider = "geofabrik",
+  download_directory = oe_download_directory(),
+  download_if_missing = FALSE,
+  return_pbf = TRUE,
+  return_gpkg = TRUE,
+  quiet = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>place</code></td>
+<td>
+<p>Description of the geographical area that should be matched with
+a <code>.osm.pbf</code> file. Can be either a length-1 character vector, an
+<code>sf</code>/<code>sfc</code>/<code>bbox</code> object, or a numeric vector of coordinates with length 2.
+In the last case, it is assumed that the EPSG code is 4326 specified as
+c(LON, LAT), while you can use any CRS with <code>sf</code>/<code>sfc</code>/<code>bbox</code> objects. See
+Details and Examples in <code>oe_match()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>provider</code></td>
+<td>
+<p>Which provider should be used to download the data? Available
+providers can be found with the following command: <code>oe_providers()</code>. For
+<code>oe_get()</code> and <code>oe_match()</code>, if <code>place</code> is equal to <code style="white-space: pre;">⁠ITS Leeds⁠</code>, then
+<code>provider</code> is set equal to <code>test</code>. This is just for simple examples and
+internal tests.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>download_directory</code></td>
+<td>
+<p>Directory where the files downloaded by osmextract
+are stored. By default it is equal to <code>oe_download_directory()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>download_if_missing</code></td>
+<td>
+<p>Attempt to download the file if it cannot be
+found? <code>FALSE</code> by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_pbf</code></td>
+<td>
+<p>Logical of length 1. If <code>TRUE</code>, the function returns the
+path of the pbf file that matches the input <code>place</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_gpkg</code></td>
+<td>
+<p>Logical of length 1. If <code>TRUE</code>, the function returns the
+path of the gpkg file that matches the input <code>place</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>Boolean. If <code>FALSE</code>, the function prints informative messages.
+Starting from <code>sf</code> version
+<a href="https://r-spatial.github.io/sf/news/index.html#version-0-9-6-2020-09-13">0.9.6</a>,
+if <code>quiet</code> is equal to <code>FALSE</code>, then vectortranslate operations will
+display a progress bar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Extra arguments that are passed to <code>oe_match()</code> and <code>oe_get()</code>.
+Please note that you cannot modify the argument <code>download_only</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The matching between the existing files (saved in the directory
+specified by <code>download_directory</code> parameter) and the input <code>place</code> is
+performed using <code>list.files()</code>, setting the <code>pattern</code> argument equal to the
+basename of the URL associated to the input <code>place</code>. For example, if you
+specify <code>place = "Isle of Wight"</code>, then the input is matched (via
+<code>oe_match()</code>) with the URL of Isle of Wight's <code>.osm.pbf</code> file, and the
+files are selected using a pattern equal to the basename of that URL.
+</p>
+<p>If there is no file in the <code>download_directory</code> that can be matched with the
+basename of the URL and <code>download_if_missing</code> parameter is equal to <code>TRUE</code>, then the
+function tries to download and read a new file from the chosen
+provider (<code>geofabrik</code> is the default provider). If <code>download_if_missing</code>
+parameter is equal to <code>FALSE</code> (default value), then the function stops with
+an error.
+</p>
+<p>By default, this function returns the path of <code>.pbf</code> and <code>.gpkg</code> files
+associated with the input place (if any). You can exclude one of the two
+formats setting the arguments <code>return_pbf</code> or <code>return_gpkg</code> to <code>FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character vector of length one (or two) representing the path(s) of
+the <code>.pbf</code>/<code>.gpkg</code> files associated with the input <code>place</code>. The files are
+sorted in alphabetical order which implies that if both formats are present
+in the <code>download_directory</code>, then the <code>.gpkg</code> file is returned first.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Copy the ITS file to tempdir() to make sure that the examples do not
+# require internet connection. You can skip the next 4 lines (and start
+# directly with oe_get_keys) when running the examples locally.
+
+res = file.copy(
+  from = system.file("its-example.osm.pbf", package = "osmextract"),
+  to = file.path(tempdir(), "test_its-example.osm.pbf"),
+  overwrite = TRUE
+)
+res = oe_get("ITS Leeds", quiet = TRUE, download_directory = tempdir())
+oe_find("ITS Leeds", provider = "test", download_directory = tempdir())
+oe_find(
+  "ITS Leeds", provider = "test",
+  download_directory = tempdir(), return_gpkg = FALSE
+)
+
+## Not run: 
+oe_find("Isle of Wight", download_directory = tempdir())
+oe_find("Malta", download_if_missing = TRUE, download_directory = tempdir())
+oe_find(
+  "Leeds",
+  provider = "bbbike",
+  download_if_missing = TRUE,
+  download_directory = tempdir(),
+  return_pbf = FALSE
+)
+## End(Not run)
+
+# Remove .pbf and .gpkg files in tempdir
+oe_clean(tempdir())
+</code></pre>
+
+
+</div>

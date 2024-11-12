@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hmm_simulate_normal_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate data distributed according to oHMMed with normal emission densities</h2>
+
+<h3>Description</h3>
+
+<p>Simulate data distributed according to oHMMed with normal emission densities
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hmm_simulate_normal_data(L, mat_T, means, sigma)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>(integer) number of simulations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mat_T</code></td>
+<td>
+<p>(matrix) a square matrix with the initial state</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>means</code></td>
+<td>
+<p>(numeric) <code>mean</code> parameter in <code>rnorm</code> for emission probabilities</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>(numeric) <code>sd</code> parameter in <code>rnorm</code> for emission probabilities</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list with the following elements:
+</p>
+
+<ul>
+<li> <p><code>data</code>: numeric vector with data
+</p>
+</li>
+<li> <p><code>states</code>: an integer vector with "true" hidden states used to generate the data vector
+</p>
+</li>
+<li> <p><code>pi</code>: numeric vector with prior probability of states
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">mat_T0 &lt;- rbind(c(1-0.01, 0.01, 0),
+                c(0.01, 1-0.02, 0.01),
+                c(0, 0.01, 1-0.01))
+L &lt;- 2^7
+means0 &lt;- c(-1,0,1)
+sigma0 &lt;- 1
+
+sim_data &lt;- hmm_simulate_normal_data(L = L, 
+                                     mat_T = mat_T0, 
+                                     means = means0, 
+                                     sigma = sigma0)
+                                     
+plot(density(sim_data$data), main = "Density of Simulated Normal Data")
+sim_data
+</code></pre>
+
+
+</div>

@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readDICOMFile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read Single DICOM File</h2>
+
+<h3>Description</h3>
+
+<p>All information, both header and image, is read into a list structure from a
+DICOM file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readDICOMFile(fname, boffset = NULL, endian = "little",
+  flipud = TRUE, skipSequence = FALSE, pixelData = TRUE, warn = -1,
+  debug = FALSE)
+
+parseDICOMHeader(rawString, sq.txt = "", endian = "little",
+  verbose = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fname</code></td>
+<td>
+<p>is the file name of the DICOM image (with suffix).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boffset</code></td>
+<td>
+<p>is the number of bytes to skip at the beginning of the DICOM
+file (default = <code>NULL</code> which lets the code determine the starting
+point).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endian</code></td>
+<td>
+<p>is the endian-ness of the file (default is <code>"little"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flipud</code></td>
+<td>
+<p>is a logical variable for vertical flipping of the image
+(default is <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skipSequence</code></td>
+<td>
+<p>is a logical variable to skip all content contained in
+SequenceItem tags (default = <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pixelData</code></td>
+<td>
+<p>is a logical variable (default = <code>TRUE</code>) on whether or
+not the PixelData should be read from the DICOM files.  This is useful when
+one wants to gather the DICOM header information without loading the images.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>is a number to regulate the display of warnings (default = -1).
+See <code>options</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) that regulates
+to display of intermediate processing steps.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rawString</code></td>
+<td>
+<p>is a vector of <code>raw</code> values taken directly from the
+DICOM file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sq.txt</code></td>
+<td>
+<p>is an character string (default = “”) that indicates if
+the DICOM header field is embedded within a sequence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) that regulates
+to display of intermediate processing steps.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A <code>while</code> loop is used to traverse the unknown number of DICOM header
+fields contained in a single file.  Information contained in
+“sequences” may be included/excluded according to the logical
+variable <code>skipSequence</code> (default = <code>TRUE</code>).
+</p>
+<p>A resursive implementation of the code breaks the DICOM file into segments
+and calls itself to parse each segment.
+</p>
+<p>Strict adherence to the DICOM standard is not required.  Specifically,
+content is allowed to start at the first byte and the four characters
+‘DICM’ are not required at bytes 129-132.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing two elements: </p>
+ <dl>
+<dt>hdr</dt>
+<dd>
+<p>all DICOM
+header fields (with or without “sequence” information).</p>
+</dd>
+<dt>img</dt>
+<dd>
+<p>the ‘image’ information.</p>
+</dd> </dl>
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Whitcher, B., V. J. Schmid and A. Thornton (2011).  Working with
+the DICOM and NIfTI Data Standards in R, <em>Journal of Statistical
+Software</em>, <b>44</b> (6), 1–28.  <a href="http://www.jstatsoft.org/v44/i06">http://www.jstatsoft.org/v44/i06</a>
+</p>
+<p>Digital Imaging and Communications in Medicine (DICOM)<br><a href="http://medical.nema.org">http://medical.nema.org</a><br><a href="http://en.wikipedia.org/wiki/Digital_Imaging_and_Communications_in_Medicine">http://en.wikipedia.org/wiki/Digital_Imaging_and_Communications_in_Medicine</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>readDICOM</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- readDICOMFile(system.file("dcm/Abdo.dcm", package="oro.dicom"))
+graphics::image(t(x$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="",
+                main="Abdo.dcm")
+
+x &lt;- readDICOMFile(system.file("dcm/Spine1.dcm", package="oro.dicom"))
+graphics::image(t(x$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="",
+                main="Spine1.dcm")
+
+</code></pre>
+
+
+</div>

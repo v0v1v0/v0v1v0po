@@ -1,0 +1,183 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_step_backward_p</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Stepwise backward regression</h2>
+
+<h3>Description</h3>
+
+<p>Build regression model from a set of candidate predictor variables by
+removing predictors based on p values, in a stepwise manner until there is
+no variable left to remove any more.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_step_backward_p(model, ...)
+
+## Default S3 method:
+ols_step_backward_p(
+  model,
+  p_val = 0.3,
+  include = NULL,
+  exclude = NULL,
+  hierarchical = FALSE,
+  progress = FALSE,
+  details = FALSE,
+  ...
+)
+
+## S3 method for class 'ols_step_backward_p'
+plot(x, model = NA, print_plot = TRUE, details = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code>; the model should include all
+candidate predictor variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other inputs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p_val</code></td>
+<td>
+<p>p value; variables with p more than <code>p_val</code> will be removed
+from the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include</code></td>
+<td>
+<p>Character or numeric vector; variables to be included in selection process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>Character or numeric vector; variables to be excluded from selection process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hierarchical</code></td>
+<td>
+<p>Logical; if <code>TRUE</code>, performs hierarchical selection.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>Logical; if <code>TRUE</code>, will display variable selection progress.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p>Logical; if <code>TRUE</code>, will print the regression result at
+each step.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class <code>ols_step_backward_p</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_plot</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, prints the plot else returns a plot object.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>ols_step_backward_p</code> returns an object of class <code>"ols_step_backward_p"</code>.
+An object of class <code>"ols_step_backward_p"</code> is a list containing the
+following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>final model; an object of class <code>lm</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metrics</code></td>
+<td>
+<p>selection metrics</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Chatterjee, Samprit and Hadi, Ali. Regression Analysis by Example. 5th ed. N.p.: John Wiley &amp; Sons, 2012. Print.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other backward selection procedures: 
+<code>ols_step_backward_adj_r2()</code>,
+<code>ols_step_backward_aic()</code>,
+<code>ols_step_backward_r2()</code>,
+<code>ols_step_backward_sbc()</code>,
+<code>ols_step_backward_sbic()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># stepwise backward regression
+model &lt;- lm(y ~ ., data = surgical)
+ols_step_backward_p(model)
+
+# stepwise backward regression plot
+model &lt;- lm(y ~ ., data = surgical)
+k &lt;- ols_step_backward_p(model)
+plot(k)
+
+# selection metrics
+k$metrics
+
+# final model
+k$model
+
+# include or exclude variables
+# force variable to be included in selection process
+ols_step_backward_p(model, include = c("age", "alc_mod"))
+
+# use index of variable instead of name
+ols_step_backward_p(model, include = c(5, 7))
+
+# force variable to be excluded from selection process
+ols_step_backward_p(model, exclude = c("pindex"))
+
+# use index of variable instead of name
+ols_step_backward_p(model, exclude = c(2))
+
+# hierarchical selection
+model &lt;- lm(y ~ bcs + alc_heavy + pindex + age + alc_mod, data = surgical)
+ols_step_backward_p(model, 0.1, hierarchical = TRUE)
+
+# plot
+k &lt;- ols_step_backward_p(model, 0.1, hierarchical = TRUE)
+plot(k)
+
+</code></pre>
+
+
+</div>

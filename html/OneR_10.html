@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optbin</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal Binning function</h2>
+
+<h3>Description</h3>
+
+<p>Discretizes all numerical data in a data frame into categorical bins where the cut points are optimally aligned with the target categories, thereby a factor is returned.
+When building a OneR model this could result in fewer rules with enhanced accuracy.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optbin(x, ...)
+
+## S3 method for class 'formula'
+optbin(formula, data, method = c("logreg", "infogain",
+  "naive"), na.omit = TRUE, ...)
+
+## S3 method for class 'data.frame'
+optbin(x, method = c("logreg", "infogain", "naive"),
+  na.omit = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>data frame with the last column containing the target variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>formula, additionally the argument <code>data</code> is needed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>data frame which contains the data, only needed when using the formula interface.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>character string specifying the method for optimal binning, see 'Details'; can be abbreviated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.omit</code></td>
+<td>
+<p>logical value whether instances with missing values should be removed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The cutpoints are calculated by pairwise logistic regressions (method <code>"logreg"</code>), information gain (method <code>"infogain"</code>) or as the means of the expected values of the respective classes (<code>"naive"</code>).
+The function is likely to give unsatisfactory results when the distributions of the respective classes are not (linearly) separable. Method <code>"naive"</code> should only be used when distributions are (approximately) normal,
+although in this case <code>"logreg"</code> should give comparable results, so it is the preferable (and therefore default) method.
+</p>
+<p>Method <code>"infogain"</code> is an entropy based method which calculates cut points based on information gain. The idea is that uncertainty is minimized by making the resulting bins as pure as possible. This method is the standard method of many decision tree algorithms.
+</p>
+<p>Character strings and logical strings are coerced into factors. Matrices are coerced into data frames. If the target is numeric it is turned into a factor with the number of levels equal to the number of values. Additionally a warning is given.
+</p>
+<p>When <code>"na.omit = FALSE"</code> an additional level <code>"NA"</code> is added to each factor with missing values.
+If the target contains unused factor levels (e.g. due to subsetting) these are ignored and a warning is given.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the target variable being in the last column.
+</p>
+
+
+<h3>Methods (by class)</h3>
+
+
+<ul>
+<li> <p><code>formula</code>: method for formulas.
+</p>
+</li>
+<li> <p><code>data.frame</code>: method for data frames.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Holger von Jouanne-Diedrich
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://github.com/vonjd/OneR">https://github.com/vonjd/OneR</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OneR</code>, <code>bin</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data &lt;- iris # without optimal binning
+model &lt;- OneR(data, verbose = TRUE)
+summary(model)
+
+data_opt &lt;- optbin(iris) # with optimal binning
+model_opt &lt;- OneR(data_opt, verbose = TRUE)
+summary(model_opt)
+
+## The same with the formula interface:
+data_opt &lt;- optbin(Species ~., data = iris)
+model_opt &lt;- OneR(data_opt, verbose = TRUE)
+summary(model_opt)
+
+</code></pre>
+
+
+</div>

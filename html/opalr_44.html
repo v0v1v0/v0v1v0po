@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dsadmin.log</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get DataSHIELD logs</h2>
+
+<h3>Description</h3>
+
+<p>The DataSHIELD log is structured as follows:
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dsadmin.log(opal, all = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal connection object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>Get all or only latest log messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><strong>Common fields</strong>
+</p>
+
+<ul>
+<li>
+<p> timestamp: when action is logged
+</p>
+</li>
+<li>
+<p> version: not used
+</p>
+</li>
+<li>
+<p> message: human readable message
+</p>
+</li>
+<li>
+<p> logger_name: name of the log channel
+</p>
+</li>
+<li>
+<p> thread_name: java thread name
+</p>
+</li>
+<li>
+<p> level: log level (TRACE, DEBUG, INFO, WARN, ERROR)
+</p>
+</li>
+<li>
+<p> level_value: log level numeric value
+</p>
+</li>
+<li>
+<p> ip: ip origin of the request, when available
+</p>
+</li>
+<li>
+<p> ds_id: unique DS session ID
+</p>
+</li>
+<li>
+<p> ds_profile: DS profile name (available after the R server session is created, can be after authentication)
+</p>
+</li>
+<li>
+<p> username: DS user name
+</p>
+</li>
+<li>
+<p> r_duration: time spent by the remote R server action (all except PARSE)
+</p>
+</li>
+<li>
+<p> r_size: R result serialized object size in bytes
+</p>
+</li>
+<li>
+<p> ds_action: DS operation (OPEN, CLOSE, PARSE, ASSIGN, AGGREGATE, LS, RM, WS_SAVE, WS_RESTORE)
+</p>
+</li>
+</ul>
+<p><strong>DS operations fields</strong>
+</p>
+
+<ul>
+<li>
+<p> OPEN: DS session opened (note: happens after successful authentication as R server session creation is deferred)
+</p>
+</li>
+<li>
+<p> CLOSE: DS session closed
+</p>
+</li>
+<li>
+<p> PARSE: R expression parsed
+</p>
+
+<ul>
+<li>
+<p> ds_map: DS function mappings used in the R parser, separated by semicolons when several functions are called
+</p>
+</li>
+<li>
+<p> ds_script_in: R script as sent by DS user
+</p>
+</li>
+<li>
+<p> ds_script_out: R script rewritten by opal, to be evaluated
+</p>
+</li>
+</ul>
+</li>
+<li>
+<p> ASSIGN:
+</p>
+
+<ul>
+<li>
+<p> ds_symbol: assigned symbol name
+</p>
+</li>
+<li>
+<p> ds_table: table name that is assigned
+</p>
+</li>
+<li>
+<p> ds_resource: resource name that is assigned
+</p>
+</li>
+<li>
+<p> ds_eval: assign R expression that is evaluated
+</p>
+</li>
+</ul>
+</li>
+<li>
+<p> AGGREGATE:
+</p>
+
+<ul><li>
+<p> ds_eval: aggregate R expression that is evaluated
+</p>
+</li></ul>
+</li>
+<li>
+<p> LS: R symbols listed
+</p>
+</li>
+<li>
+<p> RM: R symbol removed
+</p>
+
+<ul><li>
+<p> ds_symbol: symbol name to remove
+</p>
+</li></ul>
+</li>
+<li>
+<p> WS_SAVE:
+</p>
+
+<ul><li>
+<p> ds_ws: workspace name
+</p>
+</li></ul>
+</li>
+<li>
+<p> WS_RESTORE:
+</p>
+
+<ul><li>
+<p> ds_ws: workspace name
+</p>
+</li></ul>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+dsadmin.log(o)
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

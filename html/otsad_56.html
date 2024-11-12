@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PlotDetections</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>PLOT DETECTIONS</h2>
+
+<h3>Description</h3>
+
+<p><code>PlotDetections</code> shows in a graph the results obtained after the application
+of one of the anomaly detectors included in this package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PlotDetections(data, print.real.anomaly = FALSE,
+  print.time.window = FALSE, title = "", xlab = "Time",
+  ylab = "Value", return.ggplot = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>data.frame composed of at least one column called timestamp and another column
+called value. You can also include other columns such as is.anomaly, is.real.anomaly, ucl, lcl,
+anomaly.score. Any of these columns except is.real.anomaly that are included in the dataset will
+be shown in the graph automatically.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print.real.anomaly</code></td>
+<td>
+<p>If TRUE adds the real anomalies to the graph.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print.time.window</code></td>
+<td>
+<p>If TRUE shows a time band centered on the real anomaly. According to the
+article shown in the reference, if the detected anomaly remains within it would be considered a
+true positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>Title of the graph.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>X Axis Name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>Y Axis Name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.ggplot</code></td>
+<td>
+<p>If TRUE the function returns a ggplot object.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>data</code> must be a data.frame. The <code>timestamp</code> column can be numeric, of type POSIXlt,
+or a character type date convertible  to POSIXlt. The <code>value</code> column must be numeric.
+<code>is.anomaly</code>, <code>is.real.anomaly</code>, <code>ucl</code>, <code>lcl</code>, <code>anomaly.score</code> are
+some of the variables returned by the algorithms included in this package and must be numeric
+or boolean in the case of columns is.anomaly, is.real.anomaly .
+</p>
+
+
+<h3>Value</h3>
+
+<p>plotly object.
+</p>
+
+
+<h3>References</h3>
+
+<p>A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
+Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
+Applications (IEEE ICMLA’15), 2015.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 180
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+## Calculate anomalies
+result &lt;- CpSdEwma(
+  data = df$value,
+  n.train = 5,
+  threshold = 0.01,
+  l = 3
+)
+res &lt;- cbind(df, result)
+
+## Plot results
+PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
+</code></pre>
+
+
+</div>

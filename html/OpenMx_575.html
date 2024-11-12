@@ -1,0 +1,226 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>MxModel-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>MxModel Class</h2>
+
+<h3>Description</h3>
+
+<p>MxModel is an S4 class. An MxModel object is a named entity.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The ‘matrices’ slot contains a list of the MxMatrix objects included in the model. These objects are listed by name. Two objects may not share the same name. If a new MxMatrix is added to an MxModel object with the same name as an MxMatrix object in that model, the added version replaces the previous version. There is no imposed limit on the number of MxMatrix objects that may be added here.
+</p>
+<p>The ‘algebras’ slot contains a list of the MxAlgebra objects included in the model. These objects are listed by name. Two objects may not share the same name. If a new MxAlgebra is added to an MxModel object with the same name as an MxAlgebra object in that model, the added version replaces the previous version. All MxMatrix objects referenced in the included MxAlgebra objects must be included in the ‘matrices’ slot prior to estimation. There is no imposed limit on the number of MxAlgebra objects that may be added here.
+</p>
+<p>The ‘constraints’ slot contains a list of the MxConstraint objects included in the model. These objects are listed by name. Two objects may not share the same name. If a new MxConstraint is added to an MxModel object with the same name as an MxConstraint object in that model, the added version replaces the previous version. All MxMatrix objects referenced in the included MxConstraint objects must be included in the ‘matrices’ slot prior to estimation. There is no imposed limit on the number of MxConstraint objects that may be added here.
+</p>
+<p>The ‘intervals’ slot contains a list of the confidence intervals requested by included MxCI objects. These objects are listed by the free parameters, MxMatrices and MxAlgebras referenced in the MxCI objects, not the list of MxCI objects themselves. If a new MxCI object is added to an MxModel object referencing one or more free parameters MxMatrices or MxAlgebras previously listed in the ‘intervals’ slot, the new confidence interval(s) replace the existing ones. All listed confidence intervals must refer to free parameters MxMatrices or MxAlgebras in the model.
+</p>
+<p>The ‘latentVars’ slot contains a list of latent variable names,
+which may be referenced by MxPath objects. This
+slot defaults to 'NA', and is only used when the mxPath function
+is used. In the context of a RAM model, this slot accepts a character
+vector of variable names. However, the LISREL model is partitioned into
+exogenous and endogenous parts. Both exogenous and endogenous variables
+can be specified using a list like, <code>list(endo='a',  exo='b')</code>.
+If a character vector is passed to a LISREL model then those
+variables will be assumed endogenous.
+</p>
+<p>The ‘manifestVars’ slot contains a list of latent variable names,
+which may be referenced by MxPath objects. This
+slot defaults to 'NA', and is only used when the mxPath function
+is used. In the context of a RAM model, this slot accepts a character
+vector of variable names. However, the LISREL model is partitioned into
+exogenous and endogenous parts. Both exogenous and endogenous variables
+can be specified using a list like, <code>list(endo='a',  exo='b')</code>.
+If a character vector is passed to a LISREL model then those
+variables will be assumed endogenous.
+</p>
+<p>The ‘data’ slot contains an MxData object. This slot must be filled prior to execution when a fitfunction referencing data is used. Only one MxData object may be included per model, but submodels may have their own data in their own ‘data’ slots. If an MxData object is added to an MxModel which already contains an MxData object, the new object replaces the existing one.
+</p>
+<p>The ‘submodels’ slot contains references to all of the MxModel objects included as submodels of this MxModel object. Models held as arguments in other models are considered to be submodels. These objects are listed by name. Two objects may not share the same name. If a new submodel is added to an MxModel object with the same name as an existing submodel, the added version replaces the previous version. When a model containing other models is executed using mxRun, all included submodels are executed as well. If the submodels are dependent on one another, they are treated as one larger model for purposes of estimation.
+</p>
+<p>The ‘independent’ slot contains a logical value indicating whether or not the model is independent. If a model is independent (independent=TRUE), then the parameters of this model are not shared with any other model. An independent model may be estimated with no dependency on any other model. If a model is not independent (independent=FALSE), then this model shares parameters with one or more other models such that these models must be jointly estimated. These dependent models must be entered as submodels of another MxModel objects, so that they are simultaneously optimized.
+</p>
+<p>The ‘options’ slot contains a list of options for the model. The name of each entry in the list is the option name to be used at runtime. The values in this list are the values of the optimizer options. The standard interface for updating options is through the mxOption function.
+</p>
+<p>The ‘output’ slot contains a list of output added to the model by the mxRun function. Output includes parameter estimates, optimization information, model fit, and other information.  If a model has not been optimized using the mxRun function, the 'output' slot will be 'NULL'.
+</p>
+<p>Named entities in MxModel objects may be viewed and referenced by name using the $ symbol.  For instance, for an MxModel named "yourModel" containing an MxMatrix named "yourMatrix", the contents of "yourMatrix" can be accessed as yourModel$yourMatrix. Slots (i.e., matrices, algebras, etc.) in an mxMatrix may also be referenced with the $ symbol (e.g., yourModel$matrices or yourModel$algebras). See the documentation for Classes and the examples in mxModel for more information.
+</p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>Objects can be created by calls of the form <code>mxModel()</code>.
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt>
+<code>name</code>:</dt>
+<dd>
+<p>Character string.  The name of the model object. </p>
+</dd>
+<dt>
+<code>matrices</code>:</dt>
+<dd>
+<p>List of the model's MxMatrix objects.</p>
+</dd>
+<dt>
+<code>algebras</code>:</dt>
+<dd>
+<p>List of the model's MxAlgebra objects.</p>
+</dd>
+<dt>
+<code>constraints</code>:</dt>
+<dd>
+<p>List of the model's MxConstraint objects.</p>
+</dd>
+<dt>
+<code>intervals</code>:</dt>
+<dd>
+<p>List of the model's MxInterval
+objects, requested via <code>mxCI()</code>.</p>
+</dd>
+<dt>
+<code>penalties</code>:</dt>
+<dd>
+<p>List of the model's MxPenalty
+objects.</p>
+</dd>
+<dt>
+<code>latentVars</code>:</dt>
+<dd>
+<p>"Latent variables;" object of class <code>"MxCharOrList"</code>.</p>
+</dd>
+<dt>
+<code>manifestVars</code>:</dt>
+<dd>
+<p>"Manifest variables;" object of class <code>"MxCharOrList"</code>.</p>
+</dd>
+<dt>
+<code>data</code>:</dt>
+<dd>
+<p>Object of class MxData.</p>
+</dd>
+<dt>
+<code>submodels</code>:</dt>
+<dd>
+<p>List of MxModel objects.</p>
+</dd>
+<dt>
+<code>expectation</code>:</dt>
+<dd>
+<p>Object of class MxExpectation; dictates the model's specification.</p>
+</dd>
+<dt>
+<code>fitfunction</code>:</dt>
+<dd>
+<p>Object of class MxFitFunction; dictates the cost function to be minimized when fitting the model.</p>
+</dd>
+<dt>
+<code>compute</code>:</dt>
+<dd>
+<p>Object of class MxCompute–the model's compute plan, which contains instructions on what the model is to compute and how to do so.</p>
+</dd>
+<dt>
+<code>independent</code>:</dt>
+<dd>
+<p>Logical; is the model to be run independently from other submodels?</p>
+</dd>
+<dt>
+<code>options</code>:</dt>
+<dd>
+<p>List of model-specific options, set by <code>mxOption()</code>.</p>
+</dd>
+<dt>
+<code>output</code>:</dt>
+<dd>
+<p>List of model output produced during a call to <code>mxRun()</code>.</p>
+</dd>
+<dt>
+<code>.newobjects</code>:</dt>
+<dd>
+<p>Logical; for internal use.</p>
+</dd>
+<dt>
+<code>.resetdata</code>:</dt>
+<dd>
+<p>Logical; for internal use.</p>
+</dd>
+<dt>
+<code>.wasRun</code>:</dt>
+<dd>
+<p>Logical; for internal use.</p>
+</dd>
+<dt>
+<code>.modifiedSinceRun</code>:</dt>
+<dd>
+<p>Logical; for internal use.</p>
+</dd>
+<dt>
+<code>.version</code>:</dt>
+<dd>
+<p>Object of class <code>"package_version"</code>; for internal use.</p>
+</dd>
+</dl>
+<h3>Methods</h3>
+
+
+<dl>
+<dt>$</dt>
+<dd>
+<p><code>signature(x = "MxModel")</code>: Accessor.  Accesses slots by slot-name.  Also accesses constituent named entities, by name.</p>
+</dd>
+<dt>$&lt;-</dt>
+<dd>
+<p><code>signature(x = "MxModel")</code>: Assignment.  Generally, this method will not allow the user to make unsafe changes to the MxModel object.</p>
+</dd>
+<dt>[[</dt>
+<dd>
+<p><code>signature(x = "MxModel")</code>: Accessor for constituent named entities.</p>
+</dd>
+<dt>[[&lt;-</dt>
+<dd>
+<p><code>signature(x = "MxModel")</code>: Assignment for a named entity.</p>
+</dd>
+<dt>names</dt>
+<dd>
+<p><code>signature(x = "MxModel")</code>: Returns names of slots and named entities.</p>
+</dd>
+<dt>print</dt>
+<dd>
+<p><code>signature(x = "MxModel")</code>: "Print" method. </p>
+</dd>
+<dt>show</dt>
+<dd>
+<p><code>signature(object = "MxModel")</code>: "Show" method. </p>
+</dd>
+</dl>
+<p>Note that <code>imxInitModel()</code>, <code>imxModelBuilder()</code>, <code>imxTypeName()</code>, and <code>imxVerifyModel()</code> are separately documented methods for class "MxModel".
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>mxExpectationRAM, mxExpectationLISREL, mxModel for creating MxModel objects. More information about the OpenMx package may be found here.
+</p>
+
+
+</div>

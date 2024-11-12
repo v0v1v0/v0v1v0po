@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bootstrap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bootstrapping for uncertainty quantification</h2>
+
+<h3>Description</h3>
+
+<p>Parametric bootstrapping for <span class="pkg">ouch</span> models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'missing'
+bootstrap(object, ...)
+
+## S4 method for signature 'ANY'
+bootstrap(object, ...)
+
+## S4 method for signature 'hansentree'
+bootstrap(object, nboot = 200, seed = NULL, ...)
+
+## S4 method for signature 'browntree'
+bootstrap(object, nboot = 200, seed = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A fitted model object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments are passed to <code>update</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nboot</code></td>
+<td>
+<p>integer; number of bootstrap replicates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>integer; setting <code>seed</code> to a non-<code>NULL</code> value allows one to fix the random seed (see simulate).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>bootstrap</code> performs a parametric bootstrap for estimation of confidence intervals.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other methods for ouch trees: 
+<code>as_data_frame</code>,
+<code>coef()</code>,
+<code>logLik</code>,
+<code>ouch-package</code>,
+<code>paint()</code>,
+<code>plot()</code>,
+<code>print()</code>,
+<code>simulate()</code>,
+<code>summary()</code>,
+<code>update()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## Fit BM and a 5-regime OU model to the A. bimaculatus data
+tree &lt;- with(bimac,ouchtree(node,ancestor,time/max(time),species))
+
+h1 &lt;- brown(
+  data=log(bimac['size']),
+  tree=tree
+)
+
+h5 &lt;- hansen(
+  data=log(bimac['size']),
+  tree=tree,
+  regimes=bimac['OU.LP'],
+  sqrt.alpha=1,
+  sigma=1,
+  reltol=1e-11,
+  parscale=c(0.1,0.1),
+  hessian=TRUE
+)
+
+## What are appropriate AIC.c cutoffs?
+simdat &lt;- simulate(h1,nsim=100,seed=92759587)
+b1 &lt;- sapply(simdat,function(x)summary(update(h1,data=x))$aic.c)
+tic &lt;- Sys.time()
+b5 &lt;- sapply(simdat,function(x)summary(update(h5,data=x))$aic.c)
+toc &lt;- Sys.time()
+print(toc-tic)
+cat("approximate 95% AIC.c cutoff",signif(quantile(b1-b5,0.95),digits=3),"\n")
+
+## Bootstrap confidence intervals
+boots.h1 &lt;- bootstrap(h1,nboot=200,seed=92759587)
+cat("bootstrap 95% confidence intervals for h1:\n")
+print(t(sapply(boots.h1,quantile,probs=c(0.025,0.975))),digits=3)
+
+boots.h5 &lt;- bootstrap(h5,nboot=200,seed=92759587)
+cat("bootstrap 95% confidence intervals for h5:\n")
+print(t(sapply(boots.h5,quantile,probs=c(0.025,0.975))),digits=3)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,199 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>test.once.proj.robust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>robust test of single change point for matrix-valued online time
+series-projected version</h2>
+
+<h3>Description</h3>
+
+<p>Based on <code>test.once.proj</code>, this function
+repeats the randomized procedure multiple times and reports the majority
+vote, thus more robust.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">test.once.proj.robust(
+  Y,
+  k = 1,
+  m = ceiling(max(20, (dim(Y)[3])^(r/(r + 2)))),
+  epsilon = 0.05,
+  r = 8,
+  kmax = 3,
+  decrease = 0,
+  method = "ps",
+  eta = 0.25,
+  cv = 2.386,
+  S = 100,
+  pr = 0.75
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>data, a <code class="reqn">T\times p1\times p2</code> array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>a positive integer indicating which eigenvalue to monitor.
+<code class="reqn">k=1</code> for the largest eigenvalue.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>a positive integer (<code class="reqn">&gt;1</code>) indicating the bandwidth of the
+rolling windom.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>the rescaling parameter taking value in <code class="reqn">(0,1)</code>; see He
+et al. (2021).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>a positive integer indicating the order of the transformation
+function <code class="reqn">g(x)=|x|^r</code>; see also  <code>gen.psi.tau.proj</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kmax</code></td>
+<td>
+<p>a positive number determining the column number of the
+projection matrix, should be larger than 0 but smaller than <code class="reqn">p_2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>decrease</code></td>
+<td>
+<p>a logical value. If <em>decrease=1</em>, testing the
+decrease of factor number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>indicating the test statistic, “ps” for the partial-sum
+method; others for the worst-case method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>a number between <code class="reqn">[0,1)</code>, indicating the parameter <code class="reqn">\eta</code>
+used in the partial-sum statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cv</code></td>
+<td>
+<p>critical value; see also <code>test.once.psi</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>an integer indicating the number of replications.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pr</code></td>
+<td>
+<p>an number in <code class="reqn">(0,1])</code>. The procedure reports a change point
+only when the proportion of positive votes is over <em>pr</em> in the
+<em>S</em> replications.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See He et al. (2021).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list containing:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>test</code></td>
+<td>
+<p>a logical value. 1 indicating the existence of change point, 0
+indicating no change point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loc</code></td>
+<td>
+<p>an integer larger than m, indicating
+the median location of the change point among the positive votes in the
+<em>S</em> replications; or <code class="reqn">NA</code> when no change point is reported.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Yong He, Xinbing Kong, Lorenzo Trapani, Long Yu
+</p>
+
+
+<h3>References</h3>
+
+<p>He Y, Kong X, Trapani L, &amp; Yu L(2021). Online change-point detection for
+matrix-valued time series with latent two-way factor structure. <em>arXiv
+preprint</em>, arXiv:2112.13479.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+k1=3
+k2=3
+epsilon=0.05
+Sample_T=50
+p1=40
+p2=20
+kmax=8
+r=8
+m=p2
+
+# generate data
+Y=gen.data(Sample_T,p1,p2,k1,k2,tau=0.5,change=1,pp=0.5)
+
+# calculate cv for "ps" with eta=0.45 and "wc"
+cv1=getcv(0.05,method="ps",eta=0.45)
+cv2=getcv(0.05,method="wc")
+
+
+## test with Y, projection
+test.once.proj.robust(Y,k1+1,m,epsilon,r,kmax,0,method="ps",eta=0.25)
+
+
+test.once.proj.robust(Y,k1+1,m,epsilon,r,kmax,0,method="ps",eta=0.45,cv1)
+
+
+test.once.proj.robust(Y,k1+1,m,epsilon,r,kmax,0,method="wc",eta=0.5,cv2)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

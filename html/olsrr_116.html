@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_step_all_possible</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>All possible regression</h2>
+
+<h3>Description</h3>
+
+<p>Fits all regressions involving one regressor, two regressors, three
+regressors, and so on. It tests all possible subsets of the set of potential
+independent variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_step_all_possible(model, ...)
+
+## Default S3 method:
+ols_step_all_possible(model, max_order = NULL, ...)
+
+## S3 method for class 'ols_step_all_possible'
+plot(x, model = NA, print_plot = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_order</code></td>
+<td>
+<p>Maximum subset order.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class <code>ols_step_all_possible</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_plot</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, prints the plot else returns a plot object.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>ols_step_all_possible</code> returns an object of class <code>"ols_step_all_possible"</code>.
+An object of class <code>"ols_step_all_possible"</code> is a data frame containing the
+following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>mindex</code></td>
+<td>
+<p>model index</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>number of predictors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predictors</code></td>
+<td>
+<p>predictors in the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rsquare</code></td>
+<td>
+<p>rsquare of the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjr</code></td>
+<td>
+<p>adjusted rsquare of the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rmse</code></td>
+<td>
+<p>root mean squared error of the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predrsq</code></td>
+<td>
+<p>predicted rsquare of the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cp</code></td>
+<td>
+<p>mallow's Cp</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aic</code></td>
+<td>
+<p>akaike information criteria</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sbic</code></td>
+<td>
+<p>sawa bayesian information criteria</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sbc</code></td>
+<td>
+<p>schwarz bayes information criteria</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>msep</code></td>
+<td>
+<p>estimated MSE of prediction, assuming multivariate normality</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fpe</code></td>
+<td>
+<p>final prediction error</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>apc</code></td>
+<td>
+<p>amemiya prediction criteria</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hsp</code></td>
+<td>
+<p>hocking's Sp</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Mendenhall William and  Sinsich Terry, 2012, A Second Course in Statistics Regression Analysis (7th edition).
+Prentice Hall
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">model &lt;- lm(mpg ~ disp + hp, data = mtcars)
+k &lt;- ols_step_all_possible(model)
+k
+
+# plot
+plot(k)
+
+# maximum subset
+model &lt;- lm(mpg ~ disp + hp + drat + wt + qsec, data = mtcars)
+ols_step_all_possible(model, max_order = 3)
+
+</code></pre>
+
+
+</div>

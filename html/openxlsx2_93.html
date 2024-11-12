@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Insert the current plot into a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>The current plot is saved to a temporary image file using
+<code>grDevices::dev.copy()</code> This file is then written to the workbook using
+<code>wb_add_image()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_plot(
+  wb,
+  sheet = current_sheet(),
+  dims = "A1",
+  width = 6,
+  height = 4,
+  row_offset = 0,
+  col_offset = 0,
+  file_type = "png",
+  units = "in",
+  dpi = 300,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name or index of a worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>Worksheet dimension, single cell ("A1") or cell range ("A1:D4")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>Width of figure. Defaults to <code>6</code> in.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>Height of figure . Defaults to <code>4</code> in.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row_offset, col_offset</code></td>
+<td>
+<p>Offset for column and row</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_type</code></td>
+<td>
+<p>File type of image</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>units</code></td>
+<td>
+<p>Units of width and height. Can be <code>"in"</code>, <code>"cm"</code> or <code>"px"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dpi</code></td>
+<td>
+<p>Image resolution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>wb_add_chart_xml()</code> <code>wb_add_drawing()</code> <code>wb_add_image()</code> <code>wb_add_mschart()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (requireNamespace("ggplot2") &amp;&amp; interactive()) {
+## Create a new workbook
+wb &lt;- wb_workbook()
+
+## Add a worksheet
+wb$add_worksheet("Sheet 1", grid_lines = FALSE)
+
+## create plot objects
+require(ggplot2)
+p1 &lt;- ggplot(mtcars, aes(x = mpg, fill = as.factor(gear))) +
+  ggtitle("Distribution of Gas Mileage") +
+  geom_density(alpha = 0.5)
+p2 &lt;- ggplot(Orange, aes(x = age, y = circumference, color = Tree)) +
+  geom_point() + geom_line()
+
+## Insert currently displayed plot to sheet 1, row 1, column 1
+print(p1) # plot needs to be showing
+wb$add_plot(1, width = 5, height = 3.5, file_type = "png", units = "in")
+
+## Insert plot 2
+print(p2)
+wb$add_plot(1, dims = "J2", width = 16, height = 10, file_type = "png", units = "cm")
+
+}
+</code></pre>
+
+
+</div>

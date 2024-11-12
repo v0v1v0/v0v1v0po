@@ -1,0 +1,496 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optimbase</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+S3 optimbase classes
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions support the S3 class 'optimbase' and related S3 classes 
+'optimbase.outputargs' and 'optimbase.functionargs'. They are intended to 
+either create objects of these classes, check if an object is of these classes, 
+or coerce it to one of these classes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  optimbase(verbose, x0, fx0, xopt, fopt, tolfunabsolute, 
+    tolfunrelative, tolfunmethod, tolxabsolute, tolxrelative, tolxmethod, 
+    maxfunevals, funevals, maxiter, iterations, fun, status, historyxopt,
+    historyfopt, verbosetermination, outputcommand, outputcommandarg,
+    numberofvariables, storehistory, costfargument, boundsmin, boundsmax,
+    nbineqconst, logfile, logfilehandle, logstartup, withderivatives)
+  
+  optimbase.outputargs(...)
+  
+  optimbase.functionargs(...)
+  
+  ## S3 method for class 'optimbase'
+print(x,verbose=FALSE,...)
+  
+  ## S3 method for class 'optimbase'
+is(x=NULL)
+  
+  ## S3 method for class 'optimbase'
+summary(object,showhistory,...)
+  
+  ## S3 method for class 'optimbase.outputargs'
+is(x=NULL)
+  
+  ## S3 method for class 'optimbase.outputargs'
+as(x=NULL)
+  
+  ## S3 method for class 'optimbase.functionargs'
+is(x=NULL)
+  
+  ## S3 method for class 'optimbase.functionargs'
+as(x=NULL)
+  
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>The verbose option, controlling the amount of messages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x0</code></td>
+<td>
+<p>The initial guess.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fx0</code></td>
+<td>
+<p>The value of the function for the initial guess.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xopt</code></td>
+<td>
+<p>The optimum parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fopt</code></td>
+<td>
+<p>The optimum function value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolfunabsolute</code></td>
+<td>
+<p>The absolute tolerance on function value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolfunrelative</code></td>
+<td>
+<p>The relative tolerance on function value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolfunmethod</code></td>
+<td>
+<p>Logical flag for the tolerance on function value in
+the termination criteria. This criteria is suitable for functions which
+minimum is associated with a function value equal to 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolxabsolute</code></td>
+<td>
+<p>The absolute tolerance on x..</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolxrelative</code></td>
+<td>
+<p>The relative tolerance on x.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolxmethod</code></td>
+<td>
+<p>Possible values: FALSE, TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxfunevals</code></td>
+<td>
+<p>The maximum number of function evaluations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>funevals</code></td>
+<td>
+<p>The number of function evaluations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxiter</code></td>
+<td>
+<p>The maximum number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iterations</code></td>
+<td>
+<p>The number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>The cost function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>The status of the optimization.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>historyxopt</code></td>
+<td>
+<p>The list to store the history for xopt. The vectors of
+estimates will be stored on separated levels of the list, so the length of
+<code>historyfopt</code> at the end of the optimization should be the number of
+iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>historyfopt</code></td>
+<td>
+<p>The vector to store the history for fopt. The values of
+the cost function will be stored at each iteration in a new element, so
+the length of <code>historyfopt</code> at the end of the optimization should be
+the number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbosetermination</code></td>
+<td>
+<p>The verbose option for termination criteria.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputcommand</code></td>
+<td>
+<p>The command called back for output. This must be a 
+valid R function accepting the following arguments: </p>
+
+<dl>
+<dt>state</dt>
+<dd>
+<p>A character string, typically indicating the status of the
+algorithm.</p>
+</dd>
+<dt>data</dt>
+<dd>
+<p>A list containing at least the following elements:
+</p>
+
+<dl>
+<dt>x</dt>
+<dd>
+<p>the current point estimate,</p>
+</dd>
+<dt>fval</dt>
+<dd>
+<p>the value of the cost function at the current point
+estimate,</p>
+</dd>
+<dt>iteration</dt>
+<dd>
+<p>the current iteration index,</p>
+</dd>
+<dt>funccount</dt>
+<dd>
+<p>the number of function evaluations.</p>
+</dd>
+</dl>
+</dd>
+<dt>fmsdata</dt>
+<dd>
+<p>An optional object of class 'optimbase.outputargs'.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputcommandarg</code></td>
+<td>
+<p>The outputcommand argument is initialized as an empty
+object of class 'optimbase.outputargs' passed to the command defined in 
+the outputcommand element of the optimbase object. This object has no 
+required structure or content but is typically a list which may be used to
+provide some extra information to the output command.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numberofvariables</code></td>
+<td>
+<p>The number of variables to optimize.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>storehistory</code></td>
+<td>
+<p>The flag which enables/disables the storing of the
+history.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>costfargument</code></td>
+<td>
+<p>The costf argument is initialized as an empty object of 
+class 'optimbase.functionargs'. This object has no required structure or
+content but is typically a list which may be used to provide some 
+information to the cost function'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundsmin</code></td>
+<td>
+<p>Minimum bounds for the parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundsmax</code></td>
+<td>
+<p>Maximum bounds for the parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nbineqconst</code></td>
+<td>
+<p>The number of nonlinear inequality constraints. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logfile</code></td>
+<td>
+<p>The name of the log file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logfilehandle</code></td>
+<td>
+<p>The handle for the log file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logstartup</code></td>
+<td>
+<p>Set to TRUE when the logging is started up.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>withderivatives</code></td>
+<td>
+<p>Set to TRUE when the method uses derivatives.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>optional arguments to 'print' or 'plot' methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class 'optimbase'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object of class 'optimbase'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showhistory</code></td>
+<td>
+<p>Optional logical flag, to define whether optimization 
+history must be summarized or not.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The <code>optimbase</code> function returns a new object of class 'optimbase', i.e. 
+a list containing the following elements:</p>
+
+<dl>
+<dt>verbose</dt>
+<dd>
+<p>Default is FALSE.</p>
+</dd>
+<dt>x0</dt>
+<dd>
+<p>Default is NULL.</p>
+</dd>
+<dt>fx0</dt>
+<dd>
+<p>Default is NULL.</p>
+</dd>
+<dt>xopt</dt>
+<dd>
+<p>Default is 0.</p>
+</dd>
+<dt>fopt</dt>
+<dd>
+<p>Default is 0.</p>
+</dd>
+<dt>tolfunabsolute</dt>
+<dd>
+<p>Default is 0.</p>
+</dd>
+<dt>tolfunrelative</dt>
+<dd>
+<p>Default is .Machine$double.eps.</p>
+</dd>
+<dt>tolfunmethod</dt>
+<dd>
+<p>Default is FALSE.</p>
+</dd>
+<dt>tolxabsolute</dt>
+<dd>
+<p>Default is 0.</p>
+</dd>
+<dt>tolxrelative</dt>
+<dd>
+<p>Default is .Machine$double.eps.</p>
+</dd>
+<dt>tolxmethod</dt>
+<dd>
+<p>Default is TRUE.</p>
+</dd>
+<dt>maxfunevals</dt>
+<dd>
+<p>Default is 100.</p>
+</dd>
+<dt>funevals</dt>
+<dd>
+<p>Default is 0.</p>
+</dd>
+<dt>maxiter</dt>
+<dd>
+<p>Default is 100.</p>
+</dd>
+<dt>iterations</dt>
+<dd>
+<p>Default is 0.</p>
+</dd>
+<dt>fun</dt>
+<dd>
+<p>Default is ”.</p>
+</dd>
+<dt>status</dt>
+<dd>
+<p>Default is ”.</p>
+</dd>
+<dt>historyfopt</dt>
+<dd>
+<p>Default is NULL.</p>
+</dd>
+<dt>historyxopt</dt>
+<dd>
+<p>Default is NULL.</p>
+</dd>
+<dt>verbosetermination</dt>
+<dd>
+<p>Default is FALSE.</p>
+</dd>
+<dt>outputcommand</dt>
+<dd>
+<p>Default is ”.</p>
+</dd>
+<dt>outputcommandarg</dt>
+<dd>
+<p>Default is ”. If the user configures this element, 
+it is expected to be an object of class 'optimbase.outputargs' or will be
+coerced to an object of class 'optimbase.outputargs'.</p>
+</dd>
+<dt>numberofvariables</dt>
+<dd>
+<p>Default is 0.</p>
+</dd>
+<dt>storehistory</dt>
+<dd>
+<p>Default is FALSE.</p>
+</dd>
+<dt>costfargument</dt>
+<dd>
+<p>Default is ”. If the user configures this element, 
+it is expected to be an object of class 'optimbase.functionargs' or will 
+be coerced to an object of class 'optimbase.functionargs'.</p>
+</dd>
+<dt>boundsmin</dt>
+<dd>
+<p>Default is NULL.</p>
+</dd>
+<dt>boundsmax</dt>
+<dd>
+<p>Default is NULL.</p>
+</dd>
+<dt>nbineqconst</dt>
+<dd>
+<p>Default is 0.</p>
+</dd>
+<dt>logfile</dt>
+<dd>
+<p>Default is ”.</p>
+</dd>
+<dt>logfilehandle</dt>
+<dd>
+<p>Default is 0.</p>
+</dd>
+<dt>logstartup</dt>
+<dd>
+<p>Default is FALSE.</p>
+</dd>
+<dt>withderivatives</dt>
+<dd>
+<p>Default is FALSE.</p>
+</dd>
+</dl>
+<p>The <code>print.optimbase</code> and <code>is.optimbase</code> functions are S3 method for 
+objects of class 'optimbase'. The <code>showhistory</code> argument can be provided 
+to the <code>print.optimbase</code> function to indicate whether or not the history 
+of optimization should be printed.
+</p>
+<p>The <code>optimbase.outputargs</code> function returns a new object of class
+'optimbase.outputargs', i.e. a list of all arguments provided by the user. The 
+<code>is.optimbase.outputargs</code> functions are S3 method for objects of class 
+'optimbase.outputargs'.
+</p>
+<p>The <code>optimbase.functionargs</code> function returns a new object of class
+'optimbase.functionargs', i.e. a list of all arguments provided by the user.
+The <code>is.optimbase.functionargs</code> functions are S3 method for objects of 
+class 'optimbase.functionargs'.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Author of Scilab optimbase module: Michael Baudin (INRIA - Digiteo)
+</p>
+<p>Author of R adaptation: Sebastien Bihorel (<a href="mailto:sb.pmlab@gmail.com">sb.pmlab@gmail.com</a>)
+</p>
+
+
+</div>

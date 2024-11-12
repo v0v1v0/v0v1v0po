@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>forecast_accuracy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate forecast accuracy</h2>
+
+<h3>Description</h3>
+
+<p>A function to calculate various loss functions, including
+MSE, RMSE, MAE, and  MAPE.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">forecast_accuracy(Data)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>Data</code></td>
+<td>
+<p>data.frame: data frame of forecasts, model names, and dates</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>data.frame of numeric error results
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+ # simple time series
+ A = c(1:100) + rnorm(100)
+ date = seq.Date(from = as.Date('2000-01-01'), by = 'month', length.out = 100)
+ Data = data.frame(date = date, A)
+
+ # run forecast_univariate
+ forecast.uni =
+   forecast_univariate(
+     Data = Data,
+     forecast.dates = tail(Data$date,10),
+     method = c('naive','auto.arima', 'ets'),
+     horizon = 1,
+     recursive = FALSE,
+     freq = 'month')
+
+ forecasts =
+   dplyr::left_join(
+     forecast.uni,
+     data.frame(date, observed = A),
+     by = 'date'
+   )
+
+ # forecast accuracy
+ forecast.accuracy = forecast_accuracy(forecasts)
+
+
+
+</code></pre>
+
+
+</div>

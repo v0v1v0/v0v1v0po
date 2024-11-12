@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ggplotmaply</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Converts a ggplot2 object from ggplotmap() to plotly
+</h2>
+
+<h3>Description</h3>
+
+<p>This function converts a ggplot2 object created by oceanmap::ggplotmap() to a plotly object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ggplotmaply(ggobj, fixedrange=F, grid=F,expand=3)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ggobj</code></td>
+<td>
+
+<p>Character string identifying regions predefined by the region_definitions-dataset, Raster* or Extent object (corresponds to <code>v_area</code> of the v-function). If missing, region is derived from geographical coordinates, denoted by lat and lon. See add.region to define new region definitions and delete.region to delete unproper region definitions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixedrange</code></td>
+<td>
+
+<p>Vector returning longitude coordinates of the area to be plotted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grid</code></td>
+<td>
+
+<p>whether a grid should be plotted (default is <code>TRUE</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expand</code></td>
+<td>
+
+<p>By default, the underlying ggplotly-function does not stick to the plotting region of the ggobj, but extends it. This can result in missing countries or islands. The <code>expand</code>-argument extends the plotly-plotting window in each direction in order to cover the corresponding landmasks.)
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>ggoplotmaply</code> uses the <code>ggplotly</code> functions to convert the ggplot object into the plotly format.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code> ggplotmap, ggplotly</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ggplot2)
+
+#### Example 1: plot landmask of the Western Mediterranean Sea
+## a) by using longitude and latitude coordinates:
+# lon &lt;- c(-6, 16.5)
+# lat &lt;- c(34, 44.5)
+# ggobj &lt;- ggplotmap(xlim=lon, ylim=lat)
+# ggobj
+# ggplotmaply(ggobj,expand = 10) ## we need to expand the plotting region
+
+
+## b) plot landmask of the Western Mediterranean Sea by using an extent-object:
+# library('raster')
+# ext &lt;- extent(lon, lat)
+# plotmap(ext, main="Western Mediterranean Sea") # extent-object
+# ggobj &lt;- ggplotmap(ext)
+# ggobj
+# ggplotmaply(ggobj)
+
+
+## c) plot landmask of the Western Mediterranean Sea by using a raster-object:
+# r &lt;- raster(ext)
+# ggobj &lt;- ggplotmap(r)
+# ggobj
+# ggplotmaply(ggobj)
+# ggplotmaply(ggobj)
+
+## d) plot landmask of the entire Mediterranean Sea by using keyword:
+ ggobj &lt;- ggplotmap("med4") + 
+          geom_point(data=data.frame(x=3.7008, y=43.4079),aes(x,y),size=5,colour="blue")
+# ggobj
+# ggplotmaply(ggobj,expand = 10)
+
+
+## e) add landmask to raster image plot (similar to v()-call)
+# library(dplyr)
+# library(ggplot2)
+# data(cmap)
+# setwd(system.file("test_files", package="oceanmap"))
+# nc &lt;- nc2raster(ncfiles[1])
+# rs2df &lt;- nc[[1]] %&gt;% ## take first layer
+#          rasterToPoints() %&gt;% ## convert raster to xyz matrix
+#          as.data.frame() ## convert to data frame
+# names(rs2df) &lt;- c("Lon","Lat","Conc") ## reset names (important for ggplotmaply hover text)
+# ggobj &lt;- ggplot() + geom_raster(data = rs2df, aes(x=Lon,y=Lat,fill=Conc)) 
+# ggobj_with_land_mask &lt;- ggplotmap(add_to = ggobj) + 
+#                         scale_fill_gradientn(colours=cmap$jet) # change colorbar
+# ggobj_with_land_mask 
+# ggplotmaply(ggobj_with_land_mask)
+
+
+</code></pre>
+
+
+</div>

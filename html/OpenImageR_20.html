@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>HOG_apply</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>calculate the HOG (Histogram of oriented gradients) for a matrix, array or a folder of images</h2>
+
+<h3>Description</h3>
+
+<p>calculate the HOG (Histogram of oriented gradients) for a matrix, array or a folder of images
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">HOG_apply(
+  object,
+  cells = 3,
+  orientations = 6,
+  rows = NULL,
+  columns = NULL,
+  threads = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a matrix, a data frame, a 3-dimensional array (where the third dimension is equal to 3) or a path to a folder of files (images)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cells</code></td>
+<td>
+<p>the number of divisions ( cells )</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>orientations</code></td>
+<td>
+<p>number of orientation bins</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows</code></td>
+<td>
+<p>a value specifying the number of rows of each image-row of the matrix (required if object is a matrix)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columns</code></td>
+<td>
+<p>a value specifying the number of columns of each image-row of the matrix (required if object is a matrix)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threads</code></td>
+<td>
+<p>the number of parallel cores to use</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function takes as input either a matrix, a data frame, a 3-dimensional array (where the third dimension is equal to 3) or a character path to a folder of files (images). It returns the HOG-descriptors
+(histogram of oriented gradients) for each row (if matrix or data frame), for each array-slice (if array) or for each file (if path to a folder of images).
+</p>
+
+
+<h3>Value</h3>
+
+<p>If the input is a matrix, data frame or array it returns a matrix of the hog descriptors. If the input is a path to a folder it returns a list of length 2,
+the 1st sublist is a vector with the names of the image files (the order of the files in the vector corresponds to the order of the rows of the output matrix),
+the 2nd sublist is the matrix of the hog descriptors.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+MATR = matrix(runif(75), ncol = 25, nrow = 5)
+
+res = HOG_apply(MATR, cells = 3, orientations = 5, rows = 5, columns = 5, threads = 1)
+
+
+ARRAY = array(5, dim = c(10, 10, 3))
+
+res = HOG_apply(ARRAY, cells = 3, orientations = 6, threads = 1)
+
+
+FOLDER_path = paste0(system.file("tmp_images", "same_type", package = "OpenImageR"), '/')
+
+res = HOG_apply(FOLDER_path, cells = 3, orientations = 6, threads = 1)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

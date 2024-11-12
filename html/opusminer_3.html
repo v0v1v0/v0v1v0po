@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_transactions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read Transaction Data from a File (Fast)</h2>
+
+<h3>Description</h3>
+
+<p><code>read_transactions</code> reads transaction data from a file fast, providing a
+significant speed increase over alternative methods for larger files.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_transactions(filename, sep = " ", format = "list")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>A filename.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>The separator between items (default " ").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>The output format ("list" or "transactions").</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>read_transactions</code> uses (internally) the <code>readChar</code>
+function to read transaction data from a file fast.  This is substantially
+faster for larger files than alternative methods.
+</p>
+<p>Files should be in the format of a list of transactions, one line per
+transaction, each transaction (ie, line) being a sequence of item labels,
+separated by the character specified by the parameter <code>sep</code> (default "
+").  See, for example, the files at <a href="http://fimi.ua.ac.be/data/">http://fimi.ua.ac.be/data/</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The transaction data, in the form of a list (of transactions, each
+list element being a vector of character values representing item labels), or
+an object of class <code>transactions</code> (<code>arules</code>).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+trans &lt;- read_transactions("mushroom.dat")
+trans &lt;- read_transactions("mushroom.dat", format = "transactions")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

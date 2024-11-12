@@ -1,0 +1,172 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gen_a_start</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>gen_a_start
+</h2>
+
+<h3>Description</h3>
+
+<p>This function is a wrapper to ov_simgrid. It generates the a. a is used to control the strength of the relationshp between the unobserved counfounder, U, and the treatment indicator
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gen_a_start(y, tx, residuals, es, rho, my_estimand)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>A vector that represents the outcome.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tx</code></td>
+<td>
+
+<p>A vector for the treatment indicator (must be 0s and 1s).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals</code></td>
+<td>
+
+<p>A vector of residuals from regressing Y on X and controlling for treatment.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>es</code></td>
+<td>
+
+<p>An effect size value to simulate over.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+
+<p>A rho (correlation) value to simulate over.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>my_estimand</code></td>
+<td>
+
+<p>"ATE" or "ATT"
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>gen_a_start returns a list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>n1</code></td>
+<td>
+<p>scalar representing sample size of treatment group (treat == 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ve1</code></td>
+<td>
+<p>1 - b1^2 multiplied by the variance of Ystar1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b1</code></td>
+<td>
+<p>bounded parameter for treatment group (treat == 1) that it with b0 are selected to set the correlation of the omitted variable and the outcome equal to rho</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>es</code></td>
+<td>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pi</code></td>
+<td>
+<p>proportion of population that is in the treatment group (treat == 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n0</code></td>
+<td>
+<p>scalar represnting sample size of control group (treat == 0)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ve0</code></td>
+<td>
+<p>1 - b0^2 multiplied by the variance of Ystar0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b0</code></td>
+<td>
+<p>bounded parameter for control group (treat == 0) that it with b1 are selected to set the correlation of the omitted variable and the outcome equal to rho</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>scalar representing the total sample size</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ind</code></td>
+<td>
+<p>vector of positions in data that represent treatment group (treat == 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Rstar_1</code></td>
+<td>
+<p>Residuals in treatment group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Rstar_0</code></td>
+<td>
+<p>Residuals in control group</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sud)
+sud = data.frame(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(1, 10, by=.01), size=nrow(sud), replace = TRUE)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_3",
+                            model_covariates = c("sfs8p_0"),
+                            estimand = "ATE")
+
+start = gen_a_start(y=sud$eps7p_3, tx=sud$treat,
+                    residuals=residuals(outcome_mod$mod_results),
+                    es = .01,
+                    rho = .01,
+                    my_estimand = "ATE")
+</code></pre>
+
+
+</div>

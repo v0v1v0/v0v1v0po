@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gen_a_finish</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>gen_a_finish
+</h2>
+
+<h3>Description</h3>
+
+<p>This function will generate a at finish.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gen_a_finish(a_res, my_estimand, wts)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>a_res</code></td>
+<td>
+
+<p>A list of values returned by gen_a_start
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>my_estimand</code></td>
+<td>
+
+<p>"ATE" or "ATT"
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wts</code></td>
+<td>
+
+<p>A vector of the original weights
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>used to control the strength of the relationship between the omitted variable and the treatment</p>
+</td>
+</tr></table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sud)
+sud = data.frame(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(1, 10, by=.01), size=nrow(sud), replace = TRUE)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_3",
+                            model_covariates = c("sfs8p_0"),
+                            estimand = "ATE")
+
+start = gen_a_start(y=sud$eps7p_3, tx=sud$treat,
+                    residuals=residuals(outcome_mod$mod_results),
+                    es = .01,
+                    rho = .01,
+                    my_estimand = "ATE")
+
+finish = gen_a_finish(a_res = start, my_estimand = "ATE", wts = sud$wts)
+</code></pre>
+
+
+</div>

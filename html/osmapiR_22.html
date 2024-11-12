@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_delete_note</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Delete notes</h2>
+
+<h3>Description</h3>
+
+<p>Hide (delete) notes. This request needs to be done as an authenticated user with moderator role.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_delete_note(note_id, text)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>note_id</code></td>
+<td>
+<p>Note ids represented by a numeric or a character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>A non-mandatory comment as text.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Use <code>osm_reopen_note()</code> to make the note visible again.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a data frame with the hided map notes (same format as <code>osm_get_notes()</code> with <code>format = "R"</code>).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other edit notes' functions: 
+<code>osm_close_note()</code>,
+<code>osm_create_comment_note()</code>,
+<code>osm_create_note()</code>
+</p>
+<p>Other functions for moderators: 
+<code>osm_hide_comment_changeset_discussion()</code>,
+<code>osm_redaction_object()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+set_osmapi_connection("testing") # use the testing server
+note &lt;- osm_create_note(lat = "40.7327375", lon = "0.1702526", text = "Test note to delete.")
+del_note &lt;- osm_delete_note(note_id = note$id, text = "Hide note")
+del_note
+
+## End(Not run)
+</code></pre>
+
+
+</div>

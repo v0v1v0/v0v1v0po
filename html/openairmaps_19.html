@@ -1,0 +1,514 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>polarMapStatic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Deprecated static directional analysis functions</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a>
+</p>
+<p>Static direction analysis mapping functions have been deprecated in favour
+of combined functions (e.g., <code>polarMap()</code>), which present a more
+consistent, unified API for users to simply swap between the two output
+formats.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">polarMapStatic(
+  data,
+  pollutant = NULL,
+  x = "ws",
+  limits = "free",
+  upper = "fixed",
+  latitude = NULL,
+  longitude = NULL,
+  crs = 4326,
+  provider = "osm",
+  facet = NULL,
+  cols = "turbo",
+  alpha = 1,
+  key = FALSE,
+  facet.nrow = NULL,
+  d.icon = 150,
+  d.fig = 3,
+  ...
+)
+
+diffMapStatic(
+  before,
+  after,
+  pollutant = NULL,
+  limits = "free",
+  x = "ws",
+  latitude = NULL,
+  longitude = NULL,
+  crs = 4326,
+  provider = "osm",
+  facet = NULL,
+  cols = c("#002F70", "#3167BB", "#879FDB", "#C8D2F1", "#F6F6F6", "#F4C8C8", "#DA8A8B",
+    "#AE4647", "#5F1415"),
+  alpha = 1,
+  key = FALSE,
+  facet.nrow = NULL,
+  d.icon = 150,
+  d.fig = 3,
+  ...
+)
+
+annulusMapStatic(
+  data,
+  pollutant = NULL,
+  period = "hour",
+  facet = NULL,
+  limits = "free",
+  latitude = NULL,
+  longitude = NULL,
+  crs = 4326,
+  provider = "osm",
+  cols = "turbo",
+  alpha = 1,
+  key = FALSE,
+  facet.nrow = NULL,
+  d.icon = 150,
+  d.fig = 3,
+  ...
+)
+
+windroseMapStatic(
+  data,
+  ws.int = 2,
+  breaks = 4,
+  facet = NULL,
+  latitude = NULL,
+  longitude = NULL,
+  crs = 4326,
+  provider = "osm",
+  cols = "turbo",
+  alpha = 1,
+  key = FALSE,
+  facet.nrow = NULL,
+  d.icon = 150,
+  d.fig = 3,
+  ...
+)
+
+pollroseMapStatic(
+  data,
+  pollutant = NULL,
+  statistic = "prop.count",
+  breaks = NULL,
+  facet = NULL,
+  latitude = NULL,
+  longitude = NULL,
+  crs = 4326,
+  provider = "osm",
+  cols = "turbo",
+  alpha = 1,
+  key = FALSE,
+  facet.nrow = NULL,
+  d.icon = 150,
+  d.fig = 3,
+  ...
+)
+
+percentileMapStatic(
+  data,
+  pollutant = NULL,
+  percentile = c(25, 50, 75, 90, 95),
+  intervals = "fixed",
+  latitude = NULL,
+  longitude = NULL,
+  crs = 4326,
+  provider = "osm",
+  facet = NULL,
+  cols = "turbo",
+  alpha = 1,
+  key = FALSE,
+  facet.nrow = NULL,
+  d.icon = 150,
+  d.fig = 3,
+  ...
+)
+
+freqMapStatic(
+  data,
+  pollutant = NULL,
+  statistic = "mean",
+  breaks = "free",
+  latitude = NULL,
+  longitude = NULL,
+  crs = 4326,
+  provider = "osm",
+  facet = NULL,
+  cols = "turbo",
+  alpha = 1,
+  key = FALSE,
+  facet.nrow = NULL,
+  d.icon = 150,
+  d.fig = 3,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p><em>Input data table with pollutant, wind, and geo-spatial
+information.</em>
+</p>
+<p><strong>required</strong> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>A data frame. The data frame must contain the data to plot the directional
+analysis marker, which includes wind speed (<code>ws</code>), wind direction (<code>wd</code>),
+and the column representing the concentration of a pollutant. In addition,
+<code>data</code> must include a decimal latitude and longitude (or X/Y coordinate
+used in conjunction with <code>crs</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p><em>Pollutant name(s).</em>
+</p>
+<p><strong>required</strong> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The column name(s) of the pollutant(s) to plot. If multiple pollutants are
+specified the <code>type</code> argument will no longer be able to be used, and:
+</p>
+
+<ul>
+<li> <p><em>Dynamic</em>: The pollutants can be toggled between using a "layer control" menu.
+</p>
+</li>
+<li> <p><em>Static:</em>: The pollutants will each appear in a different panel.
+</p>
+</li>
+</ul>
+<p>Multiple <code>pollutants</code> prohibit the use of the <code>type</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><em>The radial axis variable.</em>
+</p>
+<p><em>default:</em> <code>"ws"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The column name for the radial axis variable to use in
+<code>openair::polarPlot()</code>. Defaults to using wind speed, <code>"ws"</code>, but other
+meteorological variables such as ambient temperature or atmospheric
+stability may be useful.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits</code></td>
+<td>
+<p><em>Specifier for the plot colour scale bounds.</em>
+</p>
+<p><em>default:</em> <code>"free"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>One of:
+</p>
+
+<ul>
+<li> <p><code>"fixed"</code> which ensures all of the markers use the same colour scale.
+</p>
+</li>
+<li> <p><code>"free"</code> (the default) which allows all of the markers to use different
+colour scales.
+</p>
+</li>
+<li>
+<p> A numeric vector in the form <code>c(lower, upper)</code> used to define the colour
+scale. For example, <code>limits = c(0, 100)</code> would force the plot limits to
+span 0-100.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+<p><em>Specifier for the polar plot radial axis upper boundary.</em>
+</p>
+<p><em>default:</em> <code>"fixed"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>One of:
+</p>
+
+<ul>
+<li> <p><code>"fixed"</code> (the default) which ensures all of the markers use the same radial axis scale.
+</p>
+</li>
+<li> <p><code>"free"</code> which allows all of the markers to use different radial axis scales.
+</p>
+</li>
+<li>
+<p> A numeric value, used as the upper limit for the radial axis scale.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latitude, longitude</code></td>
+<td>
+<p><em>The decimal latitude(Y)/longitude(X).</em>
+</p>
+<p><em>default:</em> <code>NULL</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Column names representing the decimal latitude and longitude (or other Y/X
+coordinate if using a different <code>crs</code>). If not provided, will be
+automatically inferred from data by looking for a column named
+"lat"/"latitude" or "lon"/"lng"/"long"/"longitude" (case-insensitively).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p><em>The coordinate reference system (CRS).</em>
+</p>
+<p><em>default:</em> <code>4326</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The coordinate reference system (CRS) of the data, passed to
+<code>sf::st_crs()</code>. By default this is <a href="https://epsg.io/4326">EPSG:4326</a>, the
+CRS associated with the commonly used latitude and longitude coordinates.
+Different coordinate systems can be specified using <code>crs</code> (e.g., <code>crs = 27700</code> for the <a href="https://epsg.io/27700">British National Grid</a>). Note that
+non-lat/lng coordinate systems will be re-projected to EPSG:4326 for
+plotting on the map.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>provider</code></td>
+<td>
+<p><em>The basemap(s) to be used.</em>
+</p>
+<p><em>default:</em> <code>"OpenStreetMap"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The base map(s) to be used beneath the polar markers. If not provided, will
+default to <code>"OpenStreetMap"</code>/<code>"osm"</code> for both dynamic and static maps.
+</p>
+
+<ul>
+<li> <p><em>Dynamic</em>: Any number of leaflet::providers.
+See <a href="http://leaflet-extras.github.io/leaflet-providers/preview/">http://leaflet-extras.github.io/leaflet-providers/preview/</a> for a list
+of all base maps that can be used. If multiple base maps are provided, they
+can be toggled between using a "layer control" interface. By default, the
+interface will use the provider names as labels, but users can define their
+own using a named vector (e.g., <code>c("Default" = "OpenStreetMap", "Satellite"   = "Esri.WorldImagery")</code>)
+</p>
+</li>
+<li> <p><em>Static</em>: One of <code>rosm::osm.types()</code>.
+</p>
+</li>
+</ul>
+<p>There is some overlap in static and dynamic providers. For example,
+<code>{ggspatial}</code> uses "osm" to specify "OpenStreetMap". When static providers
+are provided to dynamic maps or vice versa, <code>{openairmaps}</code> will attempt to
+substitute the correct provider string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet</code></td>
+<td>
+<p>Passed to the <code>type</code> argument of the relevant <code>polarMap()</code>
+family function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p><em>Colours to use for plotting.</em>
+</p>
+<p><em>default:</em> <code>"turbo"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The colours used for plotting, passed to <code>openair::openColours()</code>. The
+default, <code>"turbo"</code>, is a rainbow palette with relatively perceptually
+uniform colours. Read more about this palette at
+<a href="https://research.google/blog/turbo-an-improved-rainbow-colormap-for-visualization/">https://research.google/blog/turbo-an-improved-rainbow-colormap-for-visualization/</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p><em>Transparency value for polar markers.</em>
+</p>
+<p><em>default:</em> <code>1</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>A value between 0 (fully transparent) and 1 (fully opaque).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p><em>Draw individual marker legends?</em>
+</p>
+<p><em>default:</em> <code>FALSE</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Draw a key for each individual marker? Potentially useful when <code>limits = "free"</code>, but of limited use otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet.nrow</code></td>
+<td>
+<p>Passed to the <code>static.nrow</code> argument of the relevant
+<code>polarMap()</code> family function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d.icon</code></td>
+<td>
+<p><em>The diameter of the plot on the map in pixels.</em>
+</p>
+<p><em>default:</em> <code>200</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>This will affect the size of the individual polar markers. Alternatively, a
+vector in the form <code>c(width, height)</code> can be provided if a non-circular
+marker is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d.fig</code></td>
+<td>
+<p><em>The diameter of the plots to be produced using <code>{openair}</code> in
+inches.</em>
+</p>
+<p><em>default:</em> <code>3.5</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>This will affect the resolution of the markers on the map. Alternatively, a
+vector in the form <code>c(width, height)</code> can be provided if a non-circular
+marker is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to the polar plotting function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before</code></td>
+<td>
+<p>A data frame that represents the "before" case. See
+<code>polarPlot()</code> for details of different input requirements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>after</code></td>
+<td>
+<p>A data frame that represents the "after" case. See <code>polarPlot()</code>
+for details of different input requirements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p><em>Temporal period for radial axis.</em>
+</p>
+<p><em>default:</em> <code>"hour"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Options are "hour" (the default, to plot diurnal variations), "season" to
+plot variation throughout the year, "weekday" to plot day of the week
+variation and "trend" to plot the trend by wind direction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ws.int</code></td>
+<td>
+<p><em>The wind speed interval of the colour axis.</em>
+</p>
+<p><em>default:</em> <code>2</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The wind speed interval. Default is 2 m/s but for low met masts with low
+mean wind speeds a value of 1 or 0.5 m/s may be better.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p><em>Specifier for the number of breaks of the colour axis.</em>
+</p>
+<p><em>default:</em> <code>4</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Most commonly, the number of break points for wind speed in
+<code>openair::windRose()</code>. For the <code>ws.int</code> default of <code>2</code>, the default
+<code>breaks</code>, <code>4</code>, generates the break points 2, 4, 6, and 8. Breaks can also
+be used to set specific break points. For example, the argument 'breaks =
+c(0, 1, 10, 100)“ breaks the data into segments &lt;1, 1-10, 10-100, &gt;100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p><em>The statistic to be applied to each data bin in the plot</em>
+</p>
+<p><em>default:</em> <code>"prop.mean"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Options currently include <code>"prop.count"</code>, <code>"prop.mean"</code> and <code>"abs.count"</code>.
+<code>"prop.count"</code> sizes bins according to the proportion of the frequency of
+measurements.  Similarly, <code>"prop.mean"</code> sizes bins according to their
+relative contribution to the mean. <code>"abs.count"</code> provides the absolute
+count of measurements in each bin.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentile</code></td>
+<td>
+<p><em>The percentile values for the colour scale bin.</em>
+</p>
+<p><em>default:</em> <code>c(25, 50, 75, 90, 95)</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The percentile value(s) to plot using <code>openair::percentileRose()</code>. Must be
+a vector of values between <code>0</code> and <code>100</code>. If <code>percentile = NA</code> then only a
+mean line will be shown.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervals</code></td>
+<td>
+<p><em>Specifier for the percentile rose radial axis intervals.</em>
+</p>
+<p><em>default:</em> <code>"fixed"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>One of:
+</p>
+
+<ul>
+<li> <p><code>"fixed"</code> (the default) which ensures all of the markers use the same radial axis scale.
+</p>
+</li>
+<li> <p><code>"free"</code> which allows all of the markers to use different radial axis scales.
+</p>
+</li>
+<li>
+<p> A numeric vector defining a sequence of numbers to use as the intervals, e.g., <code>intervals = c(0, 10, 30, 50)</code>.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>ggplot2</code> object using <code>ggplot2::coord_sf()</code> coordinates with a
+<code>ggspatial</code> basemap
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>polarMap()</code>
+</p>
+
+
+</div>

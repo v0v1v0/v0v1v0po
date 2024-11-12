@@ -1,0 +1,37 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nao</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>North Atlantic Oscillation Index</h2>
+
+<h3>Description</h3>
+
+<p>This is the North Oscillation Index, downloaded in May 2014 and processed as follows.
+</p>
+<div class="sourceCode"><pre>d &lt;- scan("https://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/norm.nao.monthly.b5001.current.ascii.table")
+isYear &lt;- d &gt; 1900
+index &lt;- d[!isYear]
+year &lt;- 1/24 + seq(d[isYear][1], by=1/12, length.out=length(index))
+nao &lt;- data.frame(year=year, index=index)
+</pre></div>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(nao, package="ocedata")
+</code></pre>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(nao, package="ocedata")
+plot(nao$year, nao$index, xlab="Year", ylab="NAO index", type="l", col="gray")
+k &lt;- kernel("fejer", m=25, r=2)
+smoothed &lt;- kernapply(nao$index, k, circular=TRUE)
+lines(nao$year, smoothed, col=2)
+</code></pre>
+
+
+</div>

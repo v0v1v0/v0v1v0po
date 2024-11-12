@@ -1,0 +1,315 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od.3m</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal sample allocation calculation for three-level MRTs detecting main effects</h2>
+
+<h3>Description</h3>
+
+<p>The optimal design of three-level
+multisite randomized trials (MRTs) is to calculate
+the optimal sample allocation that minimizes the variance of
+treatment effect under fixed budget, which is approximately the optimal
+sample allocation that maximizes statistical power under a fixed budget.
+The optimal design parameters include
+the level-1 sample size per level-2 unit (<code>n</code>),
+the level-2 sample size per level-3 unit (<code>J</code>),
+and the proportion of level-2 unit to be assigned to treatment (<code>p</code>).
+This function solves the optimal <code>n</code>, <code>J</code> and/or <code>p</code>
+with and without constraints.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od.3m(
+  n = NULL,
+  J = NULL,
+  p = NULL,
+  icc2 = NULL,
+  icc3 = NULL,
+  r12 = NULL,
+  r22 = NULL,
+  r32m = NULL,
+  c1 = NULL,
+  c2 = NULL,
+  c3 = NULL,
+  c1t = NULL,
+  c2t = NULL,
+  omega = NULL,
+  m = NULL,
+  plots = TRUE,
+  plot.by = NULL,
+  nlim = NULL,
+  Jlim = NULL,
+  plim = NULL,
+  varlim = NULL,
+  nlab = NULL,
+  Jlab = NULL,
+  plab = NULL,
+  varlab = NULL,
+  vartitle = NULL,
+  verbose = TRUE,
+  iter = 100,
+  tol = 1e-10
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The level-1 sample size per level-2 unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>The level-2 sample size per level-3 unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The proportion of level-4 clusters/units to be assigned to treatment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icc2</code></td>
+<td>
+<p>The unconditional intraclass correlation coefficient (ICC) at level 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icc3</code></td>
+<td>
+<p>The unconditional intraclass correlation coefficient (ICC) at level 3.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r12</code></td>
+<td>
+<p>The proportion of level-1 variance explained by covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r22</code></td>
+<td>
+<p>The proportion of level-2 variance explained by covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r32m</code></td>
+<td>
+<p>The proportion of variance of site-specific treatment effect explained by covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1</code></td>
+<td>
+<p>The cost of sampling one level-1 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c2</code></td>
+<td>
+<p>The cost of sampling one level-2 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c3</code></td>
+<td>
+<p>The cost of sampling one level-3 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1t</code></td>
+<td>
+<p>The cost of sampling one level-1 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c2t</code></td>
+<td>
+<p>The cost of sampling one level-2 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omega</code></td>
+<td>
+<p>The standardized variance of site-specific treatment effect.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Total budget, default is the total costs of sampling 60
+level-3 units.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plots</code></td>
+<td>
+<p>Logical, provide variance plots if TRUE, otherwise not; default value is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.by</code></td>
+<td>
+<p>Plot the variance by <code>n</code>, <code>J</code> and/or <code>p</code>;
+default value is plot.by = list(n = "n", J = "J", p = "p").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlim</code></td>
+<td>
+<p>The plot range for n, default value is c(2, 50).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Jlim</code></td>
+<td>
+<p>The plot range for J, default value is c(2, 50).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plim</code></td>
+<td>
+<p>The plot range for p, default value is c(0, 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varlim</code></td>
+<td>
+<p>The plot range for variance, default value is c(0, 0.05).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlab</code></td>
+<td>
+<p>The plot label for <code>n</code>,
+default value is "Level-1 Sample Size: n".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Jlab</code></td>
+<td>
+<p>The plot label for <code>J</code>,
+default value is "Level-2 Sample Size: J".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plab</code></td>
+<td>
+<p>The plot label for <code>p</code>,
+default value is "Proportion Level-2 Units in Treatment: p".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varlab</code></td>
+<td>
+<p>The plot label for variance,
+default value is "Variance".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vartitle</code></td>
+<td>
+<p>The title of variance plot, default value is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical; print the values of <code>n</code>, <code>J</code>,
+and <code>p</code> if TRUE, otherwise not; default value is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>Number of iterations; default value is 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Tolerance for convergence; default value is 1e-10.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Unconstrained or constrained optimal sample allocation
+(<code>n</code>, <code>J</code>, and <code>p</code>).
+The function also returns the variance of the treatment effect,
+function name, design type,
+and parameters used in the calculation.
+</p>
+
+
+<h3>References</h3>
+
+<p>Shen, Z., &amp; Kelcey, B. (2022). Optimal sampling ratios in three-level
+multisite experiments. Journal of Research on Educational Effectiveness.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Unconstrained optimal design #---------
+  myod1 &lt;- od.3m(icc2 = 0.2, icc3 = 0.1, omega = 0.02,
+              r12 = 0.5, r22 = 0.5, r32m = 0.5,
+              c1 = 1, c2 = 5,
+              c1t = 1, c2t = 200, c3 = 200,
+              varlim = c(0, 0.005))
+  myod1$out # output
+# Plots by p and J
+  myod1 &lt;- od.3m(icc2 = 0.2, icc3 = 0.1, omega = 0.02,
+              r12 = 0.5, r22 = 0.5, r32m = 0.5,
+              c1 = 1, c2 = 5,
+              c1t = 1, c2t = 200, c3 = 200,
+              varlim = c(0, 0.005), plot.by = list(p = 'p', J = 'J'))
+
+# Constrained optimal design with p = 0.5 #---------
+  myod2 &lt;- od.3m(icc2 = 0.2, icc3 = 0.1, omega = 0.02,
+              r12 = 0.5, r22 = 0.5, r32m = 0.5,
+              c1 = 1, c2 = 5,
+              c1t = 1, c2t = 200, c3 = 200,
+              varlim = c(0, 0.005), p = 0.5)
+  myod2$out
+# Relative efficiency (RE)
+  myre &lt;- re(od = myod1, subod= myod2)
+  myre$re # RE = 0.81
+
+# Constrained optimal design with n = 5 #---------
+  myod3 &lt;- od.3m(icc2 = 0.2, icc3 = 0.1, omega = 0.02,
+              r12 = 0.5, r22 = 0.5, r32m = 0.5,
+              c1 = 1, c2 = 5,
+              c1t = 1, c2t = 200, c3 = 200,
+              varlim = c(0, 0.005), n = 5)
+  myod3$out
+# Relative efficiency (RE)
+  myre &lt;- re(od = myod1, subod= myod3)
+  myre$re # RE = 0.89
+
+# Constrained n, J and p, no calculation performed #---------
+  myod4 &lt;- od.3m(icc2 = 0.2, icc3 = 0.1, omega = 0.02,
+              r12 = 0.5, r22 = 0.5, r32m = 0.5,
+              c1 = 1, c2 = 5,
+              c1t = 1, c2t = 200, c3 = 200,
+              varlim = c(0, 0.005), p = 0.5, n = 15, J = 20)
+  myod4$out
+# Relative efficiency (RE)
+  myre &lt;- re(od = myod1, subod= myod4)
+  myre$re # RE = 0.75
+
+</code></pre>
+
+
+</div>

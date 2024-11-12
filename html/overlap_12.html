@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>overlapEst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Estimates of coefficient of overlapping
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculates up to three estimates of activity pattern overlap based on times of observations for two species.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">overlapEst(A, B, kmax = 3, adjust=c(0.8, 1, 4), n.grid = 128,
+    type=c("all", "Dhat1", "Dhat4", "Dhat5"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>A</code></td>
+<td>
+
+<p>a vector of times of observations of species A in radians, ie. scaled to [0, <code class="reqn">2\pi</code>].
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+
+<p>a vector of times of observations of species B in radians.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kmax</code></td>
+<td>
+
+<p>maximum value of k for optimal bandwidth estimation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust</code></td>
+<td>
+
+<p>bandwidth adjustment; either a single value used for all 3 overlap estimates, or a vector of 3 different values. This corresponds to <em>1/c</em> in Ridout &amp; Linkie 2009.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.grid</code></td>
+<td>
+
+<p>number of points at which to estimate density for comparison between species; smaller values give lower precision but run faster in simulations and bootstraps.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+
+<p>the name of the estimator to use: <code>Dhat4</code> is recommended if both samples are larger then 50, otherwise use <code>Dhat1</code>. See Details. The default is "all" for compatibility with older versions.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See <code>overlapTrue</code> for the meaning of coefficient of overlapping, <code class="reqn">\Delta</code>.
+</p>
+<p>These estimators of <code class="reqn">\Delta</code> use kernel density estimates fitted to the data to approximate the true density functions <em>f(t)</em> and <em>g(t)</em>. Schmid &amp; Schmidt (2006) propose five estimators of overlap:
+</p>
+<p>Dhat1 is calculated from vectors of densities estimated at <em>T</em> equally-spaced times, <em>t</em>, between 0 and <code class="reqn">2\pi</code>:
+</p>
+<p><img src="../help/figures/Dhat1.jpg" alt="Equation for Dhat1"></p>
+<p>For circular distributions, Dhat2 is equivalent to Dhat1, and Dhat3 is inapplicable.
+</p>
+<p>Dhat4 and Dhat5 use vectors of densities estimated at the times of the observations of the species, <em>x</em> and <em>y</em>:
+</p>
+<p><img src="../help/figures/Dhat4.jpg" alt="Equation for Dhat4"><br><br><img src="../help/figures/Dhat5.jpg" alt="Equation for Dhat5"></p>
+<p>where <em>n, m</em> are the sample sizes and <em>I</em> is the indicator function (1 if the condition is true, 0 otherwise).
+</p>
+<p>Dhat5 simply checks which curve is higher at each point; even tiny changes in the data can result in large, discontinuous changes in Dhat5, and it can take values &gt; 1. Don't use Dhat5.
+</p>
+<p>Comparing curves at times of actual observations works well if there are enough observations of each species. Simulations show that Dhat4 is best when the smallest sample has at least 50 observations. Dhat1 compares curves at <code>n.grid</code> equally spaced points, and is best for small samples.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>type = all</code>, a named vector of three estimates of overlap, otherwise a single estimate. Will be NA if optimal bandwidth estimation failed.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith, based on work by Martin Ridout.
+</p>
+
+
+<h3>References</h3>
+
+<p>Ridout &amp; Linkie (2009) Estimating overlap of daily activity patterns from camera trap data. <em>Journal of Agricultural, Biological, and Environmental Statistics</em> 14:322-337
+</p>
+<p>Schmid &amp; Schmidt (2006) Nonparametric estimation of the coefficient of overlapping - theory and empirical application, <em>Computational Statistics and Data Analysis</em>, 50:1583-1596.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>overlapTrue</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get example data:
+data(simulatedData)
+
+# Use defaults:
+overlapEst(tigerObs, pigObs)
+#     Dhat1     Dhat4     Dhat5 
+# 0.2908618 0.2692011 0.2275000 
+
+overlapEst(tigerObs, pigObs, type="Dhat4")
+#    Dhat4
+#    0.2692011
+</code></pre>
+
+
+</div>

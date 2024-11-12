@@ -1,0 +1,1037 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ODataQuery</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ODataQuery</h2>
+
+<h3>Description</h3>
+
+<p>R6 class that represents an OData query
+</p>
+
+
+<h3>Details</h3>
+
+<p>This class has methods to build and navigate OData services:
+</p>
+
+<ul>
+<li>
+<p> Use methods such as <code style="white-space: pre;">⁠$path()⁠</code> and <code style="white-space: pre;">⁠$get()⁠</code> to find a path.
+</p>
+</li>
+<li>
+<p> Use methods such as <code style="white-space: pre;">⁠$select()⁠</code> and <code style="white-space: pre;">⁠$filter()⁠</code> to make your query.
+</p>
+</li>
+<li>
+<p> Use methods such as <code style="white-space: pre;">⁠$retrieve()⁠</code>, <code style="white-space: pre;">⁠$all()⁠</code> and <code style="white-space: pre;">⁠$one()⁠</code> to obtain
+the results.
+</p>
+</li>
+</ul>
+<h3>Active bindings</h3>
+
+<div class="r6-active-bindings">
+
+<dl>
+<dt><code>url</code></dt>
+<dd>
+<p>Generate (encoded) url</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-new"><code>ODataQuery$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-print"><code>ODataQuery$print()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-path"><code>ODataQuery$path()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-get"><code>ODataQuery$get()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-func"><code>ODataQuery$func()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-query"><code>ODataQuery$query()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-top"><code>ODataQuery$top()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-skip"><code>ODataQuery$skip()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-select"><code>ODataQuery$select()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-filter"><code>ODataQuery$filter()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-expand"><code>ODataQuery$expand()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-orderby"><code>ODataQuery$orderby()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-search"><code>ODataQuery$search()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-compute"><code>ODataQuery$compute()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-retrieve"><code>ODataQuery$retrieve()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-all"><code>ODataQuery$all()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-one"><code>ODataQuery$one()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Create a class representing a query.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$new(
+  service,
+  .resource = "",
+  .query_options = list(),
+  httr_args = list()
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>service</code></dt>
+<dd>
+<p>The url of the endpoint to connect to.
+This url should not end with backslash.</p>
+</dd>
+<dt><code>.resource</code></dt>
+<dd>
+<p>Should not be used directly. Use $path() instead.</p>
+</dd>
+<dt><code>.query_options</code></dt>
+<dd>
+<p>Should not be used directly.
+Use methods such as $select(), $filter() and $query() instead.</p>
+</dd>
+<dt><code>httr_args</code></dt>
+<dd>
+<p>Additional parameters to pass to httr::GET</p>
+</dd>
+<dt><code>value</code></dt>
+<dd>
+<p>Read-only</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+</pre>
+</div>
+
+
+<hr>
+<a id="method-print"></a>
+
+
+
+<h4>Method <code>print()</code>
+</h4>
+
+<p>Print query, useful when debugging.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$print(top = 0, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>top</code></dt>
+<dd>
+<p>Number of records to print.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Additional parameters are passed to print</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>\dontrun{
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+service$print(10)$path("People")$print()
+}
+</pre>
+</div>
+
+
+<hr>
+<a id="method-path"></a>
+
+
+
+<h4>Method <code>path()</code>
+</h4>
+
+<p>Supply path to the resource
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$path(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Components that lead to resource path</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+</pre>
+</div>
+
+
+<hr>
+<a id="method-get"></a>
+
+
+
+<h4>Method <code>get()</code>
+</h4>
+
+<p>Query an individual record by ID parameters
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$get(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>ID-parameters (named or unnamed)</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+russellwhyte &lt;- people_entity$get("russellwhyte")
+</pre>
+</div>
+
+
+<hr>
+<a id="method-func"></a>
+
+
+
+<h4>Method <code>func()</code>
+</h4>
+
+<p>Path to an OData function
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$func(fname, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>fname</code></dt>
+<dd>
+<p>Name of the function</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Options passed to retrieve_data</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>closure
+</p>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+get_nearest_airport &lt;- service$func('GetNearestAirport')
+\dontrun{
+get_nearest_airport(lat = 33, lon = -118)
+}
+</pre>
+</div>
+
+
+<hr>
+<a id="method-query"></a>
+
+
+
+<h4>Method <code>query()</code>
+</h4>
+
+<p>Supply custom query options that do not start with $
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$query(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Named lists where the names are custom query options</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$query(filter = "FirstName eq 'scott'")$url
+</pre>
+</div>
+
+
+<hr>
+<a id="method-top"></a>
+
+
+
+<h4>Method <code>top()</code>
+</h4>
+
+<p>Limit the number of results to n
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$top(n = 10)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>n</code></dt>
+<dd>
+<p>Number of records to return at most</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$top(10)
+</pre>
+</div>
+
+
+<hr>
+<a id="method-skip"></a>
+
+
+
+<h4>Method <code>skip()</code>
+</h4>
+
+<p>Skip first few items
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$skip(n = 10)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>n</code></dt>
+<dd>
+<p>Number of items to skip</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$skip(10)
+</pre>
+</div>
+
+
+<hr>
+<a id="method-select"></a>
+
+
+
+<h4>Method <code>select()</code>
+</h4>
+
+<p>Select fields. If not present, all fields are returned.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$select(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Fields to select</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$select("FirstName", "LastName")
+</pre>
+</div>
+
+
+<hr>
+<a id="method-filter"></a>
+
+
+
+<h4>Method <code>filter()</code>
+</h4>
+
+<p>Apply filter to result
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$filter(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Can be a raw odata query or query options. It's recommended to use
+query options because these will automatically escape parameters.
+The parameters are passed on to <code>and_query</code>.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$filter(FirstName.eq = 'Scott')
+</pre>
+</div>
+
+
+<hr>
+<a id="method-expand"></a>
+
+
+
+<h4>Method <code>expand()</code>
+</h4>
+
+<p>Expand on expansion properties
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$expand(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Properties to extend on</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$expand("Friends")
+</pre>
+</div>
+
+
+<hr>
+<a id="method-orderby"></a>
+
+
+
+<h4>Method <code>orderby()</code>
+</h4>
+
+<p>Order results by one or more keys
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$orderby(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Keys to order by. To order in descending order, the key can
+be prefixed by a negative sign.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$orderby('Concurrency')
+people_entity$orderby('-Concurrency')
+</pre>
+</div>
+
+
+<hr>
+<a id="method-search"></a>
+
+
+
+<h4>Method <code>search()</code>
+</h4>
+
+<p>Search the entity
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$search(s)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>s</code></dt>
+<dd>
+<p>Search string as defined by the endpoint.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$search('Boise')
+</pre>
+</div>
+
+
+<hr>
+<a id="method-compute"></a>
+
+
+
+<h4>Method <code>compute()</code>
+</h4>
+
+<p>Compute properties
+</p>
+<p>Add additional properties to query computed from other attributes.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$compute(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Named list of properties to compute</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre># Not really supported by this particular service.
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$compute(a = "5 MUL Concurrency")
+</pre>
+</div>
+
+
+<hr>
+<a id="method-retrieve"></a>
+
+
+
+<h4>Method <code>retrieve()</code>
+</h4>
+
+<p>Retrieve data
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$retrieve(count = FALSE, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>count</code></dt>
+<dd>
+<p>Whether to include a count of the total number of records</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Passed to retrieve_data</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>\dontrun{
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity$retrieve()
+}
+</pre>
+</div>
+
+
+<hr>
+<a id="method-all"></a>
+
+
+
+<h4>Method <code>all()</code>
+</h4>
+
+<p>Retrieve all data pages
+</p>
+<p>Return concatenation of value of all pages
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$all(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Passed to retrieve_all</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>\dontrun{
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity$all()
+people_entity$all(jsonlite_args = list(simplifyVector = False))
+}
+</pre>
+</div>
+
+
+<hr>
+<a id="method-one"></a>
+
+
+
+<h4>Method <code>one()</code>
+</h4>
+
+<p>Retrieve individual
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ODataQuery$one(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Passed to retrieve_one</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>\dontrun{
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity$top(1)$one(default = NA)
+}
+</pre>
+</div>
+
+
+
+
+<h3>See Also</h3>
+
+<p><code>and_query()</code> for details.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## ------------------------------------------------
+## Method `ODataQuery$new`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+
+## ------------------------------------------------
+## Method `ODataQuery$print`
+## ------------------------------------------------
+
+## Not run: 
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+service$print(10)$path("People")$print()
+
+## End(Not run)
+
+## ------------------------------------------------
+## Method `ODataQuery$path`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+
+## ------------------------------------------------
+## Method `ODataQuery$get`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+russellwhyte &lt;- people_entity$get("russellwhyte")
+
+## ------------------------------------------------
+## Method `ODataQuery$func`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+get_nearest_airport &lt;- service$func('GetNearestAirport')
+## Not run: 
+get_nearest_airport(lat = 33, lon = -118)
+
+## End(Not run)
+
+## ------------------------------------------------
+## Method `ODataQuery$query`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$query(filter = "FirstName eq 'scott'")$url
+
+## ------------------------------------------------
+## Method `ODataQuery$top`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$top(10)
+
+## ------------------------------------------------
+## Method `ODataQuery$skip`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$skip(10)
+
+## ------------------------------------------------
+## Method `ODataQuery$select`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$select("FirstName", "LastName")
+
+## ------------------------------------------------
+## Method `ODataQuery$filter`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$filter(FirstName.eq = 'Scott')
+
+## ------------------------------------------------
+## Method `ODataQuery$expand`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$expand("Friends")
+
+## ------------------------------------------------
+## Method `ODataQuery$orderby`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$orderby('Concurrency')
+people_entity$orderby('-Concurrency')
+
+## ------------------------------------------------
+## Method `ODataQuery$search`
+## ------------------------------------------------
+
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$search('Boise')
+
+## ------------------------------------------------
+## Method `ODataQuery$compute`
+## ------------------------------------------------
+
+# Not really supported by this particular service.
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity &lt;- service$path("People")
+people_entity$compute(a = "5 MUL Concurrency")
+
+## ------------------------------------------------
+## Method `ODataQuery$retrieve`
+## ------------------------------------------------
+
+## Not run: 
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity$retrieve()
+
+## End(Not run)
+
+## ------------------------------------------------
+## Method `ODataQuery$all`
+## ------------------------------------------------
+
+## Not run: 
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity$all()
+people_entity$all(jsonlite_args = list(simplifyVector = False))
+
+## End(Not run)
+
+## ------------------------------------------------
+## Method `ODataQuery$one`
+## ------------------------------------------------
+
+## Not run: 
+service &lt;- ODataQuery$new("https://services.odata.org/V4/TripPinServiceRW")
+people_entity$top(1)$one(default = NA)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

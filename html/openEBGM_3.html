@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>autoSquash</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Automated data squashing</h2>
+
+<h3>Description</h3>
+
+<p><code>autoSquash</code> squashes data by calling <code>squashData</code> once for
+each count (<em>N</em>), removing the need to repeatedly squash the same data
+set.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">autoSquash(
+  data,
+  keep_pts = c(100, 75, 50, 25),
+  cut_offs = c(500, 1000, 10000, 1e+05, 5e+05, 1e+06, 5e+06),
+  num_super_pts = c(50, 75, 150, 500, 750, 1000, 2000, 5000)
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame (typically from <code>processRaw</code>) containing
+columns named <em>N</em>, <em>E</em>, and (possibly) <em>weight</em>. Can contain
+additional columns, which will be ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_pts</code></td>
+<td>
+<p>A vector of whole numbers for the number of points to leave
+unsquashed for each count (<em>N</em>). See the 'Details' section.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cut_offs</code></td>
+<td>
+<p>A vector of whole numbers for the cutoff values of unsquashed
+data used to determine how many "super points" to end up with after
+squashing each count (<em>N</em>). See the 'Details' section.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_super_pts</code></td>
+<td>
+<p>A vector of whole numbers for the number of
+"super points" to end up with after squashing each count (<em>N</em>). Length
+must be 1 more than length of <code>cut_offs</code>. See the 'Details' section.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See <code>squashData</code> for details on squashing a given
+count (<em>N</em>).
+</p>
+<p>The elements in <code>keep_pts</code> determine how many points are left
+unsquashed for each count (<em>N</em>). The first element in <code>keep_pts</code>
+is used for the smallest <em>N</em> (usually 1). Each successive element is
+used for each successive <em>N</em>. Once the last element is reached, it is
+used for all other <em>N</em>.
+</p>
+<p>For counts that are squashed, <code>cut_offs</code> and
+<code>num_super_pts</code> determine how the points are squashed. For instance,
+by default, if a given <em>N</em> contains less than 500 points to be
+squashed, then those points are squashed to 50 "super points".
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with column names <em>N</em>, <em>E</em>, and
+<em>weight</em> containing the reduced data set.
+</p>
+
+
+<h3>References</h3>
+
+<p>DuMouchel W, Pregibon D (2001). "Empirical Bayes Screening for
+Multi-item Associations." In <em>Proceedings of the Seventh ACM SIGKDD
+International Conference on Knowledge Discovery and Data Mining</em>, KDD '01,
+pp. 67-76. ACM, New York, NY, USA. ISBN 1-58113-391-X.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>processRaw</code> for data preparation and
+<code>squashData</code> for squashing individual counts
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data.table::setDTthreads(2)  #only needed for CRAN checks
+data(caers)
+proc &lt;- processRaw(caers)
+table(proc$N)
+
+squash1 &lt;- autoSquash(proc)
+ftable(squash1[, c("N", "weight")])
+
+## Not run: squash2 &lt;- autoSquash(proc, keep_pts = c(50, 5))
+## Not run: ftable(squash2[, c("N", "weight")])
+
+## Not run: 
+  squash3 &lt;- autoSquash(proc, keep_pts = 100,
+                        cut_offs = c(250, 500),
+                        num_super_pts = c(20, 60, 125))
+
+## End(Not run)
+## Not run: ftable(squash3[, c("N", "weight")])
+
+</code></pre>
+
+
+</div>

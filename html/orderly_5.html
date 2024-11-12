@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_bundle_pack</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pack and run orderly "bundles"</h2>
+
+<h3>Description</h3>
+
+<p>Pack up and run orderly reports to run elsewhere. By using these
+functions you can safely copy all requirements of an orderly
+report into a portable archive and run them on another machine
+(perhaps a cluster or HPC), then import the completed archive into
+your orderly tree. There is considerable overhead to using these
+functions (mostly due to transport costs) so they are intended
+primarily for very computationally demanding patterns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_bundle_pack(
+  path,
+  name,
+  parameters = NULL,
+  envir = NULL,
+  root = NULL,
+  locate = TRUE,
+  message = NULL,
+  instance = NULL,
+  remote = NULL,
+  tags = NULL
+)
+
+orderly_bundle_run(path, workdir = tempfile(), echo = TRUE, envir = NULL)
+
+orderly_bundle_import(path, root = NULL, locate = TRUE)
+
+orderly_bundle_list(path)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>A path, whose interpretation depends on the function:
+</p>
+<p><code>orderly_bundle_pack</code>: A directory to save bundles to.  If
+it does not exist it will be created for you.
+</p>
+<p><code>orderly_bundle_run</code>: The path to the packed bundle (a zip
+file created by <code>orderly_bundle_pack</code>)
+</p>
+<p><code>orderly_bundle_import</code>: The path to unpack and import
+(a zip file created by <code>orderly_bundle_run</code>)
+</p>
+<p><code>orderly_bundle_list</code>: The path to a directory that might
+contain either incomplete or complete bundles (created by either
+<code>orderly_bundle_pack</code> or <code>orderly_bundle_run</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>Name of the report to pack (see
+<code>orderly_list()</code>.  A leading <code style="white-space: pre;">⁠src/⁠</code> will be removed if
+provided, allowing easier use of autocomplete.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p>Parameters passed to the report. A named list of
+parameters declared in the <code>orderly.yml</code>.  Each parameter
+must be a scalar character, numeric, integer or logical.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envir</code></td>
+<td>
+<p>The parent of the environment that will be used to
+evaluate the report script; by default a new environment will be
+made with the global environment as the parent.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>message</code></td>
+<td>
+<p>An optional character string containing a message
+explaining why the report was run</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instance</code></td>
+<td>
+<p>Select instance of the source database to be used,
+where multiple instances are configured.  Use a single
+<em>unnamed</em> character string to indicate an instance to
+match.  If given, then this name must be present in all
+databases where instances are listed in
+<code>orderly_config.yml</code>, and will be ignored by all database
+where instances are not given.  See the "orderly" vignette for
+further information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remote</code></td>
+<td>
+<p>Remote to use to resolve dependencies.  Use this in
+order to run a report with the same dependencies as are
+available on a remote server, particularly when using <code>id = "latest"</code>.  Note that this is not the same as running
+<code>orderly_pull_dependencies()</code>, then <code>orderly_run</code>
+with <code>remote = NULL</code>, as the pull/run approach will use the
+latest report in <em>your</em> archive but the <code>remote = "remote"</code> approach will use the latest approach in the
+<em>remote</em> archive (which might be less recent).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tags</code></td>
+<td>
+<p>Character vector of tags to add to the report.  Tags
+are immutable and cannot be removed once the report is run.
+Tags added here will be <em>in addition</em> to any tags listed in
+the <code style="white-space: pre;">⁠tags:⁠</code> field in <code>orderly.yml</code> and must be present
+in <code>orderly_config.yml</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>workdir</code></td>
+<td>
+<p>The path in which to run bundles.  If it does not
+exist it will be created for you.  The completed bundle will be
+saved in this directory as <code style="white-space: pre;">⁠&lt;id&gt;.zip⁠</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+<p>Print the result of running the R code to the console</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>For <code>orderly_bundle_pack</code> and
+<code>orderly_bundle_run</code>, a list with elements <code>path</code> (the
+path to the bundle) and <code>id</code> (its orderly id).  For
+<code>orderly_bundle_list</code> a data.frame with key information
+about the report in the bundles (id, name, parameters, status,
+time).  The function <code>orderly_bundle_import</code> is called for
+its side effect only and does not return anything useful.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path &lt;- orderly::orderly_example("minimal")
+
+# A working directory to export bundles to:
+workdir &lt;- tempfile()
+
+# Pack up the "example" report to go:
+res &lt;- orderly::orderly_bundle_pack(workdir, "example", root = path)
+
+# The return value is a list with the id and the path to the zip
+# file created:
+res
+
+# A list of reports bundled in this directory and their status
+orderly::orderly_bundle_list(workdir)
+
+# Run the bundle (this would ordinarily be done on another computer)
+zip &lt;- orderly::orderly_bundle_run(res$path, workdir)
+zip
+
+# The status has now been updated to reflect the status
+orderly::orderly_bundle_list(workdir)
+
+# We can import this into the orderly tree
+orderly::orderly_bundle_import(zip$path, root = path)
+
+# This has now been included in your orderly archive and the
+# workdir can be safely deleted
+unlink(workdir, recursive = TRUE)
+orderly::orderly_list_archive(path)
+</code></pre>
+
+
+</div>

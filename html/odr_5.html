@@ -1,0 +1,236 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od.2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal sample allocation calculation for two-level CRTs detecting main effects</h2>
+
+<h3>Description</h3>
+
+<p>The optimal design of two-level
+cluster randomized trials (CRTs) detecting main effects is to calculate
+the optimal sample allocation that minimizes the variance of
+a treatment effect under a fixed budget, which is approximately the optimal
+sample allocation that maximizes statistical power under a fixed budget.
+The optimal design parameters include
+the level-1 sample size per level-2 unit (<code>n</code>)
+and the proportion of level-2 clusters/groups to be assigned to treatment (<code>p</code>).
+This function solves the optimal <code>n</code> and/or <code>p</code>
+with and without constraints.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od.2(
+  n = NULL,
+  p = NULL,
+  icc = NULL,
+  r12 = NULL,
+  r22 = NULL,
+  c1 = NULL,
+  c2 = NULL,
+  c1t = NULL,
+  c2t = NULL,
+  m = NULL,
+  plots = TRUE,
+  plot.by = NULL,
+  nlim = NULL,
+  plim = NULL,
+  varlim = NULL,
+  nlab = NULL,
+  plab = NULL,
+  varlab = NULL,
+  vartitle = NULL,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The level-1 sample size per level-2 unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The proportion of level-2 clusters/units to be assigned to treatment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icc</code></td>
+<td>
+<p>The unconditional intraclass correlation coefficient (ICC) in population or in
+each treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r12</code></td>
+<td>
+<p>The proportion of level-1 variance explained by covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r22</code></td>
+<td>
+<p>The proportion of level-2 variance explained by covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1</code></td>
+<td>
+<p>The cost of sampling one level-1 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c2</code></td>
+<td>
+<p>The cost of sampling one level-2 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1t</code></td>
+<td>
+<p>The cost of sampling one level-1 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c2t</code></td>
+<td>
+<p>The cost of sampling one level-2 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Total budget, default value is the total costs of sampling 60
+level-2 units across treatment conditions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plots</code></td>
+<td>
+<p>Logical, provide variance plots if TRUE, otherwise not; default value is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.by</code></td>
+<td>
+<p>Plot the variance by <code>n</code> and/or <code>p</code>; default value is
+plot.by = list(n = "n", p = "p").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlim</code></td>
+<td>
+<p>The plot range for n, default value is c(2, 50).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plim</code></td>
+<td>
+<p>The plot range for p, default value is c(0, 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varlim</code></td>
+<td>
+<p>The plot range for variance, default value is c(0, 0.05).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlab</code></td>
+<td>
+<p>The plot label for <code>n</code>,
+default value is "Level-1 Sample Size: n".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plab</code></td>
+<td>
+<p>The plot label for p,
+default value is "Proportion Level-2 Units in Treatment: p".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varlab</code></td>
+<td>
+<p>The plot label for variance,
+default value is "Variance".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vartitle</code></td>
+<td>
+<p>The title of variance plot, default value is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical; print the values of <code>n</code> and <code>p</code> if TRUE,
+otherwise not; default value is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Unconstrained or constrained optimal sample allocation (<code>n</code> and <code>p</code>).
+The function also returns the variance of the treatment effect,
+function name, design type,
+and parameters used in the calculation.
+</p>
+
+
+<h3>References</h3>
+
+<p>Shen, Z., &amp; Kelcey, B. (2020). Optimal sample allocation under unequal
+costs in cluster-randomized trials. Journal of Educational
+and Behavioral Statistics, 45(4): 446–474. &lt;https://doi.org/10.3102/1076998620912418&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Unconstrained optimal design #---------
+  myod1 &lt;- od.2(icc = 0.2, r12 = 0.5, r22 = 0.5, c1 = 1, c2 = 5, c1t = 1, c2t = 50,
+              varlim = c(0.01, 0.02))
+  myod1$out # output
+# Plot by p
+  myod1 &lt;- od.2(icc = 0.2, r12 = 0.5, r22 = 0.5, c1 = 1, c2 = 5, c1t = 1, c2t = 50,
+              varlim = c(0.01, 0.02), plot.by = list(p = 'p'))
+
+# Constrained optimal design with n = 20 #---------
+  myod2 &lt;- od.2(icc = 0.2, r12 = 0.5, r22 = 0.5, c1 = 1, c2 = 5, c1t = 1, c2t = 50,
+              n = 20, varlim = c(0.005, 0.025))
+  myod2$out
+# Relative efficiency (RE)
+  myre &lt;- re(od = myod1, subod= myod2)
+  myre$re # RE = 0.88
+
+# Constrained optimal design with p = 0.5 #---------
+  myod3 &lt;- od.2(icc = 0.2, r12 = 0.5, r22 = 0.5, c1 = 1, c2 = 5, c1t = 1, c2t = 50,
+             p = 0.5, varlim = c(0.005, 0.025))
+  myod3$out
+# Relative efficiency (RE)
+  myre &lt;- re(od = myod1, subod= myod3)
+  myre$re # RE = 0.90
+
+# Constrained n and p, no calculation performed #---------
+  myod4 &lt;- od.2(icc = 0.2, r12 = 0.5, r22 = 0.5, c1 = 1, c2 = 5, c1t = 1, c2t = 50,
+              n = 20, p = 0.5, varlim = c(0.005, 0.025))
+  myod4$out
+# Relative efficiency (RE)
+  myre &lt;- re(od = myod1, subod= myod4)
+  myre$re # RE = 0.83
+
+</code></pre>
+
+
+</div>

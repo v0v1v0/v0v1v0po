@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lad</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Laplacian Eigen Value method by Shenyang Huang, Yasmeen Hitti, Guillaume Rabusseau
+and Reihaneh Rabbany from their KDD'20 paper Laplacian Change Point Detection for Dynamic Graphs</h2>
+
+<h3>Description</h3>
+
+<p>Laplacian Eigen Value method by Shenyang Huang, Yasmeen Hitti, Guillaume Rabusseau
+and Reihaneh Rabbany from their KDD'20 paper Laplacian Change Point Detection for Dynamic Graphs
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lad(matlist, k = NULL, short_win, long_win, alpha = 0.05, from_file = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>matlist</code></td>
+<td>
+<p>The matrix list, where each matrix is an adjacency matrix of the graph.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>The number of eigen values to connsider</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>short_win</code></td>
+<td>
+<p>The length of the shorter windows</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>long_win</code></td>
+<td>
+<p>The length of the longer windows</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The threshold to declare anomalies</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from_file</code></td>
+<td>
+<p>This is an additional parameter only if a file needs to be read</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class lad. LAD is a window based method. It considers short and a long
+windows.  The lad object has anomalous scores when taking into account short and long windows
+along with the identified anomalies for both short and long windows.
+</p>
+
+
+<h3>References</h3>
+
+<p>Huang, S., Hitti, Y., Rabusseau, G., &amp; Rabbany, R. (2020). Laplacian Change
+Point Detection for Dynamic Graphs. Proceedings of the ACM SIGKDD International Conference
+on Knowledge Discovery and Data Mining, 349–358. https://doi.org/10.1145/3394486.3403077
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># We generate a series of networks and add an anomaly at 50th network.
+set.seed(1)
+networks &lt;- list()
+p.or.m.seq &lt;- rep(0.05, 50)
+p.or.m.seq[20] &lt;- 0.2  # anomalous network at 20
+for(i in 1:50){
+  gr &lt;- igraph::erdos.renyi.game(100, p.or.m = p.or.m.seq[i])
+  networks[[i]] &lt;- igraph::as_adjacency_matrix(gr)
+}
+ladobj &lt;- lad(networks, k = 6, short_win = 2, long_win = 4)
+ladobj
+
+</code></pre>
+
+
+</div>

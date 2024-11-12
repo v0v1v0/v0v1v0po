@@ -1,0 +1,190 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sim_ordbeta</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Power Calculation via Simulation of the Ordered Beta Regression Model</h2>
+
+<h3>Description</h3>
+
+<p>This function allows you to calculate power curves (or anything else)
+via simulating the ordered beta regression model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sim_ordbeta(
+  N = 1000,
+  k = 5,
+  iter = 1000,
+  cores = 1,
+  phi = 1,
+  cutpoints = c(-1, 1),
+  beta_coef = NULL,
+  beta_type = "continuous",
+  treat_assign = 0.5,
+  return_data = FALSE,
+  seed = as.numeric(Sys.time()),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>The sample size for the simulation. Include a vector of integers
+to examine power/results for multiple sample sizes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>The number of covariates/predictors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>The number of simulations to run. For power calculation,
+should be at least 500 (yes, this will take some time).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cores</code></td>
+<td>
+<p>The number of cores to use to parallelize the simulation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi</code></td>
+<td>
+<p>Value of the dispersion parameter in the beta distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutpoints</code></td>
+<td>
+<p>Value of the two cutpoints for the ordered model.
+By default are the values -1 and +1 (these are interpreted in the
+logit scale and so should not be too large). The farther apart,
+the fewer degenerate (0 or 1) responses there will be in the distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta_coef</code></td>
+<td>
+<p>If not null, a vector of length <code>k</code> of the true
+predictor coefficients/treatment values to use for the simulation.
+Otherwise, coefficients are drawn from a random uniform distribution
+from -1 to 1 for each predictor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta_type</code></td>
+<td>
+<p>Can be either <code>continuous</code> or <code>binary</code>. Use the latter
+for conventional treatments with two values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>treat_assign</code></td>
+<td>
+<p>If <code>beta_type</code> is set to <code>binary</code>,
+you can use this parameter to set the proportion
+of <code>N</code> assigned to treatment. By default,
+the parameter is set to 0.5 for
+equal/balanced treatment control groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_data</code></td>
+<td>
+<p>Whether to return the simulated dqta as a list
+in the <code>data</code> column of the returned data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>The seed to use to make the results reproducible. Set
+automatically to a date-time stamp.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Any other arguments are passed on to the brms::brm function
+to control modeling options.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function implements the simulation found in Kubinec (2022). This
+simulation allows you to vary the sample size, number &amp; type of predictors,
+values of the predictors (or treatment values), and the power to target.
+The function returns a data frame
+with one row per simulation draw and covariate <code>k</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a tibble data frame with columns of simulated and estimated values and
+rows for each simulation iteration X coefficient combination. I.e.,
+if there are five predictors, and 1,000 iterations, the resulting data frame
+will have 1,000 rows. If there are multiple values for <code>N</code>,
+then each value
+of <code>N</code> will have its own set of iterations, making the final size of the
+data a multiple of the number of sample sizes to iterate over. The
+data frame will have the following columns:
+1.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># This function takes a while to run as it has
+# to fit an ordered beta regression to each
+# draw. The package comes with a saved
+# simulation dataset you can inspect to see what the
+# result looks like
+
+data("sim_data")
+
+library(dplyr)
+
+# will take a while to run this
+
+
+  if(.Platform$OS.type!="windows") {
+
+    sim_data &lt;- sim_ordbeta(N=c(250,750),
+    k=1,
+    beta_coef = .5,
+    iter=5,cores=2,
+    beta_type="binary",
+    treat_assign=0.3)
+
+    }
+
+
+
+# to get the power values by N, simply summarize/group
+# by N with functions from the R package dplyr
+
+sim_data %&gt;%
+  group_by(N) %&gt;%
+  summarize(mean_power=mean(power))
+
+
+</code></pre>
+
+
+</div>

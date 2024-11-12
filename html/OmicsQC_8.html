@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get.qc.heatmap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generates the standard heatmap of scores for each sample.</h2>
+
+<h3>Description</h3>
+
+<p>This function takes the the scores for each sample and each metric,
+after being sign-corrected, and returns the standard heatmap, if filename
+is NULL. If filename is not NULL it saves the heatmap to file and returns NULL.
+The function also takes quality.scores to make sure the samples are ordered correctly, as well as the y labels
+for the quality metrics.
+get.qc.heatmap offers a standard template for generating a QC heatmap, but can also take any parameter
+that BoutrosLab.plotting.general::create.barplot takes for customisability.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get.qc.heatmap(
+  zscores,
+  quality.scores,
+  yaxis.lab = colnames(zscores),
+  xaxis.lab = quality.scores[, "Sample"],
+  filename = NULL,
+  yaxis.cex = 0.8,
+  xaxis.cex = 0,
+  xlab.cex = 1,
+  xlab.label = "Samples",
+  clustering.method = "none",
+  colour.scheme = c("red", "white"),
+  colour.centering.value = 0,
+  colourkey.labels.at = c(-10:0),
+  colourkey.cex = 1,
+  at = seq(0, -10, -2),
+  same.as.matrix = TRUE,
+  row.lines = seq(1, ncol(zscores), 1) + 0.5,
+  grid.row = TRUE,
+  row.colour = "black",
+  row.lwd = 1,
+  axes.lwd = 1,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>zscores</code></td>
+<td>
+<p>A dataframe of (sign-corrected) z-scores for each sample and test metric, i.e. the output of correct.zscore.signs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quality.scores</code></td>
+<td>
+<p>A dataframe with columns 'Sum' (of scores) and 'Sample', i.e. the output of accumulate.zscores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yaxis.lab</code></td>
+<td>
+<p>A vector of metric labels for the y-axis; defaults to column names of z-scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xaxis.lab</code></td>
+<td>
+<p>A vector of sample labels for the x-axis; defaults to ordered Sample column elements in quality.scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>Filename for tiff output, or if NULL returns the trellis object itself</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yaxis.cex</code></td>
+<td>
+<p>Size of y-axis tick labels, defaults to 0.8</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xaxis.cex</code></td>
+<td>
+<p>Size of x-axis tick labels, defaults to 0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab.cex</code></td>
+<td>
+<p>Size of x-axis label, defaults to 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab.label</code></td>
+<td>
+<p>The label for the x-axis, defaults so 'Sample'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clustering.method</code></td>
+<td>
+<p>Method used to cluster the records – “none” gives unclustered data. Accepts all agglomerative clustering methods available in hclust, plus “diana” (which is divisive).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colour.scheme</code></td>
+<td>
+<p>Heatmap colouring. Accepts old-style themes, or a vector of either two or three colours that are gradiated to create the final palette.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colour.centering.value</code></td>
+<td>
+<p>What should be the center of the colour-map</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colourkey.labels.at</code></td>
+<td>
+<p>A vector specifying the tick-positions on the colourkey</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colourkey.cex</code></td>
+<td>
+<p>Size of colourkey label text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>at</code></td>
+<td>
+<p>A vector specifying the breakpoints along the range of x; each interval specified by these breakpoints are assigned to a colour from the palette. Defaults to seq(0, -10, -2), to give a clear discrete display of colours. If x has values outside of the range specified by “at” those values are shown with the colours corresponding to the extreme ends of the colour spectrum and a warning is given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>same.as.matrix</code></td>
+<td>
+<p>Prevents the flipping of the matrix that the function normally does</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row.lines</code></td>
+<td>
+<p>Vector specifying location of lines, default is seq(1, ncol(x), 1) + 0.5. Note: Add 0.5 to customized vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grid.row</code></td>
+<td>
+<p>Allow turning off of the interior grid-lines. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row.colour</code></td>
+<td>
+<p>Interior grid-line colour, defaults to “black”. Can be a vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row.lwd</code></td>
+<td>
+<p>Interior grid-line width, defaults to 1. Setting to zero is equivalent to grid.row = FALSE and grid.col = FALSE.  Can be a vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axes.lwd</code></td>
+<td>
+<p>Width of heatmap border. Note it also changes the colourkey border and ticks</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>The function can also take any parameter that BoutrosLab.plotting.general::create.heatmap takes</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The heatmap or NULL depending if filename is specified
+</p>
+
+
+</div>

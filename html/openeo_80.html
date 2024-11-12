@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>compute_result</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Executes a job and returns the data immediately</h2>
+
+<h3>Description</h3>
+
+<p>Executes a job directly on the connected openEO service and returns the data. During the execution phase the connection to
+the server remains open. This function allows to debug the code and check the results immediately.
+Please keep in mind, that computational functions might be related to monetary costs, if no 'free' plan is available.
+Make sure to keep the data selection relatively small, also some openEO service provider might offer limited processes support,
+e.g. not supporting UDFs at this endpoint. When a file format is set, then the process graph will be parsed and the arguments for
+'save_result' will be replaced. If the 'stars' package is installed and parameter <code>as_stars</code> is set to TRUE, then the downloaded
+data is opened and interpreted into a stars object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">compute_result(
+  graph,
+  output_file = NULL,
+  budget = NULL,
+  plan = NULL,
+  as_stars = FALSE,
+  format = NULL,
+  con = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>graph</code></td>
+<td>
+<p>a <code>Graph()</code>, a function returning a <code>ProcessNode()</code> as an endpoint or the <code>ProcessNode()</code>
+will return the results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output_file</code></td>
+<td>
+<p>storage location for the returned data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>budget</code></td>
+<td>
+<p>numeric, maximum spendable amount for testing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plan</code></td>
+<td>
+<p>character, selection of a service plan</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as_stars</code></td>
+<td>
+<p>logical to indicate if the data shall be interpreted as a stars object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>character or <code>FileFormat</code> specifying the File format for the output, if 'save_result' is not
+set in the process then it will be added otherwise the value stated here will replace the original value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>con</code></td>
+<td>
+<p>connected and authenticated openEO client (optional) otherwise <code>active_connection()</code>
+is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional parameters passed to jsonlite::toJSON() (like 'digits') or additional arguments that shall
+be passed to the openEO process 'save_result'</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a local path to the downloaded file or a <code>stars</code> object if <code>as_stars=TRUE</code>
+</p>
+
+
+<h3>Note</h3>
+
+<p>If parameter 'format' is ignored, it is assumed that 'save_result' was already used in the process graph. Otherwise it is up to the
+back-end provider how data is stored if 'save_result' was omitted.
+</p>
+
+
+</div>

@@ -1,0 +1,344 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>proxim_dist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>proxim_dist()</h2>
+
+<h3>Description</h3>
+
+<p><code>proxim_dist</code> computes the pairwise distance matrix of a database and cross-distance matrix between two databases according to various distances used in the context of data fusion.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">proxim_dist(data_file, indx_DB_Y_Z = 1:3, norm = "E", prox = 0.3)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data_file</code></td>
+<td>
+<p>a data.frame corresponding ideally to an output object of the function <code>transfo_dist</code>. Otherwise this data.frame is the result of two overlayed databases with a column of database identifier ("A" and "B", 1 and 2, for example), a target variable (called <code class="reqn">Y</code> by example) only known in the first database, a target variable (<code class="reqn">Z</code>) only stored in the second database, such that <code class="reqn">Y</code> and <code class="reqn">Z</code> summarize a same information differently encoded in the two databases and set of common covariates (at least one) of any type.
+The order of the variables in the data.frame have no importance. The type of the covariates must be in accordance with the chosen distance function in the <code>norm</code> option.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indx_DB_Y_Z</code></td>
+<td>
+<p>a vector of three column indexes corresponding to the database identifier, the target variable of the above database and the target variable of the below database. The indexes must be declared in this specific order.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>a character string indicating the choice of the distance function. This latest depends on the type of the common covariates: the Hamming distance
+for binary covariates only (<code>norm</code> = "H"), the Manhattan distance ("M", by default) and the euclidean distance ("E") for continuous covariates only, or the Gower distance for mixed covariates ("G").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prox</code></td>
+<td>
+<p>a ratio (betwen 0 and 1) used to calculate the distance threshold below which an individual (a row or a given statistical unit) is considered as a neighbor of a given profile of covariates. 0.3 is the default value.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is the first step of a family of algorithms that solve recoding problems of data fusion using optimal transportation theory (see the details of these corresponding models <code>OUTCOME</code>, <code>R_OUTCOME</code>, <code>JOINT</code> and <code>R_JOINT</code> in (1) and (2)).
+The function <code>proxim_dist</code> is directly implemented in the functions <code>OT_outcome</code> and <code>OT_joint</code> but can also be used separately as long as the input database has as suitable structure. Nevertheless, its preparation will have to be rigorously made in two steps detailled in the following sections.
+</p>
+<p>A. EXPECTED STRUCTURE FOR THE INPUT DATABASE
+</p>
+<p>Firsly, the initial database required is a data.frame that must be prepared in a specific form by users. From two separate databases, the function <code>merge_dbs</code> available in this package can assist users in this initial merging, nevertheless notice that this preliminary transformation can also be made directly by following the imposed structure described below:
+two overlayed databases containing a common column of database identifiers (A and B for examples, encoded in numeric or factor form),
+a column corresponding to the target variable with its specific encoding in A (for example a factor <code class="reqn">Y</code> encoded in <code class="reqn">n_Y</code> levels, ordered or not, with NAs in the corresponding rows of B), a column corresponding to the same variable with its specific endoded in B (for example a factor <code class="reqn">Z</code> in <code class="reqn">n_Z</code> levels,
+with NAs in database A), and a set of shared covariates (at least one) between the two databases.
+</p>
+<p>The order of these variables in the database have no importance but the column indexes related to database identifier, <code class="reqn">Y</code> and <code class="reqn">Z</code>, must be specified in the <code>indx_DB_Y_Z</code> option.
+Users can refer to the structure of the table <code>simu_data</code> available in the package to adapt their databases to the inital format required.
+</p>
+<p>Missing values are allowed on covariates only, and are excluded from all computations involving the rows within which they occur.
+In the particular case where only one covariate with NAs is used, we recommend working with imputed or complete case only to avoid the presence of NA in the distance matrix that will be computed a posteriori.
+If the database counts many covariates and some of them have missing data, user can keep them or apply beforehand the <code>imput_cov</code> function on data.frame to deal with this problem.
+</p>
+<p>B. DISTANCE FUNCTIONS AND TYPES OF COVARIATES
+</p>
+<p>In a second step, the shared variables of the merged database will have to be encoded according to the choice of the distance function fixed by user, knowing that it is also frequent that it is the type of the variables which fixes the distance function to choose.
+The function <code>transfo_dist</code> is available in the package to assist users in this task but a user can also decide to make this preparation by themselves.
+Thus, with the Euclidean or Manhattan distance ((3), <code>norm</code> = "E" or "M"), if all types of variables are allowed, logical variables are transformed in binary variables, and categorical variables (factors ordered or not) are replaced by their related disjunctive tables (the function <code>transfo_quali</code> can make these specific transformations).
+The Hamming distance (<code>norm</code> = "H") only requires binary variables (all other forms are not allowed). In this context, continuous variables could have been converted in factor of k levels (<code class="reqn">k&gt;2</code>) beforehand. The categorical covariates are then transformed in disjunctive tables (containing the (<code class="reqn">k-1</code>) corresponding binary variables) before use. With this distance, categorical variables are also transformed in disjunctive tables.
+Notice that, using the Hamming distance could be quite long in presence of NAs on covariates.
+Finally, the Gower distance ((4), <code>norm</code> = "G") uses the (<code>gower.dist</code>) function (5) and so allows logical, categorical and numeric variables without preliminary transformations.
+</p>
+<p>In conclusion, the structure of the data.frame required in input of the function <code>proxim_dist</code> corresponds to two overlayed databases with two target outcomes and a set of shared covariates whose encodings depend on the distance function choosen by user.
+</p>
+<p>If some columns are excluded when computing an Euclidean, Manhattan, or Hamming distance between two rows, the sum is scaled up proportionally to the number of columns used in the computation as proposed by the standard (<code>dist</code>) function.
+If all pairs are excluded when computing a particular distance, instead of putting NA in the corresponding cell of the distance matrix, the process stops and an object listing the problematic rows is proposed in output.
+It suggests users to remove these rows before running the process again or impute NAs related to these rows (see (6) for more details).
+</p>
+<p>C. PROFILES OF COVARIATES AND OUTPUT DETAILS
+</p>
+<p>Whatever the type (mixed or not) and the number of covariates in the data.frame of interest, the function <code>proxim_dist</code> firstly detects all the possible profiles (or combinations) of covariates from the two databases, and saves them in the output <code>profile</code>.
+For example, assuming that a data.frame in input (composed of two overlayed data.frames A and B) have three shared binary covariates (identically encoded in A and B) so the sequences <code>011</code> and <code>101</code> will be considered as two distinct profiles of covariates.
+If each covariate is a factor of <code class="reqn">n_1</code>, <code class="reqn">n_2</code> and <code class="reqn">n_3</code> levels respectively, so it exists at most <code class="reqn">n_1 \times n_2 \times n_3</code> possible profiles of covariates.
+This number is considered as a maximum here because only the profiles of covariates met in at least one of the two databases will be kept for the study.
+</p>
+<p><code>proxim_dist</code> classifies individuals from the two databases according to their proximities to each profile of covariates and saves the corresponding indexes of rows from A and B in two lists <code>indXA</code> and <code>indXB</code> respectively.
+<code>indXA</code> and <code>indXB</code> thus contain as many objects as covariates profiles and the proximity between a given profile and a given individual is defined as follows.
+The function also provides in output the list of all the encountered profiles of covariates.
+As a decision rule, for a given profile of covariates <code class="reqn">P_j</code>, an individual <code class="reqn">i</code> will be considered as a neighbor of <code class="reqn">P_j</code> if <code class="reqn">dist(i,P_j) &lt; prox \times max(dist(i,P_j))</code> where <code>prox</code> will be fixed by user.
+Set the value 0 to the <code>prox</code> parameter assures that each individual of A (and B respectively) is exactly the profile of one profile of covariates. Therefore, it is not recommended in presence of continuous coavariates.
+Conversely, assign the value 1 to <code>prox</code> is not recommended because it assumes that each individual is neighbor with all the encountered profiles of covariates.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of 16 elements (the first 16 detailed below) is returned containing various distance matrices and lists useful for the algorithms that used Optimal Transportation theory. Two more objects (the last two of the following list) will be returned if distance matrices contain NAs.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>FILE_NAME</code></td>
+<td>
+<p>a simple reminder of the name of the raw database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nA</code></td>
+<td>
+<p>the number of rows of the first database (A)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nB</code></td>
+<td>
+<p>the number of rows of the second database (B)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xobserv</code></td>
+<td>
+<p>the subset of the two overlayed databases composed of the shared variables only</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>profile</code></td>
+<td>
+<p>the different encountered profiles of covariates according to the data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Yobserv</code></td>
+<td>
+<p>the numeric values of the target variable in the first database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Zobserv</code></td>
+<td>
+<p>the numeric values of the target variable in the second database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>D</code></td>
+<td>
+<p>a distance matrix corresponding to the computed distances between individuals of the two databases</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>the <code class="reqn">n_Y</code> levels of the target variable in numeric form, in the first database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>the <code class="reqn">n_Z</code> levels of the target variable in numeric form, in the second database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indY</code></td>
+<td>
+<p>a list of <code class="reqn">n_Y</code> groups of individual (or row) numbers where each group corresponds to the individuals indexes related to a given level of <code class="reqn">Y</code> in the first database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indZ</code></td>
+<td>
+<p>a list of <code class="reqn">n_Z</code> groups of individual (or row) numbers where each group corresponds to the individuals indexes related to a given level of <code class="reqn">Z</code> in the second database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indXA</code></td>
+<td>
+<p>a list of individual (row) indexes from the first database, sorted by profiles of covariates according to their proximities. See the <code>Details</code> part for more information</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indXB</code></td>
+<td>
+<p>a list of individual (row) indexes from the second database, sorted by profiles of covariates according to their proximities. See the <code>Details</code> part for more information</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DA</code></td>
+<td>
+<p>a distance matrix corresponding to the pairwise distances between individuals of the first database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DB</code></td>
+<td>
+<p>a distance matrix corresponding to the pairwise distances between individuals of the second database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ROWS_TABLE</code></td>
+<td>
+<p>combinations of row numbers of the two databases that generate NAs in D</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ROWS_TO_RM</code></td>
+<td>
+<p>number of times a row of the first or second database is involved in the NA process of D</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gregory Guernec, Valerie Gares, Jeremy Omer
+</p>
+<p><a href="mailto:otrecod.pkg@gmail.com">otrecod.pkg@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li>
+<p> Gares V, Dimeglio C, Guernec G, Fantin F, Lepage B, Korosok MR, savy N (2019). On the use of optimal transportation theory to recode variables and application to database merging. The International Journal of Biostatistics.
+Volume 16, Issue 1, 20180106, eISSN 1557-4679. doi:10.1515/ijb-2018-0106
+</p>
+</li>
+<li>
+<p> Gares V, Omer J (2020) Regularized optimal transport of covariates and outcomes in data recoding. Journal of the American Statistical Association. doi: <a href="https://doi.org/10.1080/01621459.2020.1775615">10.1080/01621459.2020.1775615</a>
+</p>
+</li>
+<li>
+<p> Anderberg, M.R. (1973), Cluster analysis for applications, 359 pp., Academic Press, New York, NY, USA.
+</p>
+</li>
+<li>
+<p> Gower, J. C. (1971). A general coefficient of similarity and some of its properties. Biometrics, 27, 623–637.
+</p>
+</li>
+<li>
+<p> D'Orazio M. (2015). Integration and imputation of survey data in R: the StatMatch package. Romanian Statistical Review, vol. 63(2)
+</p>
+</li>
+<li>
+<p> Borg, I. and Groenen, P. (1997) Modern Multidimensional Scaling. Theory and Applications. Springer.
+</p>
+</li>
+</ol>
+<h3>See Also</h3>
+
+<p><code>transfo_dist</code>, <code>imput_cov</code>, <code>merge_dbs</code>, <code>simu_data</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(simu_data)
+### The covariates of the data are prepared according to the chosen distance
+### using the transfo_dist function
+
+### Ex 1: The Manhattan distance
+
+man1 &lt;- transfo_dist(simu_data,
+  quanti = c(3, 8), nominal = c(1, 4:5, 7),
+  ordinal = c(2, 6), logic = NULL, prep_choice = "M"
+)
+mat_man1 &lt;- proxim_dist(man1, norm = "M") # man1 compatible with norm = "E" for Euclidean
+
+
+### Ex 2: The Euclidean and Manhattan distance applied on coordinates from FAMD
+
+eucl_famd &lt;- transfo_dist(simu_data,
+  quanti = c(3, 8), nominal = c(1, 4:5, 7),
+  ordinal = c(2, 6), logic = NULL, prep_choice = "FAMD", info = 0.80
+)
+mat_e_famd &lt;- proxim_dist(eucl_famd, norm = "E")
+
+
+mat_m_famd &lt;- proxim_dist(eucl_famd, norm = "M")
+
+
+### Ex 3: The Gower distance with mixed covariates
+
+gow1 &lt;- transfo_dist(simu_data[c(1:100, 301:400), ],
+  quanti = c(3, 8), nominal = c(1, 4:5, 7),
+  ordinal = c(2, 6), logic = NULL, prep_choice = "G"
+)
+mat_gow1 &lt;- proxim_dist(gow1, norm = "G")
+
+
+### Ex 4a: The Hamming distance with binary (but incomplete) covariates only
+
+# categorization of the continuous covariates age by tertiles
+ham1 &lt;- transfo_dist(simu_data,
+  quanti = c(3, 8), nominal = c(1, 4:5, 7), ordinal = c(2, 6),
+  convert_num = 8, convert_class = 3, prep_choice = "H"
+)
+mat_ham1 &lt;- proxim_dist(ham1, norm = "H")
+# Be patient ... It could take few minutes
+
+### Ex 4b: The Hamming distance with complete cases on nominal and ordinal covariates only
+simu_data_CC &lt;- simu_data[(!is.na(simu_data[, 5])) &amp; (!is.na(simu_data[, 6])) &amp;
+  (!is.na(simu_data[, 7])), 1:7]
+ham2 &lt;- transfo_dist(simu_data_CC,
+  quanti = 3, nominal = c(1, 4:5, 7), ordinal = c(2, 6),
+  prep_choice = "H"
+)
+mat_ham2 &lt;- proxim_dist(ham2, norm = "H")
+
+
+### Ex 5: PARTICULAR CASE, If only one covariate with no NAs
+
+man2 &lt;- man1[, c(1:3, 7)] # Only Smoking variable
+man2_nona &lt;- man2[!is.na(man2[, 4]), ] # Keep complete case
+mat_man2_nona &lt;- proxim_dist(man2_nona, norm = "M", prox = 0.10)
+
+mat_man2_nona_H &lt;- proxim_dist(man2_nona, norm = "H") # Hamming
+
+
+### Ex 6: PARTICULAR CASE, many covariates but NAs in distance matrix
+
+# We generated NAs in the man1 object so that:
+# dist(A4,B102) and dist(A122,B102) returns NA whatever the norm chosen:
+man1b &lt;- man1
+man1b[4, 7:9] &lt;- NA
+man1b[122, 6:9] &lt;- NA
+man1b[300 + 102, 4:6] &lt;- NA
+mat_man3 &lt;- proxim_dist(man1b, norm = "M")
+# The process stopped indicates 2 NAs and the corresponding row numbers
+# The 2nd output of mat_man3 indicates that removing first the 102th row of the database
+# B is enough to solve the pb:
+man1c &lt;- man1b[-402, ]
+mat_man4 &lt;- proxim_dist(man1c, norm = "M")
+
+
+</code></pre>
+
+
+</div>

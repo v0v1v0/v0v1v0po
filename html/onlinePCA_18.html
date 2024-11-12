@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>updateMean</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Update the Sample Mean Vector
+</h2>
+
+<h3>Description</h3>
+
+<p>Recursive update of the sample mean vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">updateMean(xbar, x, n, f, byrow = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xbar</code></td>
+<td>
+<p>current mean vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector or matrix of new data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>sample size before observing <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>forgetting factor: a number in (0,1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+<p>Are the observation vectors in <code>x</code> stored in rows (TRUE) or in columns (FALSE)?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The forgetting factor <code>f</code> determines the balance between past and present observations in the PCA update: the closer it is to 1 (resp. to 0), the more weight is placed on current (resp. past) observations. At least one of the arguments <code>n</code> and <code>f</code> must be specified. If <code>f</code> is specified, its value overrides the argument <code>n</code>. For a given argument <code>n</code>, the default value of<code>f</code> is<code class="reqn">k/(n+k)</code>, with <code class="reqn">k</code> the number of new vector observations. This corresponds to a stationnary observation process.<br></p>
+
+
+<h3>Value</h3>
+
+<p>The updated mean vector. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>updateCovariance</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 1e4
+n0 &lt;- 5e3
+d &lt;- 10
+x &lt;- matrix(runif(n*d), n, d)
+
+## Direct computation
+xbar1 &lt;- colMeans(x)
+
+## Recursive computation
+xbar2 &lt;- colMeans(x[1:n0,])
+xbar2 &lt;- updateMean(xbar2, x[(n0+1):n,], n0)
+
+## Check equality
+all.equal(xbar1, xbar2)
+</code></pre>
+
+
+</div>

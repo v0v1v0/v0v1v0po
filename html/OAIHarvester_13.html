@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>transform</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Transform OAI-PMH XML Results</h2>
+
+<h3>Description</h3>
+
+<p>Transform OAI-PMH XML results to “useful” R data structures
+(lists of character vectors or XML nodes) for further processing or
+analysis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oaih_transform(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an XML node, or a list of character vectors or XML nodes.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>In a “list context”, i.e., if <code>x</code> conceptually contains
+information on several cases, transformation gives a “list
+matrix” (a list of character vector or XML node observations with a
+dim attribute) providing a rectangular case by variables data layout;
+otherwise, a list of variables.  See the vignette for details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of character vectors or XML nodes, arranged as a matrix in the
+“list context”.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tryCatch({
+## Run inside tryCatch() so that checks fail gracefully if OAI-PMH
+## requests time out or fail otherwise.
+baseurl &lt;- "https://research.wu.ac.at/ws/oai"
+## Get a single record to save bandwidth.
+x &lt;- oaih_get_record(baseurl,
+                     "oai:research.wu.ac.at:publications/783bfc47-bf51-454d-8b78-33fd63243e48",
+                     transform = FALSE)
+## The result of the request is a single OAI-PMH XML &lt;record&gt; node:
+x
+## Transform this (turning identifier, datestamp and setSpec into
+## character data):
+x &lt;- oaih_transform(x)
+x    
+## This has its metadata in the default Dublin Core form, encoded in
+## XML.  Transform these to character data:
+oaih_transform(x$metadata)
+##
+}, error = identity)
+</code></pre>
+
+
+</div>

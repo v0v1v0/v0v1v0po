@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.project_create</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a project</h2>
+
+<h3>Description</h3>
+
+<p>Create a project
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.project_create(
+  opal,
+  project,
+  database = NULL,
+  title = NULL,
+  description = NULL,
+  tags = NULL,
+  exportFolder = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Name of the project</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>database</code></td>
+<td>
+<p>The database name (as declared in Opal) to be used to store project's data. If not provided, the project
+can have views and resources but no raw tables. If the the value is a logical and is TRUE, the default database will be 
+selected or the first one if there is no default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>The title of the project (optional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>description</code></td>
+<td>
+<p>The description of the project (optional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tags</code></td>
+<td>
+<p>A list of tag names (optional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exportFolder</code></td>
+<td>
+<p>The default location of the exported data files in the Opal file system (optional).</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other project functions: 
+<code>opal.project()</code>,
+<code>opal.project_delete()</code>,
+<code>opal.project_exists()</code>,
+<code>opal.projects()</code>,
+<code>opal.projects_databases()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+# with named database
+opal.project_create(o, 'test', database='opal_data', title='This is a test', tags=list('Test'))
+# with default database
+opal.project_create(o, 'test_default_db', database = TRUE)
+# no database, for views and resources only
+opal.project_create(o, 'test_no_db')
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

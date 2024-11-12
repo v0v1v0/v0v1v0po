@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>processRaw</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Process raw data</h2>
+
+<h3>Description</h3>
+
+<p><code>processRaw</code> finds the actual and expected counts using the methodology
+described by DuMouchel (1999); however, an adjustment is applied to expected
+counts to prevent double-counting (i.e., using unique marginal ID counts
+instead of contingency table marginal totals). Also calculates the relative
+reporting ratio (<em>RR</em>) and the proportional reporting ratio
+(<em>PRR</em>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">processRaw(
+  data,
+  stratify = FALSE,
+  zeroes = FALSE,
+  digits = 2,
+  max_cats = 10,
+  list_ids = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame containing columns named: <em>id</em>, <em>var1</em>,
+and <em>var2</em>. Possibly includes columns for stratification variables
+identified by the substring <em>'strat'</em> (e.g. <em>strat_age</em>). Other
+columns will be ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratify</code></td>
+<td>
+<p>A logical scalar (TRUE or FALSE) specifying if stratification
+is to be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zeroes</code></td>
+<td>
+<p>A logical scalar specifying if zero counts should be included.
+Using zero counts is only recommended for small data sets because it will
+dramatically increase run time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>A whole number scalar specifying how many decimal places to
+use for rounding <em>RR</em> and <em>PRR</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_cats</code></td>
+<td>
+<p>A whole number scalar specifying the maximum number of
+categories to allow in any given stratification variable. Used to help
+prevent a situation where the user forgets to categorize a continuous
+variable, such as age.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>list_ids</code></td>
+<td>
+<p>A logical scalar specifying if a column for pipe-concatenated
+IDs should be returned.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An <em>id</em> column must be included in <code>data</code>. If your data
+set does not include IDs, make a column of unique IDs using <code>df$id &lt;-
+  1:nrow(df)</code>. However, unique IDs should only be constructed if the cells in
+the contingency table are mutually exclusive. For instance, unique IDs for
+each row in <code>data</code> are not appropriate with CAERS data since a given
+report can include multiple products and/or adverse events.
+</p>
+<p>Stratification variables are identified by searching for the
+substring <em>'strat'</em>. Only variables containing <em>'strat'</em> (case
+sensitive) will be used as stratification variables. <em>PRR</em>
+calculations ignore stratification, but <em>E</em> and <em>RR</em> calculations
+are affected. A warning will be displayed if any stratum contains less than
+50 unique IDs.
+</p>
+<p>If a <em>PRR</em> calculation results in division by zero, <code>Inf</code>
+is returned.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with actual counts (<em>N</em>), expected counts
+(<em>E</em>), relative reporting ratio (<em>RR</em>), and proportional
+reporting ratio (<em>PRR</em>) for <em>var1-var2</em> pairs. Also includes a
+column for IDs (<em>ids</em>) if <code>list_ids = TRUE</code>.
+</p>
+
+
+<h3>Warnings</h3>
+
+<p>Use of the <code>zeroes = TRUE</code> option will result in a considerable
+increase in runtime. Using zero counts is not recommended if the contingency
+table is moderate or large in size (~500K cells or larger). However, using
+zeroes could be useful if the optimization algorithm fails to converge
+when estimating hyperparameters.
+</p>
+<p>Any columns in <code>data</code> containing the substring <em>'strat'</em> in the
+column name will be considered stratification variables, so verify that you
+do not have any extraneous columns with that substring.
+</p>
+
+
+<h3>References</h3>
+
+<p>DuMouchel W (1999). "Bayesian Data Mining in Large Frequency
+Tables, With an Application to the FDA Spontaneous Reporting System."
+<em>The American Statistician</em>, 53(3), 177-190.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data.table::setDTthreads(2)  #only needed for CRAN checks
+var1 &lt;- c("product_A", rep("product_B", 3), "product_C",
+          rep("product_A", 2), rep("product_B", 2), "product_C")
+var2 &lt;- c("event_1", rep("event_2", 2), rep("event_3", 2),
+          "event_2", rep("event_3", 3), "event_1")
+strat1 &lt;- c(rep("Male", 5), rep("Female", 3), rep("Male", 2))
+strat2 &lt;- c(rep("age_cat1", 5), rep("age_cat1", 3), rep("age_cat2", 2))
+dat &lt;- data.frame(
+  var1 = var1, var2 = var2, strat1 = strat1, strat2 = strat2,
+  stringsAsFactors = FALSE
+)
+dat$id &lt;- 1:nrow(dat)
+processRaw(dat)
+suppressWarnings(
+  processRaw(dat, stratify = TRUE)
+)
+processRaw(dat, zeroes = TRUE)
+suppressWarnings(
+  processRaw(dat, stratify = TRUE, zeroes = TRUE)
+)
+processRaw(dat, list_ids = TRUE)
+
+</code></pre>
+
+
+</div>

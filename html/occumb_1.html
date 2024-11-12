@@ -1,0 +1,233 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>eval_util_L</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Expected utility for local species diversity assessments.</h2>
+
+<h3>Description</h3>
+
+<p><code>eval_util_L()</code> evaluates the expected utility of a local
+species diversity assessment by using Monte Carlo integration.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">eval_util_L(
+  settings,
+  fit = NULL,
+  z = NULL,
+  theta = NULL,
+  phi = NULL,
+  N_rep = 1,
+  cores = 1L
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>settings</code></td>
+<td>
+<p>A data frame that specifies a set of conditions under which
+utility is evaluated. It must include columns named <code>K</code> and <code>N</code>, which
+specify the number of replicates per site and the sequencing depth per
+replicate, respectively.
+<code>K</code> and <code>N</code> must be numeric vectors greater than 0. When <code>K</code> contains a
+decimal value, it is discarded and treated as an integer.
+Additional columns are ignored, but may be included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p>An <code>occumbFit</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>Sample values of site occupancy status of species stored in an array
+with sample <code class="reqn">\times</code> species <code class="reqn">\times</code> site dimensions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>Sample values of sequence capture probabilities of species
+stored in a matrix with sample <code class="reqn">\times</code> species dimensions or an array
+with sample <code class="reqn">\times</code> species <code class="reqn">\times</code> site dimensions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi</code></td>
+<td>
+<p>Sample values of sequence relative dominance of species stored in
+a matrix with sample <code class="reqn">\times</code> species dimensions or an array with
+sample <code class="reqn">\times</code> species <code class="reqn">\times</code> site dimensions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N_rep</code></td>
+<td>
+<p>Controls the sample size for the Monte Carlo integration.
+The integral is evaluated using <code>N_sample * N_rep</code> random samples,
+where <code>N_sample</code> is the maximum size of the MCMC sample in the <code>fit</code>
+argument and the parameter sample in the <code>z</code>, <code>theta</code>, and <code>phi</code> arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cores</code></td>
+<td>
+<p>The number of cores to use for parallelization.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The utility of local species diversity assessment for a given set of sites
+can be defined as the expected number of detected species per site
+(Fukaya et al. 2022). <code>eval_util_L()</code> evaluates this utility for arbitrary
+sets of sites that can potentially have different values for site occupancy
+status of species, <code class="reqn">z</code>, sequence capture probabilities of species,
+<code class="reqn">\theta</code>, and sequence relative dominance of species,
+<code class="reqn">\phi</code>, for the combination of <code>K</code> and <code>N</code> values specified in the
+<code>conditions</code> argument.
+Such evaluations can be used to balance <code>K</code> and <code>N</code> to maximize the utility
+under a constant budget (possible combinations of <code>K</code> and <code>N</code> under a
+specified budget and cost values are easily obtained using <code>list_cond_L()</code>;
+see the example below).
+It is also possible to examine how the utility varies with different <code>K</code>
+and <code>N</code> values without setting a budget level, which may be useful for determining
+a satisfactory level of <code>K</code> and <code>N</code> from a purely technical point of view.
+</p>
+<p>The expected utility is defined as the expected value of the conditional
+utility in the form:
+</p>
+<p style="text-align: center;"><code class="reqn">U(K, N \mid \boldsymbol{r}, \boldsymbol{u}) = \frac{1}{J}\sum_{j = 1}^{J}\sum_{i = 1}^{I}\left\{1 - \prod_{k = 1}^{K}\left(1 - \frac{u_{ijk}r_{ijk}}{\sum_{m = 1}^{I}u_{mjk}r_{mjk}} \right)^N \right\}</code>
+</p>
+
+<p>where <code class="reqn">u_{ijk}</code> is a latent indicator variable representing
+the inclusion of the sequence of species <code class="reqn">i</code> in replicate <code class="reqn">k</code>
+at site <code class="reqn">j</code>, and <code class="reqn">r_{ijk}</code> is a latent variable that
+is proportional to the relative frequency of the sequence of species
+<code class="reqn">i</code>, conditional on its presence in replicate <code class="reqn">k</code> at site
+<code class="reqn">j</code> (Fukaya et al. 2022).
+Expectations are taken with respect to the posterior (or possibly prior)
+predictive distributions of <code class="reqn">\boldsymbol{r} = \{r_{ijk}\}</code> and
+<code class="reqn">\boldsymbol{u} = \{u_{ijk}\}</code>, which are evaluated numerically using
+Monte Carlo integration. The predictive distributions of
+<code class="reqn">\boldsymbol{r}</code> and <code class="reqn">\boldsymbol{u}</code> depend on the model
+parameters <code class="reqn">z</code>, <code class="reqn">\theta</code>, and <code class="reqn">\phi</code> values.
+Their posterior (or prior) distribution is specified by supplying an
+<code>occumbFit</code> object containing their posterior samples via the <code>fit</code> argument,
+or by supplying a matrix or array of posterior (or prior) samples of
+parameter values via the <code>z</code>, <code>theta</code>, and <code>phi</code> arguments. Higher
+approximation accuracy can be obtained by increasing the value of <code>N_rep</code>.
+</p>
+<p>The <code>eval_util_L()</code> function can be executed by supplying the <code>fit</code> argument
+without specifying the <code>z</code>, <code>theta</code>, and <code>phi</code> arguments, by supplying the
+three <code>z</code>, <code>theta</code>, and <code>phi</code> arguments without the <code>fit</code> argument, or by
+supplying the <code>fit</code> argument and any or all of the <code>z</code>, <code>theta</code>, and <code>phi</code>
+arguments. If <code>z</code>, <code>theta</code>, or <code>phi</code> arguments are specified in addition
+to the <code>fit</code>, the parameter values given in these arguments are used
+preferentially to evaluate the expected utility. If the sample sizes differ among
+parameters, parameters with smaller sample sizes are resampled with
+replacements to align the sample sizes across parameters.
+</p>
+<p>The expected utility is evaluated assuming homogeneity of replicates, in the
+sense that <code class="reqn">\theta</code> and <code class="reqn">\phi</code>, the model parameters
+associated with the species detection process, are constant across
+replicates within a site. For this reason, <code>eval_util_L()</code> does not accept
+replicate-specific <code class="reqn">\theta</code> and <code class="reqn">\phi</code>. If the
+<code>occumbFit</code> object supplied in the <code>fit</code> argument has a replicate-specific
+parameter, the parameter samples to be used in the utility evaluation must be
+provided explicitly via the <code>theta</code> or <code>phi</code> arguments.
+</p>
+<p>The Monte Carlo integration is executed in parallel on multiple CPU cores, where
+the <code>cores</code> argument controls the degree of parallelization.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with a column named <code>Utility</code> in which the estimates of the
+expected utility are stored. This is obtained by adding the <code>Utility</code> column
+to the data frame provided in the <code>settings</code> argument.
+</p>
+
+
+<h3>References</h3>
+
+<p>K. Fukaya, N. I. Kondo, S. S. Matsuzaki and T. Kadoya (2022)
+Multispecies site occupancy modelling and study design for spatially
+replicated environmental DNA metabarcoding. <em>Methods in Ecology
+and Evolution</em> <strong>13</strong>:183–193.
+<a href="https://doi.org/10.1111/2041-210X.13732">doi:10.1111/2041-210X.13732</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(1)
+
+# Generate a random dataset (20 species * 2 sites * 2 reps)
+I &lt;- 20 # Number of species
+J &lt;- 2  # Number of sites
+K &lt;- 2  # Number of replicates
+data &lt;- occumbData(
+    y = array(sample.int(I * J * K), dim = c(I, J, K)))
+
+# Fitting a null model
+fit &lt;- occumb(data = data)
+
+## Estimate expected utility
+# Arbitrary K and N values
+(util1 &lt;- eval_util_L(expand.grid(K = 1:3, N = c(1E3, 1E4, 1E5)),
+                      fit))
+
+# K and N values under specified budget and cost
+(util2 &lt;- eval_util_L(list_cond_L(budget = 1E5,
+                                  lambda1 = 0.01,
+                                  lambda2 = 5000,
+                                  fit),
+                      fit))
+
+# K values restricted
+(util3 &lt;- eval_util_L(list_cond_L(budget = 1E5,
+                                  lambda1 = 0.01,
+                                  lambda2 = 5000,
+                                  fit,
+                                  K = 1:5),
+                      fit))
+
+# theta and phi values supplied
+(util4 &lt;- eval_util_L(list_cond_L(budget = 1E5,
+                                  lambda1 = 0.01,
+                                  lambda2 = 5000,
+                                  fit,
+                                  K = 1:5),
+                      fit,
+                      theta = array(0.5, dim = c(4000, I, J)),
+                      phi = array(1, dim = c(4000, I, J))))
+
+# z, theta, and phi values, but no fit object supplied
+(util5 &lt;- eval_util_L(list_cond_L(budget = 1E5,
+                                  lambda1 = 0.01,
+                                  lambda2 = 5000,
+                                  fit,
+                                  K = 1:5),
+                      fit = NULL,
+                      z = array(1, dim = c(4000, I, J)),
+                      theta = array(0.5, dim = c(4000, I, J)),
+                      phi = array(1, dim = c(4000, I, J))))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,187 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OmicsPLS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Data integration with O2PLS: Two-Way Orthogonal Partial Least Squares</h2>
+
+<h3>Description</h3>
+
+<p>The OmicsPLS package is an R package for penalized integration of heterogeneous omics data. 
+The software articles are published in (el Bouhaddani et al, 2018, doi: <a href="https://doi.org/10.1186/s12859-018-2371-3">10.1186/s12859-018-2371-3</a>) and (Gu et al, 2020, doi: <a href="https://doi.org/10.1186/s12859-021-03958-3">10.1186/s12859-021-03958-3</a>).
+OmicsPLS includes the O2PLS fit, the GO2PLS fit, cross-validation tools and some misc functions.
+</p>
+
+
+<h3>Model and assumptions</h3>
+
+<p><strong>Note that the rows of <code>X</code> and <code>Y</code> are the subjects and columns are variables.</strong>
+The number of columns may be different, but the subjects should be the same in both datasets.
+</p>
+<p>The O2PLS model (Trygg &amp; Wold, 2003) decomposes two datasets <code class="reqn">X</code> and <code class="reqn">Y</code> into three parts. 
+</p>
+
+<ul>
+<li>
+<p>1. A joint part, representing the relationship between <code class="reqn">X</code> and <code class="reqn">Y</code>
+</p>
+</li>
+<li>
+<p>2. An orthogonal part, representing the unrelated latent variation in <code class="reqn">X</code> and <code class="reqn">Y</code> separately.
+</p>
+</li>
+<li>
+<p>3. A noise part capturing all residual variation.
+</p>
+</li>
+</ul>
+<p>See also the corresponding paper (el Bouhaddani et al, 2018).
+</p>
+
+
+<h3>Fitting</h3>
+
+<p>The O2PLS fit is done with <code>o2m</code>. 
+For data <code>X</code> and <code>Y</code> you can run <code>o2m(X,Y,n,nx,ny)</code> for an O2PLS fit with <code>n</code> joint and <code>nx, ny</code> orthogonal components.
+See the help page of <code>o2m</code> for more information on parameters.
+There are four ways to obtain an O2PLS fit, depending on the dimensionality.
+</p>
+
+<ul>
+<li>
+<p> For the not-too-high dimensional case, you may use <code>o2m</code> with default parameters. E.g. <code>o2m(X,Y,n,nx,ny)</code>.
+</p>
+</li>
+<li>
+<p> In case you only want the parameters, you may add <code>stripped = TRUE</code> to obtain a stripped version of <code>o2m</code> which avoids calculating and storing some matrices. E.g. <code>o2m(X,Y,n,nx,ny,stripped=TRUE)</code>.
+</p>
+</li>
+<li>
+<p> For high dimensional cases, defined by <code>ncol(X)&gt;p_thresh</code> and <code>ncol(Y)&gt;q_thresh</code>, a NIPALS approach is used which avoids storing large matrices. E.g. <code>o2m(X,Y,n,nx,ny,p_thresh=3000,q_thresh=3000)</code>.
+The thresholds are by default both at 3000 variables.
+</p>
+</li>
+<li>
+<p> If you want a stripped version in the high dimensional case, add <code>stripped = TRUE</code>. E.g. <code>o2m(X,Y,n,nx,ny,stripped=TRUE,p_thresh=3000,q_thresh=3000)</code>.
+</p>
+</li>
+<li>
+<p> For GO2PLS, add <code>sparsity = TRUE</code> and specify how many variables or groups to retain. E.g. <code>o2m(X,Y,n,nx,ny,sparse=TRUE,keepx, keepy)</code>.
+</p>
+</li>
+</ul>
+<h3>Obtaining results</h3>
+
+<p>After fitting an O2PLS model, by running e.g. <code>fit = o2m(X,Y,n,nx,ny)</code>, the results can be visualised.
+Use <code>plot(fit,...)</code> to plot the desired loadings with/without ggplot2.
+Use <code>summary(fit,...)</code> to see the relative explained variances in the joint/orthogonal parts.
+Also plotting the joint scores <code>fit$Tt, fit$U</code> and orthogonal scores <code>fit$T_Yosc, fit$U_Xosc</code> are of help.
+</p>
+
+
+<h3>Cross-validating</h3>
+
+<p>Determining the number of components <code>n,nx,ny</code> is an important task. For this we have two methods.
+See <code>citation("OmicsPLS")</code> for our proposed approach for determining the number of components, implemented in <code>crossval_o2m_adjR2</code>!
+</p>
+
+<ul>
+<li>
+<p> Cross-validation (CV) is done with <code>crossval_o2m</code> and <code>crossval_o2m_adjR2</code>, both have built in parallelization which relies on the <code>parallel</code> package.
+Usage is something like <code>crossval_o2m(X,Y,a,ax,ay,nr_folds)</code> where <code>a,ax,ay</code> are vectors of integers. See the help pages.
+<code>nr_folds</code> is the number of folds, with <code>nr_folds = nrow(X)</code> for Leave-One-Out CV.
+</p>
+</li>
+<li>
+<p> For <code>crossval_o2m_adjR2</code> the same parameters are to be specified. This way of cross-validating is (potentially much)
+faster than the standard approach. It is also recommended over the standard CV.
+</p>
+</li>
+<li>
+<p> To cross-validate the number of variables to keep, use <code>crossval_sparsity</code>. 
+</p>
+</li>
+</ul>
+<h3>S3 methods</h3>
+
+<p>There are S3 methods implemented for a fit obtained with <code>o2m</code>, i.e. <code>fit &lt;- o2m(X,Y,n,nx,ny)</code>
+</p>
+
+<ul>
+<li>
+<p> Use plot(fit) to plot the loadings, see above.
+</p>
+</li>
+<li>
+<p> Use <code>loadings(fit)</code> to extract a matrix with loading values
+</p>
+</li>
+<li>
+<p> Use <code>scores(fit)</code> to extract the scores
+</p>
+</li>
+<li>
+<p> Use <code>print</code> and <code>summary</code> to print and summarize the fit object
+</p>
+</li>
+</ul>
+<h3>Imputation</h3>
+
+<p>When the data contains missing values, one should impute them prior to using O2PLS.
+There are many sophisticated approaches available, such as MICE and MissForest, and no one approach is the best for all situations.
+To still allow users to quickly impute missing values in their data matrix, 
+the <code>impute_matrix</code> function is implemented. 
+It relies on the <code>softImpute</code> function+package and imputes based on the singular value decomposition.
+</p>
+
+
+<h3>Misc</h3>
+
+<p>Also some handy tools are available
+</p>
+
+<ul>
+<li> <p><code>orth(X)</code> is a function to obtain an orthogonalized version of a matrix or vector <code>X</code>.
+</p>
+</li>
+<li> <p><code>ssq(X)</code> is a function to calculate the sum of squares (or squared Frobenius norm) of <code>X</code>. See also <code>vnorm</code> for calculating the norm of each column in <code>X</code>.
+</p>
+</li>
+<li> <p><code>mse(x, y)</code> returns the mean squared difference between two matrices/vectors. 
+</p>
+</li>
+</ul>
+<h3>Citation</h3>
+
+<p>If you use the OmicsPLS R package in your research, please cite the corresponding software paper:
+</p>
+<p><strong>el Bouhaddani, S., Uh, H.-W., Jongbloed, G., Hayward, C., Klarić, L., Kiełbasa, S. M., &amp; Houwing-Duistermaat, J.</strong> (2018).
+<em>Integrating omics datasets with the OmicsPLS package.</em>
+BMC Bioinformatics, 19(1). doi: <a href="https://doi.org/10.1186/s12859-018-2371-3">10.1186/s12859-018-2371-3</a>
+</p>
+<p>The bibtex entry can be obtained with command <code>citation("OmicsPLS")</code>.
+Thank you!
+</p>
+<p>The original paper proposing O2PLS is
+</p>
+<p><strong>Trygg, J., &amp; Wold, S.</strong> (2003). 
+<em>O2-PLS, a two-block (X-Y) latent variable regression (LVR) method with an integral OSC filter.</em> 
+Journal of Chemometrics, 17(1), 53-64. doi: <a href="https://doi.org/10.1002/cem.775">10.1002/cem.775</a>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Said el Bouhaddani (<a href="mailto:s.elbouhaddani@umcutrecht.nl">s.elbouhaddani@umcutrecht.nl</a>, Twitter: @selbouhaddani),
+Zhujie Gu, 
+Szymon Kielbasa,
+Geurt Jongbloed,
+Jeanine Houwing-Duistermaat,
+Hae-Won Uh.
+</p>
+<p>Maintainer: Said el Bouhaddani (<a href="mailto:s.elbouhaddani@umcutrecht.nl">s.elbouhaddani@umcutrecht.nl</a>).
+</p>
+
+
+</div>

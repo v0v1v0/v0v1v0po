@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>naming</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Define Naming Conventions</h2>
+
+<h3>Description</h3>
+
+<p>Option naming conventions use sensible defaults so that you can get started
+quickly with minimal configuration.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">set_envvar_name_fn(fn, env = parent.frame())
+
+set_option_name_fn(fn, env = parent.frame())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fn</code></td>
+<td>
+<p>A callback function which expects two arguments, the package name
+and option name, and returns a single character value to use as an
+environment variable name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>env</code></td>
+<td>
+<p>An environment in which to search for options settings</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The callback function <code>fn</code>
+</p>
+
+
+<h3>Functions</h3>
+
+
+<ul>
+<li> <p><code>set_envvar_name_fn()</code>: Set a callback function to use to format environment variable names.
+</p>
+</li>
+<li> <p><code>set_option_name_fn()</code>: Set a callback function to use to format option names.
+</p>
+</li>
+</ul>
+<h3>Defaults</h3>
+
+<p>Given a package <code>mypackage</code> and option <code>myoption</code>, the default settings
+will generate options and environment variables using the convention:
+</p>
+<p>option:
+</p>
+<div class="sourceCode"><pre>mypackage.myoption
+</pre></div>
+<p>environment variable:
+</p>
+<div class="sourceCode"><pre>R_MYPACKAGE_MYOPTION
+</pre></div>
+<p>This convention is intended to track closely with how options and environment
+variables are handled frequently in the wild. Perhaps in contrast to the
+community conventions, an <code>R_</code> prefix is tacked on to the default environment
+variables. This prefix helps to differentiate environment variables when
+similarly named tools exist outside of the R ecosystem.
+</p>
+
+
+<h3>Setting Alternative Conventions</h3>
+
+<p>If you choose to use alternative naming conventions, you must set the
+callback function <em>before</em> defining options. This is best achieved by
+altering these settings in the file where you define your options.
+</p>
+<p>If you choose to break up your options across multiple files, then it is best
+to define the collate order for your R scripts to ensure that the options are
+consistently configured across operating systems.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>naming_formats
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set_envvar_name_fn(envvar_name_generic)
+
+set_envvar_name_fn(function(package, name) {
+  toupper(paste("ENV", package, name, sep = "_"))
+})
+
+</code></pre>
+
+
+</div>

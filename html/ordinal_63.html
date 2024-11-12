@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>update.clm2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Update method for cumulative link models</h2>
+
+<h3>Description</h3>
+
+<p>Update method for cumulative link models fitted with <code>clm2</code>.
+This makes it possible to use e.g.
+<code>update(obj, location = ~ . - var1, scale = ~ . + var2)</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'clm2'
+update(object, formula., location, scale, nominal,...,
+        evaluate = TRUE)
+## S3 method for class 'clmm2'
+update(object, formula., location, scale, nominal,...,
+        evaluate = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a <code>clm2</code> object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula.</code></td>
+<td>
+<p>not used—unfortunately this argument is part of the
+default method.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p>an optional new formula for the location; see
+<code>update.formula</code> for details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>an optional new formula for the scale; see
+<code>update.formula</code> for details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nominal</code></td>
+<td>
+<p>an optional new formula for nominal effects; see
+<code>update.formula</code> for details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments to the call, or arguments with
+changed values.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>evaluate</code></td>
+<td>
+<p>if true evaluate the new call else return the call.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If <code>evaluate = TRUE</code> the fitted object is returned,
+otherwise the updated call.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rune Haubo B Christensen</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">options(contrasts = c("contr.treatment", "contr.poly"))
+
+m1 &lt;-  clm2(SURENESS ~ PROD, scale = ~PROD, data = soup,
+           link = "logistic")
+
+m2 &lt;- update(m1, link = "probit")
+m3 &lt;- update(m1, link = "cloglog")
+m4 &lt;- update(m1, link = "loglog")
+anova(m1, update(m1, scale = ~.-PROD))
+mT1 &lt;- update(m1, threshold = "symmetric")
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>restrict_range</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Range restriction and flattening for spectra</h2>
+
+<h3>Description</h3>
+
+<p><code>restrict_range()</code> restricts wavenumber ranges to user specified values.
+Multiple ranges can be specified by inputting a series of max and min
+values in order.
+<code>flatten_range()</code> will flatten ranges of the spectra that should have no
+peaks.
+Multiple ranges can be specified by inputting the series of max and min
+values in order.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">restrict_range(x, ...)
+
+## Default S3 method:
+restrict_range(x, ...)
+
+## S3 method for class 'OpenSpecy'
+restrict_range(x, min, max, make_rel = TRUE, ...)
+
+flatten_range(x, ...)
+
+## Default S3 method:
+flatten_range(x, ...)
+
+## S3 method for class 'OpenSpecy'
+flatten_range(x, min = 2200, max = 2400, make_rel = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>OpenSpecy</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min</code></td>
+<td>
+<p>a vector of minimum values for the range to be flattened.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max</code></td>
+<td>
+<p>a vector of maximum values for the range to be flattened.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>make_rel</code></td>
+<td>
+<p>logical; should the output intensities be normalized to the
+range [0, 1] using <code>make_rel()</code> function?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to subfunctions; currently not
+in use.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>OpenSpecy</code> object with the spectral intensities within specified
+ranges restricted or flattened.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>conform_spec()</code> for conforming wavenumbers to be matched with
+a reference library;
+<code>adj_intens()</code> for log transformation functions;
+<code>min()</code> and <code>round()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">test_noise &lt;- as_OpenSpecy(x = seq(400,4000, by = 10),
+                           spectra = data.frame(intensity = rnorm(361)))
+plot(test_noise)
+
+restrict_range(test_noise, min = 1000, max = 2000)
+
+flattened_intensities &lt;- flatten_range(test_noise, min = c(1000, 2000),
+                                       max = c(1500, 2500))
+plot(flattened_intensities)
+
+</code></pre>
+
+
+</div>

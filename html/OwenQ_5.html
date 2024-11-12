@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>powen</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Owen distribution functions when δ<sub>1</sub>&gt;δ<sub>2</sub>
+</h2>
+
+<h3>Description</h3>
+
+<p>Evaluates the Owen distribution functions
+when the noncentrality parameters satisfy δ<sub>1</sub>&gt;δ<sub>2</sub> and
+the number of degrees of freedom is integer.
+</p>
+
+<ul>
+<li> <p><code>powen1</code> evaluates P(T<sub>1</sub> ≤ t<sub>1</sub>, T<sub>2</sub> ≤ t<sub>2</sub>)
+(Owen's equality 8)
+</p>
+</li>
+<li> <p><code>powen2</code> evaluates P(T<sub>1</sub> ≤ t<sub>1</sub>, T<sub>2</sub> &gt; t<sub>2</sub>)
+(Owen's equality 9)
+</p>
+</li>
+<li> <p><code>powen3</code> evaluates P(T<sub>1</sub> &gt; t<sub>1</sub>, T<sub>2</sub> &gt; t<sub>2</sub>)
+(Owen's equality 10)
+</p>
+</li>
+<li> <p><code>powen4</code> evaluates P(T<sub>1</sub> &gt; t<sub>1</sub>, T<sub>2</sub> ≤ t<sub>2</sub>)
+(Owen's equality 11)
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">powen1(nu, t1, t2, delta1, delta2, algo = 2)
+
+powen2(nu, t1, t2, delta1, delta2, algo = 2)
+
+powen3(nu, t1, t2, delta1, delta2, algo = 2)
+
+powen4(nu, t1, t2, delta1, delta2, algo = 2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nu</code></td>
+<td>
+<p>integer greater than <code class="reqn">1</code>, the number of degrees of freedom;
+infinite allowed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t1, t2</code></td>
+<td>
+<p>two numbers, positive or negative, possible infinite</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta1, delta2</code></td>
+<td>
+<p>two vectors of possibly infinite numbers with the same length,
+the noncentrality parameters;
+must satisfy <code>delta1&gt;delta2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>algo</code></td>
+<td>
+<p>the algorithm used, <code>1</code> or <code>2</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector of numbers between <code class="reqn">0</code> and <code class="reqn">1</code>, possibly
+containing some <code>NaN</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>When the number of degrees of freedom is odd, the procedure resorts to
+the Owen T-function (<code>OwenT</code>).
+</p>
+
+
+<h3>References</h3>
+
+<p>Owen, D. B. (1965).
+A special case of a bivariate noncentral t-distribution.
+<em>Biometrika</em> <b>52</b>, 437-446.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Use <code>psbt</code> for general values of <code>delta1</code> and <code>delta2</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">nu=5; t1=2; t2=1; delta1=3; delta2=2
+# Wolfram integration gives 0.1394458271284726
+( p1 &lt;- powen1(nu, t1, t2, delta1, delta2) )
+# Wolfram integration gives 0.0353568969628651
+( p2 &lt;- powen2(nu, t1, t2, delta1, delta2) )
+# Wolfram integration gives 0.806507459306199
+( p3 &lt;- powen3(nu, t1, t2, delta1, delta2) )
+# Wolfram integration gives 0.018689824158
+( p4 &lt;- powen4(nu, t1, t2, delta1, delta2) )
+# the sum should be 1
+p1+p2+p3+p4
+</code></pre>
+
+
+</div>

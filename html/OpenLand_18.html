@@ -1,0 +1,174 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>contingencyTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Contingency table</h2>
+
+<h3>Description</h3>
+
+<p>Extracts LUC transitions for all input grids of the time series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">contingencyTable(input_raster, pixelresolution = 30)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input_raster</code></td>
+<td>
+<p>path (character), Raster* object or list of Raster*
+objects. See <br><code>raster</code> for more information about
+supported file types.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pixelresolution</code></td>
+<td>
+<p>numeric. The pixel spatial resolution in meter.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list that contains 5 objects.
+</p>
+
+<ul>
+<li> <p><code>lulc_Mulstistep</code>: <code>&lt;tibble&gt;</code> Contingency table for all
+analysed time steps, containing 8 columns:
+</p>
+
+<ol>
+<li>
+<p> Period: <code>&lt;chr&gt;</code> The period <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> From: <code>&lt;dbl&gt;</code> numerical code of a LUC category <em>i</em>.
+</p>
+</li>
+<li>
+<p> To: <code>&lt;dbl&gt;</code> numerical code of a LUC category <em>j</em>.
+</p>
+</li>
+<li>
+<p> km2: <code>&lt;dbl&gt;</code> Area in square kilometers that transited from the
+category <em>i</em>
+to category <em>j</em> in the period from <em>Yt</em> to <em>Yt+1</em>.
+</p>
+</li>
+<li>
+<p> Interval: <code>&lt;dbl&gt;</code> Interval of years between the first and
+the last year of the period <em>[Yt, Yt+1]</em>.
+</p>
+</li>
+<li>
+<p> QtPixel: <code>&lt;int&gt;</code> Pixel count that transited from the categories
+<em>i</em>
+to category <em>j</em> in the period from <em>Yt</em> to <em>Yt+1</em>.
+</p>
+</li>
+<li>
+<p> yearFrom: <code>&lt;chr&gt;</code> The year that the change comes from <em>[Yt]</em>.
+</p>
+</li>
+<li>
+<p> yearTo: <code>&lt;chr&gt;</code> The year that the change goes for <em>[Yt+1]</em>.
+</p>
+</li>
+</ol>
+</li>
+<li> <p><code>lulc_Onestep</code>:<code>&lt;tibble&gt;</code> Contingency table for the entire
+analysed period <em>[Y1, YT]</em>, containing
+8 columns identical with <code>lulc_Mulstistep</code>.
+</p>
+</li>
+<li> <p><code>tb_legend</code>: <code>&lt;tibble&gt;</code> A table of the pixel value, his
+name and color containing 3 columns:
+</p>
+
+<ol>
+<li>
+<p> categoryValue: <code>&lt;dbl&gt;</code> the pixel value of the LUC category.
+</p>
+</li>
+<li>
+<p> categoryName: <code>&lt;factor&gt;</code> randomly created string associated with
+a given pixel value of a LUC category.
+</p>
+</li>
+<li>
+<p> color: <code>&lt;chr&gt;</code> random color associated with the given pixel value
+of a LUC category.
+Before further analysis, one would like to change the <code>categoryName</code>
+and <code>color</code> values.
+</p>
+
+<ul>
+<li>
+<p> Therefore the category names have to be in the same order as the
+<code>categoryValue</code>
+and the <code>levels</code> should be put in the right order for legend
+plotting. Like:
+</p>
+<pre>
+
+        myobject$tb_legend$categoryName &lt;- factor(c("name1", "name2", "name3", "name4"),
+                                               levels = c("name3", "name2", "name1", "name4"))</pre>
+</li>
+<li>
+<p> The colors have to in the same order as the values in the <code>categoryValue</code> column. Colors can be given by the
+color name (eg. "black") or an HEX value (eg. #FFFFFF). Like:
+</p>
+<pre>
+
+       myobject$tb_legend$color &lt;- c("#CDB79E", "red", "#66CD00", "yellow")</pre>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li> <p><code>totalArea</code>: <code>&lt;tibble&gt;</code>  A table with the total area of the
+study area containing 2 columns:
+</p>
+
+<ol>
+<li>
+<p> area_km2: <code>&lt;numeric&gt;</code> The total area in square kilometers.
+</p>
+</li>
+<li>
+<p> QtPixel: <code>&lt;numeric&gt;</code> The total area in pixel counts.
+</p>
+</li>
+</ol>
+</li>
+<li> <p><code>totalInterval</code>: <code>&lt;numeric&gt;</code> Total interval of the analysed
+time series in years.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+url &lt;- "https://zenodo.org/record/3685230/files/SaoLourencoBasin.rda?download=1"
+temp &lt;- tempfile()
+download.file(url, temp, mode = "wb") #downloading the online dataset
+load(temp)
+# the contingencyTable() function, with the SaoLourencoBasin dataset
+contingencyTable(input_raster = SaoLourencoBasin, pixelresolution = 30)
+
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.ODEnetwork</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plots Results of ODEnetwork</h2>
+
+<h3>Description</h3>
+
+<p>Plots the results of <code>simuNetwork</code> of the given <code>ODEnetwork</code>
+in different ways.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ODEnetwork'
+plot(x, ..., state = "12", var = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>[<code>ODEnetwork</code>]<br>
+List of class <code>ODEnetwork</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state</code></td>
+<td>
+<p>[<code>character</code>]<br>
+The type of result, that is plotted.
+If <code>1</code>, only state1 (position or angle) is plotted over time.
+If <code>2</code>, only state2 (velocity or magnitude) is plotted over time.
+If <code>12</code>, state1 and state2 are plotted over time.
+If <code>1vs2</code>, state2 is plotted over state1.
+Default is <code>state12</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var</code></td>
+<td>
+<p>[<code>numeric(n)</code>]<br>
+Subset of variables to plot. Default is <code>NULL</code>, which plots all variables.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">masses &lt;- c(1, 2)
+dampers &lt;- diag(c(0.1, 0.5))
+dampers[1, 2] &lt;- 0.05
+springs &lt;- diag(c(4, 10))
+springs[1, 2] &lt;- 6
+odenet &lt;- ODEnetwork(masses, dampers, springs)
+odenet &lt;- setState(odenet, c(1, 3), c(0, 0))
+odenet &lt;- simuNetwork(odenet, seq(0, 10, by = 0.05))
+plot(odenet)
+plot(odenet, var = 2L)
+plot(odenet, state = "1")
+plot(odenet, state = "2")
+plot(odenet, state = "1vs2")
+</code></pre>
+
+
+</div>

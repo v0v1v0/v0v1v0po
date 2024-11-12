@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>manage_na</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Ignore or remove NA intensities</h2>
+
+<h3>Description</h3>
+
+<p>Sometimes you want to keep or remove NA values in intensities to allow for
+spectra with varying shapes to be analyzed together or maintained in a single
+Open Specy object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">manage_na(x, ...)
+
+## Default S3 method:
+manage_na(x, lead_tail_only = TRUE, ig = c(NA), ...)
+
+## S3 method for class 'OpenSpecy'
+manage_na(x, lead_tail_only = TRUE, ig = c(NA), fun, type = "ignore", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector or an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> OpenSpecy object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lead_tail_only</code></td>
+<td>
+<p>logical whether to only look at leading adn tailing values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ig</code></td>
+<td>
+<p>character vector, values to ignore.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>the name of the function you want run, this is only used if the "ignore" type is chosen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character of either "ignore" or "remove".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to <code>fun</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>manage_na()</code> return logical vectors of NA locations (if vector provided) or an
+<code>OpenSpecy</code> object with ignored or removed NA values.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OpenSpecy</code> object to be matched with a reference library
+<code>fill_spec()</code> can be used to fill NA values in Open Specy objects.
+<code>restrict_range()</code> can be used to restrict spectral ranges in other ways than removing NAs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">manage_na(c(NA, -1, NA, 1, 10))
+manage_na(c(NA, -1, NA, 1, 10), lead_tail_only = FALSE)
+manage_na(c(NA, 0, NA, 1, 10), lead_tail_only = FALSE, ig = c(NA,0))
+data(raman_hdpe)
+raman_hdpe$spectra[[1]][1:10] &lt;- NA
+
+#would normally return all NA without na.rm = TRUE but doesn't here.
+manage_na(raman_hdpe, fun = make_rel)
+
+#will remove the first 10 values we set to NA
+manage_na(raman_hdpe, type = "remove")
+
+</code></pre>
+
+
+</div>

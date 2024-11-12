@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.ODRF</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>predict based on an ODRF object</h2>
+
+<h3>Description</h3>
+
+<p>Prediction of ODRF for an input matrix or data frame.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ODRF'
+predict(object, Xnew, type = "response", weight.tree = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object of class ODRF, the same created by the function <code>ODRF</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xnew</code></td>
+<td>
+<p>An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
+Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>One of <code>response</code>, <code>prob</code> or <code>tree</code>, indicating the type of output: predicted values, matrix of class probabilities or predicted value for each tree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight.tree</code></td>
+<td>
+<p>Whether to weight the tree, if <code>TRUE</code> then use the out-of-bag error of the tree as the weight. (default <code>FALSE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A set of vectors in the following list:
+</p>
+
+<ul>
+<li> <p><code>response</code>: the predicted values of the new data.
+</p>
+</li>
+<li> <p><code>prob</code>: matrix of class probabilities (one column for each class and one row for each input). If <code>object$split</code> is <code>mse</code>, a vector of tree weights is returned.
+</p>
+</li>
+<li> <p><code>tree</code>: It is a matrix where each column is a prediction for each tree.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Zhan, H., Liu, Y., &amp; Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ODRF</code> <code>predict.ODT</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Classification with Oblique Decision Random Forest
+data(seeds)
+set.seed(221212)
+train &lt;- sample(1:209, 80)
+train_data &lt;- data.frame(seeds[train, ])
+test_data &lt;- data.frame(seeds[-train, ])
+forest &lt;- ODRF(varieties_of_wheat ~ ., train_data,
+  split = "entropy", parallel = FALSE,ntrees = 50
+)
+pred &lt;- predict(forest, test_data[, -8], weight.tree = TRUE)
+# classification error
+(mean(pred != test_data[, 8]))
+
+# Regression with Oblique Decision Random Forest
+
+data(body_fat)
+set.seed(221212)
+train &lt;- sample(1:252, 80)
+train_data &lt;- data.frame(body_fat[train, ])
+test_data &lt;- data.frame(body_fat[-train, ])
+forest &lt;- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE,
+ntrees = 50, TreeRandRotate=TRUE)
+pred &lt;- predict(forest, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
+
+
+</code></pre>
+
+
+</div>

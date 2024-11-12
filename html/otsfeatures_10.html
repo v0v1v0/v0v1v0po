@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>c_joint_probabilities</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the cumulative joint probabilities of an ordinal time series</h2>
+
+<h3>Description</h3>
+
+<p><code>c_joint_probabilities</code> returns a matrix with the cumulative joint
+probabilities of an ordinal time series
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">c_joint_probabilities(series, lag = 1, states)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>series</code></td>
+<td>
+<p>An OTS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag</code></td>
+<td>
+<p>The considered lag (default is 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>states</code></td>
+<td>
+<p>A numerical vector containing the corresponding
+states.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given an OTS of length <code class="reqn">T</code> with range <code class="reqn">\mathcal{S}=\{s_0, s_1, s_2, \ldots, s_n\}</code> (<code class="reqn">s_0 &lt; s_1 &lt; s_2 &lt; \ldots &lt; s_n</code>),
+<code class="reqn">\overline{X}_t=\{\overline{X}_1,\ldots, \overline{X}_T\}</code>, the function computes the
+matrix <code class="reqn">\widehat{\boldsymbol F}(l) = \big(\widehat{f}_{i-1j-1}(l)\big)_{1 \le i, j \le n}</code>,
+with <code class="reqn">\widehat{f}_{ij}(l)=\frac{N_{ij}(l)}{T-l}</code>, where <code class="reqn">N_{ij}(l)</code> is the number
+of pairs <code class="reqn">(\overline{X}_t, \overline{X}_{t-l})</code> in the realization <code class="reqn">\overline{X}_t</code>
+such that <code class="reqn">\overline{X}_t \le s_i</code> and <code class="reqn">\overline{X}_{t-l} \le s_j</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix with the jcumulative oint probabilities.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Ángel López-Oriona, José A. Vilar
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Weiß CH (2019).
+“Distance-based analysis of ordinal data and ordinal time series.”
+<em>Journal of the American Statistical Association</em>.
+</p>
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">matrix_cjp &lt;- c_joint_probabilities(series = AustrianWages$data[[100]],
+states = 0 : 5) # Computing the matrix of
+# cumulative joint probabilities for one series in dataset AustrianWages
+</code></pre>
+
+
+</div>

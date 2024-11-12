@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gam_to_df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Converts a fitted GAM model into a tidy data frame</h2>
+
+<h3>Description</h3>
+
+<p>This function converts a fitted GAM model into a tidy data frame
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gam_to_df(model = NULL, pred = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A fitted GAM(M).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pred</code></td>
+<td>
+<p>Predictor name for which to calculate the odds ratio.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To be able to plot the smoothing function of a GAM using ggplot2,
+some preprocessing is needed coming from the raw fitted GAM model output.
+</p>
+<p>Used in <code>plot_gam()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plot_gam()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data (Source: ?mgcv::gam)
+library(mgcv)
+n &lt;- 200
+sig &lt;- 2
+dat &lt;- gamSim(1, n = n, scale = sig, verbose = FALSE)
+dat$x4 &lt;- as.factor(c(
+  rep("A", 50), rep("B", 50), rep("C", 50),
+  rep("D", 50)
+))
+fit_gam &lt;- gam(y ~ s(x0) + s(I(x1^2)) + s(x2) +
+  offset(x3) + x4, data = dat) # fit model
+
+tmp &lt;- gam_to_df(fit_gam, "x2")
+</code></pre>
+
+
+</div>

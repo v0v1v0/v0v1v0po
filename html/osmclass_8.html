@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_other_tags_list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a List from the 'other_tags' Column in OSM PBF Data</h2>
+
+<h3>Description</h3>
+
+<p>Generate a List from the 'other_tags' Column in OSM PBF Data
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_other_tags_list(x, values = FALSE, split = "\",\"|\"=&gt;\"", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>character. The 'other_tags' column of an imported osm.pbf file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>logical. <code>TRUE</code> also includes the values of tags.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split</code></td>
+<td>
+<p>character. Pattern passed to <code>strsplit</code> to split up <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to <code>strsplit</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list of tags as character vectors, or a nested list of tags and values if <code>values = TRUE</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>osmclass-package
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># See Examples at ?osmclass for full examples
+
+# Extract 'other_tags' as list
+other_tags &lt;- osm_other_tags_list(djibouti_points$other_tags)
+other_tags[1:10]
+
+# Count frequency (showing top 10)
+sort(table(unlist(other_tags)), decreasing = TRUE)[1:10]
+
+# Also include values
+other_tags_values &lt;- osm_other_tags_list(djibouti_points$other_tags, values = TRUE)
+other_tags_values[1:10]
+
+</code></pre>
+
+
+</div>

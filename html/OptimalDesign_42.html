@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_print</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Compact information about a design
+</h2>
+
+<h3>Description</h3>
+
+<p>Prints various characteristics of an experimental design
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_print(Fx, w, X=NULL, h=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> is the number of parameters
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>the vector of non-negative real numbers of length <code>n</code> representing the design
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>an <code>n</code> times <code>k</code> matrix of coordinates of design points
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Output is a list with components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the call of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design</code></td>
+<td>
+<p>a matrix with the rows of <code>Fx</code> corresponding to non-zero design weights and the non-weights themselves</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>the information matrix of <code>w</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eigenvalues</code></td>
+<td>
+<p>the eigenvalues of <code>M</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>D.value</code></td>
+<td>
+<p>the value of the D-optimality criterion for <code>w</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A.value</code></td>
+<td>
+<p>the value of the A-optimality criterion for <code>w</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>I.value</code></td>
+<td>
+<p>the value of the I-optimality criterion for <code>w</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C.value</code></td>
+<td>
+<p>the value of the C-optimality criterion for <code>w</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.value</code></td>
+<td>
+<p>the value of the c-optimality criterion for <code>w</code></p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>od_plot</code>, <code>od_pool</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">Fx &lt;- Fx_cube(~x1 + I(x1^2), n.levels = 11)
+w &lt;- 1:11/sum(1:11)
+od_print(Fx, w, Fx[, 2])
+</code></pre>
+
+
+</div>

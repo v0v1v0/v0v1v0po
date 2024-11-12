@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>label_spectro</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a labeled spectrogram</h2>
+
+<h3>Description</h3>
+
+<p><code>label_spectro</code> plot a spectrogram along with amplitude envelopes or cross-correlation scores
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">label_spectro(wave, reference = NULL, detection = NULL,
+ envelope = FALSE, threshold = NULL, smooth = 5, collevels = seq(-100, 0, 5),
+ palette = viridis::viridis, template.correlation = NULL,
+ line.x.position = 2, hop.size = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wave</code></td>
+<td>
+<p>A 'wave' class object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reference</code></td>
+<td>
+<p>Data frame or 'selection.table' (following the warbleR package format) with the reference selections (start and end of the sound events). Must contained at least the following columns: "sound.files", "selec", "start" and "end".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detection</code></td>
+<td>
+<p>Data frame or 'selection.table' with the detection (start and end of the sound events) Must contained at least the following columns: "sound.files", "selec", "start" and "end".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envelope</code></td>
+<td>
+<p>Logical to control whether the amplitude envelope is plotted. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>A numeric vector on length 1 indicated the amplitude or correlation threshold to plot on the envelope or correlation scores respectively. Default is <code>NULL</code>. Note that for amplitude the range of valid values is 0-1, while for correlations the range is 0-100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smooth</code></td>
+<td>
+<p>A numeric vector of length 1 to smooth the amplitude envelope
+with a sum smooth function. It controls the time range (in ms) in which amplitude samples are smoothed (i.e. averaged with neighboring samples). Default is 5. 0 means no smoothing is applied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collevels</code></td>
+<td>
+<p>Numeric sequence of negative numbers to control color partitioning and amplitude values that are shown (as in <code>spectro</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette</code></td>
+<td>
+<p>Function with the color palette to be used on the spectrogram (as in <code>spectro</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>template.correlation</code></td>
+<td>
+<p>List extracted from the output of <code>template_correlator</code> containing the correlation scores and metadata for an specific sound file/template dyad. For instance 'correlations[[1]]' where 'correlations' is the output of a <code>template_correlator</code> call. If supplied the correlation is also plotted. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line.x.position</code></td>
+<td>
+<p>Numeric vector of length 1 with the position in the frequency axis (so in kHz) of the lines highlighting sound events. Default is 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hop.size</code></td>
+<td>
+<p>A numeric vector of length 1 specifying the time window duration (in ms). Default is 11.6 ms, which is equivalent to 512 'wl' for a 44.1 kHz sampling rate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to  <code>spectro</code> for further spectrogram customization.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function plots spectrograms annotated with the position of sound events. <strong>Created for graphs included in the vignette, and probably only useful for that or for very short recordings</strong>. Only works on a single 'wave' object at the time.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A spectrogram along with lines highlighting the position of sound events in 'reference' and/or 'detection'. If supplied it will also plot the amplitude envelope or corelation scores below the spectrogram.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>).
+</p>
+
+
+<h3>References</h3>
+
+<p>#' Araya-Salas, M., Smith-Vidaurre, G., Chaverri, G., Brenes, J. C., Chirino, F., Elizondo-Calvo, J., &amp; Rico-Guevara, A. 2022. ohun: an R package for diagnosing and optimizing automatic sound event detection. BioRxiv, 2022.12.13.520253. https://doi.org/10.1101/2022.12.13.520253
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>energy_detector</code>, <code>template_correlator</code>, <code>template_detector</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  # load example data
+  data(list = "lbh1", "lbh_reference")
+
+  # adding labels
+  label_spectro(
+    wave = lbh1,
+    reference = lbh_reference[lbh_reference$sound.files == "lbh1.wav", ],
+    wl = 200, ovlp = 50, flim = c(1, 10)
+  )
+
+  # adding envelope
+  label_spectro(
+    wave = lbh1,
+    detection = lbh_reference[lbh_reference$sound.files == "lbh1.wav", ],
+    wl = 200, ovlp = 50, flim = c(1, 10)
+  )
+
+  # see the package vignette for more examples
+}
+
+</code></pre>
+
+
+</div>

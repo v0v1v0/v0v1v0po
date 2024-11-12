@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lineEnding</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Between DOS and UNIX Line Endings</h2>
+
+<h3>Description</h3>
+
+<p>This function converts between DOS and UNIX style line endings by invoking
+<code>unix2dos</code> (or <code>dos2unix</code>) upon a text file (see also
+<code>system("unix2dos --help")</code>). Note that 'unix2dos' must be installed on your
+local system, see Source.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lineEnding(infile, pattern = NULL, outfile = NULL, to = c("dos", "unix"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>infile</code></td>
+<td>
+<p>Input filename(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p>See <code>list.files()</code>. This will be ignored if 'infile' is
+specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outfile</code></td>
+<td>
+<p>Output filename. If not supplied, 'infile' will be
+overwritten.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>Either <code>"dos"</code> or <code>"unix"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>list.files()</code>, only applicable if
+'infile' is not specified.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Florian Detsch
+</p>
+
+
+<h3>Source</h3>
+
+<p><a href="https://waterlan.home.xs4all.nl/dos2unix.html">Dos2Unix/Unix2Dos Text file format converters</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>list.files()</code>, <code>system()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## input file
+infile &lt;- paste(system.file(package = "Orcs"), "DESCRIPTION", sep = "/")
+
+## convert to dos line endings and write to output file
+ofl = file.path(tempdir(), "DESCRIPTION4wd")
+lineEnding(infile, outfile = ofl, to = "dos")
+
+</code></pre>
+
+
+</div>

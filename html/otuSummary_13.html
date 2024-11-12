@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pbray</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Partition the Bray-Curtis distance dissimilarity
+</h2>
+
+<h3>Description</h3>
+
+<p>The pbray function partitions the Bray-Curtis distance matrix based on the who community and the subset of the community data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pbray(allComm, subComm, tolower = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>allComm</code></td>
+<td>
+
+<p>A otu table of microbial community which contains sample in rows and taxa in column. The otu table should not contain a taxonomic column.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subComm</code></td>
+<td>
+
+<p>A subset of the otu table, with the same samples as allComm.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolower</code></td>
+<td>
+
+<p>Logical, by default the function returns the lower triangular matrix.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Bray-Curtis dissimilarity is a scaled summation of abundance differences between two communities, it is thus could be partitioned between two samples attributable to a subset of the community (Shade et al., 2014; Yang et al., 2017).
+Note, the pbray function requires the input for "allComm" and "subComm" keep consistent either in either counts or relative abundance.
+If the input for "allComm" and "subComm" are the same data, the function will return the Bray-Curtis matrix for the whole community.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns a distance matrix by using the subset community against the whole community data.
+
+
+
+
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sizhong Yang &lt;yanglzu@163.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Shade A, Jones SE, Caporaso JG, Handelsman J, Knight R, Fierer N, and Gilbert JA. Conditionally rare taxa disproportionately contribute to temporal changes in microbial diversity. Mbio, 2014, 5(4): e01371-01314.
+</p>
+<p>Yang S, Winkel M, Wagner D, and Liebner S. Community structure of rare methanogenic archaea: insight from a single functional group. FEMS Microbiology Ecology, 2017: fix126.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>function contrib(), matrixConvert().
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(otumothur)
+
+subotus &lt;- subOTU(otutab = otumothur, taxhead = "taxonomy", siteInCol = TRUE,
+    percent = FALSE, choose = "rare", outype = "counts", sort = FALSE)
+pRare &lt;- pbray(allComm = t(otumothur[,-454]), subComm = t(subotus[,-454]))
+class(pRare)
+
+# convert to long format data frame
+
+longdist &lt;- matrixConvert(pRare, colname = c("sp1", "sp2", "bray"))
+</code></pre>
+
+
+</div>

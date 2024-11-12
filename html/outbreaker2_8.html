@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>custom_priors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Customise priors for outbreaker</h2>
+
+<h3>Description</h3>
+
+<p>Priors can be specified in several ways in outbreaker2 (see details and
+examples). The most flexible way to specify a prior is to provide a prior
+function directly. This function must take an argument 'param', which is a
+list which contains all the states of the parameters and augmented data. See
+the documentation of create_param for more information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">custom_priors(...)
+
+## S3 method for class 'custom_priors'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>A list or a series of named, comma-separated functions
+implementing priors. Each function must have a single argument, which
+corresponds to a 'outbreaker_param' list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>outbreaker_config</code> object as returned by <code>create_config</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>There are three ways a user can specify priors:<br></p>
+<p>1) Default: this is what happens when the 'config' has default values of
+prior parameters.<br>
+2) Customized parameters: in this case, the prior functions are the default
+ones from the package, but will use custom parameters, specified by the user
+through <code>create_config</code>.<br></p>
+<p>3) Customized functions: in this case, prior functions themselves are
+specified by the user, through the '...' argument of 'custom_priors'. The
+requirements is that such functions must have either hard-coded parameters or
+enclosed values. They will take a single argument which is a list containing
+all model parameters with the class 'outbreaker_param'. ALL PRIORS functions
+are expected to return values on a LOG SCALE.<br></p>
+<p>Priors currently used for the model are:
+</p>
+
+<ul>
+<li> <p><code>mu</code> (mutation rate): default function is an exponential
+distribution implemented in <code>outbreaker:::cpp_prior_mu</code>. New prior
+functions should use <code>x$mu</code> to refer to the current value of <code>mu</code>,
+assuming their argument is called <code>x</code>.
+</p>
+</li>
+<li> <p><code>pi</code> (reporting probability): default function is a beta
+distribution implemented in <code>outbreaker:::cpp_prior_pi</code>. New prior
+functions should use <code>x$pi</code> to refer to the current value of <code>pi</code>,
+assuming their argument is called <code>x</code>.
+</p>
+</li>
+<li> <p><code>eps</code> (contact reporting coverage): default function is a beta
+distribution implemented in <code>outbreaker:::cpp_prior_eps</code>. New prior
+functions should use <code>x$eps</code> to refer to the current value of <code>eps</code>,
+assuming their argument is called <code>x</code>.
+</p>
+</li>
+<li> <p><code>lambda</code> (non-infectious contact rate): default function is a
+beta distribution implemented in <code>outbreaker:::cpp_prior_lambda</code>. New
+prior functions should use <code>x$lambda</code> to refer to the current value of
+<code>lambda</code>, assuming their argument is called <code>x</code>.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A list of custom functions with class <code>custom_priors</code>. Values
+set to <code>NULL</code> will be ignored and default functions will be used
+instead.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thibaut Jombart (<a href="mailto:thibautjombart@gmail.com">thibautjombart@gmail.com</a>).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See <a href="http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-priors">customization vignette</a> for detailed examples on how to customize priors.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## BASIC CONFIGURATION
+custom_priors()
+
+
+## SPECIFYING PRIOR PARAMETERS
+## - this will need to be passed to outbreaker
+default_config &lt;- create_config()
+new_config &lt;- create_config(prior_mu = 1e-5,
+                        prior_pi = c(2, 1))
+
+## - to check the prior manually, default settings:
+param &lt;- list(mu = 0.001, pi = 0.9)
+outbreaker2:::cpp_prior_mu(param, default_config)
+outbreaker2:::cpp_prior_pi(param, default_config)
+
+outbreaker2:::cpp_prior_mu(param, new_config)
+outbreaker2:::cpp_prior_pi(param, new_config)
+
+## these correspond to:
+dexp(0.001, 0.01, log = TRUE)
+dbeta(0.9, 2, 1, log = TRUE)
+
+
+## SPECIFYING A PRIOR FUNCTION
+
+## flat prior for pi between 0.5 and 1
+f &lt;- function(x) {ifelse(x$pi &gt; 0.5, log(2), log(0))}
+priors &lt;- custom_priors(pi = f)
+priors # this should be passed to outbreaker
+
+## test the prior manually
+priors$pi(list(pi=1))
+priors$pi(list(pi=.6))
+priors$pi(list(pi=.2))
+priors$pi(list(pi=.49))
+
+</code></pre>
+
+
+</div>

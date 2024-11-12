@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tsrobapred</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+
+Prediction under Student-t Objective Bayesian Analysis (OBA).
+</h2>
+
+<h3>Description</h3>
+
+
+<p>This function uses the sampling distribution of parameters obtained from the function <code>tsroba</code> to predict values at unknown locations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tsrobapred(obj,xpred,coordspred)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+
+
+<p>object of the class "tsroba" (see <code>tsroba</code> function).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xpred</code></td>
+<td>
+
+
+<p>Values of the X design matrix for prediction coordinates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coordspred</code></td>
+<td>
+
+
+<p>Points coordinates to be predicted.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<p>This function predicts using the sampling distribution of parameters obtained from the function <code>tsroba</code> and the conditional Student-t distribution of the predicted values given the data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a vector with the predicted values at the specified locations.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jose A. Ordonez, Marcos O. Prates, Larissa A. Matos, Victor H. Lachos.
+</p>
+
+
+<h3>References</h3>
+
+<p>Diggle, P. and P. Ribeiro (2007).Model-Based Geostatistics.  Springer Series in Statistics.
+</p>
+<p>Ordonez, J.A, M.O. Prattes, L.A. Matos, and V.H. Lachos (2020+). Objective Bayesian analysis for spatial Student-t regression models. (Submitted)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>tsroba</code>,<code>nsrobapred1</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+set.seed(25)
+data(dataca20)
+d1=dataca20[1:158,]
+
+######covariance matern: kappa=0.3 prior:reference
+res=tsroba(calcont~altitude+area, kappa = 0.3, data=d1,
+ini.pars=c(10,3,10),iter=50,thin=1,burn=5)
+
+datapred=dataca20[159:178,]
+formula=calcont~altitude+area
+xpred=model.matrix(formula,data=datapred)
+
+tsrobapred(res,xpred=xpred,coordspred=dataca20[159:178,1:2])
+
+
+</code></pre>
+
+
+</div>

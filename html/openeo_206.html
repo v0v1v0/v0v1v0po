@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>send_udf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Test a UDF operation</h2>
+
+<h3>Description</h3>
+
+<p>This function is still under development and depends heavily on test data in a specific format and whether or not the back-end provider
+exposes their UDF service endpoint or if you have setup a local UDF service (see notes). The openEO UDF API v0.1.0 had foreseen to ship
+data and code in a single message and to be interpretable by a computing service a specific format was designed. Usually this whole operation
+is neatly hidden within the back-end, but if you want to test and debug the code, you need to create such data first. Some examples are available
+at <a href="https://github.com/Open-EO/openeo-r-udf/tree/master/examples/data">https://github.com/Open-EO/openeo-r-udf/tree/master/examples/data</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">send_udf(
+  data,
+  code,
+  host = "http://localhost",
+  port = NULL,
+  language = "R",
+  debug = FALSE,
+  user_context = NA,
+  server_context = NA,
+  download_info = FALSE,
+  legacy = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>file path or a list object with the UDF-API data object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p>a call object or a file path of the user defined code</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>host</code></td>
+<td>
+<p>URL to the UDF service</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>port</code></td>
+<td>
+<p>(optional) port of the UDF service host</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>programming language (R or Python) of the source code</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(optional) logical - Switch on / off debugging information</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user_context</code></td>
+<td>
+<p>list - Context parameter that are shipped from the user into the udf_service</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>server_context</code></td>
+<td>
+<p>list - Context usually sent from the back-end to trigger certain settings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>download_info</code></td>
+<td>
+<p>(optional) logical - Whether or not to print the time taken separately for
+the download</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legacy</code></td>
+<td>
+<p>logical - Whether or not the legacy endpoint is used (default: FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>parameters passed on to httr::content or to be more precise to jsonlite::fromJSON</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Hint: If you use a local R UDF service you might want to debug using the 'browser()' function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>the textual JSON representation of the result
+</p>
+
+
+<h3>Note</h3>
+
+<p>The debug options are only available for the R-UDF service. The R UDF-API version has to be of version 0.1.0 (not the old alpha
+version). You might want to check <a href="https://github.com/Open-EO/openeo-r-udf#running-the-api-locally">https://github.com/Open-EO/openeo-r-udf#running-the-api-locally</a> for setting up a local
+service for debugging.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+port = 5555
+host = "http://localhost" 
+script = quote({
+  all_dim = names(dim(data))
+  ndvi_result = st_apply(data, FUN = function(X,...) {
+    (X[8]-X[4])/(X[8]+X[4])
+  }, MARGIN = all_dim[-which(all_dim=="band")])
+
+  all_dim = names(dim(ndvi_result))
+  min_ndvi = st_apply(ndvi_result,FUN = min, MARGIN = all_dim[-which(all_dim=="t")])
+
+  min_ndvi
+})
+result = send_udf(data = "hypercube.json",code = script,host=host,port=port)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

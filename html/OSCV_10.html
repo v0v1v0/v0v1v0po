@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>loclin</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computing the local linear estimate (LLE).</h2>
+
+<h3>Description</h3>
+
+<p>Computing the LLE based on data <code class="reqn">(desx,y)</code> over the given vector of the argument values <code class="reqn">u</code>. The Gausssian kernel is used. See expression (3) in Savchuk and Hart (2017).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">loclin(u, desx, y, h)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>u</code></td>
+<td>
+<p>numerical vector of argument values,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>desx</code></td>
+<td>
+<p>numerical vecror of design points,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>numerical vecror of data values (corresponding to the specified design points <code class="reqn">desx</code>),</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>numerical bandwidth value (scalar).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Computing the LLE based on the Gaussian kernel for the specified vector of the argument values <code class="reqn">u</code> and given vectors of design points <code class="reqn">desx</code> and the corresponding data values <code class="reqn">y</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numerical vector of the LLE values computed over the specified vector of <code class="reqn">u</code> points.
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Clevelend, W.S. (1979). Robust locally weighted regression and smoothing scatterplots. <em>Journal of the American Statistical Association</em>, 74(368), 829-836.
+</p>
+</li>
+<li>
+<p>  Savchuk, O.Y., Hart, J.D. (2017). Fully robust one-sided cross-validation for regression functions. <em>Computational Statistics</em>, doi:10.1007/s00180-017-0713-7.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>OSCV_reg</code>, <code>h_OSCV_reg</code>, <code>ASE_reg</code>, <code>h_ASE_reg</code>, <code>CV_reg</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Example (simulated data).
+n=200
+dx=(1:n-0.5)/n
+regf=2*dx^10*(1-dx)^2+dx^2*(1-dx)^10
+u=seq(0,1,len=1000)
+ydat=regf+rnorm(n,sd=0.002)
+dev.new()
+plot(dx,regf,'l',lty="dashed",lwd=3,xlim=c(0,1),ylim=c(1.1*min(ydat),1.1*max(ydat)),
+cex.axis=1.7,cex.lab=1.7)
+title(main="Function, generated data, and LLE",cex.main=1.5)
+points(dx,ydat,pch=20,cex=1.5)
+lines(u,loclin(u,dx,ydat,0.05),lwd=3,col="blue")
+legend(0,1.1*max(ydat),legend=c("LLE based on h=0.05","true regression function"),
+lwd=c(2,3),lty=c("solid","dashed"),col=c("blue","black"),cex=1.5,bty="n")
+legend(0.7,0.5*min(ydat),legend="n=200",cex=1.7,bty="n")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

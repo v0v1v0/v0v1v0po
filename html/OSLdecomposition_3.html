@@ -1,0 +1,347 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fit_OSLcurve</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multi-exponential CW-OSL curve fitting</h2>
+
+<h3>Description</h3>
+
+<p>Fitting function for multi-exponentially decaying CW-OSL measurements,
+based on the algorithm described by Bluszcz &amp; Adamiec (2006).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fit_OSLcurve(
+  curve,
+  K.max = 5,
+  F.threshold = 150,
+  stimulation.intensity = 30,
+  stimulation.wavelength = 470,
+  verbose = TRUE,
+  output.complex = FALSE,
+  parallel.computing = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>curve</code></td>
+<td>
+<p>RLum.Data.Curve or data.frame or matrix (<strong>required</strong>):
+CW-OSL record or average CW-OSL curve created by sum_OSLcurves. If no column <code style="white-space: pre;">⁠$time⁠</code> exists, the first column is defined
+as measurement time (x-axis). Time intervals must be constant. If no column <code style="white-space: pre;">⁠$signal⁠</code> exists, the second column is defined
+as signal values (y-axis). Further columns will be ignored</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K.max</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Maximum number of components <em>K</em>. The computing time increases exponentially with the component number.
+<em>K</em> &lt; 7 is recommended</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>F.threshold</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Fitting stop criterion. If the F-value is lower than this threshold, the fitting procedure stops and the K - 1 fit is returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stimulation.intensity</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Intensity of optical stimulation in <em>mW / cm²</em>. Used to calculate photoionisation cross sections.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stimulation.wavelength</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Wavelength of optical stimulation in <em>nm</em>. Used to calculate photoionisation cross sections.
+If a wavelength between 465 and 480 nm is chosen, the cross sections are set into
+relation with literature values to name the signal components automatically.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Enables console text output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output.complex</code></td>
+<td>
+<p>logical (<em>with default</em>):
+If <code>TRUE</code>, the function returns a list of objects, see section <strong>Value</strong> for further information.
+If <code>FALSE</code>, the function returns a data.frame with the CW-OSL model parameters of the fitting chosen by the F-test.
+Setting the parameter to <code>FALSE</code> is not recommended when fitting a global average curve created by sum_OSLcurves as over-fitting is likely in such cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel.computing</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Enables the use of multiple CPU cores. This increases the execution speed significantly
+but may need administrator rights and/or a firewall exception.
+See DEoptim::DEoptim.control for further information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function assumes multiple exponentially decaying signal components with first-order kinetics:
+</p>
+<p style="text-align: center;"><code class="reqn">I(t) = n_1 \lambda_1 exp(-\lambda_1 t) + n_2 \lambda_2 exp(-\lambda_2 t) + ... + n_K \lambda_K exp(-\lambda_K t)</code>
+</p>
+
+<p>with <code class="reqn">I(t)</code> the CW-OSL signal, <code class="reqn">n</code> the signal component intensity,
+<code class="reqn">\lambda</code> the signal component decay constant and <code class="reqn">K</code> the number of signal components.
+For actual fitting, the integrated version of this formula is used, see Mittelstraß et al. (2021) for details.
+</p>
+<p>The fitting algorithm is an implementation of the <em>hybrid evolutionary-linear algorithm</em> (HELA)
+by Bluszcz &amp; Adamiec (2006). See there or Mittelstraß et al. (in preparation) for details.
+The differential evolution part of HELA is performed by DEoptim::DEoptim.
+The linear regression part of HELA is performed by decompose_OSLcurve.
+The parameter refinement by Levenberg-Marquardt fitting is performed by minpack.lm::nlsLM.
+</p>
+<p><strong>F-test</strong>
+</p>
+<p>Bluszcz &amp; Adamiec (2006) suggest the use of an F-test to determine the correct number of signal components.
+This function compares the residual square sum (<em>RSS_K</em>) value of each
+fitting with the <em>RSS_K-1</em> value of the previous fitting and calculates
+an <em>Improvement-in-fitting-quality</em> criterion:
+</p>
+<p style="text-align: center;"><code class="reqn">F_K = {(RSS_{K-1} - RSS_K)/2} / {RSS_K(N - 2K)}</code>
+</p>
+
+<p>Here, <em>N</em> is the number data points (channels) of the measurement and <em>K</em> is the number of OSL components
+in the fitting model. If <em>F_K</em> falls below the threshold value (<code>F.threshold</code>), the fitting model
+with <em>K</em> components is apparently not significantly better than the <em>K</em> - 1 model of the previous fitting cycle.
+Thus, the <em>K</em> - 1 model will be recommended as fitting solution.
+</p>
+<p><strong>Photoionisation cross sections</strong>
+</p>
+<p>While the function is suited for the analysis of a wide variety of multi-exponential decay problems,
+it is targeted to CW-OSL measurements of quartz under SAR protocol conditions (470 nm stimulation at 125 °C).
+To compare the calculated OSL components with OSL components reported in published literature,
+photoionisation cross sections are calculated using the <code>stimulation.wavelength</code> <code class="reqn">\lambda_{stim}</code>  and
+<code>stimulation.intensity</code> <code class="reqn">\Phi_{stim}</code>:
+</p>
+<p style="text-align: center;"><code class="reqn">\sigma_k=\lambda_k {hc / \Phi_{stim}\lambda_{stim}}</code>
+</p>
+
+<p>Here <code class="reqn">\sigma_k</code> is the photoionisation cross section of component <em>k</em> in cm^2,
+<code class="reqn">\lambda_k</code> the CW-OSL decay constant in s^-1, <em>h</em> the Planck constant and <em>c</em> the speed of light.
+</p>
+<p>If a <code>stimulation.intensity</code> between 460 nm and 485 nm is defined,
+the components are named automatically in accordance to the
+cross-sections published by Durcan and Duller (2011), Jain et al. (2003) and Singarayer and Bailey (2003).
+For the Ultrafast and the Slow4 component, no consistent literature values could be found, so their range
+is tentatively assigned:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<strong>Component</strong> </td>
+<td style="text-align: left;"> <strong>Lower limit (cm^2)</strong> </td>
+<td style="text-align: left;"> <strong>Upper limit (cm^2)</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Ultrafast </td>
+<td style="text-align: left;"> 1e-16 </td>
+<td style="text-align: left;"> 1e-15 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Fast </td>
+<td style="text-align: left;"> 1.9e-17 </td>
+<td style="text-align: left;"> 3.1e-17 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Medium </td>
+<td style="text-align: left;"> 3e-18 </td>
+<td style="text-align: left;"> 9e-18 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Slow1 </td>
+<td style="text-align: left;"> 1e-18 </td>
+<td style="text-align: left;"> 1.85e-18 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Slow2 </td>
+<td style="text-align: left;"> 1.1e-19 </td>
+<td style="text-align: left;"> 4e-19 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Slow3 </td>
+<td style="text-align: left;"> 1e-20 </td>
+<td style="text-align: left;"> 4.67e-20 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Slow4 </td>
+<td style="text-align: left;"> 1e-21 </td>
+<td style="text-align: left;"> 1e-20
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If <code>output.complex = FALSE</code>, a data.frame is returned. It contains the signal decay rates
+and signal intensities of the best fit. The best fit was either chosen by the F-test or
+the last successful fitting iteration.
+</p>
+<p>If <code>output.complex = TRUE</code>, a list of objects is returned:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<strong>Element</strong> </td>
+<td style="text-align: left;"> <strong>Type</strong> </td>
+<td style="text-align: left;"> <strong>Description</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>decay.rates</code> </td>
+<td style="text-align: left;"> <code>numeric</code> </td>
+<td style="text-align: left;"> vector of the best suiting decay rates </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>K.selected</code> </td>
+<td style="text-align: left;"> <code>numeric</code> </td>
+<td style="text-align: left;"> number of components of the best fit </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>F.test</code> </td>
+<td style="text-align: left;"> <code>data.frame</code> </td>
+<td style="text-align: left;"> table containing the F-test parameter and the decay rates of each fitting model </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>F.test.print</code> </td>
+<td style="text-align: left;"> <code>data.frame</code> </td>
+<td style="text-align: left;"> the same table as above, but formated for pretty console and report output </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>info.text</code> </td>
+<td style="text-align: left;"> <code>character</code> </td>
+<td style="text-align: left;"> collected messages from the algorithms </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>component.tables</code> </td>
+<td style="text-align: left;"> <code>list</code> </td>
+<td style="text-align: left;"> result data.frames for all tested models </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>curve</code> </td>
+<td style="text-align: left;"> <code>data.frame</code> </td>
+<td style="text-align: left;"> fitted time-signal-curve </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>components</code> </td>
+<td style="text-align: left;"> <code>data.frame</code> </td>
+<td style="text-align: left;"> best fit; same object as <code>output.complex = FALSE</code> returns </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>fit.results</code> </td>
+<td style="text-align: left;"> <code>list</code> </td>
+<td style="text-align: left;"> list of nls objects for all tested models </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>plot.data</code> </td>
+<td style="text-align: left;"> <code>data.frame</code> </td>
+<td style="text-align: left;"> factorized results for overview plotting with plot_PhotoCrosssections </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>parameters</code> </td>
+<td style="text-align: left;"> <code>list</code> </td>
+<td style="text-align: left;"> function arguments and the needed computing time
+</td>
+</tr>
+</table>
+<h3>Last update</h3>
+
+<p>2022-07-27, DM: Moved residual sum of squares (RSS) calculation during DE-optimization cycle to decompose_OSLcurve() to improve computing time by factor 3 to 4
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dirk Mittelstraß, <a href="mailto:dirk.mittelstrass@luminescence.de">dirk.mittelstrass@luminescence.de</a>
+</p>
+<p>Please cite the package the following way:
+</p>
+<p>Mittelstraß, D., Schmidt, C., Beyer, J., Heitmann, J. and Straessner, A.:
+R package OSLdecomposition: Automated identification and separation of quartz CW-OSL signal components, <em>in preparation</em>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Bluszcz, A., Adamiec, G., 2006. Application of differential evolution to fitting OSL
+decay curves. Radiation Measurements 41, 886–891.
+</p>
+<p>Durcan, J.A., Duller, G.A.T., 2011. The fast ratio: A rapid measure for testing the dominance of the fast component in the initial OSL signal from quartz. Radiation Measurements 46, 1065–1072.
+</p>
+<p>Jain, M., Murray, A.S., Bøtter-Jensen, L., 2003. Characterisation of blue-light stimulated luminescence components in different quartz samples: implications for dose measurement. Radiation Measurements 37, 441–449.
+</p>
+<p>Mittelstraß, D., 2019. Decomposition of weak optically stimulated luminescence signals and
+its application in retrospective dosimetry at quartz (Master thesis). TU Dresden, Dresden.
+</p>
+<p>Singarayer, J.S., Bailey, R.M., 2003. Further investigations of the quartz optically stimulated luminescence components using linear modulation.
+Radiation Measurements, Proceedings of the 10th international Conference on Luminescence and Electron-Spin Resonance Dating (LED 2002) 37, 451–458.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>RLum.OSL_decomposition, sum_OSLcurves, decompose_OSLcurve, plot_OSLcurve,
+plot_PhotoCrosssections, minpack.lm::nlsLM, DEoptim::DEoptim
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create a simple curve with just one component
+curve &lt;- data.frame(
+  X = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+  Y = c(377, 244, 163, 93, 59, 28, 17, 13, 10, 8, 9, 5))
+# Perform fitting
+components &lt;- fit_OSLcurve(curve, F.threshold = 3)
+
+# Display results
+plot_OSLcurve(curve, components)
+
+</code></pre>
+
+
+</div>

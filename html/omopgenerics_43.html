@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>emptyCohortTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an empty cohort_table object</h2>
+
+<h3>Description</h3>
+
+<p>Create an empty cohort_table object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">emptyCohortTable(cdm, name, overwrite = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cdm</code></td>
+<td>
+<p>A cdm_reference to create the table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>Name of the table to create.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>Whether to overwrite an existent table.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The cdm_reference with an empty cohort table
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(omopgenerics)
+library(dplyr, warn.conflicts = FALSE)
+
+person &lt;- tibble(
+  person_id = 1, gender_concept_id = 0, year_of_birth = 1990,
+  race_concept_id = 0, ethnicity_concept_id = 0
+)
+observation_period &lt;- tibble(
+  observation_period_id = 1, person_id = 1,
+  observation_period_start_date = as.Date("2000-01-01"),
+  observation_period_end_date = as.Date("2023-12-31"),
+  period_type_concept_id = 0
+)
+cdm &lt;- cdmFromTables(
+  tables = list("person" = person, "observation_period" = observation_period),
+  cdmName = "test"
+)
+
+cdm &lt;- emptyCohortTable(cdm, "my_empty_cohort")
+
+cdm
+cdm$my_empty_cohort
+settings(cdm$my_empty_cohort)
+attrition(cdm$my_empty_cohort)
+cohortCount(cdm$my_empty_cohort)
+
+</code></pre>
+
+
+</div>

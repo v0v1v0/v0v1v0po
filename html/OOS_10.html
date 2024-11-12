@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>forecast_comparison</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compare forecast accuracy</h2>
+
+<h3>Description</h3>
+
+<p>A function to compare forecasts. Options include: simple forecast error ratios,
+<a href="https://www.sas.upenn.edu/~fdiebold/papers/paper68/pa.dm.pdf">Diebold-Mariano test</a>, and <a href="https://www.nber.org/papers/t0326">Clark and West test</a> for nested models
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">forecast_comparison(
+  Data,
+  baseline.forecast,
+  test = "ER",
+  loss = "MSE",
+  horizon = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Data</code></td>
+<td>
+<p>data.frame: data frame of forecasts, model names, and dates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseline.forecast</code></td>
+<td>
+<p>string: column name of baseline (null hypothesis) forecasts</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test</code></td>
+<td>
+<p>string: which test to use; ER = error ratio, DM = Diebold-Mariano, CM = Clark and West</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loss</code></td>
+<td>
+<p>string: error loss function to use if creating forecast error ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizon</code></td>
+<td>
+<p>int: horizon of forecasts being compared in DM and CW tests</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>numeric test result
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+ # simple time series
+ A = c(1:100) + rnorm(100)
+ date = seq.Date(from = as.Date('2000-01-01'), by = 'month', length.out = 100)
+ Data = data.frame(date = date, A)
+
+ # run forecast_univariate
+ forecast.uni =
+   forecast_univariate(
+     Data = Data,
+     forecast.dates = tail(Data$date,10),
+     method = c('naive','auto.arima', 'ets'),
+     horizon = 1,
+     recursive = FALSE,
+     freq = 'month')
+
+ forecasts =
+   dplyr::left_join(
+     forecast.uni,
+     data.frame(date, observed = A),
+     by = 'date'
+   )
+
+ # run ER (MSE)
+ er.ratio.mse =
+   forecast_comparison(
+     forecasts,
+     baseline.forecast = 'naive',
+     test = 'ER',
+     loss = 'MSE')
+
+
+</code></pre>
+
+
+</div>

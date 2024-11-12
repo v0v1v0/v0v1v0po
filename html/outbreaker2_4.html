@@ -1,0 +1,271 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_config</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set and check parameter settings of outbreaker</h2>
+
+<h3>Description</h3>
+
+<p>This function defines settings for outbreaker.  It takes a list of named
+items as input, performs various checks, set defaults where arguments are
+missing, and return a correct list of settings. If no input is given, it
+returns the default settings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_config(..., data = NULL)
+
+## S3 method for class 'outbreaker_config'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to be passed to other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an optional list of data items as returned by
+<code>outbreaker_data</code>; if provided, this allows for further checks of
+the outbreaker setings.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>outbreaker_config</code> object as returned by <code>create_config</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Acceptables arguments for ... are:
+</p>
+
+<dl>
+<dt>init_tree</dt>
+<dd>
+<p>the tree used to initialize the MCMC. Can be either a
+character string indicating how this tree should be computed, or a vector of
+integers corresponding to the tree itself, where the i-th value corresponds
+to the index of the ancestor of 'i' (i.e., <code>init.tree[i]</code> is the
+ancestor of case <code>i</code>). Accepted character strings are "seqTrack" (uses
+seqTrack algorithm to generate the initial tree - see function
+<code>seqTrack</code> in the package <code>adegenet</code>), "random" (ancestor randomly
+selected from preceding cases), and "star" (all cases coalesce to the first
+case).  Note that for SeqTrack, all cases should have been sequenced.</p>
+</dd>
+<dt>init_alpha</dt>
+<dd>
+<p>a vector of integers indicating the initial values of
+alpha, where the i-th value indicates the ancestor of case 'i'; defaults to
+<code>NULL</code>, in which ancestries are defined from <code>init_tree</code>.</p>
+</dd>
+<dt>init_kappa</dt>
+<dd>
+<p>a (recycled) vector of integers indicating the initial
+values of kappa; defaults to 1.</p>
+</dd>
+<dt>init_t_inf</dt>
+<dd>
+<p>a vector of integers indicating the initial values of
+<code>t_inf</code>, i.e. dates of infection; defaults to <code>NULL</code>, in which case
+the most likely <code>t_inf</code> will be determined from the delay to
+reporting/symptoms distribution, and the dates of reporting/symptoms,
+provided in <code>data</code>.</p>
+</dd>
+<dt>init_mu</dt>
+<dd>
+<p>initial value for the mutation rates</p>
+</dd>
+<dt>init_pi</dt>
+<dd>
+<p>initial value for the reporting probability</p>
+</dd>
+<dt>init_eps</dt>
+<dd>
+<p>initial value for the contact reporting coverage</p>
+</dd>
+<dt>init_lambda</dt>
+<dd>
+<p>initial value for the non-infectious contact rate</p>
+</dd>
+<dt>n_iter</dt>
+<dd>
+<p>an integer indicating the number of iterations in the MCMC,
+including the burnin period</p>
+</dd>
+<dt>move_alpha</dt>
+<dd>
+<p>a vector of logicals indicating, for each case, if the
+ancestry should be estimated ('moved' in the MCMC), or not, defaulting to
+TRUE; the vector is recycled if needed.</p>
+</dd>
+<dt>move_t_inf</dt>
+<dd>
+<p>a vector of logicals indicating, for each case, if the
+dates of infection should be estimated ('moved' in the MCMC), or not,
+defaulting to TRUE; the vector is recycled if needed.</p>
+</dd>
+<dt>move_mu</dt>
+<dd>
+<p>a logical indicating whether the mutation rates
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.</p>
+</dd>
+<dt>move_pi</dt>
+<dd>
+<p>a logical indicating whether the reporting probability
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.</p>
+</dd>
+<dt>move_eps</dt>
+<dd>
+<p>a logical indicating whether the contact reporting coverage
+should be estimated ('moved' in the MCMC), or not at all, defaulting to
+TRUE.</p>
+</dd>
+<dt>move_lambda</dt>
+<dd>
+<p>a logical indicating whether the non-infectious contact
+rate should be estimated ('moved' in the MCMC), or not at all, defaulting to
+TRUE.</p>
+</dd>
+<dt>move_kappa</dt>
+<dd>
+<p>a logical indicating whether the number of generations
+between two successive cases should be estimated ('moved' in the MCMC), or
+not, all defaulting to TRUE.</p>
+</dd>
+<dt>move_pi</dt>
+<dd>
+<p>a logical indicating whether the reporting probability
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.</p>
+</dd>
+<dt>n_iter</dt>
+<dd>
+<p>the number of iterations of the MCMC</p>
+</dd>
+<dt>sample_every</dt>
+<dd>
+<p>the frequency at which MCMC samples are retained for the
+output</p>
+</dd>
+<dt>sd_mu</dt>
+<dd>
+<p>the standard deviation for the Normal proposal for the mutation
+rates</p>
+</dd>
+<dt>sd_pi</dt>
+<dd>
+<p>the standard deviation for the Normal proposal for the reporting
+probability</p>
+</dd>
+<dt>sd_eps</dt>
+<dd>
+<p>the standard deviation for the Normal proposal for the
+contact reporting coverage</p>
+</dd>
+<dt>sd_lambda</dt>
+<dd>
+<p>the standard deviation for the Normal proposal for the
+non-infectious contact rate</p>
+</dd>
+<dt>prop_alpha_move</dt>
+<dd>
+<p>the proportion of ancestries to move at each iteration
+of the MCMC</p>
+</dd>
+<dt>prop_t_inf_move</dt>
+<dd>
+<p>the proportion of infection dates to move at each
+iteration of the MCMC</p>
+</dd>
+<dt>batch_size</dt>
+<dd>
+<p>the size of the batch of random number pre-generated</p>
+</dd>
+<dt>paranoid</dt>
+<dd>
+<p>a logical indicating if the paranoid mode should be used;
+this mode is used for performing additional tests during outbreaker; it makes
+computations substantially slower and is mostly used for debugging purposes.</p>
+</dd>
+<dt>min_date</dt>
+<dd>
+<p>earliest infection date possible, expressed as days since the
+first sampling</p>
+</dd>
+<dt>max_kappa</dt>
+<dd>
+<p>an integer indicating the largest number of generations
+between any two linked cases; defaults to 5</p>
+</dd>
+<dt>prior_mu</dt>
+<dd>
+<p>a numeric value indicating the rate of the exponential prior
+for the mutation rate 'mu'</p>
+</dd>
+<dt>prior_pi</dt>
+<dd>
+<p>a numeric vector of length 2 indicating the first and second
+parameter of the beta prior for the reporting probability 'pi'</p>
+</dd>
+<dt>prior_eps</dt>
+<dd>
+<p>a numeric vector of length 2 indicating the first and second
+parameter of the beta prior for the contact reporting coverage 'eps'</p>
+</dd>
+<dt>prior_lambda</dt>
+<dd>
+<p>a numeric vector of length 2 indicating the first and
+second parameter of the beta prior for the non-infectious contact rate
+'lambda'</p>
+</dd>
+<dt>ctd_directed</dt>
+<dd>
+<p>a logical indicating if the contact tracing data is
+directed or not. If yes, the first column represents the infector and the
+second column the infectee. If ctd is provided as an epicontacts objects,
+directionality will be taken from there.</p>
+</dd>
+<dt>pb</dt>
+<dd>
+<p>a logical indicating if a progress bar should be displayed</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Thibaut Jombart (<a href="mailto:thibautjombart@gmail.com">thibautjombart@gmail.com</a>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>outbreaker_data</code> to check and process data for outbreaker
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## see default settings
+create_config()
+
+## change defaults
+create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
+
+
+
+</code></pre>
+
+
+</div>

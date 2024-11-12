@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pNHPP</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Phylogenetic Non-Homogeneous Poisson Process (pNHPP) method</h2>
+
+<h3>Description</h3>
+
+<p>Wrapper function for applying the pNHPP method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pNHPP(
+  stm_amalg,
+  tree = tree,
+  res = res,
+  add.psd = TRUE,
+  band.width = c("bw.nrd0", "bw.nrd0", "bw.ucv", "bw.bcv", "bw.SJ"),
+  lambda.post.stat = "Mean"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stm_amalg</code></td>
+<td>
+<p>multiSimmap object. A list of amalgamated stochastic maps.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tree</code></td>
+<td>
+<p>simmap or phylo object. A reference tree for discretization.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>integer. A resolution value for the discretization of tree edges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.psd</code></td>
+<td>
+<p>logical. Whether to add pseudodata or not in the 'make_data_NHPP_KDE_Markov_kernel' function. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>band.width</code></td>
+<td>
+<p>character. Bandwidth selectors for the KDE in the 'estimate_band_W' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda.post.stat</code></td>
+<td>
+<p>character. A value with the statistic to be used in the 'make_postPois_KDE' function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the estimated Markov KDE for all edges, the contMap object for plotting the NHPP, and the information necessary for making the edgeplot.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Diego Porto
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+  # Load data.
+  data("hym_stm", "hym_stm_amalg")
+  # Get a reference tree for discretization.
+  tree &lt;- hym_stm[[1]][[1]]
+  # Get ten samples of stochastic maps from head.
+  tree_list &lt;- hym_stm_amalg$head[1:10]
+  # Run the pNHPP method.
+  nhpp_test &lt;- pNHPP(tree_list, tree, res = 500,
+  add.psd = TRUE, band.width = 'bw.nrd', lambda.post.stat = 'Mean')
+
+
+
+</code></pre>
+
+
+</div>

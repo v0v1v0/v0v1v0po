@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>audio_translation_request</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>API audio: translate audio file into English text</h2>
+
+<h3>Description</h3>
+
+<p>Translates audio into English. To get more details, visit
+https://platform.openai.com/docs/api-reference/audio/createTranslation
+https://platform.openai.com/docs/guides/speech-to-text
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">audio_translation_request(
+  file,
+  model,
+  prompt = NULL,
+  response_format = NULL,
+  temperature = NULL,
+  api_key = api_get_key()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>string/raw, content of the input audio file or path to the input audio file to translate, in one of these
+formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>string, ID of the model to use. Only 'whisper-1' is currently available.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prompt</code></td>
+<td>
+<p>string, An optional text to guide the model's style or continue a previous audio segment. The prompt
+should be in English.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_format</code></td>
+<td>
+<p>string, the format of the transcript output, in one of these options: json (default), text,
+srt, verbose_json, or vtt.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>temperature</code></td>
+<td>
+<p>double, the sampling temperature, between 0 and 1. Higher values like 0.8 will make the output
+more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use
+log probability to automatically increase the temperature until certain thresholds are hit. 0 is default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>string, OpenAI API key
+(see https://platform.openai.com/account/api-keys)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>content of the httr response object
+or SimpleError (conditions) enhanced with
+two additional fields: 'status_code' (response$status_code)
+and 'message_long' (built on response content)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+res_content &lt;- audio_translation_request(
+  "path/to/audio/file.mp3",
+  "whisper-1",
+  response_format = "text"
+)
+if (!is_error(res_content)) {
+  message(res_content)
+}
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

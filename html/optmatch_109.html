@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>standardization_scale</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>pooled dispersion for a numeric variable</h2>
+
+<h3>Description</h3>
+
+<p>Dispersion as pooled across a treatment and a control group. By default,
+the measure of dispersion calculated within each group is not the
+ordinary standard deviation as in <code>stats::sd</code> but rather the robust alternative
+encoded in <code>stats::mad</code>.  The dispersion measurements are combined
+by squaring, averaging with weights proportional to one minus the sizes of
+the groups and then taking square roots.  Used in <code>match_on.glm</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">standardization_scale(x, trtgrp, standardizer = NULL, svydesign_ = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>numeric variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trtgrp</code></td>
+<td>
+<p>logical or numeric. If numeric, coerced to logical via <code>!</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>standardizer</code></td>
+<td>
+<p>function, <code>NULL</code> or numeric of length 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>svydesign_</code></td>
+<td>
+<p>ordinarily <code>NULL</code>, but may also be a
+<code>survey.design2</code>; see Details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A non-NULL <code>svydesign_</code> parameter indicates that the dispersion
+calculations are to be made respecting the weighting scheme implicit in
+that <code>survey.design2</code> object. If <code>standardizer</code> is <code>NULL</code>,
+one gets a calculation in the style of <code>stats::mad</code> but with weights,
+performed by <code>optmatch:::svy_sd</code>; for a pooling of weighted standard
+deviations, one would pass a non-<code>NULL</code> <code>svydesign_</code> parameter along
+with <code>standardizer=optmatch:::svy_sd</code>.
+(More generally, the provided <code>standardizer</code>
+function should accept as a sole argument a <code>survey.design2</code> object,
+with <code>nrows(svydesign_$variables)</code> equal to the lengths of <code>x</code> and
+<code>trtgrp</code>.  This object is expected to carry a numeric variable ‘<code>x</code>’,
+and the <code>standardizer</code> function is to return the dispersion of this variable.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>numeric of length 1
+</p>
+
+
+</div>

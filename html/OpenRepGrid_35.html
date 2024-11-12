@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calcCoordsBorders</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Coordinates of a surrounding rectangle in direction of a given vector.</h2>
+
+<h3>Description</h3>
+
+<p>An arbitrary numeric vector in 2D is to be extended so it will
+end on the borders of a surrounding rectangle of a given size.
+Currently the vector is supposed to start in the origin <code>c(0,0)</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calcCoordsBorders(x, y, xmax = 1, ymax = 1, cx = 0, cy = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>numeric vector of x coordinates x coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>numeric vector of y coordinates x coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmax</code></td>
+<td>
+<p>maximal x value for surrounding rectangle (default is <code>1</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ymax</code></td>
+<td>
+<p>maximal y value for surrounding rectangle (default is <code>1</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cx</code></td>
+<td>
+<p>center of rectangle in x direction (not yet supported).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cy</code></td>
+<td>
+<p>center of rectangle in x direction (not yet supported).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>dataframe</code> containing the x and y coordinates for the
+extended vectors.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+calcCoordsBorders(1:10, 10:1)
+
+x &lt;- c(-100:0, 0:100, 100:0, 0:-100) / 10
+y &lt;- c(0:100, 100:0, -(0:100), -(100:0)) / 10
+xy1 &lt;- calcCoordsBorders(x, y)
+xy2 &lt;- calcCoordsBorders(x, y, xm = 1.2, ym = 1.2)
+plot(xy2[, 1], xy2[, 2], type = "n")
+segments(xy1[, 1], xy1[, 2], xy2[, 1], xy2[, 2])
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

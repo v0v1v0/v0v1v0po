@@ -1,0 +1,158 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_read_bbox_notes</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve notes by bounding box</h2>
+
+<h3>Description</h3>
+
+<p>Returns the existing notes in the specified bounding box. The notes will be ordered by the date of their last change,
+the most recent one will be first.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_read_bbox_notes(
+  bbox,
+  limit = 100,
+  closed = 7,
+  format = c("R", "sf", "xml", "rss", "json", "gpx")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>Coordinates for the area to retrieve the notes from (<code style="white-space: pre;">⁠left,bottom,right,top⁠</code>). Floating point numbers in
+degrees, expressing a valid bounding box, not larger than the configured size limit, 25 square degrees, not
+overlapping the dateline.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>Specifies the number of entries returned at max. A value between 1 and 10000 is valid. Default to 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>closed</code></td>
+<td>
+<p>Specifies the number of days a note needs to be closed to no longer be returned. A value of 0 means
+only open notes are returned. A value of -1 means all notes are returned. Default to 7.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default), <code>"sf"</code> <code>"xml"</code>, <code>"rss"</code>, <code>"json"</code> or <code>"gpx"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If <code>format = "R"</code>, returns a data frame with one map note per row. If <code>format = "sf"</code>, returns a <code>sf</code> object from
+<span class="pkg">sf</span>.
+</p>
+
+
+<h4><code>format = "xml"</code></h4>
+
+<p>Returns a xml2::xml_document with the following format:
+</p>
+<div class="sourceCode xml"><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="https://www.openstreetmap.org/copyright" license="https://opendatacommons.org/licenses/odbl/1-0/"&gt;
+	&lt;note lon="0.1000000" lat="51.0000000"&gt;
+		&lt;id&gt;16659&lt;/id&gt;
+		&lt;url&gt;https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659&lt;/url&gt;
+		&lt;comment_url&gt;https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/comment&lt;/comment_url&gt;
+		&lt;close_url&gt;https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/close&lt;/close_url&gt;
+		&lt;date_created&gt;2019-06-15 08:26:04 UTC&lt;/date_created&gt;
+		&lt;status&gt;open&lt;/status&gt;
+		&lt;comments&gt;
+			&lt;comment&gt;
+				&lt;date&gt;2019-06-15 08:26:04 UTC&lt;/date&gt;
+				&lt;uid&gt;1234&lt;/uid&gt;
+				&lt;user&gt;userName&lt;/user&gt;
+				&lt;user_url&gt;https://master.apis.dev.openstreetmap.org/user/userName&lt;/user_url&gt;
+				&lt;action&gt;opened&lt;/action&gt;
+				&lt;text&gt;ThisIsANote&lt;/text&gt;
+				&lt;html&gt;&amp;lt;p&amp;gt;ThisIsANote&amp;lt;/p&amp;gt;&lt;/html&gt;
+			&lt;/comment&gt;
+			...
+		&lt;/comments&gt;
+	&lt;/note&gt;
+	...
+&lt;/osm&gt;
+</pre></div>
+
+
+
+<h4><code>format = "json"</code></h4>
+
+<p>Returns a list with the following json structure:
+</p>
+<div class="sourceCode json"><pre>{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {"type": "Point", "coordinates": [0.1000000, 51.0000000]},
+   "properties": {
+    "id": 16659,
+    "url": "https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659.json",
+    "comment_url": "https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/comment.json",
+    "close_url": "https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/close.json",
+    "date_created": "2019-06-15 08:26:04 UTC",
+    "status": "open",
+    "comments": [
+     {"date": "2019-06-15 08:26:04 UTC", "uid": 1234, "user": "userName", "user_url": "https://master.apis.dev.openstreetmap.org/user/userName", "action": "opened", "text": "ThisIsANote", "html": "&lt;p&gt;ThisIsANote&lt;/p&gt;"},
+     ...
+    ]
+   }
+  }
+ ]
+}
+</pre></div>
+
+
+
+<h4>
+<code>format = "rss"</code> &amp; <code>format = "gpx"</code>
+</h4>
+
+<p>For <code>format</code> in <code>"rss"</code>, and <code>"gpx"</code>, a xml2::xml_document with the corresponding format.
+</p>
+
+
+
+<h3>Note</h3>
+
+<p>The comment properties (<code>uid</code>, <code>user</code>, <code>user_url</code>) will be omitted if the comment was anonymous.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other get notes' functions: 
+<code>osm_feed_notes()</code>,
+<code>osm_get_notes()</code>,
+<code>osm_search_notes()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">notes &lt;- osm_read_bbox_notes(bbox = c(3.7854767, 39.7837403, 4.3347931, 40.1011851), limit = 10)
+## bbox as a character value also works (bbox = "3.7854767,39.7837403,4.3347931,40.1011851").
+notes
+</code></pre>
+
+
+</div>

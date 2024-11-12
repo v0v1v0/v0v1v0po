@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_games</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fetch the games from the opendota API.</h2>
+
+<h3>Description</h3>
+
+<p>Takes a vector of numerical value match ID's of dota2 replays, and attempts to
+fetch them from the opendota API only parsed matches are output.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_games(game_vec, wait_time = 1, output = "all", verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>game_vec</code></td>
+<td>
+<p>Numeric vector of match ID's</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wait_time</code></td>
+<td>
+<p>how long to wait (in seconds) between each API call, default is 1 sec (opendota
+asks you not to send more than 1 call per second)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Defaulted to "all", which will extract entire JSON, if not all, it should have the
+path to an R file that will be sourced and create some output, not the R file must also
+output to output_list()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Give live information on status of parsing, if FALSE no text is output to console.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list of objects, if output == "all" it's a list of JSON outputs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+match_ids &lt;- get_game_list(num_matches = 100,
+from_time = "20170101",
+to_time = "20170423",
+min_mmr = 4000)
+get_games(match_ids)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

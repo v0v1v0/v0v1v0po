@@ -1,0 +1,172 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>err_vs_theta0_plot_for_homo_design</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plots a standard error estimate of thetahat (slope over intercept) over a range of possible theta0 values
+in order to investigate robustness of the the initial theta0 guess.</h2>
+
+<h3>Description</h3>
+
+<p>Plots a standard error estimate of thetahat (slope over intercept) over a range of possible theta0 values
+in order to investigate robustness of the the initial theta0 guess.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">err_vs_theta0_plot_for_homo_design(
+  n,
+  xmin,
+  xmax,
+  theta,
+  theta0_min,
+  theta0_max,
+  theta0 = NULL,
+  beta0 = 1,
+  sigma = 1,
+  RES = 500,
+  Nsim = 5000,
+  error_est = function(est) {
+     quantile(est, 0.99) - quantile(est, 0.01)
+ },
+  theta_logged = TRUE,
+  error_pct = TRUE,
+  plot_rhos = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The number of experimental runs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmin</code></td>
+<td>
+<p>The minimum value of the independent variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmax</code></td>
+<td>
+<p>The maximum value of the independent variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>The putative true value. This is used to see how much efficiency given up by designing it for <code>theta0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta0_min</code></td>
+<td>
+<p>Simulating over different guesses of theta0, this is the minimum guess.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta0_max</code></td>
+<td>
+<p>Simulating over different guesses of theta0, this is the maximum guess.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta0</code></td>
+<td>
+<p>The guess used to construct the experimental design. Specify only if you wish to see this 
+value plotted. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta0</code></td>
+<td>
+<p>A guess to be used for the intercept. Defaults to <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>A guess to be used for the homoskedastic variance of the measurement errors. If known accurately,
+then the standard errors (i.e. the y-axis on the plot) will be accurate. Otherwise, the standard
+errors are useful only when compared to each other in a relative sense. Defaults to <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>RES</code></td>
+<td>
+<p>The number of points on the x-axis to simulate. Higher numbers will give smoother results. Default is <code>20</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Nsim</code></td>
+<td>
+<p>The number of models to be simulated for estimating the standard error at each value on the x-axis. Default is <code>1000</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error_est</code></td>
+<td>
+<p>The error metric for the estimates. The sample standard deviation (i.e. <code>sd</code>) 
+is unstable at low sample sizes. The default is the 90 percentile minus the 10 percentile.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta_logged</code></td>
+<td>
+<p>Should the values of theta be logged? Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error_pct</code></td>
+<td>
+<p>Plot error as a percentage increase from minimum. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_rhos</code></td>
+<td>
+<p>Plot an additional graph of rho by theta0. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to the <code>plot</code> function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with original parameters as well as data from the simulation
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adam Kapelner
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+xmin = 5 / 15
+xmax = 19 / 1
+n = 10
+theta0 = 0.053
+plot_info = err_vs_theta0_plot_for_homo_design(
+  n, xmin, xmax, theta0, theta0_min = 0.001, theta0_max = 1
+)
+
+</code></pre>
+
+
+</div>

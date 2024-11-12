@@ -1,0 +1,169 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxSE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute standard errors in OpenMx</h2>
+
+<h3>Description</h3>
+
+<p>This function allows you to obtain standard errors for arbitrary
+expressions, named entities, and algebras.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxSE(
+  x,
+  model,
+  details = FALSE,
+  cov,
+  forceName = FALSE,
+  silent = FALSE,
+  ...,
+  defvar.row = as.integer(NA),
+  data = "data"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the parameter to get SEs on (reference or expression)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>the <code>mxModel</code> to use.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p>logical. Whether to provide further details, e.g. the full
+sampling covariance matrix of x.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov</code></td>
+<td>
+<p>optional matrix of covariances among the free parameters. If 
+missing, the inverse Hessian from the fitted model is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>forceName</code></td>
+<td>
+<p>logical; defaults to <code>FALSE</code>.  Set to <code>TRUE</code>
+if <code>x</code> is an R symbol that refers to a character string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>logical; defaults to <code>FALSE</code>.  If <code>TRUE</code>,
+message-printing is suppressed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further named arguments passed to <code>mxEval</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>defvar.row</code></td>
+<td>
+<p>which row to load for any definition variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>name of data from which to load definition variables</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>x can be the name of an algebra, a bracket address, named entity
+or arbitrary expression.
+When the <code>details</code> argument is TRUE, the full
+sampling covariance matrix of <code>x</code> is also returned as part of a list.
+The square root of the diagonals of this sampling covariance matrix are
+the standard errors.
+</p>
+<p>When supplying the <code>cov</code> argument, take care that the free parameter
+covariance matrix is given, not the information matrix.  These 
+two are inverses of one another.
+</p>
+<p>This function uses the delta method to compute the standard error of arbitrary
+and possibly nonlinear functions of the free parameters.  The delta method
+makes a first-order Taylor approximation of the nonlinear function.  The
+nonlinear function is a map from all the free parameters to some transformed
+subset of parameters: the linearization of this map is given by the Jacobian
+<code class="reqn">J</code>.  In equation form, the delta method computes standard errors by the following:
+</p>
+<p style="text-align: center;"><code class="reqn">J^T C J</code>
+</p>
+
+<p>where <code class="reqn">J</code> is the Jacobian of the nonlinear parameter transformation
+and <code class="reqn">C</code> is the covariance matrix of the free parameters (e.g., two
+times the inverse of the Hessian of the minus two log likelihood function).
+</p>
+
+
+<h3>Value</h3>
+
+<p>SE value(s) returned as a matrix when <code>details</code> is FALSE.
+When <code>details</code> is TRUE, a list of the SE value(s) and the full 
+sampling covariance matrix.
+</p>
+
+
+<h3>References</h3>
+
+<p>- <a href="https://en.wikipedia.org/wiki/Standard_error">https://en.wikipedia.org/wiki/Standard_error</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>- <code>mxCI</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OpenMx)
+data(demoOneFactor)
+# ===============================
+# = Make and run a 1-factor CFA =
+# ===============================
+
+latents  = c("G") # the latent factor
+manifests = names(demoOneFactor) # manifest variables to be modeled
+# ===========================
+# = Make and run the model! =
+# ===========================
+m1 &lt;- mxModel("One Factor", type = "RAM", 
+	manifestVars = manifests, latentVars = latents, 
+	mxPath(from = latents, to = manifests, labels=paste0('lambda', 1:5)),
+	mxPath(from = manifests, arrows = 2),
+	mxPath(from = latents, arrows = 2, free = FALSE, values = 1),
+	mxData(cov(demoOneFactor), type = "cov", numObs = 500)
+)
+m1 = mxRun(m1)
+mxSE(lambda5, model = m1)
+mxSE(lambda1^2, model = m1)
+</code></pre>
+
+
+</div>

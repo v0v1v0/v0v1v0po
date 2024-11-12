@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OHPL.RMSEP</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute RMSEP, MAE, and Q2 for a test set</h2>
+
+<h3>Description</h3>
+
+<p>Makes predictions on new data and computes the performance evaluation
+metrics RMSEP, MAE, and Q2.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OHPL.RMSEP(object, newx, newy)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Object of class <code>OHPL</code> fitted by <code>OHPL()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newx</code></td>
+<td>
+<p>Predictor matrix of the new data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newy</code></td>
+<td>
+<p>Response matrix of the new data (matrix with one column).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of the performance metrics.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate simulation data
+dat &lt;- OHPL.sim(
+  n = 100, p = 100, rho = 0.8,
+  coef = rep(1, 10), snr = 3, p.train = 0.5,
+  seed = 1010
+)
+
+# Split training and test set
+x &lt;- dat$x.tr
+y &lt;- dat$y.tr
+x.test &lt;- dat$x.te
+y.test &lt;- dat$y.te
+
+# Fit the OHPL model
+fit &lt;- OHPL(x, y, maxcomp = 3, gamma = 0.5, G = 10, type = "max")
+
+# Compute evaluation metric RMSEP, Q2 and MAE for the test set
+perf &lt;- OHPL.RMSEP(fit, x.test, y.test)
+perf$RMSEP
+perf$Q2
+perf$MAE
+</code></pre>
+
+
+</div>

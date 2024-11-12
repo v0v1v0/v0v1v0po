@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>xml_attr_mod</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>adds or updates attribute(s) in existing xml node</h2>
+
+<h3>Description</h3>
+
+<p>Needs xml node and named character vector as input. Modifies
+the arguments of each first child found in the xml node and adds or updates
+the attribute vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">xml_attr_mod(
+  xml_content,
+  xml_attributes,
+  escapes = FALSE,
+  declaration = FALSE,
+  remove_empty_attr = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xml_content</code></td>
+<td>
+<p>some valid xml_node</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xml_attributes</code></td>
+<td>
+<p>R vector of named attributes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>escapes</code></td>
+<td>
+<p>bool if escapes should be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>declaration</code></td>
+<td>
+<p>bool if declaration should be imported</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove_empty_attr</code></td>
+<td>
+<p>bool remove empty attributes or ignore them</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If a named attribute in <code>xml_attributes</code> is "" remove the attribute
+from the node.
+If <code>xml_attributes</code> contains a named entry found in the xml node, it is
+updated else it is added as attribute.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  # add single node
+    xml_node &lt;- "&lt;a foo=\"bar\"&gt;openxlsx2&lt;/a&gt;&lt;b /&gt;"
+    xml_attr &lt;- c(qux = "quux")
+    # "&lt;a foo=\"bar\" qux=\"quux\"&gt;openxlsx2&lt;/a&gt;&lt;b qux=\"quux\"/&gt;"
+    xml_attr_mod(xml_node, xml_attr)
+
+  # update node and add node
+    xml_node &lt;- "&lt;a foo=\"bar\"&gt;openxlsx2&lt;/a&gt;&lt;b /&gt;"
+    xml_attr &lt;- c(foo = "baz", qux = "quux")
+    # "&lt;a foo=\"baz\" qux=\"quux\"&gt;openxlsx2&lt;/a&gt;&lt;b foo=\"baz\" qux=\"quux\"/&gt;"
+    xml_attr_mod(xml_node, xml_attr)
+
+  # remove node and add node
+    xml_node &lt;- "&lt;a foo=\"bar\"&gt;openxlsx2&lt;/a&gt;&lt;b /&gt;"
+    xml_attr &lt;- c(foo = "", qux = "quux")
+    # "&lt;a qux=\"quux\"&gt;openxlsx2&lt;/a&gt;&lt;b qux=\"quux\"/&gt;"
+    xml_attr_mod(xml_node, xml_attr)
+</code></pre>
+
+
+</div>

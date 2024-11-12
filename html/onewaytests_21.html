@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onewaytests</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+One-Way Tests for Independent Groups Designs
+</h2>
+
+<h3>Description</h3>
+
+<p><code>onewaytests</code> is a function covering 22 one-way tests for independent groups designs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onewaytests(formula, data, method = c("aov", "af", "ag", "agp", "ap", "aw", "b2", 
+  "bf", "box", "cochran", "gtb", "gtf", "james", "johansen", "kw", "mbf", "pf", 
+  "ss", "wa", "welch", "welch_tw", "wgf"), N = 10^5, rate = 0.1, alpha = 0.05, 
+  na.rm = TRUE, verbose = TRUE)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>a formula of the form <code>lhs ~ rhs</code> where <code>lhs</code> gives the sample values and <code>rhs</code> the corresponding groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a tibble or data frame containing the variables in <code>formula</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the one-way test. There are 22 tests available: one-way analysis of variance ("aov"), 
+Welch's heteroscedastic F test ("welch"), Welch's heteroscedastic F test with trimmed means and Winsorized variances ("welch_tw"), 
+Brown-Forsythe test ("bf"), Alexander-Govern test ("ag"), James second order test ("james"), 
+Kruskal-Wallis test ("kw"), Scott-Smith test ("ss"), Box F test ("bf"), Generalized tests equivalent to Parametric Bootstrap ("gtb") and 
+Fiducial ("gtf") tests, Johansen F test ("johansen"), Alvandi's F test ("af"), Alvandi's generalized p-value ("agp"), approximate F test ("af"), 
+B square test ("b2"), Cochran test ("cochran"), Weerahandi's generalized F test ("wgf"), modified Brown-Forsythe test ("mbf"), 
+adjusted Welch's heteroscedastic F test ("aw"), Welch-Aspin test ("wa"), Permutation F test ("pf"). Default is set to "aov".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>the number of bootstrap samples for Weerahandi's generalized F test, Alvandi's generalized p-value, and permutation F test. Default is set to 10^5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rate</code></td>
+<td>
+<p>the rate of observations trimmed and winsorized from each tail of the distribution for Welch's heteroscedastic F test 
+with trimmed means and Winsorized variances. Default is set to rate = 0.1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>the level of significance to assess the statistical difference. Default is
+set to alpha = 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>a logical value indicating whether NA values should be stripped before the computation proceeds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>a logical for printing output to R console.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>See the corresponding one-way test function.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Merve Kasikci, Osman Dag</p>
+
+
+<h3>References</h3>
+
+<p>Dag, O., Dolgun, A., Konar, N.M. (2018). onewaytests: An R Package for One-Way Tests in Independent Groups Designs. <em>The R Journal</em>, <b>10:1</b>, 175-199.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(onewaytests)
+
+# One-Way Analysis of Variance
+onewaytests(Sepal.Length ~ Species, data = iris, method = "aov")
+
+# Alexander-Govern test
+onewaytests(Sepal.Length ~ Species, data = iris, method = "ag")
+
+# Johansen F test
+onewaytests(Sepal.Length ~ Species, data = iris, method = "johansen")
+
+out &lt;- onewaytests(Sepal.Length ~ Species, data = iris, method = "aov")
+paircomp(out)
+
+
+</code></pre>
+
+
+</div>

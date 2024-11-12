@@ -1,0 +1,52 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>AbstractClass</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an abstract R6 Class</h2>
+
+<h3>Description</h3>
+
+<p>Creates an abstract R6 class by placing a thin wrapper around R6::R6Class
+which causes an error to be thrown if the class is directly constructed
+instead of one of its descendants.
+</p>
+
+
+<h3>Details</h3>
+
+<p>An abstract class is a class that cannot be constructed directly.
+Instead they are used to define common fields/methods for child classes
+that inherit from them.
+</p>
+<p>All arguments of R6::R6Class can be used as usual, see full
+details at R6::R6Class.
+</p>
+
+
+<h3>References</h3>
+
+<p>Gamma, E., Helm, R., Johnson, R., &amp; Vlissides, J. (1996).
+Design Patterns: Elements of Reusable Software.
+Addison-Wesley Professional Computing Series (p. 395).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(R6)
+
+ab &lt;- AbstractClass("abstract", public = list(hello = "Hello World"))
+## Not run: 
+# errors
+ab$new()
+
+## End(Not run)
+child &lt;- R6Class("child", inherit = ab)
+child$new()$hello
+
+</code></pre>
+
+
+</div>

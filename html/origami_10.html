@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fold_funs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cross-Validation Schemes</h2>
+
+<h3>Description</h3>
+
+<p>These functions represent different cross-validation schemes that can be
+used with <span class="pkg">origami</span>. They should be used as options for the
+<code>fold_fun</code> argument to <code>make_folds</code>, which will call the
+requested function specify <code>n</code>, based on its arguments, and pass any
+remaining arguments (e.g. <code>V</code> or <code>pvalidation</code>) on.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">folds_vfold(n, V = 10L)
+
+folds_resubstitution(n)
+
+folds_loo(n)
+
+folds_montecarlo(n, V = 1000L, pvalidation = 0.2)
+
+folds_bootstrap(n, V = 1000L)
+
+folds_rolling_origin(n, first_window, validation_size, gap = 0L, batch = 1L)
+
+folds_rolling_window(n, window_size, validation_size, gap = 0L, batch = 1L)
+
+folds_rolling_origin_pooled(
+  n,
+  t,
+  id = NULL,
+  time = NULL,
+  first_window,
+  validation_size,
+  gap = 0L,
+  batch = 1L
+)
+
+folds_rolling_window_pooled(
+  n,
+  t,
+  id = NULL,
+  time = NULL,
+  window_size,
+  validation_size,
+  gap = 0L,
+  batch = 1L
+)
+
+folds_vfold_rolling_origin_pooled(
+  n,
+  t,
+  id = NULL,
+  time = NULL,
+  V = 10L,
+  first_window,
+  validation_size,
+  gap = 0L,
+  batch = 1L
+)
+
+folds_vfold_rolling_window_pooled(
+  n,
+  t,
+  id = NULL,
+  time = NULL,
+  V = 10L,
+  window_size,
+  validation_size,
+  gap = 0L,
+  batch = 1L
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>An integer indicating the number of observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>V</code></td>
+<td>
+<p>An integer indicating the number of folds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalidation</code></td>
+<td>
+<p>A <code>numeric</code> indicating the proportion of observation
+to be placed in the validation fold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first_window</code></td>
+<td>
+<p>An integer indicating the number of observations in the
+first training sample.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validation_size</code></td>
+<td>
+<p>An integer indicating the number of points in the
+validation samples; should be equal to the largest forecast horizon.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gap</code></td>
+<td>
+<p>An integer indicating the number of points not included in the
+training or validation samples. The default is zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>batch</code></td>
+<td>
+<p>An integer indicating increases in the number of time points
+added to the training set in each iteration of cross-validation. Applicable
+for larger time-series. The default is one.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window_size</code></td>
+<td>
+<p>An integer indicating the number of observations in each
+training sample.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>An integer indicating the total amount of time to consider per
+time-series sample.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>An optional vector of unique identifiers corresponding to the time
+vector. These can be used to subset the time vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>An optional vector of integers of time points observed for each
+subject in the sample.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of <code>Fold</code>s.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other fold generation functions: 
+<code>fold_from_foldvec()</code>,
+<code>folds2foldvec()</code>,
+<code>make_folds()</code>,
+<code>make_repeated_folds()</code>
+</p>
+
+
+</div>

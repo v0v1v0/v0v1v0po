@@ -1,0 +1,420 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ProjectProblem-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Project problem class</h2>
+
+<h3>Description</h3>
+
+<p>Project problem class
+</p>
+
+
+<h3>Description</h3>
+
+<p>This class is used to represent project prioritization problems. A
+project prioritization problem has actions, projects,
+and features. Features are the biological entities that need to
+be conserved (e.g. species, populations, ecosystems). Actions are
+real-world management actions that can be implemented for conservation
+purposes (e.g. habitat restoration, monitoring, pest eradication). Each
+action should have a known cost, and this usually means that each
+action should have a defined spatial extent and time period (though this
+is not necessary). Conservation projects are groups of management actions
+(they can also comprise a singular action too), and each project is
+associated with a probability of success if all of its associated actions
+are funded. To determine which projects should be funded, each project is
+associated with an probability of persistence for the
+features that they benefit. These values should indicate the
+probability that each feature will persist if only that project funded
+and not the additional benefit relative to the baseline project. Missing
+(<code>NA</code>) values should be used to indicate which projects do not
+enhance the probability of certain features.
+</p>
+<p>Given these data, a project prioritization problem involves making a
+decision about which actions should be funded or not—and in turn, which
+projects should be funded or not—to maximize or minimize a specific
+objective whilst meeting specific constraints. The objective for a project
+prioritization problem will <em>always</em> pertain to the probability that
+features are expected to persist. For example, an objective for a project
+prioritization problem could be to maximize the maximize the total amount of
+species that are expected to persist, or minimize the total cost of the
+funded actions subject to constraints which ensure that each feature meets a
+target level of persistence. The constraints in a project prioritization
+problem can be used to specify additional requirements (e.g. certain
+actions must be funded). Finally, a project prioritization problem—unlike
+an optimization problem—also requires a method to solve the problem.
+<strong>This class represents a planning problem, to actually build and then
+solve a planning problem, use the <code>problem()</code> function. Only
+experts should use this class directly.</strong>
+</p>
+
+
+<h3>Fields</h3>
+
+
+<dl>
+<dt>$data</dt>
+<dd>
+<p><code>list</code> object containing data.</p>
+</dd>
+<dt>$objective</dt>
+<dd>
+<p>Objective object used to represent how
+the targets relate to the solution.</p>
+</dd>
+<dt>$decisions</dt>
+<dd>
+<p>Decision object used to represent the
+type of decision made on planning units.</p>
+</dd>
+<dt>$targets</dt>
+<dd>
+<p>Target object used to represent
+representation targets for features.</p>
+</dd>
+<dt>$weights</dt>
+<dd>
+<p>Weight object used to represent
+feature weights.</p>
+</dd>
+<dt>$constraints</dt>
+<dd>
+<p>Collection object used to represent
+additional constraints that the problem is subject to.</p>
+</dd>
+<dt>$solver</dt>
+<dd>
+<p>Solver object used to solve the problem.</p>
+</dd>
+</dl>
+<h3>Usage</h3>
+
+<p><code>x$print()</code>
+</p>
+<p><code>x$show()</code>
+</p>
+<p><code>x$repr()</code>
+</p>
+<p><code>x$get_data(name)</code>
+</p>
+<p><code>x$set_data(name, value)</code>
+</p>
+<p><code>number_of_actions()</code>
+</p>
+<p><code>number_of_projects()</code>
+</p>
+<p><code>number_of_features()</code>
+</p>
+<p><code>action_names()</code>
+</p>
+<p><code>project_names()</code>
+</p>
+<p><code>feature_names()</code>
+</p>
+<p><code>feature_weights()</code>
+</p>
+<p><code>feature_phylogeny()</code>
+</p>
+<p><code>action_costs()</code>
+</p>
+<p><code>project_costs()</code>
+</p>
+<p><code>project_success_probabilities()</code>
+</p>
+<p><code>pf_matrix()</code>
+</p>
+<p><code>epf_matrix()</code>
+</p>
+<p><code>pa_matrix()</code>
+</p>
+<p><code>x$add_objective(obj)</code>
+</p>
+<p><code>x$add_decisions(dec)</code>
+</p>
+<p><code>x$add_constraint(con)</code>
+</p>
+<p><code>x$add_solver(sol)</code>
+</p>
+<p><code>x$add_targets(targ)</code>
+</p>
+<p><code>x$add_weights(wt)</code>
+</p>
+<p><code>x$get_constraint_parameter(id)</code>
+</p>
+<p><code>x$set_constraint_parameter(id, value)</code>
+</p>
+<p><code>x$render_constraint_parameter(id)</code>
+</p>
+<p><code>x$render_all_constraint_parameters()</code>
+</p>
+<p><code>x$get_objective_parameter(id)</code>
+</p>
+<p><code>x$set_objective_parameter(id, value)</code>
+</p>
+<p><code>x$render_objective_parameter(id)</code>
+</p>
+<p><code>x$render_all_objective_parameters()</code>
+</p>
+<p><code>x$get_solver_parameter(id)</code>
+</p>
+<p><code>x$set_solver_parameter(id, value)</code>
+</p>
+<p><code>x$render_solver_parameter(id)</code>
+</p>
+<p><code>x$render_all_solver_parameters()</code>
+</p>
+
+
+<h3>Arguments</h3>
+
+
+<dl>
+<dt>name</dt>
+<dd>
+<p><code>character</code> name for object.</p>
+</dd>
+<dt>value</dt>
+<dd>
+<p>an object.</p>
+</dd>
+<dt>obj</dt>
+<dd>
+<p>Objective object.</p>
+</dd>
+<dt>wt</dt>
+<dd>
+<p>Weight object.</p>
+</dd>
+<dt>dec</dt>
+<dd>
+<p>Decision object.</p>
+</dd>
+<dt>con</dt>
+<dd>
+<p>Constraint object.</p>
+</dd>
+<dt>sol</dt>
+<dd>
+<p>Solver object.</p>
+</dd>
+<dt>targ</dt>
+<dd>
+<p>Target object.</p>
+</dd>
+<dt>wt</dt>
+<dd>
+<p>Weight object.</p>
+</dd>
+<dt>id</dt>
+<dd>
+<p><code>Id</code> object that refers to a specific parameter.</p>
+</dd>
+<dt>value</dt>
+<dd>
+<p>object that the parameter value should become.</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+
+<dl>
+<dt>print</dt>
+<dd>
+<p>print the object.</p>
+</dd>
+<dt>show</dt>
+<dd>
+<p>show the object.</p>
+</dd>
+<dt>repr</dt>
+<dd>
+<p>return <code>character</code> representation of the object.</p>
+</dd>
+<dt>get_data</dt>
+<dd>
+<p>return an object stored in the <code>data</code> field with
+the corresponding <code>name</code>. If the object is not present in the
+<code>data</code> field, a <code>waiver</code> object is returned.</p>
+</dd>
+<dt>set_data</dt>
+<dd>
+<p>store an object stored in the <code>data</code> field with
+the corresponding name. If an object with that name already
+exists then the object is overwritten.</p>
+</dd>
+<dt>number_of_actions</dt>
+<dd>
+<p><code>integer</code> number of actions.</p>
+</dd>
+<dt>number_of_projects</dt>
+<dd>
+<p><code>integer</code> number of projects.</p>
+</dd>
+<dt>number_of_features</dt>
+<dd>
+<p><code>integer</code> number of features.</p>
+</dd>
+<dt>action_names</dt>
+<dd>
+<p><code>character</code> names of actions in the problem.</p>
+</dd>
+<dt>project_names</dt>
+<dd>
+<p><code>character</code> names of projects in the problem.</p>
+</dd>
+<dt>feature_names</dt>
+<dd>
+<p><code>character</code> names of features in the problem.</p>
+</dd>
+<dt>feature_weights</dt>
+<dd>
+<p><code>character</code> feature weights.</p>
+</dd>
+<dt>feature_phylogeny</dt>
+<dd>
+<p><code>ape::phylo()</code> phylogenetic tree object.</p>
+</dd>
+<dt>action_costs</dt>
+<dd>
+<p><code>numeric</code> costs for each action.</p>
+</dd>
+<dt>project_costs</dt>
+<dd>
+<p><code>numeric</code> costs for each project.</p>
+</dd>
+<dt>project_success_probabilities</dt>
+<dd>
+<p><code>numeric</code> probability that
+each project will succeed.</p>
+</dd>
+<dt>pf_matrix</dt>
+<dd>
+<p>Matrix::dgCMatrix object denoting the enhanced
+probability that features will persist if different projects are funded.</p>
+</dd>
+<dt>epf_matrix</dt>
+<dd>
+<p>Matrix::dgCMatrix object denoting the enhanced
+probability that features is expected to persist if different projects are
+funded. This is calculated as the <code>pf_matrix</code> multiplied by the
+project success probabilities.</p>
+</dd>
+<dt>pa_matrix</dt>
+<dd>
+<p>Matrix::dgCMatrix object indicating which actions are
+associated with which projects.</p>
+</dd>
+<dt>feature_targets</dt>
+<dd>
+<p><code>tibble::tibble()</code> with feature targets.</p>
+</dd>
+<dt>add_objective</dt>
+<dd>
+<p>return a new  ProjectProblem
+with the objective added to it.</p>
+</dd>
+<dt>add_decisions</dt>
+<dd>
+<p>return a new ProjectProblem
+object with the decision added to it.</p>
+</dd>
+<dt>add_solver</dt>
+<dd>
+<p>return a new ProjectProblem object
+with the solver added to it.</p>
+</dd>
+<dt>add_constraint</dt>
+<dd>
+<p>return a new ProjectProblem
+object with the constraint added to it.</p>
+</dd>
+<dt>add_targets</dt>
+<dd>
+<p>return a copy with the targets added to the problem.</p>
+</dd>
+<dt>get_constraint_parameter</dt>
+<dd>
+<p>get the value of a parameter (specified by
+argument <code>id</code>) used in one of the constraints in the object.</p>
+</dd>
+<dt>set_constraint_parameter</dt>
+<dd>
+<p>set the value of a parameter (specified by
+argument <code>id</code>) used in one of the constraints in the object to
+<code>value</code>.</p>
+</dd>
+<dt>render_constraint_parameter</dt>
+<dd>
+<p>generate a <em>shiny</em> widget to modify
+the value of a parameter (specified by argument <code>id</code>).</p>
+</dd>
+<dt>render_all_constraint_parameters</dt>
+<dd>
+<p>generate a <em>shiny</em> <code>div</code>
+containing all the parameters' widgets.</p>
+</dd>
+<dt>get_objective_parameter</dt>
+<dd>
+<p>get the value of a parameter (specified by
+argument <code>id</code>) used in the object's objective.</p>
+</dd>
+<dt>set_objective_parameter</dt>
+<dd>
+<p>set the value of a parameter (specified by
+argument <code>id</code>) used in the object's objective to <code>value</code>.</p>
+</dd>
+<dt>render_objective_parameter</dt>
+<dd>
+<p>generate a <em>shiny</em> widget to modify
+the value of a parameter (specified by argument <code>id</code>).</p>
+</dd>
+<dt>render_all_objective_parameters</dt>
+<dd>
+<p>generate a <em>shiny</em> <code>div</code>
+containing all the parameters' widgets.</p>
+</dd>
+<dt>get_weight_parameter</dt>
+<dd>
+<p>get the value of a parameter (specified by
+argument <code>id</code>) used in the object's weights.</p>
+</dd>
+<dt>set_weight_parameter</dt>
+<dd>
+<p>set the value of a parameter (specified by
+argument <code>id</code>) used in the object's weights to <code>value</code>.</p>
+</dd>
+<dt>render_weight_parameter</dt>
+<dd>
+<p>generate a <em>shiny</em> widget to modify
+the value of a parameter (specified by argument <code>id</code>).</p>
+</dd>
+<dt>render_all_weight_parameters</dt>
+<dd>
+<p>generate a <em>shiny</em> <code>div</code>
+containing all the parameters' widgets.</p>
+</dd>
+<dt>get_solver_parameter</dt>
+<dd>
+<p>get the value of a parameter (specified by
+argument <code>id</code>) used in the object's solver.</p>
+</dd>
+<dt>set_solver_parameter</dt>
+<dd>
+<p>set the value of a parameter (specified by
+argument <code>id</code>) used in the object's solver to <code>value</code>.</p>
+</dd>
+<dt>render_solver_parameter</dt>
+<dd>
+<p>generate a <em>shiny</em> widget to modify
+the value of a parameter (specified by argument <code>id</code>).</p>
+</dd>
+<dt>render_all_solver_parameters</dt>
+<dd>
+<p>generate a <em>shiny</em> <code>div</code>
+containing all the parameters' widgets.</p>
+</dd>
+</dl>
+</div>

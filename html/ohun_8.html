@@ -1,0 +1,162 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_envelopes</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract absolute amplitude envelopes</h2>
+
+<h3>Description</h3>
+
+<p><code>get_envelopes</code> extracts absolute amplitude envelopes to speed up energy detection
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_envelopes(path = ".", files = NULL, bp = NULL, hop.size = 11.6, wl = NULL,
+cores = 1, thinning = 1, pb = TRUE, smooth = 5, normalize = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files are located.
+The current working directory is used as default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character vector or indicating the sound files that will be analyzed. Supported file formats:'.wav', '.mp3', '.flac' and '.wac'. If not supplied the function will work on all sound files (in the supported format) in 'path'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bp</code></td>
+<td>
+<p>Numeric vector of length 2 giving the lower and upper limits of a
+frequency bandpass filter (in kHz). Default is <code>NULL</code>. Bandpass is done using the function <code>ffilter</code>, which applies a short-term Fourier transformation to first create a spectrogram in which the target frequencies are filtered and then is back transformed into a wave object using a reverse Fourier transformation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hop.size</code></td>
+<td>
+<p>A numeric vector of length 1 specifying the time window duration (in ms). Default is 11.6 ms, which is equivalent to 512 wl for a 44.1 kHz sampling rate. Ignored if 'wl' is supplied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wl</code></td>
+<td>
+<p>A numeric vector of length 1 specifying the window length of the spectrogram. Default is <code>NULL</code>. If supplied, 'hop.size' is ignored. Used internally for bandpass filtering (so only applied when 'bp' is supplied).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cores</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thinning</code></td>
+<td>
+<p>Numeric vector of length 1 in the range 0~1 indicating the proportional reduction of the number of
+samples used to represent amplitude envelopes (i.e. the thinning of the envelopes). Usually amplitude envelopes have many more samples
+than those needed to accurately represent amplitude variation in time, which affects the size of the
+output (usually very large R objects / files). Default is <code>1</code> (no thinning). Higher sampling rates can afford higher size reduction (e.g. lower thinning values). Reduction is conducted by linear interpolation using <code>approx</code>. Note that thinning may decrease time precision and that the higher the thinning the less precise the time detection. It's generally not advised if no smoothing ('smooth' argument) is applied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smooth</code></td>
+<td>
+<p>A numeric vector of length 1 to smooth the amplitude envelope
+with a sum smooth function. It controls the time 'neighborhood' (in ms) in which amplitude samples are smoothed (i.e. averaged with neighboring samples). Default is 5. 0 means no smoothing is applied. Note that smoothing is applied before thinning (see 'thinning' argument). The function  <code>envelope</code> is used internally which is analogous to sum smoothing in <code>env</code>. This argument is used internally by <code>get_envelopes</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>Logical argument to control if envelopes are normalized to a 0-1 range.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function extracts the absolute amplitude envelopes of sound files. Can be used to manipulate envelopes before running <code>energy_detector</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class 'envelopes'.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>).
+</p>
+
+
+<h3>References</h3>
+
+<p>Araya-Salas, M., Smith-Vidaurre, G., Chaverri, G., Brenes, J. C., Chirino, F., Elizondo-Calvo, J., &amp; Rico-Guevara, A. 2022. ohun: an R package for diagnosing and optimizing automatic sound event detection. BioRxiv, 2022.12.13.520253. https://doi.org/10.1101/2022.12.13.520253
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>energy_detector</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  # Save to temporary working directory
+  data(list = c("lbh1", "lbh2"))
+  tuneR::writeWave(lbh1, file.path(tempdir(), "lbh1.wav"))
+  tuneR::writeWave(lbh2, file.path(tempdir(), "lbh2.wav"))
+
+  # get raw absolute amplitude envelopes
+  envs &lt;- get_envelopes(path = tempdir())
+
+  # extract segment for the first sound event in the first sound file
+  x &lt;- envs[[1]]$envelope
+
+  # and plot it
+  plot(x[(length(x) / 9):(length(x) / 4)], type = "l", xlab = "samples", ylab = "amplitude")
+
+  # smoothing envelopes
+  envs &lt;- get_envelopes(path = tempdir(), smooth = 6.8)
+  x &lt;- envs[[1]]$envelope
+  plot(x[(length(x) / 9):(length(x) / 4)], type = "l", xlab = "samples", ylab = "amplitude")
+
+  # smoothing and thinning
+  envs &lt;- get_envelopes(path = tempdir(), thinning = 1 / 10, smooth = 6.8)
+  x &lt;- envs[[1]]$envelope
+  plot(x[(length(x) / 9):(length(x) / 4)], type = "l", xlab = "samples", ylab = "amplitude")
+
+  # no normalization
+  envs &lt;- get_envelopes(path = tempdir(), thinning = 1 / 10, smooth = 6.8)
+  x &lt;- envs[[1]]$envelope
+  plot(x[(length(x) / 9):(length(x) / 4)],
+    type = "l", xlab = "samples", ylab = "amplitude",
+    normalize = FALSE
+  )
+}
+
+</code></pre>
+
+
+</div>

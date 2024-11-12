@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ph_remove</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove a shape</h2>
+
+<h3>Description</h3>
+
+<p>Remove a shape in a slide.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ph_remove(x, type = "body", id = 1, ph_label = NULL, id_chr = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rpptx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>placeholder type</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>placeholder index (integer) for a duplicated type. This is to be used when a placeholder
+type is not unique in the layout of the current slide, e.g. two placeholders with type 'body'. To
+add onto the first, use <code>id = 1</code> and <code>id = 2</code> for the second one.
+Values can be read from <code>slide_summary</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ph_label</code></td>
+<td>
+<p>label associated to the placeholder. Use column
+<code>ph_label</code> of result returned by <code>slide_summary</code>.
+If used, <code>type</code> and <code>id</code> are ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id_chr</code></td>
+<td>
+<p>deprecated.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>ph_with</code>
+</p>
+<p>Other functions for placeholders manipulation: 
+<code>ph_hyperlink()</code>,
+<code>ph_slidelink()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fileout &lt;- tempfile(fileext = ".pptx")
+dummy_fun &lt;- function(doc) {
+  doc &lt;- add_slide(doc,
+    layout = "Two Content",
+    master = "Office Theme"
+  )
+  doc &lt;- ph_with(
+    x = doc, value = "Un titre",
+    location = ph_location_type(type = "title")
+  )
+  doc &lt;- ph_with(
+    x = doc, value = "Un corps 1",
+    location = ph_location_type(type = "body", id = 1)
+  )
+  doc &lt;- ph_with(
+    x = doc, value = "Un corps 2",
+    location = ph_location_type(type = "body", id = 2)
+  )
+  doc
+}
+doc &lt;- read_pptx()
+for (i in 1:3) {
+  doc &lt;- dummy_fun(doc)
+}
+
+doc &lt;- on_slide(doc, index = 1)
+doc &lt;- ph_remove(x = doc, type = "title")
+
+doc &lt;- on_slide(doc, index = 2)
+doc &lt;- ph_remove(x = doc, type = "body", id = 2)
+
+doc &lt;- on_slide(doc, index = 3)
+doc &lt;- ph_remove(x = doc, type = "body", id = 1)
+
+print(doc, target = fileout)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,222 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>searchNetwork</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Geographically search the air quality networks made available by
+<code>openair::importMeta()</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>While <code>networkMap()</code> visualises entire UK air quality networks,
+<code>searchNetwork()</code> can subset specific networks to find air quality sites near
+to a specific site of interest (for example, the location of known industrial
+activity, or the centroid of a specific urban area).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">searchNetwork(
+  lat,
+  lng,
+  source = "aurn",
+  year = NULL,
+  site_type = NULL,
+  variable = NULL,
+  max_dist = NULL,
+  n = NULL,
+  crs = 4326,
+  map = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lat, lng</code></td>
+<td>
+<p><em>The decimal latitude(Y)/longitude(X).</em>
+</p>
+<p><strong>required</strong>
+</p>
+<p>Values representing the decimal latitude and longitude (or other Y/X
+coordinate if using a different <code>crs</code>) of the site of interest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source</code></td>
+<td>
+<p><em>One or more UK or European monitoring networks.</em>
+</p>
+<p><em>default:</em> <code>"aurn"</code>
+</p>
+<p>One or more air quality networks for which data is available through
+openair. Available networks include:
+</p>
+
+<ul>
+<li> <p><code>"aurn"</code>, The UK Automatic Urban and Rural Network.
+</p>
+</li>
+<li> <p><code>"aqe"</code>, The Air Quality England Network.
+</p>
+</li>
+<li> <p><code>"saqn"</code>, The Scottish Air Quality Network.
+</p>
+</li>
+<li> <p><code>"waqn"</code>, The Welsh Air Quality Network.
+</p>
+</li>
+<li> <p><code>"ni"</code>, The Northern Ireland Air Quality Network.
+</p>
+</li>
+<li> <p><code>"local"</code>, Locally managed air quality networks in England.
+</p>
+</li>
+<li> <p><code>"kcl"</code>, King's College London networks.
+</p>
+</li>
+<li> <p><code>"europe"</code>, European AirBase/e-reporting data.
+</p>
+</li>
+</ul>
+<p>There are two additional options provided for convenience:
+</p>
+
+<ul>
+<li> <p><code>"ukaq"</code> will return metadata for all networks for which data is imported by importUKAQ() (i.e., AURN, AQE, SAQN, WAQN, NI, and the local networks).
+</p>
+</li>
+<li> <p><code>"all"</code> will import all available metadata (i.e., "ukaq" plus "kcl" and "europe").
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p><em>A year, or range of years, with which to filter data.</em>
+</p>
+<p><em>default</em>: <code>NULL</code>
+</p>
+<p>By default, <code>networkMap()</code> visualises sites which are currently
+operational. <code>year</code> allows users to show sites open in a specific year, or
+over a range of years. See <code>openair::importMeta()</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>site_type</code></td>
+<td>
+<p><em>One or more site types with which to subset the site
+metadata.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>If <code>site_type</code> is specified, only sites of that type will be searched for.
+For example, <code>site_type = "urban background"</code> will only search urban
+background sites.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p><em>One or more variables of interest with which to subset the
+site metadata.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>If <code>variable</code> is specified, only sites measuring at least one of these
+pollutants will be searched for. For example, <code>variable = c("pm10", "co")</code>
+will search sites that measure PM10 and/or CO.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_dist</code></td>
+<td>
+<p><em>A maximum distance from the location of interest in
+kilometres.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>If <code>max_dist</code> is specified, only sites within <code>max_dist</code> kilometres from
+the <code>lat</code> / <code>lng</code> coordinate will be searched for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p><em>The maximum number of sites to return.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>If <code>n</code> is specified, only <code>n</code> sites will be returned. Note that this
+filtering step is applied last, after <code>site_type</code>, <code>variable</code>, and
+<code>max_dist</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p><em>The coordinate reference system (CRS).</em>
+</p>
+<p><em>default:</em> <code>4326</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The coordinate reference system (CRS) of the data, passed to
+<code>sf::st_crs()</code>. By default this is <a href="https://epsg.io/4326">EPSG:4326</a>, the
+CRS associated with the commonly used latitude and longitude coordinates.
+Different coordinate systems can be specified using <code>crs</code> (e.g., <code>crs = 27700</code> for the <a href="https://epsg.io/27700">British National Grid</a>). Note that
+non-lat/lng coordinate systems will be re-projected to EPSG:4326 for
+plotting on the map.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p><em>Return a map?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code>
+</p>
+<p>If <code>TRUE</code>, the default, <code>searchNetwork()</code> will return a <code>leaflet</code> map. If
+<code>FALSE</code>, it will instead return a tibble.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Data subsetting progresses in the order in which the arguments are given;
+first <code>source</code> and <code>year</code>, then <code>site_type</code> and <code>variable</code>, then <code>max_dist</code>,
+and finally <code>n</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Either a tibble or <code>leaflet</code> map.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other uk air quality network mapping functions: 
+<code>networkMap()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# get all AURN sites open in 2020 within 20 km of Buckingham Palace
+palace &lt;- convertPostcode("SW1A1AA")
+searchNetwork(lat = palace$lat, lng = palace$lng, max_dist = 20, year = 2020)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

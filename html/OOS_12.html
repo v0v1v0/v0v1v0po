@@ -1,0 +1,241 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>forecast_multivariate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Forecast with multivariate models</h2>
+
+<h3>Description</h3>
+
+<p>A function to estimate multivariate forecasts out-of-sample. Methods available include:
+vector auto-regression, linear regression, lasso regression, ridge regression, elastic net,
+random forest, tree-based gradient boosting machine, and single-layer neural network.
+See package website for most up-to-date list of available models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">forecast_multivariate(
+  Data,
+  forecast.dates,
+  target,
+  horizon,
+  method,
+  rolling.window = NA,
+  freq,
+  lag.variables = NULL,
+  lag.n = NULL,
+  outlier.clean = FALSE,
+  outlier.variables = NULL,
+  outlier.bounds = c(0.05, 0.95),
+  outlier.trim = FALSE,
+  outlier.cross_section = FALSE,
+  impute.missing = FALSE,
+  impute.method = "kalman",
+  impute.variables = NULL,
+  impute.verbose = FALSE,
+  reduce.data = FALSE,
+  reduce.variables = NULL,
+  reduce.ncomp = NULL,
+  reduce.standardize = TRUE,
+  parallel.dates = NULL,
+  return.models = FALSE,
+  return.data = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Data</code></td>
+<td>
+<p>data.frame: data frame of target variable, exogenous variables, and observed date (named 'date'); may alternatively be a <code>ts</code>, <code>xts</code>, or <code>zoo</code> object to forecast</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>forecast.dates</code></td>
+<td>
+<p>date: dates forecasts are created</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+<p>string: column name in Data of variable to forecast</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizon</code></td>
+<td>
+<p>int: number of periods into the future to forecast</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>string: methods to use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rolling.window</code></td>
+<td>
+<p>int: size of rolling window, NA if expanding window is used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freq</code></td>
+<td>
+<p>string: time series frequency; day, week, month, quarter, year</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag.variables</code></td>
+<td>
+<p>string: vector of variables to lag each time step, if lag.n is not null then the default is all non-date variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag.n</code></td>
+<td>
+<p>int: number of lags to create</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlier.clean</code></td>
+<td>
+<p>boolean: if TRUE then clean outliers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlier.variables</code></td>
+<td>
+<p>string: vector of variables to purge of outlier, default is all but 'date' column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlier.bounds</code></td>
+<td>
+<p>double: vector of winsorizing minimum and maximum bounds, c(min percentile, max percentile)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlier.trim</code></td>
+<td>
+<p>boolean: if TRUE then replace outliers with NA instead of winsorizing bound</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlier.cross_section</code></td>
+<td>
+<p>boolean: if TRUE then remove outliers based on cross-section (row-wise) instead of historical data (column-wise)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute.missing</code></td>
+<td>
+<p>boolean: if TRUE then impute missing values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute.method</code></td>
+<td>
+<p>string: select which method to use from the imputeTS package; 'interpolation', 'kalman', 'locf', 'ma', 'mean', 'random', 'remove','replace', 'seadec', 'seasplit'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute.variables</code></td>
+<td>
+<p>string: vector of variables to impute missing values, default is all numeric columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute.verbose</code></td>
+<td>
+<p>boolean: show start-up status of impute.missing.routine</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reduce.data</code></td>
+<td>
+<p>boolean: if TRUE then reduce dimension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reduce.variables</code></td>
+<td>
+<p>string: vector of variables to impute missing values, default is all numeric columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reduce.ncomp</code></td>
+<td>
+<p>int: number of factors to create</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reduce.standardize</code></td>
+<td>
+<p>boolean: normalize variables (mean zero, variance one) before estimating factors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel.dates</code></td>
+<td>
+<p>int: the number of cores available for parallel estimation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.models</code></td>
+<td>
+<p>boolean: if TRUE then return list of models estimated each forecast.date</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.data</code></td>
+<td>
+<p>boolean: if True then return list of information.set for each forecast.date</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>data.frame with a row for each forecast by model and forecasted date
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+ # simple time series
+ A = c(1:100) + rnorm(100)
+ B = c(1:100) + rnorm(100)
+ C = c(1:100) + rnorm(100)
+ date = seq.Date(from = as.Date('2000-01-01'), by = 'month', length.out = 100)
+ Data = data.frame(date = date, A, B, C)
+
+ # run forecast_univariate
+ forecast.multi =
+     forecast_multivariate(
+       Data = Data,
+       target = 'A',
+       forecast.dates = tail(Data$date,5),
+       method = c('ols','var'),
+       horizon = 1,
+       # information set
+       rolling.window = NA,
+       freq = 'month',
+       # data prep
+       lag.n = 4,
+       outlier.clean = TRUE,
+       impute.missing = TRUE)
+
+
+
+</code></pre>
+
+
+</div>

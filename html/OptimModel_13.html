@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hill_switchpoint_model</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Five-parameter Hill model with switch point component, gradient, starting values, and back-calculation functions</h2>
+
+<h3>Description</h3>
+
+<p> Five-parameter Hill model with switch point component, gradient, starting values, and back-calculation functions.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> 
+        hill_switchpoint_model(theta, x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p> Vector of five parameters:  <code class="reqn">(e_{\min}, e_{\max}, \text{lec50}, m, \text{lsp})</code>.  See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Vector of concentrations for the five-parameter Hill model with switch point component. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The five parameter Hill model with switch point component is given by:
+</p>
+<p style="text-align: center;"><code class="reqn">y = e_{\min} + \frac{e_{\max}-e_{\min}}{1 + \exp( m\times f(\exp(\text{lsp}), x)\times(\log(x) - \text{log.ic50}) )}\text{, where}</code>
+</p>
+
+<p><code class="reqn">e_{\min} = \min y</code> (minimum y value), <code class="reqn">e_{\max} = \max y</code> (maximum y value), <code class="reqn">\text{log.ic50} = \log( \text{ic50} )</code>, m is the shape parameter, and <code class="reqn">f(s, x)</code> is the switch point function.
+</p>
+<p>The function <code class="reqn">f(s, x) = (s-x)/(s+x) = 2/(1+x/s) - 1</code>.  This function is constrained to be between -1 and +1 with <code class="reqn">s &gt; 0.</code>
+</p>
+<p>Notes:
+</p>
+<p>1.  At <code class="reqn">x = 0</code>, <code class="reqn">f(s, x) = 1</code>, which reduces to hill_model(theta[1:4], 0).
+</p>
+<p>2.  The <code>hill_switchpoint_model</code>() is more flexible compared to <code>hill_quad_model</code>().
+</p>
+<p>3.  When the data does not contain a switchpoint, then lsp should be a large value so that <code class="reqn">f(\exp(\text{lsp}), x)</code> will be near 1 for all x.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Let N = length(x).  Then
+</p>
+
+<ul>
+<li>
+<p> hill_switchpoint_model(theta, x) returns a numeric vector of length N.
+</p>
+</li>
+<li>
+<p> attr(hill_switchpoint_model, "gradient")(theta, x) returns an N x 5 matrix.
+</p>
+</li>
+<li>
+<p> attr(hill_switchpoint_model, "start")(x, y) returns a numeric vector of length 5 with starting values for
+<code class="reqn">(e_{\min}, e_{\max}, \text{lec50}, m, \text{lsp})</code>.
+</p>
+<p>Because <code>hill_switchpoint_model</code>() can be fitted to biphasic data with a hook-effect, attr(hill_switchpoint_model, "backsolve")(theta, y0) returns the first x that satisfies
+y0=hill_switchpoint_model(theta, x)
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_fit</code>, <code>rout_fitter</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123L)
+x = rep( c(0, 2^(-4:4)), each=3 )      ## Dose
+## Create model with no switchpoint term
+theta = c(0, 100, log(.5), 2)
+y = hill_model(theta, x) + rnorm( length(x), mean=0, sd=5 )
+
+## fit0 and fit return roughly the same r-squared and sigma values.
+## Note that BIC(fit0) &lt; BIC(fit), as it should be.
+fit0 = optim_fit(NULL, hill_model, x=x, y=y)
+fit = optim_fit(c(coef(fit0), lsp=0), hill_switchpoint_model, x=x, y=y)
+fit = optim_fit(NULL, hill_switchpoint_model, x=x, y=y) 
+
+## Generate data from hill.quad.model() with a biphasic (hook-effect) profile
+set.seed(123L)
+theta = c(0, 100, 2, 1, -0.5)          ## Model parameters
+y = hill_quad_model(theta, x) + rnorm( length(x), mean=0, sd=5 )
+
+## fit.qm and fit.sp return nearly identical fits
+fit.qm = optim_fit(theta, hill_quad_model, x=x, y=y)  
+fit.sp = optim_fit(NULL, hill_switchpoint_model, x=x, y=y, ntry=50)  
+
+plot(log(x+0.01), y)
+lines(log(x+0.01), fitted(fit.qm))
+lines(log(x+0.01), fitted(fit.sp), col="red")
+
+## Generate data from hill.switchback.model()
+set.seed(123)
+theta = c(0, 100, log(0.25), -3, -2)
+y = hill_switchpoint_model(theta, x) + rnorm( length(x), mean=0, sd=5 )
+plot( log(x+0.01), y )
+
+## Note that this model cannot be fitted by hill.quad.model()
+fit = optim_fit(NULL, hill_switchpoint_model, x=x, y=y, ntry=50, 
+       start.method="fixed", until.converge=FALSE)
+pred = predict(fit, x=exp(seq(log(0.01), log(16), length=50)), interval='confidence')
+
+plot(log(x+0.01), y, main="Fitted curve with 95% confidence bands")
+lines(log(pred[,'x']+0.01), pred[,'y.hat'], col='black')
+lines(log(pred[,'x']+0.01), pred[,'lower'], col='red', lty=2)
+lines(log(pred[,'x']+0.01), pred[,'upper'], col='red', lty=2)
+
+
+## Other functions
+hill_switchpoint_model(theta, x)
+attr(hill_switchpoint_model, "gradient")(theta, x)
+attr(hill_switchpoint_model, "start")(x, y)
+attr(hill_switchpoint_model, "backsolve")(theta, 50)
+
+</code></pre>
+
+
+</div>

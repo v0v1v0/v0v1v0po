@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>delationErosion</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Delation or Erosion of an image</h2>
+
+<h3>Description</h3>
+
+<p>'r lifecycle::badge("deprecated")'
+</p>
+<p>This function was deprecated because I realized that the name of the function does not correspond to the name of the algorithm (delation -&gt; dilation)
+</p>
+<p>this function performs delation or erosion to a 2- or 3- dimensional image
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">delationErosion(image, Filter, method = "delation", threads = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>image</code></td>
+<td>
+<p>a matrix, data frame or 3-dimensional array where the third dimension is equal to 3</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Filter</code></td>
+<td>
+<p>a vector specifying the dimensions of the kernel, which will be used to perform either delation or erosion, such as c(3,3)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>one of 'delation', 'erosion'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threads</code></td>
+<td>
+<p>number of cores to run in parallel ( &gt; 1 should be used if image high dimensional )</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function utilizes a kernel to perform delation or erosion. The first value of the vector indicates the number of rows of the kernel, whereas
+the second value indicates the number of columns.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a matrix or 3-dimensional array where the third dimension is equal to 3
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+path = system.file("tmp_images", "1.png", package = "OpenImageR")
+
+image = readImage(path)
+
+res_delate = delationErosion(image, Filter = c(3,3), method = 'delation')
+
+res_erode = delationErosion(image, Filter = c(5,5), method = 'erosion')
+
+# -&gt;
+
+res_dilate = dilationErosion(image, Filter = c(3,3), method = 'dilation')
+
+res_erode = dilationErosion(image, Filter = c(5,5), method = 'erosion')
+
+</code></pre>
+
+
+</div>

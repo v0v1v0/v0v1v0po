@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>request</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>API request</h2>
+
+<h3>Description</h3>
+
+<p>To get more details, visit https://platform.openai.com/docs/api-reference/making-requests
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">request(
+  endpoint,
+  api_key = api_get_key(),
+  body = NULL,
+  query = NULL,
+  encode = "json",
+  method = "POST",
+  content_class = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>endpoint</code></td>
+<td>
+<p>string, API endpoint url</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>string, OpenAI API key
+(see https://platform.openai.com/account/api-keys)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>body</code></td>
+<td>
+<p>One of the following:
+</p>
+
+<ul>
+<li> <p><code>FALSE</code>: No body. This is typically not used with <code>POST</code>,
+<code>PUT</code>, or <code>PATCH</code>, but can be useful if you need to send a
+bodyless request (like <code>GET</code>) with <code>VERB()</code>.
+</p>
+</li>
+<li> <p><code>NULL</code>: An empty body
+</p>
+</li>
+<li> <p><code>""</code>: A length 0 body
+</p>
+</li>
+<li> <p><code>upload_file("path/")</code>: The contents of a file.  The mime
+type will be guessed from the extension, or can be supplied explicitly
+as the second argument to <code>upload_file()</code>
+</p>
+</li>
+<li>
+<p> A character or raw vector: sent as is in body. Use
+<code>content_type()</code> to tell the server what sort of data
+you are sending.
+</p>
+</li>
+<li>
+<p> A named list: See details for encode.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>NULL/list, query string elements as list(name1 = value1, name2 = value2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encode</code></td>
+<td>
+<p>If the body is a named list, how should it be encoded? Can be
+one of form (application/x-www-form-urlencoded), multipart,
+(multipart/form-data), or json (application/json).
+</p>
+<p>For "multipart", list elements can be strings or objects created by
+<code>upload_file()</code>. For "form", elements are coerced to strings
+and escaped, use <code>I()</code> to prevent double-escaping. For "json",
+parameters are automatically "unboxed" (i.e. length 1 vectors are
+converted to scalars). To preserve a length 1 vector as a vector,
+wrap in <code>I()</code>. For "raw", either a character or raw vector. You'll
+need to make sure to set the <code>content_type()</code> yourself.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>string, request method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>content_class</code></td>
+<td>
+<p>NULL/character vector, NULL or additional class
+name(s) (S3) appended to the response content</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>content of the httr response object
+or SimpleError (conditions) enhanced with
+two additional fields: 'status_code' (response$status_code)
+and 'message_long' (built on response content)
+</p>
+
+
+</div>

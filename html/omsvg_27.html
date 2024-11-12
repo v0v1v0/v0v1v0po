@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>svg_filter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build an SVG <code style="white-space: pre;">⁠&lt;filter&gt;⁠</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>The <code>svg_filter()</code> let's us create a named <code style="white-space: pre;">⁠&lt;filter&gt;⁠</code> element that we can
+apply to any SVG elements (such as shapes). We can bundle one or more filter
+elements by supplying a list of <code style="white-space: pre;">⁠filter_*()⁠</code> calls to the <code>filters</code> argument.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">svg_filter(svg, id, width = NULL, height = NULL, filters = list())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>svg</code></td>
+<td>
+<p>The <code>svg</code> object that is created using the <code>SVG()</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>The ID value to assign to the filter. This must be provided and it
+should be unique among all <code style="white-space: pre;">⁠&lt;filter&gt;⁠</code> elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width, height</code></td>
+<td>
+<p>The lengths of <code>width</code> and <code>height</code> define the extent of
+the filter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filters</code></td>
+<td>
+<p>A list of <code style="white-space: pre;">⁠filter_*()⁠</code> function calls. Examples include
+<code>filter_image()</code> and <code>filter_gaussian_blur()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>svg</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# Set up an `svg_filter()` (called
+# `"blur"`) that has the blur effect
+# (using the `filter_gaussian_blur()`
+# function); have the ellipse element
+# use the filter by referencing it
+# by name via the `"filter"` attribute
+SVG(width = 200, height = 100) %&gt;%
+  svg_filter(
+    id = "blur",
+    filters = list(
+      filter_gaussian_blur(stdev = 2)
+    )
+  ) %&gt;%
+  svg_ellipse(
+    x = 40, y = 40,
+    width = 50, height = 30,
+    attrs = svg_attrs_pres(
+      fill = "green",
+      filter = "blur"
+    )
+  )
+}
+
+</code></pre>
+
+
+</div>

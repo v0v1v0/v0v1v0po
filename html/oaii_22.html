@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>df_col_obj_implode</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Change to string nested lists in a given data.frame</h2>
+
+<h3>Description</h3>
+
+<p>Change to string nested lists in a given data.frame
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">df_col_obj_implode(
+  df,
+  col,
+  obj_prop = NULL,
+  nested = TRUE,
+  cell_header = "",
+  objs_glue = "----\n",
+  cell_footer = "",
+  obj_header = "",
+  props_glue = "\n",
+  obj_footer = "",
+  prop_fmt = "%s: %s",
+  null_prop_str = "[null]",
+  on_missing_col = "warn"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>data.frame, input data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>character vector, df column names containing objects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obj_prop</code></td>
+<td>
+<p>NULL/character vector, object properties (NULL means all)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nested</code></td>
+<td>
+<p>flag, whether the rows of the columns contain multiple objects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cell_header</code></td>
+<td>
+<p>string/NULL, cell header</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>objs_glue</code></td>
+<td>
+<p>string, how to combine objects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cell_footer</code></td>
+<td>
+<p>string/NULL, cell footer</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obj_header</code></td>
+<td>
+<p>string/NULL, object header</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>props_glue</code></td>
+<td>
+<p>string, how to combine properties</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obj_footer</code></td>
+<td>
+<p>string/NULL, object footer</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prop_fmt</code></td>
+<td>
+<p>string, sprintf fmt parameter with two '%s' fields (property</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>null_prop_str</code></td>
+<td>
+<p>string, value for NULL object property
+name, value)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>on_missing_col</code></td>
+<td>
+<p>string, behavior for missing column(s):
+"warn" - log warning, "skip" - skip missing column(s), "stop" - throw error</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Modified input data.frame
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">df &lt;- as.data.frame(do.call(cbind, list(
+  a = list(list(x = 1, y = 2), list(x = 3, y = 4)),
+  b = list("z", "z")
+)))
+df_col_obj_implode(df, "a", c("x", "y"), nested = FALSE, props_glue = ", ")
+
+</code></pre>
+
+
+</div>

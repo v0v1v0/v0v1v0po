@@ -1,0 +1,237 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Ostats_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot community trait overlap</h2>
+
+<h3>Description</h3>
+
+<p>This function plots the overlap of traits among
+species for each community. If there are multiple traits,
+each trait is plotted separately in one-dimensional space.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Ostats_plot(
+  plots,
+  sp,
+  traits,
+  overlap_dat = NULL,
+  use_plots = NULL,
+  n_col = 1,
+  scale = "fixed",
+  colorvalues = NULL,
+  alpha = 0.5,
+  adjust = 2,
+  bin_width = 1,
+  limits_x = NULL,
+  legend = FALSE,
+  name_x = "trait value",
+  name_y = "probability density",
+  normalize = TRUE,
+  means = FALSE,
+  circular = FALSE,
+  discrete = FALSE,
+  circular_args = list()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>plots</code></td>
+<td>
+<p>Site identity: a vector of names of each community.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sp</code></td>
+<td>
+<p>Taxon identity: a vector of species or taxa names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traits</code></td>
+<td>
+<p>A vector of trait measurements for each individual, or a matrix
+or data frame with rows representing individuals and columns representing traits.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overlap_dat</code></td>
+<td>
+<p>Optional: an object containing the output of <code>Ostats</code>.
+If provided, overlap statistics will be displayed in the plot panels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_plots</code></td>
+<td>
+<p>a vector of sites to plot. If NULL, the function will plot all the sites.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_col</code></td>
+<td>
+<p>Number of columns for layout of individual panels. Default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>If you want the scale of x, y or both x and y axis to be independent,
+set the argument to "free_x", "free_y" or "free" respectively.
+Default = "fixed" which uses the same scale across all sites.
+See <code>facet_grid</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorvalues</code></td>
+<td>
+<p>Vector of color values for the density polygons.
+Defaults to a viridis palette if none provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>defines the transparency level for the density polygons. Default is 0.5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust</code></td>
+<td>
+<p>the bandwidth adjustment of the density polygons. Default is 2.
+See <code>density</code>. Only used if <code>discrete = FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bin_width</code></td>
+<td>
+<p>the width of each bin of the histograms. Default is 1.
+Only used if <code>discrete = TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits_x</code></td>
+<td>
+<p>Vector of length 2, with multiplicative factor to apply to the minimum
+and maximum values of each trait to expand the limits of the x axis.
+Default is <code>c(0.5, 1.5)</code>, or 0.5 times the minimum and 1.5 times the maximum
+value of each trait, for continuous traits. For discrete traits the default is
+<code>c(1, 1)</code> or no expansion of limits.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend</code></td>
+<td>
+<p>Whether to include a legend. Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name_x</code></td>
+<td>
+<p>x-axis label. Default is 'trait value'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name_y</code></td>
+<td>
+<p>y-axis label. Default is 'probability density'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>if <code>TRUE</code>, areas of density plots are normalized to be equal
+across taxa; if <code>FALSE</code>, areas will be proportional to abundance.
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>means</code></td>
+<td>
+<p>if <code>TRUE</code>, trait means for each species are plotted in an additional plot
+column next to the traits distribution plots for each site. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>circular</code></td>
+<td>
+<p>if <code>TRUE</code>, plots density plots or histograms using polar
+coordinates, and estimates density using method for objects of class
+<code>circular</code>. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>discrete</code></td>
+<td>
+<p>if <code>TRUE</code>, plots histograms at discrete trait values instead
+of smooth kernel density plots. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>circular_args</code></td>
+<td>
+<p>optional list of additional arguments to pass to
+<code>circular</code>. Only used if <code>circular = TRUE</code> and
+<code>discrete = FALSE</code>. If no arguments are provided, default arguments to
+<code>circular</code> are used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Density plots of species trait distributions plotted together
+for each community to show how they overlap each other. Each community
+is plotted on a separate panel within a multipanel figure.
+The overlap value obtained as output from <code>Ostats</code>
+is labelled on each community graph, if provided by the user.
+</p>
+<p>If trait values are discrete rather than continuous, histograms are
+plotted instead of kernel density plots.
+</p>
+<p>If trait values are circular, a circular kernel density estimate for
+each species is plotted on a polar coordinate plot. If trait values are
+both circular and discrete, a "sunburst" plot is returned.
+</p>
+<p>The class of the returned object is <code>Ostats_plot_object</code>. Calling
+<code>print</code> on this object will draw the plot using
+<code>grid.draw</code>.
+</p>
+<p>If more than one trait is provided, a list of objects of class
+<code>Ostats_plot_object</code> will be returned.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Ostats</code> to Calculate O-statistics (community-level
+pairwise niche overlap statistics)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># set the arguments:
+plots &lt;- small_mammal_data$siteID
+sp &lt;- small_mammal_data$taxonID
+traits &lt;- log10(small_mammal_data$weight)
+
+# to plot only selected sites:
+use_plots &lt;- c('BART','KONZ','JORN')
+
+
+Ostats_plot(plots = plots, sp = sp, traits = traits,
+           overlap_dat = small_mammal_Ostats,
+           use_plots = use_plots, means = TRUE)
+</code></pre>
+
+
+</div>

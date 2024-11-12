@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PPO</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Projection Pursuit Optimization</h2>
+
+<h3>Description</h3>
+
+<p>Find the optimal projection using various projectin pursuit models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PPO(X, y, model = "PPR", split = "gini", weights = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>An n by d numeric matrix (preferable) or data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A response vector of length n.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>Model for projection pursuit.
+</p>
+
+<ul>
+<li>
+<p>"PPR"(default): projection projection regression from <code>ppr</code>. When y is a category label, it is
+expanded to K binary features.
+</p>
+</li>
+<li>
+<p>"Log": logistic based on <code>nnet</code>.
+</p>
+</li>
+<li>
+<p>"Rand": The random projection generated from <code class="reqn">\{-1, 1\}</code>.
+The following models can only be used for classification, i.e. the <code>split</code> must be ”entropy” or 'gini'.
+</p>
+</li>
+<li>
+<p>"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from library <code>PPtreeViz</code>.
+</p>
+</li>
+<li>
+<p>The following models based on <code>Pursuit</code>.
+</p>
+
+<ul>
+<li>
+<p>"holes": Holes index
+</p>
+</li>
+<li>
+<p>"cm": Central Mass index
+</p>
+</li>
+<li>
+<p>"holes": Holes index
+</p>
+</li>
+<li>
+<p>"friedmantukey": Friedman Tukey index
+</p>
+</li>
+<li>
+<p>"legendre": Legendre index
+</p>
+</li>
+<li>
+<p>"laguerrefourier": Laguerre Fourier index
+</p>
+</li>
+<li>
+<p>"hermite": Hermite index
+</p>
+</li>
+<li>
+<p>"naturalhermite": Natural Hermite index
+</p>
+</li>
+<li>
+<p>"kurtosismax": Maximum kurtosis index
+</p>
+</li>
+<li>
+<p>"kurtosismin": Minimum kurtosis index
+</p>
+</li>
+<li>
+<p>"moment": Moment index
+</p>
+</li>
+<li>
+<p>"mf": MF index
+</p>
+</li>
+<li>
+<p>"chi": Chi-square index
+</p>
+</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split</code></td>
+<td>
+<p>The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+'entropy': information gain (classification) or 'mse': mean square error (regression).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Vector of non-negative observational weights; fractional weights are allowed (default NULL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>optional parameters to be passed to the low level function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Optimal projection direction.
+</p>
+
+
+<h3>References</h3>
+
+<p>Friedman, J. H., &amp; Stuetzle, W. (1981). Projection pursuit regression. Journal of the American statistical Association, 76(376), 817-823.
+</p>
+<p>Ripley, B. D. (1996) Pattern Recognition and Neural Networks. Cambridge.
+</p>
+<p>Lee, YD, Cook, D., Park JW, and Lee, EK(2013) PPtree: Projection Pursuit Classification Tree, Electronic Journal of Statistics, 7:1369-1386.
+</p>
+<p>Cook, D., Buja, A., Lee, E. K., &amp; Wickham, H. (2008). Grand tours, projection pursuit guided tours, and manual controls. In Handbook of data visualization (pp. 295-314). Springer, Berlin, Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>RotMatPPO</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># classification
+data(seeds)
+(PP &lt;- PPO(seeds[, 1:7], seeds[, 8], model = "Log", split = "entropy"))
+(PP &lt;- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", split = "entropy"))
+(PP &lt;- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = "entropy"))
+
+# regression
+data(body_fat)
+(PP &lt;- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", split = "mse"))
+(PP &lt;- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", split = "mse"))
+(PP &lt;- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", split = "mse"))
+
+</code></pre>
+
+
+</div>

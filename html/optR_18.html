@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optR.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimization &amp; predictive modelling Toolsets</h2>
+
+<h3>Description</h3>
+
+<p>soptR is the default function for optimization
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+optR(x, y = NULL, weights = NULL, method = c("gauss",
+  "LU", "gaussseidel", "cgm", "choleski"), iter = 500, tol = 1e-07,
+  keep.data = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>: Input data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>: Response is data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>: Observation weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>: "gauss" for gaussian elimination and "LU" for LU factorization</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>: Number of Iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>: Convergence tolerance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep.data</code></td>
+<td>
+<p>: Returns Input dataset in object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>: S3 Class</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>U    : Decomposed matrix for Gauss-ELimination Ax=b is converted into Ux=c where U is upper triangular matrix for LU decomposition U contain the values for L &amp; U decomposition LUx=b
+</p>
+<p>c    : transformed b &amp; for LU transformation c is y from equation Ux=y
+</p>
+<p>estimates  : Return x values for linear system
+</p>
+<p>seq        : sequence of A matrix re-ordered
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Solving equation Ax=b
+A&lt;-matrix(c(6,-4,1, -4,6,-4,1,-4,6), nrow=3,ncol=3, byrow = TRUE)
+b&lt;-matrix(c(-14,36, 6), nrow=3,ncol=1,byrow=TRUE)
+Z&lt;-optR(A, b, method="gauss") 
+
+# Solve Linear model using LU decomposition (Supports Multi-response)
+Z&lt;-optR(A, b, method="LU")
+
+# Solving the function using numerical method
+Z&lt;-optR(A, b, method="cgm")
+
+require(utils)
+set.seed(129)
+n &lt;- 7 ; p &lt;- 2
+X &lt;- matrix(rnorm(n * p), n, p) # no intercept!
+y &lt;- rnorm(n)
+Z&lt;-optR(X, y, method="LU")
+</code></pre>
+
+
+</div>

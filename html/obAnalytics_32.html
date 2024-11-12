@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tradeImpacts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Trade impacts.</h2>
+
+<h3>Description</h3>
+
+<p>Generates a data.frame containing order book impacts.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tradeImpacts(trades)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>trades</code></td>
+<td>
+<p><code>trades</code> data.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>An impact consists of 1 or more limit orders being hit in order to fulfil a
+market order.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data.frame containing a summary of market order impacts:
+</p>
+
+<dl>
+<dt>id</dt>
+<dd>
+<p>market order id</p>
+</dd>
+<dt>min.price</dt>
+<dd>
+<p>minimum executed price</p>
+</dd>
+<dt>max.price</dt>
+<dd>
+<p>maximum executed price</p>
+</dd>
+<dt>vwap</dt>
+<dd>
+<p>VWAP obtained by market order</p>
+</dd>
+<dt>hits</dt>
+<dd>
+<p>number of limit orders hit by market order</p>
+</dd>
+<dt>vol</dt>
+<dd>
+<p>total volume removed by this impact</p>
+</dd>
+<dt>start.time</dt>
+<dd>
+<p>(local) start time of this impact</p>
+</dd>
+<dt>end.time</dt>
+<dd>
+<p>(local) end time of this impact</p>
+</dd>
+<dt>dir</dt>
+<dd>
+<p>direction of this impact (buy or sell)</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# get impacts data.frame from trades data.
+impacts &lt;- tradeImpacts(lob.data$trades)
+
+# impacts (in bps) 
+sell.bps &lt;- with(impacts[impacts$dir == "sell", ], {
+  (max.price-min.price)/max.price
+})
+10000*summary(sell.bps[sell.bps &gt; 0])
+
+</code></pre>
+
+
+</div>

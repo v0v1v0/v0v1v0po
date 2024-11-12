@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>elementCor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the correlations between elements.</h2>
+
+<h3>Description</h3>
+
+<p>Note that simple element correlations as a measure of similarity are flawed as they are not invariant to construct
+reflection (Mackay, 1992; Bell, 2010). A correlation index invariant to construct reflection is Cohen's rc measure
+(1969), which can be calculated using the argument <code>rc=TRUE</code> which is the default option.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">elementCor(x, rc = TRUE, method = "pearson", trim = 20, index = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rc</code></td>
+<td>
+<p>Use Cohen's rc which is invariant to construct reflection (see description above). It is used as the
+default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A character string indicating which correlation coefficient is to be computed. One of <code>"pearson"</code>
+(default), <code>"kendall"</code> or <code>"spearman"</code>, can be abbreviated. The default is <code>"pearson"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>The number of characters a construct is trimmed to (default is <code>20</code>). If <code>NA</code> no trimming occurs.
+Trimming simply saves space when displaying correlation of constructs with long names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>Whether to print the number of the construct.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>matrix</code> of element correlations
+</p>
+
+
+<h3>References</h3>
+
+<p>Bell, R. C. (2010). A note on aligning constructs.
+<em>Personal Construct Theory &amp; Practice</em>, (7), 42-48.
+</p>
+<p>Cohen, J. (1969). rc: A profile similarity coefficient invariant over variable reflection. <em>Psychological Bulletin,
+71</em>(4), 281-284.
+</p>
+<p>Mackay, N. (1992). Identification, Reflection, and Correlation: Problems In The Bases Of Repertory Grid Measures.
+<em>International Journal of Personal Construct Psychology, 5</em>(1), 57-75.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>constructCor()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">elementCor(mackay1992) # Cohen's rc
+elementCor(mackay1992, rc = FALSE) # PM correlation
+elementCor(mackay1992, rc = FALSE, method = "spearman") # Spearman correlation
+
+# format output
+elementCor(mackay1992, trim = 6)
+elementCor(mackay1992, index = FALSE, trim = 6)
+
+# save as object for further processing
+r &lt;- elementCor(mackay1992)
+r
+
+# change output of object
+print(r, digits = 5)
+print(r, col.index = FALSE)
+print(r, upper = FALSE)
+
+# accessing elements of the correlation matrix
+r[1, 3]
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>CpSdEwma</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Classic Processing Shift-Detection based on EWMA (SD-EWMA).</h2>
+
+<h3>Description</h3>
+
+<p><code>CpSdEwma</code> calculates the anomalies of a dataset using
+classical processing based on the SD-EWMA algorithm. This algorithm is a
+novel method for covariate shift-detection tests based on a two-stage
+structure for univariate time-series. It works in an online mode and it uses
+an exponentially weighted moving average (EWMA) model based control chart to
+detect the covariate shift-point in non-stationary time-series. See also
+<code>OcpSdEwma</code>, the optimized and faster function of this function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">CpSdEwma(data, n.train, threshold = 0.01, l = 3)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Numerical vector with training and test dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.train</code></td>
+<td>
+<p>Number of points of the dataset that correspond to the training set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Error smoothing constant.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l</code></td>
+<td>
+<p>Control limit multiplier.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>data</code> must be a numerical vector without NA values.
+<code>threshold</code> must be a numeric value between 0 and 1.
+It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is
+used. Finally, <code>l</code> is the parameter that determines the control limits.
+By default, 3 is used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>dataset conformed by the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>is.anomaly</code></td>
+<td>
+<p>1 if the value is anomalous 0, otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ucl</code></td>
+<td>
+<p>Upper control limit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lcl</code></td>
+<td>
+<p>Lower control limit.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Raza, H., Prasad, G., &amp; Li, Y. (03 de 2015). EWMA model based
+shift-detection methods for detecting covariate shifts in non-stationary
+environments. Pattern Recognition, 48(3), 659-669.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 180
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+## Calculate anomalies
+result &lt;- CpSdEwma(
+  data = df$value,
+  n.train = 5,
+  threshold = 0.01,
+  l = 3
+)
+res &lt;- cbind(df, result)
+
+## Plot results
+PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
+</code></pre>
+
+
+</div>

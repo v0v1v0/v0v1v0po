@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create.basis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Create a smooth B-spline basis
+</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a smooth B-spline basis and provides tools to
+find the coefficients of functional data in the basis  
+and to recover functional data from basis coefficients.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create.basis(x, p, sp = 1e-09, degree = 3, nderiv = 2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector of observation times</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>number of basis functions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sp</code></td>
+<td>
+<p>smoothing parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>degree</code></td>
+<td>
+<p>degree of the B splines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nderiv</code></td>
+<td>
+<p>order of the derivative to penalize for smoothing</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The knots of the B-spline basis are taken as regular quantiles of <code>x</code>. The function output is intended for use with functions 
+<code>coef2fd</code> and <code>fd2coef</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with fields
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>matrix of B-splines evaluated at <code>x</code>
+(each column represents a basis function)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>matrix that maps functional data
+to their (smoothed) coefficients of their projection
+in the basis set. For the purpose of PCA, the 
+coefficients are premultiplied by <code>M^{1/2}</code>, 
+where <code>M</code> is the Gram matrix associated with <code>B</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>invsqrtM</code></td>
+<td>
+<p>matrix <code>M^{-1/2}</code> used to recover functional
+# data from their coefficients in the basis set</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>coef2fd</code>, <code>fd2coef</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 100 # number of curves
+d &lt;- 500 # number of observation points
+grid &lt;- (1:d)/d # observation points
+p &lt;- 50 # number of B-spline basis functions 
+
+# Simulate Brownian motion
+x &lt;- matrix(rnorm(n*d,sd=1/sqrt(d)),n,d)
+x &lt;- t(apply(x,1,cumsum))
+
+# Create B-spline basis 
+mybasis &lt;- create.basis(grid, p, 1e-4)
+
+# Compute smooth basis coefficients 
+beta &lt;- fd2coef(x, mybasis)
+
+# Recover smooth functional data
+x.smooth &lt;- coef2fd(beta, mybasis) 
+	
+# Standard PCA and Functional PCA
+pca &lt;- prcomp(x)
+fpca &lt;- prcomp(beta)
+</code></pre>
+
+
+</div>

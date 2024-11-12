@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matchscale</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Match Kernel</h2>
+
+<h3>Description</h3>
+
+<p>Finds scale parameter (move.a) of a movement model that corresponds to desired quantile, or expected distance moved.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+matchscale(movementmodel, q = 40, expected = NULL, p = 0.5, lower = 1e-05, upper = 1e+05, 
+   move.b = 1, truncate = Inf)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>movementmodel</code></td>
+<td>
+<p>character (see Movement models and <a href="../doc/openCR-vignette.pdf">openCR-vignettes.pdf</a>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>desired quantile (distance moved)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expected</code></td>
+<td>
+<p>numeric expected distance moved</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>cumulative probability</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>move.b</code></td>
+<td>
+<p>shape parameter of movement kernel</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+<p>lower bound interval to search </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+<p>upper bound interval to search </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truncate</code></td>
+<td>
+<p>numeric q value at which distribution truncated</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The default behaviour is to find the movement parameter for the given combination of q and p.
+</p>
+<p>The alternative, when a value is provided for ‘expected’, is to find the movement parameter 
+corresponding to the given expected distance.
+</p>
+<p>The <code>truncate</code> argument must be specified for movementmodel ‘UNIzi'. For movementmodel 'UNI’ there is no parameter and the radius of truncation is varied to achieve the requested quantile q corresponding to cumulative probability p, or the desired expected distance.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric value for move.a (scale parameter or zero-inflation in the case of ‘UNIzi’) or truncation radius (‘UNI’).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Movement models, <code>pkernel</code>, <code>make.kernel</code>, <code>expected.d</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+matchscale('BVN', 40, 0.5)
+matchscale('BVT', 40, 0.5, move.b = 1)
+matchscale('BVT', 40, 0.5, move.b = 5)
+matchscale('BVT', move.b = 5, expected = 10)
+
+</code></pre>
+
+
+</div>

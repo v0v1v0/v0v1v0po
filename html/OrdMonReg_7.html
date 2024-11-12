@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BoundedIsoMeanTwoDykstra</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute solution to the problem of two ordered isotonic or antitonic curves</h2>
+
+<h3>Description</h3>
+
+<p>See details below.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">BoundedIsoMeanTwoDykstra(g1, w1, g2, w2, K1 = 1000, 
+    delta = 10^(-8), output = TRUE)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>g1</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code>, measurements of upper function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w1</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code>, weights for upper function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g2</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code>, measurements of lower function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w2</code></td>
+<td>
+<p>Vector in <code class="reqn">R^n</code>, weights for lower function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K1</code></td>
+<td>
+<p>Upper bound on number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>Upper bound on the error, defines stopping criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Should intermediate results be output?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See <code>BoundedIsoMeanTwo</code> for a description of the problem. This function computes the estimates 
+via Dykstra's (see Dykstra, 1983) cyclical projection algorithm.
+</p>
+<p>The algorithm is implemented for isotonic curves.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>g1</code></td>
+<td>
+<p>The estimated function <code class="reqn">\hat g_1^\circ</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g2</code></td>
+<td>
+<p>The estimated function <code class="reqn">\hat g_2^\circ</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>Value of the least squares criterion at the minimum.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error</code></td>
+<td>
+<p>Value of error (norm of difference two consecutive projections).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Number of iterations performed.</p>
+</td>
+</tr>
+</table>
+<h3>Warning</h3>
+
+<p>Note that we have chosen a very simply stopping criterion here, namely the algorithm stops
+if the norm of two consecutive projections is smaller than <code class="reqn">\delta</code>. If <code class="reqn">n</code> is very small, it may happen
+that two consecutive projections are equal although <code class="reqn">L</code> is not yet minimal (note that this typically happens
+if <code>g1</code> = <code>g2</code>). If that is the case, we suggest to set <code class="reqn">\delta &lt; 0</code> and let the algorithm run
+a sufficient number of iterations (specified by <code>K1</code>) to verify that the least squares criterion value
+can not be decreased anymore.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Fadoua Balabdaoui <a href="mailto:fadoua@ceremade.dauphine.fr">fadoua@ceremade.dauphine.fr</a>
+<br><a href="http://www.ceremade.dauphine.fr/~fadoua">http://www.ceremade.dauphine.fr/~fadoua</a>
+</p>
+<p>Kaspar Rufibach (maintainer) <a href="mailto:kaspar.rufibach@gmail.com">kaspar.rufibach@gmail.com</a>
+<br><a href="http://www.kasparrufibach.ch">http://www.kasparrufibach.ch</a>
+</p>
+<p>Filippo Santambrogio <a href="mailto:filippo.santambrogio@math.u-psud.fr">filippo.santambrogio@math.u-psud.fr</a>
+<br><a href="http://www.math.u-psud.fr/~santambr/">http://www.math.u-psud.fr/~santambr/</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Balabdaoui, F., Rufibach, K., Santambrogio, F. (2009).
+<em>Least squares estimation of two ordered monotone regression curves.</em>
+Preprint.
+</p>
+<p>Dykstra, R.L. (1983).
+An Algorithm for Restricted Least Squares Regression.
+<em>J. Amer. Statist. Assoc.</em>, <b>78</b>, 837–842.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The functions <code>BoundedAntiMean</code> and <code>BoundedIsoMean</code> for the problem of 
+estimating <em>one</em> antitonic (isotonic) regression
+function bounded above and below by <em>fixed</em> functions. The function <code>BoundedAntiMeanTwoDykstra</code> depends 
+on the functions discussed in <code>minK</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## examples are provided in the help file of the main function of this package:
+?BoundedIsoMeanTwo
+</code></pre>
+
+
+</div>

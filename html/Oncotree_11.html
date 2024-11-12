@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>distribution.oncotree</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find the event distribution defined by an oncogenetic tree</h2>
+
+<h3>Description</h3>
+
+<p><code>distribution.oncotree</code> calculates the joint distribution
+of the events defined by the tree, while <code>marginal.distr</code>
+calculates the marginal probability of occurrence of each event.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">   distribution.oncotree(otree, with.probs = TRUE, with.errors=FALSE,
+          edge.weights=if (with.errors) "estimated" else "observed")
+   marginal.distr(otree, with.errors = TRUE,
+          edge.weights=if (with.errors) "estimated" else "observed")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otree</code></td>
+<td>
+<p>An object of class <code>oncotree</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>with.probs</code></td>
+<td>
+<p>A logical value specifying if only the set of
+possible outcomes should be returned (if TRUE), or the associated
+probabilities of occurrence as well.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>with.errors</code></td>
+<td>
+<p>A logical value specifying whether false
+positive and negative error rates should be incorporated into
+the distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edge.weights</code></td>
+<td>
+<p>A choice of whether the observed or estimated
+edge transition probabilities should be used in the calculation
+of probabilities. See <code>oncotree.fit</code> for explanation
+of the difference. By default, estimated edge transition probabilities
+if <code>with.errors=TRUE</code> and the observed ones if 
+<code>with.errors=FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>For <code>distribution.oncotree</code>: a data frame each row of which
+gives a possible outcome. 
+
+
+
+
+
+
+</p>
+<p>For <code>marginal.distr</code>: a named numeric vector - the names
+are the event names (+ ‘Root’) and the values are the
+corresponding marginal probability of occurrence.   
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Aniko Szabo</p>
+
+
+<h3>See Also</h3>
+
+<p><code>oncotree.fit</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">   data(ov.cgh)
+   ov.tree &lt;- oncotree.fit(ov.cgh[1:5])
+   
+   #joint distribution
+   jj &lt;- distribution.oncotree(ov.tree, edge.weights="obs")
+   head(jj)
+   # including errors - time/size exponential in number of events
+   jj.eps &lt;- distribution.oncotree(ov.tree, with.errors=TRUE)
+   head(jj.eps)
+  
+   #marginal distribution
+   marginal.distr(ov.tree, with.error=FALSE)
+   #marginal distribution calculated from the joint
+   apply(jj[1:ov.tree$nmut], 2, function(x){sum(x*jj$Prob)})
+   
+   ##Same with errors incorporated
+   #marginal distribution
+   marginal.distr(ov.tree, with.error=TRUE)
+   #marginal distribution calculated from the joint
+   apply(jj.eps[1:ov.tree$nmut], 2, function(x){sum(x*jj.eps$Prob)})
+   
+</code></pre>
+
+
+</div>

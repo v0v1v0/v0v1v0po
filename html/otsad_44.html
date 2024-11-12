@@ -1,0 +1,234 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>IpTsSdEwma</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Incremental Processing Two-Stage Shift-Detection based on EWMA</h2>
+
+<h3>Description</h3>
+
+<p><code>IpTsSdEwma</code> allows the calculation of anomalies using
+TSSD-EWMA in an incremental processing mode. See also
+<code>OipTsSdEwma</code>, the optimized and faster function of this
+function. This algorithm is a novel method for covariate shift-detection
+tests based on a two-stage structure for univariate time-series. TSSD-EWMA
+works in two phases. In the first phase, it detects anomalies using the
+SD-EWMA <code>CpSdEwma</code> algorithm. In the second phase, it checks the
+veracity of the anomalies using the Kolmogorov-Simirnov test to reduce false
+alarms.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">IpTsSdEwma(data, n.train, threshold, l = 3, m = 5,
+  to.next.iteration = list(last.res = NULL, to.check = NULL, last.m =
+  NULL))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Numerical vector with training and test dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.train</code></td>
+<td>
+<p>Number of points of the dataset that correspond to the
+training set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Error smoothing constant.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l</code></td>
+<td>
+<p>Control limit multiplier.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Length of the subsequences for applying the Kolmogorov-Smirnov test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to.next.iteration</code></td>
+<td>
+<p>list with the necessary parameters to execute in
+the next iteration</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>data</code> must be a numerical vector without NA values.
+<code>threshold</code> must be a numeric value between 0 and 1.
+It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is
+used. Finally, <code>l</code> is the parameter that determines the control limits.
+By default, 3 is used. <code>m</code> is the length of the subsequences for
+applying the Kolmogorov-Smirnov test. By default, 5 is used. It should be
+noted that the last m values have not been verified because you need other m
+values to be able to perform the verification. Finally
+<code>to.next.iteration</code> is the last result returned by some previous
+execution of this algorithm. The first time the algorithm is executed its
+value is NULL. However, to run a new batch of data without having to include
+it in the old dataset and restart the process, the two parameters returned by
+the last run are only needed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of the following items.
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>Dataset conformed by the following columns:</p>
+</td>
+</tr></table>
+<ul>
+<li> <p><code>is.anomaly</code> 1 if the value is anomalous 0 otherwise.
+</p>
+</li>
+<li> <p><code>ucl</code> Upper control limit.
+</p>
+</li>
+<li> <p><code>lcl</code> Lower control limit.
+</p>
+</li>
+<li> <p><code>i</code> row id or index
+</p>
+</li>
+</ul>
+<table>
+<tr style="vertical-align: top;">
+<td><code>last.data.checked</code></td>
+<td>
+<p>Data frame with checked anomalies. <code>i</code> column is the id or
+index and <code>is.anomaly</code> is its new is.anomaly value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to.next.iteration</code></td>
+<td>
+<p>Last result returned by the algorithm. It is a list
+containing the following items.</p>
+</td>
+</tr>
+</table>
+<ul>
+<li> <p><code>last.res</code> Last result returned by the aplicaction of
+SD-EWMA function with the calculations of the parameters of the last run
+. These are necessary for the next run.
+</p>
+</li>
+<li> <p><code>to.check</code> Subsequence of the last remaining unchecked
+values to be checked in the next iterations.
+</p>
+</li>
+<li> <p><code>last.m</code> Subsequence of the last m values.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Raza, H., Prasad, G., &amp; Li, Y. (03 de 2015). EWMA model based
+shift-detection methods for detecting covariate shifts in non-stationary
+environments. Pattern Recognition, 48(3), 659-669.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## EXAMPLE 1: ----------------------
+## It can be used in the same way as with CpTsSdEwma passing the whole dataset
+## as an argument.
+
+## Generate data
+set.seed(100)
+n &lt;- 200
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+## Calculate anomalies
+result &lt;- IpTsSdEwma(
+  data = df$value,
+  n.train = 5,
+  threshold = 0.01,
+  l = 3,
+  m = 20,
+  to.next.iteration = NULL
+)
+res &lt;- cbind(df, result$result)
+
+## Plot results
+PlotDetections(res, print.time.window = FALSE, title = "TSSD-EWMA ANOMALY DETECTOR")
+
+## EXAMPLE 2: ----------------------
+## You can use it in an incremental way. This is an example using the stream
+## library. This library allows the simulation of streaming operation.
+
+# install.packages("stream")
+library("stream")
+
+## Generate data
+set.seed(100)
+n &lt;- 500
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[320] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+dsd_df &lt;- DSD_Memory(df)
+
+## Initialize parameters for the loop
+last.res &lt;- NULL
+res &lt;- NULL
+nread &lt;- 50
+numIter &lt;- n%/%nread
+m &lt;- 20
+dsd_df &lt;- DSD_Memory(df)
+
+## Calculate anomalies
+for(i in 1:numIter) {
+  # read new data
+  newRow &lt;- get_points(dsd_df, n = nread, outofpoints = "ignore")
+  # calculate if it's an anomaly
+  last.res &lt;- IpTsSdEwma(
+    data = newRow$value,
+    n.train = 5,
+    threshold = 0.01,
+    l = 3,
+    m = 20,
+    to.next.iteration = last.res$to.next.iteration
+  )
+  # prepare result
+  res &lt;- rbind(res, cbind(newRow, last.res$result))
+  if (!is.null(last.res$last.data.checked)) {
+    res[res$i %in% last.res$last.data.checked$i, "is.anomaly"] &lt;-
+      last.res$last.data.checked$is.anomaly
+  }
+}
+
+## Plot results
+PlotDetections(res, title = "TSSD-EWMA ANOMALY DETECTOR")
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,64 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as_params</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Produce <code style="white-space: pre;">⁠@param⁠</code> roxygen sections for options</h2>
+
+<h3>Description</h3>
+
+<p>Generate parameter documentation based on option behaviors. Especially useful
+for ubiquitous function parameters that default to option values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as_params(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Character values of options to use. If named arguments are
+provided, the option description provided as the value is mapped to a
+parameter of the argument's name.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A character vector of <code>roxygen2</code> <code style="white-space: pre;">⁠@param⁠</code> tags
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other options_roxygen2: 
+<code>as_roxygen_docs()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">options::define_options(
+  "whether messages should be written softly, or in all-caps",
+  quiet = TRUE
+)
+
+#' Hello, World
+#'
+#' @eval options::as_params("softly" = "quiet")
+#'
+hello &lt;- function(who, softly = opt("quiet")) {
+  say_what &lt;- paste0("Hello, ", who, "!")
+  if (quiet) say_what else toupper(say_what)
+}
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,266 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>power.1.111</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Budget and/or sample size, power, MDES calculation for MRTs investigating
+mediation effects with individual-level mediators</h2>
+
+<h3>Description</h3>
+
+<p>This function can calculate required budget for desired power and
+power under a fixed budget
+for multisite-randomized trials (MRTs) with individual mediators
+probing mediation effects.
+It also can perform conventional power analyses
+(e.g., required sample size and power calculation).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">power.1.111(
+  cost.model = TRUE,
+  expr = NULL,
+  constraint = NULL,
+  sig.level = 0.05,
+  two.tailed = TRUE,
+  a = NULL,
+  b = NULL,
+  power = NULL,
+  m = NULL,
+  test = NULL,
+  n = NULL,
+  p = NULL,
+  c1 = NULL,
+  c1t = NULL,
+  r.yx = 0,
+  r.mx = 0,
+  r.mw = 0,
+  q.a = 0,
+  q.b = 0,
+  max.iter = 300,
+  alim = c(0, 4),
+  blim = c(0.01, 0.99),
+  powerlim = NULL,
+  nlim = c(6, 1e+07),
+  mlim = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cost.model</code></td>
+<td>
+<p>Logical; power analyses accommodating costs and budget
+(e.g., required budget for a desired power, power under fixed budget)
+if TRUE. Otherwise, conventional power analyses are performed
+(e.g., required sample size and power calculation); default value is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expr</code></td>
+<td>
+<p>Returned object from function <code>od.1.111</code>; default value is NULL;
+if <code>expr</code> is specified, parameter values of <code>a</code>, <code>b</code>,
+<code>c</code>, <code>ct</code>, and <code>p</code>
+used or solved in function <code>od.1.111</code> will
+be passed to the current function;
+only the values of <code>p</code> that specified or solved in
+function <code>od.1.111</code> can be overwritten
+if <code>constraint</code> is specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>constraint</code></td>
+<td>
+<p>If specified, the constrained value of
+<code>p</code> in a list format (e.g., constraint = list(p = 0.5))
+will overwrite that
+from <code>expr</code>; default value is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig.level</code></td>
+<td>
+<p>Significance level or type I error rate, default value is 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>two.tailed</code></td>
+<td>
+<p>Two tailed test, the default value is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>The treatment effect on the mediator.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>The within-treatment correlation between the outcome and
+the mediator.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Statistical power specified, default is .80.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Total budget.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test</code></td>
+<td>
+<p>The type of test will be used to detect mediation effects.
+The default is the NULL or the one used in the expr
+Choices are the joint significance test (i.e., test = "joint",
+"Joint","JOINT") or the Sobel test (test = "sobel", "Sobel", or "SOBEL").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Total number of individuals in the experimental study, the default
+value is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The proportion of level-4 clusters/units to be assigned to treatment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1</code></td>
+<td>
+<p>The cost of sampling an individual in the control group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1t</code></td>
+<td>
+<p>The cost of sampling an individual in the treated group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.yx</code></td>
+<td>
+<p>The within-treatment correlation between the outcome and the
+covariate(s) in the outcome model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.mx</code></td>
+<td>
+<p>The within-treatment correlation between the mediator and the
+covariate(s) in the outcome model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.mw</code></td>
+<td>
+<p>The within-treatment correlation between the mediator and the
+covariate(s) in the mediator model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.a</code></td>
+<td>
+<p>The number of covariates at the mediator model
+(except the treatment indicator), the default value is zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.b</code></td>
+<td>
+<p>The number of covariates in the outcome model (except the treatment
+indicator and the mediator), the default value is zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iter</code></td>
+<td>
+<p>Maximal number of function evaluations when used as
+the stopping criterion. Default is 200.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alim</code></td>
+<td>
+<p>The range for identifying the root of a path
+effect (<code>a</code>) numerically. Default value is c(0, 4).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blim</code></td>
+<td>
+<p>The range for identifying the root of b path within-treatment
+correlation between the mediator and outcome (<code>b</code>) numerically.
+Default value is (.01, .99), if (<code>b</code>) is negative, please re-code
+the outcome or mediator to make it positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>powerlim</code></td>
+<td>
+<p>The range for solving the root of power (<code>power</code>) numerically,
+default value is c(1e-10, 1 - 1e-10).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlim</code></td>
+<td>
+<p>The interval/range used to numerically solve for n,
+the default values are c(6, 1e7).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mlim</code></td>
+<td>
+<p>The range for identifying the root of budget (<code>m</code>) numerically,
+default value is the costs sampling <code>nlim</code> units.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Required budget (or required sample size), statistical power,
+(<code>a</code>) , or (<code>b</code>)  depending on the specification of parameters.
+The function also returns the function name, design type,
+and parameters used in the calculation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Optimal design and power analyses accommodating costs and budget
+myod &lt;- od.1.111(a = .3, b = .5, c1 = 10, c1t = 100)
+# myod
+mypower &lt;- power.1.111(expr = myod, power = .8)
+#mypower
+
+# Conventional power analyses
+mypower &lt;- power.1.111(cost.model = FALSE, a = .3, b = .5, test = "joint",
+                       power = .8, p =.5)
+#mypower
+mypower &lt;- power.1.111(cost.model = FALSE, n = 350, b = .5, test = "joint",
+                       power = .8, p =.5)
+#mypower
+
+</code></pre>
+
+
+</div>

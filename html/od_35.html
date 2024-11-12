@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_disaggregate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Split-up each OD pair into multiple OD pairs based on subpoints/subzones</h2>
+
+<h3>Description</h3>
+
+<p>This function is for splitting-up OD pairs.
+It increases the number of rows in an OD dataset, while aiming
+to keep the amount of travel represented in the data the same.
+To take an analogy from another package, it's roughly equivalent
+to <a href="https://tidyr.tidyverse.org/reference/pivot_longer.html"><code>tidyr::pivot_longer()</code></a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_disaggregate(
+  od,
+  z,
+  subpoints = NULL,
+  code_append = "_ag",
+  population_column = 3,
+  max_per_od = 5,
+  keep_ids = TRUE,
+  integer_outputs = FALSE
+)
+
+od_split(
+  od,
+  z,
+  subpoints = NULL,
+  code_append = "_ag",
+  population_column = 3,
+  max_per_od = 5,
+  keep_ids = TRUE,
+  integer_outputs = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>od</code></td>
+<td>
+<p>An origin-destination data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>Zones representing origins and destinations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subpoints</code></td>
+<td>
+<p>Points, lines or polygons within the zones.
+These define the OD data start/end points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code_append</code></td>
+<td>
+<p>The name of the column containing aggregate zone names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>population_column</code></td>
+<td>
+<p>The column containing the total population (if it exists)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_per_od</code></td>
+<td>
+<p>Maximum flow in the population_column to assign per OD pair.
+This only comes into effect if there are enough subpoints to choose from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_ids</code></td>
+<td>
+<p>Should the origin and destination ids be kept?
+<code>TRUE</code> by default, meaning 2 extra columns are appended, with the
+names <code>o_agg</code> and <code>d_agg</code> containing IDs from the original OD data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>integer_outputs</code></td>
+<td>
+<p>Should integer outputs be returned? <code>FALSE</code> by default.
+Note: there is a known issue when integer results are generated. See
+https://github.com/ITSLeeds/od/issues/31 for details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An alias for the function is <code>od_split()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">od = od_data_df[1:2, c(1, 2, 9)]
+od
+zones = od::od_data_zones_min
+od_sf = od_to_sf(od, zones)
+set.seed(2021) # for reproducibility
+od_disag = od_disaggregate(od, zones)
+od_disag2 = od_disaggregate(od, zones, max_per_od = 11)
+plot(zones$geometry)
+plot(od_sf$geometry, lwd = 9, add = TRUE)
+plot(od_disag$geometry, col = "grey", lwd = 1, add = TRUE)
+plot(od_disag2$geometry, col = "green", lwd = 1, add = TRUE)
+table(od_disag$o_agg, od_disag$d_agg)
+# integer results
+od_disaggregate(od, zones, integer_outputs = TRUE)
+
+# with more trips per disaggregated OD pair:
+disag = od_disaggregate(od_data_df[1:2, ], z = zones, max_per_od = 50)
+plot(disag[0])
+
+# with subpoints
+subpoints = sf::st_sample(zones, 100)
+od_disag_subpoints = od_disaggregate(od, zones, subpoints = subpoints)
+plot(subpoints)
+plot(od_disag_subpoints$geometry, add = TRUE)
+
+# with buildings data
+od_disag_buildings = od_disaggregate(od, zones, od_data_buildings)
+summary(od_disag_buildings)
+plot(od_data_buildings$geometry)
+plot(od_disag_buildings[3], add = TRUE)
+# mapview::mapview(od_disag_buildings)
+
+od = od_data_df[1:2, 1:4]
+subzones = od_data_zones_small
+try(od_disaggregate(od, zones, subzones))
+od_disag = od_disaggregate(od, zones, subzones, max_per_od = 500)
+ncol(od_disag) - 3 == ncol(od) # same number of columns, the same...
+# Except disag data gained geometry and new agg ids:
+sum(od_disag[[3]]) == sum(od[[3]])
+sum(od_disag[[4]]) == sum(od[[4]])
+plot(od_disag)
+# test with road network dataset (don't run as time consuming):
+## Not run: 
+od_disag_net = od_disaggregate(od, zones, od_road_network, max_per_od = 500)
+plot(zones$geometry)
+plot(od_road_network$geometry, add = TRUE, col = "green")
+plot(od_disag_net$geometry, add = TRUE)
+mapview::mapview(zones) + od_disag_net + od_road_network
+
+## End(Not run)
+</code></pre>
+
+
+</div>

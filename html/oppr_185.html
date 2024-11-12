@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>solution_statistics</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Solution statistics</h2>
+
+<h3>Description</h3>
+
+<p>Calculate statistics describing a solution to a project prioritization
+<code>problem()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">solution_statistics(x, solution)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>project prioritization <code>problem()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solution</code></td>
+<td>
+<p><code>base::data.frame()</code> or
+<code>tibble::tibble()</code> table containing the solutions. Here,
+rows correspond to different solutions and columns correspond to
+different actions. Each column in the argument to <code>solution</code> should
+be named according to a different action in <code>x</code>.
+Cell values indicate if an action is funded in a given solution or not,
+and should be either zero or one. Arguments to <code>solution</code> can
+contain additional columns, and they will be ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>tibble::tibble()</code> table containing the following
+columns:
+</p>
+
+<dl>
+<dt><code>"cost"</code></dt>
+<dd>
+<p><code>numeric</code> cost of each solution.</p>
+</dd>
+<dt><code>"obj"</code></dt>
+<dd>
+<p><code>numeric</code> objective value for each solution.
+This is calculated using the objective function defined for the
+argument to <code>x</code>.</p>
+</dd>
+<dt><code>x$project_names()</code></dt>
+<dd>
+<p><code>numeric</code> column for each
+project indicating if it was completely funded (with a value of 1)
+or not (with a value of 0).</p>
+</dd>
+<dt><code>x$feature_names()</code></dt>
+<dd>
+<p><code>numeric</code> column for each
+feature indicating the probability that it will persist into
+the future given each solution.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>objectives, <code>replacement_costs()</code>,
+<code>project_cost_effectiveness()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# print project data
+print(sim_projects)
+
+# print action data
+print(sim_features)
+
+# print feature data
+print(sim_actions)
+
+# build problem
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 400) %&gt;%
+     add_feature_weights("weight") %&gt;%
+     add_binary_decisions()
+
+# print problem
+print(p)
+
+# create a table with some solutions
+solutions &lt;- data.frame(F1_action =       c(0, 1, 1),
+                        F2_action =       c(0, 1, 0),
+                        F3_action =       c(0, 1, 1),
+                        F4_action =       c(0, 1, 0),
+                        F5_action =       c(0, 1, 1),
+                        baseline_action = c(1, 1, 1))
+
+# print the solutions
+# the first solution only has the baseline action funded
+# the second solution has every action funded
+# the third solution has only some actions funded
+print(solutions)
+
+# calculate statistics
+solution_statistics(p, solutions)
+</code></pre>
+
+
+</div>

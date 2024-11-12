@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>newCohortTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+<code>cohort_table</code> objects constructor.</h2>
+
+<h3>Description</h3>
+
+<p><code>cohort_table</code> objects constructor.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">newCohortTable(
+  table,
+  cohortSetRef = attr(table, "cohort_set"),
+  cohortAttritionRef = attr(table, "cohort_attrition"),
+  cohortCodelistRef = attr(table, "cohort_codelist"),
+  .softValidation = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+<p>cdm_table object with at least: cohort_definition_id,
+subject_id, cohort_start_date, cohort_end_date.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cohortSetRef</code></td>
+<td>
+<p>Table with at least: cohort_definition_id, cohort_name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cohortAttritionRef</code></td>
+<td>
+<p>Table with at least: cohort_definition_id,
+number_subjects, number_records, reason_id, reason, excluded_subjects,
+excluded_records.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cohortCodelistRef</code></td>
+<td>
+<p>Table with at least: cohort_definition_id, codelist_name,
+and concept_id.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.softValidation</code></td>
+<td>
+<p>Whether to perform a soft validation of consistency.
+If set to FALSE four additional checks will be performed: 1) a check that
+cohort end date is not before cohort start date,  2) a check that there
+are no missing values in required columns, 3) a check that cohort duration is
+all within observation period, and 4) that there are no overlapping
+cohort entries</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A cohort_table object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">person &lt;- dplyr::tibble(
+  person_id = 1, gender_concept_id = 0, year_of_birth = 1990,
+  race_concept_id = 0, ethnicity_concept_id = 0
+)
+observation_period &lt;- dplyr::tibble(
+  observation_period_id = 1, person_id = 1,
+  observation_period_start_date = as.Date("2000-01-01"),
+  observation_period_end_date = as.Date("2023-12-31"),
+  period_type_concept_id = 0
+)
+cohort1 &lt;- dplyr::tibble(
+  cohort_definition_id = 1, subject_id = 1,
+  cohort_start_date = as.Date("2020-01-01"),
+  cohort_end_date = as.Date("2020-01-10")
+)
+cdm &lt;- cdmFromTables(
+  tables = list(
+    "person" = person,
+    "observation_period" = observation_period,
+    "cohort1" = cohort1
+  ),
+  cdmName = "test"
+)
+cdm
+cdm$cohort1 &lt;- newCohortTable(table = cdm$cohort1)
+cdm
+settings(cdm$cohort1)
+attrition(cdm$cohort1)
+cohortCount(cdm$cohort1)
+
+</code></pre>
+
+
+</div>

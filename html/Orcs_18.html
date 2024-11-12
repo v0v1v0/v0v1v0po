@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>latticeCombineLayer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine Multiple Lattice Plots Layerwise</h2>
+
+<h3>Description</h3>
+
+<p>This function combines multiple <strong>lattice</strong> plot objects drawing each as a
+layer on top of the previous plots. Note that the global plot settings (e.g.
+'xlim', 'ylim', ...) are taken from the first object. This is particularly
+useful when looping over large amounts of data using <code>lapply()</code> (see
+Examples).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">latticeCombineLayer(trellis.list, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>trellis.list</code></td>
+<td>
+<p>A <code>list</code> containing <strong>lattice</strong> plot objects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>latticeExtra::as.layer()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A single <strong>lattice</strong> plot object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tim Appelhans
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>latticeExtra::as.layer()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(latticeExtra)
+dat &lt;- list(1:10,
+            10:1,
+            3:7,
+            7:3)
+
+plist &lt;- lapply(seq(dat), function(i) {
+ tmp &lt;- xyplot(dat[[i]] ~ seq(dat[[i]]),
+               type = "l", col = i)
+})
+
+p &lt;- latticeCombineLayer(plist)
+
+print(p)
+
+</code></pre>
+
+
+</div>

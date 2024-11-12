@@ -1,0 +1,290 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>trajLevelMap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Trajectory level plots in <code>leaflet</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>This function plots back trajectories on a <code>leaflet</code> map. This function
+requires that data are imported using the <code>openair::importTraj()</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">trajLevelMap(
+  data,
+  longitude = "lon",
+  latitude = "lat",
+  pollutant,
+  type = NULL,
+  smooth = FALSE,
+  statistic = "frequency",
+  percentile = 90,
+  lon.inc = 1,
+  lat.inc = 1,
+  min.bin = 1,
+  .combine = NA,
+  sigma = 1.5,
+  cols = "turbo",
+  alpha = 0.5,
+  tile.border = NA,
+  provider = "OpenStreetMap",
+  legend.position = "topright",
+  legend.title = NULL,
+  legend.title.autotext = TRUE,
+  control.collapsed = FALSE,
+  control.position = "topright"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p><em>A data frame containing a HYSPLIT trajectory, perhaps accessed
+with <code>openair::importTraj()</code>.</em>
+</p>
+<p><strong>required</strong>
+</p>
+<p>A data frame containing HYSPLIT model outputs. If this data were not
+obtained using <code>openair::importTraj()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latitude, longitude</code></td>
+<td>
+<p><em>The decimal latitude/longitude.</em>
+</p>
+<p><em>default:</em> <code>"lat"</code> / <code>"lon"</code>
+</p>
+<p>Column names representing the decimal latitude and longitude.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>Pollutant to be plotted. By default the trajectory height is
+used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><em>A method to condition the <code>data</code> for separate plotting.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>Used for splitting the trajectories into different groups which can be
+selected between using a "layer control" menu. Passed to
+<code>openair::cutData()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smooth</code></td>
+<td>
+<p>Should the trajectory surface be smoothed? Defaults to <code>FALSE</code>.
+Note that, when <code>smooth = TRUE</code>, no popup information will be available.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>Statistic to use for <code>trajLevel()</code>. By default, the function
+will plot the trajectory frequencies (<code>statistic = "frequency"</code>). As an
+alternative way of viewing trajectory frequencies, the argument <code>method = "hexbin"</code> can be used. In this case hexagonal binning of the trajectory
+<em>points</em> (i.e., a point every three hours along each back trajectory).
+The plot then shows the trajectory frequencies uses hexagonal binning.
+</p>
+<p>There are also various ways of plotting concentrations.
+</p>
+<p>It is possible to set <code>statistic = "difference"</code>. In this case trajectories
+where the associated concentration is greater than <code>percentile</code> are
+compared with the the full set of trajectories to understand the
+differences in frequencies of the origin of air masses. The comparison is
+made by comparing the percentage change in gridded frequencies. For
+example, such a plot could show that the top 10\
+tend to originate from air-mass origins to the east.
+</p>
+<p>If <code>statistic = "pscf"</code> then a Potential Source Contribution Function map
+is produced. This statistic method interacts with <code>percentile</code>.
+</p>
+<p>If <code>statistic = "cwt"</code> then concentration weighted trajectories are
+plotted.
+</p>
+<p>If <code>statistic = "sqtba"</code> then Simplified Quantitative Transport Bias
+Analysis is undertaken. This statistic method interacts with <code>.combine</code> and
+<code>sigma</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentile</code></td>
+<td>
+<p>The percentile concentration of <code>pollutant</code> against which
+the all trajectories are compared.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lon.inc, lat.inc</code></td>
+<td>
+<p>The longitude and latitude intervals to be used for
+binning data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.bin</code></td>
+<td>
+<p>The minimum number of unique points in a grid cell. Counts
+below <code>min.bin</code> are set as missing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.combine</code></td>
+<td>
+<p>When statistic is "SQTBA" it is possible to combine lots of
+receptor locations to derive a single map. <code>.combine</code> identifies the column
+that differentiates different sites (commonly a column named <code>"site"</code>).
+Note that individual site maps are normalised first by dividing by their
+mean value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>For the SQTBA approach <code>sigma</code> determines the amount of back
+trajectory spread based on the Gaussian plume equation. Values in the
+literature suggest 5.4 km after one hour. However, testing suggests lower
+values reveal source regions more effectively while not introducing too
+much noise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>The colours used for plotting, passed to
+<code>openair::openColours()</code>. The default, <code>"turbo"</code>, is a rainbow palette with
+relatively perceptually uniform colours. Read more about this palette at
+<a href="https://research.google/blog/turbo-an-improved-rainbow-colormap-for-visualization/">https://research.google/blog/turbo-an-improved-rainbow-colormap-for-visualization/</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Opacity of the tiles. Must be between <code>0</code> and <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tile.border</code></td>
+<td>
+<p>Colour to use for the border of binned tiles. Defaults to
+<code>NA</code>, which draws no border.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>provider</code></td>
+<td>
+<p><em>The basemap to be used.</em>
+</p>
+<p><em>default:</em> <code>"OpenStreetMap"</code>
+</p>
+<p>A single leaflet::providers. See
+<a href="http://leaflet-extras.github.io/leaflet-providers/preview/">http://leaflet-extras.github.io/leaflet-providers/preview/</a> for a list of
+all base maps that can be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.position</code></td>
+<td>
+<p><em>Position of the shared legend.</em>
+</p>
+<p><em>default:</em> <code>"topright"</code>
+</p>
+<p>Where should the legend be placed? One of "topright", "topright",
+"bottomleft" or "bottomright". Passed to the <code>position</code> argument of
+<code>leaflet::addLegend()</code>. <code>NULL</code> defaults to "topright".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.title</code></td>
+<td>
+<p><em>Title of the legend.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>By default, when <code>legend.title = NULL</code>, the function will attempt to
+provide a sensible legend title based on <code>colour</code>. <code>legend.title</code> allows
+users to overwrite this - for example, to include units or other contextual
+information. Users may wish to use HTML tags to format the title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.title.autotext</code></td>
+<td>
+<p><em>Automatically format the title of the legend?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code>
+</p>
+<p>When <code>legend.title.autotext = TRUE</code>, <code>legend.title</code> will be first run
+through <code>quickTextHTML()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control.collapsed</code></td>
+<td>
+<p><em>Show the layer control as a collapsed?</em>
+</p>
+<p><em>default:</em> <code>FALSE</code>
+</p>
+<p>Should the "layer control" interface be collapsed? If <code>TRUE</code>, users will
+have to hover over an icon to view the options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control.position</code></td>
+<td>
+<p><em>Position of the layer control menu</em>
+</p>
+<p><em>default:</em> <code>"topright"</code>
+</p>
+<p>Where should the "layer control" interface be placed? One of "topleft",
+"topright", "bottomleft" or "bottomright". Passed to the <code>position</code>
+argument of <code>leaflet::addLayersControl()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A leaflet object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openair::trajLevel()</code>
+</p>
+<p><code>trajLevelMapStatic()</code> for the static <code>ggplot2</code> equivalent of
+<code>trajLevelMap()</code>
+</p>
+<p>Other interactive trajectory maps: 
+<code>trajMap()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+trajLevelMap(traj_data, pollutant = "pm2.5", statistic = "pscf", min.bin = 10)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

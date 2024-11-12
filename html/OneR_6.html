@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OneR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>One Rule function</h2>
+
+<h3>Description</h3>
+
+<p>Builds a model according to the One Rule (OneR) machine learning classification algorithm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OneR(x, ...)
+
+## S3 method for class 'formula'
+OneR(formula, data, ties.method = c("first", "chisq"),
+  verbose = FALSE, ...)
+
+## S3 method for class 'data.frame'
+OneR(x, ties.method = c("first", "chisq"),
+  verbose = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>data frame with the last column containing the target variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>formula, additionally the argument <code>data</code> is needed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>data frame which contains the data, only needed when using the formula interface.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ties.method</code></td>
+<td>
+<p>character string specifying how ties are treated, see 'Details'; can be abbreviated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>if <code>TRUE</code> prints rank, names and predictive accuracy of the attributes in decreasing order (with <code>ties.method = "first"</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>All numerical data is automatically converted into five categorical bins of equal length. Instances with missing values are removed.
+This is done by internally calling the default version of <code>bin</code> before starting the OneR algorithm.
+To finetune this behaviour data preprocessing with the <code>bin</code> or <code>optbin</code> functions should be performed.
+If data contains unused factor levels (e.g. due to subsetting) these are ignored and a warning is given.
+</p>
+<p>When there is more than one attribute with best performance either the first (from left to right) is being chosen (method <code>"first"</code>) or
+the one with the lowest p-value of a chi-squared test (method <code>"chisq"</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class "OneR". Internally this is a list consisting of the function call with the specified arguments, the names of the target and feature variables,
+a list of the rules, the number of correctly classified and total instances and the contingency table of the best predictor vs. the target variable.
+</p>
+
+
+<h3>Methods (by class)</h3>
+
+
+<ul>
+<li> <p><code>formula</code>: method for formulas.
+</p>
+</li>
+<li> <p><code>data.frame</code>: method for data frames.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Holger von Jouanne-Diedrich
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://github.com/vonjd/OneR">https://github.com/vonjd/OneR</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>bin</code>, <code>optbin</code>, <code>eval_model</code>, <code>maxlevels</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data &lt;- optbin(iris)
+model &lt;- OneR(data, verbose = TRUE)
+summary(model)
+plot(model)
+prediction &lt;- predict(model, data)
+eval_model(prediction, data)
+
+## The same with the formula interface:
+data &lt;- optbin(iris)
+model &lt;- OneR(Species ~., data = data, verbose = TRUE)
+summary(model)
+plot(model)
+prediction &lt;- predict(model, data)
+eval_model(prediction, data)
+</code></pre>
+
+
+</div>

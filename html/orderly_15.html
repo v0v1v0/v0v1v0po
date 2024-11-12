@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_default_remote_set</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set default remote location</h2>
+
+<h3>Description</h3>
+
+<p>Set and get default remote locations.  Default locations are
+specific to an orderly repository (based on the path of the
+repository) so there is no interaction between different orderly
+projects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_default_remote_set(value, root = NULL, locate = TRUE)
+
+orderly_default_remote_get(root = NULL, locate = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>A string describing a remote, a remote object, or
+<code>NULL</code> to clear</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The default remote (for
+<code>orderly_default_remote_get</code>). The function
+<code>orderly_default_remote_set</code> is called for its side effects
+only.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Same setup as in orderly_remote_path, with a remote orderly:
+path_remote &lt;- orderly::orderly_example("demo")
+id &lt;- orderly::orderly_run("other", list(nmin = 0),
+                           root = path_remote, echo = FALSE)
+orderly::orderly_commit(id, root = path_remote)
+id &lt;- orderly::orderly_run("use_dependency",
+                           root = path_remote, echo = FALSE)
+orderly::orderly_commit(id, root = path_remote)
+
+# And a local orderly
+path_local &lt;- orderly::orderly_example("demo")
+
+# We'll create an object to interact with this remote using
+# orderly_remote_path.
+remote &lt;- orderly::orderly_remote_path(path_remote)
+
+# There is no remote set by default:
+try(orderly::orderly_default_remote_get(root = path_local))
+
+# We can set one:
+orderly::orderly_default_remote_set(remote, root = path_local)
+
+# and now we can retrieve it:
+orderly::orderly_default_remote_get(root = path_local)
+
+# Note that this has not affected the other orderly:
+try(orderly::orderly_default_remote_get(root = path_remote))
+</code></pre>
+
+
+</div>

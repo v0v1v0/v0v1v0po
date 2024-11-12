@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>insert_or</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Insert odds ratios of GAM(M)s into smoothing function</h2>
+
+<h3>Description</h3>
+
+<p>This function inserts calculated odds ratios of GAM(M)s into a
+plot of a GAM(M) smoothing function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">insert_or(
+  plot_object = NULL,
+  or_object = NULL,
+  line_col = "red",
+  line_size = 1.2,
+  line_type = "solid",
+  line_alpha = 1,
+  text_alpha = 1,
+  text_size = 4,
+  text_col = "black",
+  rect_alpha = 0.5,
+  rect_col = NULL,
+  rect = FALSE,
+  arrow = TRUE,
+  values = TRUE,
+  values_yloc = 0,
+  values_xloc = NULL,
+  or_yloc = 0,
+  arrow_length = NULL,
+  arrow_yloc = NULL,
+  arrow_col = NULL,
+  arrow_xloc_r = NULL,
+  arrow_xloc_l = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>plot_object</code></td>
+<td>
+<p>A <code>ggplot</code> object from <code>plot_gam()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>or_object</code></td>
+<td>
+<p>A data.frame as returned from <code>or_gam()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line_col, line_alpha, line_type, line_size</code></td>
+<td>
+<p>Aesthetics of vertical lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text_col, text_alpha, text_size</code></td>
+<td>
+<p>Aesthetics of inserted values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rect_col, rect_alpha</code></td>
+<td>
+<p>Aesthetics of shaded rectangle.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rect</code></td>
+<td>
+<p>Whether to print a shaded rectangle between the
+vertical lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arrow</code></td>
+<td>
+<p>Whether to print arrows above the inserted values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>Whether to print predictor value information nearby the
+inserted vertical lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values_xloc</code></td>
+<td>
+<p>x-axis location/shift of values relative to their vertical
+line. Default to 2\% of x-axis range.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>or_yloc, values_yloc</code></td>
+<td>
+<p>Specifies y-location of inserted odds ratio
+values. Relative to plotted y-axis range. A positive (negative) value will
+place the the text higher (lower).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arrow_xloc_r, arrow_xloc_l, arrow_yloc, arrow_length, arrow_col</code></td>
+<td>
+<p>Axis
+placement options of inserted arrows. Relative to respective axis ranges.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The idea behind this function is to add calculated odds ratios of fitted GAM
+models (<code>or_gam()</code>) into a plot showing the smooth function (plot_gam) of
+the chosen predictor for which the odds ratio was calculated for. Multiple
+insertions can be made by iterative calling the function (see examples).
+</p>
+<p>Right now the function only accepts inputs from <code>or_gam()</code> objects with
+<code>slice = FALSE</code>. If you want to insert multiple odds ratio values, call the
+function multiple times.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ggplot2
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plot_gam()</code>, <code>or_gam()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(oddsratio)
+library(mgcv)
+fit_gam &lt;- gam(y ~ s(x0) + s(I(x1^2)) + s(x2) +
+  offset(x3) + x4, data = data_gam) # fit model
+
+# create input objects (plot + odds ratios)
+plot_object &lt;- plot_gam(fit_gam, pred = "x2", title = "Predictor 'x2'")
+or_object1 &lt;- or_gam(
+  data = data_gam, model = fit_gam,
+  pred = "x2", values = c(0.099, 0.198)
+)
+
+# insert first odds ratios to plot
+plot_object &lt;- insert_or(plot_object, or_object1,
+  or_yloc = 3,
+  values_xloc = 0.04, line_size = 0.5,
+  line_type = "dotdash", text_size = 6,
+  values_yloc = 0.5, arrow_col = "red"
+)
+
+# calculate second odds ratio
+or_object2 &lt;- or_gam(
+  data = data_gam, model = fit_gam, pred = "x2",
+  values = c(0.4, 0.6)
+)
+
+# add or_object2 into plot
+insert_or(plot_object, or_object2,
+  or_yloc = 2.1, values_yloc = 2,
+  line_col = "green4", text_col = "black",
+  rect_col = "green4", rect_alpha = 0.2,
+  line_alpha = 1, line_type = "dashed",
+  arrow_xloc_r = 0.01, arrow_xloc_l = -0.01,
+  arrow_length = 0.01, rect = TRUE
+)
+</code></pre>
+
+
+</div>

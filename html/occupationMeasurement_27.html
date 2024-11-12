@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>page_choose_one_option</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Show a page with multiple radio button options where once can be picked.</h2>
+
+<h3>Description</h3>
+
+<p>Show a page with multiple radio button options where once can be picked.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">page_choose_one_option(
+  page_id,
+  question_text = "Please pick one of the following options",
+  list_of_choices = list(One = 1, Two = 2, Three = 3),
+  choice_labels = NULL,
+  next_button = TRUE,
+  previous_button = TRUE,
+  run_before = NULL,
+  run_after = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>page_id</code></td>
+<td>
+<p>A unique string identifiying this page. Used to store data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>question_text</code></td>
+<td>
+<p>The question / text to display.
+This can be either a string, which will simply be displayed or a function
+to dynamically determine the question_text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>list_of_choices</code></td>
+<td>
+<p>A list of answering options.
+This can either be just a simple list of values or a named list with the
+names corresponding to what the user sees and the values corresponding to
+the actually saved values.
+e.g. with <code>list(One = 1, Two = 2, Three = 3)</code> people will see One, Two, ...
+and numbers 1, 2, ... will be saved under <code>response_id</code>.
+If you want to use more complex choice names than jsut strings (i.e. HTML),
+you can also use the choice_labels option for that.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>choice_labels</code></td>
+<td>
+<p>List or vector of only the choice names to be shown.
+This has to be matched by an equal-length vector in list_of_choices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>next_button</code></td>
+<td>
+<p>Whether to show the button to navigate to the next page?
+Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>previous_button</code></td>
+<td>
+<p>Whether to show the button to navigate to the preivous page?
+Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run_before</code></td>
+<td>
+<p>Similar to <code>run_before</code> in <code>new_page()</code>, passed explicitly
+here as this page adds some of its own code to <code>run_before</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run_after</code></td>
+<td>
+<p>Similar to <code>run_after</code> in <code>new_page()</code>, passed explicitly
+here as this page adds some of its own code to <code>run_after</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other parametrs are passed on to <code>new_page()</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A page object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>new_page()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+## Not run: 
+one_page_questionnaire &lt;- list(
+  page_choose_one_option(
+    "test_page_radio",
+    question_text = "Hello there! Please pick your favorite number from the options below:",
+    list_of_choices = list(One = 1, Two = 2, Three = 3)
+  ),
+  page_final()
+)
+if (interactive()) {
+  app(questionnaire = one_page_questionnaire)
+}
+
+## End(Not run)
+</code></pre>
+
+
+</div>

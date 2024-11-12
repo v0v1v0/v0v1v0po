@@ -1,0 +1,211 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hensm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Friendly interface to softmax regression under Henery model.</h2>
+
+<h3>Description</h3>
+
+<p>A user friendly interface to the softmax regression under the Henery model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hensm(formula, data, group = NULL, weights = NULL, ngamma = 4,
+  na.action = na.omit)
+
+## S3 method for class 'hensm'
+vcov(object, ...)
+
+## S3 method for class 'hensm'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>an object of class <code>"formula"</code> (or one that
+can be coerced to that class): a symbolic description of the
+model to be fitted.  The details of model specification are given
+under ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an optional data frame, list or environment (or object
+coercible by <code>as.data.frame</code> to a data frame) containing
+the variables in the model.  If not found in <code>data</code>, the
+variables are taken from <code>environment(formula)</code>,
+typically the environment from which <code>lm</code> is called.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>the string name of the group variable in the data,
+or a bare character with the group name. The group indices
+need not be integers, but that is more efficient. 
+They need not be sorted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>an optional vector of weights, or the string or bare name of the 
+weights in the <code>data</code> for use in the fitting process. The weights
+are attached to the outcomes, not the participant.  Set to <code>NULL</code>
+for none.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ngamma</code></td>
+<td>
+<p>The number of gammas to fit. Should be at least 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p>How to deal with missing values in <code>y</code>, <code>g</code>,
+<code>X</code>, <code>wt</code>, <code>eta0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>hensm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments to be passed to the low level
+regression fitting functions (see below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>logicals.  If <code>TRUE</code> the corresponding
+components of the fit (the model frame, the model matrix, the
+response, the QR decomposition) are returned.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Performs a softmax regression by groups, via Maximum Likelihood Estimation.
+It is assumed that successive sub-races maintain the proportional
+probability of the softmax, up to some gamma coefficients, 
+<code class="reqn">\gamma_2, \gamma_3, ..., \gamma_n</code>, which we fit. This model
+nests the Harville model fit by <code>harsm</code>, by fixing all
+the gammas equal to 1.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>hensm</code>, but also of <code>maxLik</code> with the
+fit.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This regression may give odd results when the outcomes are tied,
+imposing an arbitrary order on the tied outcomes.
+Moreover, no warning may be issued in this case.
+In future releases, ties may be dealt with differently,
+perhaps in analogy to how ties are treated in the
+Cox Proportional Hazards regression, using
+the methods of Breslow or Efron.
+</p>
+<p>To avoid incorrect inference when only the top
+performers are recorded, and all others are 
+effectively tied, one should use weighting.
+Set the weights to zero for participants who
+are tied non-winners, and one for the rest
+So for example, if you observe the Gold, Silver,
+and Bronze medal winners of an Olympic event
+that had a starting field of 12 participants,
+set weights to 1 for the medal winners, and 0
+for the others. Note that the weights do not
+attach to the participants, they attach to
+the place they took.
+</p>
+<p>Since version 0.1.0 of this package, the
+normalization of weights used in this function
+have changed under the hood. This is to
+give correct inference in the case where
+zero weights are used to signify finishing
+places were not observed. If in doubt,
+please confirm inference by simulations,
+taking as example the simulations in the README.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>harsm</code>, <code>smlik</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+nfeat &lt;- 5
+set.seed(1234)
+g &lt;- ceiling(seq(0.1,1000,by=0.1))
+X &lt;- matrix(rnorm(length(g) * nfeat),ncol=nfeat)
+beta &lt;- rnorm(nfeat)
+eta &lt;- X %*% beta
+# 2FIX: do rhenery
+y &lt;- rsm(eta,g)
+# now the pretty frontend
+data &lt;- cbind(data.frame(outcome=y,race=g),as.data.frame(X))
+
+fmla &lt;- outcome ~ V1 + V2 + V3 + V4 + V5
+fitm &lt;- hensm(fmla,data,group=race)
+
+# with offset
+eta0 &lt;- rowMeans(X)
+data &lt;- cbind(data.frame(outcome=y,race=g,eta0=eta0),as.data.frame(X))
+fmla &lt;- outcome ~ offset(eta0) + V1 + V2 + V3 + V4 + V5
+fitm &lt;- hensm(fmla,data,group=race)
+
+# on horse race data
+library(dplyr)
+data(race_data)
+df &lt;- race_data %&gt;%
+	group_by(EventId) %&gt;%
+		mutate(eta0=log(WN_pool / sum(WN_pool))) %&gt;%
+	ungroup() %&gt;%
+	mutate(weights=ifelse(!is.na(Finish),1,0)) %&gt;%
+	mutate(fac_age=cut(Age,c(0,3,5,7,Inf),include.lowest=TRUE)) 
+
+# Henery Model with market efficiency
+hensm(Finish ~ eta0,data=df,group=EventId,weights=weights,ngamma=3)
+
+# look for age effect not captured by consensus odds.
+hensm(Finish ~ offset(eta0) + fac_age,data=df,group=EventId,weights=weights,ngamma=2)
+
+
+</code></pre>
+
+
+</div>

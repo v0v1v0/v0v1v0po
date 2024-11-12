@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>crossval_o2m_adjR2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adjusted Cross-validate procedure for O2PLS</h2>
+
+<h3>Description</h3>
+
+<p>Combines CV with R2 optimization
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">crossval_o2m_adjR2(
+  X,
+  Y,
+  a,
+  ax,
+  ay,
+  nr_folds,
+  nr_cores = 1,
+  stripped = TRUE,
+  p_thresh = 3000,
+  q_thresh = p_thresh,
+  tol = 1e-10,
+  max_iterations = 100
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Numeric matrix. Vectors will be coerced to matrix with <code>as.matrix</code> (if this is possible)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Numeric matrix. Vectors will be coerced to matrix with <code>as.matrix</code> (if this is possible)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>Vector of positive integers. Denotes the numbers of joint components to consider.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ax</code></td>
+<td>
+<p>Vector of non-negative integers. Denotes the numbers of X-specific components to consider.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ay</code></td>
+<td>
+<p>Vector of non-negative integers. Denotes the numbers of Y-specific components to consider.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nr_folds</code></td>
+<td>
+<p>Positive integer. Number of folds to consider. Note: <code>kcv=N</code> gives leave-one-out CV. Note that CV with less than two folds does not make sense.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nr_cores</code></td>
+<td>
+<p>Positive integer. Number of cores to use for CV. You might want to use <code>detectCores()</code>. Defaults to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stripped</code></td>
+<td>
+<p>Logical. Use the stripped version of o2m (usually when cross-validating)?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p_thresh</code></td>
+<td>
+<p>Integer. If <code>X</code> has more than <code>p_thresh</code> columns, a power method optimization is used, see <code>o2m2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q_thresh</code></td>
+<td>
+<p>Integer. If <code>Y</code> has more than <code>q_thresh</code> columns, a power method optimization is used, see <code>o2m2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Double. Threshold for which the NIPALS method is deemed converged. Must be positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_iterations</code></td>
+<td>
+<p>Integer. Maximum number of iterations for the NIPALS method.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is an alternative way of cross-validating. It is proposed in <code>citation(OmicsPLS)</code>.
+This approach is (much) faster than the standard <code>crossval_o2m</code> approach and works fine even with two folds.
+For each element in <code>n</code> it looks for nx and ny that maximize the <code class="reqn">R^2</code> between T and U in the O2PLS model.
+This approach often yields similar integer as the standard approach.
+We however suggest to use the standard approach to minimize the prediction error around the found integers.
+</p>
+
+
+<h3>Value</h3>
+
+<p>data.frame with four columns: MSE, n, nx and ny. Each row corresponds to an element in <code>a</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">local({
+X = scale(jitter(tcrossprod(rnorm(100),runif(10))))
+Y = scale(jitter(tcrossprod(rnorm(100),runif(10))))
+crossval_o2m_adjR2(X, Y, a = 1:4, ax = 1:2, ay = 1:2,
+             nr_folds = 5, nr_cores = 1)
+})
+</code></pre>
+
+
+</div>

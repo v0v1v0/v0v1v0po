@@ -1,0 +1,180 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict_ode</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict method for <code>survFit</code> objects</h2>
+
+<h3>Description</h3>
+
+<p>Function from the <code>morse v 3.3.1</code> package.
+This is a <code>method</code> to replace function <code>predict</code> used on <code>survFit</code>
+object when computing issues happen. <code>predict_ode</code> uses the <code>deSolve</code>
+library to improve robustness. However, time to compute may be longer.
+</p>
+<p>Function from the <code>morse v 3.3.1</code> package.
+This is the generic <code>predict</code> S3 method for the <code>survFit</code> class.
+It provides predicted survival rate for "SD" or "IT" models under constant or time-variable exposure.
+</p>
+<p>Function from the <code>morse v 3.3.1</code> package.
+This is a <code>method</code> to replace function <code>predict_Nsurv</code> used on <code>survFit</code>
+object when computing issues happen. <code>predict_nsurv_ode</code> uses the <code>deSolve</code>
+library to improve robustness. However, time to compute may be longer.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">predict_ode(object, ...)
+
+## S3 method for class 'survFit'
+predict_ode(
+  object,
+  data_predict = NULL,
+  spaghetti = FALSE,
+  mcmc_size = 1000,
+  hb_value = FALSE,
+  interpolate_length = 100,
+  interpolate_method = "linear",
+  hb_valueFORCED = 0,
+  ...
+)
+
+predict_Nsurv_ode(
+  object,
+  data_predict,
+  spaghetti,
+  mcmc_size,
+  hb_value,
+  hb_valueFORCED,
+  extend_time,
+  interpolate_length,
+  interpolate_method,
+  ...
+)
+
+## S3 method for class 'survFit'
+predict_Nsurv_ode(
+  object,
+  data_predict = NULL,
+  spaghetti = FALSE,
+  mcmc_size = 1000,
+  hb_value = FALSE,
+  hb_valueFORCED = 0,
+  extend_time = 100,
+  interpolate_length = NULL,
+  interpolate_method = "linear",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object of class <code>survFit</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments to be passed to generic methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_predict</code></td>
+<td>
+<p>A dataframe with three columns <code>time</code>, <code>conc</code> and <code>replicate</code>
+used for prediction. If <code>NULL</code>, prediction is based on <code>x</code> object of
+class <code>survFit</code> used for fitting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spaghetti</code></td>
+<td>
+<p>If <code>TRUE</code>, return a set of survival curves using
+parameters drawn from the posterior distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mcmc_size</code></td>
+<td>
+<p>Can be used to reduce the number of mcmc samples in order to speed up
+the computation. <code>mcmc_size</code> is the number of selected iterations for one chain. Default
+is 1000. If all MCMC is wanted, set argument to <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hb_value</code></td>
+<td>
+<p>If <code>TRUE</code>, the background mortality <code>hb</code> is taken into account from the posterior.
+If <code>FALSE</code>, parameter <code>hb</code> is set to 0. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interpolate_length</code></td>
+<td>
+<p>Length of the time sequence for which output is wanted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interpolate_method</code></td>
+<td>
+<p>The interpolation method for concentration. See package <code>deSolve</code> for details.
+Default is <code>linear</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hb_valueFORCED</code></td>
+<td>
+<p>If <code>hb_value</code> is <code>FALSE</code>, it fix <code>hb</code>. Default is <code>0</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extend_time</code></td>
+<td>
+<p>Length of time points interpolated with variable exposure profiles.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The function returns an object of class <code>survFitPredict</code> or
+<code>survFitPredict_Nsurv</code> with two items:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>df_quantile</code></td>
+<td>
+<p>Predicted quantiles (q50, qinf95, and qsup95)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df_spaghetti</code></td>
+<td>
+<p>Predicted survival curve (if spaghetti = <code>TRUE</code>)</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library("odeGUTS")
+data(fit_odeGUTS)
+
+data_4prediction &lt;- data.frame(time = 1:10,
+                               conc = c(0,5,30,30,0,0,5,30,15,0),
+                               replicate= rep("predict", 10))
+
+predict_out &lt;- predict_ode(object = fit_odeGUTS, data_predict = data_4prediction,
+                           mcmc_size = 200, spaghetti = FALSE)
+
+
+
+</code></pre>
+
+
+</div>

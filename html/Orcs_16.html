@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ifMissing</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Take Measures in Case of Nonexisting Target Files</h2>
+
+<h3>Description</h3>
+
+<p>If a target file already exists, it is simply being imported into R. However,
+if the specified target file does not exist, it is first created by a
+user-defined function and subsequently returned, thus rendering explicit
+calls to <code>file.exists()</code> unnecessary.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ifMissing(ofl, fun0 = terra::rast, fun1 = terra::writeRaster, arg1, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ofl</code></td>
+<td>
+<p>Target file name as <code>character</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun0</code></td>
+<td>
+<p>If 'ofl' exists, <code>function</code> to be applied to it. Defaults to
+<code>terra::rast()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun1</code></td>
+<td>
+<p>If 'ofl' does not exist, <code>function</code> used to create it. Defaults
+to <code>terra::writeRaster()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arg1</code></td>
+<td>
+<p>Argument in 'fun1' (as <code>character</code>) that corresponds to 'ofl',
+e.g. 'filename' in <code>terra::writeRaster()</code> or 'file' in
+<code>utils::write.table()</code>. If missing (default), the target file name passed
+to 'fun1' needs to be explicitly included via '...'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to 'fun0' and 'fun1'.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If 'ofl' has already existed, the contents of 'ofl' derived from 'fun0'; else
+the output resultant from 'fun1'.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Florian Detsch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>file.exists()</code>, <code>do.call()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># simply import existing file
+logo &lt;- system.file("ex/logo.tif", package = "terra")
+s &lt;- ifMissing(logo) 
+
+# create nonexisting file and import it afterwards
+logo2 &lt;- file.path(tempdir(), "rlogo.tif")
+s2 &lt;- ifMissing(logo2, arg1 = "filename", x = s, datatype = "INT1U")
+
+# this also works with text files and more sophisticated custom functions
+fun = function(x, file = "", ...) {
+  write.csv(x, file, ...)
+  read.csv(file)
+}
+
+data(iris)
+ofl &lt;- file.path(tempdir(), "iris.csv")
+iris2 &lt;- ifMissing(ofl, fun1 = fun, x = iris, file = ofl, quote = FALSE, row.names = FALSE)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.tbl_ord</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot and biplot methods for 'tbl_ord' objects</h2>
+
+<h3>Description</h3>
+
+<p>Adapt <strong>stats</strong> 'prcomp' and 'princomp' methods for <code>plot()</code>,
+<code>screeplot()</code>, and <code>biplot()</code> generics to 'tbl_ord' objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'tbl_ord'
+plot(x, main = deparse(substitute(x)), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A 'tbl_ord' object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>A main title for the plot, passed to other methods (included to
+enable parsing of object name).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These methods defer to any <code>plot()</code> and <code>biplot()</code> methods for the original,
+underlying model classes of 'tbl_ord' objects. If none are found: Following
+the examples of <code>stats::plot.prcomp()</code> and <code>stats::plot.princomp()</code>,
+<code>plot.tbl_ord()</code> calls on <code>stats::screeplot()</code> to produce a scree plot of the
+decomposition of variance in the singular value decomposition. Similarly
+following <code>stats::biplot.prcomp()</code> and <code>stats::biplot.princomp()</code>,
+<code>biplot.tbl_ord()</code> produces a biplot of both rows and columns, using text
+labels when available and markers otherwise, with rows and columns
+distinguished by color and no additional annotation (e.g. vectors). The
+biplot confers inertia according to <code>get_conference()</code> unless the proportions
+do not sum to 1, in which case it produces a symmetric biplot (inertia
+conferred equally to rows and columns).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Nothing, but a plot is produced on the current graphics device.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># note: behavior depends on installed packages with class-specific methods
+
+# class 'prcomp'
+iris_pca &lt;- prcomp(iris[, -5L], scale = TRUE)
+iris_pca_ord &lt;- as_tbl_ord(iris_pca)
+plot(iris_pca)
+plot(iris_pca_ord)
+screeplot(iris_pca)
+screeplot(iris_pca_ord)
+biplot(iris_pca)
+biplot(iris_pca_ord)
+
+# class 'correspondence'
+haireye_ca &lt;- MASS::corresp(rowSums(HairEyeColor, dims = 2L), nf = 2L)
+haireye_ca_ord &lt;- as_tbl_ord(haireye_ca)
+plot(haireye_ca)
+plot(haireye_ca_ord)
+# no `screeplot()` method for class 'correspondence'
+screeplot(haireye_ca_ord)
+biplot(haireye_ca)
+biplot(haireye_ca_ord)
+</code></pre>
+
+
+</div>

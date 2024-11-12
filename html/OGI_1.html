@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cov2biu</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bi-unit Canonical Form</h2>
+
+<h3>Description</h3>
+
+<p><code>cov2biu(S)</code> returns the bi-unit canonical form of <code>S</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cov2biu(S, nu = rep(1, nrow(S)), force = FALSE, detail = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>Covariance matrix, especially it is positive semi-definite.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nu</code></td>
+<td>
+<p>Numeric vector of subjective importance. It determines the
+importance of each of the variates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force</code></td>
+<td>
+<p>Logical: if force=FALSE, <code>S</code> should be strictly positive
+definite. Default: FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detail</code></td>
+<td>
+<p>Logical: if detail=TRUE, it returns the list of the bi-unit
+form and the weight vectors. Default: FALSE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Numeric matrix of the bi-unit canonical form <code class="reqn">DSD</code> of <code class="reqn">S</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">S = matrix(0, 5, 5)
+S[1,1] = 1
+for(j in 2:5) S[1,j] = S[j,1] = -0.5
+for(i in 2:5){
+  for(j in 2:5){
+    if(i == j) S[i,j] = 1
+    else S[i,j] = 0.5
+  }
+}
+B=cov2biu(S)
+B
+</code></pre>
+
+
+</div>

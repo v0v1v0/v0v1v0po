@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_cleanup</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Orderly cleanup</h2>
+
+<h3>Description</h3>
+
+<p>Clean up orderly draft and data directories.  Deletes all drafts
+(possibly just for a set of report names) and then deletes
+dangling data sets that are not pointed to by any draft or
+committed reports.  Running cleanup does not affect any reports
+that have been committed with <code>orderly_commit()</code> (i.e.,
+the contents of the <code style="white-space: pre;">⁠archive/⁠</code> directory).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_cleanup(
+  name = NULL,
+  root = NULL,
+  locate = TRUE,
+  draft = TRUE,
+  data = TRUE,
+  failed_only = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>Optional name; in this case only clean up drafts with this name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draft</code></td>
+<td>
+<p>Logical, indicating if drafts should be removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Logical, indicating if dangling data should be removed
+(data not used by any draft or archived report).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>failed_only</code></td>
+<td>
+<p>Delete only failed reports (those without the
+end-of-run metadata).  This will also clean up drafts created by
+<code>orderly_test_start()</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>No return value, this function is called only for its side effects
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># In a new example orderly, run two reports and commit only the
+# second one:
+path &lt;- orderly::orderly_example("minimal")
+id1 &lt;- orderly::orderly_run("example", root = path)
+id2 &lt;- orderly::orderly_run("example", root = path)
+orderly::orderly_commit(id2, root = path)
+
+# We now have one draft and one archive report:
+orderly::orderly_list_drafts(root = path)
+orderly::orderly_list_archive(root = path)
+
+# To clean up the drafts:
+orderly::orderly_cleanup(root = path)
+
+# We now have no draft and one archive reports:
+orderly::orderly_list_drafts(root = path)
+orderly::orderly_list_archive(root = path)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>auto_heights</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute optimal row heights</h2>
+
+<h3>Description</h3>
+
+<p>Compute optimal row heights for cell with fixed with and
+enabled automatic row heights parameter
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">auto_heights(
+  wb,
+  sheet,
+  selected,
+  fontsize = NULL,
+  factor = 1,
+  base_height = 15,
+  extra_height = 12
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>workbook</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selected</code></td>
+<td>
+<p>selected rows</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fontsize</code></td>
+<td>
+<p>font size, optional (get base font size by default)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>factor</code></td>
+<td>
+<p>factor to manually adjust font width, e.g., for bold fonts,
+optional</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_height</code></td>
+<td>
+<p>basic row height, optional</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extra_height</code></td>
+<td>
+<p>additional row height per new line of text, optional</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list of indices of columns with fixed widths and optimal row heights
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Breuer
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Create new workbook
+wb &lt;- createWorkbook()
+addWorksheet(wb, "Sheet")
+sheet &lt;- 1
+
+## Write dummy data
+long_string &lt;- "ABC ABC ABC ABC ABC ABC ABC ABC ABC ABC ABC"
+writeData(wb, sheet, c("A", long_string, "CCC"), startCol = 2, startRow = 3)
+writeData(wb, sheet, c(4, 5), startCol = 4, startRow = 3)
+
+## Set column widths and get optimal row heights
+setColWidths(wb, sheet, c(1,2,3,4), c(10,20,10,20))
+auto_heights(wb, sheet, 1:5)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_o</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check the fit for orthogonality of all points</h2>
+
+<h3>Description</h3>
+
+<p>Checks for orthogonality of all points by calculating the angle between the slope of the tangent at <code class="reqn">(x_{0i}, y_{0i})</code> and the slope of the Euclidean vector <code class="reqn">\|\vec{D}_i\|</code> to <code class="reqn">(x_i, y_i)</code>, which should be <code class="reqn">90^{\circ}</code> if the Euclidean distance has been minimized. See 'Details'.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check_o(object, plot = TRUE) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object returned from <code>onls</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, the <code class="reqn">\alpha</code>-values are plotted for a quick overview of orthogonality for all points.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a validation method for checking the orthogonality between all <code class="reqn">(x_{0i}, y_{0i})</code> and <code class="reqn">(x_i, y_i)</code>. The function calculates the angle between the slope <code class="reqn">\mathrm{m}_i</code> of the tangent obtained from the first derivative at <code class="reqn">(x_{0i}, y_{0i})</code> and the slope <code class="reqn">\mathrm{n}_i</code> of the <code>onls</code>-minimized Euclidean distance between <code class="reqn">(x_{0i}, y_{0i})</code> and <code class="reqn">(x_i, y_i)</code>:
+</p>
+<p style="text-align: center;"><code class="reqn">\tan(\alpha_i) = \left|\frac{\mathrm{m}_i - \mathrm{n}_i}{1 + \mathrm{m}_i \cdot \mathrm{n}_i}\right|, \,\, \mathrm{m}_i = \frac{df(x, \beta)}{dx_{0i}}, \,\, \mathrm{n}_i = \frac{y_i - y_{0i}}{x_i - x_{0i}}</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">=&gt; \alpha_i[^{\circ}] = \tan^{-1} \left( \left|\frac{\mathrm{m}_i - \mathrm{n}_i}{1 + \mathrm{m}_i \cdot \mathrm{n}_i}\right| \right) \cdot \frac{360}{2\pi}</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing <code class="reqn">x_i</code>, <code class="reqn">x_{0i}</code>, <code class="reqn">y_i</code>, <code class="reqn">y_{0i}</code>, <code class="reqn">\alpha_i</code>, <code class="reqn">\frac{df}{dx}</code> and a logical for <code class="reqn">89.95^\circ &lt; \alpha_i &lt; 90.05^\circ</code>. If <code>plot = TRUE</code>, a plot of the <code class="reqn">\alpha</code>-values in black if orthogonal, or red otherwise. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Andrej-Nikolai Spiess
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Compare 'data range extended' orthogonal model with a
+## 'data range restricted' model by setting "extend = c(0, 0)"
+## =&gt; some x may not be orthogonal!
+x &lt;- 1:20
+y &lt;- 10 + 3*x^2
+y &lt;- sapply(y, function(a) rnorm(1, a, 0.1 * a))
+DAT &lt;- data.frame(x, y)
+
+mod1 &lt;- onls(y ~ a + b * x^2, data = DAT, start = list(a = 1, b = 1))
+check_o(mod1)
+
+mod2 &lt;- onls(y ~ a + b * x^2, data = DAT, start = list(a = 1, b = 1),
+             extend = c(0, 0)) 
+check_o(mod2)
+</code></pre>
+
+
+</div>

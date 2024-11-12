@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make_opt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make optional</h2>
+
+<h3>Description</h3>
+
+<p>Make an existing function accepting and returning optionals.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">make_opt(fun, stop_if_none = FALSE, fun_if_none = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>The function to make optional, might be any 
+function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stop_if_none</code></td>
+<td>
+<p>If true, <code>f_opt()</code> will stop and return 
+<code>none</code> if one of the arguments provided 
+is <code>none</code>. Else, <code>none</code> will be 
+sent as <code>NULL</code> to the function.
+*Default: FALSE*</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun_if_none</code></td>
+<td>
+<p>If not null, will be executed if an argument
+is <code>none</code>.
+*Default: NULL*</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<ol>
+<li>
+<p> Every optional argument passed to <code>f_opt()</code> will be  
+converted to its original type before being sent 
+to <code>f()</code>. If one or more of them is <code>none</code>,  
+several behaviors are available (see argument list).
+</p>
+</li>
+<li>
+<p> If <code>f()</code> returns null, or if an error is thrown 
+during its execution, then <code>f_opt()</code> returns 
+<code>none</code>. Else it will return  <code>option(f(...))</code>.
+</p>
+</li>
+</ol>
+<h3>Value</h3>
+
+<p>The optional function. To be used with the
+same parameters than <code>fun()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>option(), none(), match_with()
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">c_opt &lt;- make_opt(c)
+c_opt(option(2), none, option(5))
+## [1] 2 5
+c_opt()
+## [1] "None"
+</code></pre>
+
+
+</div>

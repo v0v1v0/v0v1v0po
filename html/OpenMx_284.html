@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxComputeLoadData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Load columns into an MxData object</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxComputeLoadData(
+  dest,
+  column,
+  method = c("csv", "data.frame"),
+  ...,
+  path = c(),
+  originalDataIsIndexOne = FALSE,
+  byrow = TRUE,
+  row.names = c(),
+  col.names = c(),
+  skip.rows = 0,
+  skip.cols = 0,
+  verbose = 0L,
+  cacheSize = 100L,
+  checkpointMetadata = TRUE,
+  na.strings = c("NA"),
+  observed = NULL,
+  rowFilter = c()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dest</code></td>
+<td>
+<p>the name of the model where the columns will be loaded</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>column</code></td>
+<td>
+<p>a character vector. The column names to replace.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>name of the conduit used to load the columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Forces remaining arguments to be specified by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>the path to the file containing the data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>originalDataIsIndexOne</code></td>
+<td>
+<p>logical. Whether to use the initial data for index 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+<p>logical. Whether the data columns are stored in rows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row.names</code></td>
+<td>
+<p>optional integer. Column containing the row names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.names</code></td>
+<td>
+<p>optional integer. Row containing the column names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip.rows</code></td>
+<td>
+<p>integer. Number of rows to skip before reading data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip.cols</code></td>
+<td>
+<p>integer. Number of columns to skip before reading data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>integer. Level of run-time diagnostic output. Set to zero to disable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cacheSize</code></td>
+<td>
+<p>integer. How many columns to cache per
+scan through the data. Only used when byrow=FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkpointMetadata</code></td>
+<td>
+<p>logical. Whether to add per record metadata to the checkpoint</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.strings</code></td>
+<td>
+<p>character vector. A vector of strings that denote a missing value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>observed</code></td>
+<td>
+<p>data frame. The reservoir of data for <code>method='data.frame'</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowFilter</code></td>
+<td>
+<p>logical vector. Whether to skip the source row.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The purpose of this compute step is to help quickly perform many
+similar analyses. For example, if we are given a sample of people
+with a few million SNPs (single-nucleotide polymorphism) per
+person then we could fit a separate model for each SNP by iterating
+over the SNP data.
+</p>
+<p>The column names given in the <code>column</code> parameter must already
+exist in the model's MxData object. Pre-existing data is assumed to be
+a placeholder and is not used unless
+<code>originalDataIsIndexOne</code> is set to TRUE.
+</p>
+<p>For <code>method='csv'</code>, the highest performance arrangement is
+<code>byrow=TRUE</code> because entire columns are stored in single
+chunks (rows) on the disk and can be easily loaded. For
+<code>byrow=FALSE</code>, the data requires transposition. To load a
+single column of observed data, it is necessary to read through
+the whole file. This can be slow for large files. To amortize the
+cost of transposition, <code>cacheSize</code> columns are loaded on
+every pass through the file.
+</p>
+<p>After <code>mxRun</code> returns, the <code>dest</code> mxData object will
+contain the most recently loaded data. Hence, any single analysis
+of a series can be reproduced by issuing <code>mxComputeLoadData</code>
+with the single index associated with a particular dataset,
+replacing the compute plan with something like
+<code>omxDefaultComputePlan</code>, and then passing the model back
+through <code>mxRun</code>. This can be a helpful approach when
+investigating unexpected results.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>mxComputeLoadMatrix, mxComputeCheckpoint, mxRun, omxDefaultComputePlan
+</p>
+
+
+</div>

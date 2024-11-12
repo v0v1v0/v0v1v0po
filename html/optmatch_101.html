@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scores</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract scores (propensity, prognostic,...) from a fitted model</h2>
+
+<h3>Description</h3>
+
+<p>This is a wrapper for <code>predict</code>, adapted for use in matching.  Given a
+fitted model but no explicit <code>newdata</code> to ‘predict’ from, it
+constructs its own <code>newdata</code> in a manner that's generally better suited
+for matching.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scores(object, newdata = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>fitted model object determining scores to be generated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>(optional) data frame containing variables with which scores
+are produced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>predict</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Like <code>predict</code>, its default predictions from a <code>glm</code> are on
+the scale of the linear predictor, not the scale of the response; see
+Rosenbaum \ Rubin (1985).  (This default can
+be overridden by specifying <code>type="response"</code>.)
+In contrast to <code>predict</code>, if <code>scores</code> isn't given an explicit
+<code>newdata</code> argument then it attempts to reconstruct one from the context
+in which it is called, rather than from its first argument.  For example, if
+it's called within the <code>formula</code> argument of a call to <code>glm</code>, its
+<code>newdata</code> is the same data frame that <code>glm</code> evaluates that formula
+in, as opposed to the model frame associated with <code>object</code>.  See
+Examples.
+</p>
+<p>The handling of missing independent variables also differs from that of
+<code>predict</code> in two ways. First, if the data used to generate <code>object</code>
+has <code>NA</code> values, they're mean-imputed using
+<code>fill.NAs</code>. Secondly, if <code>newdata</code> (either the explicit
+argument, or the implicit data generated from <code>object</code>) has <code>NA</code>
+values, they're likewise mean-imputed using <code>fill.NAs</code>.  Also,
+missingness flags are added to the formula of <code>object</code>, which is then
+re-fit, using <code>fill.NAs</code>, prior to calling <code>predict</code>.
+</p>
+<p>If <code>newdata</code> is specified and contains no missing data, <code>scores</code>
+returns the same value as <code>predict</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>See individual <code>predict</code> functions.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Josh Errickson
+</p>
+
+
+<h3>References</h3>
+
+<p>P.~R. Rosenbaum and D.~B. Rubin (1985), ‘Constructing a
+control group using multivariate matched sampling methods that incorporate
+the propensity score’, <em>The American Statistician</em>, <b>39</b> 33–38.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>predict</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(nuclearplants)
+pg &lt;- lm(cost~., data=nuclearplants, subset=(pr==0))
+# The following two lines produce identical results.
+ps1 &lt;- glm(pr~cap+date+t1+bw+predict(pg, newdata=nuclearplants),
+           data=nuclearplants)
+ps2 &lt;- glm(pr~cap+date+t1+bw+scores(pg), data=nuclearplants)
+</code></pre>
+
+
+</div>

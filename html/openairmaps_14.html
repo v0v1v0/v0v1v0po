@@ -1,0 +1,246 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>networkMap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a leaflet map of air quality measurement network sites</h2>
+
+<h3>Description</h3>
+
+<p>This function uses <code>openair::importMeta()</code> to obtain metadata for measurement
+sites and uses it to create an attractive <code>leaflet</code> map. By default a map
+will be created in which readers may toggle between a vector base map and a
+satellite/aerial image, although users can further customise the control menu
+using the <code>provider</code> and <code>control</code> parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">networkMap(
+  source = "aurn",
+  control = NULL,
+  year = NULL,
+  cluster = TRUE,
+  provider = c(Default = "OpenStreetMap", Satellite = "Esri.WorldImagery"),
+  legend = TRUE,
+  legend.position = "topright",
+  control.collapsed = FALSE,
+  control.position = "topright"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>source</code></td>
+<td>
+<p><em>One or more UK or European monitoring networks.</em>
+</p>
+<p><em>default:</em> <code>"aurn"</code>
+</p>
+<p>One or more air quality networks for which data is available through
+openair. Available networks include:
+</p>
+
+<ul>
+<li> <p><code>"aurn"</code>, The UK Automatic Urban and Rural Network.
+</p>
+</li>
+<li> <p><code>"aqe"</code>, The Air Quality England Network.
+</p>
+</li>
+<li> <p><code>"saqn"</code>, The Scottish Air Quality Network.
+</p>
+</li>
+<li> <p><code>"waqn"</code>, The Welsh Air Quality Network.
+</p>
+</li>
+<li> <p><code>"ni"</code>, The Northern Ireland Air Quality Network.
+</p>
+</li>
+<li> <p><code>"local"</code>, Locally managed air quality networks in England.
+</p>
+</li>
+<li> <p><code>"kcl"</code>, King's College London networks.
+</p>
+</li>
+<li> <p><code>"europe"</code>, European AirBase/e-reporting data.
+</p>
+</li>
+</ul>
+<p>There are two additional options provided for convenience:
+</p>
+
+<ul>
+<li> <p><code>"ukaq"</code> will return metadata for all networks for which data is imported by importUKAQ() (i.e., AURN, AQE, SAQN, WAQN, NI, and the local networks).
+</p>
+</li>
+<li> <p><code>"all"</code> will import all available metadata (i.e., "ukaq" plus "kcl" and "europe").
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p><em>Option to create a 'layer control' menu.</em>
+</p>
+<p><em>default</em>: <code>NULL</code>
+</p>
+<p>A string to specify categories in a "layer control" menu, to allow readers
+to select between different site categories. Choices include:
+</p>
+
+<ul>
+<li> <p><code>"variable"</code> to toggle between different pollutants
+</p>
+</li>
+<li> <p><code>"site_type"</code> for different site classifications
+</p>
+</li>
+<li> <p><code>"agglomeration"</code>, <code>"zone"</code> or <code>"local_authority"</code> for different regions of the UK
+</p>
+</li>
+<li> <p><code>"network"</code> for different monitoring networks, if more than one <code>source</code> is provided.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p><em>A year, or range of years, with which to filter data.</em>
+</p>
+<p><em>default</em>: <code>NULL</code>
+</p>
+<p>By default, <code>networkMap()</code> visualises sites which are currently
+operational. <code>year</code> allows users to show sites open in a specific year, or
+over a range of years. See <code>openair::importMeta()</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p><em>Cluster markers together when zoomed out?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code>
+</p>
+<p>When <code>cluster = TRUE</code>, markers are clustered together. This may be useful
+for sources like "kcl" where there are many markers very close together.
+Defaults to <code>TRUE</code>, and is forced to be <code>TRUE</code> when <code>source = "europe"</code> due
+to the large number of sites.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>provider</code></td>
+<td>
+<p><em>The basemap(s) to be used.</em>
+</p>
+<p><em>default:</em> <code>c("Default" = "OpenStreetMap", "Satellite" = "Esri.WorldImagery")</code>
+</p>
+<p>Any number of leaflet::providers. See
+<a href="http://leaflet-extras.github.io/leaflet-providers/preview/">http://leaflet-extras.github.io/leaflet-providers/preview/</a> for a list of
+all base maps that can be used. If multiple base maps are provided, they
+can be toggled between using a "layer control" interface. By default, the
+interface will use the provider names as labels, but users can define their
+own using a named vector (e.g., <code>c("Default" = "OpenStreetMap", "Satellite" = "Esri.WorldImagery")</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend</code></td>
+<td>
+<p><em>Draw a shared legend?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code>
+</p>
+<p>When multiple <code>source</code>s are defined, should a shared legend be created at
+the side of the map?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.position</code></td>
+<td>
+<p><em>Position of the legend</em>
+</p>
+<p><em>default:</em> <code>"topright"</code>
+</p>
+<p>Where should the shared legend be placed? One of "topleft", "topright",
+"bottomleft" or "bottomright". Passed to the <code>position</code> argument of
+<code>leaflet::addLayersControl()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control.collapsed</code></td>
+<td>
+<p><em>Show the layer control as a collapsed?</em>
+</p>
+<p><em>default:</em> <code>FALSE</code>
+</p>
+<p>Should the "layer control" interface be collapsed? If <code>TRUE</code>, users will
+have to hover over an icon to view the options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control.position</code></td>
+<td>
+<p><em>Position of the layer control menu</em>
+</p>
+<p><em>default:</em> <code>"topright"</code>
+</p>
+<p>Where should the "layer control" interface be placed? One of "topleft",
+"topright", "bottomleft" or "bottomright". Passed to the <code>position</code>
+argument of <code>leaflet::addLayersControl()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When selecting multiple data sources using <code>source</code>, please be mindful that
+there can be overlap between the different networks. For example, an air
+quality site in Scotland may be part of the AURN <em>and</em> the SAQN.
+<code>networkMap()</code> will only show one marker for such sites, and uses the order
+in which <code>source</code> arguments are provided as the hierarchy by which to assign
+sites to networks. The aforementioned AURN &amp; SAQN site will therefore have
+its SAQN code displayed if <code>source = c("saqn", "aurn")</code>, and its AURN code
+displayed if <code>source = c("aurn", "saqn")</code>.
+</p>
+<p>This hierarchy is also reflected when <code>control = "network"</code> is used. As
+<code>leaflet</code> markers cannot be part of multiple groups, the AURN &amp; SAQN site
+will be part of the "SAQN" layer control group when <code>source = c("saqn", "aurn")</code> and the "AURN" layer control group when <code>source = c("aurn", "saqn")</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A leaflet object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other uk air quality network mapping functions: 
+<code>searchNetwork()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# view one network, grouped by site type
+networkMap(source = "aurn", control = "site_type")
+
+# view multiple networks, grouped by network
+networkMap(source = c("aurn", "waqn", "saqn"), control = "network")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

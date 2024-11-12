@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>confint.onls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Confidence intervals for 'onls' model parameters</h2>
+
+<h3>Description</h3>
+
+<p>Computes confidence intervals for one or more parameters of an <code>onls</code> model. As in <code>MASS:::confint.nls</code>, these are based on profile likelihoods, using <code>onls:::profile.onls</code> and <code>onls:::confint.profile.onls</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'onls'
+confint(object, parm, level = 0.95, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object returned from <code>onls</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parm</code></td>
+<td>
+<p>a specification of which parameters are to be given confidence intervals, either a vector of numbers or a vector of names. If missing, all parameters are considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>the confidence level required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional argument(s) for methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Profiling the likelihood uses the following strategy:<br>
+If <code class="reqn">\theta</code> is the parameter to be profiled and <code class="reqn">\delta</code> the vector of remaining parameters,<br>
+1) compute the log-likelihood of the model <code class="reqn">\mathcal{L}(\theta^{*}, \delta^{*})</code> using the converged parameters,<br>
+2) compute a lower bound <code class="reqn">\theta^{*} - 0.6 \cdot \sigma(\theta^{*})</code> for the lower confidence limit,<br>
+3) define a grid of values ranging from <code class="reqn">\theta^{'}</code> to <code class="reqn">\theta^{*}</code> (e.g., 100 equidistant points),<br>
+4) for each grid value <code class="reqn">\theta_i</code>, compute the profile log-likelihood value <code class="reqn">\mathcal{L}_1(\theta_i)</code> by maximizing <code class="reqn">\mathcal{L}(\theta_i, \delta)</code> over <code class="reqn">\delta</code>-values by fixing <code class="reqn">\theta</code> at <code class="reqn">\theta_i</code>,<br> 
+5) find the confidence <code>level</code> by interpolation of the profile traces obtained from 4).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix (or vector) with columns giving lower and upper confidence limits for each parameter. These will be labelled as (1 - <code>level</code>)/2 and 1 - (1 - <code>level</code>)/2 in % (by default 2.5% and 97.5%).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Andrej-Nikolai Spiess, taken and modified from the <code>nls</code> functions.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+DNase1 &lt;- subset(DNase, Run == 1)
+DNase1$density &lt;- sapply(DNase1$density, function(x) rnorm(1, x, 0.1 * x))
+mod1 &lt;- onls(density ~ Asym/(1 + exp((xmid - log(conc))/scal)), 
+             data = DNase1, start = list(Asym = 3, xmid = 0, scal = 1))
+confint(mod1)
+
+</code></pre>
+
+
+</div>

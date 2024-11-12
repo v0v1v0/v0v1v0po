@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>compile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compile a problem</h2>
+
+<h3>Description</h3>
+
+<p>Compile a project prioritization <code>problem()</code> into a general
+purpose format for optimization.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">compile(x, ...)
+
+## S3 method for class 'ProjectProblem'
+compile(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function might be useful for those interested in understanding
+how their project prioritization <code>problem()</code> is expressed
+as a mathematical problem. However, if the problem just needs to
+be solved, then the <code>solve()</code> function should be used instead.
+</p>
+
+
+<h3>Value</h3>
+
+<p>OptimizationProblem object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem with maximum richness objective, $200 budget, and
+# binary decisions
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 200) %&gt;%
+     add_binary_decisions()
+
+# print problem
+print(p)
+
+# compile problem
+o &lt;- compile(p)
+
+# print compiled problem
+print(o)
+</code></pre>
+
+
+</div>

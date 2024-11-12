@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxSave</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Save model state to a checkpoint file</h2>
+
+<h3>Description</h3>
+
+<p>The function saves the last state of a model to a checkpoint file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxSave(model, chkpt.directory = ".", chkpt.prefix = "")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>an MxModel object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chkpt.directory</code></td>
+<td>
+<p>character. Directory where the checkpoint file is located</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chkpt.prefix</code></td>
+<td>
+<p>character. Prefix of the checkpoint file</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In general, the arguments ‘chkpt.directory’ and ‘chkpt.prefix’ should be identical to the <code>mxOption</code>: ‘Checkpoint Directory’ and ‘Checkpoint Prefix’ that were specified on the model before execution.
+</p>
+<p>Alternatively, the checkpoint file can be manually loaded as a data.frame in R.  Use <code>read.table</code> with the options <code>header=TRUE, sep="\t", stringsAsFactors=FALSE, check.names=FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a logical indicating the success of writing the checkpoint file to the checkpoint directory.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation">https://openmx.ssri.psu.edu/documentation</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other model state: 
+<code>mxComputeCheckpoint()</code>,
+<code>mxRestore()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OpenMx)
+
+# Simulate some data
+
+x=rnorm(1000, mean=0, sd=1)
+y= 0.5*x + rnorm(1000, mean=0, sd=1)
+tmpFrame &lt;- data.frame(x, y)
+tmpNames &lt;- names(tmpFrame)
+
+dir &lt;- tempdir()  # safe place to create files
+mxOption(key="Checkpoint Directory", value=dir)
+
+# Create a model that includes an expected covariance matrix,
+# an expectation function, a fit function, and an observed covariance matrix
+
+data &lt;- mxData(cov(tmpFrame), type="cov", numObs = 1000)
+expCov &lt;- mxMatrix(type="Symm", nrow=2, ncol=2, values=c(.2,.1,.2), free=TRUE, name="expCov")
+expFunction &lt;- mxExpectationNormal(covariance="expCov", dimnames=tmpNames)
+fitFunction &lt;- mxFitFunctionML()
+testModel &lt;- mxModel(model="testModel", expCov, data, expFunction, fitFunction)
+
+#Use mxRun to optimize the free parameters in the expected covariance matrix
+modelOut &lt;- mxRun(testModel)
+modelOut$expCov
+
+# Save the ending state of modelOut in a checkpoint file
+mxSave(modelOut)
+
+# Restore the saved model from the checkpoint file
+modelSaved &lt;- mxRestore(testModel)
+modelSaved$expCov
+</code></pre>
+
+
+</div>

@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filter-wb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add/remove column filters in a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>Add or remove excel column filters to a worksheet
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_filter(wb, sheet = current_sheet(), rows, cols)
+
+wb_remove_filter(wb, sheet = current_sheet())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A worksheet name or index.
+In <code>wb_remove_filter()</code>, you may supply a vector of worksheets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows</code></td>
+<td>
+<p>A row number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>columns to add filter to.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Adds filters to worksheet columns, same as <code>with_filter = TRUE</code> in <code>wb_add_data()</code>
+<code>wb_add_data_table()</code> automatically adds filters to first row of a table.
+</p>
+<p>NOTE Can only have a single filter per worksheet unless using tables.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wb_add_data()</code>, <code>wb_add_data_table()</code>
+</p>
+<p>Other worksheet content functions: 
+<code>col_widths-wb</code>,
+<code>grouping-wb</code>,
+<code>named_region-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_conditional_formatting()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_thread()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- wb_workbook()
+wb$add_worksheet("Sheet 1")
+wb$add_worksheet("Sheet 2")
+wb$add_worksheet("Sheet 3")
+
+wb$add_data(1, iris)
+wb$add_filter(1, row = 1, cols = seq_along(iris))
+
+## Equivalently
+wb$add_data(2, x = iris, with_filter = TRUE)
+
+## Similarly
+wb$add_data_table(3, iris)
+wb &lt;- wb_workbook()
+wb$add_worksheet("Sheet 1")
+wb$add_worksheet("Sheet 2")
+wb$add_worksheet("Sheet 3")
+
+wb$add_data(1, iris)
+wb_add_filter(wb, 1, row = 1, cols = seq_along(iris))
+
+## Equivalently
+wb$add_data(2, x = iris, with_filter = TRUE)
+
+## Similarly
+wb$add_data_table(3, iris)
+
+## remove filters
+wb_remove_filter(wb, 1:2) ## remove filters
+wb_remove_filter(wb, 3) ## Does not affect tables!
+</code></pre>
+
+
+</div>

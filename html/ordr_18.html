@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>methods-prcomp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Functionality for principal components analysis ('prcomp') objects</h2>
+
+<h3>Description</h3>
+
+<p>These methods extract data from, and attribute new data to,
+objects of class <code>"prcomp"</code> as returned by <code>stats::prcomp()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'prcomp'
+as_tbl_ord(x)
+
+## S3 method for class 'prcomp'
+recover_rows(x)
+
+## S3 method for class 'prcomp'
+recover_cols(x)
+
+## S3 method for class 'prcomp'
+recover_inertia(x)
+
+## S3 method for class 'prcomp'
+recover_coord(x)
+
+## S3 method for class 'prcomp'
+recover_conference(x)
+
+## S3 method for class 'prcomp'
+recover_aug_rows(x)
+
+## S3 method for class 'prcomp'
+recover_aug_cols(x)
+
+## S3 method for class 'prcomp'
+recover_aug_coord(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An ordination object.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>The recovery generics <code style="white-space: pre;">⁠recover_*()⁠</code> return core model components, distribution of inertia,
+supplementary elements, and intrinsic metadata; but they require methods for each model class to
+tell them what these components are.
+</p>
+<p>The generic <code>as_tbl_ord()</code> returns its input wrapped in the 'tbl_ord'
+class. Its methods determine what model classes it is allowed to wrap. It
+then provides 'tbl_ord' methods with access to the recoverers and hence to
+the model components.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Emily Paul
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other methods for singular value decomposition-based techniques: 
+<code>methods-cancor</code>,
+<code>methods-correspondence</code>,
+<code>methods-lda</code>,
+<code>methods-lra</code>,
+<code>methods-mca</code>,
+<code>methods-princomp</code>,
+<code>methods-svd</code>
+</p>
+<p>Other models from the stats package: 
+<code>methods-cancor</code>,
+<code>methods-cmds</code>,
+<code>methods-factanal</code>,
+<code>methods-kmeans</code>,
+<code>methods-lm</code>,
+<code>methods-princomp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># data frame of Anderson iris species measurements
+class(iris)
+head(iris)
+
+# compute scaled row-principal components of scaled measurements
+iris[, -5] %&gt;%
+  prcomp(scale = TRUE) %&gt;%
+  as_tbl_ord() %&gt;%
+  print() -&gt; iris_pca
+
+# recover observation principal coordinates and measurement standard coordinates
+head(get_rows(iris_pca))
+get_cols(iris_pca)
+
+# augment measurements with names and scaling parameters
+(iris_pca &lt;- augment_ord(iris_pca))
+</code></pre>
+
+
+</div>

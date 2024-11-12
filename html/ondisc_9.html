@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get-names</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get cell barcodes, feature names, and feature IDs</h2>
+
+<h3>Description</h3>
+
+<p>Obtain cell barcodes, feature names, and feature IDs of an <code>ondisc_matrix</code>, <code>metadata_ondisc_matrix</code>,
+or <code>multimodal_ondisc_matrix</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_feature_ids(x)
+
+get_feature_names(x)
+
+get_cell_barcodes(x)
+
+## S4 method for signature 'ondisc_matrix'
+get_feature_ids(x)
+
+## S4 method for signature 'ondisc_matrix'
+get_feature_names(x)
+
+## S4 method for signature 'ondisc_matrix'
+get_cell_barcodes(x)
+
+## S4 method for signature 'metadata_ondisc_matrix'
+get_feature_ids(x)
+
+## S4 method for signature 'metadata_ondisc_matrix'
+get_feature_names(x)
+
+## S4 method for signature 'metadata_ondisc_matrix'
+get_cell_barcodes(x)
+
+## S4 method for signature 'multimodal_ondisc_matrix'
+get_feature_ids(x)
+
+## S4 method for signature 'multimodal_ondisc_matrix'
+get_feature_names(x)
+
+## S4 method for signature 'multimodal_ondisc_matrix'
+get_cell_barcodes(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class <code>ondisc_matrix</code>, <code>covaraite_ondisc_matrix</code>, or <code>multimodal_ondisc_matrix</code>.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The following functions can be used to obtain feature and cell identifiers:
+</p>
+
+<ul>
+<li> <p><code>get_cell_barcodes</code>: return the cell barcodes.
+</p>
+</li>
+<li> <p><code>get_feature_names</code>: return the feature names.
+</p>
+</li>
+<li> <p><code>get_feature_ids</code>: return the IDs of the features.
+</p>
+</li>
+</ul>
+<p>In general, these functions return a character vector containing the requested identifiers. When
+<code>get_feature_names</code> or <code>get_feature_ids</code> is called on a <code>multimodal_ondisc_matrix</code>, the function instead
+returns a list containing the feature names and feature IDs, respectively, of the modalities contained
+within the <code>multimodal_ondisc_matrix</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character vector or list of character vectors containing the requested identifiers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># NOTE: You must create the RDS files "expressions.rds" and
+# "perturbations.rds" to run this example. Navigate to the help file of
+# "create_ondisc_matrix_from_mtx" (via ?create_ondisc_matrix_from_mtx),
+# and execute both code blocks.
+
+# ondisc_matrix
+h5_fp &lt;- paste0(tempdir(), "/expressions.h5")
+if (file.exists(h5_fp)) {
+odm &lt;- ondisc_matrix(h5_file = h5_fp)
+barcodes &lt;- get_cell_barcodes(odm)
+feature_names &lt;- get_feature_names(odm)
+feature_ids &lt;- get_feature_ids(odm)
+}
+
+# metadata_ondic_matrix
+expressions_fp &lt;- paste0(tempdir(), "/expressions.rds")
+if (file.exists(expressions_fp)) {
+expressions &lt;- readRDS(expressions_fp)
+barcodes &lt;- get_cell_barcodes(odm)
+feature_names &lt;- get_feature_names(odm)
+feature_ids &lt;- get_feature_ids(odm)
+}
+
+# multimodal_ondisc_matrix
+expression_fp &lt;- paste0(tempdir(), "/expressions.rds")
+perturbations_fp &lt;- paste0(tempdir(), "/perturbations.rds")
+if (file.exists(expression_fp) &amp;&amp; file.exists(perturbations_fp)) {
+    crispr_experiment &lt;- multimodal_ondisc_matrix(list(expressions = readRDS(expression_fp),
+    perturbations = readRDS(perturbations_fp)))
+    barcodes &lt;- get_cell_barcodes(crispr_experiment)
+    feature_ids &lt;- get_feature_ids(crispr_experiment)
+}
+</code></pre>
+
+
+</div>

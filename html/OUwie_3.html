@@ -1,0 +1,412 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OUwie</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generalized Hansen models</h2>
+
+<h3>Description</h3>
+
+<p>Fits generalized Ornstein-Uhlenbeck-based Hansen models of continuous characters evolving under discrete selective regimes.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OUwie(phy, data, model=c("BM1","BMS","OU1","OUM","OUMV","OUMA","OUMVA",
+"TrendyM","TrendyMS"), simmap.tree=FALSE, root.age=NULL,scaleHeight=FALSE,
+root.station=FALSE, get.root.theta=FALSE, shift.point=0.5, clade=NULL, mserr="none",
+starting.vals=NULL, check.identify=TRUE, algorithm=c("invert", "three.point"),
+diagn=FALSE, quiet=FALSE, warn=TRUE, lb = NULL, ub = NULL, opts = list(algorithm = 
+"NLOPT_LN_SBPLX", maxeval = "1000", ftol_rel = .Machine$double.eps^0.5))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>phy</code></td>
+<td>
+<p>a phylogenetic tree, in <code>ape</code> “phylo” format and with internal nodes labeled denoting the ancestral selective regimes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data.frame containing species information (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>models to fit to comparative data (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simmap.tree</code></td>
+<td>
+<p>a logical indicating whether the input tree is in SIMMAP format. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root.age</code></td>
+<td>
+<p>indicates the age of the tree. This is to be used in cases where the "tips" are not contemporary, such as in cases for fossil trees. Default is <code>NULL</code> meaning latest tip is modern day.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaleHeight</code></td>
+<td>
+<p>a logical indicating whether the total tree height should be scaled to 1 (see Details). The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root.station</code></td>
+<td>
+<p>a logical indicating whether to assume a random starting point (TRUE) or a fixed starting point (FALSE) (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get.root.theta</code></td>
+<td>
+<p>a logical indicating whether the starting state, <code class="reqn">\theta_0</code>, should be estimated (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift.point</code></td>
+<td>
+<p>the point along a branch where a regime change is assumed to have occurred (if <code>SIMMAP=FALSE</code>. The default is set to 0.5, or halfway along a branch.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clade</code></td>
+<td>
+<p>a list containing a pair of taxa whose MRCA is the clade of interest (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mserr</code></td>
+<td>
+<p>designates whether a fourth column in the data matrix contains measurement error for each species value ("known"). The measurement error is assumed to be the standard error of the species mean. The default is "none".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>starting.vals</code></td>
+<td>
+<p>a vector of initial values for the optimization search. For OU models, two must be supplied, with the first being the initial alpha value and the second being the initial sigma squared. For BM models, just a single value is needed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check.identify</code></td>
+<td>
+<p>a logical indicating whether to check that the user-supplied regime paintings will produce identifiable theta estimates. The default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>algorithm</code></td>
+<td>
+<p>designates whether the standard matrix inversion ('invert') or the faster 'three-point' algorithm of Ho and Ane (2013) should be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diagn</code></td>
+<td>
+<p>a logical indicating whether the full diagnostic analysis should be carried out. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>a logical indicating whether progress should be written to the screen. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>a logical indicating whether a warning should be printed if the number of parameters exceeds ntips/10. The default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lb</code></td>
+<td>
+<p>if algorithm == "invert" a single value indicating the lower bound for the parameter values. if algorithm == "three.point", a vector of length 3 with position 1 as alpha lower bound, position 2 as sigma.sq's lower bound, position 3 as theta's lower bound. when set to NULL it will be a default value of 1e-9. Note that even if the model you're using doesn't include alpha (e.g. BM1), it must be included in this vector, but it will not be used to set any bounds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ub</code></td>
+<td>
+<p>if algorithm == "invert" a single value indicating the upper bound for the parameter values. if algorithm == "three.point", a vector of length 3 with position 1 as alpha upper bound, position 2 as sigma.sq's upper bound, position 3 as theta's upper bound. when set to NULL it will be a default value of 100. Note that even if the model you're using doesn't include alpha (e.g. BM1), it must be included in this vector, but it will not be used to set any bounds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opts</code></td>
+<td>
+<p>a list of options to pass to nloptr for the optimization: useful to adjust for faster, coarser searches</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function fits various likelihood models for continuous characters evolving under discrete selective regimes. The function returns parameter estimates and their approximate standard errors. The R package <code>nloptr</code> provides a common interface to NLopt, an open-source library for nonlinear optimization. The likelihood function is maximized using the bounded subplex optimization routine (<code>NLOPT_LN_SBPLX</code>). As input all <code>OUwie</code> requires is a tree and a trait data.frame. The tree must be of class “phylo” and must contain the ancestral selective regimes as internal node labels. Internal node labels can be applied manually or from some sort of ancestral state reconstruction procedure (BayesTraits, <code>ape</code>, <code>diversitree</code>, SIMMAP, etc.), which would then be brought into OUwie. This is essentially what is required by <code>ouch</code> and Brownie (though Brownie provides built-in ancestral state reconstruction capabilities). The trait data.frame must have column entries in the following order: [,1] species names, [,2] current selective regime, and [,3] the continuous trait of interest. Alternatively, if the user wants to incorporate measurement error (<code>mserr</code>="known"), then a fourth column, [,4] must be included that provides the standard error estimates for each species mean. However, a global measurement error for all taxa can be estimated from the data (<code>mserr</code>="est"); is not well tested, so use at your own risk. Also, a user can specify a particular clade as being in a different selective regime, by specifying a pair of species whose mrca is the root of the clade of interest [e.g., <code>clade</code>=c("taxaA","taxaB")]. OUwie will automatically assign internal node labels and update the data matrix according to this clade designation.
+</p>
+<p>Possible models are as follows: single-rate Brownian motion (<code>model=BM1</code>), Brownian motion with different rate parameters for each state on a tree (<code>model=BMS</code>), Ornstein-Uhlenbeck model with a single optimum for all species (<code>model=OU1</code>), Ornstein-Uhlenbeck model with different state means and a single <code class="reqn">\alpha</code> and <code class="reqn">\sigma^2</code> acting all selective regimes (<code>model=OUM</code>), and new Ornstein-Uhlenbeck models that assume different state means as well as either multiple <code class="reqn">\sigma^2</code> (<code>model=OUMV</code>), multiple <code class="reqn">\alpha</code> (<code>model=OUMA</code>), or multiple <code class="reqn">\alpha</code> and <code class="reqn">\sigma^2</code> per selective regime (<code>model=OUMVA</code>).
+</p>
+<p>By default, we drop the root optima and absorb the weight into whatever regime the root is in. In previous version we used to incorrectly refer to this as "stationarity". True stationarity assumes that the starting state comes from a distribution, and the covariance requires an additional variance term to account for the fact that, up until T=0, the lineage is assumed to have been evolving in the ancestral regime. We have added this in for the OU1 and OUM models only (root.station=TRUE).
+</p>
+<p>Note, too, that when specifying the BMS model also be mindful of the root.station flag. When root.station=FALSE, the non-censored model of O'Meara et al. 2006 is invoked (i.e., a single regime at the root is estimated), and when root.station==TRUE the group mean model of Thomas et al. 2006 (i.e., the number of means equals the number of regimes). The latter case appears to be a strange special case of OU, in that it behaves similarly to the OUMV model, but without selection. I would say that this is more consistent with the censored test of O'Meara et al. (2006), as opposed to having any real connection to OU. In any case, more work is clearly needed to understand the behavior of the group means model, and therefore, I recommend setting root.station=FALSE in the BMS case.
+</p>
+<p>The Hessian matrix is used as a means to estimate the approximate standard errors of the model parameters and to assess whether they are the maximum likelihood estimates. The variance-covariance matrix of the estimated values of <code class="reqn">\alpha</code> and <code class="reqn">\sigma^2</code> are computed as the inverse of the Hessian matrix and the standard errors are the square roots of the diagonals of this matrix. The Hessian is a matrix of second-order derivatives and is approximated in the R package <code>numDeriv</code>. So, if changes in the value of a parameter results in sharp changes in the slope around the maximum of the log-likelihood function, the second-order derivative will be large, the standard error will be small, and the parameter estimate is considered stable. On the other hand, if the second-order derivative is nearly zero, then the change in the slope around the maximum is also nearly zero, indicating that the parameter value can be moved in any direction without greatly affecting the log-likelihood. In such situations, the standard error of the parameter will be large.
+</p>
+<p>For models that allow <code class="reqn">\alpha</code> and <code class="reqn">\sigma^2</code> to vary (i.e., <code>OUMV</code>, <code>OUMA</code>, and <code>OUMVA</code>), the complexity of the model can often times be greater than the information that is contained within the data. As a result one or many parameters are poorly estimated, which can cause the function to return a log-likelihood that is suboptimal. This has great potential for poor model choice and incorrect biological interpretations. An eigendecomposition of the Hessian can provide an indication of whether the search returned the maximum likelihood estimates. If all the eigenvalues of the Hessian are positive, then the Hessian is positive definite, and all parameter estimates are considered reliable. However, if there are both positive and negative eigenvalues, then the objective function is at a saddlepoint and one or several parameters cannot be estimated adequately. One solution is to just fit a simpler model. Another is to actually identify the offending parameters. This can be done through the examination of the eigenvectors. The row order corresponds to the entries in <code>index.matrix</code>, the columns correspond to the order of values in <code>eigval</code>, and the larger the value of the row entry the greater the association between the corresponding parameter and the eigenvalue. Thus, the largest values in the columns associated with negative eigenvalues are the parameters that are causing the objective function to be at a saddlepoint.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>OUwie</code> returns an object of class <code>OUwie</code>. This is a list with elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>$loglik</code></td>
+<td>
+<p>the maximum log-likelihood.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$AIC</code></td>
+<td>
+<p>Akaike information criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$AICc</code></td>
+<td>
+<p>Akaike information criterion corrected for sample-size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$BIC</code></td>
+<td>
+<p>Bayesian information criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$mBIC</code></td>
+<td>
+<p>modified Bayesian information criterion of Ho and Ane (2014).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$model</code></td>
+<td>
+<p>The model being fit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$param.count</code></td>
+<td>
+<p>The number of parameters counted in the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$solution</code></td>
+<td>
+<p>a matrix containing the maximum likelihood estimates of <code class="reqn">\alpha</code> and <code class="reqn">\sigma^2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$theta</code></td>
+<td>
+<p>a matrix containing the maximum likelihood estimates of <code class="reqn">\theta</code> and its standard error.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$solution.se</code></td>
+<td>
+<p>a matrix containing the approximate standard errors of <code class="reqn">\alpha</code> and <code class="reqn">\sigma^2</code>. The standard error is calculated as the diagonal of the inverse of the Hessian matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$tot.state</code></td>
+<td>
+<p>A vector of names for the different regimes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$index.mat</code></td>
+<td>
+<p>The indices of the parameters being estimated are returned. The numbers correspond to the row in the <code>eigvect</code> and can useful for identifying the parameters that are causing the objective function to be at a saddlepoint (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$simmap.tree</code></td>
+<td>
+<p>A logical indicating whether the input phylogeny is a SIMMAP formatted tree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$root.age</code></td>
+<td>
+<p>The user-supplied age at the root of the tree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$split.point</code></td>
+<td>
+<p>The user-supplied point at which regime changes are assumed to have occurred.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$opts</code></td>
+<td>
+<p>Internal settings of the likelihood search.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$data</code></td>
+<td>
+<p>User-supplied dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$phy</code></td>
+<td>
+<p>User-supplied tree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$root.station</code></td>
+<td>
+<p>A logical indicating whether the starting state, <code class="reqn">\theta_0</code>, was estimated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$starting.vals</code></td>
+<td>
+<p>A vector of user-supplied initial search parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$lb</code></td>
+<td>
+<p>The lower bound set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$ub</code></td>
+<td>
+<p>The upper bound set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$iterations</code></td>
+<td>
+<p>Number of iterations of the likelihood search that were executed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$get.root.theta</code></td>
+<td>
+<p>Indicates whether the root.theta was included in the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$regime.weights</code></td>
+<td>
+<p>A table containing parameter estimates and the weights for time spent in each regime for each tip.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$eigval</code></td>
+<td>
+<p>The eigenvalues from the decomposition of the Hessian of the likelihood function. If any <code>eigval&lt;0</code> then one or more parameters were not optimized during the likelihood search (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$eigvect</code></td>
+<td>
+<p>The eigenvectors from the decomposition of the Hessian of the likelihood function is returned (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$new.start</code></td>
+<td>
+<p>The vector of values to use if you want to restart the run from this point (starting.vals for a new run).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$algorithm</code></td>
+<td>
+<p>The algorithm used to estimate parameters</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Jeremy M. Beaulieu and Brian C. O'Meara</p>
+
+
+<h3>References</h3>
+
+<p>Beaulieu J.M., Jhwueng D.C., Boettiger C., and O'Meara B.C. 2012. Modeling stabilizing selection: Expanding the Ornstein-Uhlenbeck model of adaptive evolution. Evolution 66:2369-2383.
+</p>
+<p>O'Meara B.C., Ane C., Sanderson P.C., Wainwright P.C. 2006. Testing for different rates of continuous trait evolution using likelihood. Evolution 60:922-933.
+</p>
+<p>Butler M.A., King A.A. 2004. Phylogenetic comparative analysis: A modeling approach for adaptive evolution. American Naturalist 164:683-695.
+</p>
+<p>Ho, L.S.T., and C. Ane. 2014. Intrinsic inference difficulties for trait evolution with Ornstein-Uhlenbeck models. Methods in Ecology and Evolution, 5: 1133-1146.
+</p>
+<p>Thomas G.H., Freckleton R.P., and Szekely T. 2006. Comparative analysis of the influence of developmental mode on phenotypic diversification rates in shorebirds. Proceedings of the Royal Society, B. 273:1619-1624.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(tworegime)
+
+#Plot the tree and the internal nodes to highlight the selective regimes:
+select.reg&lt;-character(length(tree$node.label))
+select.reg[tree$node.label == 1] &lt;- "black"
+select.reg[tree$node.label == 2] &lt;- "red"
+plot(tree)
+nodelabels(pch=21, bg=select.reg)
+
+
+
+## Not run: 
+#To see the first 5 lines of the data matrix to see what how to
+#structure the data:
+trait[1:5,]
+
+#Now fit an OU model that allows different sigma^2:
+OUwie(tree,trait,model=c("OUMV"))
+
+#Fit an OU model based on a clade of interest:
+OUwie(tree,trait,model=c("OUMV"), clade=c("t50", "t64"), algorithm="three.point")
+
+#For large trees, it may be useful to have ways to restart the search (due to
+#finite time per run on a computing cluster, for example). You can do this
+#by changing settings of OUwie runs. For example:
+
+run1 &lt;- OUwie(tree,trait,model=c("OUMV"), root.station=FALSE, algorithm="invert", 
+opts = list("algorithm"="NLOPT_LN_SBPLX", "maxeval"="500", "ftol_abs"=0.001))
+
+save(run1, file="run1.rda")
+
+#Then, later or in a different session:
+
+load("run1.rda")
+
+run2 &lt;- OUwie(tree, trait, model=c("OUMV"), algorithm="three.point", 
+opts = list("algorithm"="NLOPT_LN_SBPLX", "maxeval"="500", "ftol_abs"=0.001),
+starting.vals=run1$new.start)
+
+#run2 will start off where run1 stopped.
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_map</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download spatial data from OD Surveys databases</h2>
+
+<h3>Description</h3>
+
+<p><code>read_map()</code> download the geodetic data for a specific Origin Destination survey
+and return it as an sf dataframe. It uses the cached data file if it was
+previously downloaded to avoid extra networking consumption. To understand
+the returned dataframe format, please reefer to the <code>read_dictionary()</code>
+function for the same survey cohort.
+It is also necessary to specify the geometry granularity wanted, be it
+"municipality", "district" or "zone" level of details. Of course, not all
+geometries are available for all surveys.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_map(city = "São Paulo", year = 2017, harmonize = FALSE, geometry = "zone")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>city</code></td>
+<td>
+<p>Character. City of reference. Defaults to "São Paulo".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>Numeric. Year of reference in the format <code>yyyy</code>. Defaults to
+<code>1977</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>harmonize</code></td>
+<td>
+<p>Logical. When <code>FALSE</code> (Default), the function returns the raw
+data. If <code>TRUE</code>, the function returns harmonized data to the same
+city, across all the years.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geometry</code></td>
+<td>
+<p>Character. The type of spatial data to be opened. Options
+include <code>c("zone","district", "municipality")</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code style="white-space: pre;">⁠"sf" "data.frame"⁠</code> object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(odbr)
+
+# return zone data from OD Surveys database as sf object at a given city and year
+df &lt;- read_map(
+  city = "Sao Paulo",
+  year = 2017,
+  harmonize = FALSE,
+  geometry = "zone"
+)
+
+#' # return district data from OD Surveys database as sf object at a given city and year
+df &lt;- read_map(
+  city = "Sao Paulo",
+  year = 2017,
+  harmonize = FALSE,
+  geometry = "district"
+)
+
+# return municipality data from OD Surveys database as sf object at a given city and year
+df &lt;- read_map(
+  city = "Sao Paulo",
+  year = 2017,
+  harmonize = FALSE,
+  geometry = "municipality"
+)
+
+</code></pre>
+
+
+</div>

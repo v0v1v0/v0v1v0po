@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pproto</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a new <code>pproto</code> object</h2>
+
+<h3>Description</h3>
+
+<p>Construct a new object with <code>pproto</code>. This object system is inspired
+from the <code>ggproto</code> system used in the <code>ggplot2</code> package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pproto(`_class` = NULL, `_inherit` = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>_class</code></td>
+<td>
+<p>Class name to assign to the object. This is stored as the class
+attribute of the object. This is optional: if <code>NULL</code> (the default),
+no class name will be added to the object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>_inherit</code></td>
+<td>
+<p><code>pproto</code> object to inherit from. If <code>NULL</code>, don"t
+inherit from any object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>A list of members to add to the new <code>pproto</code> object.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">Adder &lt;- pproto("Adder",
+  x = 0,
+  add = function(self, n) {
+    self$x &lt;- self$x + n
+    self$x
+  }
+)
+
+Adder$add(10)
+Adder$add(10)
+
+Abacus &lt;- pproto("Abacus", Adder,
+  subtract = function(self, n) {
+    self$x &lt;- self$x - n
+    self$x
+  }
+)
+Abacus$add(10)
+Abacus$subtract(10)
+
+</code></pre>
+
+
+</div>

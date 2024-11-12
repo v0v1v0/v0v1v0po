@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_protect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Protect a workbook from modifications</h2>
+
+<h3>Description</h3>
+
+<p>Protect or unprotect a workbook from modifications by the user in the
+graphical user interface. Replaces an existing protection.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_protect(
+  wb,
+  protect = TRUE,
+  password = NULL,
+  lock_structure = FALSE,
+  lock_windows = FALSE,
+  type = 1,
+  file_sharing = FALSE,
+  username = unname(Sys.info()["user"]),
+  read_only_recommended = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protect</code></td>
+<td>
+<p>Whether to protect or unprotect the sheet (default <code>TRUE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>password</code></td>
+<td>
+<p>(optional) password required to unprotect the workbook</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lock_structure</code></td>
+<td>
+<p>Whether the workbook structure should be locked</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lock_windows</code></td>
+<td>
+<p>Whether the window position of the spreadsheet should be
+locked</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Lock type (see <strong>Details</strong>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_sharing</code></td>
+<td>
+<p>Whether to enable a popup requesting the unlock password
+is prompted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>username</code></td>
+<td>
+<p>The username for the <code>file_sharing</code> popup</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>read_only_recommended</code></td>
+<td>
+<p>Whether or not a post unlock message appears
+stating that the workbook is recommended to be opened in read-only mode.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Lock types:
+</p>
+
+<ul>
+<li> <p><code>1</code>  xlsx with password (default)
+</p>
+</li>
+<li> <p><code>2</code> xlsx recommends read-only
+</p>
+</li>
+<li> <p><code>4</code> xlsx enforces read-only
+</p>
+</li>
+<li> <p><code>8</code> xlsx is locked for annotation
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- wb_workbook()
+wb$add_worksheet("S1")
+wb_protect(wb, protect = TRUE, password = "Password", lock_structure = TRUE)
+
+# Remove the protection
+wb_protect(wb, protect = FALSE)
+
+wb &lt;- wb_protect(
+  wb,
+  protect = TRUE,
+  password = "Password",
+  lock_structure = TRUE,
+  type = 2L,
+  file_sharing = TRUE,
+  username = "Test",
+  read_only_recommended = TRUE
+)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,448 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>restAPI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>restAPI Class</h2>
+
+<h3>Description</h3>
+
+<p>Base class for <a href="https://www.okx.com/docs-v5/en/">Okx exchange v5 API</a>.
+</p>
+
+
+<h3>Details</h3>
+
+<p>You can implement all REST API requests in Okx exchange by inheriting the <code>restAPI</code> class.
+Please refer to the example provided at the end of the document.
+</p>
+<p>For commonly used interfaces, they have been implemented in this package.
+The naming convention is as follows: for "/api/v5/AAA/BBB", a new class named <code>restAPIAAA</code>,
+which inherits from <code>restAPI</code>, has been defined in this package.
+The <code>BBB</code> method in this new class is used to call the API.
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>url</code></dt>
+<dd>
+<p>Okx REST API url, which is https://www.okx.com.</p>
+</dd>
+<dt><code>api_key</code></dt>
+<dd>
+<p>Okx API key.</p>
+</dd>
+<dt><code>secret_key</code></dt>
+<dd>
+<p>Okx API secret key.</p>
+</dd>
+<dt><code>passphrase</code></dt>
+<dd>
+<p>Okx API passphrase.</p>
+</dd>
+<dt><code>simulate</code></dt>
+<dd>
+<p>Whether to use demo trading service.</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-restAPI-new"><code>restAPI$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPI-get_timestamp"><code>restAPI$get_timestamp()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPI-get_request_path"><code>restAPI$get_request_path()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPI-get_body"><code>restAPI$get_body()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPI-get_message"><code>restAPI$get_message()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPI-get_signature"><code>restAPI$get_signature()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPI-get_header"><code>restAPI$get_header()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPI-get_result"><code>restAPI$get_result()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPI-clone"><code>restAPI$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-restAPI-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Create a new REST API object.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPI$new(api_key, secret_key, passphrase, simulate = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>api_key</code></dt>
+<dd>
+<p>Okx API key.</p>
+</dd>
+<dt><code>secret_key</code></dt>
+<dd>
+<p>Okx API secret key.</p>
+</dd>
+<dt><code>passphrase</code></dt>
+<dd>
+<p>Okx API passphrase.</p>
+</dd>
+<dt><code>simulate</code></dt>
+<dd>
+<p>Whether to use demo trading service.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-restAPI-get_timestamp"></a>
+
+
+
+<h4>Method <code>get_timestamp()</code>
+</h4>
+
+<p>Get UTC timestamp.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPI$get_timestamp()</pre></div>
+
+
+<hr>
+<a id="method-restAPI-get_request_path"></a>
+
+
+
+<h4>Method <code>get_request_path()</code>
+</h4>
+
+<p>Get request path.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPI$get_request_path(api, method = c("GET", "POST"), ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>api</code></dt>
+<dd>
+<p>Request api e.g. /api/v5/account/positions-history.</p>
+</dd>
+<dt><code>method</code></dt>
+<dd>
+<p>Request method, <code>GET</code> or <code>POST</code>.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Other request parameters.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-restAPI-get_body"></a>
+
+
+
+<h4>Method <code>get_body()</code>
+</h4>
+
+<p>Get request body.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPI$get_body(method = c("GET", "POST"), ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>method</code></dt>
+<dd>
+<p>Request method, <code>GET</code> or <code>POST</code>.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Other request parameters.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-restAPI-get_message"></a>
+
+
+
+<h4>Method <code>get_message()</code>
+</h4>
+
+<p>Get the signing messages.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPI$get_message(timestamp, request_path, body, method = c("GET", "POST"))</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>timestamp</code></dt>
+<dd>
+<p>Retrieve through method <code>get_timestamp</code>.</p>
+</dd>
+<dt><code>request_path</code></dt>
+<dd>
+<p>Retrieve through method <code>get_request_path</code>.</p>
+</dd>
+<dt><code>body</code></dt>
+<dd>
+<p>Retrieve through method <code>get_body</code>.</p>
+</dd>
+<dt><code>method</code></dt>
+<dd>
+<p>Request method, <code>GET</code> or <code>POST</code>.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-restAPI-get_signature"></a>
+
+
+
+<h4>Method <code>get_signature()</code>
+</h4>
+
+<p>Get the signature.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPI$get_signature(msg, secret_key = self$secret_key)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>msg</code></dt>
+<dd>
+<p>Retrieve through method <code>get_message</code>.</p>
+</dd>
+<dt><code>secret_key</code></dt>
+<dd>
+<p>Okx API secret key.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-restAPI-get_header"></a>
+
+
+
+<h4>Method <code>get_header()</code>
+</h4>
+
+<p>Get request headers.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPI$get_header(timestamp, msg)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>timestamp</code></dt>
+<dd>
+<p>Retrieve through method <code>get_timestamp</code>.</p>
+</dd>
+<dt><code>msg</code></dt>
+<dd>
+<p>Retrieve through method <code>get_message</code>.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-restAPI-get_result"></a>
+
+
+
+<h4>Method <code>get_result()</code>
+</h4>
+
+<p>Retrieve data from api.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPI$get_result(api, method = c("GET", "POST"), process, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>api</code></dt>
+<dd>
+<p>Request api e.g. /api/v5/account/positions-history.</p>
+</dd>
+<dt><code>method</code></dt>
+<dd>
+<p>Request method, <code>GET</code> or <code>POST</code>.</p>
+</dd>
+<dt><code>process</code></dt>
+<dd>
+<p>A function to process the data received from the API.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Other request parameters.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-restAPI-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPI$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>See Also</h3>
+
+<p><code>restAPItrade</code>
+<code>restAPIaccount</code>
+<code>restAPImarket</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# for [Get currencies](https://www.okx.com/docs-v5/en/#rest-api-funding-get-currencies)
+# you can define the class like this
+myRestAPI &lt;- R6::R6Class(
+  inherit = restAPI,
+  public = list(
+    get_currencies = function(ccy, process = "identity") {
+      self$get_result(
+        api = "/api/v5/asset/currencies", method = "GET", process = process,
+        ccy = ccy
+      )
+    }
+  )
+)
+# And call it like this
+tmp &lt;- myRestAPI$new(api_key, secret_key, passphrase)
+tmp$get_currencies("BTC")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

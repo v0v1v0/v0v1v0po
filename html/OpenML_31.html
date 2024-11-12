@@ -1,0 +1,150 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>listOMLRuns</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List the first 5000 OpenML runs.</h2>
+
+<h3>Description</h3>
+
+<p>This function returns information on all OpenML runs that match certain
+<code>task.id</code>(s), <code>run.id</code>(s), flow ID <code>flow.id</code> and/or
+<code>uploader.id</code>(s). Alternatively the function can be passed a single
+<code>tag</code> to list only runs with the corresponding tag associated.
+Note that by default only the first 5000 runs will be returned (due to the argument “limit = 5000”).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">listOMLRuns(
+  task.id = NULL,
+  flow.id = NULL,
+  run.id = NULL,
+  uploader.id = NULL,
+  tag = NULL,
+  limit = 5000,
+  offset = NULL,
+  verbosity = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>task.id</code></td>
+<td>
+<p>[<code>integer</code>]<br>
+a single ID or a vector of IDs of the task(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flow.id</code></td>
+<td>
+<p>[<code>integer</code>]<br>
+a single ID or a vector of IDs of the flow(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run.id</code></td>
+<td>
+<p>[<code>integer</code>]<br>
+a single ID or a vector of IDs of the run(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uploader.id</code></td>
+<td>
+<p>[<code>integer</code>]<br>
+a single ID or a vector of IDs of uploader profile(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tag</code></td>
+<td>
+<p>[<code>character</code>]<br>
+If not <code>NULL</code> only entries with the corresponding <code>tag</code>s
+are listed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>[<code>numeric(1)</code>]<br>
+Optional. The maximum number of entries to return. 
+Without specifying <code>offset</code>, it returns the first '<code>limit</code>' entries.
+Setting <code>limit = NULL</code> returns all available entries.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>[<code>numeric(1)</code>]<br>
+Optional. The offset to start from. 
+Should be indices starting from 0, which do not refer to IDs. 
+Is ignored when no <code>limit</code> is given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbosity</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+Print verbose output on console? Possible values are:<br><code>0</code>: normal output,<br><code>1</code>: info output,<br><code>2</code>: debug output.<br>
+Default is set via <code>setOMLConfig</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>[<code>data.frame</code>].
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function is memoised. I.e., if you call this function twice in a running R session,
+the first call will query the server and store the results in memory while the second and all subsequent calls will return
+the cached results from the first call.
+You can reset the cache by calling <code>forget</code> on the function manually.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other listing functions: 
+<code>chunkOMLlist()</code>,
+<code>listOMLDataSetQualities()</code>,
+<code>listOMLDataSets()</code>,
+<code>listOMLEstimationProcedures()</code>,
+<code>listOMLEvaluationMeasures()</code>,
+<code>listOMLFlows()</code>,
+<code>listOMLSetup()</code>,
+<code>listOMLStudies()</code>,
+<code>listOMLTaskTypes()</code>,
+<code>listOMLTasks()</code>
+</p>
+<p>Other run-related functions: 
+<code>convertOMLMlrRunToBMR()</code>,
+<code>convertOMLRunToBMR()</code>,
+<code>deleteOMLObject()</code>,
+<code>getOMLRun()</code>,
+<code>makeOMLRunParameter()</code>,
+<code>makeOMLRun()</code>,
+<code>tagOMLObject()</code>,
+<code>uploadOMLRun()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># \dontrun{
+#   runs_ctree = listOMLRuns(flow.id = 2569)
+#   head(runs_ctree)
+# }
+</code></pre>
+
+
+</div>

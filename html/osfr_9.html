@@ -1,0 +1,158 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osf_create</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a new project or component on OSF</h2>
+
+<h3>Description</h3>
+
+<p>Use <code>osf_create_project()</code> to create a new top-level project on OSF. A nested
+component can be created by providing an <code>osf_tbl_node</code> containing an
+existing project or component to <code>osf_create_component()</code>'s <code>x</code> argument.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osf_create_project(
+  title,
+  description = NULL,
+  public = FALSE,
+  category = "project"
+)
+
+osf_create_component(
+  x,
+  title,
+  description = NULL,
+  public = FALSE,
+  category = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>title, description</code></td>
+<td>
+<p>Set a title (required) and, optionally, a
+description.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>public</code></td>
+<td>
+<p>Logical, should it be publicly available (<code>TRUE</code>) or private
+(<code>FALSE</code>, the default)?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>category</code></td>
+<td>
+<p>Character string, specify a category to change the icon
+displayed on OSF. The defaults are <code>"project"</code> for projects and
+<code>"uncategorized"</code> for components. The specified category can be easily
+changed later on OSF. Valid category options include:
+</p>
+
+<ul>
+<li>
+<p> analysis
+</p>
+</li>
+<li>
+<p> communication
+</p>
+</li>
+<li>
+<p> data
+</p>
+</li>
+<li>
+<p> hypothesis
+</p>
+</li>
+<li>
+<p> instrumentation
+</p>
+</li>
+<li>
+<p> methods and measures
+</p>
+</li>
+<li>
+<p> procedure
+</p>
+</li>
+<li>
+<p> project
+</p>
+</li>
+<li>
+<p> software
+</p>
+</li>
+<li>
+<p> other
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An <code>osf_tbl_node</code> with a single OSF project or component that will
+serve as the new sub-component's parent node.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>osf_tbl_node</code> containing the new project or component.
+</p>
+
+
+<h3>OSF nodes</h3>
+
+<p>Projects and components are both implemented as <em>nodes</em> on OSF. The only
+distinction between the two is that a project is a top-level node, and a
+component must have a parent node (i.e., must be a sub-component of another
+project or component). Because projects and components are functionally
+identical, osfr uses the same <code>osf_tbl_node</code> class to represent both.
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li>
+<p> OSF Guides: Create a Project.
+<a href="https://help.osf.io/article/383-creating-a-project">https://help.osf.io/article/383-creating-a-project</a>.
+</p>
+</li>
+<li>
+<p> OSF Guides: Create a Component.
+<a href="https://help.osf.io/article/253-create-components">https://help.osf.io/article/253-create-components</a>.
+</p>
+</li>
+</ol>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# create a new public project
+project &lt;- osf_create_project(title = "Private OSF Project", public = TRUE)
+
+# add a private component to the new project
+component &lt;- osf_create_component(project, title = "Project Data")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,53 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>drag</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wind drag coefficient</h2>
+
+<h3>Description</h3>
+
+<p><code>drag</code> holds wind drag coefficients for wind-profile and eddy-covariance
+methods, summarized in Figure 3 of Garratt (1977).  The data are stored in a
+data frame with four columns: <code>U</code> is wind speed in m/s; <code>Cd</code> is for
+(neutral) drag coefficient; <code>n</code> is the number of data measurements
+represented by the value; and <code>method</code> is a factor with two levels:
+<code>profile</code> and <code>eddy</code>, for two methods of inferring <code>Cd</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(drag, package="ocedata")
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>The data were digitized from Figure 3 of Garratt (1977) by Dan Kelley.
+</p>
+
+
+<h3>References</h3>
+
+<p>J. R. Garratt, 1977.  Review of drag coefficients over oceans and
+continents. <em>Monthly Weather Review</em>, 105:915-927.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(drag, package="ocedata")
+par(mar=c(3,3,1,1), mgp=c(2, 0.7, 0))
+plot(drag$U, drag$Cd, pch=ifelse(drag$method == "profile", 1, 19),
+    xlab="U [m/s]", ylab=expression(C[D]),
+    xlim=c(0, 22), ylim=c(0, 3e-3))
+legend("topleft", pch=c(1,19),
+    legend=c("profile method", "eddy covariance method"))
+
+
+</code></pre>
+
+
+</div>

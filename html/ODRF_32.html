@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>RotMatPPO</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a Projection Matrix: RotMatPPO</h2>
+
+<h3>Description</h3>
+
+<p>Create a projection matrix using projection pursuit optimization (<code>PPO</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">RotMatPPO(
+  X,
+  y,
+  model = "PPR",
+  split = "entropy",
+  weights = NULL,
+  dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2/3)),
+  numProj = ifelse(dimProj == "Rand", sample(floor(ncol(X)/3), 1),
+    ceiling(ncol(X)/dimProj)),
+  catLabel = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>An n by d numeric matrix (preferable) or data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A response vector of length n.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>Model for projection pursuit (for details see <code>PPO</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split</code></td>
+<td>
+<p>One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification, default)
+or 'mse': mean square error (regression).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>A vector of length same as <code>data</code> that are positive weights. (default NULL)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dimProj</code></td>
+<td>
+<p>Number of variables to be projected, <code>dimProj</code>=min(ceiling(n^0.4),ceiling(ncol(X)*2/3)) (default) or dimProj="Rand": random from 1 to ncol(X).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numProj</code></td>
+<td>
+<p>The number of projection directions, when <code>dimProj</code>="Rand" default
+<code>numProj</code> = sample(ceiling(ncol(<code>X</code>)/3),1) otherwise default <code>numProj</code>=ceiling(ncol(<code>X</code>)/<code>dimProj</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>catLabel</code></td>
+<td>
+<p>A category labels of class <code>list</code> in predictors. (default NULL, for details see Examples of <code>ODT</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Used to handle superfluous arguments passed in using paramList.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A random matrix to use in running <code>ODT</code>.
+</p>
+
+<ul>
+<li>
+<p>Variable: Variables to be projected.
+</p>
+</li>
+<li>
+<p>Number: Number of projections.
+</p>
+</li>
+<li>
+<p>Coefficient: Coefficients of the projection matrix.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>RotMatMake</code> <code>RotMatRand</code> <code>RotMatRF</code> <code>PPO</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(220828)
+X &lt;- matrix(rnorm(1000), 100, 10)
+y &lt;- (rnorm(100) &gt; 0) + 0
+(RotMat &lt;- RotMatPPO(X, y))
+(RotMat &lt;- RotMatPPO(X, y, dimProj = "Rand"))
+(RotMat &lt;- RotMatPPO(X, y, dimProj = 6, numProj = 4))
+
+# classification
+data(seeds)
+(PP &lt;- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "Log", split = "entropy"))
+(PP &lt;- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "PPR", split = "entropy"))
+(PP &lt;- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = "entropy"))
+
+# regression
+data(body_fat)
+(PP &lt;- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Log", split = "mse"))
+(PP &lt;- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", split = "mse"))
+(PP &lt;- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", split = "mse"))
+
+</code></pre>
+
+
+</div>

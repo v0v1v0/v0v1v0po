@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>occolors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Color Palettes for the opticut Package
+</h2>
+
+<h3>Description</h3>
+
+<p>A convenient way of setting color palettes for the opticut package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">occolors(theme)
+col2gray(col, method="BT.709")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theme</code></td>
+<td>
+
+<p>character value, character vector, or a function used to interpolate the colors.
+The built-in values are <code>"br"</code> (default, blue-red divergent palette,
+colorblind safe),
+<code>"gr"</code> (green-red divergent palette), <code>"bw"</code> (black and white: grayscale converted <code>"br"</code> settings).
+See <code>colorRampPalette</code>, <code>gray</code> and the Examples.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+
+<p>vector of color specification as described on the help page
+for the <code>col2rgb</code> function. This is converted to grayscale.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+
+<p>character, the method used for grayscale conversion. See Details.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Grayscale conversion methods in <code>col2gray</code> calculate gray levels based on
+red (R), green (G), and blue (B) color channels as follows:
+</p>
+
+<dl>
+<dt><code>"BT.709"</code></dt>
+<dd>
+<p>0.2126 * R + 0.7152 * G + 0.0722 * B,
+luminosity correction following the  ITU-R BT.709 recommendation;</p>
+</dd>
+<dt><code>"BT.601"</code></dt>
+<dd>
+<p>0.299 * R + 0.587 * G + 0.114 * B,
+luminosity correction following the  ITU-R BT.601 recommendation;</p>
+</dd>
+<dt><code>"desaturate"</code></dt>
+<dd>
+<p>(max(R, G, B) + min(R, G, B)) / 2,
+also called lightness;</p>
+</dd>
+<dt><code>"average"</code></dt>
+<dd>
+<p>(R + G + B) / 3;</p>
+</dd>
+<dt><code>"maximum"</code></dt>
+<dd>
+<p>max(R, G, B);</p>
+</dd>
+<dt><code>"minimum"</code></dt>
+<dd>
+<p>min(R, G, B);</p>
+</dd>
+<dt><code>"red"</code></dt>
+<dd>
+<p>R;</p>
+</dd>
+<dt><code>"green"</code></dt>
+<dd>
+<p>G;</p>
+</dd>
+<dt><code>"blue"</code></dt>
+<dd>
+<p>B.</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p><code>occolors</code> returns a function, see <code>colorRampPalette</code>.
+</p>
+<p><code>col2gray</code> returns a vector of gray colors based on
+the conversion <code>method</code> and <code>gray</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Solymos &lt;psolymos@gmail.com&gt;
+</p>
+<p>Hexadecimal values for the built-in palettes are taken from
+<a href="https://colorbrewer2.org/">https://colorbrewer2.org/</a>.
+</p>
+<p>Converting color to grayscale:
+<a href="https://en.wikipedia.org/wiki/Grayscale">https://en.wikipedia.org/wiki/Grayscale</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>colorRampPalette</code> for a general description of palettes.
+</p>
+<p><code>ocoptions</code> for setting the color theme option in the
+opticut package.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## using palettes
+plot(1:100, rep(2, 100), pch = 15,
+    ylim = c(0, 21), axes = FALSE, ann = FALSE,
+    col = occolors()(100)) # default 'bg'
+text(50, 1, "theme = 'br'")
+points(1:100, rep(5, 100), pch = 15,
+    col=occolors("gr")(100))
+text(50, 4, "theme = 'gr'")
+points(1:100, rep(8, 100), pch = 15,
+    col=occolors("bw")(100))
+text(50, 7, "theme = 'bw'")
+points(1:100, rep(11, 100), pch = 15,
+    col=occolors(terrain.colors)(100))
+text(50, 10, "theme = terrain.colors")
+points(1:100, rep(14, 100), pch = 15,
+    col=occolors(c("purple", "pink", "orange"))(100))
+text(50, 13, "theme = c('purple', 'pink', 'orange')")
+points(1:100, rep(17, 100), pch = 15,
+    col=occolors(c("#a6611a", "#ffffbf", "#018571"))(100))
+text(50, 16, "theme = c('#a6611a', '#ffffbf', '#018571')")
+points(1:100, rep(20, 100), pch = 15,
+    col=occolors(c("#7b3294", "#ffffbf", "#008837"))(100))
+text(50, 19, "theme = c('#7b3294', '#ffffbf', '#008837')")
+
+## grayscale conversions
+n &lt;- 25
+col &lt;- occolors("br")(n)
+method &lt;- c("BT.709", "BT.601",
+    "desaturate", "average", "maximum", "minimum",
+    "red", "green", "blue")
+plot(0, type="n", ann=FALSE, axes=FALSE,
+    xlim=c(0, n), ylim=c(3*length(method), 0))
+for (j in 1:length(method)) {
+    for (i in 1:n) {
+        polygon(c(i-1, i, i, i-1), c(0, 0, 1, 1)+((j-1)*3),
+            col=col[i], border=col[i])
+        polygon(c(i-1, i, i, i-1), c(1, 1, 2, 2)+((j-1)*3),
+            col=col2gray(col[i], method=method[j]),
+            border=col2gray(col[i], method=method[j]))
+        text(n/2, 1+((j-1)*3), method[j])
+    }
+}
+</code></pre>
+
+
+</div>

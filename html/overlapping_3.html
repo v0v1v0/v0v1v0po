@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>overlap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Estimate the overlapping measure. 
+</h2>
+
+<h3>Description</h3>
+
+<p>It returns the overlapped estimated area between two or more kernel density estimations from empirical data. The overlapping measure can be computed either as the integral of the minimum between two densities (<code>type = "1"</code>) or as the proportion of overlapping area between two densities (<code>type = "2"</code>). In the last case, the integral of the minimum between two densities is divided by the integral of the maximum of the two densities.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">overlap( x, nbins = 1024, type = c( "1", "2" ), 
+    pairsOverlap = TRUE, plot = FALSE, boundaries = NULL, 
+    get_xpoints = FALSE, ... )
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a list of numerical vectors to be compared (each vector is an element of the list).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nbins</code></td>
+<td>
+<p>number of equally spaced points through which the density estimates are compared; see <code>density</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character, type of index. If <code>type = "2"</code> returns the proportion of the overlapped area between two or more densities, see Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pairsOverlap</code></td>
+<td>
+<p>logical, if <code>TRUE</code> (default) returns the overlapped area relative to each pair of distributions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>logical, if <code>TRUE</code>, the final plot of estimated densities and overlapped areas is produced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundaries</code></td>
+<td>
+<p>an optional vector indicating the minimum and the maximum over a predefined subset of the support of the empirical densities, see Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get_xpoints</code></td>
+<td>
+<p>logical, if <code>TRUE</code> returns a vector where the abscissas represent the points of intersection among the densities. Note: it works only if <code>pairsOverlap = FALSE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>optional arguments to be passed to the function <code>density</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When dealing with two densities: <code>type = "1"</code> corresponds to the integral of the minimum between the two densities; <code>type = "2"</code> corresponds to the proportion of the overlapped area over the total area.
+</p>
+<p>If the list <code>x</code> contains more than two elements (i.e. more than two distributions) it computes both the multiple and the pairwise overlapping among all distributions. 
+</p>
+<p>If <code>plot = TRUE</code> all the overlapped areas are plotted.  It requires <code>ggplot2</code>.
+</p>
+<p>The optional vector <code>boundaries</code> has to contain two numbers for the empirical minimum and maximum of the overlapped area. See examples below. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>It returns a list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>OV </code></td>
+<td>
+<p>estimate of the overlapped area; if <code>x</code> contains more than two elements then a vector of estimates is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xpoints </code></td>
+<td>
+<p>a list of intersection points (in abscissa) among the densities (if <code>get_xpoints = TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>OVpairs</code></td>
+<td>
+<p>the estimates of overlapped areas for each pair of densities (only if <code>x</code> contains more than two elements).</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Call function <code>ovmult</code>. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Massimiliano Pastore, Pierfrancesco Alaimo Di Loro, Marco Mingione
+</p>
+
+
+<h3>References</h3>
+
+<p>Pastore, M. (2018). Overlapping: a R package for Estimating Overlapping in Empirical Distributions. The Journal of Open Source Software, 3 (32), 1023. doi: <a href="https://doi.org/10.21105/joss.01023">10.21105/joss.01023</a>
+</p>
+<p>Pastore, M., Calcagnì, A. (2019). Measuring Distribution Similarities Between Samples: A Distribution-Free Overlapping Index. Frontiers in Psychology, 10:1089. doi: <a href="https://doi.org/10.3389/fpsyg.2019.01089">10.3389/fpsyg.2019.01089</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(20150605)
+x &lt;- list(X1=rnorm(100), X2=rt(50,8), X3=rchisq(80,2))
+overlap(x, plot=TRUE)
+
+# including boundaries
+x &lt;- list(X1=runif(100), X2=runif(100,.5,1))
+overlap(x, plot=TRUE, boundaries=c(.5,1))
+
+x &lt;- list(X1=runif(100), X2=runif(50), X3=runif(30))
+overlap(x, plot=TRUE, boundaries=c(.1,.9))
+
+# changing kernel
+overlap(x, plot=TRUE, kernel="rectangular")
+
+# normalized overlap
+N &lt;- 1e5
+x &lt;- list(X1=runif(N),X2=runif(N,.5))
+overlap(x)
+overlap(x, type = "2")
+
+
+</code></pre>
+
+
+</div>

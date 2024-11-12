@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OneArmTTEAnalysis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform analysis on the data of one-arm clinical trial with time-to-event endpoint</h2>
+
+<h3>Description</h3>
+
+<p>This function can get analysis results on the input trial data using several approaches for
+one-arm trial design with time-to-event endpoint. Default approaches include one-sample log-rank
+test, Landmark Kaplen-Meier method and binary method which regards the survival of each subject
+at a landmark is a binary variable. In addition, if <code>RWdata</code> is not <code>NULL</code>, the <code>RWdata</code>
+input will be used as an external control and cox model will be used to evaluate the treatment effect
+of input trial data (experimental arm) compared with the external control.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OneArmTTEAnalysis(
+  data,
+  eventRates.ctrl,
+  landmark,
+  RWdata = NULL,
+  RWSurvCal = FALSE,
+  conf.type = "plain",
+  alpha = 0.05
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Trial data. A tibble/data.frame containing <code>time</code> and <code>censor</code>, where <code>censor=1</code> indicates event.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eventRates.ctrl</code></td>
+<td>
+<p>Event rates of historical control.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>landmark</code></td>
+<td>
+<p>The landmark of interest to evaluate the survival rate for Landmark Kaplan-Meier method and binary method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>RWdata</code></td>
+<td>
+<p>The real world data to be used as external control; A tibble/data.frame containing <code>time</code> and <code>censor</code>, where <code>censor=1</code> indicates event; default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>RWSurvCal</code></td>
+<td>
+<p>Indicator of whether to calculate historical cumulative hazard and survival rate at landmark from real world data; default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.type</code></td>
+<td>
+<p>Type of confidence interval in the survival model; One of "<code>none</code>", "<code>plain</code>" (the default), "<code>log</code>", "<code>log-log</code>", "<code>logit</code>" or "<code>arcsin</code>".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Type I error rate level.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function outputs a list of analysis results of each design, including:
+1) p-value of one-sample log-rank test,
+2) historical survival rate at landmark,
+3) survival rate estimate with confidence interval of landmark kaplan-meier method,
+4) survival rate estimate with confidence interval of binary method,
+5) p-value of binary method,
+6) hazard ratio estimate with confidence interval compared with real world data (if available),
+7) p-value of log-rank test compared with real world data (if available).
+</p>
+
+
+<h3>Value</h3>
+
+<p>No visible return values.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(survival)
+data(example_data)
+# Piecewise exponential of historical control
+median.ctrl &lt;- c(14.3, 1.5, 4.9)
+eventRates.ctrl &lt;- tibble::tibble(duration=c(4,2,100),rate=log(2)/median.ctrl)
+OneArmTTEAnalysis(example_data, eventRates.ctrl, landmark=6)
+
+</code></pre>
+
+
+</div>

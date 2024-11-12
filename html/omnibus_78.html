@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>naCompare</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compare values using &lt;, &lt;=, &gt;, &gt;=, !=, and == (robust to NAs)</h2>
+
+<h3>Description</h3>
+
+<p>This function and set of operators perform simple (vectorized) comparisons using <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>!=</code>, or <code>==</code> between values and <em>always</em> returns <code>TRUE</code> or <code>FALSE</code>. <code>TRUE</code> only occurs if the condition can be evaluated and it is <code>TRUE</code>. <code>FALSE</code> is returned if the condition is <code>FALSE</code> <em>or</em> it cannot be evaluated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">naCompare(op, x, y)
+
+x %&lt;na% y
+
+x %&lt;=na% y
+
+x %==na% y
+
+x %!=na% y
+
+x %&gt;na% y
+
+x %&gt;=na% y
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>op</code></td>
+<td>
+<p>Character, the operation to perform: <code>'&lt;'</code>, <code>'&lt;='</code>, <code>'&gt;'</code>, <code>'&gt;='</code>, <code>'!='</code>, or <code>'=='</code>. Note this must be a character (i.e., put it in quotes).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x, y</code></td>
+<td>
+<p>Vectors of numeric, character, <code>NA</code>, and/or <code>NaN</code> values. This is the first value in the operation <code>x XXX y</code> where <code>XXX</code> is the operator in <code>op</code>. If <code>x</code> is shorter than <code>y</code> then <code>x</code> is recycled.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Vector of logical values.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">naCompare('&lt;', c(1, 2, NA), c(10, 1, 0))
+naCompare('&lt;', c(1, 2, NA), 10)
+naCompare('&lt;', c(1, 2, NA), NA)
+# compare to:
+NA &lt; 5
+NA &lt; NA
+
+# same operations with operators:
+1 %&lt;na% 2
+1 %&lt;na% NA
+3 %==na% 3
+NA %==na% 3
+4 %!=na% 4
+4 %!=na% NA
+5 %&gt;=na% 3
+5 %&gt;=na% NA
+3 %==na% c(NA, 1, 2, 3, 4)
+
+# compare to:
+1 &lt; 2
+1 &lt; NA
+3 == 3
+NA == 3
+4 != 4
+4 != NA
+5 &gt;= 3
+5 &gt;= NA
+3 == c(NA, 1, 2, 3, 4)
+</code></pre>
+
+
+</div>

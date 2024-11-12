@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_locked_in_constraints</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add locked in constraints</h2>
+
+<h3>Description</h3>
+
+<p>Add constraints to a project prioritization <code>problem()</code> to ensure
+that specific actions are prioritized for funding in the solution. For
+example, it may be desirable to lock in actions for conserving culturally or
+taxonomically important species.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_locked_in_constraints(x, locked_in)
+
+## S4 method for signature 'ProjectProblem,numeric'
+add_locked_in_constraints(x, locked_in)
+
+## S4 method for signature 'ProjectProblem,logical'
+add_locked_in_constraints(x, locked_in)
+
+## S4 method for signature 'ProjectProblem,character'
+add_locked_in_constraints(x, locked_in)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locked_in</code></td>
+<td>
+<p>Object that determines which planning units that should be
+locked in. See the Details section for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The locked actions can be specified in several different
+ways:
+</p>
+
+<dl>
+<dt><code>integer</code></dt>
+<dd>
+<p><code>vector</code> of indices pertaining to which
+actions should be locked in the solution (i.e. row numbers of the
+actions in the argument to <code>actions</code> in <code>problem()</code>).</p>
+</dd>
+<dt><code>logical</code></dt>
+<dd>
+<p><code>vector</code> containing <code>logical</code>
+(i.e. <code>TRUE</code> and/or <code>FALSE</code> values) that indicate which
+actions should be locked in the solution. These <code>logical</code>
+values should correspond to each row in the argument to <code>actions</code>
+in <code>problem()</code>).</p>
+</dd>
+<dt><code>character</code></dt>
+<dd>
+<p>column name that indicates if actions
+units should be locked in the solution. This argument
+should  denote a column in the argument to <code>actions</code>
+in <code>problem()</code> which contains <code>logical</code>
+(i.e. <code>TRUE</code> and/or <code>FALSE</code> values) to indicate
+which actions should be locked.</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>ProjectProblem object with the constraints
+added to it.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>constraints.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# print action data
+print(sim_actions)
+
+# build problem with maximum richness objective and $150 budget
+p1 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 150) %&gt;%
+     add_binary_decisions()
+
+# print problem
+print(p1)
+
+# build another problem, and lock in the 3rd action using numeric inputs
+p2 &lt;- p1 %&gt;%
+      add_locked_in_constraints(c(3))
+
+# print problem
+print(p2)
+
+# build another problem, and lock in the actions using logical inputs from
+# the sim_actions table
+p3 &lt;- p1 %&gt;%
+      add_locked_in_constraints(sim_actions$locked_in)
+
+# print problem
+print(p3)
+
+# build another problem, and lock in the actions using the column name
+# "locked_in" in the sim_actions table
+# the sim_actions table
+p4 &lt;- p1 %&gt;%
+      add_locked_in_constraints("locked_in")
+
+# print problem
+print(p4)
+
+## Not run: 
+# solve problems
+s1 &lt;- solve(p1)
+s2 &lt;- solve(p2)
+s3 &lt;- solve(p3)
+s4 &lt;- solve(p4)
+
+# print the actions selected for funding in each of the solutions
+print(s1[, sim_actions$name])
+print(s2[, sim_actions$name])
+print(s3[, sim_actions$name])
+print(s4[, sim_actions$name])
+
+## End(Not run)
+</code></pre>
+
+
+</div>

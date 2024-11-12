@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict_Ohit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make predictions based on a fitted "Ohit" object</h2>
+
+<h3>Description</h3>
+
+<p>This function returns predictions from a fitted <code>"Ohit"</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">predict_Ohit(object, newX)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Fitted "Ohit" model object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newX</code></td>
+<td>
+<p>Matrix of new values for <code>X</code> at which predictions are to be made.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pred_HDIC</code></td>
+<td>
+<p>The predicted value based on the model determined by OGA+HDIC.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pred_Trim</code></td>
+<td>
+<p>The predicted value based on the model determined by OGA+HDIC+Trim.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Hai-Tang Chiou, Ching-Kang Ing and Tze Leung Lai.
+</p>
+
+
+<h3>References</h3>
+
+<p>Ing, C.-K. and Lai, T. L. (2011). A stepwise regression method and consistent model selection for high-dimensional sparse linear models. <em>Statistica Sinica</em>, <strong>21</strong>, 1473–1513.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example setup (Example 3 in Section 5 of Ing and Lai (2011))
+n = 410
+p = 4000
+q = 10
+beta_1q = c(3, 3.75, 4.5, 5.25, 6, 6.75, 7.5, 8.25, 9, 9.75)
+b = sqrt(3/(4 * q))
+
+x_relevant = matrix(rnorm(n * q), n, q)
+d = matrix(rnorm(n * (p - q), 0, 0.5), n, p - q)
+x_relevant_sum = apply(x_relevant, 1, sum)
+x_irrelevant = apply(d, 2, function(a) a + b * x_relevant_sum)
+X = cbind(x_relevant, x_irrelevant)
+epsilon = rnorm(n)
+y = as.vector((x_relevant %*% beta_1q) + epsilon)
+
+# with intercept
+fit1 = Ohit(X[1:400, ], y[1:400])
+predict_Ohit(fit1, rbind(X[401:401, ]))
+predict_Ohit(fit1, X[401:410, ])
+# without intercept
+fit2 = Ohit(X[1:400, ], y[1:400], intercept = FALSE)
+predict_Ohit(fit2, rbind(X[401:401, ]))
+predict_Ohit(fit2, X[401:410, ])
+</code></pre>
+
+
+</div>

@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_diff_upload_changeset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Diff (OsmChange format) upload to a changeset</h2>
+
+<h3>Description</h3>
+
+<p>With this API call files in the <a href="https://wiki.openstreetmap.org/wiki/OsmChange">OsmChange</a> format can be uploaded to
+the server. This is guaranteed to be running in a transaction. So either all the changes are applied or none.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_diff_upload_changeset(changeset_id, osmcha, format = c("R", "xml"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>changeset_id</code></td>
+<td>
+<p>The ID of the changeset this diff belongs to. The user issuing this API call has to be the same
+that created the changeset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osmcha</code></td>
+<td>
+<p>The OsmChange data. Can be the path of an OsmChange file, a xml2::xml_document or an
+<code>osmapi_OsmChange</code> object (see <code style="white-space: pre;">⁠osmchange_*()⁠</code> functions).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default) or <code>"xml"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To upload an OSC file it has to conform to the <a href="https://wiki.openstreetmap.org/wiki/OsmChange">OsmChange</a>
+specification with the following differences:
+</p>
+
+<ul>
+<li>
+<p> each element must carry a <code>changeset</code> and a <code>version</code> attribute (xml) / column (data.frame), except when you are
+creating an element where the version is not required as the server sets that for you. The <code>changeset</code> must be the
+same as the changeset ID being uploaded to.
+</p>
+</li>
+<li>
+<p> a <code style="white-space: pre;">⁠&lt;delete&gt;⁠</code> block in the OsmChange document may have an <code style="white-space: pre;">⁠if-unused⁠</code> attribute (the value of which is ignored)
+(<code>action_type</code> column with <code style="white-space: pre;">⁠delete if-unused⁠</code> for data.frames). If this attribute is present, then the delete
+operation(s) in this block are conditional and will only be executed if the object to be deleted is not used by
+another object. Without the <code style="white-space: pre;">⁠if-unused⁠</code>, such a situation would lead to an error, and the whole diff upload would
+fail. Setting the attribute will also cause deletions of already deleted objects to not generate an error.
+</p>
+</li>
+<li> <p><a href="https://wiki.openstreetmap.org/wiki/OsmChange">OsmChange</a> documents generally have <code>user</code> and <code>uid</code> attributes
+on each element. These are not required in the document uploaded to the API.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>If a diff is successfully applied and <code>format = "R"</code>, it returns a data frame with one row for each edited object.
+For <code>format = "xml"</code>, a xml2::xml_document is returned in the following format:
+</p>
+<div class="sourceCode xml"><pre>&lt;diffResult generator="OpenStreetMap Server" version="0.6"&gt;
+	&lt;node|way|relation old_id="#" new_id="#" new_version="#"/&gt;
+	...
+&lt;/diffResult&gt;
+</pre></div>
+<p>with one element for every object in the upload.
+</p>
+<p>Note that this can be counter-intuitive when the same element has appeared multiple times in the input then it will
+appear multiple times in the output.</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <strong>Attribute</strong> </td>
+<td style="text-align: center;"> <strong>create</strong> </td>
+<td style="text-align: center;"> <strong>modify</strong> </td>
+<td style="text-align: center;"> <strong>delete</strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <strong>old_id</strong> </td>
+<td style="text-align: center;"> same as uploaded element </td>
+<td style="text-align: center;"> same as uploaded element </td>
+<td style="text-align: center;"> same as uploaded element </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <strong>new_id</strong> </td>
+<td style="text-align: center;"> new ID </td>
+<td style="text-align: center;"> new ID ''or'' same as uploaded </td>
+<td style="text-align: center;"> not present </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <strong>new_version</strong> </td>
+<td style="text-align: center;"> new version </td>
+<td style="text-align: center;"> new version </td>
+<td style="text-align: center;"> not present </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+
+<ul>
+<li>
+<p> Processing stops at the first error, so if there are multiple conflicts in one diff upload, only the first problem
+is reported.
+</p>
+</li>
+<li>
+<p> Refer to <code>osm_capabilities()</code> –&gt; <code>changesets$maximum_elements</code> for the maximum number of changes permitted in a
+changeset.
+</p>
+</li>
+<li>
+<p> There is currently no limit in the diff size on the Rails port. CGImap limits diff size to 50MB (uncompressed
+size).
+</p>
+</li>
+<li>
+<p> Forward referencing of placeholder ids is not permitted and will be rejected by the API.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other edit changeset's functions: 
+<code>osm_create_changeset()</code>
+</p>
+<p>Other OsmChange's functions: 
+<code>osm_download_changeset()</code>,
+<code>osmchange_create()</code>,
+<code>osmchange_delete()</code>,
+<code>osmchange_modify()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">vignette("how_to_edit_osm", package = "osmapiR")
+</code></pre>
+
+
+</div>

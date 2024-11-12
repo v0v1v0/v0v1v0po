@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiInitialise_for_Compass</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Implementation of opiInitialise for the ImoVifa machine.</h2>
+
+<h3>Description</h3>
+
+<p>This is for internal use only. Use <code>opiInitialise()</code> with
+these Arguments and you will get the Value back.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ip</code></td>
+<td>
+<p>IP address on which server is listening as a string</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>port</code></td>
+<td>
+<p>Port number on which server is listening</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Could be used for fake compass, simulations, etc</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Warning: this returns a list, not a single error code.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with elements:
+</p>
+
+<ul>
+<li> <p><code>err</code> NULL if successful, not otherwise.
+</p>
+</li>
+<li> <p><code>prl</code> A pair giving the (x,y) in degrees of the Preferred Retinal
+Locus detected in the initial alignment.
+</p>
+</li>
+<li> <p><code>onh</code> a pair giving the (x,y) in degrees of the ONH as selected by
+the user.
+</p>
+</li>
+<li> <p><code>image</code> raw bytes being the JPEG compressed infra-red image acquired
+during alignment.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+  # Set up the Compass
+  chooseOpi("Compass")
+  result &lt;- opiInitialize(ip = "192.168.1.7", port = 44965)
+  if (is.null(result$err))
+    print(result$prl)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

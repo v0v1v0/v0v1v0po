@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_aic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Akaike information criterion</h2>
+
+<h3>Description</h3>
+
+<p>Akaike information criterion for model selection.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_aic(model, method = c("R", "STATA", "SAS"), corrected = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A character vector; specify the method to compute AIC. Valid
+options include R, STATA and SAS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corrected</code></td>
+<td>
+<p>Logical; if <code>TRUE</code>, returns corrected akaike information criterion for SAS method.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>AIC provides a means for model selection. Given a collection of models for
+the data, AIC estimates the quality of each model, relative to each of the
+other models. R and STATA use loglikelihood to compute AIC. SAS uses residual
+sum of squares. Below is the formula in each case:
+</p>
+<p><em>R &amp; STATA</em>
+</p>
+<p style="text-align: center;"><code class="reqn">AIC = -2(loglikelihood) + 2p</code>
+</p>
+
+<p><em>SAS</em>
+</p>
+<p style="text-align: center;"><code class="reqn">AIC = n * ln(SSE / n) + 2p</code>
+</p>
+
+<p><em>corrected</em>
+</p>
+<p style="text-align: center;"><code class="reqn">AIC = n * ln(SSE / n) + ((n * (n + p)) / (n - p - 2))</code>
+</p>
+
+<p>where <em>n</em> is the sample size and <em>p</em> is the number of model parameters including intercept.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Akaike information criterion of the model.
+</p>
+
+
+<h3>References</h3>
+
+<p>Akaike, H. (1969). “Fitting Autoregressive Models for Prediction.” Annals of the Institute of Statistical
+Mathematics 21:243–247.
+</p>
+<p>Judge, G. G., Griffiths, W. E., Hill, R. C., and Lee, T.-C. (1980). The Theory and Practice of Econometrics.
+New York: John Wiley &amp; Sons.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other model selection criteria: 
+<code>ols_apc()</code>,
+<code>ols_fpe()</code>,
+<code>ols_hsp()</code>,
+<code>ols_mallows_cp()</code>,
+<code>ols_msep()</code>,
+<code>ols_sbc()</code>,
+<code>ols_sbic()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># using R computation method
+model &lt;- lm(mpg ~ disp + hp + wt + qsec, data = mtcars)
+ols_aic(model)
+
+# using STATA computation method
+model &lt;- lm(mpg ~ disp + hp + wt + qsec, data = mtcars)
+ols_aic(model, method = 'STATA')
+
+# using SAS computation method
+model &lt;- lm(mpg ~ disp + hp + wt + qsec, data = mtcars)
+ols_aic(model, method = 'SAS')
+
+# corrected akaike information criterion
+model &lt;- lm(mpg ~ disp + hp + wt + qsec, data = mtcars)
+ols_aic(model, method = 'SAS', corrected = TRUE)
+
+</code></pre>
+
+
+</div>

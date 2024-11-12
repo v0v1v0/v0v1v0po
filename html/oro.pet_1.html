@@ -1,0 +1,187 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>activityConcentration</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculating SUVs for PET Using QIBA Pseudocode</h2>
+
+<h3>Description</h3>
+
+<p>The standard uptake value (SUV) is calculated based on an 18F-FDG-PET
+acquistion using ancillary information contained in the DICOM data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">activityConcentration(pixelData, ...)
+
+## S4 method for signature 'array'
+activityConcentration(
+  pixelData,
+  CSV = NULL,
+  seriesNumber = NULL,
+  method = "qiba"
+)
+
+.activityConcentration(
+  pixelData,
+  CSV = NULL,
+  seriesNumber = NULL,
+  method = "qiba"
+)
+
+standardUptakeValue(pixelData, ...)
+
+## S4 method for signature 'array'
+standardUptakeValue(
+  pixelData,
+  mask = NULL,
+  CSV = NULL,
+  seriesNumber = NULL,
+  method = c("qiba", "user"),
+  prior = NULL,
+  decayedDose = NULL
+)
+
+.standardUptakeValue(
+  pixelData,
+  mask = NULL,
+  CSV = NULL,
+  seriesNumber = NULL,
+  method = c("qiba", "user"),
+  prior = NULL,
+  decayedDose = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pixelData</code></td>
+<td>
+<p>is a multidimensional array of signal intensities of class
+<code>nifti</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CSV</code></td>
+<td>
+<p>is a <code>data.frame</code> that is the output from <code>dicomTable</code>
+and contains all necessary DICOM header fields.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seriesNumber</code></td>
+<td>
+<p>is the SeriesNumber that corresponds to the PET
+acquisition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>takes on two possible values (<code>qiba</code> and <code>user</code>),
+where QIBA pseudocode is used to calculate the SUVs or user-defined
+parameters are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mask</code></td>
+<td>
+<p>is a multidimensional array of logical values (only used when
+<code>method = "user"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>is a list of DICOM header field names that are necessary for
+the SUV calculation under <code>method = "user"</code> or may be used to replace
+values from the DICOM header information when <code>method = "qiba"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>decayedDose</code></td>
+<td>
+<p>is the amount of the RadionuclideTotalDose after being
+corrected for residual dose in the syringe.  This value is NOT usually
+corrected in the DICOM data.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing the following items 
+</p>
+
+<ul>
+<li>
+<p>SUVbwis a
+multidimensional array, the same dimension as <code>pixelData</code>, that
+contains the standard uptake values. 
+</p>
+</li>
+<li>
+<p>hdris a list of DICOM header
+fields used in the SUV calculation. 
+</p>
+</li>
+<li>
+<p>decayTimeis the decay time
+calculated from the DICOM header information. 
+</p>
+</li>
+<li>
+<p>decayedDoseis the
+RadionuclideTotalDose, if taken from the DICOM header information, or the
+user-specified value. 
+</p>
+</li>
+<li>
+<p>SUVbwScaleFactoris
+<code class="reqn">\mbox{PatientsWeight}\cdot1000/\mbox{decayedDose}</code>.
+
+</p>
+</li>
+</ul>
+<h3>Note</h3>
+
+<p>Note, for GE scanners it is common for the RescaleSlope DICOM field to vary
+on a slice-by-slice basis.  This is taken into account if a GE scanner is
+detected from the Modality DICOM field.  However, the InstanceNumber is used
+to reorder the slices so they match the incoming NIfTI file of PixelData.
+If this is not correct it may be necessary to manually re-order the
+RescaleSlope field in the CSV data frame so that the activity concentration
+is calculated correctly.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://qibawiki.rsna.org/index.php?title=Standardized_Uptake_Value_(SUV)">https://qibawiki.rsna.org/index.php?title=Standardized_Uptake_Value_(SUV)</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dicomTable</code>, <code>nifti</code>
+</p>
+
+
+</div>

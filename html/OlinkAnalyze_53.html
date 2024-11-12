@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_one_non_parametric</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function which performs a Kruskal-Wallis Test or Friedman Test per protein</h2>
+
+<h3>Description</h3>
+
+<p>Performs an Kruskal-Wallis Test for each assay (by OlinkID) in every panel using stats::kruskal.test.
+Performs an Friedman Test for each assay (by OlinkID) in every panel using rstatix::friedman_test.
+The function handles factor variable. <br><br>
+Samples that have no variable information or missing factor levels are automatically removed from the analysis (specified in a message if verbose = TRUE).
+Character columns in the input dataframe are automatically converted to factors (specified in a message if verbose = T).
+Numerical variables are not converted to factors.
+If a numerical variable is to be used as a factor, this conversion needs to be done on the dataframe before the function call. <br><br>
+Inference is specified in a message if verbose = TRUE. <br>
+The formula notation of the final model is specified in a message if verbose = TRUE. <br><br>
+Adjusted p-values are calculated by stats::p.adjust according to the Benjamini &amp; Hochberg (1995) method (“fdr”).
+The threshold is determined by logic evaluation of Adjusted_pval &lt; 0.05.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_one_non_parametric(
+  df,
+  variable,
+  dependence = FALSE,
+  subject = NULL,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>NPX or Quantified_value data frame in long format with at least protein name (Assay), OlinkID, UniProt, Panel and a factor with at least 3 levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p>Single character value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dependence</code></td>
+<td>
+<p>Boolean. Default: FALSE. When the groups are independent, the kruskal-Wallis will run, when the groups are dependent, the Friedman test will run.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subject</code></td>
+<td>
+<p>Group information for the repeated measurement. If (dependence = TRUE), this parameter need to be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble containing the Kruskal-Wallis Test or Friedman Test results for every protein.
+</p>
+<p>Columns include:
+</p>
+
+<ul>
+<li>
+<p>Assay: "character" Protein symbol
+</p>
+</li>
+<li>
+<p>OlinkID: "character" Olink specific ID
+</p>
+</li>
+<li>
+<p>UniProt: "character" UniProt ID
+</p>
+</li>
+<li>
+<p>Panel: "character" Name of Olink Panel
+</p>
+</li>
+<li>
+<p>term: "character" term in model
+</p>
+</li>
+<li>
+<p>df: "numeric" degrees of freedom
+</p>
+</li>
+<li>
+<p>method: "character" which method was used
+</p>
+</li>
+<li>
+<p>statistic: "named numeric" the value of the test statistic with a name describing it
+</p>
+</li>
+<li>
+<p>p.value: "numeric" p-value for the test
+</p>
+</li>
+<li>
+<p>Adjusted_pval: "numeric" adjusted p-value for the test (Benjamini&amp;Hochberg)
+</p>
+</li>
+<li>
+<p>Threshold: "character" if adjusted p-value is significant or not (&lt; 0.05)
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(dplyr)
+
+# One-way Kruskal-Wallis Test
+try({ # May fail if dependencies are not installed
+kruskal_results &lt;- olink_one_non_parametric(df = npx_data1,
+                                            variable = "Site")
+})
+
+#Friedman Test
+friedman_results &lt;- olink_one_non_parametric(df = npx_data1,
+                                             variable = "Time",
+                                             subject = "Subject",
+                                             dependence = TRUE)
+
+</code></pre>
+
+
+</div>

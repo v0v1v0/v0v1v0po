@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>error_group</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>error_group()</h2>
+
+<h3>Description</h3>
+
+<p>This function studies the association between two categorical distributions with different numbers of modalities.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">error_group(REF, Z, ord = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>REF</code></td>
+<td>
+<p>a factor with a reference number of levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>a factor with a number of levels greater than the number of levels of the reference.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ord</code></td>
+<td>
+<p>a boolean. If TRUE, only neighboring levels of <code class="reqn">Z</code> will be grouped and tested together.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Assuming that <code class="reqn">Y</code> and <code class="reqn">Z</code> are categorical variables summarizing a same information, and that one of the two related encodings is unknown by user
+because this latter is, for example, the result of predictions provided by a given model or algorithm, the function <code>error_group</code> searches for potential links between the modalities of <code class="reqn">Y</code> to approach at best the distribution of <code class="reqn">Z</code>.
+</p>
+<p>Assuming that <code class="reqn">Y</code> and <code class="reqn">Z</code> have <code class="reqn">n_Y</code> and <code class="reqn">n_Z</code> modalities respectively so that <code class="reqn">n_Y &gt; n_Z</code>, in a first step, the
+function <code>error_group</code> combines modalities of <code class="reqn">Y</code> to build all possible variables <code class="reqn">Y'</code> verifying  <code class="reqn">n_{Y'} = n_Z</code>.
+In a second step, the association between <code class="reqn">Z</code> and each new variable <code class="reqn">Y'</code> generated is measured by studying the ratio of concordant pairs related to the confusion matrix but also using standard criterions:
+the Cramer's V (1), the Cohen's kappa coefficient (2) and the Spearman's rank correlation coefficient.
+</p>
+<p>According to the type of <code class="reqn">Y</code>, different combinations of modalities are tested:
+</p>
+
+<ul>
+<li>
+<p> If <code class="reqn">Y</code> and <code class="reqn">Z</code> are ordinal (<code>ord = TRUE</code>), only consecutive modalities of <code class="reqn">Y</code> will be grouped to build the variables <code class="reqn">Y'</code>.
+</p>
+</li>
+<li>
+<p> If <code class="reqn">Y</code> and <code class="reqn">Z</code> are nominal (<code>ord = FALSE</code>), all combinations of modalities of <code class="reqn">Y</code> (consecutive or not) will be grouped to build the variables <code class="reqn">Y'</code>.
+</p>
+</li>
+</ul>
+<p>All the associations tested are listed in output as a data.frame object.
+The function <code>error_group</code> is directly integrated in the function <code>verif_OT</code> to evaluate the proximity of two multinomial distributions, when one of them is estimated from the predictions of an OT algorithm.
+</p>
+<p>Example:
+Assuming that <code class="reqn">Y = (1,1,2,2,3,3,4,4)</code> and <code class="reqn">Z = (1,1,1,1,2,2,2,2)</code>, so <code class="reqn">n_Y = 4</code> and <code class="reqn">n_Z = 2</code> and the related coefficient of correlation <code class="reqn">cor(Y,Z)</code> is 0.89.
+Are there groupings of modalities of <code class="reqn">Y</code> which contribute to improving the proximity between <code class="reqn">Y</code> and <code class="reqn">Z</code> ?
+From <code class="reqn">Y</code>, the function <code>error_group</code> gives an answer to this question by successively constructing the variables: <code class="reqn">Y_1 = (1,1,1,1,2,2,2,2)</code>, <code class="reqn">Y_2 = (1,1,2,2,1,1,2,2)</code>, <code class="reqn">Y_3 = (1,1,2,2,2,2,1,1)</code>
+and tests <code class="reqn">\mbox{cor}(Z,Y_1) = 1</code>, <code class="reqn">\mbox{cor}(Z,Y_2) = 0</code>, <code class="reqn">\mbox{cor}(Z,Y_3) = 0</code>.
+Here, the tests permit to conclude that the difference of encodings between <code class="reqn">Y</code> and <code class="reqn">Z</code> resulted in fact in a simple grouping of modalities.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data.frame with five columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>combi</code></td>
+<td>
+<p>the first column enumerates all possible groups of modalities of <code class="reqn">Y</code> to obtain the same number of levels as the reference.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error_rate</code></td>
+<td>
+<p>the second column gives the corresponding rate error from the confusion matrix (ratio of non-diagonal elements)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Kappa</code></td>
+<td>
+<p>this column indicates the result of the Cohen's kappa coefficient related to each combination of <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Vcramer</code></td>
+<td>
+<p>this column indicates the result of the Cramer's V criterion related to each combination of <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>RankCor</code></td>
+<td>
+<p>this column indicates the result of the Spearman's coefficient of correlation related to each combination of <code class="reqn">Y</code></p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gregory Guernec
+</p>
+<p><a href="mailto:otrecod.pkg@gmail.com">otrecod.pkg@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li>
+<p> Cramér, Harald. (1946). Mathematical Methods of Statistics. Princeton: Princeton University Press.
+</p>
+</li>
+<li>
+<p> McHugh, Mary L. (2012). Interrater reliability: The kappa statistic. Biochemia Medica. 22 (3): 276–282
+</p>
+</li>
+</ol>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Basic examples:
+sample1 &lt;- as.factor(sample(1:3, 50, replace = TRUE))
+length(sample1)
+sample2 &lt;- as.factor(sample(1:2, 50, replace = TRUE))
+length(sample2)
+sample3 &lt;- as.factor(sample(c("A", "B", "C", "D"), 50, replace = TRUE))
+length(sample3)
+sample4 &lt;- as.factor(sample(c("A", "B", "C", "D", "E"), 50, replace = TRUE))
+length(sample4)
+
+# By only grouping consecutive levels of sample1:
+error_group(sample1, sample4)
+# By only all possible levels of sample1, consecutive or not:
+error_group(sample2, sample1, ord = FALSE)
+
+
+
+### using a sample of the tab_test object (3 complete covariates)
+### Y1 and Y2 are a same variable encoded in 2 different forms in DB 1 and 2:
+### (4 levels for Y1 and 3 levels for Y2)
+
+data(tab_test)
+# Example with n1 = n2 = 70 and only X1 and X2 as covariates
+tab_test2 &lt;- tab_test[c(1:70, 5001:5070), 1:5]
+
+### An example of JOINT model (Manhattan distance)
+# Suppose we want to impute the missing parts of Y1 in DB2 only ...
+try1J &lt;- OT_joint(tab_test2,
+  nominal = c(1, 4:5), ordinal = c(2, 3),
+  dist.choice = "M", which.DB = "B"
+)
+
+# Error rates between Y2 and the predictions of Y1 in the DB 2
+# by grouping the levels of Y1:
+error_group(try1J$DATA2_OT$Z, try1J$DATA2_OT$OTpred)
+table(try1J$DATA2_OT$Z, try1J$DATA2_OT$OTpred)
+
+
+</code></pre>
+
+
+</div>

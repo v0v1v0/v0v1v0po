@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>prop_strat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Form propensity score strata</h2>
+
+<h3>Description</h3>
+
+<p>Form initial propensity score strata
+to be improved upon by <code>refine()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">prop_strat(z, X, nstrata = 5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>Vector of treatment assignment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Covariate matrix or data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nstrata</code></td>
+<td>
+<p>The number of strata to form</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Object of class "strat", which is a list containing <code>z</code>,
+<code>X</code> with the propensity score as an additional column, <code>base_strata</code>
+(a factor of the resulting propensity score strata), and <code>details</code>,
+(a list containing <code>X_std</code>, which is the standardized version of the new <code>X</code>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> ps &lt;- prop_strat(z = rhc_X[, "z"],
+                  X = rhc_X[,  !(colnames(rhc_X) %in% c("pr", "z"))])
+table(rhc_X[, "z"], ps$base_strata)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>subset-odm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Subset using the <code>[</code> operator.</h2>
+
+<h3>Description</h3>
+
+<p>Apply the <code>[</code> operator to an <code>ondisc_matrix</code>, <code>metadata_ondisc_matrix</code>, or <code>multimodal_ondisc_matrix</code>
+to subset the object. You can pass logical, character, or numeric vectors to <code>[</code>; character
+vectors are assumed to refer to feature IDs (for rows) and cell barcodes (for columns).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'ondisc_matrix,missing,missing,missing'
+x[i, j, drop]
+
+## S4 method for signature 'ondisc_matrix,ANY,missing,missing'
+x[i, j]
+
+## S4 method for signature 'ondisc_matrix,missing,ANY,missing'
+x[i, j]
+
+## S4 method for signature 'ondisc_matrix,ANY,ANY,missing'
+x[i, j]
+
+## S4 method for signature 'metadata_ondisc_matrix,ANY,ANY,missing'
+x[i, j, drop]
+
+## S4 method for signature 'metadata_ondisc_matrix,ANY,missing,missing'
+x[i, j, drop]
+
+## S4 method for signature 'metadata_ondisc_matrix,missing,ANY,missing'
+x[i, j, drop]
+
+## S4 method for signature 'metadata_ondisc_matrix,missing,missing,missing'
+x[i, j, drop]
+
+## S4 method for signature 'multimodal_ondisc_matrix,missing,missing,missing'
+x[i, j, drop]
+
+## S4 method for signature 'multimodal_ondisc_matrix,missing,ANY,missing'
+x[i, j, drop]
+
+## S4 method for signature 'multimodal_ondisc_matrix,ANY,ANY,ANY'
+x[i, j, drop]
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>ondisc_matrix</code>, <code>metadata_ondisc_matrix</code>, or <code>multimodal_ondisc_matrix</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i</code></td>
+<td>
+<p>a vector (numeric, logical, or character) indicating features to keep.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+<p>a vector (numeric, logical, or character) indicating cells to keep.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop</code></td>
+<td>
+<p>not used</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>You can subset an <code>ondisc_matrix</code> and a <code>metadata_ondisc_matrix</code> by cell and/or feature. You can subset a
+<code>multimodal_ondisc_matrix</code> by cell only (because the features differ across modalities).
+</p>
+
+
+<h3>Value</h3>
+
+<p>An appropriately subset object of the same class as <code>x</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># NOTE: You must create the RDS files "expressions.rds" and
+# "perturbations.rds" to run this example. Navigate to the help file of
+# "create_ondisc_matrix_from_mtx" (via ?create_ondisc_matrix_from_mtx),
+# and execute both code blocks.
+
+# subset an ondisc_matrix
+h5_fp &lt;- paste0(tempdir(), "/expressions.h5")
+if (file.exists(h5_fp)) {
+odm &lt;- ondisc_matrix(h5_file = h5_fp)
+# keep cells 100-110
+x &lt;- odm[,100:110]
+# keep all cells except 50, 100, 150
+x &lt;- odm[,-c(50, 100, 150)]
+# keep genes ENSG00000188305, ENSG00000257284, and ENSG00000251655:
+x &lt;- odm[c("ENSG00000188305", "ENSG00000257284", "ENSG00000251655"),]
+# keep the cells CTTAGGACACTGGCGT-1 and AAAGGATTCACATCAG-1:
+x &lt;- odm[,c("CTTAGGACACTGGCGT-1", "AAAGGATTCACATCAG-1")]
+# keep all genes except ENSG00000188305 and ENSG00000257284
+x &lt;- odm[!(get_feature_ids(odm) %in% c("ENSG00000188305", "ENSG00000257284")),]
+}
+
+# subset a metadata_ondic_matrix
+expressions_fp &lt;- paste0(tempdir(), "/expressions.rds")
+if (file.exists(expressions_fp)) {
+expressions &lt;- readRDS(expressions_fp)
+# keep cells 100-110
+x &lt;- expressions[,100:110]
+# keep genes ENSG00000188305, ENSG00000257284, and ENSG00000251655
+x &lt;- expressions[c("ENSG00000188305", "ENSG00000257284", "ENSG00000251655"),]
+}
+
+# subset a multimodal ondisc_matrix
+expression_fp &lt;- paste0(tempdir(), "/expressions.rds")
+perturbations_fp &lt;- paste0(tempdir(), "/perturbations.rds")
+if (file.exists(expression_fp) &amp;&amp; file.exists(perturbations_fp)) {
+    expressions &lt;- readRDS(expression_fp)
+    perturbations &lt;- readRDS(expression_fp)
+    crispr_experiment &lt;- multimodal_ondisc_matrix(list(expressions = expressions,
+    perturbations = perturbations))
+    # Keep all cells except 10,100, and 105.
+    x &lt;- crispr_experiment[,-c(10,100,105)]
+    # Keep the first 5 cells
+    x &lt;- crispr_experiment[,1:5]
+}
+</code></pre>
+
+
+</div>

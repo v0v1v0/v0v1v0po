@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>listOMLRunEvaluations</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List run results of a task.</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves all run results for task(s) (<code>task.id</code>), flow(s) (<code>flow.id</code>)
+run(s) (<code>run.id</code>) or uploaders(s) (<code>uploader.id</code> and returns a <code>data.frame</code>.
+Each row contains, among others, the run id “rid”. Alternatively the
+function can be passed a single <code>tag</code> to list only runs with the corresponding
+tag associated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">listOMLRunEvaluations(
+  task.id = NULL,
+  flow.id = NULL,
+  run.id = NULL,
+  uploader.id = NULL,
+  tag = NULL,
+  limit = NULL,
+  offset = NULL,
+  verbosity = NULL,
+  evaluation.measure = NULL,
+  show.array.measures = FALSE,
+  extend.flow.name = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>task.id</code></td>
+<td>
+<p>[<code>integer</code>]<br>
+a single ID or a vector of IDs of the task(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flow.id</code></td>
+<td>
+<p>[<code>integer</code>]<br>
+a single ID or a vector of IDs of the flow(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run.id</code></td>
+<td>
+<p>[<code>integer</code>]<br>
+a single ID or a vector of IDs of the run(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uploader.id</code></td>
+<td>
+<p>[<code>integer</code>]<br>
+a single ID or a vector of IDs of uploader profile(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tag</code></td>
+<td>
+<p>[<code>character</code>]<br>
+If not <code>NULL</code> only entries with the corresponding <code>tag</code>s
+are listed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>[<code>numeric(1)</code>]<br>
+Optional. The maximum number of entries to return. 
+Without specifying <code>offset</code>, it returns the first '<code>limit</code>' entries.
+Setting <code>limit = NULL</code> returns all available entries.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>[<code>numeric(1)</code>]<br>
+Optional. The offset to start from. 
+Should be indices starting from 0, which do not refer to IDs. 
+Is ignored when no <code>limit</code> is given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbosity</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+Print verbose output on console? Possible values are:<br><code>0</code>: normal output,<br><code>1</code>: info output,<br><code>2</code>: debug output.<br>
+Default is set via <code>setOMLConfig</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>evaluation.measure</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+Use this to speedup your request.
+It restricts the results to only one evaluation measure (see <code>listOMLEvaluationMeasures</code> for possible values).
+Default is <code>NULL</code>, which means that no restriction is going to happen and all possible evaluation measures will be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.array.measures</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+Should measures that return an array instead of a single skalar value be shown (e.g. confusion matrix, predictive accuracy within each class)?
+Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extend.flow.name</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+Adds a column <code>flow.version</code> that refers to the version number of the flow and a column <code>flow.source</code> containing the prefix of the flow that specifies the source of the flow (i.e. weka, R) and a column <code>learner.name</code> that refers to the learner.
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>[<code>data.frame</code>].
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function is memoised. I.e., if you call this function twice in a running R session,
+the first call will query the server and store the results in memory while the second and all subsequent calls will return
+the cached results from the first call.
+You can reset the cache by calling <code>forget</code> on the function manually.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># \dontrun{
+# 	# get run results of task 6 (as many rows as runs for this task)
+# 	rev_tid6 = listOMLRunEvaluations(task.id = 6L)
+# 	str(rev_tid6)
+#
+# 	# get run results of run 8 (one row)
+# 	rev_rid8 = listOMLRunEvaluations(run.id = 8)
+# 	str(rev_rid8)
+# }
+</code></pre>
+
+
+</div>

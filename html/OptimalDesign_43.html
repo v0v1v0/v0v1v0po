@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_PUK</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Efficient rounding of an approximate design
+</h2>
+
+<h3>Description</h3>
+
+<p>Compute the classical efficient rounding of a non-normalized approximate design <code>w</code> such that the resulting exact design has size <code>floor(sum(w))</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_PUK(Fx, w, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> (where <code>m&gt;=2</code>) is the number of parameters
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>the vector of non-negative real numbers of length <code>n</code> representing the design
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The rounded version of <code>w</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman and Samuel Rosa
+</p>
+
+
+<h3>References</h3>
+
+<p>Pukelsheim F, Rieder S (1992) Efficient rounding of approximate designs. Biometrika, 79(4), 763–770.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compute a D-optimal approximate design
+# Round it using the efficient rounding to various sizes
+# Visualize the designs
+
+Fx &lt;- Fx_cube(~x1 + I(x1^2) + I(x1^3), lower = 0, upper = 1, n.levels = 11)
+w.app &lt;- od_REX(Fx)$w.best
+Phi.app &lt;- optcrit(Fx, w.app)
+
+w.ex10 &lt;- od_PUK(Fx, 10*w.app)$w.round
+w.ex20 &lt;- od_PUK(Fx, 20*w.app)$w.round
+w.ex30 &lt;- od_PUK(Fx, 30*w.app)$w.round
+
+par(mfrow = c(2, 2))
+od_plot(Fx, w.app, main.lab = "Approximate")
+od_plot(Fx, w.ex10, main.lab = paste("N=10, Eff:", round(optcrit(Fx, w.ex10)/Phi.app/10, 4)))
+od_plot(Fx, w.ex20, main.lab = paste("N=20, Eff:", round(optcrit(Fx, w.ex20)/Phi.app/20, 4)))
+od_plot(Fx, w.ex30, main.lab = paste("N=30, Eff:", round(optcrit(Fx, w.ex30)/Phi.app/30, 4)))
+par(mfrow = c(1, 1))
+</code></pre>
+
+
+</div>

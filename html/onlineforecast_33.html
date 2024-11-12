@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>in_range</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Selects a period</h2>
+
+<h3>Description</h3>
+
+<p>Returns a logical vector of boolean values where TRUE indicates if timestamp is within the
+specified period.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">in_range(tstart, time, tend = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tstart</code></td>
+<td>
+<p>The start of the period.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>The timestamps as POSIX.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tend</code></td>
+<td>
+<p>The end of the period. If not given then the period will have no end.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Returns a logical vector of boolean values where TRUE indicates if timestamp is within the
+specified period spanned by tstart and tend. 
+</p>
+<p>Note the convention of time stamp in the end of the time intervals causes the time point
+which equals <code>tstart</code> not to be included. See last example.
+</p>
+<p>The times can be given as character or POSIX, per default in tz='GMT'.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A logical vector indicating the selected period with TRUE
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Take a subset
+D &lt;- subset(Dbuilding, c("2010-12-15", "2011-01-01"))
+
+# Just a logical returning TRUE in a specified period
+in_range("2010-12-20", D$t, "2010-12-22")
+
+# Set which period to evaluate when optimizing parameters, like in rls_optim()
+# (the points with scoreperiod == false are not included in the score evaluation)
+D$scoreperiod &lt;- in_range("2010-12-20", D$t)
+D$scoreperiod
+
+# Further, excluding a small period by
+D$scoreperiod[in_range("2010-12-26", D$t, "2010-12-27")] &lt;- FALSE
+D$scoreperiod
+
+# Note the convention of time stamp in the end of the time intervals
+# causes the point with t = 2010-12-26 00:00:00 not to be included
+# since it's covering to "2010-12-25 23:00:00" to "2010-12-26 00:00:00"
+D$t[in_range("2010-12-26", D$t, "2010-12-27")]
+
+# When characters are given, then they are translated to the time zone of the time vector
+D &lt;- subset(Dbuilding, c("2010-12-15", "2010-12-16"))
+D$t &lt;- ct(D$t, tz="CET")
+D$t[in_range("2010-12-15 02:00", D$t, "2010-12-15 05:00")]
+
+</code></pre>
+
+
+</div>

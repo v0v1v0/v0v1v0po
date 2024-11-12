@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>body_add_gg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a 'ggplot' in a 'Word' document</h2>
+
+<h3>Description</h3>
+
+<p>add a ggplot as a png image into an rdocx object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">body_add_gg(
+  x,
+  value,
+  width = 6,
+  height = 5,
+  res = 300,
+  style = "Normal",
+  scale = 1,
+  pos = "after",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rdocx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>ggplot object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>height in inches</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>height in inches</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>resolution of the png image in ppi</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>paragraph style</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>Multiplicative scaling factor, same as in ggsave</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pos</code></td>
+<td>
+<p>where to add the new element relative to the cursor,
+one of "after", "before", "on".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to png function.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other functions for adding content: 
+<code>body_add_blocks()</code>,
+<code>body_add_break()</code>,
+<code>body_add_caption()</code>,
+<code>body_add_docx()</code>,
+<code>body_add_fpar()</code>,
+<code>body_add_img()</code>,
+<code>body_add_par()</code>,
+<code>body_add_plot()</code>,
+<code>body_add_table()</code>,
+<code>body_add_toc()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (require("ggplot2")) {
+  doc &lt;- read_docx()
+
+  gg_plot &lt;- ggplot(data = iris) +
+    geom_point(mapping = aes(Sepal.Length, Petal.Length))
+
+  if (capabilities(what = "png")) {
+    doc &lt;- body_add_gg(doc, value = gg_plot, style = "centered")
+  }
+
+  print(doc, target = tempfile(fileext = ".docx"))
+}
+</code></pre>
+
+
+</div>

@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>odds.fv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the fair (vigorish free) odds for a vector of vigged odds.</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the fair (vigorish free) odds for a vector of vigged odds.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">odds.fv(..., input = "us", output = "us",
+  Vectorized2wayOutput1stElement = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Odds of the format defined in input, the odds can be submitted as a data.frame or as a vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>Default to US Odds. Valid selections are  "us" for US odds,
+"prob" for Probability ,"dec" for Decimal odds,"malay" for Malaysian odds,
+"hk" for Hong Kong odds, "indo" for Indonesian odds</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Default to US Odds. Valid selections are  "us" for US odds,
+"prob" for Probability ,"dec" for Decimal odds,"malay" for Malaysian odds,
+"hk" for Hong Kong odds, "indo" for Indonesian odds</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Vectorized2wayOutput1stElement</code></td>
+<td>
+<p>This speeds up the calculation as the output is a a vector that contains the FV of the first input. Usefull in dplyr chains.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector or a matrix of the fair values of the the given vigged values in the format chosen in output
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">odds.fv(-120,110)
+odds.fv(2.05,3.12,2.90,input="dec",output="prob")
+df &lt;- data.frame(Home = c(1.5,1.8,1.9),
+                Away = c(2.9,2.2,2.05))
+odds.fv(df,input = "dec",output = "prob")
+odds.fv(df$Home,df$Away,input="dec",output="prob")
+odds.fv(df$Home,df$Away,input="dec",output="prob",Vectorized2wayOutput1stElement = TRUE)
+</code></pre>
+
+
+</div>

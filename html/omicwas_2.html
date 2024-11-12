@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ctcisQTL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cell-Type-Specific QTL analysis</h2>
+
+<h3>Description</h3>
+
+<p>Cell-Type-Specific QTL analysis
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ctcisQTL(
+  X,
+  Xpos,
+  W,
+  Y,
+  Ypos,
+  C = NULL,
+  max.pos.diff = 1e+06,
+  outdir = tempdir(),
+  outfile = "ctcisQTL.out.txt"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Matrix (or vector) of SNP genotypes; SNPs x samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xpos</code></td>
+<td>
+<p>Vector of the physical position of X</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>Matrix of cell type composition; samples x cell types.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Matrix (or vector) of bulk omics measurements; markers x samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ypos</code></td>
+<td>
+<p>Vector of the physical position of Y</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C</code></td>
+<td>
+<p>Matrix (or vector) of covariates; samples x covariates.
+X, Xpos, W, Y, Ypos, C should be numeric.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.pos.diff</code></td>
+<td>
+<p>Maximum positional difference to compute cis-QTL.
+Association analysis is performed between a row of X and a row of Y,
+only when they are within this limit.
+Since the limiting is only by position, the function needs to be run
+separately for each chromosome.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outdir</code></td>
+<td>
+<p>Output directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outfile</code></td>
+<td>
+<p>Output file.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A function for analyses of QTL, such as eQTL, mQTL, pQTL.
+The statistical test is almost identical to
+<code>ctassoc(test =  "nls.identity", regularize = "TRUE")</code>.
+Association analysis is performed between each row of Y and each row of X.
+Usually, the former will be a methylation/expression marker,
+and the latter will be a SNP.
+To cope with the large number of combinations,
+the testing is limited to pairs whose position is within
+the difference specified by <code>max.pos.diff</code>; i.e., limited to cis-QTL.
+In detail, this function performs linear ridge regression,
+whereas <code>ctassoc(test =  "nls.identity", regularize = "TRUE")</code>
+actually is nonlinear regression
+but with <code class="reqn">f</code> = identity as normalizing transformation.
+In order to speed up computation, first, the parameters <code class="reqn">\alpha_{h j}</code> and
+<code class="reqn">\gamma_{j l}</code> are fit by ordinary linear regression assuming <code class="reqn">\beta_{h j k} = 0</code>.
+Next, <code class="reqn">\beta_{h j k}</code> are fit and tested by
+linear ridge regression (see documentation for ctassoc).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The estimate, statistic, p.value are written to the specified file.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>ctassoc
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(GSE79262small)
+X    = GSE79262small$X
+Xpos = GSE79262small$Xpos
+W    = GSE79262small$W
+Y    = GSE79262small$Y
+Ypos = GSE79262small$Ypos
+C    = GSE79262small$C
+X    = X[seq(1, 3601, 100), ] # for brevity
+Xpos = Xpos[seq(1, 3601, 100)]
+ctcisQTL(X, Xpos, W, Y, Ypos, C = C)
+
+
+</code></pre>
+
+
+</div>

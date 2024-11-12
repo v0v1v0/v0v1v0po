@@ -1,0 +1,248 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optimbase.set</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Optimization Object Configuration
+</h2>
+
+<h3>Description</h3>
+
+<p>This functions configures the current optimization object with the given
+<code>value</code> for the given <code>key</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  optimbase.set(this = NULL, key = NULL, value = NULL)
+  optimbase.histset(this = NULL, iter = NULL, key = NULL, value = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>this</code></td>
+<td>
+<p>The current optimization object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>The key to configure. See details for the list of possible keys.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>The value to assign to the key.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>The iteration at which the data must be stored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>optimbase.set</code> set the content of the <code>key</code> element of the 
+optimization object <code>this</code> to <code>value</code>.
+</p>
+<p>The only available keys in <code>optimbase.set</code> are the following:
+</p>
+
+<dl>
+<dt>'verbose'</dt>
+<dd>
+<p>Set to 1 to enable verbose logging.</p>
+</dd>
+<dt>'x0'</dt>
+<dd>
+<p>The initial guesses, as a n x 1 column vector, where n is the
+number of variables.</p>
+</dd>
+<dt>'fx0'</dt>
+<dd>
+<p>The value of the cost function at the initial point
+estimate.</p>
+</dd>
+<dt>'xopt'</dt>
+<dd>
+<p>The optimum point estimate.</p>
+</dd>
+<dt>'fopt'</dt>
+<dd>
+<p>The value of the cost function at the optimum point 
+estimate.</p>
+</dd>
+<dt>'tolfunabsolute'</dt>
+<dd>
+<p>The absolute tolerance for the function value.</p>
+</dd>
+<dt>'tolfunrelative'</dt>
+<dd>
+<p>The relative tolerance for the function value.</p>
+</dd>
+<dt>'tolfunmethod'</dt>
+<dd>
+<p>The method used for the tolerance on function value
+in the termination criteria. The following values are available: TRUE,
+FALSE. If this criteria is triggered, the status of the optimization is
+set to 'tolf'.</p>
+</dd>
+<dt>'tolxabsolute'</dt>
+<dd>
+<p>The absolute tolerance on x.</p>
+</dd>
+<dt>'tolxrelative'</dt>
+<dd>
+<p>The relative tolerance on x.</p>
+</dd>
+<dt>'tolxmethod'</dt>
+<dd>
+<p>The method used for the tolerance on x in the
+termination criteria. The following values are available: TRUE, FALSE. If
+this criteria is triggered during optimization, the status of the
+optimization is set to 'tolx'.</p>
+</dd>
+<dt>'maxfunevals'</dt>
+<dd>
+<p>The maximum number of function evaluations. If this
+criteria is triggered during optimization, the status of the optimization
+is set to 'maxfuneval' (see
+<code>vignette('optimbase',package='optimbase')</code> for more details).</p>
+</dd>
+<dt>'funevals'</dt>
+<dd>
+<p>The number of function evaluations.</p>
+</dd>
+<dt>'maxiter'</dt>
+<dd>
+<p>The maximum number of iterations. If this criteria is
+triggered during optimization, the status of the optimization is set to
+'maxiter' (see <code>vignette('optimbase',package='optimbase')</code>
+for more details).</p>
+</dd>
+<dt>'iterations'</dt>
+<dd>
+<p>The number of iterations.</p>
+</dd>
+<dt>'function'</dt>
+<dd>
+<p>The objective function, which computes the value of the
+cost function and the non linear constraints, if any. See
+<code>vignette('optimbase',package='optimbase')</code> for the details of
+the communication between the optimization system and the cost function.</p>
+</dd>
+<dt>'status'</dt>
+<dd>
+<p>A string containing the status of the optimization.</p>
+</dd>
+<dt>'historyxopt'</dt>
+<dd>
+<p>A list, with nbiter element, containing the history
+of x during the iterations. This list is available after optimization if
+the history storing was enabled with the <code>storehistory</code>
+element.</p>
+</dd>
+<dt>'historyfopt'</dt>
+<dd>
+<p>An vector, with nbiter values, containing the history
+of the function value during the iterations. This vector is available
+after optimization if the history storing was enabled with the
+<code>storehistory</code> element.</p>
+</dd>
+<dt>'verbosetermination'</dt>
+<dd>
+<p>Set to 1 to enable verbose termination
+logging.</p>
+</dd>
+<dt>'outputcommand'</dt>
+<dd>
+<p>A command which is called back for output. Details
+of the communication between the optimization system and the output
+command function are provided in      
+<code>vignette('optimbase',package='optimbase')</code>.</p>
+</dd>
+<dt>'outputcommandarg'</dt>
+<dd>
+<p>An additionnal argument, passed to the output
+command.</p>
+</dd>
+<dt>'numberofvariables'</dt>
+<dd>
+<p>The number of variables to optimize.</p>
+</dd>
+<dt>'storehistory'</dt>
+<dd>
+<p>Set to TRUE to enable the history storing.</p>
+</dd>
+<dt>'costfargument'</dt>
+<dd>
+<p>An additionnal argument, passed to the cost
+function.</p>
+</dd>
+<dt>'boundsmin'</dt>
+<dd>
+<p>The minimum bounds for the parameters.</p>
+</dd>
+<dt>'boundsmax'</dt>
+<dd>
+<p>The maximum bounds for the parameters.</p>
+</dd>
+<dt>'nbineqconst'</dt>
+<dd>
+<p>The number of inequality constraints.</p>
+</dd>
+<dt>'logfile'</dt>
+<dd>
+<p>The name of the log file.</p>
+</dd>
+<dt>'logfilehandle'</dt>
+<dd>
+<p>Set to 1 if logging has been started</p>
+</dd>
+<dt>'logstartup'</dt>
+<dd>
+<p>Set to 1 if logging has been started</p>
+</dd>
+<dt>'withderivatives'</dt>
+<dd>
+<p>Set to TRUE if the algorithm uses derivatives.</p>
+</dd>
+</dl>
+<p>The only available keys in <code>optimbase.histset</code> are 'historyxopt' and
+'historyfopt'. Contrary to <code>optimbase.set</code>, this function only alters
+the value of <code>historyxopt</code> and <code>historyfopt</code> at the specific
+iteration <code>iter</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An updated optimization object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Author of Scilab optimbase module: Michael Baudin (INRIA - Digiteo)
+</p>
+<p>Author of R adaptation: Sebastien Bihorel (<a href="mailto:sb.pmlab@gmail.com">sb.pmlab@gmail.com</a>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optimbase</code>
+</p>
+
+
+</div>

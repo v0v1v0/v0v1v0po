@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.optweight</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Summarize, print, and plot information about estimated weights
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions summarize the weights resulting from a call to <code>optweight</code> or <code>optweight.svy</code>. <code>summary</code> produces summary statistics on the distribution of weights, including their range and variability, and the effective sample size of the weighted sample (computing using the formula in McCaffrey, Rudgeway, &amp; Morral, 2004). <code>plot</code> creates a histogram of the weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'optweight'
+summary(object, top = 5, ignore.s.weights = FALSE, ...)
+
+## S3 method for class 'optweightMSM'
+summary(object, top = 5, ignore.s.weights = FALSE, ...)
+
+## S3 method for class 'optweight.svy'
+summary(object, top = 5, ignore.s.weights = FALSE, ...)
+
+## S3 method for class 'summary.optweight'
+print(x, ...)
+
+## S3 method for class 'summary.optweightMSM'
+print(x, ...)
+
+## S3 method for class 'summary.optweight.svy'
+print(x, ...)
+
+## S3 method for class 'summary.optweight'
+plot(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+
+<p>An <code>optweight</code>, <code>optweightMSM</code>, or <code>optweight.svy</code> object; the output of a call to <code>optweight</code> or <code>optweight.svy</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top</code></td>
+<td>
+
+<p>How many of the largest and smallest weights to display. Default is 5.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore.s.weights</code></td>
+<td>
+
+<p>Whether or not to ignore sampling weights when computing the weight summary. If <code>FALSE</code>, the default, the estimated weights will be multiplied by the sampling weights (if any) before values are computed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A <code>summary.optweight</code>, <code>summary.optweightMSM</code>, or <code>summary.optweight.svy</code> object; the output of a call to <code>summary.optweight</code>, <code>summary.optweightMSM</code>, or <code>summary.optweight.svy</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Additional arguments. For <code>plot</code>, additional arguments passed to <code>hist</code> to determine the number of bins, though <code>geom_histogram</code> from <span class="pkg">ggplot2</span> is actually used to create the plot.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>For point treatments (i.e., <code>optweight</code> objects), <code>summary</code> returns a <code>summary.optweight</code> object with the following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>weight.range</code></td>
+<td>
+<p>The range (minimum and maximum) weight for each treatment group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight.top</code></td>
+<td>
+<p>The units with the greatest weights in each treatment group; how many are included is determined by <code>top</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coef.of.var</code></td>
+<td>
+<p>The coefficient of variation (standard deviation divided by mean) of the weights in each treatment group and overall. When no sampling weights are used, this is simply the standard deviation of the weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean.abs.dev</code></td>
+<td>
+<p>The mean absolute deviation of the weights in each treatment group and overall.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effective.sample.size</code></td>
+<td>
+<p>The effective sample size for each treatment group before and after weighting.</p>
+</td>
+</tr>
+</table>
+<p>For longitudinal treatments (i.e., <code>optweightMSM</code> objects), a list of the above elements for each treatment period.
+</p>
+<p>For <code>optweight.svy</code> objects, a list of the above elements but with no treatment group divisions.
+</p>
+<p><code>plot</code> returns a <code>ggplot</code> object with a histogram displaying the distribution of the estimated weights. If the estimand is the ATT or ATC, only the weights for the non-focal group(s) will be displayed (since the weights for the focal group are all 1). A dotted line is displayed at the mean of the weights (usually 1).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Noah Greifer
+</p>
+
+
+<h3>References</h3>
+
+<p>McCaffrey, D. F., Ridgeway, G., &amp; Morral, A. R. (2004). Propensity Score Estimation With Boosted Regression for Evaluating Causal Effects in Observational Studies. Psychological Methods, 9(4), 403–425. doi: <a href="https://doi.org/10.1037/1082-989X.9.4.403">10.1037/1082-989X.9.4.403</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plot.optweight</code> for plotting the values of the dual variables.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library("cobalt")
+data("lalonde", package = "cobalt")
+
+#Balancing covariates between treatment groups (binary)
+(ow1 &lt;- optweight(treat ~ age + educ + married +
+                nodegree + re74, data = lalonde,
+                tols = .001,
+                estimand = "ATT"))
+
+(s &lt;- summary(ow1))
+
+plot(s, breaks = 12)
+</code></pre>
+
+
+</div>

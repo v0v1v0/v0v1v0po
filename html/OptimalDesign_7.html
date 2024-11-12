@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Fx_dose</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Matrix of candidate regressors for a dose-response model
+</h2>
+
+<h3>Description</h3>
+
+<p>Creates the matrix of all candidate regressors for a linearization of a dose response model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Fx_dose(dose.levels, theta0, dose.model="emax", echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dose.levels</code></td>
+<td>
+
+<p>the <code>n</code>-dimensional vector of admissible doses.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta0</code></td>
+<td>
+
+<p>the 3-dimensional vector of values of the unknown parameter in which to linearize the model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dose.model</code></td>
+<td>
+
+<p>the type of the dose-response model, possible values are <code>"emax"</code>, <code>"loglin"</code>, and <code>"exp"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For mathematical details, see the referenced paper.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code>n</code> times <code>3</code> matrix of all candidate regressors of a dose-response model linearized in <code>theta0</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Dette H, Kiss C, Bevanda M, Bretz F (2010). Optimal designs for the EMAX, log-linear and exponential models. Biometrika, 97(2), 513-518.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Fx_cube, Fx_simplex, Fx_blocks, Fx_glm, Fx_survival</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The loglinear model for the doses 1:150
+# Localized at the values of theta0=c(0, 0.0797, 1)
+Fx &lt;- Fx_dose(1:150, c(0, 0.0797, 1), dose.model="loglin")
+
+# The locally D-optimal approximate design
+w_a &lt;- od_REX(Fx)$w.best
+od_plot(Fx, w_a, 1:150)
+
+# The locally D-optimal exact design of size 10
+w_e &lt;- od_KL(Fx, 10, t.max=3)$w.best
+od_plot(Fx, w_e, 1:150)
+</code></pre>
+
+
+</div>

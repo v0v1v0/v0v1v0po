@@ -1,0 +1,226 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotly_ts.data.list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Time series plotting</h2>
+
+<h3>Description</h3>
+
+<p>Plot time series of observations and forecasts (lagged to be aligned in time).
+</p>
+<p>Plot forecasts, residuals, cumulated residuals and RLS coefficients
+</p>
+<p>Simply the same as <code>plot_ts()</code> with <code>usely=TRUE</code>, such that plotly is used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'data.list'
+plotly_ts(
+  object,
+  patterns = ".*",
+  xlim = NA,
+  ylims = NA,
+  xlab = "",
+  ylabs = NA,
+  mains = "",
+  mainouter = "",
+  legendtexts = NA,
+  colormaps = NA,
+  xat = NA,
+  usely = TRUE,
+  p = NA,
+  kseq = NA,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A <code>data.list</code> or <code>data.frame</code> with observations and forecasts, note diffe</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>patterns</code></td>
+<td>
+<p>See <code>plot_ts</code>. The default pattern finds the generated series in the function, '!!RLSinputs!!' will be replaced with the names of the RLS inputs (regression stage inputs).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>The time range as a character of length 2 and form "YYYY-MM-DD" or POSIX. Date to start and end the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylims</code></td>
+<td>
+<p>The <code>ylim</code> for each plot given in a list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A character with the label for the x-axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylabs</code></td>
+<td>
+<p>A character vector with labels for the y-axes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mains</code></td>
+<td>
+<p>A character vector with the main for each plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mainouter</code></td>
+<td>
+<p>A character with the main at the top of the plot (can also be added afterwards with <code>title(main, outer=TRUE)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legendtexts</code></td>
+<td>
+<p>A list with the legend texts for each plot (replaces the names of the variables).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colormaps</code></td>
+<td>
+<p>A list of colormaps, which will be used in each plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xat</code></td>
+<td>
+<p>POSIXt specifying where the ticks on x-axis should be put.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>usely</code></td>
+<td>
+<p>If TRUE then plotly will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The plot_ts parameters in a list, as generated with the function <code>par_ts()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kseq</code></td>
+<td>
+<p>For <code>class(object)=="data.list"</code> an integer vector, default = NA. Control which forecast horizons to include in the plots. If NA all the horizons will be included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Parameters passed to <code>par_ts</code>, see the list of parameters in <code>?par_ts</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Generates time series plots depending on the variables matched by each regular expression given in the <code>patterns</code> argument.
+</p>
+<p>The forecasts matrices in the <code>data.list</code> given in <code>object</code> will be lagged to be aligned in time (i.e. k-step forecasts will be lagged by k).
+</p>
+<p>Use the plotly package if argument <code>usely</code> is TRUE, see <code>plotly_ts()</code>.
+</p>
+<p>A useful plot for residual analysis and model validation of an RLS fitted forecast model.
+</p>
+<p>All parameters, except those described below, are simply passed to <code>plot_ts()</code>.
+</p>
+<p>The <code>plotly</code> package must be installed and loaded.
+</p>
+<p>Note that the plot parameters set with <code>par_ts()</code> have no effect on the <code>plotly</code> plots.
+</p>
+<p>See <a href="https://onlineforecasting.org/vignettes/nice-tricks.html">https://onlineforecasting.org/vignettes/nice-tricks.html</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with a data.frame with the data for each plot, if usely=TRUE, then a list of the figures (drawn with print(subplot(L, shareX=TRUE, nrows=length(L), titleY = TRUE))).
+</p>
+<p>The plotted data in a <code>data.list</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>par_ts</code> for setting plot control parameters.
+</p>
+<p><code>regex</code> for regular expressions to select which variables to plot.
+</p>
+<p><code>plot_ts</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Time series plots for \code{data.list}, same as for \code{data.frame} except use of \code{kseq}
+D &lt;- Dbuilding
+plot_ts(D, c("heatload","Ta"), kseq=c(1,24))
+# Make two plots (and set the space for the legend)
+plot_ts(D, c("heatload","Ta"), kseq=c(1,24), legendspace=11)
+# Only the Ta observations 
+plot_ts(D, c("heatload","Taobs$"), kseq=c(1,24), legendspace=11)
+
+# Give labels
+plot_ts(D, c("heatload","Ta"), kseq=c(1,24), xlab="Time", ylabs=c("Heat (kW)","Temperature (C)"))
+# Mains (see mainsline in par_ts())
+plot_ts(D, c("heatload","Ta"), kseq=c(1,24), mains=c("Heatload","Temperature"), mainsline=c(-1,-2))
+
+# Format of the xaxis (see par_ts())
+plot_ts(D, c("heatload","Ta"), kseq=c(1,24), xaxisformat="%Y-%m-%d %H:%m")
+
+# Return the data, for other plots etc.
+L &lt;- plot_ts(D, c("heatload","Ta"), kseq=c(1,24))
+names(L[[1]])
+names(L[[2]])
+
+
+
+# Fit a model (see vignette 'setup-and-use-model'
+D &lt;- Dbuilding
+D$scoreperiod &lt;- in_range("2010-12-22", D$t)
+model &lt;- forecastmodel$new()
+model$output = "heatload"
+model$add_inputs(Ta = "Ta",
+                 mu = "one()")
+model$add_regprm("rls_prm(lambda=0.9)")
+model$kseq &lt;- c(3,18)
+fit1 &lt;- rls_fit(NA, model, D, returnanalysis = TRUE)
+
+# Plot it
+plot_ts(fit1)
+
+# Return the data
+Dplot &lt;- plot_ts(fit1)
+
+# The RLS coefficients are now in a nice format
+head(Dplot$mu)
+
+
+# See the website link above
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nearest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>nearest accessible position</h2>
+
+<h3>Description</h3>
+
+<p>nearest() calculates the nearest position to the given coordinates which can be accessed by car.
+The coordinate-standard is WGS84. Attention: The OSRM API v4 is only working locally, but
+not with the 'OSRM' webserver.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nearest(lat, lng, api_version = 5, localhost = F, timeout = 0.001)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lat, </code></td>
+<td>
+<p>A numeric (-90 &lt; lat &lt; 90)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng, </code></td>
+<td>
+<p>A numeric (-180 &lt; lng &lt; 180)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_version, </code></td>
+<td>
+<p>A numeric (either 4 or 5)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>localhost, </code></td>
+<td>
+<p>A logical (TRUE = localhost is used, FALSE = onlinehost is used)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeout</code></td>
+<td>
+<p>A numeric indicating the timeout between server requests (in order to prevent queue overflows). Default is 0.001s.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data.frame with lat and lng
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+osrmr::nearest(47,9, 5, FALSE)
+
+Sys.setenv("OSRM_PATH_API_5"="C:/OSRM_API5")
+osrmr::run_server(Sys.getenv("OSRM_PATH_API_5"), "switzerland-latest.osrm")
+osrmr::nearest(47,9, 5, TRUE)
+osrmr::quit_server()
+Sys.unsetenv("OSRM_PATH_API_5")
+
+Sys.setenv("OSRM_PATH_API_4"="C:/OSRM_API4")
+osrmr::run_server(Sys.getenv("OSRM_PATH_API_4"), "switzerland-latest.osrm")
+osrmr::nearest(47,9, 4, TRUE)
+osrmr::quit_server()
+Sys.unsetenv("OSRM_PATH_API_4")
+## End(Not run)
+</code></pre>
+
+
+</div>

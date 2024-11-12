@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make.table</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Tabulate Estimates From Multiple Models</h2>
+
+<h3>Description</h3>
+
+<p>Session-specific estimates of real parameters (p, phi, etc.) are arranged in a rectangular table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+make.table(fits, parm = "phi", fields = "estimate", strata = 1, 
+    collapse = FALSE, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fits</code></td>
+<td>
+<p>openCRlist object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parm</code></td>
+<td>
+<p>character name of real parameter estimate to tabulate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fields</code></td>
+<td>
+<p>character column from predict (estimate, SE.estimate, lcl, ucl)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strata</code></td>
+<td>
+<p>integer; indices of strata to report</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collapse</code></td>
+<td>
+<p>logical; if TRUE stratum-specific results are collapsed to single table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to <code>predict.openCRlist</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The input will usually be from <code>par.openCR.fit</code>.
+</p>
+<p><code>collate.openCR</code> is a flexible alternative.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A table object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>collate.openCR</code>,
+<code>par.openCR.fit</code>, 
+<code>openCRlist</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+arglist &lt;- list(
+    constant = list(capthist = ovenCHp, model = phi~1), 
+    session.specific = list(capthist = ovenCHp, model = phi~session)
+)
+fits &lt;- par.openCR.fit(arglist, trace = FALSE)
+print(make.table(fits), na = ".")
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

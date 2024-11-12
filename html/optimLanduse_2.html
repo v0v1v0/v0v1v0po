@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calcPerformance</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Attach portfolio performance and distance to target</h2>
+
+<h3>Description</h3>
+
+<p>The Portfolio performances are calculated and attached to the solved
+optimLanduse object. Each performance measure describes the relative
+proportion to the maximum achievable (the "target") of the indicator,
+given the current land use distribution and the uncertainty scenario set.
+The lowest performing scenario of all indicators is the degree of minimal
+fulfillment under the worst-possible outcome.
+It can thus be interpreted as the guaranteed performance.
+At least this proportion will be achieved across all indicators.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calcPerformance(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An optimized optimLanduse object.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>For further information and calculation, see the supplement of Gosling et al. (2020),
+Formula S5 (in the supplement of the paper) and also the paragraph
+optimLanduse functions and workflow - Post-processing in Husmann et al. (2022).
+</p>
+
+
+<h3>Value</h3>
+
+<p>An optimized optimLanduse object with attached portfolio performance.
+</p>
+
+
+<h3>References</h3>
+
+<p>Gosling, E., Reith, E., Knoke T., Gerique, A., Paul, C. (2020): Exploring
+farmer perceptions of agroforestry via multi-objective optimisation: a test application
+in Eastern Panama. <em>Agroforestry Systems</em> <strong>94</strong>. <a href="https://doi.org/10.1007/s10457-020-00519-0">doi:10.1007/s10457-020-00519-0</a>
+</p>
+<p>Husmann, K., von Groß, V., Bödeker, K., Fuchs, J. M., Paul, C., &amp; Knoke, T. (2022). optimLanduse: A package for multiobjective land-cover composition optimization under uncertainty. Methods in Ecology and Evolution, 00, 1– 10. https://doi.org/10.1111/2041-210X.14000
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">require(ggplot2)
+require(readxl)
+
+dat &lt;- read_xlsx(exampleData("exampleGosling.xlsx"))
+init &lt;- initScenario(dat, uValue = 2,
+                     optimisticRule = "expectation",
+                     fixDistance = 3)
+result &lt;- solveScenario(x = init)
+performance &lt;- calcPerformance(result)
+
+# Visualize the distance
+
+ggplot(performance$scenarioTable,
+       aes(x = indicator,
+           y = performance,
+           color = indicator)) +
+geom_point() +
+geom_hline(yintercept =
+           min(performance$scenarioTable$performance),
+          linetype = "dashed", color = "red") +
+ylim(0, 1)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pointsOnBoxplot.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Draw Points on Top of a Boxplot using Appropriate Shifting</h2>
+
+<h3>Description</h3>
+
+<p>Draw Points on Top of a Boxplot using Appropriate Shifting
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+pointsOnBoxplot(x = NULL, y = NULL, totalSpread = 0.3,
+  roundTo = NULL, horizontal = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector of numeric values that were used to create boxplots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>vector of values representing a categorical variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>totalSpread</code></td>
+<td>
+<p>total spread of point plotting range within a boxplot. Defaults to 0.3 so that points plot between 0.85 and 1.15</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>roundTo</code></td>
+<td>
+<p>optional rounding interval. For example, if given roundTo = 0.25, all numeric x values will be rounded to the nearest quarter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizontal</code></td>
+<td>
+<p>logical indicating if the boxplots should be horizontal; default FALSE means vertical boxes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further parameters to be passed to the points function</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>points are drawn to the current device
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jason Waddell
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Examples run in the formula and default methods
+x2 &lt;- runif(50, 0, 10);
+table(customRound(x2, roundTo = 0.5))
+boxplot(x2)
+pointsOnBoxplot(x2, pch = 19, roundTo = 0.5)
+
+# Set up input data
+x &lt;- c(sample(1:5, size = 25, replace = TRUE), rpois(25, lambda = 4))
+colVec &lt;- c(rep("olivedrab", 10), rep("red", 5), rep("goldenrod", 15),
+    rep("red", 15), rep("olivedrab", 5))
+y &lt;- rep(c("Awesome Rats", "Stupid Rats"), each = 25)
+y2 &lt;- rep(c("Open", "Analytics"), 25)
+
+x2 &lt;- c(1, 2, 2, 3, 3, 1, 1, 1, 4, 5)
+y3 &lt;- c(rep("A", 5), rep("B", 5))
+levels(y3) &lt;- c("A", "B", "C")
+
+boxplot(x ~ y, horizontal = TRUE)
+pointsOnBoxplot(x ~ y, horizontal = TRUE)
+
+boxplot(x ~ y)
+pointsOnBoxplot(x = x, y = y, col = colVec, pch = 19, cex = 2)
+
+boxplot(x ~ y + y2)
+pointsOnBoxplot(x ~ y + y2, col = colVec, pch = 19, cex = 2)
+</code></pre>
+
+
+</div>

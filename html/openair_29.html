@@ -1,0 +1,217 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>linearRelation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Linear relations between pollutants</h2>
+
+<h3>Description</h3>
+
+<p>This function considers linear relationships between two pollutants. The
+relationships are calculated on different times bases using a linear model.
+The slope and 95% confidence interval in slope relationships by time unit are
+plotted in many ways. The function is particularly useful when considering
+whether relationships are consistent with emissions inventories.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">linearRelation(
+  mydata,
+  x = "nox",
+  y = "no2",
+  period = "month",
+  condition = FALSE,
+  n = 20,
+  rsq.thresh = 0,
+  ylab = paste0("slope from ", y, " = m.", x, " + c"),
+  auto.text = TRUE,
+  cols = "grey30",
+  date.breaks = 5,
+  plot = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame minimally containing <code>date</code> and two
+pollutants.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>First pollutant that when plotted would appear on the x-axis of a
+relationship e.g. <code>x = "nox"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Second pollutant that when plotted would appear on the y-axis of a
+relationship e.g. <code>y = "pm10"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p>A range of different time periods can be analysed. The default
+is <code>month</code> but can be <code>year</code> and <code>week</code>. For increased
+flexibility an integer can be used e.g. for 3-month values <code>period =
+  "3 month"</code>. Other cases include <code>"hour"</code> will show the diurnal
+relationship between <code>x</code> and <code>y</code> and “weekday” the day of
+the week relationship between <code>x</code> and <code>y</code>. “day.hour” will
+plot the relationship by weekday and hour of the day.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condition</code></td>
+<td>
+<p>For <code>period = "hour"</code>, <code>period = "day"</code> and
+<code>period = "day.hour"</code>, setting <code>condition = TRUE</code> will plot the
+relationships split by year. This is useful for seeing how the
+relationships may be changing over time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The minimum number of points to be sent to the linear model.
+Because there may only be a few points e.g. hours where two pollutants are
+available over one week, <code>n</code> can be set to ensure that at least
+<code>n</code> points are sent to the linear model. If a period has hours &lt;
+<code>n</code> that period will be ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rsq.thresh</code></td>
+<td>
+<p>The minimum correlation coefficient (R2) allowed. If the
+relationship between <code>x</code> and <code>y</code> is not very good for a
+particular period, setting <code>rsq.thresh</code> can help to remove those
+periods where the relationship is not strong. Any R2 values below
+<code>rsq.thresh</code> will not be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>y-axis title, specified by the user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.text</code></td>
+<td>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code>
+titles and axis labels will automatically try and format pollutant names
+and units properly e.g.  by subscripting the ‘2’ in NO2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>Colour for the points and uncertainty intervals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.breaks</code></td>
+<td>
+<p>Number of major x-axis intervals to use. The function will
+try and choose a sensible number of dates/times as well as formatting the
+date/time appropriately to the range being considered.  This does not
+always work as desired automatically. The user can therefore increase or
+decrease the number of intervals by adjusting the value of
+<code>date.breaks</code> up or down.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should a plot be produced? <code>FALSE</code> can be useful when
+analysing data to extract plot components and plotting them in other ways.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other graphical parameters. A useful one to remove the strip with
+the date range on at the top of the plot is to set <code>strip = FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The relationships between pollutants can yield some very useful information
+about source emissions and how they change. A scatterPlot between two
+pollutants is the usual way to investigate the relationship. A linear
+regression is useful to test the strength of the relationship. However,
+considerably more information can be gleaned by considering different time
+periods, such as how the relationship between two pollutants vary over time,
+by day of the week, diurnally and so on. The <code>linearRelation</code> function
+does just that - it fits a linear relationship between two pollutants over a
+wide range of time periods determined by <code>period</code>.
+</p>
+<p><code>linearRelation</code> function is particularly useful if background
+concentrations are first removed from roadside concentrations, as the
+increment will relate more directly with changes in emissions. In this
+respect, using <code>linearRelation</code> can provide valuable information on how
+emissions may have changed over time, by hour of the day etc. Using the
+function in this way will require users to do some basic manipulation with
+their data first.
+</p>
+<p>If a data frame is supplied that contains <code>nox</code>, <code>no2</code> and
+<code>o3</code>, the <code>y</code> can be chosen as <code>y = "ox"</code>. In function will
+therefore consider total oxidant slope (sum of NO2 + O3), which can provide
+valuable information on likely vehicle primary NO emissions. Note, however,
+that most roadside sites do not have ozone measurements and
+<code>calcFno2</code> is the alternative.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an openair object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>calcFno2()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># monthly relationship between NOx and SO2 - note rapid fall in
+# ratio at the beginning of the series
+linearRelation(mydata, x = "nox", y = "so2")
+# monthly relationship between NOx and SO2 - note rapid fall in
+# ratio at the beginning of the series
+## Not run: linearRelation(mydata, x = "nox", y = "ox")
+
+# diurnal oxidant slope by year # clear change in magnitude
+# starting 2003, but the diurnal profile has also changed: the
+# morning and evening peak hours are more important, presumably
+# due to change in certain vehicle types
+## Not run: linearRelation(mydata, x = "nox", y = "ox", period = "hour", condition = TRUE)
+
+# PM2.5/PM10 ratio, but only plot where monthly R2 &gt;= 0.8
+## Not run: linearRelation(mydata, x = "pm10", y = "pm25", rsq.thresh = 0.8)
+</code></pre>
+
+
+</div>

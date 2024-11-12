@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>maxControlsCap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set thinning and thickening caps for full matching</h2>
+
+<h3>Description</h3>
+
+<p>Functions to find the largest value of min.controls, or the
+smallest value of max.controls, for which a full matching problem
+is feasible.  These are determined by constraints embedded in the
+matching problem's distance matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">maxControlsCap(distance, min.controls = NULL, solver = "")
+
+minControlsCap(distance, max.controls = NULL, solver = "")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+<p>Either a matrix of non-negative, numeric
+discrepancies, or a list of such matrices. (See
+<code>fullmatch</code> for details.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.controls</code></td>
+<td>
+<p>Optionally, set limits on the minimum number
+of controls per matched set.  (Only makes sense for
+<code>maxControlsCap</code>.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solver</code></td>
+<td>
+<p>Choose which solver to use. See <code>help(fullmatch)</code>
+for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.controls</code></td>
+<td>
+<p>Optionally, set limits on the maximum number
+of controls per matched set.  (Only makes sense for
+<code>minControlsCap</code>.)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function works by repeated application of full matching, so on
+large problems it can be time-consuming.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For <code>minControlsCap</code>,
+<code>strictest.feasible.min.controls</code> and
+<code>given.max.controls</code>. For <code>maxControlsCap</code>,
+<code>given.min.controls</code> and
+<code>strictest.feasible.max.controls</code>.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>strictest.feasible.min.controls</code></td>
+<td>
+<p>The largest values of the
+<code>fullmatch</code> argument <code>min.controls</code> that yield
+a full match;</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>given.max.controls</code></td>
+<td>
+<p> The <code>max.controls</code> argument
+given to <code>minControlsCap</code> or, if none was given, a vector
+of <code>Inf</code>s. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>given.min.controls</code></td>
+<td>
+<p> The <code>min.controls</code> argument
+given to <code>maxControlsCap</code> or, if none was given, a vector
+of <code>0</code>s; </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strictest.feasible.max.controls</code></td>
+<td>
+<p>The smallest values of
+the <code>fullmatch</code> argument <code>max.controls</code> that
+yield a full match.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Essentially this is just a line search.  I've done several
+things to speed it up, but not everything that might be done.
+At present, not very thoroughly tested either: you might check
+the final results to make sure that <code>fullmatch</code>
+works with the values of <code>min.controls</code> (or
+<code>max.controls</code>) suggested by these functions, and that it
+ceases to work if you increase (decrease) those values.
+Comments appreciated.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Ben B. Hansen
+</p>
+
+
+<h3>References</h3>
+
+<p>Hansen, B.B. and S. Olsen Klopfer (2006),
+‘Optimal full matching and related designs via network
+flows’, <em>Journal of Computational and Graphical Statistics</em>
+<b>15</b>, 609–627.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fullmatch</code>
+</p>
+
+
+</div>

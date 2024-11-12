@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>collect.cdm_reference</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieves the cdm reference into a local cdm.</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves the cdm reference into a local cdm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'cdm_reference'
+collect(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A cdm_reference object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>For compatibility only, not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A local cdm_reference.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(omopgenerics)
+library(dplyr, warn.conflicts = FALSE)
+
+cdm &lt;- cdmFromTables(
+  tables = list(
+    "person" = dplyr::tibble(
+      person_id = c(1, 2, 3), gender_concept_id = 0, year_of_birth = 1990,
+      race_concept_id = 0, ethnicity_concept_id = 0
+    ),
+    "observation_period" = dplyr::tibble(
+      observation_period_id = 1:3, person_id = 1:3,
+      observation_period_start_date = as.Date("2000-01-01"),
+      observation_period_end_date = as.Date("2023-12-31"),
+      period_type_concept_id = 0
+    )
+  ),
+  cdmName = "mock"
+)
+
+collect(cdm)
+
+</code></pre>
+
+
+</div>

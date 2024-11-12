@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calcul_</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculating a class variable</h2>
+
+<h3>Description</h3>
+
+<p>Add to a data table a column whose values can be represented in a class
+analysis (ratio, part, evolution ...).
+</p>
+<p>The calculation is based on volume data (from the population, for example).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calcul_ratio(data, var1, var2)
+
+calcul_tx_evol_global(data, var1, var2)
+
+calcul_tx_evol_ann_moy(data, var1, var2, nbAnnees)
+
+calcul_part_ens(data, var)
+
+calculette(data, formule = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>tableau de donnees (data.frame).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var1</code></td>
+<td>
+<p>chaine de caracteres (character). Variable en volume de la
+table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var2</code></td>
+<td>
+<p>chaine de caracteres (character). Variable en volume de la
+table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nbAnnees</code></td>
+<td>
+<p>nombre (numeric). Nombre d'annees appliquable au taux
+d'evolution annuel moyen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var</code></td>
+<td>
+<p>chaine de caracteres (character). Variable en volume de la table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formule</code></td>
+<td>
+<p>chaine de caracteres (character). Formule libre pour le
+calcul d'une variable de classes. Seuls les caracteres + - * / ^ ( ) sont
+acceptes.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Les formules utilisees sont : </p>
+
+<dl>
+<dt>ratio</dt>
+<dd>
+<p><code>(data[,var1]/data[,var2])*100</code></p>
+</dd>
+<dt>tx_evol_global</dt>
+<dd>
+<p><code>((data[,var2]-data[,var1])/data[,var1])*100</code></p>
+</dd>
+<dt>tx_evol_ann_moy</dt>
+<dd>
+<p><code>((data[,var2]/data[,var1])^(1/nbAnnees)-1)*100</code></p>
+</dd>
+<dt>part_ens</dt>
+<dd>
+<p><code>(data[,var]/sum(data[,var],na.rm = TRUE))*100</code></p>
+</dd> </dl>
+<h3>Value</h3>
+
+<p>Retourne un objet data.frame.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("donnees_monoloc")
+
+ratio &lt;- calcul_ratio(data = donnees_monoloc, var1 = "POP_2010", var2 = "POP_2015")
+teg &lt;- calcul_tx_evol_global(data = donnees_monoloc, var1 = "POP_2010", var2 = "POP_2015")
+team &lt;- calcul_tx_evol_ann_moy(data = donnees_monoloc, var1 = "POP_2010", var2 = "POP_2015",
+nbAnnees = 5)
+part &lt;- calcul_part_ens(data = donnees_monoloc, var = "POP_2015")
+
+</code></pre>
+
+
+</div>

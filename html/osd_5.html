@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotOSDres</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plotting OSD objects</h2>
+
+<h3>Description</h3>
+
+<p>Plots the results determined by <code>osd</code> function. Profile or spectra resolution can be selected for visualization.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotOSDres(OSDobj, type = c("eic", "tic", "s"), ncomp = vector(),
+ comp.spectra = vector(), mztxt.top = 5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>OSDobj</code></td>
+<td>
+<p>the <code>osd</code> selected for plotting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of resolution to be plotted. Concentration resolution can be shown by its extracted ion chromatogram (EIC) "eic" or by its ion total chromatogram "tic". Also, the spectra for each compound in the model can be shown by "s".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncomp</code></td>
+<td>
+<p>vector; the compounds to be plotted. If spectra is selected for visualization, please select only one compound to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comp.spectra</code></td>
+<td>
+<p>a vector to compare a resolved spectra with.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mztxt.top</code></td>
+<td>
+<p>integer; the number of the m/z values ordered by intensity to visualize on the spectra plot</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Xavier Domingo-Almenara. xavier.domingo@urv.cat</p>
+
+
+<h3>See Also</h3>
+
+<p><code>osd</code>
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#load GC-MS sample data, containing three different metabolites 
+#appearing in co-elution.
+data(gcms1)
+
+#resolve the situation using ICA-OSD algorithm
+resolution &lt;- osd(D=gcms1, k=3, res.method="ica.osd")
+
+#plot the resolution, the extracted ion chromatogram (m/z) are plotted 
+# in grey whereas the profile matrix appear in color.
+plotOSDres(resolution, type="eic")
+plotOSDres(resolution, type="tic")
+
+#plot each resolved spectra for compound 1 to 3.
+plotOSDres(resolution, type="s",1)
+plotOSDres(resolution, type="s",2)
+plotOSDres(resolution, type="s",3)
+</code></pre>
+
+
+</div>

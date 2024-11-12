@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>toOrg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Generate Org-mode Markup
+</h2>
+
+<h3>Description</h3>
+
+<p>Transform R objects into Org-mode objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">toOrg(x, ...)
+
+## S3 method for class 'org'
+print(x, ...)
+
+## S3 method for class 'data.frame'
+toOrg(x, row.names = NULL, ...)
+
+## S3 method for class 'Date'
+toOrg(x, inactive = FALSE, ...)
+
+## S3 method for class 'POSIXt'
+toOrg(x, inactive = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>an object
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row.names</code></td>
+<td>
+
+<p><code>NULL</code>, logical or character. If <code>TRUE</code>,
+<code>row.names</code> of <code>x</code> are added as the first column,
+with column name "<code>row.names</code>". If a character string, the
+string is used as the column name. See Examples.
+</p>
+<p>If <code>NULL</code>, <code>row.names</code> are added when they are not
+<code>1, 2, ...</code> (i.e. row numbers).
+</p>
+<p>If <code>FALSE</code>, <code>row.names</code> are not added.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inactive</code></td>
+<td>
+
+<p>logical: use inactive timestamps? See
+<a href="http://orgmode.org/manual/Creating-timestamps.html">http://orgmode.org/manual/Creating-timestamps.html</a> .
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Transforms an object <code>x</code> into character vectors with Org
+markup. Most useful when <code>x</code> is a data.frame.
+</p>
+<p><code>toOrg</code> is meant for snippets of code, not for producing whole
+Org documents.
+</p>
+<p>When you work with <code>POSIXt</code>, make sure that a
+potential timezone does not cause trouble: Org does
+not support timezones.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character vector, usually with class <code>org</code>. In some cases,
+class <code>character</code> is additionally attached.
+</p>
+<p>To save it to a file, use <code>writeLines</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Enrico Schumann
+</p>
+
+
+<h3>References</h3>
+
+<p>Org mode manual <a href="https://orgmode.org/manual/index.html">https://orgmode.org/manual/index.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>toLatex</code>, function <code>as.orgtable</code> in
+<span class="pkg">microplot</span>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">toOrg(data.frame(a = 1:3, row.names = LETTERS[1:3]))
+## =&gt;  | row.names | a |
+##     |-----------+---|
+##     | A         | 1 |
+##     | B         | 2 |
+##     | C         | 3 |
+
+toOrg(data.frame(a = 1:3))
+## =&gt;  | a |
+##     |---|
+##     | 1 |
+##     | 2 |
+##     | 3 |
+
+toOrg(data.frame(a = 1:3), row.names = TRUE)
+## =&gt;  | row.names | a |
+##     |-----------+---|
+##     | 1         | 1 |
+##     | 2         | 2 |
+##     | 3         | 3 |
+
+
+toOrg(data.frame(a = 1:5), row.names = "row numbers")
+## =&gt;  | row numbers | a |
+##     |-------------+---|
+##     | 1           | 1 |
+##     | 2           | 2 |
+##     | 3           | 3 |
+##     | 4           | 4 |
+##     | 5           | 5 |
+
+## Not run: 
+writeLines(toOrg(data.frame(a = 1:3)), "~/Desktop/my_table.org")
+## End(Not run)
+
+## Dates/Times
+toOrg(as.Date("2015-01-01"))                   ## &lt;2015-01-01 Thu&gt;
+toOrg(as.Date("2015-01-01"), inactive = TRUE)  ## [2015-01-01 Thu]
+toOrg(Sys.time())                              ## &lt;2017-03-20 Mon 13:23:18&gt;
+
+## Convert Org dates to Date
+
+## see ?strptime: Each input string is processed as far as
+##                necessary for the format specified: any
+##                trailing characters are ignored.
+d &lt;- toOrg(as.Date("2015-01-01"))
+as.Date(d, "&lt;%Y-%m-%d")
+
+</code></pre>
+
+
+</div>

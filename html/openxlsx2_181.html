@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>write_xlsx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write data to an xlsx file</h2>
+
+<h3>Description</h3>
+
+<p>Write a data frame or list of data frames to an xlsx file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">write_xlsx(x, file, as_table = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object or a list of objects that can be handled by <code>wb_add_data()</code> to write to file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>An optional xlsx file name. If no file is passed, the object is not written to disk and only a workbook object is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as_table</code></td>
+<td>
+<p>If <code>TRUE</code>, will write as a data table, instead of data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code>wb_workbook</code>, <code>wb_add_worksheet</code>, <code>wb_add_data_table</code>, <code>wb_add_data</code>, <code>wb_freeze_pane</code>, <code>wb_set_col_widths</code>, <code>wb_save</code>
+</p>
+
+<dl>
+<dt><code>creator</code></dt>
+<dd>
+<p>Creator of the workbook (your name). Defaults to login username or <code>options("openxlsx2.creator")</code> if set.</p>
+</dd>
+<dt><code>sheet</code></dt>
+<dd>
+<p>A name for the new worksheet</p>
+</dd>
+<dt><code>grid_lines</code></dt>
+<dd>
+<p>A logical. If <code>FALSE</code>, the worksheet grid lines will be
+hidden.</p>
+</dd>
+<dt><code>tab_color</code></dt>
+<dd>
+<p>Color of the sheet tab. A  <code>wb_color()</code>,  a valid color (belonging to
+<code>grDevices::colors()</code>) or a valid hex color beginning with "#".</p>
+</dd>
+<dt><code>zoom</code></dt>
+<dd>
+<p>The sheet zoom level, a numeric between 10 and 400 as a
+percentage. (A zoom value smaller than 10 will default to 10.)</p>
+</dd>
+<dt><code>total_row</code></dt>
+<dd>
+<p>logical. With the default <code>FALSE</code> no total row is added.</p>
+</dd>
+<dt><code>start_col</code></dt>
+<dd>
+<p>A vector specifying the starting column to write <code>x</code> to.</p>
+</dd>
+<dt><code>start_row</code></dt>
+<dd>
+<p>A vector specifying the starting row to write <code>x</code> to.</p>
+</dd>
+<dt><code>col_names</code></dt>
+<dd>
+<p>If <code>TRUE</code>, column names of <code>x</code> are written.</p>
+</dd>
+<dt><code>row_names</code></dt>
+<dd>
+<p>If <code>TRUE</code>, the row names of <code>x</code> are written.</p>
+</dd>
+<dt><code>na.strings</code></dt>
+<dd>
+<p>Value used for replacing <code>NA</code> values from <code>x</code>. Default
+looks if <code>options(openxlsx2.na.strings)</code> is set. Otherwise <code>na_strings()</code>
+uses the special <code style="white-space: pre;">⁠#N/A⁠</code> value within the workbook.</p>
+</dd>
+<dt><code>first_active_row</code></dt>
+<dd>
+<p>Top row of active region</p>
+</dd>
+<dt><code>first_active_col</code></dt>
+<dd>
+<p>Furthest left column of active region</p>
+</dd>
+<dt><code>first_row</code></dt>
+<dd>
+<p>If <code>TRUE</code>, freezes the first row (equivalent to <code>first_active_row = 2</code>)</p>
+</dd>
+<dt><code>first_col</code></dt>
+<dd>
+<p>If <code>TRUE</code>, freezes the first column (equivalent to <code>first_active_col = 2</code>)</p>
+</dd>
+<dt><code>widths</code></dt>
+<dd>
+<p>Width to set <code>cols</code> to specified column width or <code>"auto"</code> for
+automatic sizing. <code>widths</code> is recycled to the length of <code>cols</code>. openxlsx2
+sets the default width is 8.43, as this is the standard in some spreadsheet
+software. See <strong>Details</strong> for general information on column widths.</p>
+</dd>
+<dt><code>overwrite</code></dt>
+<dd>
+<p>If <code>FALSE</code>, will not overwrite when <code>file</code> already exists.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>columns of <code>x</code> with class <code>Date</code> or <code>POSIXt</code> are automatically
+styled as dates and datetimes respectively.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A workbook object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## write to working directory
+write_xlsx(iris, file = temp_xlsx(), col_names = TRUE)
+
+write_xlsx(iris,
+  file = temp_xlsx(),
+  col_names = TRUE
+)
+
+## Lists elements are written to individual worksheets, using list names as sheet names if available
+l &lt;- list("IRIS" = iris, "MTCARS" = mtcars, matrix(runif(1000), ncol = 5))
+write_xlsx(l, temp_xlsx(), col_widths = c(NA, "auto", "auto"))
+
+## different sheets can be given different parameters
+write_xlsx(l, temp_xlsx(),
+  start_col = c(1, 2, 3), start_row = 2,
+  as_table = c(TRUE, TRUE, FALSE), with_filter = c(TRUE, FALSE, FALSE)
+)
+
+# specify column widths for multiple sheets
+write_xlsx(l, temp_xlsx(), col_widths = 20)
+write_xlsx(l, temp_xlsx(), col_widths = list(100, 200, 300))
+write_xlsx(l, temp_xlsx(), col_widths = list(rep(10, 5), rep(8, 11), rep(5, 5)))
+</code></pre>
+
+
+</div>

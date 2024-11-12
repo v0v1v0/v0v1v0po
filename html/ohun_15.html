@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>merge_overlaps</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Merge overlapping selections</h2>
+
+<h3>Description</h3>
+
+<p><code>merge_overlaps</code> merges several overlapping selections into a single selection
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">merge_overlaps(X, pb = TRUE, cores = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Data frame or 'selection.table' (following the warbleR package format) with selections (start and end of the sound events). Must contained at least the following columns: "sound.files", "selec", "start" and "end".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cores</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function finds time-overlapping selection in reference tables and collapses them into a single selection. It can be useful to prepare reference tables to be used in an energy detection routine. In such cases overlapping selections are expected to be detected as a single sound. Therefore, merging them can be useful to prepare references in a format representing a more realistic expectation of how a perfect energy detection routine would look like.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If any time-overlapping selection is found it returns a data frame in which overlapping selections are collapse into a single selection.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas <a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+<p>Araya-Salas, M., Smith-Vidaurre, G., Chaverri, G., Brenes, J. C., Chirino, F., Elizondo-Calvo, J., &amp; Rico-Guevara, A. 2022. ohun: an R package for diagnosing and optimizing automatic sound event detection. BioRxiv, 2022.12.13.520253. https://doi.org/10.1101/2022.12.13.520253
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summarize_diagnostic</code>, <code>label_detection</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  # load data
+  data("lbh_reference")
+
+  # nothing to merge
+  merge_overlaps(lbh_reference)
+
+  # create artificial overlapping selections
+  lbh_ref2 &lt;- rbind(as.data.frame(lbh_reference[c(3, 10), ]), lbh_reference[c(3, 10), ])
+
+  lbh_ref2$selec &lt;- seq_len(nrow(lbh_ref2))
+
+  merge_overlaps(lbh_ref2)
+}
+</code></pre>
+
+
+</div>

@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetLabels</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Lables</h2>
+
+<h3>Description</h3>
+
+<p><code>GetLabels</code> Calculates the start and end positions of each window that
+are focused on the real anomalies. This windows can be used to know if the detected anomaly is a
+true positive or not.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetLabels(data)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>All dataset with training and test datasets with at least <code>timestamp</code>,
+<code>value</code>, <code>is.anomaly</code>, <code>is.real.anomaly</code>, <code>start.limit</code> and
+<code>end.limit</code> columns.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p><code>data</code> must be a data.frame with  <code>timestamp</code>, <code>value</code>, <code>is.anomaly</code>
+and <code>is.real.anomaly</code> columns. <code>timestamp</code> column can be numeric, of type POSIXct, or a
+character type date convertible to POSIXct. see  <code>GetWindowsLimits</code> to know more
+about how to get <code>start.limit</code> and <code>end.limit</code> columns.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Same data set with two additional columns <code>label</code> and <code>first.tp</code>.
+<code>first.tp</code> indicates for each window Which is the position of first true positive.
+<code>label</code> indicates for each detection if it is a TP, FP, TN or FN.
+</p>
+
+
+<h3>References</h3>
+
+<p>A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
+Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
+Applications (IEEE ICMLA’15), 2015.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 180
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+# Add is.real.anomaly column
+df$is.real.anomaly &lt;- 0
+df[c(25,80,150), "is.real.anomaly"] &lt;- 1
+
+## Calculate anomalies
+result &lt;- CpSdEwma(
+  data = df$value,
+  n.train = 5,
+  threshold = 0.01,
+  l = 3
+)
+res &lt;- cbind(df, result)
+
+# Get Window Limits
+data &lt;- GetWindowsLimits(res)
+data[data$is.real.anomaly == 1,]
+
+# Get labels
+data &lt;- GetLabels(data)
+data[data$is.real.anomaly == 1 | data$is.anomaly == 1,]
+
+# Plot results
+PlotDetections(res, print.real.anomaly = TRUE, print.time.window = TRUE)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>distanceHartmann</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>'Hartmann distance' (standardized Slater distances).</h2>
+
+<h3>Description</h3>
+
+<p>Calculate Hartmann distance
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">distanceHartmann(
+  x,
+  method = "paper",
+  reps = 10000,
+  prob = NULL,
+  progress = TRUE,
+  distributions = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>The method used for distance calculation, on of
+<code style="white-space: pre;">⁠"paper", "simulate", "new"⁠</code>. <code>"paper"</code> uses the
+parameters as given in Hartmann (1992) for calculation.
+<code>"simulate"</code> (default) simulates a Slater distribution
+for the calculation. In a future version the time consuming
+simulation will be replaced by more accurate parameters for
+Hartmann distances than used in Hartmann (1992).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reps</code></td>
+<td>
+<p>Number of random grids to generate sample distribution for
+Slater distances (default is <code>10000</code>). Note that
+a lot of samples may take a while to calculate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+<p>The probability of each rating value to occur.
+If <code>NULL</code> (default) the distribution is uniform.
+The number of values must match the length of the rating scale.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>Whether to show a progress bar during simulation
+(default is <code>TRUE</code>) (for <code>method="simulate"</code>).
+May be useful when the distribution is estimated on the basis
+of many quasis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distributions</code></td>
+<td>
+<p>Whether to additionally return the values of the simulated
+distributions (Slater etc.) The default is <code>FALSE</code>
+as it will quickly boost the object size.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Hartmann (1992) showed in a simulation study that Slater distances (see <code>distanceSlater()</code>) based on random grids,
+for which Slater coined the expression quasis, have a skewed distribution, a mean and a standard deviation depending
+on the number of constructs elicited. He suggested a linear transformation (z-transformation) which takes into
+account the estimated (or expected) mean and the standard deviation of the derived distribution to standardize
+Slater distance scores across different grid sizes. 'Hartmann distances' represent a more accurate version of
+'Slater distances'. Note that Hartmann distances are multiplied by -1. Hence, negative Hartmann values represent
+dissimilarity, i.e. a big Slater distance. <br></p>
+<p>There are two ways to use this function. Hartmann distances can either be calculated based on the reference values
+(i.e. means and standard deviations of Slater distance distributions) as given by Hartmann in his paper. The second
+option is to conduct an instant simulation for the supplied grid size for each calculation. The second option will
+be more accurate when a big number of quasis is used in the simulation. <br></p>
+<p>It is also possible to return the quantiles of the sample distribution and only the element distances considered
+'significant' according to the quantiles defined.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix containing Hartmann distances. In the attributes several additional parameters can be found:
+</p>
+
+<ul>
+<li> <p><code>arguments</code>: A list of several parameters including <code>mean</code> and <code>sd</code> of Slater distribution.
+</p>
+</li>
+<li> <p><code>quantiles</code>: Quantiles for Slater and Hartmann distance distribution.
+</p>
+</li>
+<li> <p><code>distributions</code>: List with values of the simulated distributions.
+</p>
+</li>
+</ul>
+<h3>Calculation</h3>
+
+<p>The 'Hartmann distance' is calculated as follows (Hartmann 1992, p. 49).  <br></p>
+<p style="text-align: center;"><code class="reqn">D = -1 (\frac{D_{slater} - M_c}{sd_c})</code>
+</p>
+
+<p>Where <code class="reqn">D_{slater}</code> denotes the Slater distances of the grid,
+<code class="reqn">M_c</code> the sample distribution's mean value and
+<code class="reqn">sd_c</code> the sample distribution's standard deviation.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hartmann, A. (1992). Element comparisons in repertory  grid technique: Results and consequences of a
+Monte  Carlo study. <em>International Journal of Personal Construct Psychology, 5</em>(1), 41-56.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>distanceSlater()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+### basics  ###
+
+distanceHartmann(bell2010)
+distanceHartmann(bell2010, method = "simulate")
+h &lt;- distanceHartmann(bell2010, method = "simulate")
+h
+
+# printing options
+print(h)
+print(h, digits = 6)
+# 'significant' distances only
+print(h, p = c(.05, .95))
+
+# access cells of distance matrix
+h[1, 2]
+
+### advanced  ###
+
+# histogram of Slater distances and indifference region
+h &lt;- distanceHartmann(bell2010, distributions = TRUE)
+l &lt;- attr(h, "distributions")
+hist(l$slater, breaks = 100)
+hist(l$hartmann, breaks = 100)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

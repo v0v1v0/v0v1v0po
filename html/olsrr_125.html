@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_step_both_aic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Stepwise AIC regression</h2>
+
+<h3>Description</h3>
+
+<p>Build regression model from a set of candidate predictor variables by
+entering and removing predictors based on akaike information criteria, in a
+stepwise manner until there is no variable left to enter or remove any more.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_step_both_aic(model, ...)
+
+## Default S3 method:
+ols_step_both_aic(
+  model,
+  include = NULL,
+  exclude = NULL,
+  progress = FALSE,
+  details = FALSE,
+  ...
+)
+
+## S3 method for class 'ols_step_both_aic'
+plot(x, print_plot = TRUE, details = TRUE, digits = 3, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include</code></td>
+<td>
+<p>Character or numeric vector; variables to be included in selection process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>Character or numeric vector; variables to be excluded from selection process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>Logical; if <code>TRUE</code>, will display variable selection progress.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p>Logical; if <code>TRUE</code>, details of variable selection will
+be printed on screen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class <code>ols_step_both_*</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_plot</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, prints the plot else returns a plot object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>Number of decimal places to display.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>List containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>final model; an object of class <code>lm</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metrics</code></td>
+<td>
+<p>selection metrics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>others</code></td>
+<td>
+<p>list; info used for plotting and printing</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Venables, W. N. and Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth edition. Springer.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other both direction selection procedures: 
+<code>ols_step_both_adj_r2()</code>,
+<code>ols_step_both_r2()</code>,
+<code>ols_step_both_sbc()</code>,
+<code>ols_step_both_sbic()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# stepwise regression
+model &lt;- lm(y ~ ., data = stepdata)
+ols_step_both_aic(model)
+
+# stepwise regression plot
+model &lt;- lm(y ~ ., data = stepdata)
+k &lt;- ols_step_both_aic(model)
+plot(k)
+
+# selection metrics
+k$metrics
+
+# final model
+k$model
+
+# include or exclude variables
+# force variable to be included in selection process
+model &lt;- lm(y ~ ., data = stepdata)
+
+ols_step_both_aic(model, include = c("x6"))
+
+# use index of variable instead of name
+ols_step_both_aic(model, include = c(6))
+
+# force variable to be excluded from selection process
+ols_step_both_aic(model, exclude = c("x2"))
+
+# use index of variable instead of name
+ols_step_both_aic(model, exclude = c(2))
+
+# include &amp; exclude variables in the selection process
+ols_step_both_aic(model, include = c("x6"), exclude = c("x2"))
+
+# use index of variable instead of name
+ols_step_both_aic(model, include = c(6), exclude = c(2))
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

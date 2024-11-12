@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anim_scale</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Animate an element through scaling</h2>
+
+<h3>Description</h3>
+
+<p>Within an <code>anims()</code> call, itself passed to any <code>anims</code> argument, the
+<code>anim_scale()</code> function can be used to express an animation where the target
+element undergoes a scaling change with time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anim_scale(scale = NULL, easing_fn = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>The scale value of the element at the keyframe time (given as
+the LHS value in the <code>anims()</code> call). If providing a single scaling value,
+the scaling will operate in the x and y directions (relative to the center
+of the element). If two values are provided, these will be taken as scaling
+values in the x and y directions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>easing_fn</code></td>
+<td>
+<p>The timing or easing function to use for the animation. If
+not provided, the <code>linear()</code> timing function will be used (which is doesn't
+use any easing in the animation, just a linear movement). The other timing
+and easing functions are: <code>step_start()</code>, <code>step_end()</code>, <code>ease_in()</code>,
+<code>ease_out()</code>, and <code>ease_in_out()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>anim_opacity</code> object, which is to be used as part of an <code>anims()</code>
+call.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# Basic animation of an element's
+# scaling state (moving to a new
+# `scale` value)
+SVG(width = 300, height = 300) %&gt;%
+  svg_rect(
+    x = 50, y = 50,
+    width = 50, height = 50,
+    attrs = svg_attrs_pres(
+      stroke = "magenta",
+      fill = "lightblue"
+    ),
+    anims = anims(
+      2.0 ~ anim_scale(scale = 2)
+    )
+  )
+}
+
+</code></pre>
+
+
+</div>

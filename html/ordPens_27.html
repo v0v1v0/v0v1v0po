@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.ordPen</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict method for ordPen objects</h2>
+
+<h3>Description</h3>
+
+<p>Obtains predictions from an <code>ordPen</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ordPen'
+predict(object, newx, newu = NULL, newz = NULL,
+  offset = rep(0,nrow(as.matrix(newx))), 
+  type = c("link", "response", "class"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an <code>ordPen</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newx</code></td>
+<td>
+<p>the matrix (or <code>data.frame</code>) of new observations of the
+considered ordinal predictors, with each column corresponding to
+one predictor and containing numeric values from {1,2,...}.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newu</code></td>
+<td>
+<p>a matrix (or <code>data.frame</code>) of new observations of the
+additional categorical (nominal) predictors, with each column corresponding
+to one (additional) predictor and containing numeric values {1,2,...}.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newz</code></td>
+<td>
+<p>a matrix (or <code>data.frame</code>) of new observations of the
+additional metric predictors, with each column corresponding to one
+(additional) predictor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>potential offset values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of prediction; <code>type = "link"</code> is on the
+scale of linear predictors, whereas <code>type = "response"</code> is on
+the scale of the response variable, i.e., <code>type = "response"</code>
+applies the inverse link function to the linear predictors. <code>type = "class"</code> is only available for cumulative logit models and returns the class number with the highest fitted probability.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments (not supported at this time).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix of predictions whose columns correspond to the different values of
+the penalty parameter <code>lambda</code> of the <code>ordPen</code> object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jan Gertheiss, Aisouda Hoshiyar</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ordSelect</code>, <code>ordSmooth</code>, <code>ordFusion</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># the training data
+set.seed(123)
+
+# generate (ordinal) predictors
+x1 &lt;- sample(1:8,100,replace=TRUE)
+x2 &lt;- sample(1:6,100,replace=TRUE)
+x3 &lt;- sample(1:7,100,replace=TRUE)
+
+# the response
+y &lt;- -1 + log(x1) + sin(3*(x2-1)/pi) + rnorm(100)
+
+# x matrix
+x &lt;- cbind(x1,x2,x3)
+
+# lambda values
+lambda &lt;- c(1000,500,200,100,50,30,20,10,1)
+
+# selecting and/or smoothing/fusing
+o1 &lt;- ordSmooth(x = x, y = y, lambda = lambda)
+o2 &lt;- ordSelect(x = x, y = y, lambda = lambda)
+o3 &lt;- ordFusion(x = x, y = y, lambda = lambda)
+
+# new data
+x1 &lt;- sample(1:8,10,replace=TRUE)
+x2 &lt;- sample(1:6,10,replace=TRUE)
+x3 &lt;- sample(1:7,10,replace=TRUE)
+newx &lt;- cbind(x1,x2,x3)
+
+# prediction
+round(predict(o1, newx), digits=3)
+round(predict(o2, newx), digits=3)
+round(predict(o3, newx), digits=3)
+</code></pre>
+
+
+</div>

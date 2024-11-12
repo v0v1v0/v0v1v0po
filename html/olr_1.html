@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>olr: Optimal Linear Regression</h2>
+
+<h3>Description</h3>
+
+<p>The main olr() runs all of the possible linear regression equation combinations, which are all of the
+combinations of dependent variables respect to the independent variable. In essence, the olr()
+returns the best fit linear regression model. The user can prompt the olr() to return either the
+best fit statistical summary of either the greatest adjusted R-squared, or the greatest R-squared term.
+R-squared increases with the addition of an explanatory variable whether it is 'significant' or not,
+thus this was developed to eliminate that conundrum. Adjusted R-squared is preferred to overcome this
+phenomenon, but each combination will still produce different results and this will return the best one.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olr(dataset, responseName = NULL, predictorNames = NULL,
+  adjr2 = TRUE)
+
+olrmodels(dataset, responseName = NULL, predictorNames = NULL)
+
+olrformulas(dataset, responseName = NULL, predictorNames = NULL)
+
+olrformulaorder(dataset, responseName = NULL, predictorNames = NULL)
+
+adjr2list(dataset, responseName = NULL, predictorNames = NULL)
+
+r2list(dataset, responseName = NULL, predictorNames = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataset</code></td>
+<td>
+<p>is defined by the user and points to the name of the dataset that is being used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>responseName</code></td>
+<td>
+<p>the response variable name defined as a string. For example, it represents a header in the data table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predictorNames</code></td>
+<td>
+<p>the predictor variable or variables that are the terms that are to be regressed against the <code>responseName</code>. Place desired headers from the <code>dataset</code> in here as a character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjr2</code></td>
+<td>
+<p><code>adjr2 = TRUE</code> returns the regression summary for the maximum adjusted R-squared term. <code>adjr2 = FALSE</code> returns the regression summary for the maximum R-squared term.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Complimentary functions below follow the format: function(dataset, responseName = NULL, predictorNames = NULL) <br><br><strong>olrmodels:</strong> returns the list of models accompanied by the coefficients. After typing in <code>olrmodels(dataset, responseName, predictorNames)</code> type the desired summary number to the right of the comma in the brackets: <code>[,x]</code> where x equals the desired summary number. For example, <code>olrmodels(dataset, responseName, predictorNames)[,8]</code> <br><br><strong>olrformulas:</strong> returns the list of olr() formulas <br><br><strong>olrformulasorder:</strong> returns the formulas with the predictors (dependent variables) in ascending order <br><br><strong>adjr2list:</strong> list of the adjusted R-squared terms <br><br><strong>r2list:</strong> list of the R-squared terms <br><br></p>
+<p>When <code>responseName</code> and <code>predictorNames</code> are <code>NULL</code>, then the first column in the <code>dataset</code> is set as the <code>responseName</code> and the remaining columns are the <code>predictorNames</code>.
+</p>
+<p><em>A 'Python' version is available at</em> &lt;https://pypi.org/project/olr&gt;.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The regression summary for the adjusted R-squared or the R-squared, specified with <code>TRUE</code> or <code>FALSE</code> in the olr().
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">file &lt;- system.file("extdata", "oildata.csv", package = "olr", mustWork = TRUE)
+oildata &lt;- read.csv(file, header = TRUE)
+
+dataset &lt;- oildata
+responseName &lt;- 'OilPrices'
+predictorNames &lt;- c('SP500', 'RigCount', 'API', 'Field_Production', 'OperableCapacity', 'Imports')
+
+olr(dataset, responseName, predictorNames, adjr2 = TRUE)
+
+</code></pre>
+
+
+</div>

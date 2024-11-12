@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>LinSpike</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generation of a Spike Signal with Linear Rise and Decline</h2>
+
+<h3>Description</h3>
+
+<p>This function takes in numeric arguments for a customizable, spike shape, in which rise and decline are modelled by means of a linear function. A discretized time course is returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">LinSpike(baseline, peak, period, duty_cycle, peak_pos, trend, duration,
+  resolution)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>baseline</code></td>
+<td>
+<p>minimal oscillation value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>peak</code></td>
+<td>
+<p>maximal oscillation value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p>oscillation period of the oscillating species (reciprocal of the frequency)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>duty_cycle</code></td>
+<td>
+<p>ratio of the active phase (oscillator above baseline) to the total oscillation period</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>peak_pos</code></td>
+<td>
+<p>position of the peak value in the active phase of an oscillation cycle (example: <code>peak_pos = 0.5</code>, peak position is in the middle of the active phase)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trend</code></td>
+<td>
+<p>percental decrease or increase in the peak value for the successive oscillation cycles; if set to 1, peak value remains unchanged</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>duration</code></td>
+<td>
+<p>duration of the generated time course</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resolution</code></td>
+<td>
+<p>temporal resolution of the generated time course</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Standards:
+</p>
+
+<ul>
+<li>
+<p><code>peak</code> must be larger than <code>baseline</code>
+</p>
+</li>
+<li>
+<p><code>duration</code> must be larger than <code>resolution</code>
+</p>
+</li>
+<li>
+<p><code>duration</code> must be a multiple of <code>resolution</code>
+</p>
+</li>
+<li>
+<p><code>period</code> must be a multiple of <code>resolution</code>
+</p>
+</li>
+<li>
+<p><code>duration</code>, <code>resolution</code>, <code>peak</code> and <code>period</code> must be larger than 0
+</p>
+</li>
+<li>
+<p><code>baseline</code> must be larger or equal to 0
+</p>
+</li>
+<li>
+<p><code>duty_cycle</code> must be larger than 0 and smaller or equal to 1
+</p>
+</li>
+<li>
+<p><code>trend</code> must be larger than 0
+</p>
+</li>
+<li>
+<p><code>peak_pos</code> must be larger or equal to 0 and smaller than 1
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>Returns a matrix with two columns: a time vector and an oscillator abundance vector.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># test effect of changes in period
+m1 = LinSpike(baseline = 200, peak = 1000, period = 50, duty_cycle = 0.6,
+peak_pos = 0.3, trend = 1, duration = 500, resolution = 0.1)
+m2 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+peak_pos = 0.3, trend = 1, duration = 500, resolution = 0.1)
+m3 = LinSpike(baseline = 200, peak = 1000, period = 200, duty_cycle = 0.6,
+peak_pos = 0.3, trend = 1, duration = 500, resolution = 0.1)
+
+par(mfrow = c(3,1))
+plot(m1, type = "l", xlab = "time", ylab = "abundance")
+plot(m2, type = "l", xlab = "time", ylab = "abundance")
+plot(m3, type = "l", xlab = "time", ylab = "abundance")
+
+# test effect of changes in duty_cycle
+m1 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.3,
+peak_pos = 0.3, trend = 1, duration = 500, resolution = 0.1)
+m2 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+peak_pos = 0.3, trend = 1, duration = 500, resolution = 0.1)
+m3 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.9,
+peak_pos = 0.3, trend = 1, duration = 500, resolution = 0.1)
+
+par(mfrow = c(3,1))
+plot(m1, type = "l", xlab = "time", ylab = "abundance")
+plot(m2, type = "l", xlab = "time", ylab = "abundance")
+plot(m3, type = "l", xlab = "time", ylab = "abundance")
+
+# test effect of changes in peak_pos
+m1 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+peak_pos = 0.3, trend = 1, duration = 500, resolution = 0.1)
+m2 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+peak_pos = 0.6, trend = 1, duration = 500, resolution = 0.1)
+m3 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+peak_pos = 0.9, trend = 1, duration = 500, resolution = 0.1)
+
+par(mfrow = c(3,1))
+plot(m1, type = "l", xlab = "time", ylab = "abundance")
+plot(m2, type = "l", xlab = "time", ylab = "abundance")
+plot(m3, type = "l", xlab = "time", ylab = "abundance")
+
+# test effect of changes in trend
+m1 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+peak_pos = 0.3, trend = 0.7, duration = 500, resolution = 0.1)
+m2 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+peak_pos = 0.3, trend = 1, duration = 500, resolution = 0.1)
+m3 = LinSpike(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+peak_pos = 0.3, trend = 1.3, duration = 500, resolution = 0.1)
+
+par(mfrow = c(3,1))
+plot(m1, type = "l", xlab = "time", ylab = "abundance")
+plot(m2, type = "l", xlab = "time", ylab = "abundance")
+plot(m3, type = "l", xlab = "time", ylab = "abundance")
+</code></pre>
+
+
+</div>

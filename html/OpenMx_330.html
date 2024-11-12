@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxDescribeDataWLS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Determine whether a dataset will have weights and summary statistics for the means if used with mxFitFunctionWLS</h2>
+
+<h3>Description</h3>
+
+<p>Given either a data.frame or an mxData of type raw, this function determines whether <code>mxFitFunctionWLS</code>
+will generate expectations for means.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxDescribeDataWLS(
+  data,
+  allContinuousMethod = c("cumulants", "marginals"),
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the (currently raw) data being used in a <code>mxFitFunctionWLS</code> model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allContinuousMethod</code></td>
+<td>
+<p>the method used to process data when all columns are continuous.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical. Whether to report diagnostics.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>All-continuous data processed using the "cumulants" method lack means, while
+all continuous data processed with allContinuousMethod = "marginals" will have means.
+</p>
+<p>When data are not all continuous, allContinuousMethod is ignored, and means are modelled.
+</p>
+
+
+<h3>Value</h3>
+
+<p>- list describing the data.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>- <code>mxFitFunctionWLS</code>, <code>omxAugmentDataWithWLSSummary</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# ====================================
+# = All continuous, data.frame input =
+# ====================================
+
+tmp = mxDescribeDataWLS(mtcars, allContinuousMethod= "cumulants", verbose = TRUE)
+tmp$hasMeans # FALSE - no means with cumulants
+tmp = mxDescribeDataWLS(mtcars, allContinuousMethod= "marginals")
+tmp$hasMeans # TRUE we get means with marginals
+
+# ==========================
+# = mxData object as input =
+# ==========================
+tmp = mxData(mtcars, type="raw")
+mxDescribeDataWLS(tmp, allContinuousMethod= "cumulants", verbose = TRUE)$hasMeans # FALSE
+mxDescribeDataWLS(tmp, allContinuousMethod= "marginals")$hasMeans  # TRUE
+
+# =======================================
+# = One var is a factor: Means modelled =
+# =======================================
+tmp = mtcars
+tmp$cyl = factor(tmp$cyl)
+mxDescribeDataWLS(tmp, allContinuousMethod= "cumulants")$hasMeans # TRUE - always has means
+mxDescribeDataWLS(tmp, allContinuousMethod= "marginals")$hasMeans # TRUE
+
+</code></pre>
+
+
+</div>

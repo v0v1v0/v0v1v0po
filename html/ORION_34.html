@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.Groupwise</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Overview Class Groups</h2>
+
+<h3>Description</h3>
+
+<p><code>summary.Groupwise</code> returns a summarizing overview. For each length the number of permutations consisting of the same set of classes is given.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'Groupwise'
+summary(object = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A Groupwise object as it is returned by <code>groupwise</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function gives an overview of the characteristics of the Groupwise object. 
+The number of permutations per size is given. A permutation means that the corresponding cascades contain the same classes but with different order.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>groupwise</code>, <code>summary.PredictionMap</code>, <code>summary.Subcascades</code>, <code>summary.Conf</code>, <code>summary.ConfusionTable</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+# generate Subcascades object
+subc = subcascades(predMap,thresh=0.7)
+groupwise = groupwise(subc,maxCl=50)
+
+summary(groupwise)
+</code></pre>
+
+
+</div>

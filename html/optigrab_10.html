@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opt_fill</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>opt_fill</h2>
+
+<h3>Description</h3>
+
+<p>Fill a recursive structure with command-line arguments
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opt_fill(x, opts = commandArgs(), style = getOption("optigrab")$style)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>list-like (recursive)) object with names to use as a template.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opts</code></td>
+<td>
+<p>character command-line option list (Default: commandArgs() )</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>string; the command-line style (Default: getOption('optigrab')$style</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>opt_fill</code> uses <code>x</code> as a template of values to be retrieved. Named elements
+of <code>x</code> are retrieved from the command line using <code>opt_get()</code>. Values are
+coerced to the type/class of the elements of x.
+</p>
+<p>This gives a handy way of defining and retrieving all setting at once
+overridding the defaults.
+</p>
+<p><code>opt_fill</code> is similar to <code>utils::modifyList()</code> but does not work recursively.
+</p>
+
+
+<h3>Value</h3>
+
+<p>(A copy of) <code>x</code>, with values filled from the command-line.  If
+<code>x</code> is a reference structure, this is done by reference, returning
+the object invisibly.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>opt_get()</code>
+<code>utils::modifyList()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  defaults &lt;- list( foo="a", bar=1 )
+  
+  opt_fill( defaults, opts=c( '--foo', 'command-line-foo' ))
+  opt_fill( defaults, opts=c( '--foo', 'command-line-foo', '--bar', '9999' ))
+ 
+  defaults &lt;- as.environment(defaults)
+  opt_fill( defaults, opts=c( '--foo', 'env-fill', '--bar', '555' ))
+  
+  str( as.list(defaults) )
+
+</code></pre>
+
+
+</div>

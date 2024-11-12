@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fGeneralisedMean</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate the Generalised Mean </h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the generalised mean of relative abundances for a collection of species introduced by Angelika C. Studeny. It is a method for quantifying species biodiversity that can be adapted to the context of onomastics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fGeneralisedMean (x, pki, pki0, s, location, lambda)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> dataframe of the data values for each species not null (because if you have a sample, there might be species that are not represented).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pki</code></td>
+<td>
+<p> name of a variable which represents the relative frequency for each species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pki0</code></td>
+<td>
+<p> variable which represents the relative frequency for each species not null (because if you have a sample, there might be species that are not represented).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> name of a variable which represents the grouping element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p> vector which represents total number of species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p> free parameter.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a community <code class="reqn">i</code>, the generalised mean of relative abundances is defined by
+<code class="reqn">M_t (\lambda) = \left[\frac{1}{S_i} \sum_{k\in S_i} \left(\frac{N_{ki}^t}{N_{ki}^{t0}}\right)^\lambda\right]^{\frac{1}{\lambda}}</code>,
+where <code class="reqn">N_{ki}^t</code> denotes the number of individuals of species <code class="reqn">k</code> at times <code class="reqn">t</code>, <code class="reqn">t0</code> is the baseline year and <code class="reqn">S_i</code> are all species at the community, species richness, and <code class="reqn">\lambda</code> can be any non-zero real number.
+</p>
+<p>In onomastic context, <code class="reqn">N_{ki}^t</code> denotes the absolute frequency of surname <code class="reqn">k</code> in region (<code class="reqn">\approx</code> community diversity context) <code class="reqn">i</code> at times <code class="reqn">t</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element, for example the communities / regions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>generalisedMean</code></td>
+<td>
+<p> the value of generalised mean.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Studeny, A.C. (2012). <em>Quantifying Biodiversity Trends in Time and Space</em>. PhD thesis, University of St Andrews.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fMargalef</code>, 
+<code>fMenhinick</code>, 
+<code>fPielou</code>,
+<code>fShannon</code>,
+<code>fSheldon</code>,
+<code>fSimpson</code>,
+<code>fSimpsonInf</code>,
+<code>fGeometricMean</code>,
+<code>fHeip</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(sqldf)
+data(surnamesgal14)
+
+loc &lt;- length(unique(surnamesgal14$muni))
+
+apes2=sqldf('select  muni, count(surname) as ni,
+sum(number) as population from surnamesgal14
+group by muni;')
+
+result = fGeneralisedMean(x= surnamesgal14[surnamesgal14$number != 0,],
+pki="pki", pki0=surnamesgal14[surnamesgal14$number != 0,"pki"],
+location  = "muni", s = apes2$ni[1:loc], lambda = 1 )
+result
+
+data(namesmengal16)
+
+loc &lt;- length(unique(namesmengal16$muni))
+
+namesmengal16$pki &lt;- (namesmengal16$number /
+namesmengal16$population)
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from namesmengal16
+group by muni;')
+
+result = fGeneralisedMean(x= namesmengal16[namesmengal16$number != 0,],
+pki="pki", pki0=namesmengal16[namesmengal16$number != 0,"pki"],
+location  = "muni", s = names2$ni[1:loc], lambda = 1 )
+result
+
+data(nameswomengal16)
+
+loc &lt;- length(unique(nameswomengal16$muni))
+
+nameswomengal16$pki &lt;- (nameswomengal16$number /
+nameswomengal16$population)
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from nameswomengal16
+group by muni;')
+
+result = fGeneralisedMean(x= nameswomengal16[nameswomengal16$number != 0,],
+pki="pki", pki0=nameswomengal16[nameswomengal16$number != 0,"pki"],
+location  = "muni", s = names2$ni[1:loc], lambda = 1 )
+result
+</code></pre>
+
+
+</div>

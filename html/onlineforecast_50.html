@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>long_format</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Long format of prediction data.frame</h2>
+
+<h3>Description</h3>
+
+<p>Creates a long format of the predictions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">long_format(fit, Time = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p>The result from either lm_fit or rls_fit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Time</code></td>
+<td>
+<p>If the timestamps are missing from the fit object</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This functions creates a useful prediction data.frame which can be useful for analysis and plotting.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data.frame of when the prediction where made, also the prediction value and timestamp.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Take data
+D &lt;- subset(Dbuilding, c("2010-12-15", "2011-01-01"))
+D$y &lt;- D$heatload
+D$scoreperiod &lt;- in_range("2010-12-20", D$t)
+# Define a model
+model &lt;- forecastmodel$new()
+model$add_inputs(Ta = "Ta",
+                 mu = "one()")
+model$add_regprm("rls_prm(lambda=0.99)")
+model$kseq &lt;- 1:6
+# Fit it
+fit &lt;- rls_fit(prm=c(lambda=0.99), model, D)
+
+# Get the forecasts (in fit$Yhat) on long format
+long_format(fit)
+
+</code></pre>
+
+
+</div>

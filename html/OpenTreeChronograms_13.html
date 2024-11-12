@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_ott_children</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Use this instead of <code>rotl::tol_subtree()</code> when taxa are not in synthesis tree and
+you still need to get all species or an induced OpenTree subtree</h2>
+
+<h3>Description</h3>
+
+<p>Use this instead of <code>rotl::tol_subtree()</code> when taxa are not in synthesis tree and
+you still need to get all species or an induced OpenTree subtree
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_ott_children(input = NULL, ott_ids = NULL, ott_rank = "species", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>Optional. A character vector of names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ott_ids</code></td>
+<td>
+<p>If not NULL, it takes this argument and ignores input. A
+numeric vector of ott ids obtained with <code>rotl::taxonomy_taxon_info()</code> or
+<code>rotl::tnrs_match_names()</code> or <code>tnrs_match()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ott_rank</code></td>
+<td>
+<p>A character vector with the ranks you wanna get lineage children from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments to pass to <code>get_valid_children()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># An example with the dog genus:
+
+# It is currently not possible to get an OpenTree subtree of a taxon that is
+#  missing from the OpenTree synthetic tree.
+# The dog genus is not monophyletic in the OpenTree synthetic tree, so in
+#  practice, it has no node to extract a subtree from.
+# Get the Open Tree Taxonomy identifier (OTT id) for "Canis":
+tnrs &lt;- tnrs_match("Canis")
+
+## Not run: 
+rotl::tol_subtree(tnrs$ott_id[1])
+#&gt; Error: HTTP failure: 400
+#&gt; [/v3/tree_of_life/subtree] Error: node_id was not found (broken taxon).
+
+## End(Not run) # end dontrun
+
+
+ids &lt;- tnrs$ott_id[1]
+names(ids) &lt;- tnrs$unique_name
+children &lt;- get_ott_children(ott_ids = ids) # or
+# children &lt;- get_ott_children(input = "Canis")
+str(children)
+ids &lt;- children$Canis$ott_id
+names(ids) &lt;- rownames(children$Canis)
+tree_children &lt;- rotl::tol_induced_subtree(ott_ids = ids)
+plot(tree_children, cex = 0.3)
+
+# An example with flowering plants:
+
+# orders &lt;- get_ott_children(input = "magnoliophyta", ott_rank = "order")
+# Get the number of orders of flowering plants that we have
+# sum(orders$Magnoliophyta$rank == "order")
+
+ # end donttest
+</code></pre>
+
+
+</div>

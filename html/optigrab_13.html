@@ -1,0 +1,204 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opt_get</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get option's values from the command-line</h2>
+
+<h3>Description</h3>
+
+<p>Returns value(s) from the command-line associated with the desired option.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opt_get(name, default, n, required = FALSE, description = NULL,
+  opts = commandArgs(), style = getOption("optigrab")$style)
+
+opt_get_gnu(flag, ...)
+
+opt_get_ms(flag, ...)
+
+opt_get_java(flag, ...)
+
+opt_grab(flag, n = 1, opts = commandArgs())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>character; vector of possible synonymes for the "flag" that
+identifies the option.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default</code></td>
+<td>
+<p>any; the value(s) provided if the flag is not found 
+(default: <code>NA</code> )</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>integer; number of values to retrieve. See Details.
+(default: determined by default, see <strong>Details</strong> below.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>required</code></td>
+<td>
+<p>logical; whether the value is required. If not found or an
+incorrect, number of values are found, an error is thrown.
+(default: <code>FALSE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>description</code></td>
+<td>
+<p>(character) message to be printed with <code>opt_help</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opts</code></td>
+<td>
+<p>character; vector to parse for options
+(default: <code>commandArgs()</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>list; list of functions that define the parsing style</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flag</code></td>
+<td>
+<p>character; vector of possible synonyms for the "flag" that 
+identifies the option. These should be given as they would exactly 
+appear on the command line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>opt_grab</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These functions support parsing of command arguments work when using
+<code>Rscript</code>, a <code>#!</code> on linux systems or <code>R CMD BATCH</code>. By
+default, they closely follows the ubiquitous GNU standards for command-line
+interfaces.
+<code>opt_grab</code> is the workhorse that does the actual parsing. It returns
+the options values or <code>NA</code> if it cannot discern
+them.  It is currently exported, but this may change in future version
+to be an internal function. Its interface is not guarantted.  The user
+should use <code>opt_get</code> instead.
+</p>
+<p><code>opt_get</code> supports default values, automated guessing for <code>n</code> and 
+(attempts a) coercion of the return values to the correct class.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>opt_grab</code> always returns a character; it is either the value for the
+flags or <code>NA_character_</code> if if they cannot be parsed.
+</p>
+<p><code>opt_get</code> returns a value the command-line value as specified by 
+the arguments or produces an error if the value could not be 
+determined and <code>required==TRUE</code>.
+</p>
+
+
+<h3>Selecting <code>n</code>
+</h3>
+
+<p>Except in rare-caces, the user should not have to specify <code>n</code>. This is 
+determined from the value of <code>default</code>. 
+</p>
+<p>If <code>default</code> is a logical value, i.e. <code>TRUE</code> or <code>FALSE</code>, 
+<code>n</code> is assumed to take no arguments. Presents of the flag on the command
+line will return <code>TRUE</code>, absense of the flag returns false. 
+</p>
+<p>If <code>default</code> is another type than logical, <code>n</code> is selected as 
+<code>length(default)</code>. 
+</p>
+<p>If <code>default</code> is missing, <code>n</code> is 1.
+</p>
+
+
+<h3>automatic coercision</h3>
+
+<p>Command-line arguments are character vectors.  If <code>default</code> is supplied
+then the <code>opt_get</code> attempts to coerce the values it returns to 
+<code>class(default)</code>.  The user might wish to supply the correct methods to 
+handle the conversions.
+</p>
+
+
+<h3>side-effects</h3>
+
+<p><code>opt_grab</code> has the additional side-effect of keeping track of the 
+arguments. This is useful for keeping track of      
+</p>
+<p><code>flag</code> is used to identify the command line flag. It can include all 
+synonyms for the flags. 
+</p>
+<p><code>n</code> the number of value(s) to retrieve from the command line.  If 
+<code>n=0</code>, then a logical value is returned indicating whether the flag 
+exists 
+</p>
+<p><code>required</code> indicates if a value is required. If the the flag is not 
+found and there is no <code>default</code> given or if there is not the correct 
+number of value(s) an error is raised.  
+</p>
+<p><code>opts</code> is the vector from which options are parsed. By default, this is  
+<code>commandArgs()</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.gnu.org/prep/standards/standards.html">GNU Command Line Standards</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>commandArgs()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  opts &lt;- c( '--foo', 'bar' )
+ 
+  opt_get('foo')
+  opt_get( c('foo'), opts=opts )    
+  opt_grab( c('--foo'), opts=opts ) 
+  
+  opt_get_ms( c('foo'), opts=c('/foo', 'bar' ) )
+  opt_get_java( c('foo'), opts=c('-foo', 'bar' ) )
+  
+  
+  # Using pipes:
+  ## Not run: 
+    c('foo', 'f') %&gt;% opt_get('bar')
+  
+## End(Not run)
+  
+</code></pre>
+
+
+</div>

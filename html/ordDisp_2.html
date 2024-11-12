@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordDisp-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Separating Location and Dispersion in Ordinal Regression Models</h2>
+
+<h3>Description</h3>
+
+<p>A function to estimate the location-shift model or rating-scale model accounting for response styles (RSRS) 
+for the regression analysis of ordinal responses. The model allows to account for differing variability in 
+subgroups of the population. The model explicitely links varying disperion (or response behaviour) to explanatory 
+variables (metric, binary, ordinal and/or nominal). The basic models are described in Tutz and Berger (2016) and Tutz and Berger (2017).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordDisp(formula, data, family = c("cumulative", "acat"),
+  scaling = TRUE, middle = TRUE, m = NULL, n_bs = 6,
+  reverse = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>Object of class <code>formula</code>: a symbolic description of the model to be fitted. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Data.frame of class <code>data.frame</code> containing the variables of the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>Type of link function that is used to link the mean responses to the linear predictors of the model; 
+ordDisp currently allows only one out of <code>"cumulative"</code> and <code>"acat"</code>. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaling</code></td>
+<td>
+<p>If true, the thresholds of the location-shift model are shifting by using scale values for the widening of 
+the intervals between two thresholds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>middle</code></td>
+<td>
+<p>If true, the model expects a symmetric response of the form 'strongly disagree','moderatly disagree',...,
+'moderatly agree','strongly agree'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Middle category of the (non-symmetric) response, chosen for the model. Only relevant, if <code>middle=FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_bs</code></td>
+<td>
+<p>Number of inner B-spline basis functions for smooth components (see details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reverse</code></td>
+<td>
+<p>Argument of the family function passed to <code>vglm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The formula has to have the form <code>response ~ x-variables|z-variables</code>, where <code>response</code> is the name of 
+the ordinal response variable, <code>x-variables</code> are the terms that specify the location (or content-related) effects 
+of the model and <code>z-variables</code> are the terms that specify the dispersion (or response-style) effects.
+</p>
+<p>If all the variables are entered in both parts of the model, the right hand side of the formula can, for example, 
+have the form <code>x1+...+xp|x1+...+xp</code>. If the second part is omitted, a simple model without dispersion 
+(or response-style) effects is fitted.
+</p>
+<p>The function allows for smooth (non-linear) effects in the x-variables and/or the z-variables. Smooth effects are specified 
+by entering s(x) and/or s(z) into the formula. The functions are fitted using <code>n_bs</code> B-spline basis functions.
+</p>
+<p>Function <code>ordDisp</code> internally calls <code>vglm</code> from package <code>VGAM</code>. Argument <code>family</code> is passed to <code>vglm</code>. 
+Currently two link functions are implemented
+</p>
+
+<ul>
+<li> <p><code>"cumulative"</code> to estimate a cumulative model of the form 
+</p>
+<p style="text-align: center;"><code class="reqn">P(y\leq r)/P(y&gt;r)=eta_r</code>
+</p>
+
+</li>
+<li> <p><code>"acat"</code> to estimate a adjacent-categories model of the form 
+</p>
+<p style="text-align: center;"><code class="reqn">P(y=r+1)/P(y=r)=eta_r</code>
+</p>
+
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>Object of class <code>ordDisp</code> which inherits from <code>vglm</code>. The object comprises all the slots of an 
+<code>"vglm"</code>-object and in addition the following components: 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>outercall</code></td>
+<td>
+<p>The matched call of <code>ordDisp</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Design matrix of x-variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>Design matrix of z-variables.</p>
+</td>
+</tr>
+</table>
+<p>All the methods implemented for objects of class <code>vglm</code>, like <code>print</code>, <code>summary</code>, <code>predict</code> 
+and <code>plot</code> can be applied.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Moritz Berger &lt;moritz.berger@imbie.uni-bonn.de&gt; <br><a href="https://www.imbie.uni-bonn.de/personen/dr-moritz-berger/">https://www.imbie.uni-bonn.de/personen/dr-moritz-berger/</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Tutz, Gerhard and Berger, Moritz (2016): Response Styles in Rating Scales - Simultaneous Modelling of 
+Content-Related Effects and the Tendency to Middle or Extreme Categories, 
+Journal of Educational and Behavioral Statistics 41(3), 239-268.
+</p>
+<p>Tutz, Gerhard and Berger, Moritz (2017): Seperating Location and Dispersion in Ordinal Regression Models,
+Econometrics and Statistics 2, 131-148.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summaryvglm</code>, <code>predictvglm</code>, <code>plotordDisp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(reti)
+
+mod &lt;- ordDisp(RET~SM+DIAB+GH+BP|SM+DIAB,data=reti,family="cumulative")
+summary(mod)
+
+mod2 &lt;- ordDisp(RET~SM+s(DIAB)+GH+BP|SM+DIAB+GH+BP, data=reti, 
+family="cumulative", n_bs=4, scaling=FALSE)
+summary(mod2)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ons_get</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download data from ONS</h2>
+
+<h3>Description</h3>
+
+<p>This functions is used to find information about data published by the ONS.
+<code>Datasets</code> are published in unique <code>versions</code>, which are categorized by <code>edition</code>.
+Available datasets are given  an <code>id</code>. All available <code>id</code> can be viewed with <code>ons_ids()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ons_get(
+  id = NULL,
+  edition = NULL,
+  version = NULL,
+  ons_read = getOption("onsr.read"),
+  ...
+)
+
+ons_get_obs(id = NULL, edition = NULL, version = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[character]⁠</code>     Id that represents a dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edition</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[character]⁠</code>     A subset of the dataset representing a specific time period.
+For some datasets this edition can contain all time periods (all historical data).
+The latest version of this is displayed by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[character]⁠</code>     A specific instance of the edition at a point in time. New
+versions can be published as a result of corrections, revisions or new data
+becoming available.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ons_read</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[character]⁠</code>. Reading backend, one of <code>readr</code>, <code>data.table</code> or <code>vroom</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed on the methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble with the dataset in tidy format.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+ons_get(id = "cpih01")
+
+# Same dataset but older version
+ons_get(id = "cpih01", version = "5")
+
+
+# Take only specific observations
+ons_get_obs("cpih01", geography = "K02000001", aggregate = "cpih1dim1A0", time = "Oct-11")
+
+# Or can use a wildcard for the time
+ons_get_obs("cpih01", geography = "K02000001", aggregate = "cpih1dim1A0", time = "*")
+
+
+
+</code></pre>
+
+
+</div>

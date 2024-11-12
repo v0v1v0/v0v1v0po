@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>error_ohs_emulation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Measure of error for emulation-based OHS emulation</h2>
+
+<h3>Description</h3>
+
+<p>Measure of error for semiparametric (emulation) based estimation of optimal holdout set sizes.
+</p>
+<p>Returns a set of values of n for which a <code>1-alpha</code> credible interval for cost at includes a lower value than the cost at the estimated optimal holdout size.
+</p>
+<p>This is not a confidence interval, credible interval or credible set for the OHS, and is prone to misinterpretation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">error_ohs_emulation(
+  nset,
+  k2,
+  var_k2,
+  N,
+  k1,
+  alpha = 0.1,
+  var_u = 1e+07,
+  k_width = 5000,
+  k2form = powerlaw,
+  theta = powersolve(nset, k2, y_var = var_k2)$par,
+  npoll = 1000
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nset</code></td>
+<td>
+<p>Training set sizes for which k2() has been evaluated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2</code></td>
+<td>
+<p>Estimated k2() at training set sizes <code>nset</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var_k2</code></td>
+<td>
+<p>Variance of error in k2() estimate at each training set size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Total number of samples on which the model will be fitted/used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k1</code></td>
+<td>
+<p>Mean cost per sample with no predictive score in place</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Use 1-alpha credible interval. Defaults to 0.1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var_u</code></td>
+<td>
+<p>Marginal variance for Gaussian process kernel. Defaults to 1e7</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k_width</code></td>
+<td>
+<p>Kernel width for Gaussian process kernel. Defaults to 5000</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2form</code></td>
+<td>
+<p>Functional form governing expected cost per sample given sample size. Should take two parameters: n (sample size) and theta (parameters). Defaults to function <code>powerlaw</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>Current estimates of parameter values for k2form. Defaults to the MLE power-law solution corresponding to n,k2, and var_k2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>npoll</code></td>
+<td>
+<p>Check npoll equally spaced values between 1 and N for minimum. If NULL, check all values (this can be slow). Defaults to 1000</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Vector of values <code>n</code> for which 1-alpha credible interval for cost <code>l(n)</code> at n contains mean posterior cost at estimated optimal holdout size.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+ # Set seed
+set.seed(57365)
+
+# Parameters
+N=100000;
+k1=0.3
+A=8000; B=1.5; C=0.15; theta=c(A,B,C)
+
+# True mean function
+k2_true=function(n) powerlaw(n,theta)
+
+# True OHS
+nx=1:N
+ohs_true=nx[which.min(k1*nx + k2_true(nx)*(N-nx))]
+
+# Values of n for which cost has been estimated
+np=50 # this many points
+nset=round(runif(np,1,N))
+var_k2=runif(np,0.001,0.0015)
+k2=rnorm(np,mean=k2_true(nset),sd=sqrt(var_k2))
+
+# Compute OHS
+res1=optimal_holdout_size_emulation(nset,k2,var_k2,N,k1)
+
+# Error estimates
+ex=error_ohs_emulation(nset,k2,var_k2,N,k1)
+
+# Plot
+plot(res1)
+
+# Add error
+abline(v=ohs_true)
+abline(v=ex,col=rgb(1,0,0,alpha=0.2))
+
+# Show justification for error
+n=seq(1,N,length=1000)
+mu=mu_fn(n,nset,k2,var_k2,N,k1); psi=pmax(0,psi_fn(n, nset, var_k2, N)); Z=-qnorm(0.1/2)
+lines(n,mu - Z*sqrt(psi),lty=2,lwd=2)
+legend("topright",
+    c("Err. region",expression(paste(mu(n)- "z"[alpha/2]*sqrt(psi(n))))),
+    pch=c(16,NA),lty=c(NA,2),lwd=c(NA,2),col=c("pink","black"),bty="n")
+</code></pre>
+
+
+</div>

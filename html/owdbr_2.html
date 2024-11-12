@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getpbf_mun</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Collects municipal level data from the program BOLSA FAMILIA database.</h2>
+
+<h3>Description</h3>
+
+<p>The program BOLSA FAMILIA is a brazilian social welfare program that provides financial aid for poor families.
+This function collects municipal level data from the program, some data like the number of citizens in a municipality which are enrolled in the program, and the total amount of money invested by the program in that city.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getpbf_mun(IBGECODE, AAAA, MM = NULL, PAGE = 1, YEARLY = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>IBGECODE</code></td>
+<td>
+<p>IBGE unique identifier of the municipality which you want the data. The list of municipalities and its codes might be requested with the function owdbr::munlist()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AAAA</code></td>
+<td>
+<p>Year of the data (AAAA format)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MM</code></td>
+<td>
+<p>Month of the data (MM format)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PAGE</code></td>
+<td>
+<p>Request's page. In normal situations: page=1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>YEARLY</code></td>
+<td>
+<p>If True, it is not needed to fill the MM param, the package will request the data for the entire year (AAAA). Default= TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a tibble with the requested data, if there are more than one IBGECODE, returns all of them in the same tibble.
+</p>
+
+<dl>
+<dt>dataReferencia</dt>
+<dd>
+<p>Reference date</p>
+</dd>
+<dt>valor</dt>
+<dd>
+<p>Amount of money invested in the municipality.</p>
+</dd>
+<dt>quantidadeBeneficiados</dt>
+<dd>
+<p>Number of citizens wich are enrolled in the program in that moment</p>
+</dd>
+<dt>municipio.codigoIBGE</dt>
+<dd>
+<p>IBGE code of the municipality.</p>
+</dd>
+<dt>municipio.nomeIBGE</dt>
+<dd>
+<p>Name of the municipality.</p>
+</dd>
+<dt>municipio.pais</dt>
+<dd>
+<p>Country of the municipality.</p>
+</dd>
+<dt>municipio.uf.sigla</dt>
+<dd>
+<p>Abbreviation of name of the state in which the municipality is.</p>
+</dd>
+<dt>municipio.uf.nome</dt>
+<dd>
+<p>Full name of the state in wich the municipality is.</p>
+</dd>
+<dt>tipo.id</dt>
+<dd>
+<p>Type</p>
+</dd>
+<dt>tipo.descricao</dt>
+<dd>
+<p>Abbreviation of the program's name.</p>
+</dd>
+<dt>tipo.descricaoDetalhada</dt>
+<dd>
+<p>Full name of the program.</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Joao Pedro Oliveira dos Santos, International Relations Institute, Pontifical Catholic University of Rio de Janeiro
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+getpbf_mun("3304557", AAAA = "2015", MM = "05", PAGE = 1, YEARLY = FALSE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

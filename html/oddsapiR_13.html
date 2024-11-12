@@ -1,0 +1,251 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>toa_sports_odds_history</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2><strong>Find odds history for the sports which are accessible through the Odds API</strong></h2>
+
+<h3>Description</h3>
+
+<p><strong>Get the odds history for the sports which the Odds API provides coverage</strong>
+</p>
+<div class="sourceCode r"><pre>   try(toa_sports_odds(sport_key = 'baseball_mlb', 
+                       regions = 'us', 
+                       markets = 'spreads', 
+                       odds_format = 'decimal',
+                       date_format = 'iso'))
+</pre></div>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">toa_sports_odds_history(
+  sport_key,
+  event_ids,
+  date,
+  regions = "us",
+  markets = "spreads",
+  odds_format = "decimal",
+  date_format = "iso",
+  bookmakers = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sport_key</code></td>
+<td>
+<p>The <code>sport_key</code> to look up odds for. See <code>toa_sports()</code> for a full lookup of <code>sport_key</code> values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>event_ids</code></td>
+<td>
+<p>The <code>event_id</code>'s to look up odds for. See <code>toa_sports_odds()</code> for a full lookup of <code>event_id</code> values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p>The timestamp of the data snapshot to be returned, specified in ISO8601 format. The historical odds API will return the closest snapshot equal to or earlier than the provided date parameter
+Example : 2022-10-10T12:15:00Z</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regions</code></td>
+<td>
+<p>The region to pull odds from. Options include:
+</p>
+
+<ul>
+<li>
+<p> us
+</p>
+</li>
+<li>
+<p> uk
+</p>
+</li>
+<li>
+<p> us
+</p>
+</li>
+<li>
+<p> eu
+</p>
+</li>
+<li>
+<p> au
+Multiple can be specified if comma delimited.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>markets</code></td>
+<td>
+<p>The type of odds to return. Multiple can be specified if comma delimited. Options include:
+</p>
+
+<ul>
+<li>
+<p> h2h
+</p>
+</li>
+<li>
+<p> spreads
+</p>
+</li>
+<li>
+<p> totals
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>odds_format</code></td>
+<td>
+<p>The format in which to return odds. Options include:
+</p>
+
+<ul>
+<li>
+<p> decimal
+</p>
+</li>
+<li>
+<p> american
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_format</code></td>
+<td>
+<p>Date format. Options include:
+</p>
+
+<ul>
+<li>
+<p> iso
+</p>
+</li>
+<li>
+<p> unix
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bookmakers</code></td>
+<td>
+<p>Comma-separated list of bookmakers to be returned. If both bookmakers and
+regions are specified, bookmakers takes precendence. Bookmakers can be from any region.
+Every group of 10 bookmakers counts as 1 request. For example for a single market,
+specifying up to 10 bookmakers counts as 1 request.
+Specifying between 11 and 20 bookmakers counts as 2 requests</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<div class="sourceCode r"><pre>try(toa_sports_odds_history(sport_key = 'basketball_ncaab', 
+                               event_ids = '48db9c3293a52baab881d95d38f37a98',
+                               date = '2023-03-18T12:15:00Z',
+                               regions = 'us', 
+                               markets = 'spreads', 
+                               odds_format = 'decimal',
+                               date_format = 'iso',
+                               bookmakers = NULL))
+</pre></div>
+
+
+<h3>Value</h3>
+
+<p>Sports for which The Odds API provides betting information for as a tibble:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   col_name </td>
+<td style="text-align: left;"> types </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   id </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   sport_key </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   sport_title </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   commence_time </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   home_team </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   away_team </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   bookmaker_key </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   bookmaker </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   last_update </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   market_key </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   outcomes_name </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   outcomes_price </td>
+<td style="text-align: left;"> numeric </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   outcomes_point </td>
+<td style="text-align: left;"> numeric </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+</div>

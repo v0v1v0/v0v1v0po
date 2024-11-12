@@ -1,0 +1,218 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_MISOCP</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Optimal exact design using mixed integer second-order cone programming
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes an optimal or nearly-optimal approximate or exact experimental design using mixed integer second-order cone programming.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_MISOCP(Fx, b1=NULL, A1=NULL, b2=NULL, A2=NULL, b3=NULL, A3=NULL, w0=NULL,
+          bin=FALSE, type="exact", crit="D", h=NULL, gap=NULL,
+          t.max=120, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> (where <code>m&gt;=2</code>) is the number of parameters
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b1,A1, b2,A2, b3,A3</code></td>
+<td>
+
+<p>the real vectors and matrices that define the constraints on permissible designs <code>w</code> as follows: <code>A1 %*% w &lt;= b1</code>, <code>A2 %*% w &gt;= b2</code>, <code>A3 %*% w == b3</code>. Each of the arguments can be <code>NULL</code>, but at least one of <code>b1</code>, <code>b2</code>, <code>b3</code> must be non-<code>NULL</code>. If some <code>bi</code> is non-<code>NULL</code> and <code>Ai</code> is <code>NULL</code>, then <code>Ai</code> is set to be <code>matrix(1, nrow =1, ncol = n)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w0</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design to be augmented (i.e., the function adds the constraint <code>w &gt;= w0</code> for permissible designs <code>w</code>). This argument can also be <code>NULL</code>; in that case, <code>w0</code> is set to the vector of zeros.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bin</code></td>
+<td>
+
+<p>Should each design point be used at most once?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+
+<p>the type of the design. Permissible values are <code>"approximate"</code> and <code>"exact"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>the optimality criterion. Possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code>, <code>"c"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> nor <code>"c"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> or <code>"c"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gap</code></td>
+<td>
+
+<p>the gap for the MISOCP solver to stop the computation. If <code>NULL</code>, the default gap is used.  Setting <code>gap=0</code> and <code>t.max=Inf</code> will ultimately provide the optimal exact design, but the computation may be extremely time consuming.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.max</code></td>
+<td>
+
+<p>the time limit for the computation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>At least one of <code>b1</code>, <code>b2</code>, <code>b3</code> must be non-<code>NULL</code>.
+If <code>bi</code> is non-<code>NULL</code> and <code>Ai</code> is <code>NULL</code> for some <code>i</code> then <code>Ai</code> is set to be the vector of ones. If <code>bi</code> is <code>NULL</code> for some <code>i</code> then <code>Ai</code> is ignored.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the call of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.best</code></td>
+<td>
+<p>the permissible design found, or <code>NULL</code>. The value <code>NULL</code> indicates a failed computation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supp</code></td>
+<td>
+<p>the indices of the support of <code>w.best</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.supp</code></td>
+<td>
+<p>the weights of <code>w.best</code> on the support</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M.best</code></td>
+<td>
+<p>the information matrix of <code>w.best</code> or <code>NULL</code> if <code>w.best</code> is <code>NULL</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phi.best</code></td>
+<td>
+<p>the value of the criterion of optimality of the design <code>w.best</code>. If <code>w.best</code> has a singular information matrix or if the computation fails, the value of <code>Phi.best</code> is <code>0</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>the status variable of the gurobi optimization procedure; see the gurobi solver documentation for details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.act</code></td>
+<td>
+<p>the actual time of the computation</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Sagnol G, Harman R (2015): Computing exact D-optimal designs by mixed integer second order cone programming. The Annals of Statistics, Volume 43, Number 5, pp. 2198-2224.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>od_KL, od_RC, od_AQUA</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Compute an A-optimal block size two design
+# for 6 treatments and 9 blocks
+
+Fx &lt;- Fx_blocks(6)
+w &lt;- od_MISOCP(Fx, b3 = 9, crit = "A", bin = TRUE)$w.best
+des &lt;- combn(6, 2)[, as.logical(w)]
+print(des)
+
+library(igraph)
+grp &lt;- graph_(t(des), from_edgelist(directed = FALSE))
+plot(grp, layout=layout_with_graphopt)
+
+# Compute a symmetrized D-optimal approximate design
+# for the full quadratic model on a square grid
+# with uniform marginal constraints
+
+Fx &lt;- Fx_cube(~x1 + x2 + I(x1^2) + I(x2^2) + I(x1*x2), n.levels = c(21, 21))
+A3 &lt;- matrix(0, nrow = 21, ncol = 21^2)
+for(i in 1:21) A3[i, (i*21 - 20):(i*21)] &lt;- 1
+w &lt;- od_MISOCP(Fx, b3 = rep(1, 21), A3 = A3, crit = "D", type = "approximate")$w.best
+w.sym &lt;- od_SYM(Fx, w, b3 = rep(1, 21), A3 = A3)$w.sym
+od_plot(Fx, w.sym, Fx[, 2:3], dd.size = 2)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

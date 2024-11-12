@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>update_datelife_cache</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an updated OpenTree chronograms database object</h2>
+
+<h3>Description</h3>
+
+<p>The function calls <code>get_opentree_chronograms()</code> to update the OpenTree
+chronograms database cached in datelife. It has the option to write the updated
+object as an .Rdata file, that will be independent of the <code>opentree_chronograms</code>
+data object that you can load with <code>data("opentree_chronograms", package = "datelife")</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">update_datelife_cache(
+  write = TRUE,
+  updated_name = "opentree_chronograms_updated",
+  file_path = file.path(tempdir()),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>write</code></td>
+<td>
+<p>Defaults to <code>TRUE</code>, it saves an .Rdata file named indicated by argument <code>name</code>,
+containing available chronograms from Open Tree of Life. Saves to path indicated by argument <code>path</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>updated_name</code></td>
+<td>
+<p>Used if <code>write = TRUE</code>. Defaults to <code>"opentree_chronograms_updated"</code>. A character
+vector of length one indicating the name to assign to both the updated OpenTree chronogram
+database object and the ".Rdata" file. For example, if <code>name = "my_database"</code>, the
+function will assign the updated chronogram database to an object named <code>my_database</code>
+and will write it to a file named "my_database.Rdata" in the path indicated
+by argument <code>file_path</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_path</code></td>
+<td>
+<p>Used if <code>write = TRUE</code>. A character vector of length 1 indicating
+the path to write the updated database ".Rdata" file to, excluding file name.
+Defaults to temporary directory obtained with <code>base::tempdir()</code> and formatted with
+<code>base::file.path()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code>get_opentree_chronograms</code>
+</p>
+
+<dl>
+<dt><code>max_tree_count</code></dt>
+<dd>
+<p>Default to "all", it gets all available chronograms. For testing purposes, a numeric value indicating the max number of trees to be cached.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of 4 elements:
+</p>
+
+<dl>
+<dt>authors</dt>
+<dd>
+<p>A list of lists of author names of the original studies that
+published chronograms currently stored in the Open Tree of Life database.</p>
+</dd>
+<dt>curators</dt>
+<dd>
+<p>A list of lists of curator names that uploaded chronograms
+to the Open Tree of Life database.</p>
+</dd>
+<dt>studies</dt>
+<dd>
+<p>A list of study identifiers from original studies that
+published chronograms currently stored in the Open Tree of Life database.</p>
+</dd>
+<dt>trees</dt>
+<dd>
+<p>A <code>multiPhylo</code> object storing the chronograms from Open Tree of
+Life database.</p>
+</dd>
+<dt>update</dt>
+<dd>
+<p>A character vector indicating the time when the database object
+was last updated.</p>
+</dd>
+<dt>version</dt>
+<dd>
+<p>A character vector indicating when the chronogram database <code>opentree_chronograms</code>
+object was last updated. Format is year.month.day</p>
+</dd>
+</dl>
+</div>

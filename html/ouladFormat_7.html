@@ -1,0 +1,156 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dataset_VLE_time</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns the formatted VLE data set for daily and weekly counts</h2>
+
+<h3>Description</h3>
+
+<p>Load and formats the student Virtual Learning Environment (VLE) data set from the OULAD for data analysis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dataset_VLE_time(
+  module = c("AAA", "BBB", "CCC", "DDD", "EEE", "FFF", "GGG"),
+  presentation = c("2013B", "2014B", "2013J", "2014J", "All"),
+  repeat_students = c("remove", "keep"),
+  week_begin = -4,
+  week_end = 39,
+  example_data = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>module</code></td>
+<td>
+<p>name of the module to be included, either <code>"AAA"</code>, <code>"BBB"</code>, <code>"CCC"</code>, <code>"DDD"</code>, <code>"EEE"</code>, <code>"FFF"</code> or <code>"GGG"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>presentation</code></td>
+<td>
+<p>name of the semester of the module to be included, either <code>"2013B"</code>,
+<code>"2014B"</code>, <code>"2013J"</code>, <code>"2014J"</code>, or <code>"All"</code>.
+<code>"B"</code> indicates a February start time whereas <code>"J"</code> indicates an October start time. <code>"All"</code> indicates that all presentations of the module will be included in the returned data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>repeat_students</code></td>
+<td>
+<p>indicator of whether students who had previous attempts at the module should be removed, either <code>"remove"</code> or <code>"keep"</code>.
+If presentation is set to <code>"All"</code>, this is automatically set to <code>"remove"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>week_begin</code></td>
+<td>
+<p>the first semester week of VLE data to be included in formatted data. Depending on the module presentation, students
+started to view activities four weeks prior to the initial module start date. Weeks prior to the initial module start
+are indicated by a negative integer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>week_end</code></td>
+<td>
+<p>the last semester week of VLE data to be included in the formatted data.
+Week 39 is the last week material was viewed (and earlier in some module presentations).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>example_data</code></td>
+<td>
+<p>logical. Indicates whether to run a subset of the data as an example.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns three <code>tibbles</code> (objects of class <code>tbl_df</code>) based on the OULAD studentVle.csv file,
+the specified inputs (module, presentation, and repeat_students), and
+the range of the weeks included in the <code>tibbles</code>. <code>week_begin</code> and <code>week_end</code>
+indicates the first and last semester week respectively that is included in
+the output <code>tibbles</code>. These may be different to the input parameters of  <code>week_begin</code> and <code>week_end</code>.
+Weeks prior to the initial module start day are indicated by a negative integer.
+The three <code>tibbles</code> returned are: 1) filtered_data, 2) daily_data, and 3) weekly_data.
+</p>
+
+
+<h3>filtered_data tibble</h3>
+
+<p>A <code>tibble</code> based on the students' VLE interactions and the inputs. The <code>tibble</code> consists of (Kuzilek et al., 2017):
+</p>
+
+<ul>
+<li>
+<p>id_student - the unique student identification number.
+</p>
+</li>
+<li>
+<p>code_module - the module identification code.
+</p>
+</li>
+<li>
+<p>code_presentation - the presentation identification code.
+</p>
+</li>
+<li>
+<p>id_site - the VLE material identification number.
+</p>
+</li>
+<li>
+<p>date - the day of the student’s interaction with the material.
+</p>
+</li>
+<li>
+<p>sum_click - the number of times the student interacted with the material on a specific day.
+</p>
+</li>
+</ul>
+<h3>daily_data tibble</h3>
+
+<p>A <code>tibble</code> where each row represents a unique student, and each column their number of interactions with
+the VLE for different days of the module. The module starts on day 0. Days prior to the initial start day, are indicated by negative integers.
+</p>
+
+
+<h3>weekly_data tibble</h3>
+
+<p>A <code>tibble</code> where each row represents a unique student, and each column their number of interactions with
+the VLE for different weeks of the module. Weeks prior to the initial start week (week 1) are indicated by the term 'pre' in the week name.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kuzilek, J., Hlosta, M., &amp; Zdrahal, Z. (2017). Open university learning analytics dataset. Scientific Data
+volume 4 , (pp. 1–8). https://doi.org/10.1038/sdata.2017.171.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>convert_VLE()</code>, <code>dataset_VLE_activity()</code>, and <code>combined_dataset()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Uses subset of the VLE data set for example
+dataset_VLE_time(example_data = TRUE)
+
+# Slow to run as it loads the full VLE data set
+dataset_VLE_time(module = "BBB", presentation = "2013J",
+repeat_students = "remove", week_begin = 1, week_end = 13,
+example_data=FALSE)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>polynomial.roots</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Create a list of polynomial roots </h2>
+
+<h3>Description</h3>
+
+<p>This function returns a list with <code class="reqn">n</code> elements containing the roots of 
+the order $k$ monic orthogonal polynomials for orders <code class="reqn">k = 0,\;1,\; \ldots ,\;n</code> 
+using a data frame with the monic polynomial recurrence parameter vectors 
+<code class="reqn">\bf{a}</code> and <code class="reqn">\bf{b}</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">polynomial.roots(m.r)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>m.r</code></td>
+<td>
+<p> monic recurrence data frame with parameters a and b </p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The parameter <code>m.r</code> is a data frame with $n$+1 rows and two names columns. 
+The columns which are names <code>a</code> and <code>b</code> correspond to the above referenced vectors.
+Function <code>jacobi.matrices</code> is used to create a list of symmetric, 
+tridiagonal Jacobi matrices from these named columns.  The eigenvalues of 
+the <code class="reqn">k \times k</code> Jacobi matrix are the roots or zeros of the order $k$ 
+monic orthogonal polynomial.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with <code class="reqn">n</code> elements each of which is a vector of polynomial roots
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>1 </code></td>
+<td>
+<p>roots of the order 1 monic polynomial</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>2 </code></td>
+<td>
+<p>roots of the order 2 monic polynomial</p>
+</td>
+</tr>
+</table>
+<p>...
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>n </code></td>
+<td>
+<p>roots of the order <code class="reqn">n</code> monic polynomial</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p> Frederick Novomestky <a href="mailto:fnovomes@poly.edu">fnovomes@poly.edu</a> </p>
+
+
+<h3>References</h3>
+
+<p>Abramowitz, M. and I. A. Stegun, 1968. <em>Handbook of Mathematical Functions with
+Formulas, Graphs, and Mathematical Tables</em>, Dover Publications, Inc., New York.
+</p>
+<p>Courant, R., and D. Hilbert, 1989. <em>Methods of Mathematical Physics</em>,
+John Wiley, New York, NY.
+</p>
+<p>Szego, G., 1939. <em>Orthogonal Polynomials</em>, 23, American Mathematical Society
+Colloquium Publications, Providence, RI.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>monic.polynomial.recurrences</code>,
+<code>jacobi.matrices</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">###
+### generate the recurrences data frame for
+### the normalized Chebyshev polynomials of
+### orders 0 to 10
+###
+r &lt;- chebyshev.t.recurrences( 10, normalized=TRUE )
+###
+### construct the corresponding monic polynomial
+### recurrences
+###
+m.r &lt;- monic.polynomial.recurrences( r )
+###
+### obtain the polynomial roots from the monic polynomial
+### recurrences
+p.roots &lt;- polynomial.roots( m.r )
+</code></pre>
+
+
+</div>

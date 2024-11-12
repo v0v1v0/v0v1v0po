@@ -1,0 +1,257 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optic_simulation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a configuration object used to run simulations</h2>
+
+<h3>Description</h3>
+
+<p>Performs validation on inputs and produces a configuration object
+that contains all required parameters to dispatch simulation runs for the empirical data
+provided.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optic_simulation(
+  x,
+  models,
+  iters,
+  unit_var,
+  time_var,
+  conf_var,
+  effect_magnitude,
+  n_units,
+  effect_direction,
+  policy_speed,
+  prior_control = "level",
+  bias_size = NULL,
+  bias_type = NULL,
+  treat_var = NULL,
+  n_implementation_periods,
+  rhos = NULL,
+  years_apart = NULL,
+  ordered = NULL,
+  method,
+  method_sample,
+  method_model,
+  method_results,
+  method_pre_model,
+  method_post_model,
+  globals = NULL,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Empirical data used to simulate synthetic datasets with specified treatment effect.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>models</code></td>
+<td>
+<p>List of 'optic_model' objects that should be run for each iteration and simulation scenario.
+The elements must be created using the 'optic_model' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iters</code></td>
+<td>
+<p>A numeric, specifying number of iterations for each simulation scenario.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit_var</code></td>
+<td>
+<p>A string variable, used to determine clusters for clustered standard errors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_var</code></td>
+<td>
+<p>A string variable, specifying time units (e.g. "year", "time to treat", etc). Must be specified in terms of years (fractional years are accepted).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf_var</code></td>
+<td>
+<p>An unobserved confounding variable. Only used for the 'confound-method'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effect_magnitude</code></td>
+<td>
+<p>A vector of numerics, specifying 'true' effect sizes for treatment scenarios. See vignette for more details. Synthetic datasets will be generated for each entry in the vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_units</code></td>
+<td>
+<p>A numeric, determining number of units to simulate treatment effects. Synthetic datasets will be generated for each entry in the vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effect_direction</code></td>
+<td>
+<p>A vector containing either 'neg', 'null', or 'pos'. Determines the direction of the simulated effect. Synthetic datasets will be generated for each entry in the vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>policy_speed</code></td>
+<td>
+<p>A vector of strings, containing either 'instant' or 'slow' entries, determining how quickly treated units obtain the simulated effect. Synthetic datasets will be generated for each entry in the vector. Can either be 'instant" (so treatment effect applies fully in the first treated time period) or 'slow' (treatment effect ramps up linearly to the desired effect size, based on 'n_implementation_periods'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior_control</code></td>
+<td>
+<p>Only used for confounding method. Adds an additional set of variables which control for the outcome in previous periods (either a moving average of previous time periods or an autoregressive term)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bias_size</code></td>
+<td>
+<p>A string, either "small" "medium" or "large". Specifies relative size of bias for 'confounding' method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bias_type</code></td>
+<td>
+<p>A string, either linear" or "nonlinear". Specifies type of bias for 'confounding' method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>treat_var</code></td>
+<td>
+<p>A string variable, referring to the unit-of-analysis for treatment (which may not be the same as the unit var argument, e.g. treated classrooms within clustered schools)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_implementation_periods</code></td>
+<td>
+<p>A vector of numerics, determining number of periods after implementation until treated units reach the desired simulated treatment effect. Synthetic datasets will be generated for each entry in the vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rhos</code></td>
+<td>
+<p>A vector of values between 0-1, indicating the correlation between the primary policy and a concurrent policy. Only applies when 'method' == 'concurrent'. Synthetic datasets will be generated for each entry in the vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>years_apart</code></td>
+<td>
+<p>A numeric, for number of years between the primary policy being implemented and the concurrent policy. Only applies when 'method' == 'concurrent'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ordered</code></td>
+<td>
+<p>A boolean, determines if the primary policy always occurs before the concurrent policy ('TRUE') or if the policies are randomly ordered ('FALSE').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A string, determing the simulation method. Can be either 'no_confounding', 'confounding' or 'concurrent'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method_sample</code></td>
+<td>
+<p>Underlying function for the sampling method to determine treatment status. Provided here for convenience so that the user does not need to modify the actual underlying function's script.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method_model</code></td>
+<td>
+<p>Another convenience function, which can be modified to control the model call.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method_results</code></td>
+<td>
+<p>Another convenience function, which can be modified to control the simulation results that are returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method_pre_model</code></td>
+<td>
+<p>Similar to method_sample argument, this variable is provided as a convenience for the user. This function transforms the treatment effect, after it's simulated within the synthetic data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method_post_model</code></td>
+<td>
+<p>Another convenience function, which can be modified to control transformations to the simulated effect, after modeling.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>globals</code></td>
+<td>
+<p>Additional globals to pass to the simulate function, such as parallelization packages or additional R packages used by method calls (e.g. modeling packages, like "FEOLS").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean, default True. If TRUE, provides summary details on simulation runs across iterations</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The resulting configuration object is used to pass simulation scenarios to the 'simulate' function. Provided as a convenience function to the user
+so they can investigate simulation arguments prior to running models.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An OpticSim object, which contains simulation and model parameters for simulation runs, which is used as an input for dispatch_simulations.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Load data for simulation and set up a hypothetical policy effect: 
+
+data(overdoses)
+eff &lt;- 0.1*mean(overdoses$crude.rate, na.rm = TRUE)
+
+# Set up a simple linear model
+form &lt;- formula(crude.rate ~ state + year + population + treatment_level)
+mod &lt;- optic_model(name = 'lin', 
+                   type = 'reg', 
+                   call = 'lm', 
+                   formula = form, 
+                   se_adjust = 'none')
+
+# Create simulation object, with desired parameters for simulations:
+sim &lt;- optic_simulation(x = overdoses, 
+                        models = list(mod), 
+                        method = 'no_confounding', 
+                        unit_var = 'state', 
+                        treat_var = 'state',
+                        time_var = 'year', 
+                        effect_magnitude = list(eff), 
+                        n_units = 10, 
+                        effect_direction = 'pos', 
+                        iters = 10,
+                        policy_speed = 'instant', 
+                        n_implementation_periods = 1)
+
+</code></pre>
+
+
+</div>

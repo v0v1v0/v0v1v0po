@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>c_spec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Manage spectral objects</h2>
+
+<h3>Description</h3>
+
+<p><code>c_spec()</code> concatenates <code>OpenSpecy</code> objects.
+<code>sample_spec()</code> samples spectra from an <code>OpenSpecy</code> object.
+<code>merge_map()</code> merge two <code>OpenSpecy</code> objects from spectral maps.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">c_spec(x, ...)
+
+## Default S3 method:
+c_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+c_spec(x, ...)
+
+## S3 method for class 'list'
+c_spec(x, range = NULL, res = 5, ...)
+
+sample_spec(x, ...)
+
+## Default S3 method:
+sample_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+sample_spec(x, size = 1, prob = NULL, ...)
+
+merge_map(x, ...)
+
+## Default S3 method:
+merge_map(x, ...)
+
+## S3 method for class 'OpenSpecy'
+merge_map(x, ...)
+
+## S3 method for class 'list'
+merge_map(x, origins = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a list of <code>OpenSpecy</code> objects or of file paths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>range</code></td>
+<td>
+<p>a numeric providing your own wavenumber ranges or character
+argument called <code>"common"</code> to let <code>c_spec()</code> find the common
+wavenumber range of the supplied spectra. <code>NULL</code> will interpret the
+spectra having all the same wavenumber range.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>defaults to <code>NULL</code>, the resolution you want the output
+wavenumbers to be.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>the number of spectra to sample.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+<p>probabilities to use for the sampling.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>origins</code></td>
+<td>
+<p>a list with 2 value vectors of x y coordinates for the offsets of each image.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to submethods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>c_spec()</code> and <code>sample_spec()</code> return <code>OpenSpecy</code> objects.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Zacharias Steinmetz, Win Cowger
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>conform_spec()</code> for conforming wavenumbers
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Concatenating spectra
+spectra &lt;- lapply(c(read_extdata("raman_hdpe.csv"),
+                    read_extdata("ftir_ldpe_soil.asp")), read_any)
+common &lt;- c_spec(spectra, range = "common", res = 5)
+range &lt;- c_spec(spectra, range = c(1000, 2000), res = 5)
+
+# Sampling spectra
+tiny_map &lt;- read_any(read_extdata("CA_tiny_map.zip"))
+sampled &lt;- sample_spec(tiny_map, size = 3)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>push_to_gateway</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pushgateway Integration</h2>
+
+<h3>Description</h3>
+
+<p>Some workloads may not want to run an HTTP server to expose metrics,
+especially in the case of short-lived batch jobs. For these cases metrics
+can also be manually "pushed" to a Prometheus Pushgateway instance, though
+<a href="https://prometheus.io/docs/practices/pushing/">there are drawbacks</a>.
+</p>
+<p><code>push_to_gateway()</code> is used to push metrics, and <code>delete_from_gateway()</code> is
+used to clean them up when the workload is finished.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">push_to_gateway(url, job, instance = NA, registry = global_registry(), ...)
+
+delete_from_gateway(url, job, instance = NA, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>url</code></td>
+<td>
+<p>The URL of the Pushgateway</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>job</code></td>
+<td>
+<p>A value for the <code>job</code> label applied to all pushed metrics.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instance</code></td>
+<td>
+<p>A value for the <code>instance</code> label applied to all pushed
+metrics, or <code>NA</code> to leave it unset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>registry</code></td>
+<td>
+<p>A <code>Registry</code> object, defaulting to the shared global one.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional named string arguments converted to labels. Beware
+that these are not yet checked for URL safety.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>NULL</code>, invisibly.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+register_default_metrics()
+push_to_gateway("localhost:9091", job = "batch-job-1")
+# Some time later...
+delete_from_gateway("localhost:9091", job = "batch-job-1")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

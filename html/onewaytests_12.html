@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gp.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Test for Equal Means in a One-Way Layout under Unequal Variances
+</h2>
+
+<h3>Description</h3>
+
+<p><code>gp.test</code> tests whether two or more samples from normal distributions have the same means when the variances are not necessarily equal.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gp.test(formula, data, method = c("gtb","gtf"), alpha = 0.05, 
+  na.rm = TRUE, verbose = TRUE)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>a formula of the form <code>lhs ~ rhs</code> where <code>lhs</code> gives the sample values and <code>rhs</code> the corresponding groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a tibble or data frame containing the variables in <code>formula</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a character string to select the method. "gtb": Generalized Test Equivalent to Parametric Bootstrap Test (size close to intended), "gtf": Generalized Test Equivalent to Fiducial Test (size assured).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>the level of significance to assess the statistical difference. Default is
+set to alpha = 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>a logical value indicating whether NA values should be stripped before the computation proceeds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>a logical for printing output to R console.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with class "owt" containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>the p-value of the corresponding test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>the level of significance to assess the statistical difference.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the selected method used in generalized test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame containing the variables in which NA values (if exist) are removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>a formula of the form <code>lhs ~ rhs</code> where <code>lhs</code> gives the sample values and <code>rhs</code> the corresponding groups.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The methods underlying Generalized Tests are summarized in Weerahandi and Krishnamoorthy (2019), which shows that both the Fiducial and the Parametric Bootstrap tests are generalized tests based on an exact probability statement on alternative test variables. Greater details of them can be found in
+Krishnamoorthy et al. (2007) and Li et al. (2011). For greater details about Generalized Inference, the reader is referred to Weerahandi (2004), which can be freely read at <a href="http://www.Weerahandi.org">Generalized Inference</a>.
+</p>
+<p>For additional information about the methods and the code, the reader can contact the authors of this code, <a href="mailto:Weerahandi@X-Techniques.com">Sam Weerahandi</a> or <a href="mailto:malwane.ananda@unlv.edu">Malwane Ananda</a>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sam Weerahandi, Malwane Ananda
+</p>
+
+
+<h3>References</h3>
+
+<p>Daniel, W.W., Cross, C.L. (2013). <em>Biostatistics: A Foundation for Analysis in the Health Sciences. (10th ed.)</em>. John Wiley and Sons, Inc.
+</p>
+<p>Krishnamoorthy, K., Lu, F., Mathew, T. (2007). A parametric bootstrap approach for ANOVA with unequal variances: fixed and random models. <em>Computational Statistics and Data Analysis</em>, <b>51:12</b>, 5731-5742.
+</p>
+<p>Li, X., Wang J., Liang H. (2011). Comparison of several means: a fiducial based approach. <em>Computational Statistics and Data Analysis</em>, <b>55:5</b>, 1993-2002.
+</p>
+<p>Weerahandi, S. (2004). <em>Generalized Inference in Repeated Measures: Exact Methods in MANOVA and Mixed Models</em>, Series in Probability and Statistics. John Wiley and Sons, Inc. 
+</p>
+<p>Weerahandi, S., Krishnamoorthy, K. (2019). A note reconciling ANOVA tests under unequal error variances. <em>Communications in Statistics-Theory and Methods</em>, <b>48:3</b>, 689-693.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(onewaytests)
+
+out &lt;- gp.test(Sepal.Length ~ Species, data = iris, method = "gtb")
+paircomp(out)
+
+out &lt;- gp.test(Sepal.Length ~ Species, data = iris, method = "gtf")
+paircomp(out)
+
+
+
+</code></pre>
+
+
+</div>

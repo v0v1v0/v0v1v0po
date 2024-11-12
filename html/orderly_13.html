@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_deduplicate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Deduplicate an orderly archive</h2>
+
+<h3>Description</h3>
+
+<p>Deduplicate an orderly archive.  Deduplicating an orderly archive
+will replace all files that have the same content with "hard
+links".  This requires hard link support in the underlying
+operating system, which is available on all unix-like systems
+(e.g. MacOS and Linux) and on Windows since Vista.  However, on
+windows systems this might require somewhat elevated privileges.
+If you use this feature, it is <em>very important</em> that you
+treat your orderly archive as read-only (though you should be
+anyway) as changing one copy of a linked file changes all the
+other instances of it - the files are literally the same file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_deduplicate(root = NULL, locate = TRUE, dry_run = TRUE, quiet = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>Logical, indicating if the deduplication should be
+planned but not run</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>Logical, indicating if the status should not be printed</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function will alter your orderly archive.  Ordinarily this is
+not something that should be done, so we try to be careful.  In
+order for this to work, it is <em>very important</em> to treat your
+orderly archive as read-only generally.  If your canonical orderly
+archive is behind OrderlyWeb this will almost certainly be the
+case already.
+</p>
+<p>With "hard linking", two files with the same content can be
+updated so that both files point at the same physical bit of data.
+This is great, as if the file is large, then only one copy needs
+to be stored.  However, this means that if a change is made to one
+copy of the file, it is immediately reflected in the other, but
+there is nothing to indicate that the files are linked!
+</p>
+<p>This approach is worth exploring if you have large files that are
+outputs of one report and inputs to another, or large inputs
+repeatedly used in different reports, or outputs that end up being
+the same in multiple reports.  If you run the deduplication with
+<code>dry_run = TRUE</code>, an indication of the savings will be
+printed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Invisibly, information about the duplication status of the
+archive before deduplication was run.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+path &lt;- orderly::orderly_example("demo")
+id1 &lt;- orderly::orderly_run("minimal", root = path)
+id2 &lt;- orderly::orderly_run("minimal", root = path)
+orderly_commit(id1, root = path)
+orderly_commit(id2, root = path)
+tryCatch(
+  orderly::orderly_deduplicate(path, dry_run = TRUE),
+  error = function(e) NULL)
+</code></pre>
+
+
+</div>

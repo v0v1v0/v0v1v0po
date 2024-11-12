@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>openxlsx2-deprecated</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Deprecated functions in package <em>openxlsx2</em>
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions are provided for compatibility with older versions of <code>openxlsx2</code>,
+and may be defunct as soon as the next release. This guide helps you update your
+code to the latest standards.
+</p>
+<p>As of openxlsx2 v1.0, API change should be minimal.
+</p>
+
+
+<h3>Internal functions</h3>
+
+<p>These functions are used internally by openxlsx2. It is no longer advertised
+to use them in scripts. They originate from openxlsx, but do not fit openxlsx2's API.
+</p>
+<p>You should be able to modify
+</p>
+
+<ul>
+<li> <p><code>delete_data()</code> -&gt; <code>wb_clean_sheet()</code>
+</p>
+</li>
+<li> <p><code>write_data()</code> -&gt; <code>wb_add_data()</code>
+</p>
+</li>
+<li> <p><code>write_datatable()</code> -&gt; <code>wb_add_data_table()</code>
+</p>
+</li>
+<li> <p><code>write_comment()</code> -&gt; <code>wb_add_comment()</code>
+</p>
+</li>
+<li> <p><code>remove_comment()</code> -&gt; <code>wb_remove_comment()</code>
+</p>
+</li>
+<li> <p><code>write_formula()</code> -&gt; <code>wb_add_formula()</code>
+</p>
+</li>
+</ul>
+<p>You should be able to change those with minimal changes
+</p>
+
+
+<h3>Deprecated functions</h3>
+
+<p>First of all, you can set an option that will add warnings when using deprecated
+functions.
+</p>
+<div class="sourceCode"><pre>options("openxlsx2.soon_deprecated" = TRUE)
+</pre></div>
+
+
+<h3>Argument changes</h3>
+
+<p>For consistency, arguments were renamed to snake_case for the 0.8 release.
+It is now recommended to use <code>dims</code> (the cell range) in favor of <code>row</code>, <code>col</code>, <code>start_row</code>, <code>start_col</code>
+</p>
+<p>See <code>wb_dims()</code> as it provides many options on how to provide cell range
+</p>
+
+
+<h3>Functions with a new name</h3>
+
+<p>These functions were renamed for consistency.
+</p>
+
+<ul>
+<li> <p><code>convertToExcelDate()</code> -&gt; <code>convert_to_excel_date()</code>
+</p>
+</li>
+<li> <p><code>wb_grid_lines()</code> -&gt; <code>wb_set_grid_lines()</code>
+</p>
+</li>
+<li> <p><code>create_comment()</code> -&gt; <code>wb_comment()</code>
+</p>
+</li>
+</ul>
+<h3>Deprecated usage</h3>
+
+
+<ul><li> <p><code>wb_get_named_regions()</code> will no longer allow providing a file.
+</p>
+</li></ul>
+<div class="sourceCode"><pre>## Before
+wb_get_named_regions(file)
+
+## Now
+wb &lt;- wb_load(file)
+wb_get_named_regions(wb)
+# also possible
+wb_load(file)$get_named_regions()`
+</pre></div>
+
+
+<h3>See Also</h3>
+
+<p>.Deprecated
+</p>
+
+
+</div>

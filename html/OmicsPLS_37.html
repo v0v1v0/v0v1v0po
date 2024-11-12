@@ -1,0 +1,218 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>so2m_group</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform Group Sparse O2PLS</h2>
+
+<h3>Description</h3>
+
+<p>Perform Group Sparse O2PLS
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">so2m_group(
+  X,
+  Y,
+  n,
+  nx,
+  ny,
+  groupx = NULL,
+  groupy = NULL,
+  keepx = NULL,
+  keepy = NULL,
+  tol = 1e-10,
+  max_iterations = 1000,
+  max_iterations_sparsity = 1000
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Numeric matrix. Vectors will be coerced to matrix with <code>as.matrix</code> (if this is possible)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Numeric matrix. Vectors will be coerced to matrix with <code>as.matrix</code> (if this is possible)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Integer. Number of joint PLS components. Must be positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nx</code></td>
+<td>
+<p>Integer. Number of orthogonal components in <code class="reqn">X</code>. Negative values are interpreted as 0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ny</code></td>
+<td>
+<p>Integer. Number of orthogonal components in <code class="reqn">Y</code>. Negative values are interpreted as 0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupx</code></td>
+<td>
+<p>Vector. Used when <code>sparse = TRUE</code>. A vector of strings indicating group names of each X-variable. Its length must be equal to the number of variables in <code class="reqn">X</code>. The order of group names must corresponds to the order of the variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupy</code></td>
+<td>
+<p>Vector. Used when <code>sparse = TRUE</code>. A vector of strings indicating group names of each Y-variable. The length must be equal to the number of variables in <code class="reqn">Y</code>. The order of group names must corresponds to the order of the variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepx</code></td>
+<td>
+<p>Vector. Used when <code>sparse = TRUE</code>. A vector of length <code>n</code> indicating how many variables (or groups if <code>groupx</code> is provided) to keep in each of the joint component of <code class="reqn">X</code>. If the input is an integer, all the components will have the same amount of variables or groups retained.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepy</code></td>
+<td>
+<p>Vector. Used when <code>sparse = TRUE</code>. A vector of length <code>n</code> indicating how many variables (or groups if <code>groupx</code> is provided) to keep in each of the joint component of <code class="reqn">Y</code>. If the input is an integer, all the components will have the same amount of variables or groups retained.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Double. Threshold for which the NIPALS method is deemed converged. Must be positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_iterations</code></td>
+<td>
+<p>Integer. Maximum number of iterations for the NIPALS method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_iterations_sparsity</code></td>
+<td>
+<p>Integer. Used when <code>sparse = TRUE</code>. Maximum number of iterations for the NIPALS method for GO2PLS.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Tt</code></td>
+<td>
+<p>Joint <code class="reqn">X</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W.</code></td>
+<td>
+<p>Joint <code class="reqn">X</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>Joint <code class="reqn">Y</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C.</code></td>
+<td>
+<p>Joint <code class="reqn">Y</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>T_Yosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">X</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P_Yosc.</code></td>
+<td>
+<p>Orthogonal <code class="reqn">X</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W_Yosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">X</code> weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U_Xosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">Y</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P_Xosc.</code></td>
+<td>
+<p>Orthogonal <code class="reqn">Y</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C_Xosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">Y</code> weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_U</code></td>
+<td>
+<p>Regression coefficient in <code>Tt</code> ~ <code>U</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_T.</code></td>
+<td>
+<p>Regression coefficient in <code>U</code> ~ <code>Tt</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H_TU</code></td>
+<td>
+<p>Residuals in <code>Tt</code> in <code>Tt</code> ~ <code>U</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H_UT</code></td>
+<td>
+<p>Residuals in <code>U</code> in <code>U</code> ~ <code>Tt</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W_gr</code></td>
+<td>
+<p>Joint weights of X variables at group level. They are the norms of the X-joint loadings per group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C_gr</code></td>
+<td>
+<p>Joint weights of Y variables at group level. They are the norms of the Y-joint loadings per group</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>o2m</code>
+</p>
+
+
+</div>

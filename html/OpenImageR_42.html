@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>superpixels</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>SLIC and SLICO superpixel implementations</h2>
+
+<h3>Description</h3>
+
+<p>SLIC and SLICO superpixel implementations
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">superpixels(
+  input_image,
+  method = "slic",
+  superpixel = 200,
+  compactness = 20,
+  return_slic_data = FALSE,
+  return_lab_data = FALSE,
+  return_labels = FALSE,
+  write_slic = "",
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input_image</code></td>
+<td>
+<p>either a 2-dimensional or a 3-dimensional input image where the third dimension is equal to 3 (the range of the pixel values should be preferably in the range 0 to 255)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a character string specifying the method to use. Either "slic" or "slico"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>superpixel</code></td>
+<td>
+<p>a numeric value specifying the number of superpixels to use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compactness</code></td>
+<td>
+<p>a numeric value specifying the compactness parameter. The <em>compactness</em> parameter is needed only if <em>method</em> is "slic". The "slico" method adaptively chooses the compactness parameter for each superpixel differently.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_slic_data</code></td>
+<td>
+<p>a boolean. If TRUE then the resulted slic or slico data will be returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_lab_data</code></td>
+<td>
+<p>a boolean. If TRUE then the Lab data will be returned ( the Lab-colour format )</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_labels</code></td>
+<td>
+<p>a boolean. If TRUE then the labels will be returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>write_slic</code></td>
+<td>
+<p>a character string. If not an empty string ("") then it should be a path to the output file with extension .bin ( for instance "/my_dir/output.bin" ). The data will be saved in binary format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>a boolean. If TRUE then information will be printed in the R session</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>https://www.epfl.ch/labs/ivrl/research/slic-superpixels/
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(OpenImageR)
+
+#-------------------
+# 3-dimensional data
+#-------------------
+
+path = system.file("tmp_images", "slic_im.png", package = "OpenImageR")
+
+im = readImage(path)
+
+res = superpixels(input_image = im, method = "slic", superpixel = 200,
+
+                  compactness = 20, return_slic_data = TRUE)
+
+
+#-------------------
+# 2-dimensional data
+#-------------------
+
+im_2d = im[,,1]
+
+res_mt = superpixels(input_image = im_2d, method = "slic", superpixel = 200,
+
+                     compactness = 20, return_slic_data = TRUE)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>comp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bounded types for properties</h2>
+
+<h3>Description</h3>
+
+<p>This set of classes define different numerical object with restriction on it.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PositiveInteger(object)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>object to be coerced</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>These special classes could be registered as signaling fields by calling
+<code>signalingFields</code> or <code>signalingField</code>, or using <code>setProperties</code>,
+so they could be used for GUI design, and changing of the fields automatically
+validate the current value
+</p>
+<p>The construction of these objects has validation with them, please see the example.
+</p>
+
+<dl>
+<dt>PositiveInteger(object)</dt>
+<dd>
+<p>Construct a <code>PositiveInteger</code> object</p>
+</dd>
+<dt>NonpositiveInteger(object)</dt>
+<dd>
+<p>Construct a <code>NonpositiveInteger</code> object</p>
+</dd>
+<dt>NegativeInteger(object)</dt>
+<dd>
+<p>Construct a <code>NegativeInteger</code> object</p>
+</dd>
+<dt>NonnegativeInteger(object)</dt>
+<dd>
+<p>Construct a <code>NonnegativeInteger</code> object</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>An object of the corresponding class</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tengfei Yin, Michael Lawrence</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Constructors
+require(objectProperties)
+obj &lt;- PositiveInteger(1)
+obj &lt;- NonnegativeInteger(0)
+obj &lt;- NegativeInteger(-1)
+obj &lt;- NonpositiveInteger(0)
+## setting as properties
+filt.gen &lt;- setRefClass("Filter",
+properties(list(cutoff = "NonnegativeInteger",
+weight = "PositiveInteger")), contains = "PropertySet")
+## new property instance
+obj &lt;- filt.gen$new(cutoff = 0, weight = 1)
+obj$properties()
+as.list(obj)
+## get the value
+obj$cutoff
+## set the value
+obj$cutoff &lt;- 30
+## the class doesn't change
+## if you pass a value which out of boundary, it will throw an error message
+obj$cutoff
+class(obj$cutoff)</code></pre>
+
+
+</div>

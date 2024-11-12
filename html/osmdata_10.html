@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opq_around</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>opq_around</h2>
+
+<h3>Description</h3>
+
+<p>Find all features around a given point, and optionally match specific
+'key'-'value' pairs. This function is <em>not</em> intended to be combined with
+add_osm_feature, rather is only to be used in the sequence
+opq_around -&gt; osmdata_xml (or other extraction function). See
+examples for how to use.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opq_around(lon, lat, radius = 15, key = NULL, value = NULL, timeout = 25)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lon</code></td>
+<td>
+<p>Longitude of desired point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat</code></td>
+<td>
+<p>Latitude of desired point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>radius</code></td>
+<td>
+<p>Radius in metres around the point for which data should be
+extracted. Queries with  large values for this parameter may fail.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>(Optional) OSM key of enclosing data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>(Optional) OSM value matching 'key' of enclosing data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeout</code></td>
+<td>
+<p>It may be necessary to increase this value for large queries,
+because the server may time out before all data are delivered.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other queries: 
+<code>add_osm_features()</code>,
+<code>add_osm_feature()</code>,
+<code>bbox_to_string()</code>,
+<code>getbb()</code>,
+<code>opq_csv()</code>,
+<code>opq_enclosing()</code>,
+<code>opq_osm_id()</code>,
+<code>opq_string()</code>,
+<code>opq()</code>,
+<code>overpass_status()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Get all benches ("amenity=bench") within 100m of a particular point
+lat &lt;- 53.94542
+lon &lt;- -2.52017
+key &lt;- "amenity"
+value &lt;- "bench"
+radius &lt;- 100
+x &lt;- opq_around (lon, lat, radius, key, value) %&gt;%
+    osmdata_sf ()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

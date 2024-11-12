@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osf_rm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Delete an entity from OSF</h2>
+
+<h3>Description</h3>
+
+<p>Use <code>osf_rm()</code> to <strong>permanently</strong> delete a project, component, file or
+directory from OSF, including any uploaded files, wiki content, or comments
+contained therein. Because this process is <strong>irreversible</strong>, osfr will first
+open the item in your web browser so you can verify what is about to be
+deleted before proceeding.
+</p>
+<p>If the project or component targeted for deletion contains sub-components,
+those must be deleted first. Setting <code>recurse = TRUE</code> will attempt to
+remove the hierarchy of sub-components before deleting the top-level entity.
+</p>
+<p><em>Note: This functionality is limited to contributors with admin-level
+permissions.</em>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osf_rm(x, recurse = FALSE, verbose = FALSE, check = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>One of the following:
+</p>
+
+<ul>
+<li>
+<p> An <code>osf_tbl_node</code> with a single OSF project or component.
+</p>
+</li>
+<li>
+<p> An <code>osf_tbl_file</code> containing a single directory or file.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recurse</code></td>
+<td>
+<p>Remove all sub-components before deleting the top-level
+entity. This only applies when deleting projects or components.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical, indicating whether to print informative messages
+about interactions with the OSF API (default <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check</code></td>
+<td>
+<p>If <code>FALSE</code> deletion will proceed without opening the item or
+requesting verification—this effectively removes your safety net.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Invisibly returns <code>TRUE</code> if deletion was successful.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other OSF file operations: 
+<code>osf_cp()</code>,
+<code>osf_mkdir()</code>,
+<code>osf_mv()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+project &lt;- osf_create_project("My Short-Lived Project")
+osf_rm(project)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

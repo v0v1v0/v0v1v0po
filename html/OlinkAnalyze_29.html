@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_lmer_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function which performs a point-range plot per protein on a linear mixed model</h2>
+
+<h3>Description</h3>
+
+<p>Generates a point-range plot faceted by Assay using ggplot and ggplot2::geom_pointrange based on a linear mixed effects model using lmerTest:lmer and emmeans::emmeans.
+See <code>olink_lmer</code> for details of input notation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_lmer_plot(
+  df,
+  variable,
+  outcome = "NPX",
+  random,
+  olinkid_list = NULL,
+  covariates = NULL,
+  x_axis_variable,
+  col_variable = NULL,
+  number_of_proteins_per_plot = 6,
+  verbose = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>NPX data frame in long format with at least protein name (Assay), OlinkID, UniProt, 1-2 variables with at least 2 levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p>Single character value or character array.
+Variable(s) to test. If length &gt; 1, the included variable names will be used in crossed analyses .
+Also takes ':' or '*' notation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>Character. The dependent variable. Default: NPX.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>random</code></td>
+<td>
+<p>Single character value or character array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>olinkid_list</code></td>
+<td>
+<p>Character vector indicating which proteins (by OlinkID) for which to create figures.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covariates</code></td>
+<td>
+<p>Single character value or character array. Default: NULL.
+Covariates to include. Takes ':' or '*' notation. Crossed analysis will not be inferred from main effects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_axis_variable</code></td>
+<td>
+<p>Character. Which main effect to use as x-axis in the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_variable</code></td>
+<td>
+<p>Character. If provided, the interaction effect col_variable:x_axis_variable will be plotted with x_axis_variable on the x-axis and col_variable as color.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>number_of_proteins_per_plot</code></td>
+<td>
+<p>Number plots to include in the list of point-range plots. Defaults to 6 plots per figure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>coloroption for color ordering</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of objects of class "ggplot" showing point-range plot of NPX (y-axis) over x_axis_variable for each assay (facet), colored by col_variable if provided.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(dplyr)
+if (requireNamespace("lme4", quietly = TRUE) &amp; requireNamespace("lmerTest", quietly = TRUE)){
+lmer_results &lt;- olink_lmer(df = npx_data1,
+                           variable=c("Time", 'Treatment'),
+                           random = c('Subject'))
+
+assay_list &lt;- lmer_results %&gt;%
+    filter(Threshold == 'Significant' &amp; term == 'Time:Treatment') %&gt;%
+    select(OlinkID) %&gt;%
+    distinct() %&gt;%
+    pull()
+
+list_of_pointrange_plots &lt;- olink_lmer_plot(df = npx_data1,
+                                            variable=c("Time", 'Treatment'),
+                                            random = c('Subject'),
+                                            x_axis_variable = 'Time',
+                                            col_variable = 'Treatment',
+                                            verbose=TRUE,
+                                            olinkid_list = assay_list,
+                                            number_of_proteins_per_plot = 10)
+}
+
+</code></pre>
+
+
+</div>

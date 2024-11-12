@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stairs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plotting stairs with time point at end of interval.</h2>
+
+<h3>Description</h3>
+
+<p>Plotting steps with time point at end of interval
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stairs(x, y, type = "b", preline = FALSE, pch = 19, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>x values for plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>y values for plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>if 'b' then include points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preline</code></td>
+<td>
+<p>if TRUE, then a line backwards from the first point is added.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>Passed to <code>points()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to <code>lines()</code> and <code>points()</code> when they are called in the function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It's easy to plot stairs with <code>plot(x,y,type="s")</code>, however that makes the steps forward from <code>x</code>, for time series this works if the time points are at the beginning of the intervals.
+</p>
+<p>Often with time series the time points are in the end of the intervals, so the steps should go backaward, this is achieved with this function.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Usual stairs plot has steps forward from x
+x &lt;- rnorm(10)
+plot(1:10, x, type="s")
+
+# Stairs with step backward from x
+plot(1:10, x, type="n")
+stairs(1:10, x)
+
+# Use for time series plotting
+plot_ts(Dbuilding, "heatload", c("2010-12-15","2010-12-16"), plotfun=stairs)
+
+# Set it globally for all plot_ts
+p &lt;- par_ts()
+p$plotfun &lt;- stairs
+options(par_ts=p)
+plot_ts(Dbuilding, "heatload", c("2010-12-15","2010-12-16"))
+
+# Modify it to only lines
+plot_ts(Dbuilding, "heatload", c("2010-12-15","2010-12-16"),
+        plotfun=function(x,y,...){stairs(x,y, type="l")})
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,196 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_font</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modify font in a cell region</h2>
+
+<h3>Description</h3>
+
+<p>Modify the font in a cell region with more precision
+You can specify the font in a cell with other cell styling functions,
+but <code>wb_add_font()</code> gives you more control.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_font(
+  wb,
+  sheet = current_sheet(),
+  dims = "A1",
+  name = "Aptos Narrow",
+  color = wb_color(hex = "FF000000"),
+  size = "11",
+  bold = "",
+  italic = "",
+  outline = "",
+  strike = "",
+  underline = "",
+  charset = "",
+  condense = "",
+  extend = "",
+  family = "",
+  scheme = "",
+  shadow = "",
+  vert_align = "",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>the worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>the cell range</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>Font name: default "Aptos Narrow"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color</code></td>
+<td>
+<p>An object created by <code>wb_color()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>Font size: default "11",</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bold</code></td>
+<td>
+<p>bold, "single" or "double", default: ""</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>italic</code></td>
+<td>
+<p>italic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outline</code></td>
+<td>
+<p>outline</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strike</code></td>
+<td>
+<p>strike</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>underline</code></td>
+<td>
+<p>underline</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>charset</code></td>
+<td>
+<p>charset</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condense</code></td>
+<td>
+<p>condense</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extend</code></td>
+<td>
+<p>extend</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>font family</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scheme</code></td>
+<td>
+<p>font scheme</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shadow</code></td>
+<td>
+<p>shadow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vert_align</code></td>
+<td>
+<p>vertical alignment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>...</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wb_add_font()</code> provides all the options openxml accepts for a font node,
+not all have to be set. Usually <code>name</code>, <code>size</code> and <code>color</code> should be what the user wants.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>wbWorkbook</code>, invisibly
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other styles: 
+<code>wb_add_border()</code>,
+<code>wb_add_cell_style()</code>,
+<code>wb_add_fill()</code>,
+<code>wb_add_named_style()</code>,
+<code>wb_add_numfmt()</code>,
+<code>wb_cell_style</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> wb &lt;- wb_workbook() %&gt;% wb_add_worksheet("S1") %&gt;% wb_add_data("S1", mtcars)
+ wb %&gt;% wb_add_font("S1", "A1:K1", name = "Arial", color = wb_color(theme = "4"))
+# With chaining
+ wb &lt;- wb_workbook()$add_worksheet("S1")$add_data("S1", mtcars)
+ wb$add_font("S1", "A1:K1", name = "Arial", color = wb_color(theme = "4"))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordAOV</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ANOVA for factors with ordered levels</h2>
+
+<h3>Description</h3>
+
+<p>This function performs analysis of variance when the
+factor(s) of interest has/have ordinal scale level. For testing, values from
+the null distribution are simulated.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordAOV(x, y, type = c("RLRT", "LRT"), nsim = 10000,
+null.sample = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a vector or matrix of integers 1,2,... giving the observed levels
+of the ordinal factor(s). If <code>x</code> is a matrix, it is assumed that
+each column corresponds to one ordinal factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>the vector of response values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of test to carry out: likelihood ratio ("LRT") or
+restricted likelihood ratio ("RLRT").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>number of values to simulate from the null distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>null.sample</code></td>
+<td>
+<p>a vector, or a list of vectors (in case of multi-factorial
+ANOVA) containing values already simulated from the null distribution
+(overrides <code>nsim</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments to <code>LRTSim</code> and
+<code>RLRTSim</code>, respectively.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The method assumes that ordinal factor levels (contained in vector/columns of
+matrix <code>x</code>) take values 1,2,...,max, where max denotes the highest level
+of the respective factor observed in the data. Every level between 1 and max has
+to be observed at least once.
+</p>
+<p>The method uses a mixed effects formulation of the usual one- or multi-factorial
+ANOVA model (with main effects only) while penalizing (squared) differences of
+adjacent means. Testing for equal means across factor levels is done by
+(restricted) likelihood ratio testing for a zero variance component in a linear
+mixed model. For simulating values from the finite sample null
+distribution of the (restricted) likelihood ratio statistic, the
+algorithms implemented in Package <code>RLRsim</code> are used. See
+<code>LRTSim</code> and <code>RLRTSim</code> for further information.
+</p>
+<p>If <code>x</code> is a vector (or one-column matrix), one-factorial ANOVA is applied,
+and it is simulated from the exact finite sample null distribution as derived by
+Crainiceanu &amp; Ruppert (2004). If <code>x</code> is a matrix, multi-factorial ANOVA
+(with main effects only) is done, and the approximation of the finite sample null
+distribution proposed by Greven et al. (2008) is used. Simulation
+studies by Gertheiss (2014) suggest that for ANOVA with ordinal factors RLRT
+should rather be used than LRT.
+</p>
+
+
+<h3>Value</h3>
+
+<p>In case of one-factorial ANOVA, a list of class <code>htest</code> containing the
+following components (see also <code>exactLRT</code> and <code>exactRLRT</code>):
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>the observed (restricted) likelihood ratio.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>p-value for the observed test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a character string indicating what type of test was performed
+and how many values were simulated to determine the critical value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample</code></td>
+<td>
+<p>the samples from the null distribution returned by
+<code>LRTSim</code> and <code>RLRTSim, respectively.</code></p>
+</td>
+</tr>
+</table>
+<p>In case of multi-factorial ANOVA, a list (of lists) with the jth component
+giving the results above when testing the main effect of factor j.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jan Gertheiss</p>
+
+
+<h3>References</h3>
+
+<p>Crainiceanu, C. and D. Ruppert (2004). <em>Likelihood ratio tests in linear
+mixed models with one variance component</em>, Journal of the Royal Statistical
+Society B, 66, 165-185.
+</p>
+<p>Gertheiss, J. (2014). <em>ANOVA for factors with ordered levels</em>, Journal of
+Agricultural, Biological and Environmental Statistics, 19, 258-277.
+</p>
+<p>Gertheiss, J. and F. Oehrlein (2011). <em>Testing relevance and linearity of
+ordinal predictors</em>, Electronic Journal of Statistics, 5, 1935-1959.
+</p>
+<p>Greven, S., C. Crainiceanu, H. Kuechenhoff, and A. Peters (2008). <em>Restricted
+likelihood ratio testing for zero variance components in linear mixed models</em>,
+Journal of Computational and Graphical Statistics, 17, 870-891.
+</p>
+<p>Scheipl, F., S. Greven, and H. Kuechenhoff (2008). <em>Size and power of tests
+for a zero random effect variance or polynomial regression in additive and linear
+mixed models</em>, Computational Statistics &amp; Data Analysis, 52, 3283-3299.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>LRTSim</code>, <code>RLRTSim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load some data
+data(ICFCoreSetCWP)
+
+# the pysical health component summary
+y &lt;- ICFCoreSetCWP$phcs
+
+# consider the first ordinal factor
+x &lt;- ICFCoreSetCWP[,1]
+
+# adequate coding
+x &lt;- as.integer(x - min(x) + 1)
+
+# ANOVA
+ordAOV(x, y, type = "RLRT", nsim=1000000)
+</code></pre>
+
+
+</div>

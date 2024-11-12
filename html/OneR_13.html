@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.OneR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict method for OneR models</h2>
+
+<h3>Description</h3>
+
+<p>Predict cases or probabilities based on OneR model object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'OneR'
+predict(object, newdata, type = c("class", "prob"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>object of class <code>"OneR"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>data frame in which to look for the feature variable with which to predict.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character string denoting the type of predicted value returned. Default <code>"class"</code> gives a named vector with the predicted classes, <code>"prob"</code> gives a matrix whose columns are the probability of the first, second, etc. class.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>newdata</code> can have the same format as used for building the model but must at least have the feature variable that is used in the OneR rules.
+If cases appear that were not present when building the model the predicted case is <code>UNSEEN</code> or <code>NA</code> when <code>"type = prob"</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The default is a factor with the predicted classes, if <code>"type = prob"</code> a matrix is returned whose columns are the probability of the first, second, etc. class.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Holger von Jouanne-Diedrich
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://github.com/vonjd/OneR">https://github.com/vonjd/OneR</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OneR</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">model &lt;- OneR(iris)
+prediction &lt;- predict(model, iris[1:4])
+eval_model(prediction, iris[5])
+
+## type prob
+predict(model, data.frame(Petal.Width = seq(0, 3, 0.5)))
+predict(model, data.frame(Petal.Width = seq(0, 3, 0.5)), type = "prob")
+</code></pre>
+
+
+</div>

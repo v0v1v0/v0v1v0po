@@ -1,0 +1,139 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GloptiPolyR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Global optimization of up to cubic polynomial functions (up to 5 variables)</h2>
+
+<h3>Description</h3>
+
+<p>Optimize a quadratic or cubic polynomial functionin 2 ~ 5 variables
+with bound constraints
+(Del Castillo et al. 2020).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GloptiPolyR(P)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>P</code></td>
+<td>
+<p>A list of list; Each sub-list has 2 components:
+1. a multi-dimensional array corresponding to a objective or constraint function
+2. an attribute of the objective or constraint function</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>GloptipolyR is an R implementation of the “Gloptipoly” algorithm
+(Lasserre 2001)
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the optimal solution and its corresponding objective value
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Enrique del Castillo <a href="mailto:exd13@psu.edu">exd13@psu.edu</a>,
+Peng Chen <a href="mailto:pfc5098@psu.edu">pfc5098@psu.edu</a>,
+Adam Meyers <a href="mailto:akm5733@psu.edu">akm5733@psu.edu</a>,
+John Hunt <a href="mailto:J.Hunt@westernsydney.edu.au">J.Hunt@westernsydney.edu.au</a> and
+James Rapkin <a href="mailto:jr297@exeter.ac.uk">jr297@exeter.ac.uk</a>.
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Del Castillo E, Chen P, Meyers A, Hunt J, Rapkin J (2020).
+“Confidence regions for the location of response surface optima: the R package OptimaRegion.”
+<em>Communications in Statistics-Simulation and Computation</em>, 1–21.<br><br> Lasserre JB (2001).
+“Global optimization with polynomials and the problem of moments.”
+<em>SIAM Journal on optimization</em>, <b>11</b>(3), 796–817.
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Optimize the following quadratic function in 3 variables
+# f(x) = -1.5 x_1 + 2.13 x_2 - 1.81 x_3 + 7.13 x_1 x_2 +
+#        3.27 x_1 x_3  + 2.73 x_2 x_3 +
+#        4.69 x_1^2 + 6.27 x_2^2 + 5.21 x_3^2.
+
+# The input for GloptiPolyR is a list of 7 sub-lists,
+# each of which corresponds to the objective function or a constraint
+# function, respectively. See del Castillo et al. (2019) for details.
+P &lt;- list()
+p_f &lt;- list()
+p_g_1 &lt;- list()
+p_g_2 &lt;- list()
+p_g_3 &lt;- list()
+p_g_4 &lt;- list()
+p_g_5 &lt;- list()
+p_g_6 &lt;- list()
+
+p_f$c &lt;- array(0, dim = c(3, 3, 3))
+p_f$c[2, 1, 1] &lt;- -1.5
+p_f$c[1, 2, 1] &lt;- 2.13
+p_f$c[1, 1, 2] &lt;- -1.81
+p_f$c[2, 2, 1] &lt;- 7.13
+p_f$c[2, 1, 2] &lt;- 3.27
+p_f$c[1, 2, 2] &lt;- 2.73
+p_f$c[3, 1, 1] &lt;- 4.69
+p_f$c[1, 3, 1] &lt;- 6.27
+p_f$c[1, 1, 3] &lt;- 5.21
+
+p_g_1$c &lt;- array(0, dim = c(3, 3, 3))
+p_g_1$c[1, 1, 1] &lt;- 2
+p_g_1$c[2, 1, 1] &lt;- 1
+
+p_g_2$c &lt;- array(0, dim = c(3, 3, 3))
+p_g_2$c[1, 1, 1] &lt;- -2
+p_g_2$c[2, 1, 1] &lt;- 1
+
+p_g_3$c &lt;- array(0, dim = c(3, 3, 3))
+p_g_3$c[1, 1, 1] &lt;- 2
+p_g_3$c[1, 2, 1] &lt;- 1
+
+p_g_4$c &lt;- array(0, dim = c(3, 3, 3))
+p_g_4$c[1, 1, 1] &lt;- -2
+p_g_4$c[1, 2, 1] &lt;- 1
+
+p_g_5$c &lt;- array(0, dim = c(3, 3, 3))
+p_g_5$c[1, 1, 1] &lt;- 2
+p_g_5$c[1, 1, 2] &lt;- 1
+
+p_g_6$c &lt;- array(0, dim = c(3, 3, 3))
+p_g_6$c[1, 1, 1] &lt;- -2
+p_g_6$c[1, 1, 2] &lt;- 1
+
+# Set the attribute for the objective function as either ``min'' or ``max''.
+p_f$t &lt;- "min"
+
+# Set the attributes for the constraint functions as either ``&gt;='' or ``&lt;=''.
+p_g_1$t &lt;- "&gt;="
+p_g_2$t &lt;- "&lt;="
+p_g_3$t &lt;- "&gt;="
+p_g_4$t &lt;- "&lt;="
+p_g_5$t &lt;- "&gt;="
+p_g_6$t &lt;- "&lt;="
+
+# Now we put together the input P and use it to call GloptiPolyR
+P &lt;- list(p_f, p_g_1, p_g_2, p_g_3, p_g_4, p_g_5, p_g_6)
+GloptiPolyR(P)
+</code></pre>
+
+
+</div>

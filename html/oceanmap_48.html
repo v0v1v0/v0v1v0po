@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>region_definitions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+region definitions dataframe
+</h2>
+
+<h3>Description</h3>
+
+<p>dataset providing spatial extent and color bar placement information by a region-keyword  in later related function-calls (see: v, plotmap and regions). Information consists of a region-keyword, -longname, its spatial extent (longitudes and latitudes), grid resolution, as well as default colorbar position and figure size.
+Region definitions can be added, backed up or restored by add.region or deleted by calling delete.region.
+</p>
+<p><b>ATTENTION!</b> When reinstalling or updating the oceanmap package, previous region definitions are getting lost! It is therefore highly recommanded to take and restore own backups (see: <code>backup</code> and <code>restore</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(region_definitions)</code></pre>
+
+
+<h3>Format</h3>
+
+<p>data.frame
+</p>
+
+
+<h3>Value</h3>
+
+<p>dataframe with the following header, containing the summary information of the region specified:
+</p>
+<p><code>label name latn lats lonw lone ncol nrow px cbx1 cbx2  cby1  cby2 gradient oticks figxdim figydim grid.res</code>
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>label</code></td>
+<td>
+
+<p>region-keywords
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+
+<p>the long name of the region
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td>
+<code>latn</code> &amp; <code>lats</code>
+</td>
+<td>
+
+<p>northern and southern most latitude of the region
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td>
+<code>lonw</code> &amp; <code>lone</code>
+</td>
+<td>
+
+<p>western and eastern most longitude of the region
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td>
+<code>ncol</code>, <code>nrow</code> &amp; <code>px</code>
+</td>
+<td>
+
+<p>default matrix size per region described by the number of columns, rows and pixels. <b>ATTENTION!</b>! Regions of the same spatial extent but different default (matrix-) resolution may cause errors when reading or writing '.gz'-files and must therefore be distinguished by different keywords.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cbx1 &amp; cbx2</code></td>
+<td>
+
+<p>x-coordinates for colorbar
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cby1 &amp; cby2</code></td>
+<td>
+
+<p>y-coordinates for colorbar
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gradient</code></td>
+<td>
+
+<p>the color-<code>gradient</code> of the colorbar (<code>x</code> for horizontal, and <code>y</code> for vertical)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oticks</code></td>
+<td>
+
+<p>the margin where the colorbar ticks should be plotted, relative to the colorbar rectangle (<code>'l'</code> left, <code>'r'</code> right and <code>'b'</code> for bottom)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figxdim &amp; figydim</code></td>
+<td>
+
+<p>the region-specific default plot device size (width and height in inches)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grid.res</code></td>
+<td>
+
+<p>the default grid resolution in degrees
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See <code>add.region</code> to add new, backup or restore region definitions, and <code>plotmap</code> for basic landmask plots</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(region_definitions)
+head(region_definitions)
+region_definitions$label
+# ?region_definitions
+
+# figure(width=15,height=15)
+# par(mfrow=c(5,6))
+# for(n in region_definitions$label) plotmap(region = n,main=n)
+
+
+# Mediterranean Sea with a spatial resolution of 4km (e.g. MODIS-Aqua)
+region_definitions[region_definitions$label == 'med4',]
+
+# Mediterranean Sea with a spatial resolution of 9km (e.g. dekkar)
+region_definitions[region_definitions$label == 'med9',]
+
+# plotting same landmasks by different region-keywords
+plotmap('med4')
+plotmap('med9')
+
+
+## Example for selecting wrong area definition when saving files
+path &lt;- system.file("test_files", package="oceanmap")
+gz.files &lt;- Sys.glob(paste0(path,'/med4*.gz')) # load sample-med4'.gz'-files
+
+fname &lt;- name_split(gz.files[1])
+param &lt;- fname$parameter
+gz &lt;- readbin(gz.files[1])
+dim(gz)
+v(gz.files[1])
+
+## reset region name
+# fname$area &lt;- 'med9'
+# fname &lt;- name_join(fname)
+# writebin(gz,fname,param=param)
+# v(fname,folder=".")
+# system(paste('rm', fname))
+</code></pre>
+
+
+</div>

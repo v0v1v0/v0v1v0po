@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osf_retrieve</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve an entity from OSF</h2>
+
+<h3>Description</h3>
+
+<p>Create an <code>osf_tbl</code> representation of an existing OSF project, component,
+file, or user based on the associated unique identifier. Usually this is a
+5-character global unique identifier (GUID) but for files or directories, it
+could also be an 11-character Waterbutler ID. See below for details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osf_retrieve_user(id)
+
+osf_retrieve_node(id)
+
+osf_retrieve_file(id)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>An OSF identifier corresponding to an OSF user, project, component,
+or file. Set <code>id = "me"</code> to retrieve your own OSF profile.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>An <code>osf_tbl_user</code>, <code>osf_tbl_node</code>, or <code>osf_tbl_file</code> containing
+the corresponding OSF entity.
+</p>
+
+
+<h3>OSF identifiers</h3>
+
+<p>A 5-character GUID is assigned to every user,
+project, component, and file on OSF and forms the basis for the service's
+URL scheme. For example the GUID for a project accessible at
+<a href="https://osf.io/ezum7">https://osf.io/ezum7</a> is simply <code>ezum7</code>. You can learn more about GUIDs
+in the <a href="https://help.osf.io/article/203-faqs">OSF FAQ</a>.
+</p>
+<p>An important detail is that files and directories are handled internally on
+OSF by another serviced called <a href="http://www.waterbutler.io/">Waterbutler</a>,
+which uses 11-character identifiers. Although Waterbutler IDs are largely
+hidden from users on <a href="https://osf.io">https://osf.io</a>, they represent the primary method for
+identifying files/directories by the OSF API. In fact, files do not receive a
+GUID until it is viewed directly on <a href="https://osf.io">https://osf.io</a> and directories never
+receive a GUID. Therefore, osfr relies on Waterbutler IDs for files and
+directories, and always includes them (rather than GUIDs) in <code>osf_tbl_file</code>
+objects.
+</p>
+
+
+<h3>Retrieving OSF objects</h3>
+
+<p>To begin using osfr to interact with resources on OSF you must use one of the
+following <em>retrieve</em> functions to create an <code>osf_tbl</code> that contains
+the entity of interest. Note the functions are entity-type specific, use:
+</p>
+
+<ul>
+<li> <p><code>osf_retrieve_node()</code> to retrieve a project or component
+</p>
+</li>
+<li> <p><code>osf_retrieve_file()</code> to retrieve a file or directory
+</p>
+</li>
+<li> <p><code>osf_retrieve_user()</code> to retrieve a user
+</p>
+</li>
+</ul>
+<h3>A note on 3rd-party storage providers</h3>
+
+<p>While OSF supports integration with a variety of 3rd-party cloud storage
+providers, osfr can currently only access files stored on the default OSF
+storage service. Support for additional storage providers is planned for a
+future release.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+ # retrieve your own OSF user profile (must be authenticated, ?osf_auth)
+ osf_retrieve_user("me")
+
+# retrieve the Psychology Reproducibility Project (P:RP, osf.io/ezum7)
+osf_retrieve_node("ezum7")
+
+# get the first figure from the P:RP
+osf_retrieve_file("https://osf.io/7js8c")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

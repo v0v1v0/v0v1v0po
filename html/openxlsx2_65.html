@@ -1,0 +1,6961 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wbWorkbook</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Workbook class</h2>
+
+<h3>Description</h3>
+
+<p>This is the class used by <code>openxlsx2</code> to modify workbooks from R.
+You can load an existing workbook with <code>wb_load()</code> and create a new one with
+<code>wb_workbook()</code>.
+</p>
+<p>After that, you can modify the <code>wbWorkbook</code> object through two primary methods:
+</p>
+<p><em>Wrapper Function Method</em>: Utilizes the <code>wb</code> family of functions that support
+piping to streamline operations.
+</p>
+<div class="sourceCode r"><pre>wb &lt;- wb_workbook(creator = "My name here") %&gt;%
+  wb_add_worksheet(sheet = "Expenditure", grid_lines = FALSE) %&gt;%
+  wb_add_data(x = USPersonalExpenditure, row_names = TRUE)
+</pre></div>
+<p><em>Chaining Method</em>: Directly modifies the object through a series of chained
+function calls.
+</p>
+<div class="sourceCode r"><pre>wb &lt;- wb_workbook(creator = "My name here")$
+  add_worksheet(sheet = "Expenditure", grid_lines = FALSE)$
+  add_data(x = USPersonalExpenditure, row_names = TRUE)
+</pre></div>
+<p>While wrapper functions require explicit assignment of their output to reflect
+changes, chained functions inherently modify the input object. Both approaches
+are equally supported, offering flexibility to suit user preferences. The
+documentation mainly highlights the use of wrapper functions.
+</p>
+<div class="sourceCode r"><pre># Import workbooks
+path &lt;- system.file("extdata/openxlsx2_example.xlsx", package = "openxlsx2")
+wb &lt;- wb_load(path)
+
+## or create one yourself
+wb &lt;- wb_workbook()
+# add a worksheet
+wb$add_worksheet("sheet")
+# add some data
+wb$add_data("sheet", cars)
+# Add data with piping in a different location
+wb &lt;- wb %&gt;% wb_add_data(x = cars, dims = wb_dims(from_dims = "D4"))
+# open it in your default spreadsheet software
+if (interactive()) wb$open()
+</pre></div>
+<p>Note that the documentation is more complete in each of the wrapper functions.
+(i.e. <code>?wb_add_data</code> rather than <code>?wbWorkbook</code>).
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>sheet_names</code></dt>
+<dd>
+<p>The names of the sheets</p>
+</dd>
+<dt><code>calcChain</code></dt>
+<dd>
+<p>calcChain</p>
+</dd>
+<dt><code>charts</code></dt>
+<dd>
+<p>charts</p>
+</dd>
+<dt><code>is_chartsheet</code></dt>
+<dd>
+<p>A logical vector identifying if a sheet is a chartsheet.</p>
+</dd>
+<dt><code>customXml</code></dt>
+<dd>
+<p>customXml</p>
+</dd>
+<dt><code>connections</code></dt>
+<dd>
+<p>connections</p>
+</dd>
+<dt><code>ctrlProps</code></dt>
+<dd>
+<p>ctrlProps</p>
+</dd>
+<dt><code>Content_Types</code></dt>
+<dd>
+<p>Content_Types</p>
+</dd>
+<dt><code>app</code></dt>
+<dd>
+<p>app</p>
+</dd>
+<dt><code>core</code></dt>
+<dd>
+<p>The XML core</p>
+</dd>
+<dt><code>custom</code></dt>
+<dd>
+<p>custom</p>
+</dd>
+<dt><code>drawings</code></dt>
+<dd>
+<p>drawings</p>
+</dd>
+<dt><code>drawings_rels</code></dt>
+<dd>
+<p>drawings_rels</p>
+</dd>
+<dt><code>docMetadata</code></dt>
+<dd>
+<p>doc_meta_data</p>
+</dd>
+<dt><code>embeddings</code></dt>
+<dd>
+<p>embeddings</p>
+</dd>
+<dt><code>externalLinks</code></dt>
+<dd>
+<p>externalLinks</p>
+</dd>
+<dt><code>externalLinksRels</code></dt>
+<dd>
+<p>externalLinksRels</p>
+</dd>
+<dt><code>headFoot</code></dt>
+<dd>
+<p>The header and footer</p>
+</dd>
+<dt><code>media</code></dt>
+<dd>
+<p>media</p>
+</dd>
+<dt><code>metadata</code></dt>
+<dd>
+<p>contains cell/value metadata imported on load from xl/metadata.xml</p>
+</dd>
+<dt><code>persons</code></dt>
+<dd>
+<p>Persons of the workbook. to be used with <code>wb_add_thread()</code></p>
+</dd>
+<dt><code>pivotTables</code></dt>
+<dd>
+<p>pivotTables</p>
+</dd>
+<dt><code>pivotTables.xml.rels</code></dt>
+<dd>
+<p>pivotTables.xml.rels</p>
+</dd>
+<dt><code>pivotDefinitions</code></dt>
+<dd>
+<p>pivotDefinitions</p>
+</dd>
+<dt><code>pivotRecords</code></dt>
+<dd>
+<p>pivotRecords</p>
+</dd>
+<dt><code>pivotDefinitionsRels</code></dt>
+<dd>
+<p>pivotDefinitionsRels</p>
+</dd>
+<dt><code>queryTables</code></dt>
+<dd>
+<p>queryTables</p>
+</dd>
+<dt><code>richData</code></dt>
+<dd>
+<p>richData</p>
+</dd>
+<dt><code>slicers</code></dt>
+<dd>
+<p>slicers</p>
+</dd>
+<dt><code>slicerCaches</code></dt>
+<dd>
+<p>slicerCaches</p>
+</dd>
+<dt><code>sharedStrings</code></dt>
+<dd>
+<p>sharedStrings</p>
+</dd>
+<dt><code>styles_mgr</code></dt>
+<dd>
+<p>styles_mgr</p>
+</dd>
+<dt><code>tables</code></dt>
+<dd>
+<p>tables</p>
+</dd>
+<dt><code>tables.xml.rels</code></dt>
+<dd>
+<p>tables.xml.rels</p>
+</dd>
+<dt><code>theme</code></dt>
+<dd>
+<p>theme</p>
+</dd>
+<dt><code>vbaProject</code></dt>
+<dd>
+<p>vbaProject</p>
+</dd>
+<dt><code>vml</code></dt>
+<dd>
+<p>vml</p>
+</dd>
+<dt><code>vml_rels</code></dt>
+<dd>
+<p>vml_rels</p>
+</dd>
+<dt><code>comments</code></dt>
+<dd>
+<p>Comments (notes) present in the workbook.</p>
+</dd>
+<dt><code>threadComments</code></dt>
+<dd>
+<p>Threaded comments</p>
+</dd>
+<dt><code>timelines</code></dt>
+<dd>
+<p>timelines</p>
+</dd>
+<dt><code>timelineCaches</code></dt>
+<dd>
+<p>timelineCaches</p>
+</dd>
+<dt><code>workbook</code></dt>
+<dd>
+<p>workbook</p>
+</dd>
+<dt><code>workbook.xml.rels</code></dt>
+<dd>
+<p>workbook.xml.rels</p>
+</dd>
+<dt><code>worksheets</code></dt>
+<dd>
+<p>worksheets</p>
+</dd>
+<dt><code>worksheets_rels</code></dt>
+<dd>
+<p>worksheets_rels</p>
+</dd>
+<dt><code>sheetOrder</code></dt>
+<dd>
+<p>The sheet order.  Controls ordering for worksheets and
+worksheet names.</p>
+</dd>
+<dt><code>path</code></dt>
+<dd>
+<p>path</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-wbWorkbook-new"><code>wbWorkbook$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-append"><code>wbWorkbook$append()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-append_sheets"><code>wbWorkbook$append_sheets()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-validate_sheet"><code>wbWorkbook$validate_sheet()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_chartsheet"><code>wbWorkbook$add_chartsheet()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_worksheet"><code>wbWorkbook$add_worksheet()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-clone_worksheet"><code>wbWorkbook$clone_worksheet()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_data"><code>wbWorkbook$add_data()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_data_table"><code>wbWorkbook$add_data_table()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_pivot_table"><code>wbWorkbook$add_pivot_table()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_slicer"><code>wbWorkbook$add_slicer()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_slicer"><code>wbWorkbook$remove_slicer()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_timeline"><code>wbWorkbook$add_timeline()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_timeline"><code>wbWorkbook$remove_timeline()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_formula"><code>wbWorkbook$add_formula()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_style"><code>wbWorkbook$add_style()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-to_df"><code>wbWorkbook$to_df()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-load"><code>wbWorkbook$load()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-save"><code>wbWorkbook$save()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-open"><code>wbWorkbook$open()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-buildTable"><code>wbWorkbook$buildTable()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-update_table"><code>wbWorkbook$update_table()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-copy_cells"><code>wbWorkbook$copy_cells()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_base_font"><code>wbWorkbook$get_base_font()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_base_font"><code>wbWorkbook$set_base_font()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_base_colors"><code>wbWorkbook$get_base_colors()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_base_colours"><code>wbWorkbook$get_base_colours()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_base_colors"><code>wbWorkbook$set_base_colors()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_base_colours"><code>wbWorkbook$set_base_colours()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_bookview"><code>wbWorkbook$set_bookview()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_sheet_names"><code>wbWorkbook$get_sheet_names()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_sheet_names"><code>wbWorkbook$set_sheet_names()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_row_heights"><code>wbWorkbook$set_row_heights()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_row_heights"><code>wbWorkbook$remove_row_heights()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-createCols"><code>wbWorkbook$createCols()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-group_cols"><code>wbWorkbook$group_cols()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-ungroup_cols"><code>wbWorkbook$ungroup_cols()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_col_widths"><code>wbWorkbook$remove_col_widths()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_col_widths"><code>wbWorkbook$set_col_widths()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-group_rows"><code>wbWorkbook$group_rows()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-ungroup_rows"><code>wbWorkbook$ungroup_rows()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_worksheet"><code>wbWorkbook$remove_worksheet()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_data_validation"><code>wbWorkbook$add_data_validation()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-merge_cells"><code>wbWorkbook$merge_cells()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-unmerge_cells"><code>wbWorkbook$unmerge_cells()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-freeze_pane"><code>wbWorkbook$freeze_pane()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_comment"><code>wbWorkbook$add_comment()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_comment"><code>wbWorkbook$get_comment()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_comment"><code>wbWorkbook$remove_comment()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_thread"><code>wbWorkbook$add_thread()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_thread"><code>wbWorkbook$get_thread()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_conditional_formatting"><code>wbWorkbook$add_conditional_formatting()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_conditional_formatting"><code>wbWorkbook$remove_conditional_formatting()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_image"><code>wbWorkbook$add_image()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_plot"><code>wbWorkbook$add_plot()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_drawing"><code>wbWorkbook$add_drawing()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_chart_xml"><code>wbWorkbook$add_chart_xml()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_mschart"><code>wbWorkbook$add_mschart()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_form_control"><code>wbWorkbook$add_form_control()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-print"><code>wbWorkbook$print()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-protect"><code>wbWorkbook$protect()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-protect_worksheet"><code>wbWorkbook$protect_worksheet()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_properties"><code>wbWorkbook$get_properties()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_properties"><code>wbWorkbook$set_properties()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_mips"><code>wbWorkbook$add_mips()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_mips"><code>wbWorkbook$get_mips()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_creators"><code>wbWorkbook$set_creators()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_creators"><code>wbWorkbook$add_creators()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_creators"><code>wbWorkbook$remove_creators()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_last_modified_by"><code>wbWorkbook$set_last_modified_by()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_page_setup"><code>wbWorkbook$set_page_setup()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-page_setup"><code>wbWorkbook$page_setup()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_header_footer"><code>wbWorkbook$set_header_footer()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_tables"><code>wbWorkbook$get_tables()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_tables"><code>wbWorkbook$remove_tables()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_filter"><code>wbWorkbook$add_filter()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_filter"><code>wbWorkbook$remove_filter()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_grid_lines"><code>wbWorkbook$set_grid_lines()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-grid_lines"><code>wbWorkbook$grid_lines()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_named_region"><code>wbWorkbook$add_named_region()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_named_regions"><code>wbWorkbook$get_named_regions()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-remove_named_region"><code>wbWorkbook$remove_named_region()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_order"><code>wbWorkbook$set_order()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_sheet_visibility"><code>wbWorkbook$get_sheet_visibility()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_sheet_visibility"><code>wbWorkbook$set_sheet_visibility()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_page_break"><code>wbWorkbook$add_page_break()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-clean_sheet"><code>wbWorkbook$clean_sheet()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_border"><code>wbWorkbook$add_border()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_fill"><code>wbWorkbook$add_fill()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_font"><code>wbWorkbook$add_font()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_numfmt"><code>wbWorkbook$add_numfmt()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_cell_style"><code>wbWorkbook$add_cell_style()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_cell_style"><code>wbWorkbook$get_cell_style()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_cell_style"><code>wbWorkbook$set_cell_style()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_cell_style_across"><code>wbWorkbook$set_cell_style_across()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_named_style"><code>wbWorkbook$add_named_style()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_dxfs_style"><code>wbWorkbook$add_dxfs_style()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-clone_sheet_style"><code>wbWorkbook$clone_sheet_style()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_sparklines"><code>wbWorkbook$add_sparklines()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_ignore_error"><code>wbWorkbook$add_ignore_error()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_sheetview"><code>wbWorkbook$set_sheetview()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-add_person"><code>wbWorkbook$add_person()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_person"><code>wbWorkbook$get_person()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_active_sheet"><code>wbWorkbook$get_active_sheet()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_active_sheet"><code>wbWorkbook$set_active_sheet()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-get_selected"><code>wbWorkbook$get_selected()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-set_selected"><code>wbWorkbook$set_selected()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-wbWorkbook-clone"><code>wbWorkbook$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-wbWorkbook-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Creates a new <code>wbWorkbook</code> object
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$new(
+  creator = NULL,
+  title = NULL,
+  subject = NULL,
+  category = NULL,
+  datetime_created = Sys.time(),
+  theme = NULL,
+  keywords = NULL,
+  comments = NULL,
+  manager = NULL,
+  company = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>creator</code></dt>
+<dd>
+<p>character vector of creators. Duplicated are ignored.</p>
+</dd>
+<dt><code>title, subject, category, keywords, comments, manager, company</code></dt>
+<dd>
+<p>workbook properties</p>
+</dd>
+<dt><code>datetime_created</code></dt>
+<dd>
+<p>The datetime (as <code>POSIXt</code>) the workbook is
+created.  Defaults to the current <code>Sys.time()</code> when the workbook object
+is created, not when the Excel files are saved.</p>
+</dd>
+<dt><code>theme</code></dt>
+<dd>
+<p>Optional theme identified by string or number</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>a <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-append"></a>
+
+
+
+<h4>Method <code>append()</code>
+</h4>
+
+<p>Append a field. This method is intended for internal use
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$append(field, value)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>field</code></dt>
+<dd>
+<p>A valid field name</p>
+</dd>
+<dt><code>value</code></dt>
+<dd>
+<p>A value for the field</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-append_sheets"></a>
+
+
+
+<h4>Method <code>append_sheets()</code>
+</h4>
+
+<p>Append to <code>self$workbook$sheets</code> This method is intended for internal use
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$append_sheets(value)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>value</code></dt>
+<dd>
+<p>A value for <code>self$workbook$sheets</code></p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-validate_sheet"></a>
+
+
+
+<h4>Method <code>validate_sheet()</code>
+</h4>
+
+<p>validate sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$validate_sheet(sheet)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>A character sheet name or integer location</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The integer position of the sheet
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_chartsheet"></a>
+
+
+
+<h4>Method <code>add_chartsheet()</code>
+</h4>
+
+<p>Add a chart sheet to the workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_chartsheet(
+  sheet = next_sheet(),
+  tab_color = NULL,
+  zoom = 100,
+  visible = c("true", "false", "hidden", "visible", "veryhidden"),
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>tab_color</code></dt>
+<dd>
+<p>tab_color</p>
+</dd>
+<dt><code>zoom</code></dt>
+<dd>
+<p>zoom</p>
+</dd>
+<dt><code>visible</code></dt>
+<dd>
+<p>visible</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_worksheet"></a>
+
+
+
+<h4>Method <code>add_worksheet()</code>
+</h4>
+
+<p>Add worksheet to the <code>wbWorkbook</code> object
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_worksheet(
+  sheet = next_sheet(),
+  grid_lines = TRUE,
+  row_col_headers = TRUE,
+  tab_color = NULL,
+  zoom = 100,
+  header = NULL,
+  footer = NULL,
+  odd_header = header,
+  odd_footer = footer,
+  even_header = header,
+  even_footer = footer,
+  first_header = header,
+  first_footer = footer,
+  visible = c("true", "false", "hidden", "visible", "veryhidden"),
+  has_drawing = FALSE,
+  paper_size = getOption("openxlsx2.paperSize", default = 9),
+  orientation = getOption("openxlsx2.orientation", default = "portrait"),
+  hdpi = getOption("openxlsx2.hdpi", default = getOption("openxlsx2.dpi", default = 300)),
+  vdpi = getOption("openxlsx2.vdpi", default = getOption("openxlsx2.dpi", default = 300)),
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>grid_lines</code></dt>
+<dd>
+<p>gridLines</p>
+</dd>
+<dt><code>row_col_headers</code></dt>
+<dd>
+<p>rowColHeaders</p>
+</dd>
+<dt><code>tab_color</code></dt>
+<dd>
+<p>tabColor</p>
+</dd>
+<dt><code>zoom</code></dt>
+<dd>
+<p>zoom</p>
+</dd>
+<dt><code>header</code></dt>
+<dd>
+<p>header</p>
+</dd>
+<dt><code>footer</code></dt>
+<dd>
+<p>footer</p>
+</dd>
+<dt><code>odd_header</code></dt>
+<dd>
+<p>oddHeader</p>
+</dd>
+<dt><code>odd_footer</code></dt>
+<dd>
+<p>oddFooter</p>
+</dd>
+<dt><code>even_header</code></dt>
+<dd>
+<p>evenHeader</p>
+</dd>
+<dt><code>even_footer</code></dt>
+<dd>
+<p>evenFooter</p>
+</dd>
+<dt><code>first_header</code></dt>
+<dd>
+<p>firstHeader</p>
+</dd>
+<dt><code>first_footer</code></dt>
+<dd>
+<p>firstFooter</p>
+</dd>
+<dt><code>visible</code></dt>
+<dd>
+<p>visible</p>
+</dd>
+<dt><code>has_drawing</code></dt>
+<dd>
+<p>hasDrawing</p>
+</dd>
+<dt><code>paper_size</code></dt>
+<dd>
+<p>paperSize</p>
+</dd>
+<dt><code>orientation</code></dt>
+<dd>
+<p>orientation</p>
+</dd>
+<dt><code>hdpi</code></dt>
+<dd>
+<p>hdpi</p>
+</dd>
+<dt><code>vdpi</code></dt>
+<dd>
+<p>vdpi</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-clone_worksheet"></a>
+
+
+
+<h4>Method <code>clone_worksheet()</code>
+</h4>
+
+<p>Clone a workbooksheet to another workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$clone_worksheet(
+  old = current_sheet(),
+  new = next_sheet(),
+  from = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>old</code></dt>
+<dd>
+<p>name of worksheet to clone</p>
+</dd>
+<dt><code>new</code></dt>
+<dd>
+<p>name of new worksheet to add</p>
+</dd>
+<dt><code>from</code></dt>
+<dd>
+<p>name of new worksheet to add</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-add_data"></a>
+
+
+
+<h4>Method <code>add_data()</code>
+</h4>
+
+<p>add data
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_data(
+  sheet = current_sheet(),
+  x,
+  dims = wb_dims(start_row, start_col),
+  start_col = 1,
+  start_row = 1,
+  array = FALSE,
+  col_names = TRUE,
+  row_names = FALSE,
+  with_filter = FALSE,
+  name = NULL,
+  sep = ", ",
+  apply_cell_style = TRUE,
+  remove_cell_style = FALSE,
+  na.strings = na_strings(),
+  inline_strings = TRUE,
+  enforce = FALSE,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>x</code></dt>
+<dd>
+<p>x</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>start_col</code></dt>
+<dd>
+<p>startCol</p>
+</dd>
+<dt><code>start_row</code></dt>
+<dd>
+<p>startRow</p>
+</dd>
+<dt><code>array</code></dt>
+<dd>
+<p>array</p>
+</dd>
+<dt><code>col_names</code></dt>
+<dd>
+<p>colNames</p>
+</dd>
+<dt><code>row_names</code></dt>
+<dd>
+<p>rowNames</p>
+</dd>
+<dt><code>with_filter</code></dt>
+<dd>
+<p>withFilter</p>
+</dd>
+<dt><code>name</code></dt>
+<dd>
+<p>name</p>
+</dd>
+<dt><code>sep</code></dt>
+<dd>
+<p>sep</p>
+</dd>
+<dt><code>apply_cell_style</code></dt>
+<dd>
+<p>applyCellStyle</p>
+</dd>
+<dt><code>remove_cell_style</code></dt>
+<dd>
+<p>if writing into existing cells, should the cell style be removed?</p>
+</dd>
+<dt><code>na.strings</code></dt>
+<dd>
+<p>Value used for replacing <code>NA</code> values from <code>x</code>. Default
+<code>na_strings()</code> uses the special <code style="white-space: pre;">⁠#N/A⁠</code> value within the workbook.</p>
+</dd>
+<dt><code>inline_strings</code></dt>
+<dd>
+<p>write characters as inline strings</p>
+</dd>
+<dt><code>enforce</code></dt>
+<dd>
+<p>enforce that selected dims is filled. For this to work, <code>dims</code> must match <code>x</code></p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+<dt><code>return</code></dt>
+<dd>
+<p>The <code>wbWorkbook</code> object</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-add_data_table"></a>
+
+
+
+<h4>Method <code>add_data_table()</code>
+</h4>
+
+<p>add a data table
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_data_table(
+  sheet = current_sheet(),
+  x,
+  dims = wb_dims(start_row, start_col),
+  start_col = 1,
+  start_row = 1,
+  col_names = TRUE,
+  row_names = FALSE,
+  table_style = "TableStyleLight9",
+  table_name = NULL,
+  with_filter = TRUE,
+  sep = ", ",
+  first_column = FALSE,
+  last_column = FALSE,
+  banded_rows = TRUE,
+  banded_cols = FALSE,
+  apply_cell_style = TRUE,
+  remove_cell_style = FALSE,
+  na.strings = na_strings(),
+  inline_strings = TRUE,
+  total_row = FALSE,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>x</code></dt>
+<dd>
+<p>x</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>start_col</code></dt>
+<dd>
+<p>startCol</p>
+</dd>
+<dt><code>start_row</code></dt>
+<dd>
+<p>startRow</p>
+</dd>
+<dt><code>col_names</code></dt>
+<dd>
+<p>colNames</p>
+</dd>
+<dt><code>row_names</code></dt>
+<dd>
+<p>rowNames</p>
+</dd>
+<dt><code>table_style</code></dt>
+<dd>
+<p>tableStyle</p>
+</dd>
+<dt><code>table_name</code></dt>
+<dd>
+<p>tableName</p>
+</dd>
+<dt><code>with_filter</code></dt>
+<dd>
+<p>withFilter</p>
+</dd>
+<dt><code>sep</code></dt>
+<dd>
+<p>sep</p>
+</dd>
+<dt><code>first_column</code></dt>
+<dd>
+<p>firstColumn</p>
+</dd>
+<dt><code>last_column</code></dt>
+<dd>
+<p>lastColumn</p>
+</dd>
+<dt><code>banded_rows</code></dt>
+<dd>
+<p>bandedRows</p>
+</dd>
+<dt><code>banded_cols</code></dt>
+<dd>
+<p>bandedCols</p>
+</dd>
+<dt><code>apply_cell_style</code></dt>
+<dd>
+<p>applyCellStyle</p>
+</dd>
+<dt><code>remove_cell_style</code></dt>
+<dd>
+<p>if writing into existing cells, should the cell style be removed?</p>
+</dd>
+<dt><code>na.strings</code></dt>
+<dd>
+<p>Value used for replacing <code>NA</code> values from <code>x</code>. Default
+<code>na_strings()</code> uses the special <code style="white-space: pre;">⁠#N/A⁠</code> value within the workbook.</p>
+</dd>
+<dt><code>inline_strings</code></dt>
+<dd>
+<p>write characters as inline strings</p>
+</dd>
+<dt><code>total_row</code></dt>
+<dd>
+<p>write total rows to table</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_pivot_table"></a>
+
+
+
+<h4>Method <code>add_pivot_table()</code>
+</h4>
+
+<p>add pivot table
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_pivot_table(
+  x,
+  sheet = next_sheet(),
+  dims = "A3",
+  filter,
+  rows,
+  cols,
+  data,
+  fun,
+  params,
+  pivot_table,
+  slicer,
+  timeline
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>a wb_data object</p>
+</dd>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>the worksheet cell where the pivot table is placed</p>
+</dd>
+<dt><code>filter</code></dt>
+<dd>
+<p>a character object with names used to filter</p>
+</dd>
+<dt><code>rows</code></dt>
+<dd>
+<p>a character object with names used as rows</p>
+</dd>
+<dt><code>cols</code></dt>
+<dd>
+<p>a character object with names used as cols</p>
+</dd>
+<dt><code>data</code></dt>
+<dd>
+<p>a character object with names used as data</p>
+</dd>
+<dt><code>fun</code></dt>
+<dd>
+<p>a character object of functions to be used with the data</p>
+</dd>
+<dt><code>params</code></dt>
+<dd>
+<p>a list of parameters to modify pivot table creation</p>
+</dd>
+<dt><code>pivot_table</code></dt>
+<dd>
+<p>a character object with a name for the pivot table</p>
+</dd>
+<dt><code>slicer</code></dt>
+<dd>
+<p>a character object with names used as slicer</p>
+</dd>
+<dt><code>timeline</code></dt>
+<dd>
+<p>a character object with names used as timeline</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Details</h5>
+
+<p><code>fun</code> can be either of AVERAGE, COUNT, COUNTA, MAX, MIN, PRODUCT, STDEV,
+STDEVP, SUM, VAR, VARP
+</p>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_slicer"></a>
+
+
+
+<h4>Method <code>add_slicer()</code>
+</h4>
+
+<p>add pivot table
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_slicer(
+  x,
+  dims = "A1",
+  sheet = current_sheet(),
+  pivot_table,
+  slicer,
+  params
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>a wb_data object</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>the worksheet cell where the pivot table is placed</p>
+</dd>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>pivot_table</code></dt>
+<dd>
+<p>the name of a pivot table on the selected sheet</p>
+</dd>
+<dt><code>slicer</code></dt>
+<dd>
+<p>a variable used as slicer for the pivot table</p>
+</dd>
+<dt><code>params</code></dt>
+<dd>
+<p>a list of parameters to modify pivot table creation</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_slicer"></a>
+
+
+
+<h4>Method <code>remove_slicer()</code>
+</h4>
+
+<p>add pivot table
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_slicer(sheet = current_sheet())</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_timeline"></a>
+
+
+
+<h4>Method <code>add_timeline()</code>
+</h4>
+
+<p>add pivot table
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_timeline(
+  x,
+  dims = "A1",
+  sheet = current_sheet(),
+  pivot_table,
+  timeline,
+  params
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>a wb_data object</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>the worksheet cell where the pivot table is placed</p>
+</dd>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>pivot_table</code></dt>
+<dd>
+<p>the name of a pivot table on the selected sheet</p>
+</dd>
+<dt><code>timeline</code></dt>
+<dd>
+<p>a variable used as timeline for the pivot table</p>
+</dd>
+<dt><code>params</code></dt>
+<dd>
+<p>a list of parameters to modify pivot table creation</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_timeline"></a>
+
+
+
+<h4>Method <code>remove_timeline()</code>
+</h4>
+
+<p>add pivot table
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_timeline(sheet = current_sheet())</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_formula"></a>
+
+
+
+<h4>Method <code>add_formula()</code>
+</h4>
+
+<p>Add formula
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_formula(
+  sheet = current_sheet(),
+  x,
+  dims = wb_dims(start_row, start_col),
+  start_col = 1,
+  start_row = 1,
+  array = FALSE,
+  cm = FALSE,
+  apply_cell_style = TRUE,
+  remove_cell_style = FALSE,
+  enforce = FALSE,
+  shared = FALSE,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>x</code></dt>
+<dd>
+<p>x</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>start_col</code></dt>
+<dd>
+<p>startCol</p>
+</dd>
+<dt><code>start_row</code></dt>
+<dd>
+<p>startRow</p>
+</dd>
+<dt><code>array</code></dt>
+<dd>
+<p>array</p>
+</dd>
+<dt><code>cm</code></dt>
+<dd>
+<p>cm</p>
+</dd>
+<dt><code>apply_cell_style</code></dt>
+<dd>
+<p>applyCellStyle</p>
+</dd>
+<dt><code>remove_cell_style</code></dt>
+<dd>
+<p>if writing into existing cells, should the cell style be removed?</p>
+</dd>
+<dt><code>enforce</code></dt>
+<dd>
+<p>enforce dims</p>
+</dd>
+<dt><code>shared</code></dt>
+<dd>
+<p>shared formula</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_style"></a>
+
+
+
+<h4>Method <code>add_style()</code>
+</h4>
+
+<p>add style
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_style(style = NULL, style_name = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>style</code></dt>
+<dd>
+<p>style</p>
+</dd>
+<dt><code>style_name</code></dt>
+<dd>
+<p>style_name</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-to_df"></a>
+
+
+
+<h4>Method <code>to_df()</code>
+</h4>
+
+<p>to_df
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$to_df(
+  sheet,
+  start_row = 1,
+  start_col = NULL,
+  row_names = FALSE,
+  col_names = TRUE,
+  skip_empty_rows = FALSE,
+  skip_empty_cols = FALSE,
+  skip_hidden_rows = FALSE,
+  skip_hidden_cols = FALSE,
+  rows = NULL,
+  cols = NULL,
+  detect_dates = TRUE,
+  na.strings = "#N/A",
+  na.numbers = NA,
+  fill_merged_cells = FALSE,
+  dims,
+  show_formula = FALSE,
+  convert = TRUE,
+  types,
+  named_region,
+  keep_attributes = FALSE,
+  check_names = FALSE,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>Either sheet name or index. When missing the first sheet in the workbook is selected.</p>
+</dd>
+<dt><code>start_row</code></dt>
+<dd>
+<p>first row to begin looking for data.</p>
+</dd>
+<dt><code>start_col</code></dt>
+<dd>
+<p>first column to begin looking for data.</p>
+</dd>
+<dt><code>row_names</code></dt>
+<dd>
+<p>If TRUE, the first col of data will be used as row names.</p>
+</dd>
+<dt><code>col_names</code></dt>
+<dd>
+<p>If TRUE, the first row of data will be used as column names.</p>
+</dd>
+<dt><code>skip_empty_rows</code></dt>
+<dd>
+<p>If TRUE, empty rows are skipped.</p>
+</dd>
+<dt><code>skip_empty_cols</code></dt>
+<dd>
+<p>If TRUE, empty columns are skipped.</p>
+</dd>
+<dt><code>skip_hidden_rows</code></dt>
+<dd>
+<p>If TRUE, hidden rows are skipped.</p>
+</dd>
+<dt><code>skip_hidden_cols</code></dt>
+<dd>
+<p>If TRUE, hidden columns are skipped.</p>
+</dd>
+<dt><code>rows</code></dt>
+<dd>
+<p>A numeric vector specifying which rows in the Excel file to read. If NULL, all rows are read.</p>
+</dd>
+<dt><code>cols</code></dt>
+<dd>
+<p>A numeric vector specifying which columns in the Excel file to read. If NULL, all columns are read.</p>
+</dd>
+<dt><code>detect_dates</code></dt>
+<dd>
+<p>If TRUE, attempt to recognize dates and perform conversion.</p>
+</dd>
+<dt><code>na.strings</code></dt>
+<dd>
+<p>A character vector of strings which are to be interpreted as NA. Blank cells will be returned as NA.</p>
+</dd>
+<dt><code>na.numbers</code></dt>
+<dd>
+<p>A numeric vector of digits which are to be interpreted as NA. Blank cells will be returned as NA.</p>
+</dd>
+<dt><code>fill_merged_cells</code></dt>
+<dd>
+<p>If TRUE, the value in a merged cell is given to all cells within the merge.</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Character string of type "A1:B2" as optional dimensions to be imported.</p>
+</dd>
+<dt><code>show_formula</code></dt>
+<dd>
+<p>If TRUE, the underlying Excel formulas are shown.</p>
+</dd>
+<dt><code>convert</code></dt>
+<dd>
+<p>If TRUE, a conversion to dates and numerics is attempted.</p>
+</dd>
+<dt><code>types</code></dt>
+<dd>
+<p>A named numeric indicating, the type of the data. 0: character, 1: numeric, 2: date, 3: posixt, 4:logical. Names must match the returned data</p>
+</dd>
+<dt><code>named_region</code></dt>
+<dd>
+<p>Character string with a named_region (defined name or table). If no sheet is selected, the first appearance will be selected.</p>
+</dd>
+<dt><code>keep_attributes</code></dt>
+<dd>
+<p>If TRUE additional attributes are returned. (These are used internally to define a cell type.)</p>
+</dd>
+<dt><code>check_names</code></dt>
+<dd>
+<p>If TRUE then the names of the variables in the data frame are checked to ensure that they are syntactically valid variable names.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>a data frame
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-load"></a>
+
+
+
+<h4>Method <code>load()</code>
+</h4>
+
+<p>load workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$load(file, sheet, data_only = FALSE, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>file</code></dt>
+<dd>
+<p>file</p>
+</dd>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>data_only</code></dt>
+<dd>
+<p>data_only</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-save"></a>
+
+
+
+<h4>Method <code>save()</code>
+</h4>
+
+<p>Save the workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$save(file = self$path, overwrite = TRUE, path = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>file</code></dt>
+<dd>
+<p>The path to save the workbook to</p>
+</dd>
+<dt><code>overwrite</code></dt>
+<dd>
+<p>If <code>FALSE</code>, will not overwrite when <code>path</code> exists</p>
+</dd>
+<dt><code>path</code></dt>
+<dd>
+<p>Deprecated argument previously used for file. Please use file in new code.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-open"></a>
+
+
+
+<h4>Method <code>open()</code>
+</h4>
+
+<p>open wbWorkbook in Excel.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$open(interactive = NA)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>interactive</code></dt>
+<dd>
+<p>If <code>FALSE</code> will throw a warning and not open the path.
+This can be manually set to <code>TRUE</code>, otherwise when <code>NA</code> (default) uses
+the value returned from <code>base::interactive()</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Details</h5>
+
+<p>minor helper wrapping xl_open which does the entire same thing
+</p>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-buildTable"></a>
+
+
+
+<h4>Method <code>buildTable()</code>
+</h4>
+
+<p>Build table
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$buildTable(
+  sheet = current_sheet(),
+  colNames,
+  ref,
+  showColNames,
+  tableStyle,
+  tableName,
+  withFilter = TRUE,
+  totalsRowCount = 0,
+  totalLabel = FALSE,
+  showFirstColumn = 0,
+  showLastColumn = 0,
+  showRowStripes = 1,
+  showColumnStripes = 0
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>colNames</code></dt>
+<dd>
+<p>colNames</p>
+</dd>
+<dt><code>ref</code></dt>
+<dd>
+<p>ref</p>
+</dd>
+<dt><code>showColNames</code></dt>
+<dd>
+<p>showColNames</p>
+</dd>
+<dt><code>tableStyle</code></dt>
+<dd>
+<p>tableStyle</p>
+</dd>
+<dt><code>tableName</code></dt>
+<dd>
+<p>tableName</p>
+</dd>
+<dt><code>withFilter</code></dt>
+<dd>
+<p>withFilter</p>
+</dd>
+<dt><code>totalsRowCount</code></dt>
+<dd>
+<p>totalsRowCount</p>
+</dd>
+<dt><code>totalLabel</code></dt>
+<dd>
+<p>totalLabel</p>
+</dd>
+<dt><code>showFirstColumn</code></dt>
+<dd>
+<p>showFirstColumn</p>
+</dd>
+<dt><code>showLastColumn</code></dt>
+<dd>
+<p>showLastColumn</p>
+</dd>
+<dt><code>showRowStripes</code></dt>
+<dd>
+<p>showRowStripes</p>
+</dd>
+<dt><code>showColumnStripes</code></dt>
+<dd>
+<p>showColumnStripes</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorksheet</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-update_table"></a>
+
+
+
+<h4>Method <code>update_table()</code>
+</h4>
+
+<p>update a data_table
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$update_table(sheet = current_sheet(), dims = "A1", tabname)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>tabname</code></dt>
+<dd>
+<p>a tablename</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorksheet</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-copy_cells"></a>
+
+
+
+<h4>Method <code>copy_cells()</code>
+</h4>
+
+<p>copy cells around in a workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$copy_cells(
+  sheet = current_sheet(),
+  dims = "A1",
+  data,
+  as_value = FALSE,
+  as_ref = FALSE,
+  transpose = FALSE,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>data</code></dt>
+<dd>
+<p>a wb_data object</p>
+</dd>
+<dt><code>as_value</code></dt>
+<dd>
+<p>should a copy of the value be written</p>
+</dd>
+<dt><code>as_ref</code></dt>
+<dd>
+<p>should references to the cell be written</p>
+</dd>
+<dt><code>transpose</code></dt>
+<dd>
+<p>should the data be written transposed</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments passed to add_data() if used with <code>as_value</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorksheet</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-get_base_font"></a>
+
+
+
+<h4>Method <code>get_base_font()</code>
+</h4>
+
+<p>Get the base font
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_base_font()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>A list of of the font
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_base_font"></a>
+
+
+
+<h4>Method <code>set_base_font()</code>
+</h4>
+
+<p>Set the base font
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_base_font(
+  font_size = 11,
+  font_color = wb_color(theme = "1"),
+  font_name = "Aptos Narrow",
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>font_size</code></dt>
+<dd>
+<p>fontSize</p>
+</dd>
+<dt><code>font_color</code></dt>
+<dd>
+<p>font_color</p>
+</dd>
+<dt><code>font_name</code></dt>
+<dd>
+<p>font_name</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-get_base_colors"></a>
+
+
+
+<h4>Method <code>get_base_colors()</code>
+</h4>
+
+<p>Get the base color
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_base_colors(xml = FALSE, plot = TRUE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>xml</code></dt>
+<dd>
+<p>xml</p>
+</dd>
+<dt><code>plot</code></dt>
+<dd>
+<p>plot</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-get_base_colours"></a>
+
+
+
+<h4>Method <code>get_base_colours()</code>
+</h4>
+
+<p>Get the base colour
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_base_colours(xml = FALSE, plot = TRUE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>xml</code></dt>
+<dd>
+<p>xml</p>
+</dd>
+<dt><code>plot</code></dt>
+<dd>
+<p>plot</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-set_base_colors"></a>
+
+
+
+<h4>Method <code>set_base_colors()</code>
+</h4>
+
+<p>Set the base color
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_base_colors(theme = "Office", ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>theme</code></dt>
+<dd>
+<p>theme</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>...</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_base_colours"></a>
+
+
+
+<h4>Method <code>set_base_colours()</code>
+</h4>
+
+<p>Set the base colour
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_base_colours(theme = "Office", ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>theme</code></dt>
+<dd>
+<p>theme</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>...</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_bookview"></a>
+
+
+
+<h4>Method <code>set_bookview()</code>
+</h4>
+
+<p>Set the book views
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_bookview(
+  active_tab = NULL,
+  auto_filter_date_grouping = NULL,
+  first_sheet = NULL,
+  minimized = NULL,
+  show_horizontal_scroll = NULL,
+  show_sheet_tabs = NULL,
+  show_vertical_scroll = NULL,
+  tab_ratio = NULL,
+  visibility = NULL,
+  window_height = NULL,
+  window_width = NULL,
+  x_window = NULL,
+  y_window = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>active_tab</code></dt>
+<dd>
+<p>activeTab</p>
+</dd>
+<dt><code>auto_filter_date_grouping</code></dt>
+<dd>
+<p>autoFilterDateGrouping</p>
+</dd>
+<dt><code>first_sheet</code></dt>
+<dd>
+<p>firstSheet</p>
+</dd>
+<dt><code>minimized</code></dt>
+<dd>
+<p>minimized</p>
+</dd>
+<dt><code>show_horizontal_scroll</code></dt>
+<dd>
+<p>showHorizontalScroll</p>
+</dd>
+<dt><code>show_sheet_tabs</code></dt>
+<dd>
+<p>showSheetTabs</p>
+</dd>
+<dt><code>show_vertical_scroll</code></dt>
+<dd>
+<p>showVerticalScroll</p>
+</dd>
+<dt><code>tab_ratio</code></dt>
+<dd>
+<p>tabRatio</p>
+</dd>
+<dt><code>visibility</code></dt>
+<dd>
+<p>visibility</p>
+</dd>
+<dt><code>window_height</code></dt>
+<dd>
+<p>windowHeight</p>
+</dd>
+<dt><code>window_width</code></dt>
+<dd>
+<p>windowWidth</p>
+</dd>
+<dt><code>x_window</code></dt>
+<dd>
+<p>xWindow</p>
+</dd>
+<dt><code>y_window</code></dt>
+<dd>
+<p>yWindow</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-get_sheet_names"></a>
+
+
+
+<h4>Method <code>get_sheet_names()</code>
+</h4>
+
+<p>Get sheet names
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_sheet_names(escape = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>escape</code></dt>
+<dd>
+<p>Logical if the xml special characters are escaped</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A <code>named</code> <code>character</code> vector of sheet names in their order.  The
+names represent the original value of the worksheet prior to any
+character substitutions.
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_sheet_names"></a>
+
+
+
+<h4>Method <code>set_sheet_names()</code>
+</h4>
+
+<p>Sets a sheet name
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_sheet_names(old = NULL, new)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>old</code></dt>
+<dd>
+<p>Old sheet name</p>
+</dd>
+<dt><code>new</code></dt>
+<dd>
+<p>New sheet name</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_row_heights"></a>
+
+
+
+<h4>Method <code>set_row_heights()</code>
+</h4>
+
+<p>Sets a row height for a sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_row_heights(
+  sheet = current_sheet(),
+  rows,
+  heights = NULL,
+  hidden = FALSE
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>rows</code></dt>
+<dd>
+<p>rows</p>
+</dd>
+<dt><code>heights</code></dt>
+<dd>
+<p>heights</p>
+</dd>
+<dt><code>hidden</code></dt>
+<dd>
+<p>hidden</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_row_heights"></a>
+
+
+
+<h4>Method <code>remove_row_heights()</code>
+</h4>
+
+<p>Removes a row height for a sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_row_heights(sheet = current_sheet(), rows)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>rows</code></dt>
+<dd>
+<p>rows</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-createCols"></a>
+
+
+
+<h4>Method <code>createCols()</code>
+</h4>
+
+<p>creates column object for worksheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$createCols(sheet = current_sheet(), n, beg, end)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>n</code></dt>
+<dd>
+<p>n</p>
+</dd>
+<dt><code>beg</code></dt>
+<dd>
+<p>beg</p>
+</dd>
+<dt><code>end</code></dt>
+<dd>
+<p>end</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-group_cols"></a>
+
+
+
+<h4>Method <code>group_cols()</code>
+</h4>
+
+<p>Group cols
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$group_cols(
+  sheet = current_sheet(),
+  cols,
+  collapsed = FALSE,
+  levels = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>cols</code></dt>
+<dd>
+<p>cols</p>
+</dd>
+<dt><code>collapsed</code></dt>
+<dd>
+<p>collapsed</p>
+</dd>
+<dt><code>levels</code></dt>
+<dd>
+<p>levels</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-ungroup_cols"></a>
+
+
+
+<h4>Method <code>ungroup_cols()</code>
+</h4>
+
+<p>ungroup cols
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$ungroup_cols(sheet = current_sheet(), cols)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>cols</code></dt>
+<dd>
+<p>columns</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_col_widths"></a>
+
+
+
+<h4>Method <code>remove_col_widths()</code>
+</h4>
+
+<p>Remove row heights from a worksheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_col_widths(sheet = current_sheet(), cols)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>A name or index of a worksheet</p>
+</dd>
+<dt><code>cols</code></dt>
+<dd>
+<p>Indices of columns to remove custom width (if any) from.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_col_widths"></a>
+
+
+
+<h4>Method <code>set_col_widths()</code>
+</h4>
+
+<p>Set column widths
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_col_widths(
+  sheet = current_sheet(),
+  cols,
+  widths = 8.43,
+  hidden = FALSE
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>cols</code></dt>
+<dd>
+<p>cols</p>
+</dd>
+<dt><code>widths</code></dt>
+<dd>
+<p>Width of columns</p>
+</dd>
+<dt><code>hidden</code></dt>
+<dd>
+<p>A logical vector to determine which cols are hidden; values
+are repeated across length of <code>cols</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-group_rows"></a>
+
+
+
+<h4>Method <code>group_rows()</code>
+</h4>
+
+<p>Group rows
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$group_rows(
+  sheet = current_sheet(),
+  rows,
+  collapsed = FALSE,
+  levels = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>rows</code></dt>
+<dd>
+<p>rows</p>
+</dd>
+<dt><code>collapsed</code></dt>
+<dd>
+<p>collapsed</p>
+</dd>
+<dt><code>levels</code></dt>
+<dd>
+<p>levels</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-ungroup_rows"></a>
+
+
+
+<h4>Method <code>ungroup_rows()</code>
+</h4>
+
+<p>ungroup rows
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$ungroup_rows(sheet = current_sheet(), rows)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>rows</code></dt>
+<dd>
+<p>rows</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_worksheet"></a>
+
+
+
+<h4>Method <code>remove_worksheet()</code>
+</h4>
+
+<p>Remove a worksheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_worksheet(sheet = current_sheet())</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The worksheet to delete</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_data_validation"></a>
+
+
+
+<h4>Method <code>add_data_validation()</code>
+</h4>
+
+<p>Adds data validation
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_data_validation(
+  sheet = current_sheet(),
+  dims = "A1",
+  type,
+  operator,
+  value,
+  allow_blank = TRUE,
+  show_input_msg = TRUE,
+  show_error_msg = TRUE,
+  error_style = NULL,
+  error_title = NULL,
+  error = NULL,
+  prompt_title = NULL,
+  prompt = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>type</code></dt>
+<dd>
+<p>type</p>
+</dd>
+<dt><code>operator</code></dt>
+<dd>
+<p>operator</p>
+</dd>
+<dt><code>value</code></dt>
+<dd>
+<p>value</p>
+</dd>
+<dt><code>allow_blank</code></dt>
+<dd>
+<p>allowBlank</p>
+</dd>
+<dt><code>show_input_msg</code></dt>
+<dd>
+<p>showInputMsg</p>
+</dd>
+<dt><code>show_error_msg</code></dt>
+<dd>
+<p>showErrorMsg</p>
+</dd>
+<dt><code>error_style</code></dt>
+<dd>
+<p>The icon shown and the options how to deal with such inputs. Default "stop" (cancel), else "information" (prompt popup) or "warning" (prompt accept or change input)</p>
+</dd>
+<dt><code>error_title</code></dt>
+<dd>
+<p>The error title</p>
+</dd>
+<dt><code>error</code></dt>
+<dd>
+<p>The error text</p>
+</dd>
+<dt><code>prompt_title</code></dt>
+<dd>
+<p>The prompt title</p>
+</dd>
+<dt><code>prompt</code></dt>
+<dd>
+<p>The prompt text</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-merge_cells"></a>
+
+
+
+<h4>Method <code>merge_cells()</code>
+</h4>
+
+<p>Set cell merging for a sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$merge_cells(
+  sheet = current_sheet(),
+  dims = NULL,
+  solve = FALSE,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>solve</code></dt>
+<dd>
+<p>logical if intersecting cells should be solved</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-unmerge_cells"></a>
+
+
+
+<h4>Method <code>unmerge_cells()</code>
+</h4>
+
+<p>Removes cell merging for a sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$unmerge_cells(sheet = current_sheet(), dims = NULL, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-freeze_pane"></a>
+
+
+
+<h4>Method <code>freeze_pane()</code>
+</h4>
+
+<p>Set freeze panes for a sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$freeze_pane(
+  sheet = current_sheet(),
+  first_active_row = NULL,
+  first_active_col = NULL,
+  first_row = FALSE,
+  first_col = FALSE,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>first_active_row</code></dt>
+<dd>
+<p>first_active_row</p>
+</dd>
+<dt><code>first_active_col</code></dt>
+<dd>
+<p>first_active_col</p>
+</dd>
+<dt><code>first_row</code></dt>
+<dd>
+<p>first_row</p>
+</dd>
+<dt><code>first_col</code></dt>
+<dd>
+<p>first_col</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_comment"></a>
+
+
+
+<h4>Method <code>add_comment()</code>
+</h4>
+
+<p>Add comment
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_comment(sheet = current_sheet(), dims = "A1", comment, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>row and column as spreadsheet dimension, e.g. "A1"</p>
+</dd>
+<dt><code>comment</code></dt>
+<dd>
+<p>a comment to apply to the worksheet</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-get_comment"></a>
+
+
+
+<h4>Method <code>get_comment()</code>
+</h4>
+
+<p>Get comments
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_comment(sheet = current_sheet(), dims = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>dims</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A data frame containing comments
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_comment"></a>
+
+
+
+<h4>Method <code>remove_comment()</code>
+</h4>
+
+<p>Remove comment
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_comment(sheet = current_sheet(), dims = "A1", ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>row and column as spreadsheet dimension, e.g. "A1"</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_thread"></a>
+
+
+
+<h4>Method <code>add_thread()</code>
+</h4>
+
+<p>add threaded comment to worksheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_thread(
+  sheet = current_sheet(),
+  dims = "A1",
+  comment = NULL,
+  person_id,
+  reply = FALSE,
+  resolve = FALSE
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>comment</code></dt>
+<dd>
+<p>the comment to add</p>
+</dd>
+<dt><code>person_id</code></dt>
+<dd>
+<p>the person Id this should be added for</p>
+</dd>
+<dt><code>reply</code></dt>
+<dd>
+<p>logical if the comment is a reply</p>
+</dd>
+<dt><code>resolve</code></dt>
+<dd>
+<p>logical if the comment should be marked as resolved</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-get_thread"></a>
+
+
+
+<h4>Method <code>get_thread()</code>
+</h4>
+
+<p>Get threads
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_thread(sheet = current_sheet(), dims = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>dims</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A data frame containing threads
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_conditional_formatting"></a>
+
+
+
+<h4>Method <code>add_conditional_formatting()</code>
+</h4>
+
+<p>Add conditional formatting
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_conditional_formatting(
+  sheet = current_sheet(),
+  dims = NULL,
+  rule = NULL,
+  style = NULL,
+  type = c("expression", "colorScale", "dataBar", "iconSet", "duplicatedValues",
+    "uniqueValues", "containsErrors", "notContainsErrors", "containsBlanks",
+    "notContainsBlanks", "containsText", "notContainsText", "beginsWith", "endsWith",
+    "between", "topN", "bottomN"),
+  params = list(showValue = TRUE, gradient = TRUE, border = TRUE, percent = FALSE, rank =
+    5L),
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>rule</code></dt>
+<dd>
+<p>rule</p>
+</dd>
+<dt><code>style</code></dt>
+<dd>
+<p>style</p>
+</dd>
+<dt><code>type</code></dt>
+<dd>
+<p>type</p>
+</dd>
+<dt><code>params</code></dt>
+<dd>
+<p>Additional parameters</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_conditional_formatting"></a>
+
+
+
+<h4>Method <code>remove_conditional_formatting()</code>
+</h4>
+
+<p>Remove conditional formatting
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_conditional_formatting(
+  sheet = current_sheet(),
+  dims = NULL,
+  first = FALSE,
+  last = FALSE
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>dims</p>
+</dd>
+<dt><code>first</code></dt>
+<dd>
+<p>first</p>
+</dd>
+<dt><code>last</code></dt>
+<dd>
+<p>last</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_image"></a>
+
+
+
+<h4>Method <code>add_image()</code>
+</h4>
+
+<p>Insert an image into a sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_image(
+  sheet = current_sheet(),
+  dims = "A1",
+  file,
+  width = 6,
+  height = 3,
+  row_offset = 0,
+  col_offset = 0,
+  units = "in",
+  dpi = 300,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>file</code></dt>
+<dd>
+<p>file</p>
+</dd>
+<dt><code>width</code></dt>
+<dd>
+<p>width</p>
+</dd>
+<dt><code>height</code></dt>
+<dd>
+<p>height</p>
+</dd>
+<dt><code>row_offset, col_offset</code></dt>
+<dd>
+<p>offsets</p>
+</dd>
+<dt><code>units</code></dt>
+<dd>
+<p>units</p>
+</dd>
+<dt><code>dpi</code></dt>
+<dd>
+<p>dpi</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_plot"></a>
+
+
+
+<h4>Method <code>add_plot()</code>
+</h4>
+
+<p>Add plot. A wrapper for add_image()
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_plot(
+  sheet = current_sheet(),
+  dims = "A1",
+  width = 6,
+  height = 4,
+  row_offset = 0,
+  col_offset = 0,
+  file_type = "png",
+  units = "in",
+  dpi = 300,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>width</code></dt>
+<dd>
+<p>width</p>
+</dd>
+<dt><code>height</code></dt>
+<dd>
+<p>height</p>
+</dd>
+<dt><code>row_offset, col_offset</code></dt>
+<dd>
+<p>offsets</p>
+</dd>
+<dt><code>file_type</code></dt>
+<dd>
+<p>fileType</p>
+</dd>
+<dt><code>units</code></dt>
+<dd>
+<p>units</p>
+</dd>
+<dt><code>dpi</code></dt>
+<dd>
+<p>dpi</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_drawing"></a>
+
+
+
+<h4>Method <code>add_drawing()</code>
+</h4>
+
+<p>Add xml drawing
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_drawing(
+  sheet = current_sheet(),
+  dims = "A1",
+  xml,
+  col_offset = 0,
+  row_offset = 0,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>xml</code></dt>
+<dd>
+<p>xml</p>
+</dd>
+<dt><code>col_offset, row_offset</code></dt>
+<dd>
+<p>offsets for column and row</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_chart_xml"></a>
+
+
+
+<h4>Method <code>add_chart_xml()</code>
+</h4>
+
+<p>Add xml chart
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_chart_xml(
+  sheet = current_sheet(),
+  dims = NULL,
+  xml,
+  col_offset = 0,
+  row_offset = 0,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>xml</code></dt>
+<dd>
+<p>xml</p>
+</dd>
+<dt><code>col_offset, row_offset</code></dt>
+<dd>
+<p>positioning parameters</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_mschart"></a>
+
+
+
+<h4>Method <code>add_mschart()</code>
+</h4>
+
+<p>Add mschart chart to the workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_mschart(
+  sheet = current_sheet(),
+  dims = NULL,
+  graph,
+  col_offset = 0,
+  row_offset = 0,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>the dimensions where the sheet will appear</p>
+</dd>
+<dt><code>graph</code></dt>
+<dd>
+<p>mschart graph</p>
+</dd>
+<dt><code>col_offset, row_offset</code></dt>
+<dd>
+<p>offsets for column and row</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_form_control"></a>
+
+
+
+<h4>Method <code>add_form_control()</code>
+</h4>
+
+<p>Add form control to workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_form_control(
+  sheet = current_sheet(),
+  dims = "A1",
+  type = c("Checkbox", "Radio", "Drop"),
+  text = NULL,
+  link = NULL,
+  range = NULL,
+  checked = FALSE
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>type</code></dt>
+<dd>
+<p>type</p>
+</dd>
+<dt><code>text</code></dt>
+<dd>
+<p>text</p>
+</dd>
+<dt><code>link</code></dt>
+<dd>
+<p>link</p>
+</dd>
+<dt><code>range</code></dt>
+<dd>
+<p>range</p>
+</dd>
+<dt><code>checked</code></dt>
+<dd>
+<p>checked</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-print"></a>
+
+
+
+<h4>Method <code>print()</code>
+</h4>
+
+<p>Prints the <code>wbWorkbook</code> object
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$print()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly; called for its side-effects
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-protect"></a>
+
+
+
+<h4>Method <code>protect()</code>
+</h4>
+
+<p>Protect a workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$protect(
+  protect = TRUE,
+  password = NULL,
+  lock_structure = FALSE,
+  lock_windows = FALSE,
+  type = 1,
+  file_sharing = FALSE,
+  username = unname(Sys.info()["user"]),
+  read_only_recommended = FALSE,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>protect</code></dt>
+<dd>
+<p>protect</p>
+</dd>
+<dt><code>password</code></dt>
+<dd>
+<p>password</p>
+</dd>
+<dt><code>lock_structure</code></dt>
+<dd>
+<p>lock_structure</p>
+</dd>
+<dt><code>lock_windows</code></dt>
+<dd>
+<p>lock_windows</p>
+</dd>
+<dt><code>type</code></dt>
+<dd>
+<p>type</p>
+</dd>
+<dt><code>file_sharing</code></dt>
+<dd>
+<p>file_sharing</p>
+</dd>
+<dt><code>username</code></dt>
+<dd>
+<p>username</p>
+</dd>
+<dt><code>read_only_recommended</code></dt>
+<dd>
+<p>read_only_recommended</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-protect_worksheet"></a>
+
+
+
+<h4>Method <code>protect_worksheet()</code>
+</h4>
+
+<p>protect worksheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$protect_worksheet(
+  sheet = current_sheet(),
+  protect = TRUE,
+  password = NULL,
+  properties = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>protect</code></dt>
+<dd>
+<p>protect</p>
+</dd>
+<dt><code>password</code></dt>
+<dd>
+<p>password</p>
+</dd>
+<dt><code>properties</code></dt>
+<dd>
+<p>A character vector of properties to lock.  Can be one
+or more of the following: <code>"selectLockedCells"</code>,
+<code>"selectUnlockedCells"</code>, <code>"formatCells"</code>, <code>"formatColumns"</code>,
+<code>"formatRows"</code>, <code>"insertColumns"</code>, <code>"insertRows"</code>,
+<code>"insertHyperlinks"</code>, <code>"deleteColumns"</code>, <code>"deleteRows"</code>, <code>"sort"</code>,
+<code>"autoFilter"</code>, <code>"pivotTables"</code>, <code>"objects"</code>, <code>"scenarios"</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-get_properties"></a>
+
+
+
+<h4>Method <code>get_properties()</code>
+</h4>
+
+<p>Get properties of a workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_properties()</pre></div>
+
+
+<hr>
+<a id="method-wbWorkbook-set_properties"></a>
+
+
+
+<h4>Method <code>set_properties()</code>
+</h4>
+
+<p>Set a property of a workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_properties(
+  creator = NULL,
+  title = NULL,
+  subject = NULL,
+  category = NULL,
+  datetime_created = Sys.time(),
+  modifier = NULL,
+  keywords = NULL,
+  comments = NULL,
+  manager = NULL,
+  company = NULL,
+  custom = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>creator</code></dt>
+<dd>
+<p>character vector of creators. Duplicated are ignored.</p>
+</dd>
+<dt><code>title, subject, category, datetime_created, modifier, keywords, comments, manager, company, custom</code></dt>
+<dd>
+<p>A workbook property to set</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-add_mips"></a>
+
+
+
+<h4>Method <code>add_mips()</code>
+</h4>
+
+<p>add mips string
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_mips(xml = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>xml</code></dt>
+<dd>
+<p>A mips string added to self$custom</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-get_mips"></a>
+
+
+
+<h4>Method <code>get_mips()</code>
+</h4>
+
+<p>get mips string
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_mips(single_xml = TRUE, quiet = TRUE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>single_xml</code></dt>
+<dd>
+<p>single_xml</p>
+</dd>
+<dt><code>quiet</code></dt>
+<dd>
+<p>quiet</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-set_creators"></a>
+
+
+
+<h4>Method <code>set_creators()</code>
+</h4>
+
+<p>Set creator(s)
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_creators(creators)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>creators</code></dt>
+<dd>
+<p>A character vector of creators to set.  Duplicates are
+ignored.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-add_creators"></a>
+
+
+
+<h4>Method <code>add_creators()</code>
+</h4>
+
+<p>Add creator(s)
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_creators(creators)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>creators</code></dt>
+<dd>
+<p>A character vector of creators to add.  Duplicates are
+ignored.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_creators"></a>
+
+
+
+<h4>Method <code>remove_creators()</code>
+</h4>
+
+<p>Remove creator(s)
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_creators(creators)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>creators</code></dt>
+<dd>
+<p>A character vector of creators to remove.  All duplicated
+are removed.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-set_last_modified_by"></a>
+
+
+
+<h4>Method <code>set_last_modified_by()</code>
+</h4>
+
+<p>Change the last modified by
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_last_modified_by(name, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>A new value</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_page_setup"></a>
+
+
+
+<h4>Method <code>set_page_setup()</code>
+</h4>
+
+<p>set_page_setup() this function is intended to supersede page_setup(), but is not yet stable
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_page_setup(
+  sheet = current_sheet(),
+  black_and_white = NULL,
+  cell_comments = NULL,
+  copies = NULL,
+  draft = NULL,
+  errors = NULL,
+  first_page_number = NULL,
+  id = NULL,
+  page_order = NULL,
+  paper_height = NULL,
+  paper_width = NULL,
+  hdpi = NULL,
+  vdpi = NULL,
+  use_first_page_number = NULL,
+  use_printer_defaults = NULL,
+  orientation = NULL,
+  scale = NULL,
+  left = 0.7,
+  right = 0.7,
+  top = 0.75,
+  bottom = 0.75,
+  header = 0.3,
+  footer = 0.3,
+  fit_to_width = FALSE,
+  fit_to_height = FALSE,
+  paper_size = NULL,
+  print_title_rows = NULL,
+  print_title_cols = NULL,
+  summary_row = NULL,
+  summary_col = NULL,
+  tab_color = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>black_and_white</code></dt>
+<dd>
+<p>black_and_white</p>
+</dd>
+<dt><code>cell_comments</code></dt>
+<dd>
+<p>cell_comment</p>
+</dd>
+<dt><code>copies</code></dt>
+<dd>
+<p>copies</p>
+</dd>
+<dt><code>draft</code></dt>
+<dd>
+<p>draft</p>
+</dd>
+<dt><code>errors</code></dt>
+<dd>
+<p>errors</p>
+</dd>
+<dt><code>first_page_number</code></dt>
+<dd>
+<p>first_page_number</p>
+</dd>
+<dt><code>id</code></dt>
+<dd>
+<p>id</p>
+</dd>
+<dt><code>page_order</code></dt>
+<dd>
+<p>page_order</p>
+</dd>
+<dt><code>paper_height, paper_width</code></dt>
+<dd>
+<p>paper size</p>
+</dd>
+<dt><code>hdpi, vdpi</code></dt>
+<dd>
+<p>horizontal and vertical dpi</p>
+</dd>
+<dt><code>use_first_page_number</code></dt>
+<dd>
+<p>use_first_page_number</p>
+</dd>
+<dt><code>use_printer_defaults</code></dt>
+<dd>
+<p>use_printer_defaults</p>
+</dd>
+<dt><code>orientation</code></dt>
+<dd>
+<p>orientation</p>
+</dd>
+<dt><code>scale</code></dt>
+<dd>
+<p>scale</p>
+</dd>
+<dt><code>left</code></dt>
+<dd>
+<p>left</p>
+</dd>
+<dt><code>right</code></dt>
+<dd>
+<p>right</p>
+</dd>
+<dt><code>top</code></dt>
+<dd>
+<p>top</p>
+</dd>
+<dt><code>bottom</code></dt>
+<dd>
+<p>bottom</p>
+</dd>
+<dt><code>header</code></dt>
+<dd>
+<p>header</p>
+</dd>
+<dt><code>footer</code></dt>
+<dd>
+<p>footer</p>
+</dd>
+<dt><code>fit_to_width</code></dt>
+<dd>
+<p>fitToWidth</p>
+</dd>
+<dt><code>fit_to_height</code></dt>
+<dd>
+<p>fitToHeight</p>
+</dd>
+<dt><code>paper_size</code></dt>
+<dd>
+<p>paperSize</p>
+</dd>
+<dt><code>print_title_rows</code></dt>
+<dd>
+<p>printTitleRows</p>
+</dd>
+<dt><code>print_title_cols</code></dt>
+<dd>
+<p>printTitleCols</p>
+</dd>
+<dt><code>summary_row</code></dt>
+<dd>
+<p>summaryRow</p>
+</dd>
+<dt><code>summary_col</code></dt>
+<dd>
+<p>summaryCol</p>
+</dd>
+<dt><code>tab_color</code></dt>
+<dd>
+<p>tabColor</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-page_setup"></a>
+
+
+
+<h4>Method <code>page_setup()</code>
+</h4>
+
+<p>page_setup()
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$page_setup(
+  sheet = current_sheet(),
+  orientation = NULL,
+  scale = 100,
+  left = 0.7,
+  right = 0.7,
+  top = 0.75,
+  bottom = 0.75,
+  header = 0.3,
+  footer = 0.3,
+  fit_to_width = FALSE,
+  fit_to_height = FALSE,
+  paper_size = NULL,
+  print_title_rows = NULL,
+  print_title_cols = NULL,
+  summary_row = NULL,
+  summary_col = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>orientation</code></dt>
+<dd>
+<p>orientation</p>
+</dd>
+<dt><code>scale</code></dt>
+<dd>
+<p>scale</p>
+</dd>
+<dt><code>left</code></dt>
+<dd>
+<p>left</p>
+</dd>
+<dt><code>right</code></dt>
+<dd>
+<p>right</p>
+</dd>
+<dt><code>top</code></dt>
+<dd>
+<p>top</p>
+</dd>
+<dt><code>bottom</code></dt>
+<dd>
+<p>bottom</p>
+</dd>
+<dt><code>header</code></dt>
+<dd>
+<p>header</p>
+</dd>
+<dt><code>footer</code></dt>
+<dd>
+<p>footer</p>
+</dd>
+<dt><code>fit_to_width</code></dt>
+<dd>
+<p>fitToWidth</p>
+</dd>
+<dt><code>fit_to_height</code></dt>
+<dd>
+<p>fitToHeight</p>
+</dd>
+<dt><code>paper_size</code></dt>
+<dd>
+<p>paperSize</p>
+</dd>
+<dt><code>print_title_rows</code></dt>
+<dd>
+<p>printTitleRows</p>
+</dd>
+<dt><code>print_title_cols</code></dt>
+<dd>
+<p>printTitleCols</p>
+</dd>
+<dt><code>summary_row</code></dt>
+<dd>
+<p>summaryRow</p>
+</dd>
+<dt><code>summary_col</code></dt>
+<dd>
+<p>summaryCol</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_header_footer"></a>
+
+
+
+<h4>Method <code>set_header_footer()</code>
+</h4>
+
+<p>Sets headers and footers
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_header_footer(
+  sheet = current_sheet(),
+  header = NULL,
+  footer = NULL,
+  even_header = NULL,
+  even_footer = NULL,
+  first_header = NULL,
+  first_footer = NULL,
+  align_with_margins = NULL,
+  scale_with_doc = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>header</code></dt>
+<dd>
+<p>header</p>
+</dd>
+<dt><code>footer</code></dt>
+<dd>
+<p>footer</p>
+</dd>
+<dt><code>even_header</code></dt>
+<dd>
+<p>evenHeader</p>
+</dd>
+<dt><code>even_footer</code></dt>
+<dd>
+<p>evenFooter</p>
+</dd>
+<dt><code>first_header</code></dt>
+<dd>
+<p>firstHeader</p>
+</dd>
+<dt><code>first_footer</code></dt>
+<dd>
+<p>firstFooter</p>
+</dd>
+<dt><code>align_with_margins</code></dt>
+<dd>
+<p>align_with_margins</p>
+</dd>
+<dt><code>scale_with_doc</code></dt>
+<dd>
+<p>scale_with_doc</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-get_tables"></a>
+
+
+
+<h4>Method <code>get_tables()</code>
+</h4>
+
+<p>get tables
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_tables(sheet = current_sheet())</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The sheet tables.  <code>character()</code> if empty
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_tables"></a>
+
+
+
+<h4>Method <code>remove_tables()</code>
+</h4>
+
+<p>remove tables
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_tables(sheet = current_sheet(), table, remove_data = TRUE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>table</code></dt>
+<dd>
+<p>table</p>
+</dd>
+<dt><code>remove_data</code></dt>
+<dd>
+<p>removes the data as well</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_filter"></a>
+
+
+
+<h4>Method <code>add_filter()</code>
+</h4>
+
+<p>add filters
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_filter(sheet = current_sheet(), rows, cols)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>rows</code></dt>
+<dd>
+<p>rows</p>
+</dd>
+<dt><code>cols</code></dt>
+<dd>
+<p>cols</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_filter"></a>
+
+
+
+<h4>Method <code>remove_filter()</code>
+</h4>
+
+<p>remove filters
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_filter(sheet = current_sheet())</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_grid_lines"></a>
+
+
+
+<h4>Method <code>set_grid_lines()</code>
+</h4>
+
+<p>grid lines
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_grid_lines(sheet = current_sheet(), show = FALSE, print = show)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>show</code></dt>
+<dd>
+<p>show</p>
+</dd>
+<dt><code>print</code></dt>
+<dd>
+<p>print</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-grid_lines"></a>
+
+
+
+<h4>Method <code>grid_lines()</code>
+</h4>
+
+<p>grid lines
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$grid_lines(sheet = current_sheet(), show = FALSE, print = show)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>show</code></dt>
+<dd>
+<p>show</p>
+</dd>
+<dt><code>print</code></dt>
+<dd>
+<p>print</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_named_region"></a>
+
+
+
+<h4>Method <code>add_named_region()</code>
+</h4>
+
+<p>add a named region
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_named_region(
+  sheet = current_sheet(),
+  dims = "A1",
+  name,
+  local_sheet = FALSE,
+  overwrite = FALSE,
+  comment = NULL,
+  hidden = NULL,
+  custom_menu = NULL,
+  description = NULL,
+  is_function = NULL,
+  function_group_id = NULL,
+  help = NULL,
+  local_name = NULL,
+  publish_to_server = NULL,
+  status_bar = NULL,
+  vb_procedure = NULL,
+  workbook_parameter = NULL,
+  xml = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>name</code></dt>
+<dd>
+<p>name</p>
+</dd>
+<dt><code>local_sheet</code></dt>
+<dd>
+<p>local_sheet</p>
+</dd>
+<dt><code>overwrite</code></dt>
+<dd>
+<p>overwrite</p>
+</dd>
+<dt><code>comment</code></dt>
+<dd>
+<p>comment</p>
+</dd>
+<dt><code>hidden</code></dt>
+<dd>
+<p>hidden</p>
+</dd>
+<dt><code>custom_menu</code></dt>
+<dd>
+<p>custom_menu</p>
+</dd>
+<dt><code>description</code></dt>
+<dd>
+<p>description</p>
+</dd>
+<dt><code>is_function</code></dt>
+<dd>
+<p>function</p>
+</dd>
+<dt><code>function_group_id</code></dt>
+<dd>
+<p>function group id</p>
+</dd>
+<dt><code>help</code></dt>
+<dd>
+<p>help</p>
+</dd>
+<dt><code>local_name</code></dt>
+<dd>
+<p>localName</p>
+</dd>
+<dt><code>publish_to_server</code></dt>
+<dd>
+<p>publish to server</p>
+</dd>
+<dt><code>status_bar</code></dt>
+<dd>
+<p>status bar</p>
+</dd>
+<dt><code>vb_procedure</code></dt>
+<dd>
+<p>vb procedure</p>
+</dd>
+<dt><code>workbook_parameter</code></dt>
+<dd>
+<p>workbookParameter</p>
+</dd>
+<dt><code>xml</code></dt>
+<dd>
+<p>xml</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-get_named_regions"></a>
+
+
+
+<h4>Method <code>get_named_regions()</code>
+</h4>
+
+<p>get named regions in a workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_named_regions(tables = FALSE, x = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>tables</code></dt>
+<dd>
+<p>Return tables as well?</p>
+</dd>
+<dt><code>x</code></dt>
+<dd>
+<p>Not used.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A <code>data.frame</code> of named regions
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-remove_named_region"></a>
+
+
+
+<h4>Method <code>remove_named_region()</code>
+</h4>
+
+<p>remove a named region
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$remove_named_region(sheet = current_sheet(), name = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>name</code></dt>
+<dd>
+<p>name</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_order"></a>
+
+
+
+<h4>Method <code>set_order()</code>
+</h4>
+
+<p>set worksheet order
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_order(sheets)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheets</code></dt>
+<dd>
+<p>sheets</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-get_sheet_visibility"></a>
+
+
+
+<h4>Method <code>get_sheet_visibility()</code>
+</h4>
+
+<p>Get sheet visibility
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_sheet_visibility()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>Returns sheet visibility
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_sheet_visibility"></a>
+
+
+
+<h4>Method <code>set_sheet_visibility()</code>
+</h4>
+
+<p>Set sheet visibility
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_sheet_visibility(sheet = current_sheet(), value)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>value</code></dt>
+<dd>
+<p>value</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_page_break"></a>
+
+
+
+<h4>Method <code>add_page_break()</code>
+</h4>
+
+<p>Add a page break
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_page_break(sheet = current_sheet(), row = NULL, col = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>row</code></dt>
+<dd>
+<p>row</p>
+</dd>
+<dt><code>col</code></dt>
+<dd>
+<p>col</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-clean_sheet"></a>
+
+
+
+<h4>Method <code>clean_sheet()</code>
+</h4>
+
+<p>clean sheet (remove all values)
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$clean_sheet(
+  sheet = current_sheet(),
+  dims = NULL,
+  numbers = TRUE,
+  characters = TRUE,
+  styles = TRUE,
+  merged_cells = TRUE
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>numbers</code></dt>
+<dd>
+<p>remove all numbers</p>
+</dd>
+<dt><code>characters</code></dt>
+<dd>
+<p>remove all characters</p>
+</dd>
+<dt><code>styles</code></dt>
+<dd>
+<p>remove all styles</p>
+</dd>
+<dt><code>merged_cells</code></dt>
+<dd>
+<p>remove all merged_cells</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorksheetObject</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_border"></a>
+
+
+
+<h4>Method <code>add_border()</code>
+</h4>
+
+<p>create borders for cell region
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_border(
+  sheet = current_sheet(),
+  dims = "A1",
+  bottom_color = wb_color(hex = "FF000000"),
+  left_color = wb_color(hex = "FF000000"),
+  right_color = wb_color(hex = "FF000000"),
+  top_color = wb_color(hex = "FF000000"),
+  bottom_border = "thin",
+  left_border = "thin",
+  right_border = "thin",
+  top_border = "thin",
+  inner_hgrid = NULL,
+  inner_hcolor = NULL,
+  inner_vgrid = NULL,
+  inner_vcolor = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>dimensions on the worksheet e.g. "A1", "A1:A5", "A1:H5"</p>
+</dd>
+<dt><code>bottom_color, left_color, right_color, top_color, inner_hcolor, inner_vcolor</code></dt>
+<dd>
+<p>a color, either something openxml knows or some RGB color</p>
+</dd>
+<dt><code>left_border, right_border, top_border, bottom_border, inner_hgrid, inner_vgrid</code></dt>
+<dd>
+<p>the border style, if NULL no border is drawn. See create_border for possible border styles</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_fill"></a>
+
+
+
+<h4>Method <code>add_fill()</code>
+</h4>
+
+<p>provide simple fill function
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_fill(
+  sheet = current_sheet(),
+  dims = "A1",
+  color = wb_color(hex = "FFFFFF00"),
+  pattern = "solid",
+  gradient_fill = "",
+  every_nth_col = 1,
+  every_nth_row = 1,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>color</code></dt>
+<dd>
+<p>the colors to apply, e.g. yellow: wb_color(hex = "FFFFFF00")</p>
+</dd>
+<dt><code>pattern</code></dt>
+<dd>
+<p>various default "none" but others are possible:
+"solid", "mediumGray", "darkGray", "lightGray", "darkHorizontal",
+"darkVertical", "darkDown", "darkUp", "darkGrid", "darkTrellis",
+"lightHorizontal", "lightVertical", "lightDown", "lightUp", "lightGrid",
+"lightTrellis", "gray125", "gray0625"</p>
+</dd>
+<dt><code>gradient_fill</code></dt>
+<dd>
+<p>a gradient fill xml pattern.</p>
+</dd>
+<dt><code>every_nth_col</code></dt>
+<dd>
+<p>which col should be filled</p>
+</dd>
+<dt><code>every_nth_row</code></dt>
+<dd>
+<p>which row should be filled</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorksheetObject</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_font"></a>
+
+
+
+<h4>Method <code>add_font()</code>
+</h4>
+
+<p>provide simple font function
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_font(
+  sheet = current_sheet(),
+  dims = "A1",
+  name = "Aptos Narrow",
+  color = wb_color(hex = "FF000000"),
+  size = "11",
+  bold = "",
+  italic = "",
+  outline = "",
+  strike = "",
+  underline = "",
+  charset = "",
+  condense = "",
+  extend = "",
+  family = "",
+  scheme = "",
+  shadow = "",
+  vert_align = "",
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>name</code></dt>
+<dd>
+<p>font name: default "Aptos Narrow"</p>
+</dd>
+<dt><code>color</code></dt>
+<dd>
+<p>rgb color: default "FF000000"</p>
+</dd>
+<dt><code>size</code></dt>
+<dd>
+<p>font size: default "11",</p>
+</dd>
+<dt><code>bold</code></dt>
+<dd>
+<p>bold</p>
+</dd>
+<dt><code>italic</code></dt>
+<dd>
+<p>italic</p>
+</dd>
+<dt><code>outline</code></dt>
+<dd>
+<p>outline</p>
+</dd>
+<dt><code>strike</code></dt>
+<dd>
+<p>strike</p>
+</dd>
+<dt><code>underline</code></dt>
+<dd>
+<p>underline</p>
+</dd>
+<dt><code>charset</code></dt>
+<dd>
+<p>charset</p>
+</dd>
+<dt><code>condense</code></dt>
+<dd>
+<p>condense</p>
+</dd>
+<dt><code>extend</code></dt>
+<dd>
+<p>extend</p>
+</dd>
+<dt><code>family</code></dt>
+<dd>
+<p>font family</p>
+</dd>
+<dt><code>scheme</code></dt>
+<dd>
+<p>font scheme</p>
+</dd>
+<dt><code>shadow</code></dt>
+<dd>
+<p>shadow</p>
+</dd>
+<dt><code>vert_align</code></dt>
+<dd>
+<p>vertical alignment</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_numfmt"></a>
+
+
+
+<h4>Method <code>add_numfmt()</code>
+</h4>
+
+<p>provide simple number format function
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_numfmt(sheet = current_sheet(), dims = "A1", numfmt)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>numfmt</code></dt>
+<dd>
+<p>number format id or a character of the format</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorksheetObject</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_cell_style"></a>
+
+
+
+<h4>Method <code>add_cell_style()</code>
+</h4>
+
+<p>provide simple cell style format function
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_cell_style(
+  sheet = current_sheet(),
+  dims = "A1",
+  apply_alignment = NULL,
+  apply_border = NULL,
+  apply_fill = NULL,
+  apply_font = NULL,
+  apply_number_format = NULL,
+  apply_protection = NULL,
+  border_id = NULL,
+  ext_lst = NULL,
+  fill_id = NULL,
+  font_id = NULL,
+  hidden = NULL,
+  horizontal = NULL,
+  indent = NULL,
+  justify_last_line = NULL,
+  locked = NULL,
+  num_fmt_id = NULL,
+  pivot_button = NULL,
+  quote_prefix = NULL,
+  reading_order = NULL,
+  relative_indent = NULL,
+  shrink_to_fit = NULL,
+  text_rotation = NULL,
+  vertical = NULL,
+  wrap_text = NULL,
+  xf_id = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>apply_alignment</code></dt>
+<dd>
+<p>logical apply alignment</p>
+</dd>
+<dt><code>apply_border</code></dt>
+<dd>
+<p>logical apply border</p>
+</dd>
+<dt><code>apply_fill</code></dt>
+<dd>
+<p>logical apply fill</p>
+</dd>
+<dt><code>apply_font</code></dt>
+<dd>
+<p>logical apply font</p>
+</dd>
+<dt><code>apply_number_format</code></dt>
+<dd>
+<p>logical apply number format</p>
+</dd>
+<dt><code>apply_protection</code></dt>
+<dd>
+<p>logical apply protection</p>
+</dd>
+<dt><code>border_id</code></dt>
+<dd>
+<p>border ID to apply</p>
+</dd>
+<dt><code>ext_lst</code></dt>
+<dd>
+<p>extension list something like <code style="white-space: pre;">⁠&lt;extLst&gt;...&lt;/extLst&gt;⁠</code></p>
+</dd>
+<dt><code>fill_id</code></dt>
+<dd>
+<p>fill ID to apply</p>
+</dd>
+<dt><code>font_id</code></dt>
+<dd>
+<p>font ID to apply</p>
+</dd>
+<dt><code>hidden</code></dt>
+<dd>
+<p>logical cell is hidden</p>
+</dd>
+<dt><code>horizontal</code></dt>
+<dd>
+<p>align content horizontal ('left', 'center', 'right')</p>
+</dd>
+<dt><code>indent</code></dt>
+<dd>
+<p>logical indent content</p>
+</dd>
+<dt><code>justify_last_line</code></dt>
+<dd>
+<p>logical justify last line</p>
+</dd>
+<dt><code>locked</code></dt>
+<dd>
+<p>logical cell is locked</p>
+</dd>
+<dt><code>num_fmt_id</code></dt>
+<dd>
+<p>number format ID to apply</p>
+</dd>
+<dt><code>pivot_button</code></dt>
+<dd>
+<p>unknown</p>
+</dd>
+<dt><code>quote_prefix</code></dt>
+<dd>
+<p>unknown</p>
+</dd>
+<dt><code>reading_order</code></dt>
+<dd>
+<p>reading order left to right</p>
+</dd>
+<dt><code>relative_indent</code></dt>
+<dd>
+<p>relative indentation</p>
+</dd>
+<dt><code>shrink_to_fit</code></dt>
+<dd>
+<p>logical shrink to fit</p>
+</dd>
+<dt><code>text_rotation</code></dt>
+<dd>
+<p>degrees of text rotation</p>
+</dd>
+<dt><code>vertical</code></dt>
+<dd>
+<p>vertical alignment of content ('top', 'center', 'bottom')</p>
+</dd>
+<dt><code>wrap_text</code></dt>
+<dd>
+<p>wrap text in cell</p>
+</dd>
+<dt><code>xf_id</code></dt>
+<dd>
+<p>xf ID to apply</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-get_cell_style"></a>
+
+
+
+<h4>Method <code>get_cell_style()</code>
+</h4>
+
+<p>get sheet style
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_cell_style(sheet = current_sheet(), dims)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>a character vector of cell styles
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_cell_style"></a>
+
+
+
+<h4>Method <code>set_cell_style()</code>
+</h4>
+
+<p>set sheet style
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_cell_style(sheet = current_sheet(), dims, style)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>style</code></dt>
+<dd>
+<p>style</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorksheetObject</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-set_cell_style_across"></a>
+
+
+
+<h4>Method <code>set_cell_style_across()</code>
+</h4>
+
+<p>set style across columns and/or rows
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_cell_style_across(
+  sheet = current_sheet(),
+  style,
+  cols = NULL,
+  rows = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>sheet</p>
+</dd>
+<dt><code>style</code></dt>
+<dd>
+<p>style</p>
+</dd>
+<dt><code>cols</code></dt>
+<dd>
+<p>cols</p>
+</dd>
+<dt><code>rows</code></dt>
+<dd>
+<p>rows</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code> object
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_named_style"></a>
+
+
+
+<h4>Method <code>add_named_style()</code>
+</h4>
+
+<p>set sheet style
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_named_style(
+  sheet = current_sheet(),
+  dims = "A1",
+  name = "Normal",
+  font_name = NULL,
+  font_size = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>name</code></dt>
+<dd>
+<p>name</p>
+</dd>
+<dt><code>font_name, font_size</code></dt>
+<dd>
+<p>optional else the default of the theme</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorkbook</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_dxfs_style"></a>
+
+
+
+<h4>Method <code>add_dxfs_style()</code>
+</h4>
+
+<p>create dxfs style
+These styles are used with conditional formatting and custom table styles
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_dxfs_style(
+  name,
+  font_name = NULL,
+  font_size = NULL,
+  font_color = NULL,
+  num_fmt = NULL,
+  border = NULL,
+  border_color = wb_color(getOption("openxlsx2.borderColor", "black")),
+  border_style = getOption("openxlsx2.borderStyle", "thin"),
+  bg_fill = NULL,
+  gradient_fill = NULL,
+  text_bold = NULL,
+  text_italic = NULL,
+  text_underline = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>the style name</p>
+</dd>
+<dt><code>font_name</code></dt>
+<dd>
+<p>the font name</p>
+</dd>
+<dt><code>font_size</code></dt>
+<dd>
+<p>the font size</p>
+</dd>
+<dt><code>font_color</code></dt>
+<dd>
+<p>the font color (a <code>wb_color()</code> object)</p>
+</dd>
+<dt><code>num_fmt</code></dt>
+<dd>
+<p>the number format</p>
+</dd>
+<dt><code>border</code></dt>
+<dd>
+<p>logical if borders are applied</p>
+</dd>
+<dt><code>border_color</code></dt>
+<dd>
+<p>the border color</p>
+</dd>
+<dt><code>border_style</code></dt>
+<dd>
+<p>the border style</p>
+</dd>
+<dt><code>bg_fill</code></dt>
+<dd>
+<p>any background fill</p>
+</dd>
+<dt><code>gradient_fill</code></dt>
+<dd>
+<p>any gradient fill</p>
+</dd>
+<dt><code>text_bold</code></dt>
+<dd>
+<p>logical if text is bold</p>
+</dd>
+<dt><code>text_italic</code></dt>
+<dd>
+<p>logical if text is italic</p>
+</dd>
+<dt><code>text_underline</code></dt>
+<dd>
+<p>logical if text is underlined</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments passed to <code>create_dxfs_style()</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorksheetObject</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-clone_sheet_style"></a>
+
+
+
+<h4>Method <code>clone_sheet_style()</code>
+</h4>
+
+<p>clone style from one sheet to another
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$clone_sheet_style(from = current_sheet(), to)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>from</code></dt>
+<dd>
+<p>the worksheet you are cloning</p>
+</dd>
+<dt><code>to</code></dt>
+<dd>
+<p>the worksheet the style is applied to</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-add_sparklines"></a>
+
+
+
+<h4>Method <code>add_sparklines()</code>
+</h4>
+
+<p>apply sparkline to worksheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_sparklines(sheet = current_sheet(), sparklines)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>sparklines</code></dt>
+<dd>
+<p>sparkline created by <code>create_sparkline()</code></p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-add_ignore_error"></a>
+
+
+
+<h4>Method <code>add_ignore_error()</code>
+</h4>
+
+<p>Ignore error on worksheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_ignore_error(
+  sheet = current_sheet(),
+  dims = "A1",
+  calculated_column = FALSE,
+  empty_cell_reference = FALSE,
+  eval_error = FALSE,
+  formula = FALSE,
+  formula_range = FALSE,
+  list_data_validation = FALSE,
+  number_stored_as_text = FALSE,
+  two_digit_text_year = FALSE,
+  unlocked_formula = FALSE,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>dims</code></dt>
+<dd>
+<p>Cell range in a sheet</p>
+</dd>
+<dt><code>calculated_column</code></dt>
+<dd>
+<p>calculatedColumn</p>
+</dd>
+<dt><code>empty_cell_reference</code></dt>
+<dd>
+<p>emptyCellReference</p>
+</dd>
+<dt><code>eval_error</code></dt>
+<dd>
+<p>evalError</p>
+</dd>
+<dt><code>formula</code></dt>
+<dd>
+<p>formula</p>
+</dd>
+<dt><code>formula_range</code></dt>
+<dd>
+<p>formulaRange</p>
+</dd>
+<dt><code>list_data_validation</code></dt>
+<dd>
+<p>listDataValidation</p>
+</dd>
+<dt><code>number_stored_as_text</code></dt>
+<dd>
+<p>numberStoredAsText</p>
+</dd>
+<dt><code>two_digit_text_year</code></dt>
+<dd>
+<p>twoDigitTextYear</p>
+</dd>
+<dt><code>unlocked_formula</code></dt>
+<dd>
+<p>unlockedFormula</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-set_sheetview"></a>
+
+
+
+<h4>Method <code>set_sheetview()</code>
+</h4>
+
+<p>add sheetview
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_sheetview(
+  sheet = current_sheet(),
+  color_id = NULL,
+  default_grid_color = NULL,
+  right_to_left = NULL,
+  show_formulas = NULL,
+  show_grid_lines = NULL,
+  show_outline_symbols = NULL,
+  show_row_col_headers = NULL,
+  show_ruler = NULL,
+  show_white_space = NULL,
+  show_zeros = NULL,
+  tab_selected = NULL,
+  top_left_cell = NULL,
+  view = NULL,
+  window_protection = NULL,
+  workbook_view_id = NULL,
+  zoom_scale = NULL,
+  zoom_scale_normal = NULL,
+  zoom_scale_page_layout_view = NULL,
+  zoom_scale_sheet_layout_view = NULL,
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+<dt><code>color_id, default_grid_color</code></dt>
+<dd>
+<p>Integer: A color, default is 64</p>
+</dd>
+<dt><code>right_to_left</code></dt>
+<dd>
+<p>Logical: if TRUE column ordering is right  to left</p>
+</dd>
+<dt><code>show_formulas</code></dt>
+<dd>
+<p>Logical: if TRUE cell formulas are shown</p>
+</dd>
+<dt><code>show_grid_lines</code></dt>
+<dd>
+<p>Logical: if TRUE the worksheet grid is shown</p>
+</dd>
+<dt><code>show_outline_symbols</code></dt>
+<dd>
+<p>Logical: if TRUE outline symbols are shown</p>
+</dd>
+<dt><code>show_row_col_headers</code></dt>
+<dd>
+<p>Logical: if TRUE row and column headers are shown</p>
+</dd>
+<dt><code>show_ruler</code></dt>
+<dd>
+<p>Logical: if TRUE a ruler is shown in page layout view</p>
+</dd>
+<dt><code>show_white_space</code></dt>
+<dd>
+<p>Logical: if TRUE margins are shown in page layout view</p>
+</dd>
+<dt><code>show_zeros</code></dt>
+<dd>
+<p>Logical: if FALSE cells containing zero are shown blank if !showFormulas</p>
+</dd>
+<dt><code>tab_selected</code></dt>
+<dd>
+<p>Integer: zero vector indicating the selected tab</p>
+</dd>
+<dt><code>top_left_cell</code></dt>
+<dd>
+<p>Cell: the cell shown in the top left corner / or top right with rightToLeft</p>
+</dd>
+<dt><code>view</code></dt>
+<dd>
+<p>View: "normal", "pageBreakPreview" or "pageLayout"</p>
+</dd>
+<dt><code>window_protection</code></dt>
+<dd>
+<p>Logical: if TRUE the panes are protected</p>
+</dd>
+<dt><code>workbook_view_id</code></dt>
+<dd>
+<p>integer: Pointing to some other view inside the workbook</p>
+</dd>
+<dt><code>zoom_scale, zoom_scale_normal, zoom_scale_page_layout_view, zoom_scale_sheet_layout_view</code></dt>
+<dd>
+<p>Integer: the zoom scale should be between 10 and 400. These are values for current, normal etc.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional arguments</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>wbWorksheetObject</code>, invisibly
+</p>
+
+
+<hr>
+<a id="method-wbWorkbook-add_person"></a>
+
+
+
+<h4>Method <code>add_person()</code>
+</h4>
+
+<p>add person to workbook
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$add_person(
+  name = NULL,
+  id = NULL,
+  user_id = NULL,
+  provider_id = "None"
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>name</p>
+</dd>
+<dt><code>id</code></dt>
+<dd>
+<p>id</p>
+</dd>
+<dt><code>user_id</code></dt>
+<dd>
+<p>user_id</p>
+</dd>
+<dt><code>provider_id</code></dt>
+<dd>
+<p>provider_id</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-get_person"></a>
+
+
+
+<h4>Method <code>get_person()</code>
+</h4>
+
+<p>description get person
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_person(name = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>name</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-get_active_sheet"></a>
+
+
+
+<h4>Method <code>get_active_sheet()</code>
+</h4>
+
+<p>description get active sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_active_sheet()</pre></div>
+
+
+<hr>
+<a id="method-wbWorkbook-set_active_sheet"></a>
+
+
+
+<h4>Method <code>set_active_sheet()</code>
+</h4>
+
+<p>description set active sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_active_sheet(sheet = current_sheet())</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-get_selected"></a>
+
+
+
+<h4>Method <code>get_selected()</code>
+</h4>
+
+<p>description get selected sheets
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$get_selected()</pre></div>
+
+
+<hr>
+<a id="method-wbWorkbook-set_selected"></a>
+
+
+
+<h4>Method <code>set_selected()</code>
+</h4>
+
+<p>set selected sheet
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$set_selected(sheet = current_sheet())</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>sheet</code></dt>
+<dd>
+<p>The name of the sheet</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-wbWorkbook-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>wbWorkbook$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+</div>

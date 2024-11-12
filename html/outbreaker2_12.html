@@ -1,0 +1,166 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.outbreaker_chains</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Basic methods for processing outbreaker results</h2>
+
+<h3>Description</h3>
+
+<p>Several methods are defined for instances of the class
+<code>outbreaker_chains</code>, returned by <code>outbreaker</code>, including:
+<code>print</code>, <code>plot</code>, <code>summary</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'outbreaker_chains'
+print(x, n_row = 3, n_col = 8, ...)
+
+## S3 method for class 'outbreaker_chains'
+plot(
+  x,
+  y = "post",
+  type = c("trace", "hist", "density", "alpha", "t_inf", "kappa", "network"),
+  group = NULL,
+  burnin = 0,
+  min_support = 0.1,
+  labels = NULL,
+  ...
+)
+
+## S3 method for class 'outbreaker_chains'
+summary(object, burnin = 0, method = c("mpa", "decycle"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>outbreaker_chains</code> object as returned by <code>outbreaker</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_row</code></td>
+<td>
+<p>the number of rows to display in head and tail; defaults to 3.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_col</code></td>
+<td>
+<p>the number of columns to display; defaults to 8.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to be passed to other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a character string indicating which element of an
+<code>outbreaker_chains</code> object to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>a character string indicating the kind of plot to be used (see details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>a vector of character strings indicating the parameters to display, 
+or "all" to display all global parameters (non node-specific parameters).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>burnin</code></td>
+<td>
+<p>the number of iterations to be discarded as burnin</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_support</code></td>
+<td>
+<p>a number between 0 and 1 indicating the minimum support of
+ancestries to be plotted; only used if 'type' is 'network'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>a vector of length N indicating the case labels (must be
+provided in the same order used for dates of symptom onset)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an <code>outbreaker_chains</code> object as returned by <code>outbreaker</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the method used to determine consensus ancestries. 'mpa'
+(maximum posterior ancestry) simply returns the posterior ancestry with the
+highest posterior support for each case, even if this includes
+cycles. 'decycle' will return the maximum posterior ancestry, except when
+cycles are detected, in which case the link in the cycle with the lowest
+support is pruned and the tree recalculated.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>type</code> indicates the type of graphic to plot:
+</p>
+
+<ul>
+<li> <p><code>trace</code> to visualise MCMC traces for parameters or augmented data (plots the
+log-likelihood by default)
+</p>
+</li>
+<li> <p><code>hist</code> to plot histograms of quantitative values
+</p>
+</li>
+<li> <p><code>density</code> to plot kernel density estimations of quantitative values
+</p>
+</li>
+<li> <p><code>alpha</code> to visualise the posterior frequency of ancestries
+</p>
+</li>
+<li> <p><code>network</code> to visualise the transmission tree; note that
+this opens up an interactive plot and requires a web browser with
+Javascript enabled; the argument 'min_support' is useful to select only the
+most supported ancestries and avoid displaying too many links
+</p>
+</li>
+<li> <p><code>kappa</code> to visualise the distributions generations between cases and their
+ancestor/infector
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Thibaut Jombart (<a href="mailto:thibautjombart@gmail.com">thibautjombart@gmail.com</a>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See <a href="http://www.repidemicsconsortium.org/outbreaker2/articles/introduction.html#graphics">introduction vignette</a> for detailed examples on how to visualise <code>outbreaker_chains</code> objects.
+</p>
+
+
+</div>

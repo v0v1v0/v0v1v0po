@@ -1,0 +1,202 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hesschk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run tests, where possible, on user objective function and (optionally) gradient and hessian</h2>
+
+<h3>Description</h3>
+
+<p><code>hesschk</code> checks a user-provided R function, <code>ffn</code>. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">   hesschk(xpar, ffn, ggr, hhess, trace=0, testtol=(.Machine$double.eps)^(1/3), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xpar</code></td>
+<td>
+
+<p>parameters to the user objective and gradient functions ffn and ggr
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ffn</code></td>
+<td>
+
+<p>User-supplied objective function
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ggr</code></td>
+<td>
+
+<p>User-supplied gradient function
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hhess</code></td>
+<td>
+
+<p>User-supplied Hessian function
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+
+<p>set &gt;0 to provide output from hesschk to the console, 0 otherwise
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testtol</code></td>
+<td>
+
+<p>tolerance for equality tests
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>optional arguments passed to the objective function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<table>
+<tr>
+<td style="text-align: left;">
+Package: </td>
+<td style="text-align: left;"> hesschk</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Depends: </td>
+<td style="text-align: left;"> R (&gt;= 2.6.1)</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+License: </td>
+<td style="text-align: left;"> GPL Version 2.</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p><code>numDeriv</code> is used to compute a numerical approximation to the Hessian
+matrix. If there is no analytic gradient, then the <code>hessian()</code> function 
+from <code>numDeriv</code> is applied to the user function <code>ffn</code>. Otherwise, 
+the <code>jacobian()</code> function of <code>numDeriv</code> is applied to the <code>ggr</code>
+function so that only one level of differencing is used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns a single object <code>hessOK</code> which is TRUE if the 
+analytic Hessian code returns a Hessian matrix that is "close" to the 
+numerical approximation obtained via <code>numDeriv</code>; FALSE otherwise.
+</p>
+<p><code>hessOK</code> is returned with the following attributes:
+</p>
+
+<ul>
+<li>
+<p>"nullhess"Set TRUE if the user does not supply a function to compute the Hessian.
+</p>
+</li>
+<li>
+<p>"asym"Set TRUE if the Hessian does not satisfy symmetry conditions to
+within a tolerance. See the <code>hesschk</code> for details.
+</p>
+</li>
+<li>
+<p>"ha"The analytic Hessian computed at paramters <code>xpar</code> using <code>hhess</code>.
+</p>
+</li>
+<li>
+<p>"hn"The numerical approximation to the Hessian computed at paramters <code>xpar</code>.
+</p>
+</li>
+<li>
+<p>"msg"A text comment on the outcome of the tests.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>John C. Nash
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># genrose function code
+genrose.f&lt;- function(x, gs=NULL){ # objective function
+## One generalization of the Rosenbrock banana valley function (n parameters)
+	n &lt;- length(x)
+        if(is.null(gs)) { gs=100.0 }
+	fval&lt;-1.0 + sum (gs*(x[1:(n-1)]^2 - x[2:n])^2 + (x[2:n] - 1)^2)
+        return(fval)
+}
+
+genrose.g &lt;- function(x, gs=NULL){
+# vectorized gradient for genrose.f
+# Ravi Varadhan 2009-04-03
+	n &lt;- length(x)
+        if(is.null(gs)) { gs=100.0 }
+	gg &lt;- as.vector(rep(0, n))
+	tn &lt;- 2:n
+	tn1 &lt;- tn - 1
+	z1 &lt;- x[tn] - x[tn1]^2
+	z2 &lt;- 1 - x[tn]
+	gg[tn] &lt;- 2 * (gs * z1 - z2)
+	gg[tn1] &lt;- gg[tn1] - 4 * gs * x[tn1] * z1
+	return(gg)
+}
+
+genrose.h &lt;- function(x, gs=NULL) { ## compute Hessian
+   if(is.null(gs)) { gs=100.0 }
+	n &lt;- length(x)
+	hh&lt;-matrix(rep(0, n*n),n,n)
+	for (i in 2:n) {
+		z1&lt;-x[i]-x[i-1]*x[i-1]
+#		z2&lt;-1.0-x[i]
+                hh[i,i]&lt;-hh[i,i]+2.0*(gs+1.0)
+                hh[i-1,i-1]&lt;-hh[i-1,i-1]-4.0*gs*z1-4.0*gs*x[i-1]*(-2.0*x[i-1])
+                hh[i,i-1]&lt;-hh[i,i-1]-4.0*gs*x[i-1]
+                hh[i-1,i]&lt;-hh[i-1,i]-4.0*gs*x[i-1]
+	}
+        return(hh)
+}
+
+trad&lt;-c(-1.2,1)
+ans100&lt;-hesschk(trad, genrose.f, genrose.g, genrose.h, trace=1)
+print(ans100)
+ans10&lt;-hesschk(trad, genrose.f, genrose.g, genrose.h, trace=1, gs=10)
+print(ans10)
+
+
+</code></pre>
+
+
+</div>

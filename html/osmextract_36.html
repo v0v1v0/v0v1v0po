@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_poly</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read a <code>.poly</code> file.</h2>
+
+<h3>Description</h3>
+
+<p>Read a <code>.poly</code> file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_poly(input, crs = "OGC:CRS84", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>Character vector representing a polygon object saved using the
+<code>.poly</code> format. Can be also a path to a file or a URL pointing to a valid
+<code>.poly</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p>The Coordinate Reference System (CRS) of the input polygon.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to <code>readLines()</code> (which is the function
+used to read external <code>.poly</code> files).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Polygon Filter File Format (<code>.poly</code>) is defined
+<a href="https://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Format">here</a>.
+The code behind the function was inspired by the <code>parse_poly</code> function
+defined
+<a href="https://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Python_Parsing">here</a>.
+</p>
+<p><a href="https://download.geofabrik.de/">Geofabrik</a> stores the <code>.poly</code> files used
+to generate their extracts. Furthermore, a nice collection of exact-border
+poly files created from cities with an OSM Relation ID is available in this
+git repository on github: <a href="https://github.com/jameschevalier/cities">https://github.com/jameschevalier/cities</a>.
+</p>
+<p>The default value for the <code>crs</code> argument is "OGC:CRS84" instead of "4326"
+or "EPSG:4326" since, by definition, the coordinates are provided as
+"longitude, latitude" (but these differences should be relevant only when
+<code>sf::st_axis_order()</code> is <code>TRUE</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>sfc_MULTIPOLYGON</code>/<code>sfc</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">toy_poly &lt;- c(
+  "test_poly",
+  "first_area",
+  "0 0",
+  "0 1",
+  "1 1",
+  "1 0",
+  "0 0",
+  "END",
+  "END"
+)
+(out &lt;- read_poly(toy_poly))
+plot(out)
+
+## Not run: 
+italy_poly &lt;- "https://download.geofabrik.de/europe/italy.poly"
+plot(read_poly(italy_poly))
+## End(Not run)
+</code></pre>
+
+
+</div>

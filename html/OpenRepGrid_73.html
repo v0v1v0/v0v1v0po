@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>elementRmsCor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Root mean square (RMS) of inter-element correlations.</h2>
+
+<h3>Description</h3>
+
+<p>The RMS is also known as 'quadratic mean' of the inter-element correlations. The RMS serves as a simplification of
+the correlation table. It reflects the average relation of one element with all other elements. Note that as the
+correlations are squared during its calculation, the RMS is not affected by the sign of the correlation (cf.
+Fransella, Bell &amp; Bannister, 2003, p. 86).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">elementRmsCor(x, rc = TRUE, method = "pearson", trim = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rc</code></td>
+<td>
+<p>Whether to use Cohen's rc which is invariant to construct
+reflection (see description above). It is used as the default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A character string indicating which correlation coefficient
+to be computed. One of <code>"pearson"</code> (default),
+<code>"kendall"</code> or <code>"spearman"</code>, can be abbreviated.
+The default is <code>"pearson"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>The number of characters an element is trimmed to (default is
+<code>NA</code>). If <code>NA</code> no trimming occurs. Trimming
+simply saves space when displaying correlation of constructs
+with long names.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that simple element correlations as a measure of similarity are flawed as they are not invariant to construct
+reflection (Mackay, 1992; Bell, 2010). A correlation index invariant to construct reflection is Cohen's rc measure
+(1969), which can be calculated using the argument <code>rc=TRUE</code> which is the default option in this function.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>dataframe</code> of the RMS of inter-element correlations.
+</p>
+
+
+<h3>References</h3>
+
+<p>Fransella, F., Bell, R. C., &amp; Bannister, D. (2003).
+<em>A Manual for Repertory  Grid Technique (2. Ed.)</em>. Chichester: John Wiley &amp; Sons.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>constructRmsCor()</code>, <code>elementCor()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# data from grid manual by Fransella, Bell and Bannister
+elementRmsCor(fbb2003)
+elementRmsCor(fbb2003, trim = 10)
+
+# modify output
+r &lt;- elementRmsCor(fbb2003)
+print(r, digits = 5)
+
+# access second row of calculation results
+r[2, "RMS"]
+
+</code></pre>
+
+
+</div>

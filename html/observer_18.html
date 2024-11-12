@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>observe_if</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Observe your data</h2>
+
+<h3>Description</h3>
+
+<p><code>observe_if</code> identifies rows of <code>.data</code> where the predicates 
+tested fail.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">observe_if(.data, ..., .append = TRUE)
+
+observe_if_(.data, ..., .dots, .append = TRUE)
+
+## S3 method for class 'data.frame'
+observe_if_(.data, ..., .dots, .append = TRUE)
+
+## S3 method for class 'tbl_df'
+observe_if_(.data, ..., .dots, .append = TRUE)
+
+## S3 method for class 'grouped_df'
+observe_if_(.data, ..., .dots, .append = TRUE)
+
+observe(.data, ...)
+
+## Default S3 method:
+observe(.data, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>A tbl or data.frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Logical predicates. 
+Multiple conditions are considered as separate observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.append</code></td>
+<td>
+<p>logical. If <code>TRUE</code> (the default), the <code>observations</code> 
+attribute, in case it already exists before the call, is appended; 
+if <code>FALSE</code> it is updated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.dots</code></td>
+<td>
+<p>Used to work around non-standard evaluation.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>.data</code> is returned together with an <code>observations</code> attribute.
+This attribute is a data frame (actually a <code>tibble</code>) 
+which contains all check runs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+
+df &lt;- data.frame(x = 1:3, y = 2:4)
+df %&gt;% 
+  observe_if(y-x==1) %&gt;% 
+  observe_if(x &lt; 3) %&gt;% 
+  observe_if(y &lt; 4, x &gt; 1) %&gt;% 
+  obs()
+
+</code></pre>
+
+
+</div>

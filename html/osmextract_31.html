@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oe_update</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Update all the .osm.pbf files saved in a directory</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to re-download all <code>.osm.pbf</code> files stored in
+<code>download_directory</code> that were firstly downloaded through <code>oe_get()</code>. See
+Details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oe_update(
+  download_directory = oe_download_directory(),
+  quiet = FALSE,
+  delete_gpkg = TRUE,
+  max_file_size = 5e+08,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>download_directory</code></td>
+<td>
+<p>Character string of the path of the directory
+where the <code>.osm.pbf</code> files are saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>Boolean. If <code>FALSE</code> the function prints informative
+messages. See Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delete_gpkg</code></td>
+<td>
+<p>Boolean. if <code>TRUE</code> the function deletes the old <code>.gpkg</code>
+files. We added this parameter to minimize the probability of accidentally
+reading-in old and not-synchronized <code>.gpkg</code> files. See Details. Defaults to
+<code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_file_size</code></td>
+<td>
+<p>The maximum file size to download without asking in
+interactive mode. Default: <code>5e+8</code>, half a gigabyte.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameter that will be passed to <code>oe_get()</code> (such as
+<code>stringsAsFactors</code> or <code>query</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used to re-download <code>.osm.pbf</code> files that are
+stored in a directory (specified by <code>download_directory</code> param) and that
+were firstly downloaded through <code>oe_get()</code> . The name of the files must
+begin with the name of one of the supported providers (see
+<code>oe_providers()</code>) and it must end with <code>.osm.pbf</code>. All other
+files in the directory that do not match this format are ignored.
+</p>
+<p>The process for re-downloading the <code>.osm.pbf</code> files is performed using the
+function <code>oe_get()</code> . The appropriate provider is determined by looking at
+the first word in the path of the <code>.osm.pbf</code> file. The place is determined
+by looking at the second word in the file path and the matching is
+performed through the <code>id</code> column in the provider's database. So, for
+example, the path <code>geofabrik_italy-latest-update.osm.pbf</code> will be matched
+with the provider <code>"geofabrik"</code> and the geographical zone <code>italy</code> through
+the column <code>id</code> in <code>geofabrik_zones</code>.
+</p>
+<p>The parameter <code>delete_gpkg</code> is used to delete all <code>.gpkg</code> files in
+<code>download_directory</code>. We decided to set its default value to <code>TRUE</code> to
+minimize the possibility of reading-in old and non-synchronized <code>.gpkg</code>
+files. If you set <code>delete_gpkg = FALSE</code>, then you need to manually
+reconvert all files using <code>oe_get()</code> or <code>oe_vectortranslate()</code> .
+</p>
+<p>If you set the parameter <code>quiet</code> to <code>FALSE</code>, then the function will print
+some useful messages regarding the characteristics of the files before and
+after updating them. More precisely, it will print the output of the
+columns <code>size</code>, <code>mtime</code> and <code>ctime</code> from <code>file.info()</code>. Please note that
+the meaning of <code>mtime</code> and <code>ctime</code> depends on the OS and the file system.
+Check <code>file.info()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The path(s) of the <code>.osm.pbf</code> file(s) that were updated.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Set up a fake directory with .pbf and .gpkg files
+fake_dir = tempdir()
+# Fill the directory
+oe_get("Andorra", download_directory = fake_dir, download_only = TRUE)
+# Check the directory
+list.files(fake_dir, pattern = "gpkg|pbf")
+# Update all .pbf files and delete all .gpkg files
+oe_update(fake_dir, quiet = TRUE)
+list.files(fake_dir, pattern = "gpkg|pbf")
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onbabynames</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Names of babies in Ontario Between 1917 and 2018</h2>
+
+<h3>Description</h3>
+
+<p>A database containing the first names of babies born in Ontario
+between 1917 and 2018. Counts of fewer than 5 names were suppressed for privacy.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onbabynames
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A database containing  161 703 lines and 4 columns:
+</p>
+
+<dl>
+<dt>year</dt>
+<dd>
+<p>Year</p>
+</dd>
+<dt>sex</dt>
+<dd>
+<p>F for female and M for male</p>
+</dd>
+<dt>name</dt>
+<dd>
+<p>Name</p>
+</dd>
+<dt>n</dt>
+<dd>
+<p>Frequency</p>
+</dd>
+</dl>
+<h3>Source</h3>
+
+<p><a href="https://data.ontario.ca/dataset/eb4c585c-6ada-4de7-8ff1-e876fb1a6b0b/resource/919b7260-aafd-4af1-a427-38a51dbc8436/download/ontario_top_baby_names_male_1917-2018_en_fr.csv">https://data.ontario.ca/dataset/eb4c585c-6ada-4de7-8ff1-e876fb1a6b0b/resource/919b7260-aafd-4af1-a427-38a51dbc8436/download/ontario_top_baby_names_male_1917-2018_en_fr.csv</a>
+</p>
+<p><a href="https://data.ontario.ca/dataset/4d339626-98f9-49fe-aede-d64f03fa914f/resource/0c4aec56-b2b8-499b-9739-68ab8a56e69a/download/ontario_top_baby_names_female_1917-2018_en_fr.csv">https://data.ontario.ca/dataset/4d339626-98f9-49fe-aede-d64f03fa914f/resource/0c4aec56-b2b8-499b-9739-68ab8a56e69a/download/ontario_top_baby_names_female_1917-2018_en_fr.csv</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+  library(dplyr)
+
+  # The five most popular girls names in Ontario in 2018
+  onbabynames %&gt;%
+    filter(year == 2018 &amp; sex == "F") %&gt;%
+    arrange(desc(n)) %&gt;%
+    head(5)
+
+  library(ggplot2)
+
+  # The popularity of the five most popular girls names in Ontario in 2018
+  # between 1917 and 2018
+
+  girls2018 &lt;- onbabynames %&gt;%
+    filter(year == 2018 &amp; sex == "F") %&gt;%
+    arrange(desc(n)) %&gt;%
+    select(name) %&gt;%
+    head(5)
+
+  onbabynames %&gt;%
+    filter(name %in% girls2018$name) %&gt;%
+    ggplot(aes(x = year, y = n, color = name)) +
+    geom_line()
+
+</code></pre>
+
+
+</div>

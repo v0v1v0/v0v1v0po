@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ant_efficiency</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Detection efficiency for directional Oregon RFID antenna data</h2>
+
+<h3>Description</h3>
+
+<p>Determines detection efficiency for each antenna in systems where multiple antennas are used along a linear migration route.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ant_efficiency(x, LOC_vec)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>data frame generated using <code>join_multireader_data</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LOC_vec</code></td>
+<td>
+<p>vector of antenna locations from first encountered to last encountered.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>ant_efficiency</code> determines the detection efficiency of each antenna in a linear migration route. Direction is determined based on the order of locations from first encountered to last encountered, as specified in <em>LOC_vec</em>. Use <code>site_summary</code> to identify all locations present in the multi reader data, which must be included in <em>LOC_vec</em>. 
+</p>
+<p>Antenna efficiency is determined by identifying which tags were detected at antenna x and which tags were detected anywhere after/above antenna x. The efficiency of antenna x is then the number of shared tag detections divided by the total number of detections after x. Note that efficiency and shared detections cannot be determined for the final antenna as there are no subsequent detections. Reversing the order of <em>LOC_vec</em> can inform efficiency in systems with movement in multiple directions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a tibble object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Annika Putt &lt;annika@instream.net&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>import_ORFID</code> for importing data files from Oregon RFID ORMR and ORSR antenna readers.
+</p>
+<p><code>join_multireader_data</code> for combining data from Oregon RFID ORMR and ORSR antenna readers into a multi-reader array.
+</p>
+<p><code>site_summary</code> for identifying all locations present in a multi-reader array.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create a list containing compiled reader data:
+readers &lt;- list(reader_us, reader_ds)
+
+# Join data into a multi-reader array:
+PIT_data &lt;- join_multireader_data(readers)
+
+# List readers:
+unique(PIT_data$LOC)
+
+# Determine antenna efficiency for animals moving from downstream to upstream:
+ant_efficiency(PIT_data, c("downstream_A1", "upstream_A1"))
+
+# Determine antenna efficiency for animals moving from upstream to downstream:
+ant_efficiency(PIT_data, c("upstream_A1", "downstream_A1"))
+ 
+</code></pre>
+
+
+</div>

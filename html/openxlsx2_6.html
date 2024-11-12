@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as_xml</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>loads character string to pugixml and returns an externalptr</h2>
+
+<h3>Description</h3>
+
+<p>loads character string to pugixml and returns an externalptr
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as_xml(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>input as xml</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>read_xml()</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>might be useful for larger documents where single nodes are shortened
+and otherwise the full tree has to be reimported. unsure where we have
+such a case.
+is useful, for printing nodes from a larger tree, that have been exported
+as characters (at some point in time we have to convert the xml to R)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tmp_xlsx &lt;- tempfile()
+xlsxFile &lt;- system.file("extdata", "openxlsx2_example.xlsx", package = "openxlsx2")
+unzip(xlsxFile, exdir = tmp_xlsx)
+
+wb &lt;- wb_load(xlsxFile)
+styles_xml &lt;- sprintf("%s/xl/styles.xml", tmp_xlsx)
+
+# is external pointer
+sxml &lt;- read_xml(styles_xml)
+
+# is character
+font &lt;- xml_node(sxml, "styleSheet", "fonts", "font")
+
+# is again external pointer
+as_xml(font)
+</code></pre>
+
+
+</div>

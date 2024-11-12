@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grback</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Backward difference numerical gradient approximation.</h2>
+
+<h3>Description</h3>
+
+<p><code>grback</code> computes the backward difference approximation to the gradient of 
+user function <code>userfn</code>. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">   grback(par, userfn, fbase=NULL, env=optsp, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>par</code></td>
+<td>
+
+<p>parameters to the user objective function userfn
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>userfn</code></td>
+<td>
+
+<p>User-supplied objective function
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fbase</code></td>
+<td>
+
+<p>The value of the function at the parameters, else NULL. This is to save
+recomputing the function at this point.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>env</code></td>
+<td>
+
+<p>Environment for scratchpad items (like <code>deps</code> for approximation 
+control in this routine). Default <code>optsp</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>optional arguments passed to the objective function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<table>
+<tr>
+<td style="text-align: left;">
+Package: </td>
+<td style="text-align: left;"> grback</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Depends: </td>
+<td style="text-align: left;"> R (&gt;= 2.6.1)</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+License: </td>
+<td style="text-align: left;"> GPL Version 2.</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>grback</code> returns a single vector object <code>df</code> which approximates the 
+gradient of userfn at the parameters par. The approximation is controlled by a
+global value <code>optderiveps</code> that is set when the package is attached.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>John C. Nash
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">cat("Example of use of grback\n")
+
+myfn&lt;-function(xx, shift=100){
+    ii&lt;-1:length(xx)
+    result&lt;-shift+sum(xx^ii)
+}
+
+xx&lt;-c(1,2,3,4)
+ii&lt;-1:length(xx)
+print(xx)
+gn&lt;-grback(xx,myfn, shift=0)
+print(gn)
+ga&lt;-ii*xx^(ii-1)
+cat("compare to analytic gradient:\n")
+print(ga)
+
+cat("change the step parameter to 1e-4\n")
+optsp$deps &lt;- 1e-4
+gn2&lt;-grback(xx,myfn, shift=0)
+print(gn2)
+
+</code></pre>
+
+
+</div>

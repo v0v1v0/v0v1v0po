@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.file_download</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download a file</h2>
+
+<h3>Description</h3>
+
+<p>Download a file or a folder from the Opal file system.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.file_download(opal, source, destination = NULL, key = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source</code></td>
+<td>
+<p>Path to the file in the Opal file system.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>destination</code></td>
+<td>
+<p>Path to the file to be written. If ommitted, file with same name in the working directory will be written.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>File encryption key: downloaded file will be a zip file with content encrypted (use 7zip to decrypt).</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other file functions: 
+<code>opal.file()</code>,
+<code>opal.file_cp()</code>,
+<code>opal.file_ls()</code>,
+<code>opal.file_mkdir()</code>,
+<code>opal.file_mkdir_tmp()</code>,
+<code>opal.file_mv()</code>,
+<code>opal.file_read()</code>,
+<code>opal.file_rm()</code>,
+<code>opal.file_unzip()</code>,
+<code>opal.file_upload()</code>,
+<code>opal.file_write()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+# download a file
+opal.file_download(o, '/home/administrator/joins/join-src-3.csv')
+# download a file encrypted by a key: resulting file is a zip with an encrypted content
+opal.file_download(o, '/home/administrator/export/some-data.csv', 
+                      destination='some-data.zip', key='AZF57893FBDE')
+# download, create destination folder and rename file
+opal.file_download(o, '/home/administrator/spss/DatabaseTest.sav', 'spss/test.sav')
+# download a folder
+opal.file_download(o, '/home/administrator/export', 'export.zip')
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

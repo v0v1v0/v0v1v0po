@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>figure</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+generate (and save) graphic devices with flexible fileformat selection
+</h2>
+
+<h3>Description</h3>
+
+<p><code>figure</code> generates graphic devices with flexible fileformat selection.
+<b>Function call with (figure(do.save=T) needs to be finished by close_fig(do.save=T), to close open file connection.</b>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">figure(filename, folder, type, save=F, do.save=save, 
+       width=10, height=10, xpos=-1, do.overwrite=T, delete.old=do.overwrite, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+
+<p>name of the figure to be generated (without file extension)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>folder</code></td>
+<td>
+
+<p>plot folder (by default current working directory) 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+
+<p>character string indicating the graphics format of the figure file. can be:
+</p>
+
+<ul>
+<li>
+<p>"jpg"
+</p>
+</li>
+<li>
+<p>"jpeg"
+</p>
+</li>
+<li>
+<p>"png"
+</p>
+</li>
+<li>
+<p>"tiff"
+</p>
+</li>
+<li>
+<p>"eps"
+</p>
+</li>
+<li>
+<p>"pdf"
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width, height</code></td>
+<td>
+
+<p>width and height of figure to be generated. default units are inches.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>save, do.save</code></td>
+<td>
+
+<p>whether file should be saved or not (default is TRUE). 
+if FALSE, new graphic device will be opened inside R.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xpos</code></td>
+<td>
+
+<p>horizontal screen position of graphic device (ignored if do.save == TRUE)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>do.overwrite, delete.old</code></td>
+<td>
+
+<p>overwrite existing figure with same filename and extension (default is FALSE)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>additional arguments to be passed to the graphic device
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>close_fig</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example 1: plotmap() and figure()
+do.save &lt;- FALSE
+figure("Gulf_of_Lions_extended", do.save=do.save, width=5, height=5, type="pdf")
+plotmap("lion")
+close_fig(do.save)
+
+## now resize figure manually and get new figure dimensions:
+width &lt;- dev.size()[1]
+height &lt;- dev.size()[2]
+
+# do.save &lt;- TRUE
+# figure("Gulf_of_Lions_extended", do.save=do.save, width=width, height=height, type="pdf")
+# plotmap("lion")
+# close_fig(do.save)
+
+
+
+
+</code></pre>
+
+
+</div>

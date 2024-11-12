@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>RKMeans</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Regularized K-means clustering algorithm for multi-view data
+</h2>
+
+<h3>Description</h3>
+
+<p>This function improves the regularized K-means clustering (RKMC) algorithm for the multi-view data clustering problem. Specifically, the regularisation term is added to the K-means algorithm to avoid overfitting of the data. Numerical analysis shows that the RKMC algorithm significantly improves the clustering performance compared to other methods. In addition, in order to reveal the structure of real data as realistically as possible, improve the clustering accuracy of high-dimensional data, and balance the weights of each view, the RKMC algorithm assigns a series of learnable weight values to each view, thus reflecting the relationship and compatibility of each view more flexibly.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">RKMeans(X, K, V, yita, r, max.iter, truere, method = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>is the data matrix
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+
+<p>is the number of cluster
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>V</code></td>
+<td>
+
+<p>is the view of X
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yita</code></td>
+<td>
+
+<p>is the regularized parameter
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+
+<p>is the banlance parameter
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iter</code></td>
+<td>
+
+<p>is the max iter
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truere</code></td>
+<td>
+
+<p>is the ture label in data set
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+
+<p>is the caluate the NMI
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>NMI,weight,center,result
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Miao Yu
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  library(MASS) 
+  library(Matrix)  
+  yita=0.5;V=2;K=3;r=0.5;max.iter=10;n1=n2=n3=70
+  X1&lt;-rnorm(n1,20,2);X2&lt;-rnorm(n2,25,1.5);X3&lt;-rnorm(n3,30,2) 
+  Xv&lt;-c(X1,X2,X3)
+  data&lt;-matrix(Xv,n1+n2+n3,2)
+  data[1:70,2]&lt;-1;data[71:140,2]&lt;-2;data[141:210,2]&lt;-3
+  X&lt;-matrix(data[,1],n1+n2+n3,1) 
+  truere=data[,2]
+  lamda1&lt;-0.2;lamda2&lt;-0.8
+  lamda&lt;-matrix(c(lamda1,lamda2),nrow=1,ncol=2)
+  sol.svd &lt;- svd(lamda)
+  U1&lt;-sol.svd$u
+  D1&lt;-sol.svd$d
+  V1&lt;-sol.svd$v
+  C1&lt;-t(U1)
+  Y1&lt;-C1/D1
+  view&lt;-V1
+  view1&lt;-matrix(view[1,])
+  view2&lt;-matrix(view[2,])
+  X1&lt;-matrix(view1,n1+n2+n3,1)
+  X2&lt;-matrix(view2,n1+n2+n3,1)
+  RKMeans(X=X1,K=K,V=V,yita=yita,r=r,max.iter=max.iter,truere=truere,method=0)
+</code></pre>
+
+
+</div>

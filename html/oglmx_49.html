@@ -1,0 +1,435 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oglmx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Fit Ordered Generalized Linear Model.
+</h2>
+
+<h3>Description</h3>
+
+<p><code>oglmx</code> is used to estimate models for which the outcome variable is discrete and the mean and/or variance of the underlying latent variable can be modelled as a linear combination of explanatory variables. Standard models such as probit, logit, ordered probit and ordered logit are included in the diverse set of models estimated by the function.
+
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oglmx(formulaMEAN, formulaSD=NULL, data, start=NULL, weights=NULL,
+      link="probit", constantMEAN=TRUE, constantSD=TRUE, beta=NULL,
+      delta=NULL, threshparam=NULL, analhessian=TRUE, 
+      sdmodel=expression(exp(z)), SameModelMEANSD=FALSE, na.action,
+      savemodelframe=TRUE, Force=FALSE, robust=FALSE)
+      
+oglmx.fit(outcomeMatrix, X, Z, w, beta, delta, threshparam, link, start,
+          sdmodel, optmeth="maxLik", analhessian, robust)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formulaMEAN</code></td>
+<td>
+
+<p>an object of class <code>formula</code>: a symbolic description of the model used to explain the mean of the latent variable. The response variable should be a numeric vector or factor variable such that the numerical assignments for the levels of the factor have ordinal meaning.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formulaSD</code></td>
+<td>
+
+<p>either <code>NULL</code> or an object of class <code>formula</code>: a symbolic description of the model used to explain the variance of the latent variable.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>a data frame containing the variables in the model.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+
+<p>either <code>NULL</code> or a numeric vector specifying start values for each of the estimated parameters, passed to the maximisation routine.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+
+<p>either <code>NULL</code> or a numeric vector of length equal to the number of rows in the data frame. Used to apply weighted maximum likelihood estimation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+
+<p>specifies a link function for the model to be estimated, accepted values are "<code>probit</code>", "<code>logit</code>", "<code>cauchit</code>", "<code>loglog</code>" and "<code>cloglog</code>"
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>constantMEAN</code></td>
+<td>
+
+<p>logical. Should an intercept be included in the model of the mean of the latent variable? Can be overwritten and set to <code>FALSE</code> using the formulaMEAN argument by writing <code>0 + </code> as the first element of the equation.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>constantSD</code></td>
+<td>
+
+<p>logical. Should an intercept be included in the model of the variance of the latent variable? Can be overwritten and set to <code>FALSE</code> using the formulaSD argument by writing <code>0 + </code> as the first element of the equation.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+
+<p><code>NULL</code> or numeric vector. Used to prespecify elements of the parameter vector for the equation of the mean of the latent variable. Vector should be of length one or of length equal to the number of explanatory variables in the mean equation. If of length one the value is presumed to correspond to the constant if a constant is included or the first element of the parameter vector. If of length greater than one then <code>NA</code> should be entered for elements of the vector to be estimated. 
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+
+<p><code>NULL</code> or numeric vector. Used to prespecify elements of the parameter vector for the equation of the variance of the latent variable. Vector should be of length one or of length equal to the number of explanatory variables in the variance equation. If of length one the value is presumed to correspond to the constant if a constant is included or the first element of the parameter vector. If of length greater than one then <code>NA</code> should be entered for elements of the vector to be estimated.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshparam</code></td>
+<td>
+
+<p><code>NULL</code> or numeric vector. Used to prespecify the threshold parameters of the model. Vector should be of length equal to the number of outcomes minus one. <code>NA</code> should be entered for threshold parameters to be estimated by the model.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>analhessian</code></td>
+<td>
+
+<p>logical. Indicates whether the analytic Hessian should be calculated and used, default is TRUE, if set to FALSE a finite-difference approximation of the Hessian is used.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sdmodel</code></td>
+<td>
+
+<p>object of mode “<code>expression</code>”. The expression defines function that transforms the linear model for the standard deviation into the standard deviation. The expression should be written as a function of variable <code>z</code>. The default value is <code>expression(exp(z))</code>.  
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SameModelMEANSD</code></td>
+<td>
+
+<p>logical. Indicates whether the matrix used to model the mean of the latent variable is identical to that used to model the variance. If <code>formulaSD=NULL</code> and <code>SameModelMEANSD=TRUE</code> a model with heteroskedasticity is estimated. If <code>SameModelMEANSD=FALSE</code> and <code>formulaSD==formulaMEAN</code> value is overridden. Used to reduce memory requirements when models are identical. 
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+
+<p>a function which indicates what should happen when the data contain NAs. The default is set by the <code>na.action</code> setting of <code>options</code>, and is <code>na.fail</code> if that is unset. The factory-fresh default is <code>na.omit</code>. Another possible value is <code>NULL</code>, no action. Value <code>na.exclude</code> can be useful.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>savemodelframe</code></td>
+<td>
+
+<p>logical. Indicates whether the model frame(s) should be saved for future use. Default is <code>FALSE</code>. Should be set to <code>TRUE</code> if intending to estimate Average Marginal Effects.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Force</code></td>
+<td>
+
+<p>logical. If set to <code>FALSE</code> (the default) the function stops if the response variable has more than twenty categories. Should be changed to <code>TRUE</code> if a model with more than twenty categories is desired.
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>robust</code></td>
+<td>
+
+<p>logical. If set to <code>TRUE</code> the outer product or BHHH estimate of the meat in the sandwich of the variance-covariance matrix is calculated. If calculated standard errors will be calculated using the sandwich estimator by default when calling <code>summary</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcomeMatrix, X, Z</code></td>
+<td>
+
+<p><code>X</code> is a data matrix for the right hand side of the mean equation, <code>outcomeMatrix</code> is a matrix that indicates the outcome variable and <code>Z</code> is a data matrix for the variance equation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p><code>w</code> specifies a vector of weights for the <code>oglmx.fit</code> function.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>optmeth</code></td>
+<td>
+
+<p><code>optmeth</code> specifies a method for the maximisation of the likelihood, currently "maxLik" is the only available option.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class "<code>oglmx</code>" with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>link function used in the estimated model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sdmodel</code></td>
+<td>
+<p>Expression for the model for the standard deviation, default is exp(z).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the call used to generate the results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>factorvars</code></td>
+<td>
+<p>vector listing factor variables included in the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Outcomes</code></td>
+<td>
+<p>numeric vector listing the values of the different outcomes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NoVarModData</code></td>
+<td>
+<p>dataframe. Contains data required to estimate the no information model used in calculation of McFadden's R-squared measure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NOutcomes</code></td>
+<td>
+<p>the number of distinct outcomes in the response variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hetero</code></td>
+<td>
+<p>logical. If <code>TRUE</code> indicates that the estimated model includes a model for the variance of the error term, i.e. heteroskedasticity.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>two element list. Each element is an object of type <code>formula</code> related to the mean and standard deviation equation respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modelframes</code></td>
+<td>
+<p>If <code>savemodelframe</code> set to <code>FALSE</code> then returns <code>NULL</code>, otherwise returns a list with two elements, the model frames for the mean and variance equations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BothEq</code></td>
+<td>
+<p>Omitted in the case of a homoskedastic model. Dataframe listing variables that are contained in both the mean and variance equations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varMeans</code></td>
+<td>
+<p>a list containing two numeric vectors. The vectors list the mean values of the variables in the mean and variance equation respectively. Stored for use in a call of <code>margins.oglmx</code> to obtain marginal effects at means.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varBinary</code></td>
+<td>
+<p>a list containing two numeric vectors. The vectors indicate whether the variables in the mean and variance equations are binary indicators. Stored for use in a call of <code>margins.oglmx</code> to obtain marginal effects at means.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loglikelihood </code></td>
+<td>
+<p>log-likelihood for the estimated model. Includes as attributes the log-likelihood for the constant only model and the number of observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coefficients</code></td>
+<td>
+<p>vector of estimated parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gradient</code></td>
+<td>
+<p>numeric vector, the value of the gradient of the log-likelihood function at the obtained parameter vector. Should be approximately equal to zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no.iterations</code></td>
+<td>
+<p>number of iterations of maximisation algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnCode</code></td>
+<td>
+<p>code returned by the <code>maxLik</code> optimisation routine. For details of meaning see <code>maxNR</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hessian</code></td>
+<td>
+<p>hessian matrix of the log-likelihood function evaluated at the obtained parameter vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allparams</code></td>
+<td>
+<p>a list containing three numeric vectors, the vectors contain the parameters from the mean equation, the variance equation and the threshold parameters respectively. Includes the prespecified and estimated parameters together.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Est.Parameters</code></td>
+<td>
+<p>list containing three logical vectors. Indicates which parameters in the parameter vectors were estimated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BHHHhessian</code></td>
+<td>
+<p>Omitted if <code>robust = FALSE</code> and weights were not included. The BHHH variance-covariance estimate.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Nathan Carroll, <a href="mailto:nathan.carroll@ur.de">nathan.carroll@ur.de</a>
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Cameron, A. C. &amp; Trivedi, P. K. (2005) <em>Microeconometrics : methods and applications </em> Cambridge University Press
+</p>
+<p>Wooldridge, J. M. (2002) <em>Econometric analysis of cross section and panel data </em> The MIT Press
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>maxLik</code>, <code>margins.oglmx</code>, <code>polr</code>.
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># create random sample, three variables, two binary.
+set.seed(242)
+n&lt;-250
+x1&lt;-sample(c(0,1),n,replace=TRUE,prob=c(0.75,0.25))
+x2&lt;-vector("numeric",n)
+x2[x1==0]&lt;-sample(c(0,1),n-sum(x1==1),replace=TRUE,prob=c(2/3,1/3))
+z&lt;-rnorm(n,0.5)
+# create latent outcome variable
+latenty&lt;-0.5+1.5*x1-0.5*x2+0.5*z+rnorm(n,sd=exp(0.5*x1-0.5*x2))
+# observed y has four possible values: -1,0,1,2
+# threshold values are: -0.5, 0.5, 1.5.
+y&lt;-vector("numeric",n)
+y[latenty&lt; -0.5]&lt;--1
+y[latenty&gt;= -0.5 &amp; latenty&lt;0.5]&lt;- 0
+y[latenty&gt;= 0.5 &amp; latenty&lt;1.5]&lt;- 1
+y[latenty&gt;= 1.5]&lt;- 2
+dataset&lt;-data.frame(y,x1,x2)
+# estimate standard ordered probit
+results.oprob&lt;-oglmx(y ~ x1 + x2 + z, data=dataset,link="probit",constantMEAN=FALSE,
+                     constantSD=FALSE,delta=0,threshparam=NULL)
+coef(results.oprob) # extract estimated coefficients
+summary(results.oprob)
+# calculate marginal effects at means
+margins.oglmx(results.oprob)
+# estimate ordered probit with heteroskedasticity
+results.oprobhet&lt;-oglmx(y ~ x1 + x2 + z, ~ x1 + x2, data=dataset, link="probit",
+                     constantMEAN=FALSE, constantSD=FALSE,threshparam=NULL)
+summary(results.oprobhet)
+library("lmtest")
+# likelihood ratio test to compare model with and without heteroskedasticity.
+lrtest(results.oprob,results.oprobhet)
+# calculate marginal effects at means.
+margins.oglmx(results.oprobhet)
+# scale of parameter values is meaningless. Suppose instead two of the 
+# three threshold values were known, then can include constants in the 
+# mean and standard deviation equation and the scale is meaningful.
+results.oprobhet1&lt;-oglmx(y ~ x1 + x2 + z, ~ x1 + x2, data=dataset, link="probit",
+                        constantMEAN=TRUE, constantSD=TRUE,threshparam=c(-0.5,0.5,NA))
+summary(results.oprobhet1)
+margins.oglmx(results.oprobhet1)
+# marginal effects are identical to results.oprobithet, but using the true thresholds
+# means the estimated parameters are on the same scale as underlying data.
+# can choose any two of the threshold values and get broadly the same result.
+results.oprobhet2&lt;-oglmx(y ~ x1 + x2 + z, ~ x1 + x2, data=dataset, link="probit",
+                         constantMEAN=TRUE, constantSD=TRUE,threshparam=c(-0.5,NA,1.5))
+summary(results.oprobhet2)
+margins.oglmx(results.oprobhet2)
+# marginal effects are again identical. Parameter estimates do change.
+
+
+
+</code></pre>
+
+
+</div>

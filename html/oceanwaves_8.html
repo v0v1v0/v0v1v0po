@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>waveStatsZC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate wave statistics using zero-crossing method</h2>
+
+<h3>Description</h3>
+
+<p>Calculate ocean wave summary statistics, including significant
+wave height and period.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">waveStatsZC(data, Fs, threshold = NULL, plot = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A numeric vector of water surface height data. The data do not
+need to be detrended prior to use. Typical units = meters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Fs</code></td>
+<td>
+<p>Sampling frequency of the data, in Hz.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>The minimum height necessary for a zero-crossing event to 
+be considered a wave.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Set to TRUE if summary histograms of wave heights and wave
+periods are desired.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Based on an upward zero-crossing algorithm originally
+provided by Urs Neumeier, v1.06. However, by default the algorithm
+is run as a downward zero-crossing process by inverting the data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list object containing summary statistic values.
+</p>
+
+<ul>
+<li> <p><code>Hsig</code> Mean of the highest 1/3 of waves in the data set. Units = 
+same as input surface heights.
+</p>
+</li>
+<li> <p><code>Hmean</code>  Overall mean wave height, for all waves (bigger than 
+threshold). 
+</p>
+</li>
+<li> <p><code>H10</code> Mean height of the upper 10% of all waves. 
+</p>
+</li>
+<li> <p><code>Hmax</code> Maximum wave height in the input data.
+</p>
+</li>
+<li> <p><code>Tmean</code> Mean period of all waves (bigger than threshold). 
+Units = seconds.
+</p>
+</li>
+<li> <p><code>Tsig</code> Mean period of <code>Hsig</code> (highest 1/3 of waves).
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Original MATLAB function by Urs Neumeier:  
+http://neumeier.perso.ch/matlab/waves.html
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>waveStatsSP</code> for wave statistics determined using 
+spectral analysis methods.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(wavedata)
+waveStatsZC(data = wavedata$swDepth.m, Fs = 4, plot = TRUE)
+</code></pre>
+
+
+</div>

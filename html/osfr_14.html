@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osf_mv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Move a file or directory</h2>
+
+<h3>Description</h3>
+
+<p>Use <code>osf_mv()</code> to move a file or directory to a new project, component, or
+subdirectory.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osf_mv(x, to, overwrite = FALSE, verbose = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An <code>osf_tbl_file</code> containing a single file or directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>Destination where the file or directory will be moved. This
+can be one of the following:
+</p>
+
+<ul>
+<li>
+<p> An <code>osf_tbl_node</code> with a single project or component.
+</p>
+</li>
+<li>
+<p> An <code>osf_tbl_file</code> with a single directory.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>Logical, if a file or directory with the same name already
+exists at the destination should it be replaced with <code>x</code>?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical, indicating whether to print informative messages
+about interactions with the OSF API (default <code>FALSE</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that a file (or directory) cannot be moved or copied onto itself, even
+if <code>overwrite = TRUE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>osf_tbl_file</code> containing the updated OSF file.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other OSF file operations: 
+<code>osf_cp()</code>,
+<code>osf_mkdir()</code>,
+<code>osf_rm()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Create an example file to upload to our example project
+project &lt;- osf_create_project("Flower Data")
+
+write.csv(iris, file = "iris.csv")
+data_file &lt;- osf_upload(project,"iris.csv")
+
+# Create a new directory to move our file to
+data_dir &lt;- osf_mkdir(project, "data")
+
+# Move the file to our data directory
+data_file &lt;- osf_mv(data_file, to = data_dir)
+
+# Move our data directory to a new component
+data_comp &lt;- osf_create_component(project, title = "data", category = "data")
+data_dir %&gt;%
+  osf_mv(to = data_comp) %&gt;%
+  osf_open()
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>viaroute_api_v4</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>travel time or full information of a route for OSRM API 4</h2>
+
+<h3>Description</h3>
+
+<p>For a given start- and end-destination, viaroute() calculates route informations using OSRM API 4.
+OSRM chooses the nearest point which can be accessed by car for the start and destination.
+The coordinate-standard is WGS84.
+Attention: The OSRM API-4 is only working locally, but not with the onlinehost.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">viaroute_api_v4(lat1, lng1, lat2, lng2, instructions, address)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lat1</code></td>
+<td>
+<p>A numeric (-90 &lt; lat1 &lt; 90) -&gt; start-destination</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng1</code></td>
+<td>
+<p>A numeric (-180 &lt; lng1 &lt; 180) -&gt; start-destination</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat2</code></td>
+<td>
+<p>A numeric (-90 &lt; lat2 &lt; 90) -&gt; end-destination</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng2</code></td>
+<td>
+<p>A numeric (-180 &lt; lng2 &lt; 180) -&gt; end-destination</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instructions</code></td>
+<td>
+<p>A logical. If FALSE, only the traveltime (in seconds, as numeric) will be returned.
+If TRUE, more details of the route are returned (as list).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>address</code></td>
+<td>
+<p>A character specifying the serveraddress (local or online)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a numeric or a list (depending on parameter instructions)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+Sys.setenv("OSRM_PATH"="C:/OSRM_API4")
+osrmr::run_server("switzerland-latest.osrm")
+osrmr:::viaroute_api_v4(47,9,48,10, FALSE, osrmr:::server_address(TRUE))
+osrmr::quit_server()
+Sys.unsetenv("OSRM_PATH")
+## End(Not run)
+</code></pre>
+
+
+</div>

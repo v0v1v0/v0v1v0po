@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fix.kappa</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adjust tree for matrix condition</h2>
+
+<h3>Description</h3>
+
+<p>Iteratively deletes taxa with shortest tip length to try to get a variance covariance matrix with good matrix condition.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fix.kappa(phy, data, threshold = log(40))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>phy</code></td>
+<td>
+<p>a phylogenetic tree, in <code>ape</code> “phylo” format and with internal nodes labeled denoting the ancestral selective regimes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data.frame containing species information (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>log(condition), as measured by kappa(), which is too large</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Internally, OUwie uses an algorithm that can perform poorly when the variance covariance matrix is poorly conditioned (which can happen if two columns are very similar, as when the divergence depth of two species is very recent). This does not mean there is anything wrong with the biology, just that the numerical algorithms perform poorly in that case. If it's a model that can be fit in phylolm or geiger, those packages use a differnt algorithm that is more robust to this. What this function does is take your original tree and data and deletes taxa with the shortest branches, in order, to try to get a starting tree with generally good condition. Deleting data is always a sad thing, but this can result in a more accurate estimate of the likelihood and parameter values.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This returns a list with two elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>$phy</code></td>
+<td>
+<p>the phylogeny with taxa deleted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$data</code></td>
+<td>
+<p>the data with taxa deleted.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Brian C. O'Meara</p>
+
+
+</div>

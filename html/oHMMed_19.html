@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>posterior_prob_gamma_poisson</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Forward-Backward Algorithm to Calculate the Posterior Probabilities of Hidden States in Poisson-Gamma Model</h2>
+
+<h3>Description</h3>
+
+<p>Forward-Backward Algorithm to Calculate the Posterior Probabilities of Hidden States in Poisson-Gamma Model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">posterior_prob_gamma_poisson(data, pi, mat_T, betas, alpha)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>(numeric) Poisson data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pi</code></td>
+<td>
+<p>(numeric) prior probability of states</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mat_T</code></td>
+<td>
+<p>(matrix) transition probability matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betas</code></td>
+<td>
+<p>(numeric) vector with prior rates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>(numeric) prior scale</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Please see <a href="https://static-content.springer.com/esm/art%3A10.1186%2Fs12859-024-05751-4/MediaObjects/12859_2024_5751_MOESM1_ESM.pdf">supplementary information</a> at <a href="https://doi.org/10.1186/s12859-024-05751-4">doi:10.1186/s12859-024-05751-4</a> for more details on the algorithm.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with the following elements: 
+</p>
+
+<ul>
+<li> <p><code>F</code>: auxiliary forward variables
+</p>
+</li>
+<li> <p><code>B</code>: auxiliary backward variables
+</p>
+</li>
+<li> <p><code>s</code>: weights
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">mat_T &lt;- rbind(c(1-0.01,0.01,0),
+               c(0.01,1-0.02,0.01),
+               c(0,0.01,1-0.01))
+L &lt;- 2^10
+betas &lt;- c(0.1, 0.3, 0.5)
+alpha &lt;- 1
+
+sim_data &lt;- hmm_simulate_gamma_poisson_data(L = L,
+                                            mat_T = mat_T,
+                                            betas = betas,
+                                            alpha = alpha)
+pi &lt;- sim_data$pi
+hmm_poison_data &lt;- sim_data$data
+hist(hmm_poison_data, breaks = 100)
+
+# Calculate posterior probabilities of hidden states
+post_prob &lt;- posterior_prob_gamma_poisson(data = hmm_poison_data,
+                                          pi = pi,
+                                          mat_T = mat_T,
+                                          betas = betas,
+                                          alpha = alpha)
+str(post_prob)
+</code></pre>
+
+
+</div>

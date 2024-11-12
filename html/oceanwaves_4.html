@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>prCorr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Correct for depth attenuation of a water surface elevation 
+pressure signal.</h2>
+
+<h3>Description</h3>
+
+<p>Bottom-mounted pressure transducers suffer from pressure signal 
+attenuation when attempting to estimate surface wave heights. This 
+function corrects water surface elevation time series based on the
+depth of the water column and height of the sensor above the bottom.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">prCorr(pt, Fs, zpt, M = 512, CorrLim = c(0.05, 0.33), plot = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pt</code></td>
+<td>
+<p>A vector of sea surface elevations (units of meters).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Fs</code></td>
+<td>
+<p>Sampling frequency (units of Hz). Normally 4 Hz for an OWHL logger.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zpt</code></td>
+<td>
+<p>Height of the pressure sensor above the seabed (units of meters).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>Length of time series segments that will be used in the detrending
+and attenuation correction operations. 512 samples is the default, should be
+an even number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CorrLim</code></td>
+<td>
+<p>[min max] frequency for attenuation correction (Hz, optional, 
+default [0.05 0.33], which translate to periods of 20 sec to 3 sec).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Logical value TRUE or FALSE. Displays a plot of the original and 
+corrected time series.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector of the depth-corrected surface elevations (units of meters 
+usually). Any original trend in the input data (such as tide change) is 
+present in the output data. The returned surface elevation fluctuations will 
+typically be more extreme than the raw input surface elevations.
+</p>
+
+
+<h3>References</h3>
+
+<p>Based on original MATLAB function by developed by Travis Mason, 
+M. Lecouturier &amp; Urs Neumeier http://neumeier.perso.ch/matlab/waves.html 
+</p>
+<p>Each segment of pt will be linearly detrended, corrected for attenuation,
+and the linear trend will be added back to the returned data.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(wavedata)
+corrected = prCorr(wavedata$swPressure.mbar, Fs = 4, zpt = 0.1)
+# Plot the results
+corrected = prCorr(wavedata$swPressure.mbar, Fs = 4, zpt = 0.1, plot=TRUE)
+</code></pre>
+
+
+</div>

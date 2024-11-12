@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>active_connection</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Active Connection</h2>
+
+<h3>Description</h3>
+
+<p>The function gets or sets the currently active connection to an openEO service. Usually, the
+active connection is set when calling the <code>connect()</code> function. Just the last
+connection is set as active.
+An application for the active connection is the optional connection within all the functions
+that interact with the openEO service and require a connection. If the connection is omitted
+in the function, this function is called in order to try to fetch a connection. If you
+want to operate on multiple services at once, you should use an explicit connection.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">active_connection(con = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>con</code></td>
+<td>
+<p>optional <code>OpenEOClient()</code> to set, if omitted or NULL the currently active
+connection is returned</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p><code>OpenEOClient()</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>connect()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Note: all URLs and credentials are arbitrary
+con1 = connect("https://first.openeo-backend.com")
+con2 = connect("https://second.openeo-backend.com")
+
+active_connection() # this will be con2, the last connected backend
+
+active_connection(con = con1) # sets the first connection as active, so it does not have to 
+# be passed to all functions
+
+active_connection() # this will now return the previous set connection con1
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

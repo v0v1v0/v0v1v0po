@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>export_qgis_</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Export a 'leaflet' map to Qgis project</h2>
+
+<h3>Description</h3>
+
+<p>Export a 'leaflet' map to Qgis project.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">export_qgis_ronds(map, cheminDossier, nomFichier, titre1 = "", titre2
+= "", source = "")
+
+export_qgis_classes(map, cheminDossier, nomFichier, titre1 = "", titre2 =
+"", source = "")
+
+export_qgis_ronds_classes(map, cheminDossier, nomFichier, titre1 = "",
+titre2 = "", source = "")
+
+export_qgis_classes_ronds(map, cheminDossier, nomFichier, titre1 = "",
+titre2 = "", source = "")
+
+export_qgis_typo(map, cheminDossier, nomFichier, titre1 = "", titre2 = "",
+source = "")
+
+export_qgis_oursins(map, cheminDossier, nomFichier, titre1 = "", titre2 =
+"", source = "")
+
+export_qgis_joignantes(map, cheminDossier, nomFichier, titre1 = "", titre2 =
+"", source = "")
+
+export_qgis_saphirs(map, cheminDossier, nomFichier, titre1 = "", titre2 =
+"", source = "")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>objet leaflet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cheminDossier</code></td>
+<td>
+<p>chaine de caracteres (character). Chemin du dossier
+d'exportation du projet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nomFichier</code></td>
+<td>
+<p>chaine de caracteres (character). Nom du projet en sortie
+sans l'extension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>titre1</code></td>
+<td>
+<p>chaine de caracteres (character). Titre principal de la carte,
+le plus souvent informatif.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>titre2</code></td>
+<td>
+<p>chaine de caracteres (character). Titre secondaire de la
+carte, le plus souvent descriptif.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source</code></td>
+<td>
+<p>chaine de caracteres (character). Source de la carte.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Il faut obligatoirement ajouter la legende a la carte avant d'utiliser la
+fonction d'export Qgis.
+</p>
+<p>Le projet .qgs est associe a tous les fonds ShapeFile qui composent la carte
+(.shp, .dbf, .prj, .shx).
+</p>
+<p>Attention, l'export du projet Qgis peut durer quelques minutes.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Ne retourne aucun objet.
+</p>
+<p>Exporte la carte en projet Qgis a l'emplacement specifie.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>leaflet_ronds, leaflet_classes,
+leaflet_ronds_classes, leaflet_classes_ronds,</code>
+</p>
+<p><code>leaflet_typo, leaflet_oursins,
+leaflet_joignantes, leaflet_saphirs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("depm")
+data("regm")
+
+data("donnees_monoloc")
+
+# Ronds proportionnels
+map &lt;- leaflet_ronds(data = donnees_monoloc, fondMaille = depm,
+idData = "COD_DEP", varVolume = "POP_2015")
+map &lt;- add_legende_ronds(map = map, titre = "POP_2015", lng = 9, lat = 50, zoom = 6)
+
+
+ ## Not run:
+ export_qgis_ronds(map = map, cheminDossier = tempdir(), nomFichier = "projet_qgis",
+ source = "Source : INSEE - RP2016")
+ ## End(Not run)
+
+
+</code></pre>
+
+
+</div>

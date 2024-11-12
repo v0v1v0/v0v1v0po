@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nsrobapred1</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Prediction under Normal Objective Bayesian Analysis (OBA).
+</h2>
+
+<h3>Description</h3>
+
+<p>This function uses the sampling distribution of parameters obtained from the function <code>tsroba</code> to predict values at unknown locations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nsrobapred1(xpred, coordspred, obj)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xpred</code></td>
+<td>
+
+<p>Values of the X design matrix for prediction coordinates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coordspred</code></td>
+<td>
+
+<p>Points coordinates to be predicted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+
+
+<p>object of the class "nsroba" (see <code>nsroba</code> function).
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function predicts using the sampling distribution of parameters obtained from the function <code>nsroba</code> and the conditional normal distribution of the predicted values given the data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a vector with the predicted values at the specified locations.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jose A. Ordonez, Marcos O. Prates, Larissa A. Matos, Victor H. Lachos.
+</p>
+
+
+<h3>References</h3>
+
+<p>Berger, J.O,  De Oliveira, V. and Sanso, B. (2001). Objective Bayesian Analysis of Spatially Correlated Data. Journal of the American Statistical Association., 96, 1361 – 1374.
+</p>
+<p>Diggle, P. and P. Ribeiro (2007).Model-Based Geostatistics.  Springer Series in Statistics.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>nsroba</code>,<code>tsrobapred</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+
+
+
+
+set.seed(25)
+data(dataelev)
+d1=dataelev[1:42,]
+
+reselev=nsroba(elevation~1, kappa = 0.5, cov.model = "matern", data=d1,
+ini.pars=c(10,3),intphi=c(0.8,10))
+
+datapred1=dataelev[43:52,]
+coordspred1=datapred1[,1:2]
+nsrobapred1(obj=reselev,coordspred=coordspred1,xpred=rep(1,10))
+
+</code></pre>
+
+
+</div>

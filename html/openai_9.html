@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_image_edit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create image edit</h2>
+
+<h3>Description</h3>
+
+<p>Creates an edited or extended image given an original image and a prompt. See
+<a href="https://platform.openai.com/docs/api-reference/images/create-edit">this page</a>
+for details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_image_edit(
+  image,
+  mask,
+  prompt,
+  n = 1,
+  size = c("1024x1024", "256x256", "512x512"),
+  response_format = c("url", "b64_json"),
+  user = NULL,
+  openai_api_key = Sys.getenv("OPENAI_API_KEY"),
+  openai_organization = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>image</code></td>
+<td>
+<p>required; a length one character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mask</code></td>
+<td>
+<p>required; a length one character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prompt</code></td>
+<td>
+<p>required; a length one character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>required; defaults to <code>1</code>; a length one numeric vector with the
+integer value greater than <code>0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>required; defaults to <code>"1024x1024"</code>; a length one character
+vector, one among <code>"256x256"</code>, <code>"512x512"</code>, and <code>"1024x1024"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_format</code></td>
+<td>
+<p>required; defaults to <code>"url"</code>; a length one character
+vector, one among <code>"url"</code> and <code>"b64_json"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user</code></td>
+<td>
+<p>optional; defaults to <code>NULL</code>; a length one character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>openai_api_key</code></td>
+<td>
+<p>required; defaults to <code>Sys.getenv("OPENAI_API_KEY")</code>
+(i.e., the value is retrieved from the <code>.Renviron</code> file); a length one
+character vector. Specifies OpenAI API key.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>openai_organization</code></td>
+<td>
+<p>optional; defaults to <code>NULL</code>; a length one
+character vector. Specifies OpenAI organization.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For arguments description please refer to the <a href="https://platform.openai.com/docs/api-reference/images/create-edit">official documentation</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list, an element of which contain either a link to the
+edited image or the edited image decoded in Base64.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other image functions: 
+<code>create_image_variation()</code>,
+<code>create_image()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+image &lt;- system.file("extdata", "astronaut.png", package = "openai")
+mask &lt;- system.file("extdata", "mask.png", package = "openai")
+create_image_edit(
+    image = image,
+    mask = mask,
+    prompt = "goat",
+    n = 1,
+    response_format = "url"
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

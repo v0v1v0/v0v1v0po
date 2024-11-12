@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetNumTrainingValues</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Number of Training Values</h2>
+
+<h3>Description</h3>
+
+<p><code>GetNumTrainingValues</code> Calculates the number of values to be used as a
+training set.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetNumTrainingValues(n.row, prob.percent = 0.15)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n.row</code></td>
+<td>
+<p>Number of rows of the all dataset with training and test values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob.percent</code></td>
+<td>
+<p>Percentage of training values</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>the number of values to be used as a training set is calculated as a minimum
+between 15% of the number of rows in the dataset and 15% of 5000.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Number of training values.
+</p>
+
+
+<h3>References</h3>
+
+<p>A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
+Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
+Applications (IEEE ICMLA’15), 2015.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 180
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+# Get number of instances to train phase
+GetNumTrainingValues(nrow(df))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_stability</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot random forest stability</h2>
+
+<h3>Description</h3>
+
+<p>Plot the estimated stability of random forest against certain numbers of trees
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_stability(
+  optRF_object,
+  measure = c("selection", "importance", "prediction"),
+  from = 0,
+  to = 1e+05,
+  add.recommendation = TRUE,
+  add = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>optRF_object</code></td>
+<td>
+<p>An optRF_object, either the result from the opt_importance or the opt_prediction function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measure</code></td>
+<td>
+<p>A character string indicating which stability measure is to be plotted. One of "selection" (default, visualises selection stability), "prediction" (visualises prediction stability) or "importance" (visualises variable importance stability).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>Smallest num.trees value to be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>Greatest num.trees value to be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.recommendation</code></td>
+<td>
+<p>When set as TRUE, if a recommendation was stated within the opt_prediction or opt_importance function, the recommended num.trees value as well as the expected random forest stability will be highlighted in the graph</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+<p>If FALSE, a new plot will be created, if TRUE, the graph will be added to an existing plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Any other arguments from the plot function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plot showing the estimated stability of random forest for the given num.trees values.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(SNPdata)
+set.seed(123)
+result_optpred = opt_prediction(y = SNPdata[,1], X=SNPdata[,-1]) # optimise random forest
+plot_stability(result_optpred, measure = "prediction", add.recommendation = TRUE, add=FALSE)
+plot_stability(result_optpred, measure = "selection",  add.recommendation = FALSE, add=TRUE)
+
+
+</code></pre>
+
+
+</div>

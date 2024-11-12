@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>removeTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove an Excel table in a workbook</h2>
+
+<h3>Description</h3>
+
+<p>List Excel tables in a workbook
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">removeTable(wb, sheet, table)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name or index of a worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+<p>Name of table to remove. See <code>getTables()</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>character vector of table names on the specified sheet
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+wb &lt;- createWorkbook()
+addWorksheet(wb, sheetName = "Sheet 1")
+addWorksheet(wb, sheetName = "Sheet 2")
+writeDataTable(wb, sheet = "Sheet 1", x = iris, tableName = "iris")
+writeDataTable(wb, sheet = 1, x = mtcars, tableName = "mtcars", startCol = 10)
+
+
+removeWorksheet(wb, sheet = 1) ## delete worksheet removes table objects
+
+writeDataTable(wb, sheet = 1, x = iris, tableName = "iris")
+writeDataTable(wb, sheet = 1, x = mtcars, tableName = "mtcars", startCol = 10)
+
+## removeTable() deletes table object and all data
+getTables(wb, sheet = 1)
+removeTable(wb = wb, sheet = 1, table = "iris")
+writeDataTable(wb, sheet = 1, x = iris, tableName = "iris", startCol = 1)
+
+getTables(wb, sheet = 1)
+removeTable(wb = wb, sheet = 1, table = "iris")
+writeDataTable(wb, sheet = 1, x = iris, tableName = "iris", startCol = 1)
+## Not run: 
+saveWorkbook(wb = wb, file = "removeTableExample.xlsx", overwrite = TRUE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

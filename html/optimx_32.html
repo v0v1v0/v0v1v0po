@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optchk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>General-purpose optimization</h2>
+
+<h3>Description</h3>
+
+<p>A wrapper function that attempts to check the objective function,
+and optionally the gradient and hessian functions, supplied by the
+user for optimization. It also tries to check the scale of the
+parameters and bounds to see if they are reasonable. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optchk(par, fn, gr=NULL, hess=NULL, lower=-Inf, upper=Inf, 
+            control=list(), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>par</code></td>
+<td>
+<p>a vector of initial values for the parameters 
+for which optimal values are to be found. Names on the elements
+of this vector are preserved and used in the results data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fn</code></td>
+<td>
+<p>A function to be minimized (or maximized), with first
+argument the vector of parameters over which minimization is to take
+place.  It should return a scalar result.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gr</code></td>
+<td>
+<p>A function to return (as a vector) the gradient for those methods that 
+can use this information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hess</code></td>
+<td>
+<p>A function to return (as a symmetric matrix) the Hessian of the objective 
+function for those methods that can use this information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower, upper</code></td>
+<td>
+<p>Bounds on the variables for methods such as <code>"L-BFGS-B"</code> that can
+handle box (or bounds) constraints.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of control parameters. See ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>For <code>optimx</code> further arguments to be passed to <code>fn</code> 
+and <code>gr</code>; otherwise, further arguments are not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that arguments after <code>...</code> must be matched exactly.
+</p>
+<p>While it can be envisaged that a user would have an analytic hessian but not an analytic
+gradient, we do NOT permit the user to test the hessian in this situation.
+</p>
+<p>Any names given to <code>par</code> will be copied to the vectors passed to
+<code>fn</code> and <code>gr</code>.  Note that no other attributes of <code>par</code>
+are copied over. (We have not verified this as at 2009-07-29.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of the following items:
+</p>
+
+<dl>
+<dt>grOK</dt>
+<dd>
+<p>TRUE if the analytic gradient and a numerical approximation via <code>numDeriv</code>
+agree within the <code>control$grtesttol</code> as per the <code>R</code> code in function 
+<code>grchk</code>. <code>NULL</code> if no analytic gradient function is provided. </p>
+</dd> 
+<dt>hessOK</dt>
+<dd>
+<p>TRUE if the analytic hessian and a numerical approximation via <code>numDeriv::jacobian</code>
+agree within the <code>control$hesstesttol</code> as per the <code>R</code> code in function 
+<code>hesschk</code>. NULL if no analytic hessian or no analytic gradient is provided. Note
+that since an analytic gradient must be available for this test, we use the Jacobian of the 
+gradient to compute the Hessian to avoid one level of differencing, though the <code>hesschk</code>
+function can work without the gradient.</p>
+</dd>
+<dt>scalebad</dt>
+<dd>
+<p>TRUE if the larger of the <code>scaleratios</code> exceeds <code>control$scaletol</code></p>
+</dd>
+<dt>scaleratios</dt>
+<dd>
+<p>A vector of the parameter and bounds scale ratios. See the function code
+of <code>scalechk</code> for the computation of these values.</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>See the manual pages for <code>optim()</code> and the packages the DESCRIPTION <code>suggests</code>.
+</p>
+<p>Nash JC, and Varadhan R (2011). Unifying Optimization Algorithms to Aid Software System Users: 
+<b>optimx</b> for R., <em>Journal of Statistical Software</em>, 43(9), 1-14.,  
+URL http://www.jstatsoft.org/v43/i09/.
+</p>
+<p>Nash JC (2014). On Best Practice Optimization Methods in R., 
+<em>Journal of Statistical Software</em>, 60(2), 1-14.,
+URL http://www.jstatsoft.org/v60/i02/.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fr &lt;- function(x) {   ## Rosenbrock Banana function
+    x1 &lt;- x[1]
+    x2 &lt;- x[2]
+    100 * (x2 - x1 * x1)^2 + (1 - x1)^2
+}
+grr &lt;- function(x) { ## Gradient of 'fr'
+    x1 &lt;- x[1]
+    x2 &lt;- x[2]
+    c(-400 * x1 * (x2 - x1 * x1) - 2 * (1 - x1),
+       200 *      (x2 - x1 * x1))
+}
+
+myctrl&lt;- ctrldefault(2)
+myctrl$trace &lt;- 3
+mychk &lt;- optchk(par=c(-1.2,1), fr, grr, lower=rep(-10,2), upper=rep(10,2), control=myctrl)
+cat("result of optchk\n")
+print(mychk)
+
+</code></pre>
+
+
+</div>

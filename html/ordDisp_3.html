@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotordDisp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Visualization of Estimated Effects</h2>
+
+<h3>Description</h3>
+
+<p>A function to visualize the estimated effects of the location-shift model or rating-scale model accounting for response styles
+(RSRS) obtained by <code>ordDisp</code>. In case of linear effects, the function returns a two-dimensional plot of the tupel <code class="reqn">(exp{\alpha},exp{\beta}</code>. 
+It is optional to include pointwise 95% confidence intervals represented by stars, where the horizontal and vertical 
+length correspond to the confidence intervals of <code class="reqn">exp{\alpha}</code> (dispersion or response-style effect) and <code class="reqn">exp{\beta}</code> 
+(location or content-related effect). In case of smooth effects, the function returns two plots of the fitted (non-linear) functions <code class="reqn">f(\beta)</code> 
+and <code class="reqn">f(\alpha)</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotordDisp(x, names, colorvec, reference = NULL, labels = NULL,
+  cex = 1, KI = FALSE, KIfactor = 10/11, title = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Object of class <code>ordDisp</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>names</code></td>
+<td>
+<p>Names of the variables that shall be plotted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorvec</code></td>
+<td>
+<p>Vector of colors that are used for plotting (same length as names)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reference</code></td>
+<td>
+<p>Optional name of reference with estimate <code class="reqn">(\alpha,\beta)=(0,0)</code> (for categorical covariates)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>Optional names that are used as labels in the plot (same length as names)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>Global argument to set the size of all the labels in the plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>KI</code></td>
+<td>
+<p>If true, pointwise 95% confidence intervals are included in the plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>KIfactor</code></td>
+<td>
+<p>Ratio that is used to plot the stars that represent confidence intervals (only if <code>KI=TRUE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>Optional title that is added to the plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Moritz Berger &lt;moritz.berger@imbie.uni-bonn.de&gt; <br><a href="https://www.imbie.uni-bonn.de/personen/dr-moritz-berger/">https://www.imbie.uni-bonn.de/personen/dr-moritz-berger/</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Tutz, Gerhard and Berger, Moritz (2016): Response Styles in Rating Scales - Simultaneous Modelling of 
+Content-Related Effects and the Tendency to Middle or Extreme Categories, 
+Journal of Educational and Behavioral Statistics 41(3), 239-268.
+</p>
+<p>Tutz, Gerhard and Berger, Moritz (2017): Seperating Location and Dispersion in Ordinal Regression Models,
+Econometrics and Statistics 2, 131-148.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ordDisp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(reti)
+
+mod &lt;- ordDisp(RET~SM+DIAB+GH+BP|SM+DIAB,data=reti,family="cumulative")
+plot(mod,names=c("SM","DIAB"),colorvec=c(1,2))
+plotvglm(mod)
+
+mod2 &lt;- ordDisp(RET~SM+s(DIAB)+GH+BP|SM+DIAB+GH+BP, data=reti, 
+family="cumulative", n_bs=4, scaling=FALSE)
+plot(mod2, names=c("DIAB"))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optim_weights</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weight functions for optim_fit</h2>
+
+<h3>Description</h3>
+
+<p> Weight functions for <code>optim_fit</code>. May be used when <code>fit.method=="irwls"</code> or <code>fit.method=="mle"</code>. Generally, not called by the user.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> 
+       weights_varIdent(phi, mu)
+       weights_varExp(phi, mu)
+       weights_varPower(phi, mu)
+       weights_varConstPower(phi, mu)
+       weights_tukey_bw(phi = 4.685, resid)
+       weights_huber(phi=1.345, resid)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>phi</code></td>
+<td>
+<p>Variance parameter(s)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>Vector of means</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resid</code></td>
+<td>
+<p>Vector of model residuals</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<ul>
+<li> <p><code>weights_varIdent</code> returns a vector of ones.
+</p>
+</li>
+<li> <p><code>weights_varExp</code> returns <code class="reqn">\exp(\phi*\mu)</code>
+</p>
+</li>
+<li> <p><code>weights_varPower</code> returns <code class="reqn">|\mu|^{\phi}</code>
+</p>
+</li>
+<li> <p><code>weights_varConstPower</code> returns <code class="reqn">\phi_1 + |\mu|^{\phi_2}</code> where <code class="reqn">\phi_i =\phi</code>[i]
+</p>
+</li>
+<li> <p><code> weights_tukey_bw</code> is a Tukey bi-weight function. Let 
+</p>
+<p style="text-align: center;"><code class="reqn">r=\tfrac{|\text{resid}|}{\text{mad}(\text{resid},\text{center}=\text{TRUE})}.</code>
+</p>
+ 
+<p>Then this function returns
+</p>
+<p style="text-align: center;"><code class="reqn">\left(1-\left(\tfrac{r}{\phi}\right)^2\right)^2\text{ whenever } r &lt;= \phi\text{ and }0{ o.w.}</code>
+</p>
+
+<p>For this the user should use <code>phi.fixed=TRUE</code> in the <code>optim_fit</code> function.
+</p>
+</li>
+<li>
+<p><code>weights_huber</code> is a Huber weighting function that returns <code class="reqn">\min(1, \phi/r)</code>, where <code class="reqn">r = |\text{resid}|/\text{sig}</code> and <code class="reqn">\text{sig} = \text{mad}(\text{resid}, \text{center} = \text{TRUE})</code>.  For this the user should use <code>phi.fixed = TRUE</code> in the <code>optim_fit</code> function.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A vector of numeric weights.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_fit</code>, <code>rout_fitter</code>
+</p>
+
+
+</div>

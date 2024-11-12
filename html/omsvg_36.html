@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>svg_rect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Addition of a <code>rect</code> element</h2>
+
+<h3>Description</h3>
+
+<p>The <code>svg_rect()</code> function adds a rectangle to an <code>svg</code> object. The position
+of the rectangle is given by <code>x</code> and <code>y</code>, and this refers to the upper left
+point of the rectangle. The <code>width</code> and the <code>height</code> are the dimensions of
+the rectangle. All of these dimensions are in units of <code>px</code>. The optional
+<code>rx</code> and <code>ry</code> parameter are corner radius values (again, in <code>px</code> units) that
+define x and y radius of the corners of the rectangle.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">svg_rect(
+  svg,
+  x,
+  y,
+  width,
+  height,
+  rx = NULL,
+  ry = NULL,
+  stroke = NULL,
+  stroke_width = NULL,
+  fill = NULL,
+  opacity = NULL,
+  attrs = list(),
+  anims = list(),
+  filters = list(),
+  id = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>svg</code></td>
+<td>
+<p>The <code>svg</code> object that is created using the <code>SVG()</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x, y</code></td>
+<td>
+<p>The <code>x</code> and <code>y</code> positions of the upper left point of the rectangle
+to be drawn. The <code>x</code> and <code>y</code> values are relative to upper left of the SVG
+drawing area.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width, height</code></td>
+<td>
+<p>The <code>width</code> and <code>height</code> of the element that is to be
+drawn. The <code>width</code> is the distance in the 'x' direction from point <code>x</code>
+(proceeding right) and the <code>height</code> is the distance in the 'y' direction
+from point <code>y</code> (proceeding downward).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rx, ry</code></td>
+<td>
+<p>Optional corner radius values in the 'x' and 'y' directions.
+Applies to all corners of the rectangle. If only one value is provided
+(say, just for <code>rx</code>) then the unset value will take that set value as well.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stroke</code></td>
+<td>
+<p>The color of the stroke applied to the element (i.e., the
+outline).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stroke_width</code></td>
+<td>
+<p>The width of the stroke in units of pixels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fill</code></td>
+<td>
+<p>The fill color of the element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opacity</code></td>
+<td>
+<p>The opacity of the element. Must be a value in the
+range of <code>0</code> to <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attrs</code></td>
+<td>
+<p>A presentation attribute list. The helper function
+<code>svg_attrs_pres()</code> can help us easily generate this named list object. For the
+most part, the list's names are the presentation attribute names and the
+corresponding values are the matching attribute values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anims</code></td>
+<td>
+<p>An animation directive list for the element. This should be
+structured using the <code>anims()</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filters</code></td>
+<td>
+<p>A filter directive list for the element. This is easily
+created by using a list of <code style="white-space: pre;">⁠filter_*()⁠</code> functions (e.g.,
+<code>list(filter_gaussian_blur(2), filter_drop_shadow(2, 2))</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>An optional ID value to give to the built tag. This is useful for
+modifying this element in a later function call or for interacting with
+CSS.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>svg</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# Create an SVG with a single
+# rectangle element
+svg_1 &lt;-
+  SVG(width = 100, height = 100) %&gt;%
+    svg_rect(
+      x = 20, y = 10,
+      width = 40, height = 15,
+      stroke = "blue", fill = "yellow"
+    )
+
+# Create an SVG with a single
+# rectangle element that moves
+# to new `x` positions
+svg_2 &lt;-
+  SVG(width = 300, height = 300) %&gt;%
+    svg_rect(
+      x = 50, y = 50,
+      width = 50, height = 50,
+      stroke = "magenta", fill = "lightblue",
+      anims = anims(
+        0.5 ~ list(
+          anim_position(
+            x = 50, y = 50,
+            easing_fn = ease_out()
+          ),
+          anim_rotation(rotation = 0)
+        ),
+        2.0 ~ list(
+          anim_position(
+            x = 200, y = 50,
+            easing_fn = ease_in_out()
+          ),
+          anim_rotation(rotation = 90)
+        )
+      )
+    )
+}
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_ortho_with_chars</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check the orthogonality with field/topographic characteristics</h2>
+
+<h3>Description</h3>
+
+<p>Check the orthogonality of the trial input rates and observed characteristics provided by the user
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check_ortho_with_chars(td, sp_data_list, vars_list)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>td</code></td>
+<td>
+<p>(tibble) trial design data created by make_exp_plots() and assign_rates()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sp_data_list</code></td>
+<td>
+<p>(list) list of spatial datasets as 'sf' from the 'sf' package or 'SpatRaster' from the 'terra' package</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars_list</code></td>
+<td>
+<p>(list) list of character vectors indicating the name of the variables to be used in the datasets specified in sp_data_list</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(td_single_input)
+yield_sf &lt;- sf::st_read(system.file("extdata", "yield-simple1.shp", package = "ofpetrial"))
+ssurgo_sf &lt;-
+  sf::st_read(system.file("extdata", "ssurgo-simple1.shp", package = "ofpetrial")) %&gt;%
+  dplyr::mutate(mukey = factor(mukey))
+topo_rast &lt;-
+  c(
+    terra::rast(system.file("extdata", "slope.tif", package = "ofpetrial")),
+    terra::rast(system.file("extdata", "twi.tif", package = "ofpetrial"))
+  )
+
+checks &lt;-
+  check_ortho_with_chars(
+    td = td_single_input,
+    sp_data_list = list(yield_sf, ssurgo_sf, topo_rast),
+    vars_list = list("Yld_Vol_Dr", c("mukey", "clay"), names(topo_rast))
+  )
+
+checks$summary_data[[1]]
+
+checks$summary_fig[[1]]
+</code></pre>
+
+
+</div>

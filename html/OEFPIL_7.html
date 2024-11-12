@@ -1,0 +1,244 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OEFPIL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal Estimation of Parameters by Iterated Linearization</h2>
+
+<h3>Description</h3>
+
+<p>Function for computing optimal estimate of parameters of a nonlinear function by iterated linearization (using Taylor expansion). The model considers measurements errors in both (dependent and independent) variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OEFPIL(data, form, start.val, CM, max.iter = 100, see.iter.val = FALSE,
+       save.file.name, th, signif.level, useNLS = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data file can be any object of type <code>data.frame</code> with 2 named columns or <code>list</code> with 2 elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>form</code></td>
+<td>
+<p>an object of class <code>formula</code> (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start.val</code></td>
+<td>
+<p>a named list of starting values of estimating parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CM</code></td>
+<td>
+<p>a covariance matrix of <code>data</code> (See 'Details' for the information about required structure.).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iter</code></td>
+<td>
+<p>maximum number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>see.iter.val</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, all the partial results of the algorithm are displayed and saved. The default value is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>save.file.name</code></td>
+<td>
+<p>a name of the file for saving results. If missing, no output file is saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>th</code></td>
+<td>
+<p>a numerical value, indicating threshold necessary for the iteration stoppage. The default value is <code>.Machine$double.eps ^ (2 / 3)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signif.level</code></td>
+<td>
+<p>a significance level for the confidence interval. If missing, the default value 0.05 is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useNLS</code></td>
+<td>
+<p>logical. If <code>TRUE</code> (the default value), function will set up starting parameters calculated by <code>nlsLM</code> function (nonlinear least square estimation).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Models for OEPFIL function are specified symbolically. A typical model has the form <code>y ~ f(x, a_1,...,a_n)</code>, where
+</p>
+<ul>
+<li> <p><code>y</code> is the (numerical) response vector,
+</p>
+</li>
+<li> <p><code>x</code> is the predictor,
+</p>
+</li>
+<li>
+<p> terms <code>a_1,...,a_n</code> are parameters of specified model.</p>
+</li>
+</ul>
+<p>Function <code>f</code> is known nonlinear function with continuous second partial derivatives with respect to <code>x</code> and parameters <code>a_1,...a_n</code> (for more details see (Kubáček, 2000).
+</p>
+<p>All calculations are performed assuming normality of a response vector and measurements errors.
+</p>
+<p>In the <code>data</code> entry of type <code>data.frame</code>, both columns must be named as variables in formula. The same holds for elements of <code>list</code>.
+</p>
+<p>A choice of <code>start.val</code> is important for the convergence of the algorithm. If the <code>OEFPIL</code> algorithm does not converge, starting values modified by <code>nlsLM</code> function (<code>useNLS = TRUE</code>) are recommended (see Example 3).
+</p>
+<p>The <code>CM</code> has to be a <code>2n</code> covariance matrix (where <code>n</code> is length of <code>data</code>) of following structure: first <code>n</code> elements of the diagonal correspond to the variance of independent variable (<code>x</code>) and other to the variance of dependent variable (<code>y</code>).
+If argument <code>CM</code> is missing, the input covariance matrix is set to a diagonal variance matrix with sample variance on the main diagonal.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>"OEFPIL"</code>. It is a list containing the following components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>name_Est</code></td>
+<td>
+<p>estimations of model parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name_upgraded.start.val</code></td>
+<td>
+<p>modified starting values of estimating parameters (result from <code>nlsLM</code> function).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov.m_Est</code></td>
+<td>
+<p>estimated covariance matrix of parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov.m_nlsLM</code></td>
+<td>
+<p>a covariance matrix of starting values of parameters from <code>nlsLM</code> function (if <code>useNLS</code> was set to <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>it_num</code></td>
+<td>
+<p>number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name_previous.step</code></td>
+<td>
+<p>the parameter values from the previous iterative step.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CI_parameters</code></td>
+<td>
+<p>a list of confidence intervals for estimated parameters (a significance level is based on <code>signif.level</code> argument).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logs</code></td>
+<td>
+<p>warnings or messages of events, which happen during the run of the algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contents</code></td>
+<td>
+<p>a list of outputs as original values of data and other characteristics, which are usable in plotting or other operations with model results.</p>
+</td>
+</tr>
+</table>
+<p>If <code>useNLS</code> argument is set to <code>FALSE</code>, the <code>name_upgraded.start.val</code> are the same as <code>start.values</code> (no <code>nlsLM</code> procedure for starting value fitting is performed).
+</p>
+
+
+<h3>Note</h3>
+
+<p>The symbol <code>pi</code> is reserved for the Ludolf's constant. So naming one of the model´s parameters by this symbol results in constant entry of the model.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kubáček, L. and Kubáčková, L. (2000) <em>Statistika a metrologie</em>. Univerzita Palackého v Olomouci.
+</p>
+<p>Köning, R., Wimmer, G. and Witkovský, V. (2014) <em>Ellipse fitting by nonlinear constraints to demodulate quadrature homodyne interferometer signals and to determine the statistical uncertainty of the interferometric phase</em>.
+Measurement Science and Technology.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>NanoIndent.OEFPIL</code> and function <code>nlsLM</code> from <code>minpack.lm</code> package for nonlinear least square algorithms.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##Example 1 - Use of OEFPIL function for steam data from MASS library
+library(MASS)
+steamdata &lt;- steam
+colnames(steamdata) &lt;- c("x","y")
+k &lt;- nrow(steamdata)
+CM &lt;- diag(rep(5,2*k))
+
+st1 &lt;- OEFPIL(steamdata, y ~ b1 * 10 ^ (b2 * x/ (b3 + x)),
+ list(b1 = 5, b2 = 8, b3 = 200), CM, useNLS = FALSE)
+
+## Displaying results using summary function
+summary(st1)
+
+## Plot of estimated function
+plot(st1, signif.level = 0.05)
+
+## Example 2 - Use of OEFPIL for nanoindentation data "silica2098.RData"
+## (which is part of the OEFPIL package)
+## Preparing arguments for OEFPIL function
+max.iter = 100
+see.iter.val = FALSE
+signif.level = 0.05
+useNLS = TRUE
+
+## Creating a list with starting values for parameters
+start.val &lt;- list(alpha=0.1, m=1.5, hp=0.9)
+names(start.val) &lt;- c("alpha", "m", "hp")
+
+## Imputed formula
+form &lt;- Load ~ alpha * (Depth - hp) ^ m
+k &lt;- length(silica2098[,1])
+CM &lt;- diag(c(rep(0.5^2,k),rep(0.001^2,k)))
+
+## Use of OEFPIL function with defined arguments
+output.form &lt;- OEFPIL(silica2098, form, start.val, CM = CM, max.iter = max.iter,
+ see.iter.val = see.iter.val, signif.level = signif.level, useNLS = useNLS)
+
+## Displaying results with summary (the result is the same as in NanoIndent.OEFPIL function)
+summary(output.form)
+
+</code></pre>
+
+
+</div>

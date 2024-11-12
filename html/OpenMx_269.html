@@ -1,0 +1,213 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxComputeEM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit a model using DLR's (1977) Expectation-Maximization (EM) algorithm</h2>
+
+<h3>Description</h3>
+
+<p>The EM algorithm constitutes the following steps: Start with an
+initial parameter vector. Predict the missing data to form a
+completed data model. Optimize the completed data model to obtain
+a new parameter vector. Repeat these steps until convergence
+criteria are met.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxComputeEM(
+  expectation = NULL,
+  predict = NA_character_,
+  mstep,
+  observedFit = "fitfunction",
+  ...,
+  maxIter = 500L,
+  tolerance = 1e-09,
+  verbose = 0L,
+  freeSet = NA_character_,
+  accel = "varadhan2008",
+  information = NA_character_,
+  infoArgs = list(),
+  estep = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>expectation</code></td>
+<td>
+<p>a vector of expectation names <a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predict</code></td>
+<td>
+<p>what to predict from the observed data <a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mstep</code></td>
+<td>
+<p>a compute plan to optimize the completed data model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>observedFit</code></td>
+<td>
+<p>the name of the observed data fit function (defaults to "fitfunction")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Forces remaining arguments to be specified by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxIter</code></td>
+<td>
+<p>maximum number of iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolerance</code></td>
+<td>
+<p>optimization is considered converged when the maximum relative change in fit is less than tolerance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>integer. Level of run-time diagnostic output. Set to zero to disable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freeSet</code></td>
+<td>
+<p>names of matrices containing free variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>accel</code></td>
+<td>
+<p>name of acceleration method ("varadhan2008" or "ramsay1975")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>information</code></td>
+<td>
+<p>name of information matrix approximation method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>infoArgs</code></td>
+<td>
+<p>arguments to control the information matrix method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estep</code></td>
+<td>
+<p>a compute plan to perform the expectation step</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The arguments to this function have evolved.  The old style
+<code>mxComputeEM(e,p,mstep=m)</code> is equivalent to the new style
+<code>mxComputeEM(estep=mxComputeOnce(e,p), mstep=m)</code>. This change
+allows the API to more closely match the literature on the E-M
+method.  You might use <code>mxAlgebra(..., recompute='onDemand')</code> to
+contain the results of the E-step and then cause this algebra to
+be recomputed using <code>mxComputeOnce</code>.
+</p>
+<p>This compute plan does not work with any and all expectations. It
+requires a special kind of expectation that can predict its
+missing data to create a completed data model.
+</p>
+<p>The EM algorithm does not produce a parameter covariance matrix
+for standard errors. The Oakes (1999) direct method and S-EM, an
+implementation of Meng &amp; Rubin (1991), are included.
+</p>
+<p>Ramsay (1975) was recommended in Bock, Gibbons, &amp; Muraki (1988).
+</p>
+
+
+<h3>References</h3>
+
+<p>Bock, R. D., Gibbons, R., &amp; Muraki, E. (1988). Full-information
+item factor analysis. <em>Applied Psychological Measurement,
+6</em>(4), 431-444.
+</p>
+<p>Dempster, A. P., Laird, N. M., &amp; Rubin, D. B. (1977). Maximum likelihood from
+incomplete data via the EM algorithm. <em>Journal of the Royal Statistical Society.
+Series B (Methodological)</em>, 1-38.
+</p>
+<p>Meng, X.-L. &amp; Rubin, D. B. (1991). Using EM to obtain asymptotic variance-covariance
+matrices: The SEM algorithm. <em>Journal of the American Statistical Association,
+86</em> (416), 899-909.
+</p>
+<p>Oakes, D. (1999). Direct calculation of the information matrix via
+the EM algorithm.  <em>Journal of the Royal Statistical Society:
+Series B (Statistical Methodology), 61</em>(2), 479-482.
+</p>
+<p>Ramsay, J. O. (1975). Solving implicit equations in psychometric data analysis.
+<em>Psychometrika, 40</em> (3), 337-360.
+</p>
+<p>Varadhan, R. &amp; Roland, C. (2008). Simple and globally convergent
+methods for accelerating the convergence of any EM
+algorithm. <em>Scandinavian Journal of Statistics, 35</em>, 335-353.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>MxAlgebra, mxComputeOnce
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OpenMx)
+set.seed(190127)
+
+N &lt;- 200
+x &lt;- matrix(c(rnorm(N/2,0,1),
+              rnorm(N/2,3,1)),ncol=1,dimnames=list(NULL,"x"))
+data4mx &lt;- mxData(observed=x,type="raw")
+
+class1 &lt;- mxModel("Class1",
+	mxMatrix(type="Full",nrow=1,ncol=1,free=TRUE,values=0,name="Mu"),
+	mxMatrix(type="Full",nrow=1,ncol=1,free=TRUE,values=4,name="Sigma"),
+	mxExpectationNormal(covariance="Sigma",means="Mu",dimnames="x"),
+	mxFitFunctionML(vector=TRUE))
+
+class2 &lt;- mxRename(class1, "Class2")
+
+mm &lt;- mxModel(
+	"Mixture", data4mx, class1, class2,
+	mxAlgebra((1-Posteriors) * Class1.fitfunction, name="PL1"),
+	mxAlgebra(Posteriors * Class2.fitfunction, name="PL2"),
+	mxAlgebra(PL1 + PL2, name="PL"),
+	mxAlgebra(PL2 / PL,  recompute='onDemand',
+	          initial=matrix(runif(N,.4,.6), nrow=N, ncol = 1), name="Posteriors"),
+	mxAlgebra(-2*sum(log(PL)), name="FF"),
+	mxFitFunctionAlgebra(algebra="FF"),
+	mxComputeEM(
+	  estep=mxComputeOnce("Mixture.Posteriors"),
+	  mstep=mxComputeGradientDescent(fitfunction="Mixture.fitfunction")))
+
+mm &lt;- mxOption(mm, "Max minutes", 1/20)  # remove this line to find optimum
+mmfit &lt;- mxRun(mm)
+summary(mmfit)
+</code></pre>
+
+
+</div>

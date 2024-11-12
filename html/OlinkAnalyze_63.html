@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_qc_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function to plot an overview of a sample cohort per Panel</h2>
+
+<h3>Description</h3>
+
+<p>Generates a facet plot per Panel using ggplot2::ggplot and ggplot2::geom_point and stats::IQR plotting IQR vs. median for all samples.
+Horizontal dashed lines indicate +/-IQR_outlierDef standard deviations from the mean IQR (default 3).
+Vertical dashed lines indicate +/-median_outlierDef standard deviations from the mean sample median (default 3).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_qc_plot(
+  df,
+  color_g = "QC_Warning",
+  plot_index = FALSE,
+  label_outliers = TRUE,
+  IQR_outlierDef = 3,
+  median_outlierDef = 3,
+  outlierLines = TRUE,
+  facetNrow = NULL,
+  facetNcol = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>NPX data frame in long format. Must have columns SampleID, NPX and Panel</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color_g</code></td>
+<td>
+<p>Character value indicating which column to use as fill color (default QC_Warning)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_index</code></td>
+<td>
+<p>Boolean. If FALSE (default), a point will be plotted for a sample. If TRUE,
+a sample's unique index number is displayed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label_outliers</code></td>
+<td>
+<p>Boolean. If TRUE, an outlier sample will be labelled with its SampleID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>IQR_outlierDef</code></td>
+<td>
+<p>The number of standard deviations from the mean IQR that defines an outlier (default 3)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>median_outlierDef</code></td>
+<td>
+<p>The number of standard deviations from the mean sample median that defines an outlier. (default 3)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlierLines</code></td>
+<td>
+<p>Draw dashed lines at +/-IQR_outlierDef and +/-median_outlierDef standard deviations from the mean IQR and sample median respectively (default TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facetNrow</code></td>
+<td>
+<p>The number of rows that the panels are arranged on</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facetNcol</code></td>
+<td>
+<p>The number of columns that the panels are arranged on</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>coloroption passed to specify color order</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class "ggplot". Scatterplot shows IQR vs median for all samples per panel
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+
+olink_qc_plot(npx_data1, color_g = "QC_Warning")
+
+#Change the outlier threshold to +-4SD
+olink_qc_plot(npx_data1, color_g = "QC_Warning", IQR_outlierDef = 4, median_outlierDef = 4)
+
+#Identify the outliers
+qc &lt;- olink_qc_plot(npx_data1, color_g = "QC_Warning", IQR_outlierDef = 4, median_outlierDef = 4)
+outliers &lt;- qc$data %&gt;% filter(Outlier == 1)
+
+</code></pre>
+
+
+</div>

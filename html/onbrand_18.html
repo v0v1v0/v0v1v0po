@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>report_add_slide</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Slide and Content</h2>
+
+<h3>Description</h3>
+
+<p>Creates a report slide and populates the content in
+placeholders and arbitrary locations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">report_add_slide(
+  obnd,
+  template = NULL,
+  elements = NULL,
+  user_location = NULL,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obnd</code></td>
+<td>
+<p>onbrand report object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>template</code></td>
+<td>
+<p>Name of slide template to use (name from templates in yaml mapping file)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>elements</code></td>
+<td>
+<p>Content and type for each placeholder you wish to fill for
+this slide: This is a list with names set to placeholders for the specified
+template. Each placeholder is a list and should have a content element and a
+type element (see Details below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user_location</code></td>
+<td>
+<p>List with arbitrary element names (see Details below)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean variable when set to TRUE (default) messages will be
+displayed on the terminal; Messages will be included in the returned onbrand
+object.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To add content based on placeholder names consider the mapping information for the slide
+template <code>title_slide</code> with the two place holders <code>title</code> and
+<code>subtitle</code>.
+</p>
+<pre>rpptx:
+ master: Office Theme
+ templates:
+   title_slide:
+     title:
+       type:         ctrTitle
+       index:        1
+       ph_label:     Title 1
+       content_type: text
+     subtitle:
+       type:         subTitle
+       index:        1
+       ph_label:     Subtitle 2
+       content_type: text</pre>
+<p>This shows how to populate a title slide with text:
+</p>
+<pre>obnd = report_add_slide(obnd,
+ template = "title_slide",
+ elements = list(
+    title     = list( content      = "Slide Title",
+                      type         = "text"),
+    subtitle  = list( content      = "Subtitle",
+                      type         = "text")))</pre>
+<p>To add content based on user defined locations you need to supply a list
+with the content, type, starting point and stopping point. You can use any
+template you wish, and you need to populate the <code>user_location</code> input.
+This consists of lists. The name of these lists can be arbitrary
+(text_example and fig_example below). Each list has a content and type, this
+is the same used in elements above. The start and stop each represent x and
+y coordinates. This is the fraction of the width and height of the slide
+measured from the upper left. So the <code>start = c(0.5, 0)</code> below means
+the box holding that content would start at the middle of the slide width
+and the top of the slide.
+</p>
+<pre> #'obnd = report_add_slide(obnd,
+ template = "two_content_header_text",
+ user_location = list(
+    text_example  = list( content      = "This is text",
+                          type         = "text",
+                          start        = c(.01,.02),
+                          stop         = c(.3,.15)),
+    fig_example   = list( content      = ggplot2::ggplot(),
+                          type         = "ggplot",
+                          start        = c(.5,0),
+                          stop         = c(1,.5))
+ )
+)</pre>
+<p>See the function <code>add_pptx_ph_content</code> for a list of
+allowed values for <code>type</code>. Note that if mapping defines the
+<code>content_type</code> as <code>text</code>, you cannot use a <code>list</code> type.
+Similarly, if the <code>content_type</code> is defined as <code>list</code>, you
+cannot use a <code>text</code> type.
+</p>
+
+
+<h3>Value</h3>
+
+<p>onbrand report object with either the content added or isgood set
+to FALSE with any messages in the msgs field. The isgood value is a Boolean variable
+indicating the current state of the object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>add_pptx_ph_content</code> <code>view_layout</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">obnd = read_template(
+      template = file.path(system.file(package="onbrand"), "templates", "report.pptx"),
+      mapping  = file.path(system.file(package="onbrand"), "templates", "report.yaml"))
+
+# Adding content based on placeholder elements
+obnd = report_add_slide(obnd,
+ template = "content_text",
+ elements = list(
+    title         = list( content      = "Text Example",
+                          type         = "text"),
+    sub_title     = list( content      = "Adding a slide with a block of text",
+                          type         = "text"),
+    content_body  = list( content      = "A block of text",
+                          type         = "text")))
+
+# Adding content based on specified locations
+obnd = report_add_slide(obnd,
+ template = "two_content_header_text",
+ user_location = list(
+    text_example  = list( content      = "This is text",
+                          type         = "text",
+                          start        = c(.01,.02),
+                          stop         = c(.3,.15))))
+</code></pre>
+
+
+</div>

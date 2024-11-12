@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_aggregate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Aggregate od pairs based on aggregating zones</h2>
+
+<h3>Description</h3>
+
+<p>This function is for aggregating OD pairs.
+It generally decreases the number of rows in an OD dataset, while aiming
+to keep the amount of travel represented in the data the same.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_aggregate(od, aggzones = NULL, FUN = sum)
+
+od_group(od, aggzones = NULL, FUN = sum)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>od</code></td>
+<td>
+<p>An origin-destination data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aggzones</code></td>
+<td>
+<p>Points within the zones defining the OD data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FUN</code></td>
+<td>
+<p>The aggregating function to use</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An alias for the function is <code>od_group()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">od_aggregated = od_data_df[1:2, c(1, 2, 9)]
+aggzones = od::od_data_zones_min
+subzones = od_data_zones_small
+plot(aggzones$geometry)
+plot(subzones$geometry, add = TRUE)
+od = od_disaggregate(od_aggregated, aggzones, subzones)
+od_agg = od_aggregate(od, aggzones)
+names(od_agg)[1:(ncol(od_agg) - 1)] = names(od_aggregated)
+attr(od_aggregated, "spec") = NULL
+identical(sf::st_drop_geometry(od_agg), od_aggregated)
+</code></pre>
+
+
+</div>

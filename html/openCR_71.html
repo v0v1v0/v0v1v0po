@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rev.capthist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reverse Primary Sessions</h2>
+
+<h3>Description</h3>
+
+<p>The <code>rev</code> method for capthist objects reverses the order of the primary sessions while retaining the order of secondary sessions within each primary session.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+## S3 method for class 'capthist'
+rev(x)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>multi-session capthist object from secr</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>rev() is used to demonstrate 'reversed time' analyses (Nichols 2016)
+in which seniority (gamma) is estimated as reversed-time survival (phi)
+The approach is numerically equivalent to direct modelling of seniority (see Examples). 
+Direct modelling allows more control and is more intuitive.
+</p>
+<p>If <code>x</code> is not overtly multi-session and has no intervals attribute then each occasion is treated as a primary session.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Capthist object with same observations as input, but re-ordered. 
+The order of attributes <code>sessionlabels</code> and <code>intervals</code> is also reversed.
+A default intervals attribute is added if the input lacks one.
+</p>
+
+
+<h3>References</h3>
+
+<p>Nichols, J. D. (2016) And the first one now will later be last:
+time-reversal in Cormack–Jolly–Seber Models. <em>Statistical Science</em>
+<b>31,</b> 175–190.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+summary(rev(ovenCH), terse = TRUE)
+
+# These three models give the same result for gamma except for
+# gamma(1982) which is confounded with p and not separately estimable:
+
+## Not run: 
+
+dipperPradel &lt;- openCR.fit(dipperCH, type = "Pradelg", model = list(p~t, phi~t, gamma~t))
+revdipper &lt;- openCR.fit(rev(dipperCH), model=list(p~t, phi~t))
+dipperJSSA &lt;- openCR.fit(dipperCH, type='JSSAgCL', model=list(p~t, phi~t, gamma~t))
+
+predict(dipperPradel)$gamma
+predict(revdipper)$phi
+predict(dipperJSSA)$gamma
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

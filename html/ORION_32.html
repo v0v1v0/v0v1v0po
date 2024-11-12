@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.Conf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary of conf</h2>
+
+<h3>Description</h3>
+
+<p><code>summary.Conf</code> returns a summarizing overview of a Conf object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'Conf'
+summary(object = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A Conf object as it is returned by <code>conf</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function gives an overview of the Conf object. 
+The overall number of classes, the highest and lowest sensitivities of the first class as well as the highest and lowest performance of the second class are recorded.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>conf</code>, <code>summary.PredictionMap</code>, <code>summary.Subcascades</code>, <code>summary.Groupwise</code>, <code>summary.ConfusionTable</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+
+conf = conf(predMap)
+
+summary(conf)
+</code></pre>
+
+
+</div>

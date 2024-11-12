@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matches</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Number of matches in ratings</h2>
+
+<h3>Description</h3>
+
+<p>Count the number of matches, i.e. (near) identical ratings between two elements or constructs. Matches are used as
+the basis for the calculation of grid indexes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matches(x, deviation = 0, diag.na = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deviation</code></td>
+<td>
+<p>Maximal difference between ratings to be considered a match (default <code>0</code> = only identical rating
+scores are a match). Especially useful for long rating scale (e.g. 0 to 100).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diag.na</code></td>
+<td>
+<p>Whether to set the diagonal of the matrices to <code>NA</code> (default is <code>TRUE</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of class <code>org.matches</code> with:
+</p>
+
+<ul>
+<li> <p><code>grid</code>: The grid used to calculate the matches.
+</p>
+</li>
+<li> <p><code>deviation</code> The deviation parameter.
+</p>
+</li>
+<li> <p><code>max_constructs</code> Maximum possible number of matches across constructs.
+</p>
+</li>
+<li> <p><code>max_elements</code> Maximum possible number of matches across elements.
+</p>
+</li>
+<li> <p><code>total_constructs</code> Total number of matches across constructs.
+</p>
+</li>
+<li> <p><code>total_elements</code> Total number of matches across elements.
+</p>
+</li>
+<li> <p><code>constructs</code>: Matrix with no. of matches for constructs.
+</p>
+</li>
+<li> <p><code>elements</code>: Matrix with no. of matches for elements.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">m &lt;- matches(boeker)
+
+# several output options
+print(m, index = FALSE, names = FALSE, upper = FALSE)
+print(m, output = "C")  # construct matches
+print(m, output = "E")  # element matches
+
+# extract the matrices
+m$constructs
+m$elements
+
+</code></pre>
+
+
+</div>

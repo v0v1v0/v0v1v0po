@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mockConditionOccurrence</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generates a mock condition occurrence table and integrates it into an existing CDM object.</h2>
+
+<h3>Description</h3>
+
+<p>This function simulates condition occurrences for individuals within a
+specified cohort. It helps create a realistic dataset by generating
+condition records for each person, based on the number of records specified
+per person.The generated data are aligned with the existing observation
+periods to ensure that all conditions are recorded within valid observation
+windows.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mockConditionOccurrence(cdm, recordPerson = 1, seed = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cdm</code></td>
+<td>
+<p>A ‘cdm_reference' object that should already include ’person',
+'observation_period', and 'concept' tables.This object is the base
+CDM structure where the condition occurrence data will be added.
+It is essential that these tables are not empty as they provide
+the necessary context for generating condition data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recordPerson</code></td>
+<td>
+<p>An integer specifying the expected number of condition
+records to generate per person.This parameter allows
+the simulation of varying frequencies of condition
+occurrences among individuals in the cohort,
+reflecting the variability seen in real-world medical
+data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>An optional integer used to set the seed for random number
+generation, ensuring reproducibility of the generated data.If
+provided, it allows the function to produce the same results
+each time it is run with the same inputs.If 'NULL', the seed is
+not set, resulting in different outputs on each run.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns the modified 'cdm' object with the new
+'condition_occurrence' table added. This table includes the
+simulated condition data for each person, ensuring that each
+record is within the valid observation periods and linked to the
+correct individuals in the 'person' table.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(omock)
+
+# Create a mock CDM reference and add condition occurrences
+cdm &lt;- mockCdmReference() |&gt;
+  mockPerson() |&gt;
+  mockObservationPeriod() |&gt;
+  mockConditionOccurrence(recordPerson = 2)
+
+# View the generated condition occurrence data
+print(cdm$condition_occurrence)
+
+</code></pre>
+
+
+</div>

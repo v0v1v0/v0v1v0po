@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>runTaskMlr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run mlr learner on OpenML task.</h2>
+
+<h3>Description</h3>
+
+<p>Run task with a specified learner from <span class="pkg">mlr</span> and produce predictions.
+By default, the evaluation measure contained in the task is used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">runTaskMlr(
+  task,
+  learner,
+  measures = NULL,
+  verbosity = NULL,
+  seed = 1,
+  scimark.vector = NULL,
+  models = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>task</code></td>
+<td>
+<p>[<code>OMLTask</code>]<br>
+An OpenML task.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>learner</code></td>
+<td>
+<p>[<code>Learner</code>]<br>
+Learner from package mlr to run the task.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measures</code></td>
+<td>
+<p>[<code>Measure</code>]<br>
+Additional measures that should be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbosity</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+Print verbose output on console? Possible values are:<br><code>0</code>: normal output,<br><code>1</code>: info output,<br><code>2</code>: debug output.<br>
+Default is set via <code>setOMLConfig</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>[<code>numeric(1)</code>|<code>OMLSeedParList</code> ]<br>
+Set a seed to make the run reproducible.
+Default is <code>1</code> and sets the seed using <code>set.seed(1)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scimark.vector</code></td>
+<td>
+<p>[<code>numeric(6)</code>]<br>
+Optional vector of performance measurements computed by the scientific SciMark
+benchmark. May be computed using the <span class="pkg">rscimark</span> R package.
+Default is <code>NULL</code>, which means no performance measurements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>models</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+This argument is passed to <code>benchmark</code>.
+Should all fitted models be stored in the <code>ResampleResult</code>?
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>[any]<br>
+Further arguments that are passed to <code>convertOMLTaskToMlr</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>[<code>list</code>] Named list with the following components:
+</p>
+
+<dl>
+<dt>run</dt>
+<dd>
+<p>The <code>OMLRun</code> object.</p>
+</dd>
+<dt>bmr</dt>
+<dd>
+<p>Benchmark result returned by <code>benchmark</code>.</p>
+</dd>
+<dt>flow</dt>
+<dd>
+<p>The generated <code>OMLFlow</code> object.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p><code>getOMLTask</code>, <code>makeLearner</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># \dontrun{
+#   library(mlr)
+#   ## run a single flow (learner) on a single task
+#   task = getOMLTask(57)
+#   lrn = makeLearner("classif.rpart")
+#   res = runTaskMlr(task, lrn)
+#   ## the result "res" is a list, storing information on the actual "run", the
+#   ## corresponding benchmark result "bmr" and the applied "flow"
+# }
+</code></pre>
+
+
+</div>

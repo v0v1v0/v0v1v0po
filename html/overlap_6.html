@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>densityFit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Fits von Mises kernel density to time-of-day data.
+</h2>
+
+<h3>Description</h3>
+
+<p>Fits von Mises kernel density to time-of-day data. Intended primarily for internal use: input checking is minimal.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">densityFit(x, grid, bw)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>a vector of times of observations in <em>radians</em>, ie. scaled to [<code class="reqn">0, 2\pi</code>].
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grid</code></td>
+<td>
+
+<p>a vector of times in <em>radians</em> for which the density is required. This could be a vector of equidistant values in [<code class="reqn">0, 2\pi</code>], eg. <code>seq(0, 2*pi, length=128)</code>, or it could be any set of times for which a density is needed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bw</code></td>
+<td>
+
+<p>bandwidth, the concentration parameter for the von Mises kernel: smaller values result in smoother curves.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a vector of densities corresponding to the times in grid.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>C code written by Mike Meredith.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>getBandWidth</code> for appropriate bandwidth.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get example data:
+data(simulatedData)
+
+densityFit(tigerObs, c(0, pi/2, pi, 3*pi/2, 2*pi), 50)
+# Densities at 6am and 6pm are fairly high, at midnight and midday, tiny.
+# A crepuscular species!
+</code></pre>
+
+
+</div>

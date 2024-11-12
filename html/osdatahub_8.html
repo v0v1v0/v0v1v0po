@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>download_os_opendata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download OS OpenData Products</h2>
+
+<h3>Description</h3>
+
+<p>Main function for downloading OS open data product files to your local
+machine.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">download_os_opendata(product, ...)
+
+## S3 method for class 'product_list'
+download_os_opendata(
+  product,
+  file_name,
+  file_format,
+  area,
+  output_dir,
+  overwrite = FALSE,
+  ...
+)
+
+## S3 method for class 'character'
+download_os_opendata(
+  product,
+  file_name,
+  file_format,
+  file_subformat,
+  area,
+  output_dir,
+  overwrite = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>product</code></td>
+<td>
+<p>A <code>product_list</code> object retrieved and filtered using
+<code>list_os_opendata</code>. Alternatively, a data product name as a character
+string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters. Not currently used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_name</code></td>
+<td>
+<p>(character) Filter downloads to only include those with this
+file name. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_format</code></td>
+<td>
+<p>(character) Filter downloads to only include those with
+this format. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>area</code></td>
+<td>
+<p>(character) Filter downloads for only this area. Use 'GB' for all
+Great Britain. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output_dir</code></td>
+<td>
+<p>Path to the directory where the downloaded files will be
+saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>Boolean. Should existing files be overwritten? Default is
+<code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_subformat</code></td>
+<td>
+<p>(character) Filter downloads to only include those with
+this subformat. Optional and only used when <code>product</code> is a character
+string.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The OS Downloads API assists with the discovery and download of OS
+OpenData and OS Premium data packages. This function is used as the main
+step to download open data products to your local machine. It is designed
+to work best after <code>list_os_opendata</code> is first used to search and
+filter for the specific download product. The <code>product_list</code> returned
+by the listing step can be used as the input value to download the desired
+files. Alternatively, it is possible to supply a product name and filtering
+options based on file formats and areas.
+</p>
+<p>The optional <code>area</code> filter is based on two-letter British National
+Grid tiles. Use 'GB' for all of Great Britain. Valid values area: GB, HP,
+HT, HU, HW, HX, HY, HZ, NA, NB, NC, ND, NF, NG, NH, NJ, NK, NL, NM, NN, NO,
+NR, NS, NT, NU, NW, NX, NY, NZ, OV, SD, SE, TA, SH, SJ, SK, TF, TG, SM, SN,
+SO, SP, TL, TM, SR, SS, ST, SU, TQ, TR, SV, SW, SX, SY, SZ, TV.
+</p>
+<p>For more information on the Downloads API, see
+<a href="https://osdatahub.os.uk/docs/downloads/technicalSpecification">https://osdatahub.os.uk/docs/downloads/technicalSpecification</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Silently returns the directory where the downloaded files are
+stored.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>list_os_opendata()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Search and filter available open products.
+prod_list &lt;- list_os_opendata('OpenGreenSpace',
+                              file_format = 'GeoPackage',
+                              area = 'GB')
+
+# Use the product list to initiate a download.
+download_os_opendata(prod_list, output_dir = tempdir())
+
+# Combine search and download.
+# Be sure to know the products to avoid downloading more data than desired.
+download_os_opendata(product = 'OpenGreenSpace',
+                     file_format = 'GeoPackage',
+                     area = 'GB',
+                     output_dir = tempdir())
+
+
+</code></pre>
+
+
+</div>

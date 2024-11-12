@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>constructPca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Principal component analysis (PCA) of inter-construct correlations.</h2>
+
+<h3>Description</h3>
+
+<p>Various methods for rotation and methods for the calculation of the correlations are available. Note that the number
+of factors has to be specified. For more information on the PCA function itself type <code>?principal</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">constructPca(
+  x,
+  nfactors = 3,
+  rotate = "varimax",
+  method = "pearson",
+  trim = NA
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nfactors</code></td>
+<td>
+<p>Number of components to extract (default is <code>3</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rotate</code></td>
+<td>
+<p><code>"none"</code>, <code>"varimax"</code>, <code>"promax"</code> and <code>"cluster"</code> are possible rotations (default is <code>none</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A character string indicating which correlation coefficient is to be computed. One of <code>"pearson"</code>
+(default), <code>"kendall"</code> or <code>"spearman"</code>, can be abbreviated. The default is <code>"pearson"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>The number of characters a construct is trimmed to (default is <code>7</code>). If <code>NA</code> no trimming occurs.
+Trimming simply saves space when displaying correlation of constructs with long names.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an object of class <code>constructPca</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Fransella, F., Bell, R. &amp; Bannister, D. (2003). <em>A Manual for Repertory Grid Technique</em> (2. Ed.).
+Chichester: John Wiley &amp; Sons.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>To extract the PCA loadings for further processing see <code>constructPcaLoadings()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+constructPca(bell2010)
+
+# data from grid manual by Fransella et al. (2003, p. 87)
+# note that the construct order is different
+constructPca(fbb2003, nfactors = 2)
+
+# no rotation
+constructPca(fbb2003, rotate = "none")
+
+# use a different type of correlation (Spearman)
+constructPca(fbb2003, method = "spearman")
+
+# save output to object
+m &lt;- constructPca(fbb2003, nfactors = 2)
+m
+
+# different printing options
+print(m, digits = 5)
+print(m, cutoff = .3)
+
+</code></pre>
+
+
+</div>

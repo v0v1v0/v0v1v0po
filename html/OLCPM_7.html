@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ITP_noproj</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>testing the number of row factors- without projection</h2>
+
+<h3>Description</h3>
+
+<p>This function tests whether the number of row factors is equal or larger
+than a given integer, under a two-way factor model, using flat version
+of sample covariance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ITP_noproj(
+  Y,
+  k = 1,
+  alpha = 0.05,
+  epsilon = 0.05,
+  r = 8,
+  M = 100,
+  S = 100,
+  fq = 1/4
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>data, a <code class="reqn">T\times p1\times p2</code> array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>an positive integer indicating which eigenvalue to test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>a number in (0,1), indicating the significance of the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>a small positive number in (0,1), indicating the size of scaling.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>a positive number indicating the order of the power function
+for transforming the rescaled eigenvalue.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>a large integer for the number of Gaussian variables in the randomized test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>another large integer for the number of replications in the strong rule. Usually <code class="reqn">M=S=T</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fq</code></td>
+<td>
+<p>a number in (0,0.5), controlling the threshold function of the strong rule.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See He et al. (2023)
+</p>
+
+
+<h3>Value</h3>
+
+<p>a logical value. 1 for "the number of row factors is smaller than k".
+0 for "at least k row factors exists".
+</p>
+
+
+<h3>References</h3>
+
+<p>He Y, Kong X, Trapani L, &amp; Yu L (2023).
+One-way or two-way factor model for matrix sequences? <em>Journal of Econometrics</em>,
+235(2), 1981-2004.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">k1=3
+k2=3
+Sample_T=100
+p1=40
+p2=20
+
+Y=gen.data(Sample_T,p1,p2,k1,k2,tau=0.5,change=0)
+ITP_noproj(Y,k=1,M=Sample_T,S=Sample_T)
+ITP_noproj(Y,k=4,M=Sample_T,S=Sample_T)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordi.breadth</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+ordi.breadth
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates ordinated diet breadth
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordi.breadth(dat, dist.method = "jaccard")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+
+<p>A matrix of diet associations. Rows are herbivores and columns are diet items.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.method</code></td>
+<td>
+
+<p>Dissimilarity index passed on to vegdist in the vegan package.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing the following
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>species</code></td>
+<td>
+<p>A vector of the herbivore species names (row names of <code>dat</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eig</code></td>
+<td>
+<p>The eigen values for each of the PCo axes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tot.breadth</code></td>
+<td>
+<p>A vector of the raw ordinated host breadth for each species</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaled.breadth</code></td>
+<td>
+<p>A vector of the scaled ordinated host breadth for each species</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distances</code></td>
+<td>
+<p>A list of vectors giving the distance of each diet item from the centroid of each herbivore</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group.vectors</code></td>
+<td>
+<p>A matrix of logicals indicating diet items (columns) for each herbivore (rows)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centroids.group</code></td>
+<td>
+<p>A matrix giving the centroid on PCo (columns) for each herbivore (rows)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plants.ord</code></td>
+<td>
+<p>A matrix of the coordinates for each plant in PCoA space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.method</code></td>
+<td>
+<p>Dissimilarity index used for PCoA</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>James Fordyce
+</p>
+
+
+<h3>References</h3>
+
+<p>Fordyce, J.A., C.C. Nice, C.A. Hamm, &amp; M.L. Forister. Quantifying diet breadth through ordination of host association. Ecology
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summaryhbreadth</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">testdata&lt;-	
+	c(		
+			0,0,0,0,1,0,0,0,0,0,#1
+			0,0,0,0,0,0,1,1,0,0,#2
+			1,1,1,0,0,0,0,0,0,0,#3
+			0,0,0,0,1,1,0,1,0,1,#4
+			1,1,1,0,0,0,1,0,0,0,#4
+			1,1,0,0,1,0,1,0,0,0,#4
+			0,0,0,1,0,0,1,0,1,1,#4
+			1,0,1,0,1,1,0,0,0,1, #5
+			1,1,0,0,1,0,0,1,1,1,#6
+			1,1,1,0,1,1,0,1,1,1) #8
+
+
+dat&lt;-array(dim=c(10,10),data=testdata)
+dat&lt;-t(dat)
+colnames(dat)&lt;-paste("",LETTERS[1:10],sep="")
+rownames(dat)&lt;-paste("bug",1:10,sep="")
+
+
+ordi.breadth(dat)
+</code></pre>
+
+
+</div>

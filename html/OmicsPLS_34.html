@@ -1,0 +1,59 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rmsep_combi</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Symmetrized root MSE of Prediction</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the symmetrized root MSE of prediction on test data. *Expected* to work in combination with <code>loocv</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rmsep_combi(Xtst, Ytst, fit)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Xtst</code></td>
+<td>
+<p>Numeric vector or matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ytst</code></td>
+<td>
+<p>Numeric vector or matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p><code>o2m</code> fit (on data without <code>Xtst</code> and <code>Ytst</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is the building block for <code>loocv</code>, as it produced the prediction error for test (left out) data.
+</p>
+<p>This is a symmetrized version of <code>rmsep</code>, and is used by <code>loocv</code>. The predicion error of both <code>Xtst</code> and <code>Ytst</code> are calculated and summed.
+Whether this is a good idea depends: If <code class="reqn">X</code> and <code class="reqn">Y</code> have similar meanings (LC-MS versus MALDI) this is a good thing to do. If the two matrices do not have similar meanings,
+(Metabolomics versus Transcriptomics) then you may want to not sum up the two prediction errors or include weights in the sum.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Mean squares difference between predicted Y and true Y
+</p>
+
+
+</div>

@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxAlgebraFromString</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create MxAlgebra object from a string</h2>
+
+<h3>Description</h3>
+
+<p>Create MxAlgebra object from a string
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxAlgebraFromString(algString, name = NA, dimnames = NA, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>algString</code></td>
+<td>
+<p>the character string to convert into an R expression</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>An optional character string indicating the name of the object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dimnames</code></td>
+<td>
+<p>list. The dimnames attribute for the algebra: a list of length 2 giving the row and column names respectively. An empty list is treated as NULL, and a list of length one as row names. The list can be named, and the list names will be used as names for the dimensions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Forwarded verbatim to mxAlgebra</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>mxAlgebra
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">A &lt;- mxMatrix(values = runif(25), nrow = 5, ncol = 5, name = 'A')
+B &lt;- mxMatrix(values = runif(25), nrow = 5, ncol = 5, name = 'B')
+model &lt;- mxModel(A, B, name = 'model',
+  mxAlgebraFromString("A * (B + A)", name = 'test'))
+model &lt;- mxRun(model)
+model[['test']]$result
+A$values * (B$values + A$values)
+</code></pre>
+
+
+</div>

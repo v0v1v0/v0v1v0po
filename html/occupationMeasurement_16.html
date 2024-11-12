@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_item_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve data for an item.</h2>
+
+<h3>Description</h3>
+
+<p>Each page in the questionnaire can have multiple items on it.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_item_data(
+  session,
+  page_id,
+  item_id = NULL,
+  key = c("all", "question_text", "response_text", "response_id"),
+  default = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>session</code></td>
+<td>
+<p>The shiny session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page_id</code></td>
+<td>
+<p>The page for which to retrieve data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item_id</code></td>
+<td>
+<p>The item for which to retrieve data.
+This <em>has</em> to be different for different items on the same page.
+Since most pages contain only a single question/item, <code>item_id</code> is set to "default" if missing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>The key for which to retrieve a value. (Optional)
+If no key is provided, the items's whole data will be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default</code></td>
+<td>
+<p>A default value to return if the key or page is not
+present in the questionnaire data.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The items's data.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>set_item_data()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+## Not run: 
+# Set up a "fake" shiny session to store data
+session &lt;- shiny::MockShinySession$new()
+session$userData &lt;- list(
+  current_page_id = "other_page",
+  questionnaire_data = list(
+    example_page = list()
+  )
+)
+
+# This code is expected to be run in e.g. run_before or run_after
+# It doesn't really make sense to run this code outside
+set_item_data(
+  session = session,
+  page_id = "example_page",
+  question_text = "How are you?"
+)
+
+# This code is expected to be run in e.g. run_before
+get_item_data(
+  session = session,
+  page_id = "example_page"
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

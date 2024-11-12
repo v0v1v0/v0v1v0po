@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>data_outliers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Clean outliers</h2>
+
+<h3>Description</h3>
+
+<p>A function to clean outliers. Is used as a data preparation helper function and is called internally
+by forecast_univariate, forecast_multivariate, and forecast_combine.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data_outliers(
+  Data,
+  variables = NULL,
+  w.bounds = c(0.05, 0.95),
+  trim = FALSE,
+  cross_section = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Data</code></td>
+<td>
+<p>data.frame: data frame of target variable, exogenous variables, and observed date (named 'date')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variables</code></td>
+<td>
+<p>string: vector of variables to standardize, default is all but 'date' column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.bounds</code></td>
+<td>
+<p>double: vector of winsorizing minimum and maximum bounds, c(min percentile, max percentile)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>boolean: if TRUE then replace outliers with NA instead of winsorizing bound</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cross_section</code></td>
+<td>
+<p>boolean: if TRUE then remove outliers based on cross-section (row-wise) instead of historical data (column-wise)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>data.frame with a date column and one column per forecast method selected
+</p>
+
+
+</div>

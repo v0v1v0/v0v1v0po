@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>run_tab</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Tab for 'Word'</h2>
+
+<h3>Description</h3>
+
+<p>Object representing a tab
+in a Word document. The result must be used
+within a call to fpar. It will only have
+effects in Word output.
+</p>
+<p>Tabulation marks settings can be defined with <code>fp_tabs()</code> in
+paragraph settings defined with <code>fp_par()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">run_tab()
+</code></pre>
+
+
+<h3>usage</h3>
+
+<p>You can use this function in conjunction with fpar to create paragraphs
+consisting of differently formatted text parts. You can also use this
+function as an <em>r chunk</em> in an R Markdown document made with package
+officedown.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other run functions for reporting: 
+<code>external_img()</code>,
+<code>ftext()</code>,
+<code>hyperlink_ftext()</code>,
+<code>run_autonum()</code>,
+<code>run_bookmark()</code>,
+<code>run_columnbreak()</code>,
+<code>run_comment()</code>,
+<code>run_footnote()</code>,
+<code>run_footnoteref()</code>,
+<code>run_linebreak()</code>,
+<code>run_pagebreak()</code>,
+<code>run_reference()</code>,
+<code>run_word_field()</code>,
+<code>run_wordtext()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">z &lt;- fp_tabs(
+  fp_tab(pos = 0.5, style = "decimal"),
+  fp_tab(pos = 1.5, style = "decimal")
+)
+par1 &lt;- fpar(
+  run_tab(), ftext("88."),
+  run_tab(), ftext("987.45"),
+  fp_p = fp_par(
+    tabs = z
+  )
+)
+par2 &lt;- fpar(
+  run_tab(), ftext("8."),
+  run_tab(), ftext("670987.45"),
+  fp_p = fp_par(
+    tabs = z
+  )
+)
+x &lt;- read_docx()
+x &lt;- body_add(x, par1)
+x &lt;- body_add(x, par2)
+print(x, target = tempfile(fileext = ".docx"))
+</code></pre>
+
+
+</div>

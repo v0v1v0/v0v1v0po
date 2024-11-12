@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>centeredBasis.gen</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generation of a recentered B-spline basis matrix in additive models</h2>
+
+<h3>Description</h3>
+
+<p>Generation of a B-spline basis matrix with recentered columns
+to handle the identifiability constraint in additive models. See Wood (CRC Press 2017, pp. 175-176) for more details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">centeredBasis.gen(x, knots, cm = NULL, pen.order = 2, verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector of values where to compute the "recentered" B-spline basis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>knots</code></td>
+<td>
+<p>vector of knots (that should cover the values in &lt;x&gt;)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cm</code></td>
+<td>
+<p>(Optional) values subtracted from each column of the original B-spline matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pen.order</code></td>
+<td>
+<p>penalty order for the B-spline parameters (Default: 2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>verbose indicator (Default: TRUE)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>List containing
+</p>
+
+<ul>
+<li>
+<p><code>B</code> : <code style="white-space: pre;">⁠ ⁠</code>centered B-spline matrix (with columns recentered to have mean 0 over equi-spaced x values on the range of the knots).
+</p>
+</li>
+<li>
+<p><code>Dd</code> : <code style="white-space: pre;">⁠ ⁠</code>difference matrix (of order &lt;pen.order&gt;) for the associated centered B-spline matrix.
+</p>
+</li>
+<li>
+<p><code>Pd</code> : <code style="white-space: pre;">⁠ ⁠</code>penalty matrix (of order &lt;pen.order&gt;) for the associated centered B-spline matrix.
+</p>
+</li>
+<li>
+<p><code>K</code> : <code style="white-space: pre;">⁠ ⁠</code>number of centered B-splines in the basis.
+</p>
+</li>
+<li>
+<p><code>cm</code> : <code style="white-space: pre;">⁠ ⁠</code>values subtracted from each column of the original B-spline matrix. By default, this is a vector containing the mean of each column in the original B-spline matrix.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Philippe Lambert <a href="mailto:p.lambert@uliege.be">p.lambert@uliege.be</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Lambert, P. and Gressani, 0. (2023) Penalty parameter selection and asymmetry corrections
+to Laplace approximations in Bayesian P-splines models. Statistical Modelling. &lt;doi:10.1177/1471082X231181173&gt;. Preprint: &lt;arXiv:2210.01668&gt;.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x = seq(0,1,by=.01)
+knots = seq(0,1,length=5)
+obj = centeredBasis.gen(x,knots)
+matplot(x,obj$B,type="l",ylab="Centered B-splines")
+colMeans(obj$B)
+
+</code></pre>
+
+
+</div>

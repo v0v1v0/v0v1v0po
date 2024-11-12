@@ -1,0 +1,260 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>span_table</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Spread Large Table Over Smaller Tables</h2>
+
+<h3>Description</h3>
+
+<p>Takes a large table and spreads it over smaller tables to
+paginate it. It will preserve common row  information on the left and
+separate columns according to maximum specifications. The final tables will
+have widths less than or equal to both max_col and max_width, and heights
+less than or equal to both max_row and max_height.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">span_table(
+  table_body = NULL,
+  row_common = NULL,
+  table_body_head = NULL,
+  row_common_head = NULL,
+  header_format = "text",
+  obnd = NULL,
+  max_row = 20,
+  max_col = 10,
+  max_height = 7,
+  max_width = 6.5,
+  table_alignment = "center",
+  inner_border = officer::fp_border(color = "black", width = 0.3),
+  outer_border = officer::fp_border(color = "black", width = 2),
+  set_header_inner_border_v = TRUE,
+  set_header_inner_border_h = TRUE,
+  set_header_outer_border = TRUE,
+  set_body_inner_border_v = TRUE,
+  set_body_inner_border_h = FALSE,
+  set_body_outer_border = TRUE,
+  notes_detect = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>table_body</code></td>
+<td>
+<p>Data frame with the body of the large table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row_common</code></td>
+<td>
+<p>Data frame with the common rows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table_body_head</code></td>
+<td>
+<p>Data frame or matrix with headers for the table body.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>row_common_head</code></td>
+<td>
+<p>Data frame or matrix with headers for the common rows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header_format</code></td>
+<td>
+<p>Format of the header either <code>"text"</code> (default) or <code>"md"</code> for markdown.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obnd</code></td>
+<td>
+<p>Optional onbrand object used to format markdown. The default <code>NULL</code> value will use default formatting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_row</code></td>
+<td>
+<p>Maximum number of rows in output tables (A value of <code>NULL</code> will set max_row to the number of rows in the table).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_col</code></td>
+<td>
+<p>Maximum number of columns in output tables (A value of <code>NULL</code> will set max_col to number of columns in the table).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_height</code></td>
+<td>
+<p>Maximum height of the final table in inches (A value of <code>NULL</code> will use 100 inches).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_width</code></td>
+<td>
+<p>Maximum width of the final table in inches (A value of <code>NULL</code> will use 100 inches).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table_alignment</code></td>
+<td>
+<p>Character string specifying the alignment #'of the table (body and headers). Can be <code>"center"</code> (default), <code>"left"</code>, <code>"right"</code>, or <code>"justify"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inner_border</code></td>
+<td>
+<p>Border object for inner border lines defined using <code>officer::fp_border()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outer_border</code></td>
+<td>
+<p>Border object for outer border lines defined using <code>officer::fp_border()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>set_header_inner_border_v</code></td>
+<td>
+<p>Boolean value to enable or disable inner vertical borders for headers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>set_header_inner_border_h</code></td>
+<td>
+<p>Boolean value to enable or disable inner horizontal borders for headers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>set_header_outer_border</code></td>
+<td>
+<p>Boolean value to enable or disable outer border for headers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>set_body_inner_border_v</code></td>
+<td>
+<p>Boolean value to enable or disable inner vertical borders for the body</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>set_body_inner_border_h</code></td>
+<td>
+<p>Boolean value to enable or disable inner horizontal borders for the body</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>set_body_outer_border</code></td>
+<td>
+<p>Boolean value to enable or disable outer border borders for the body</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>notes_detect</code></td>
+<td>
+<p>Vector of strings to detect in output tables (example <code>c("NC", "BLQ")</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The way the data frames relate to each other are mapped out below. The
+dimensions of the different data frames are identified below (nrow x ncol)
+</p>
+<pre>
+ |-------------------------------------| ---
+ |                 |                   |  ^
+ |                 |                   |  |
+ | row_common_head |  table_body_head  |  | m
+ |      m x n      |       m x c       |  |
+ |                 |                   |  v
+ |-------------------------------------| ---
+ |                 |                   |  ^
+ |                 |                   |  |
+ |    row_common   |    table_body     |  | r
+ |      r x n      |      r x c        |  |
+ |                 |                   |  |
+ |                 |                   |  v
+ |-------------------------------------| ---
+
+ |&lt;---------------&gt;|&lt;-----------------&gt;|
+         n                   c
+</pre>
+
+
+<h3>Value</h3>
+
+<p>list with the following elements
+</p>
+
+<ul>
+<li>
+<p>isgood:    Boolean indicating the exit status of the function.
+</p>
+</li>
+<li>
+<p>one_body:  Full table with no headers.
+</p>
+</li>
+<li>
+<p>one_table: Full table with headers.
+</p>
+</li>
+<li>
+<p>msgs:      Vector of text messages describing any errors that were found.
+</p>
+</li>
+<li>
+<p>tables:    Named list of tables. Each list element is of the output.
+format from <code>build_span()</code>.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>build_span for the relationship of inputs.</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if(interactive()){
+
+tbl_res = mk_lg_tbl()
+
+res =
+span_table(table_body      = tbl_res$lg_tbl_body,
+           row_common      = tbl_res$lg_tbl_row_common,
+           table_body_head = tbl_res$lg_tbl_body_head,
+           row_common_head = tbl_res$lg_tbl_row_common_head,
+           max_row         = 20,
+           max_col         = 10,
+           notes_detect    = c("BQL", "NC"))
+
+
+# Notes detected in the first table:
+res[["tables"]][["Table 1"]][["notes"]]
+
+# First table as a data frame:
+res[["tables"]][["Table 1"]][["df"]]
+
+# First table as a flextable:
+res[["tables"]][["Table 1"]][["ft"]]
+
+}
+
+</code></pre>
+
+
+</div>

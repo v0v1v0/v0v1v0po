@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OpenRepGrid.ic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+<span class="pkg">OpenRepGrid.ic</span> -  Interpretive Clustering for Repertory Grids</h2>
+
+<h3>Description</h3>
+
+<p>The <span class="pkg">OpenRepGrid.ic</span> package implements <em>Interpretive Clustering (IC)</em>
+as outlined in Burr, King, and Heckmann (2020). The authors describe
+a variant of construct clustering which uses a procedure from graph theory
+called <a href="https://en.wikipedia.org/wiki/Clique_problem#Listing_all_maximal_cliques">maximal cliques enumeration</a>.
+Given a similarity measure, in our case the number of matching scores between
+two constructs, a network graph of relatedness between constructs is
+construed. A clique is a group of constructs which are all mutually related,
+given some cut-off criterion for relatedness (e.g. 6 matching scores in a
+grid with 7 elements). While the paper also describes an offline approach to identify
+the construct cliques, this software automates the process. Under the hood,
+the package uses the <code>igraph</code> package for clique identification.
+</p>
+<p>The package also contains a shiny based UI you can start via the function
+<code>ic()</code>. Visit <a href="http://ic.openrepgrid.org">http://ic.openrepgrid.org</a> for an online version.
+An introduction to the software is also available on <a href="https://youtu.be/f9oINYA22Rc">YouTube</a>.
+Below you find an example of how to process a repgrid in an Excel
+file using code only.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p><strong>Maintainer</strong>: Mark Heckmann <a href="mailto:heckmann.mark@gmail.com">heckmann.mark@gmail.com</a> (<a href="https://orcid.org/0000-0002-0736-7417">ORCID</a>) [copyright holder]
+</p>
+<p>Authors:
+</p>
+
+<ul>
+<li>
+<p> Viv Burr
+</p>
+</li>
+<li>
+<p> Nigel King
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Burr, V. King, N. &amp; Heckmann, M. (2020) The qualitative analysis of repertory grid data: Interpretive Clustering,
+Qualitative Research in Psychology, <a href="https://doi.org/10.1080/14780887.2020.1794088">doi:10.1080/14780887.2020.1794088</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Useful links:
+</p>
+
+<ul>
+<li> <p><a href="https://github.com/markheckmann/OpenRepGrid.ic">https://github.com/markheckmann/OpenRepGrid.ic</a>
+</p>
+</li>
+<li>
+<p> Report bugs at <a href="https://github.com/markheckmann/OpenRepGrid.ic/issues">https://github.com/markheckmann/OpenRepGrid.ic/issues</a>
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The shiny package is just a small UI wrapper around the 
+# the workhorse core functions. Here is how to call them.
+
+library(tidyverse)
+library(openxlsx)
+library(igraph)
+library(OpenRepGrid.ic)
+
+file &lt;- system.file("extdata", "sylvia.xlsx", package = "OpenRepGrid.ic")
+file_out &lt;- str_replace(file, ".xlsx$", " CLIQUES.xlsx") %&gt;% basename
+
+x &lt;- read.xlsx(file)            # read grid
+tests &lt;- check_excel_input(x)   # check if input format is correct
+l &lt;- network_graph_images(x, min_clique_size = 3, 
+                          show_edges = TRUE, 
+                          min_matches = 6)    # produce images
+file_tmp &lt;- create_excel_output(file, l)      # create Excel file
+# file.show(file_tmp)  # not run during tests
+
+# open images saved as temp files (as shown in output Excel file)
+file.show(l$img_all_constructs)
+file.show(l$img_all_constructs_full_labels)
+file.show(l$img_all_constructs_separate_poles)
+
+file.show(l$img_cliques_only)
+file.show(l$img_cliques_only_full_labels)
+file.show(l$img_cliques_only_separate_poles)
+
+# calculation results used in network_graph_images
+# some of them are also contained in Excel file
+s &lt;- calculate_similarity(x)
+s
+
+
+</code></pre>
+
+
+</div>

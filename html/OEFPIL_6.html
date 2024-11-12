@@ -1,0 +1,232 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>NanoIndent.OEFPIL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimation of parameters in nanoindentation</h2>
+
+<h3>Description</h3>
+
+<p>Fitting the unloading curve in nanoindentation process by power law function with parameters estimated by iterated linearization algorithm (OEFPIL). The special case of <code>OEFPIL</code> function customized for using in nanoindentation (see 'Details').
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">NanoIndent.OEFPIL(data, alpha.start, m.start, hp.start, unload.data = FALSE, ucut = 0.98,
+                 lcut = 0.4, CM, uh = 0.5, uF = 0.001, max.iter = 100,
+                 see.iter.val = FALSE, save.file.name, th = .Machine$double.eps ^ (2 / 3),
+                 signif.level = 0.05, useNLS = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an object of type <code>data.frame</code> with 2 named columns or <code>list</code> with 2 elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha.start</code></td>
+<td>
+<p>a starting value of the fitting constant alpha.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m.start</code></td>
+<td>
+<p>a starting value of the exponent m.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hp.start</code></td>
+<td>
+<p>a starting value of the permanent indentation depth hp.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unload.data</code></td>
+<td>
+<p>a logical value (default <code>FALSE</code>) indicating the structure of <code>data</code>. If <code>TRUE</code>, an input data contains only unloading part of the curve. If <code>FALSE</code>, an input data contains complete loading, hold and unloading parts of an indentation process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ucut</code></td>
+<td>
+<p>a numerical value, indicating the upper bound of cut off.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lcut</code></td>
+<td>
+<p>a numerical value, indicating the lower bound of cut off.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CM</code></td>
+<td>
+<p>a covariance matrix of the input <code>data</code>. See 'Details' for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uh</code></td>
+<td>
+<p>standard deviation of depth.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uF</code></td>
+<td>
+<p>standard deviation of load.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iter</code></td>
+<td>
+<p>maximum number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>see.iter.val</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, all the partial results of the OEFPIL algorithm are displayed and saved. The default value is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>save.file.name</code></td>
+<td>
+<p>a name of the file for saving results. If missing, no output file is saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>th</code></td>
+<td>
+<p>a numerical value, indicating threshold necessary for the iteration stoppage.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signif.level</code></td>
+<td>
+<p>a significance level for the confidence interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useNLS</code></td>
+<td>
+<p>logical. If <code>TRUE</code> (the default value), function will set up starting parameters calculated by <code>nlsLM</code> function (nonlinear least square estimation).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In this special case of the <code>OEFPIL</code> function, the dependence of parameters is fixed in
+the form: <code class="reqn">F = \alpha * (h - h_p)^m</code>, where <code class="reqn">F</code> is load and <code class="reqn">h</code> depth measured within a nanoindentation process.
+It is possible to set own starting values of the parameters, in the other case these values are calculated by the algorithm and printing into the console.
+</p>
+<p>A selection of the part of the unloading curve fitted by a power law function is provided with <code>lcut</code> and <code>ucut</code> arguments. The default values 0.4 and 0.98 corresponds to the range 40-98 % <code class="reqn">F_{max}</code> (maximum force) as recommended in ISO 14577 standard.
+</p>
+<p>The <code>CM</code> has to be a <code>2n</code> covariance matrix (where <code>n</code> is length of <code>data</code>) of following structure: first <code>n</code> elements of the diagonal correspond to the variance of depth and other to the variance of load.
+If argument <code>CM</code> is missing, the input covariance matrix is set to a diagonal matrix with variance of depth and load (calculated from <code>uh</code> and <code>uF</code>) on the diagonal.
+If standard deviations are missing too, the default values (<code>uh</code>=0.5, <code>uF</code>=0.001) are used.
+</p>
+<p>The estimations and confidence intervals are computed under normality assumption (see <code>OEFPIL</code> 'Details').
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>"OEFPIL"</code>. It is a list containing at least the following components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>name_Est</code></td>
+<td>
+<p>estimations of model parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name_upgraded.start.val</code></td>
+<td>
+<p>modified starting values of estimating parameters (result from <code>nlsLM</code> function).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov.m_Est</code></td>
+<td>
+<p>estimated covariance matrix of parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>it_num</code></td>
+<td>
+<p>number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CI_parameters</code></td>
+<td>
+<p>a list of confidence intervals for estimated parameters (a significance level is based on <code>signif.level</code> argument).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logs</code></td>
+<td>
+<p>warnings or messages of events, which happen during the run of the algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>for other components specification see <code>OEFPIL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contents</code></td>
+<td>
+<p>a list of outputs as original values of data and other characteristics, which are usable in plotting or other operations with model results.</p>
+</td>
+</tr>
+</table>
+<p>If <code>useNLS</code> argument is set to <code>FALSE</code>, the <code>name_upgraded.start.val</code> are the same as <code>start.values</code> (no <code>nlsLM</code> procedure for starting value fitting is performed).
+</p>
+
+
+<h3>References</h3>
+
+<p>ISO/IEC: <em>14577-1:2015 Metallic materials – Instrumented indentation test for hardness and materials parameters – Part 1: Test method</em> (ISO/IEC, Internation Organisation for Standardisation, 2015).
+</p>
+<p>Anna Charvátová Campbell, Petr Grolich, Radek šlesinger. (2019). <em>Niget: Nanoindentation general evaluation tool</em>. SoftwareX, <strong>Vol. 9</strong>: 248–254.
+doi: <a href="https://doi.org/10.1016/j.softx.2019.03.001">10.1016/j.softx.2019.03.001</a>.
+</p>
+<p>Köning, R., Wimmer, G. and Witkovský, V. <em>Ellipse fitting by nonlinear constraints to demodulate quadrature homodyne interferometer signals and to determine the statistical uncertainty of the interferometric phase</em>. Measurement Science and Technology (2014).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OEFPIL</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##Use of NanoIndent function for data file "silicaBerk.RData" (a part of the OEFPIL package)
+signif.level = 0.05
+output.form.NI &lt;- NanoIndent.OEFPIL(silicaBerk, unload.data = TRUE, ucut = 0.98, lcut = 0.2,
+uh = 0.5, uF = 0.001, signif.level = signif.level)
+
+##The output is an object of class 'OEFPIL', supplementary functions for this class are available
+##Use of summary function
+summary(output.form.NI)
+
+##Plot of estimated unloading curve
+plot(output.form.NI, signif.level = signif.level)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>but</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Modification of function arguments  </h2>
+
+<h3>Description</h3>
+
+<p>Modifies the arguments of a function
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  fun %but% x
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p> Function to modify </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Modifier </p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A function with the same body as the <code>fun</code> argument but 
+with a different list of arguments.  
+</p>
+
+
+<h3>Note</h3>
+
+<p>The <code>%but%</code> operator is S3-generic with the following methods: 
+</p>
+<p>- A default method which does nothing more than returning the <code>fun</code> function.
+</p>
+<p>- A charactor method. In that case, <code>x</code> describes the logical
+arguments of the function. <code>x</code> is a single character string containing 
+one or several token of the form <code>ab</code> where <code>b</code> is the first 
+letter of the logical argument we wish to modify and <code>a</code> is 
+an optional modifier. <code>a</code> can be empty or <code>+</code>, in which 
+case the argument will be set to <code>TRUE</code>; <code>-</code> in which case the
+argument will be set to <code>FALSE</code>; or <code>!</code> in which case the 
+argument will be the opposite of the current value in <code>fun</code>
+</p>
+<p>- A list. In that case, arguments that are part of the formal 
+arguments of <code>fun</code> and elements of the list <code>x</code> are 
+updated to the element in <code>x</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Romain Francois &lt;francoisromain@free.fr&gt; </p>
+
+
+<h3>See Also</h3>
+
+ <p>args, formals </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">        
+### default method, nothing is done
+rnorm %but% 44
+
+### character method, operating on logical arguments
+grep %but% "pf"     # grep, with perl and fixed set to TRUE
+grep %but% "i-e"    # grep, ignoring the case but not using extended regular expressions
+( grep %but% "vp" )( "blue", colors() )
+
+### list method 
+rnorm %but% list( mean = 3 )
+rnorm %but% list( nonsense = 4 )
+</code></pre>
+
+
+</div>

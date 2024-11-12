@@ -1,0 +1,171 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.rimle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plot Methods for RIMLE Objects
+</h2>
+
+<h3>Description</h3>
+
+<p>Plot robust model-based clustering results: scatter plot with
+clustering information and cluster fit.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'rimle'
+plot(x, what=c("fit", "clustering"),
+     data=NULL, margins=NULL, cluster=NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Output from <code>rimle</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>what</code></td>
+<td>
+
+<p>The type of graph. It can be one of the following:
+<code>"fit"</code> (default), <code>"clustering"</code>. See <em>Details</em>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data vector, matrix or data.frame (or some
+transformation of them),  used for obtaining the
+<code>'rimle'</code> object. This is only relevant if
+<code>what="clustering"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margins</code></td>
+<td>
+
+<p>A vector of integers denoting the variables (numbers of columns of
+<code>data</code>) to be used for a <code>pairs</code>-plot if
+<code>what="clustering"</code>. When <code>margins=NULL</code> it is
+set to  <code>1:ncol(data)</code> (default).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>An integer denoting the cluster for which the <em>fit</em>
+plot is returned. This is only relevant if <code>what="fit"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>further arguments passed to or from other methods.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+
+<dl>
+<dt>If <code>what="fit"</code>
+</dt>
+<dd>
+<p>The P<code>-</code>P plot (probability<code>-</code>probability plot) of the weighted empirical
+distribution function of the Mahalanobis distances of observations
+from clusters' centers against the target distribution. The target
+distribution is the Chi-square distribution with degrees of
+freedom equal to <code>ncol(data)</code>. The weights are given by the improper posterior
+probabilities. If <code>cluster=NULL</code> P<code>-</code>P plots are produced for
+all clusters, otherwise <code>cluster</code> selects a single P<code>-</code>P
+plot at times.
+</p>
+</dd>
+<dt>If <code>what="clustering"</code>
+</dt>
+<dd>
+<p>A pairwise scatterplot with cluster memberships. Points
+assigned to the noise/outliers component are denoted by
+<code>'+'</code>.
+</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>Coretto, P.  and C. Hennig (2016).
+Robust improper maximum likelihood: tuning, computation, and a comparison with
+other methods for robust Gaussian clustering.
+<em>Journal of the American Statistical Association</em>, Vol. 111(516),
+pp. 1648-1659. 
+doi: <a href="https://doi.org/10.1080/01621459.2015.1100996">10.1080/01621459.2015.1100996</a>
+</p>
+<p>P. Coretto and C. Hennig (2017).
+Consistency, breakdown robustness, and algorithms for robust improper
+maximum  likelihood clustering.
+<em>Journal of Machine Learning Research</em>, Vol. 18(142), pp. 1-39.
+<a href="https://jmlr.org/papers/v18/16-382.html">https://jmlr.org/papers/v18/16-382.html</a>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Pietro Coretto
+<a href="mailto:pcoretto@unisa.it">pcoretto@unisa.it</a>
+<a href="https://pietro-coretto.github.io">https://pietro-coretto.github.io</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>otrimle</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Load  Swiss banknotes data
+data(banknote)
+x &lt;- banknote[,-1]
+
+## Perform rimle clustering with default arguments
+set.seed(1)
+a &lt;- rimle(data = x, G = 2)
+print(a)
+
+## Plot clustering
+plot(a, data = x, what = "clustering")
+
+## Plot clustering on selected margins
+plot(a, data = x, what = "clustering", margins = 4:6)
+
+## Plot clustering on the first two principal components
+z &lt;- scale(x) %*%   eigen(cor(x), symmetric = TRUE)$vectors
+colnames(z) &lt;- paste("PC", 1:ncol(z), sep = "")
+plot(a, data = z, what = "clustering", margins = 1:2)
+
+## Fit plot for all clusters
+plot(a, what = "fit")
+
+## Fit plot for cluster 1
+plot(a, what = "fit", cluster = 1)
+</code></pre>
+
+
+</div>

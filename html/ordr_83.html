@@ -1,0 +1,230 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>geom_text_radiate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Text radiating outward from the origin</h2>
+
+<h3>Description</h3>
+
+<p><code>geom_text_radiate()</code> is adapted from <code>ggbiplot()</code> in the
+off-CRAN extensions of the same name (Vu, 2014; Telford, 2017; Gegzna,
+2018). It renders text at specified positions and angles that radiate out
+from the origin.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">geom_text_radiate(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+  ...,
+  parse = FALSE,
+  check_overlap = FALSE,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mapping</code></td>
+<td>
+<p>Set of aesthetic mappings created by <code>aes()</code>. If specified and
+<code>inherit.aes = TRUE</code> (the default), it is combined with the default mapping
+at the top level of the plot. You must supply <code>mapping</code> if there is no plot
+mapping.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data to be displayed in this layer. There are three
+options:
+</p>
+<p>If <code>NULL</code>, the default, the data is inherited from the plot
+data as specified in the call to <code>ggplot()</code>.
+</p>
+<p>A <code>data.frame</code>, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+<code>fortify()</code> for which variables will be created.
+</p>
+<p>A <code>function</code> will be called with a single argument,
+the plot data. The return value must be a <code>data.frame</code>, and
+will be used as the layer data. A <code>function</code> can be created
+from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>The statistical transformation to use on the data for this
+layer, either as a <code>ggproto</code> <code>Geom</code> subclass or as a string naming the
+stat stripped of the <code>stat_</code> prefix (e.g. <code>"count"</code> rather than
+<code>"stat_count"</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>position</code></td>
+<td>
+<p>Position adjustment, either as a string, or the result of
+a call to a position adjustment function. Cannot be jointy specified with
+<code>nudge_x</code> or <code>nudge_y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments passed on to <code>layer()</code>. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+<code>colour = "red"</code> or <code>size = 3</code>. They may also be parameters
+to the paired geom/stat.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parse</code></td>
+<td>
+<p>If <code>TRUE</code>, the labels will be parsed into expressions and
+displayed as described in <code>?plotmath</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check_overlap</code></td>
+<td>
+<p>If <code>TRUE</code>, text that overlaps previous text in the
+same layer will not be plotted. <code>check_overlap</code> happens at draw time and in
+the order of the data. Therefore data should be arranged by the label
+column before calling <code>geom_text()</code>. Note that this argument is not
+supported by <code>geom_label()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>If <code>FALSE</code>, the default, missing values are removed with
+a warning. If <code>TRUE</code>, missing values are silently removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.legend</code></td>
+<td>
+<p>logical. Should this layer be included in the legends?
+<code>NA</code>, the default, includes if any aesthetics are mapped.
+<code>FALSE</code> never includes, and <code>TRUE</code> always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inherit.aes</code></td>
+<td>
+<p>If <code>FALSE</code>, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. <code>borders()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A ggproto layer.
+</p>
+
+
+<h3>Biplot layers</h3>
+
+<p><code>ggbiplot()</code> uses <code>ggplot2::fortify()</code> internally to produce a single data
+frame with a <code>.matrix</code> column distinguishing the subjects (<code>"rows"</code>) and
+variables (<code>"cols"</code>). The stat layers <code>stat_rows()</code> and <code>stat_cols()</code> simply
+filter the data frame to one of these two.
+</p>
+<p>The geom layers <code style="white-space: pre;">⁠geom_rows_*()⁠</code> and <code style="white-space: pre;">⁠geom_cols_*()⁠</code> call the corresponding
+stat in order to render plot elements for the corresponding factor matrix.
+<code style="white-space: pre;">⁠geom_dims_*()⁠</code> selects a default matrix based on common practice, e.g.
+points for rows and arrows for columns.
+</p>
+
+
+<h3>Aesthetics</h3>
+
+<p><code>geom_text_radiate()</code> understands the following aesthetics (required
+aesthetics are in bold):
+</p>
+
+<ul>
+<li> <p><strong><code>x</code></strong>
+</p>
+</li>
+<li> <p><strong><code>y</code></strong>
+</p>
+</li>
+<li> <p><strong><code>label</code></strong>
+</p>
+</li>
+<li> <p><code>alpha</code>
+</p>
+</li>
+<li> <p><code>angle</code>
+</p>
+</li>
+<li> <p><code>colour</code>
+</p>
+</li>
+<li> <p><code>family</code>
+</p>
+</li>
+<li> <p><code>fontface</code>
+</p>
+</li>
+<li> <p><code>hjust</code>
+</p>
+</li>
+<li> <p><code>lineheight</code>
+</p>
+</li>
+<li> <p><code>size</code>
+</p>
+</li>
+<li> <p><code>vjust</code>
+</p>
+</li>
+<li> <p><code>group</code>
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Vincent Q. Vu (2014). ggbiplot: A 'ggplot2' based biplot. R package version
+0.55. <a href="https://github.com/vqv/ggbiplot">https://github.com/vqv/ggbiplot</a>, <code>experimental</code> branch
+</p>
+<p>Richard J Telford (2017). ggbiplot: A 'ggplot2' based biplot. R package
+version 0.6. <a href="https://github.com/richardjtelford/ggbiplot">https://github.com/richardjtelford/ggbiplot</a> (fork),
+<code>experimental</code> branch
+</p>
+<p>Vilmantas Gegzna (2018). ggbiplot: A 'ggplot2' based biplot. R package
+version 0.55. <a href="https://github.com/forked-packages/ggbiplot">https://github.com/forked-packages/ggbiplot</a> (fork), <code>experimental</code>
+branch
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other geom layers: 
+<code>geom_axis()</code>,
+<code>geom_isoline()</code>,
+<code>geom_lineranges()</code>,
+<code>geom_origin()</code>,
+<code>geom_unit_circle()</code>,
+<code>geom_vector()</code>
+</p>
+
+
+</div>

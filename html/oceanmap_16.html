@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>delete.region</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+deletes a region from the region_definitions-definition file</h2>
+
+<h3>Description</h3>
+
+<p>deletes a specified region from the region_definitions-definition file</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">delete.region(region,lib.folder,restore=F)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>region</code></td>
+<td>
+
+<p>Character string identifying the region that should be deleted.
+See region_definitions for area definitions and use add.region to add new regions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lib.folder</code></td>
+<td>
+
+<p>Character string indicating R-library path in which the oceanmap-package is installed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>restore</code></td>
+<td>
+
+<p>whether the original region_definitions-file should be restored.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+<p>add.region, region_definitions, regions, writebin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example 1: Add region by supplying a one-row data.frame 
+##            that holds the entire required information
+data(region_definitions)
+lion &lt;- region_definitions[region_definitions$label == 'lion',] # selecting Gulf of Lions region
+lion
+junk &lt;- lion 
+junk$label &lt;- 'junk' # rename region label
+#add.region(junk) # add junk region
+data(region_definitions) # reload region_definitions
+region_definitions[,1:9]
+
+## Example 2: Delete region
+#delete.region("junk") # delete junk region
+data(region_definitions) # reload region_definitions
+region_definitions[,1:9]
+</code></pre>
+
+
+</div>

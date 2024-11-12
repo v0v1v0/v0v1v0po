@@ -1,0 +1,361 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>trajMapStatic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Trajectory line plots in <code>ggplot2</code>
+</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>This function plots back trajectories using <code>ggplot2</code>. The function
+requires that data are imported using <code>openair::importTraj()</code>. It is a
+<code>ggplot2</code> implementation of <code>openair::trajPlot()</code> with many of the same
+arguments, which should be more flexible for post-hoc changes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">trajMapStatic(
+  data,
+  colour = "height",
+  type = NULL,
+  group = NULL,
+  longitude = "lon",
+  latitude = "lat",
+  npoints = 12,
+  xlim = NULL,
+  ylim = NULL,
+  crs = sf::st_crs(3812),
+  origin = TRUE,
+  map = TRUE,
+  map.fill = "grey85",
+  map.colour = "grey75",
+  map.alpha = 0.8,
+  map.lwd = 0.5,
+  map.lty = 1,
+  facet = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p><em>A data frame containing a HYSPLIT trajectory, perhaps accessed
+with <code>openair::importTraj()</code>.</em>
+</p>
+<p><strong>required</strong>
+</p>
+<p>A data frame containing HYSPLIT model outputs. If this data were not
+obtained using <code>openair::importTraj()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colour</code></td>
+<td>
+<p><em>Column to be used for colouring each trajectory.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>This column may be numeric, character, factor or date(time). This will
+commonly be a pollutant concentration which has been joined (e.g., by
+<code>dplyr::left_join()</code>) to the trajectory data by "date".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><em>A method to condition the <code>data</code> for separate plotting.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>Used for splitting the trajectories into different groups which will appear
+as different panels. Passed to <code>openair::cutData()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p><em>Column to use to distinguish different trajectory paths.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>By default, trajectory paths are distinguished using the arrival date.
+<code>group</code> allows for additional columns to be used (e.g., <code>"receptor"</code> if
+multiple receptors are being plotted).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latitude, longitude</code></td>
+<td>
+<p><em>The decimal latitude/longitude.</em>
+</p>
+<p><em>default:</em> <code>"lat"</code> / <code>"lon"</code>
+</p>
+<p>Column names representing the decimal latitude and longitude.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>npoints</code></td>
+<td>
+<p><em>Interval at which points are placed along the trajectory
+paths.</em>
+</p>
+<p><em>default:</em> <code>12</code>
+</p>
+<p>A dot is placed every <code>npoints</code> along each full trajectory. For hourly back
+trajectories points are plotted every <code>npoints</code> hours. This helps to
+understand where the air masses were at particular times and get a feel for
+the speed of the air (points closer together correspond to slower moving
+air masses). Defaults to <code>12</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim, ylim</code></td>
+<td>
+<p><em>The x- and y-limits of the plot.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>A numeric vector of length two defining the x-/y-limits of the map, passed
+to <code>ggplot2::coord_sf()</code>. If <code>NULL</code>, limits will be estimated based on the
+lat/lon ranges of the input data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p><em>The coordinate reference system (CRS) into which all data should
+be projected before plotting.</em>
+</p>
+<p><em>default:</em> <code>sf::st_crs(3812)</code>
+</p>
+<p>This argument defaults to the Lambert projection, but can take any
+coordinate reference system to pass to the <code>crs</code> argument of
+<code>ggplot2::coord_sf()</code>. Alternatively, <code>crs</code> can be set to <code>NULL</code>, which
+will typically render the map quicker but may cause countries far from the
+equator or large areas to appear distorted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>origin</code></td>
+<td>
+<p><em>Draw the receptor point as a circle?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code>
+</p>
+<p>When <code>TRUE</code>, the receptor point(s) are marked with black circles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p><em>Draw a base map?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code>
+</p>
+<p>Draws the geometries of countries under the trajectory paths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.fill</code></td>
+<td>
+<p><em>Colour to use to fill the polygons of the base map.</em>
+</p>
+<p><em>default:</em> <code>"grey85"</code>
+</p>
+<p>See <code>colors()</code> for colour options. Alternatively, a hexadecimal color code
+can be provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.colour</code></td>
+<td>
+<p><em>Colour to use for the polygon borders of the base map.</em>
+</p>
+<p><em>default:</em> <code>"grey75"</code>
+</p>
+<p>See <code>colors()</code> for colour options. Alternatively, a hexadecimal color code
+can be provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.alpha</code></td>
+<td>
+<p><em>Transparency of the base map polygons.</em>
+</p>
+<p><em>default:</em> <code>0.8</code>
+</p>
+<p>Must be between <code>0</code> (fully transparent) and <code>1</code> (fully opaque).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.lwd</code></td>
+<td>
+<p><em>Line width of the base map polygon borders.</em>
+</p>
+<p><em>default:</em> <code>0.5</code>
+</p>
+<p>Any numeric value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map.lty</code></td>
+<td>
+<p><em>Line type of the base map polygon borders.</em>
+</p>
+<p><em>default:</em> <code>1</code>
+</p>
+<p>See <code>ggplot2::scale_linetype()</code> for common examples. The default, <code>1</code>,
+draws solid lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet</code></td>
+<td>
+<p>Deprecated. Please use <code>type</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code>ggplot2::coord_sf</code>
+</p>
+
+<dl>
+<dt><code>expand</code></dt>
+<dd>
+<p>If <code>TRUE</code>, the default, adds a small expansion factor to
+the limits to ensure that data and axes don't overlap. If <code>FALSE</code>,
+limits are taken exactly from the data or <code>xlim</code>/<code>ylim</code>.</p>
+</dd>
+<dt><code>datum</code></dt>
+<dd>
+<p>CRS that provides datum to use when generating graticules.</p>
+</dd>
+<dt><code>label_graticule</code></dt>
+<dd>
+<p>Character vector indicating which graticule lines should be labeled
+where. Meridians run north-south, and the letters <code>"N"</code> and <code>"S"</code> indicate that
+they should be labeled on their north or south end points, respectively.
+Parallels run east-west, and the letters <code>"E"</code> and <code>"W"</code> indicate that they
+should be labeled on their east or west end points, respectively. Thus,
+<code>label_graticule = "SW"</code> would label meridians at their south end and parallels at
+their west end, whereas <code>label_graticule = "EW"</code> would label parallels at both
+ends and meridians not at all. Because meridians and parallels can in general
+intersect with any side of the plot panel, for any choice of <code>label_graticule</code> labels
+are not guaranteed to reside on only one particular side of the plot panel. Also,
+<code>label_graticule</code> can cause labeling artifacts, in particular if a graticule line
+coincides with the edge of the plot panel. In such circumstances, <code>label_axes</code> will
+generally yield better results and should be used instead.
+</p>
+<p>This parameter can be used alone or in combination with <code>label_axes</code>.</p>
+</dd>
+<dt><code>label_axes</code></dt>
+<dd>
+<p>Character vector or named list of character values
+specifying which graticule lines (meridians or parallels) should be labeled on
+which side of the plot. Meridians are indicated by <code>"E"</code> (for East) and
+parallels by <code>"N"</code> (for North). Default is <code>"--EN"</code>, which specifies
+(clockwise from the top) no labels on the top, none on the right, meridians
+on the bottom, and parallels on the left. Alternatively, this setting could have been
+specified with <code>list(bottom = "E", left = "N")</code>.
+</p>
+<p>This parameter can be used alone or in combination with <code>label_graticule</code>.</p>
+</dd>
+<dt><code>lims_method</code></dt>
+<dd>
+<p>Method specifying how scale limits are converted into
+limits on the plot region. Has no effect when <code>default_crs = NULL</code>.
+For a very non-linear CRS (e.g., a perspective centered
+around the North pole), the available methods yield widely differing results, and
+you may want to try various options. Methods currently implemented include <code>"cross"</code>
+(the default), <code>"box"</code>, <code>"orthogonal"</code>, and <code>"geometry_bbox"</code>. For method <code>"cross"</code>,
+limits along one direction (e.g., longitude) are applied at the midpoint of the
+other direction (e.g., latitude). This method avoids excessively large limits for
+rotated coordinate systems but means that sometimes limits need to be expanded a
+little further if extreme data points are to be included in the final plot region.
+By contrast, for method <code>"box"</code>, a box is generated out of the limits along both directions,
+and then limits in projected coordinates are chosen such that the entire box is
+visible. This method can yield plot regions that are too large. Finally, method
+<code>"orthogonal"</code> applies limits separately along each axis, and method
+<code>"geometry_bbox"</code> ignores all limit information except the bounding boxes of any
+objects in the <code>geometry</code> aesthetic.</p>
+</dd>
+<dt><code>ndiscr</code></dt>
+<dd>
+<p>Number of segments to use for discretising graticule lines;
+try increasing this number when graticules look incorrect.</p>
+</dd>
+<dt><code>default</code></dt>
+<dd>
+<p>Is this the default coordinate system? If <code>FALSE</code> (the default),
+then replacing this coordinate system with another one creates a message alerting
+the user that the coordinate system is being replaced. If <code>TRUE</code>, that warning
+is suppressed.</p>
+</dd>
+<dt><code>clip</code></dt>
+<dd>
+<p>Should drawing be clipped to the extent of the plot panel? A
+setting of <code>"on"</code> (the default) means yes, and a setting of <code>"off"</code>
+means no. In most cases, the default of <code>"on"</code> should not be changed,
+as setting <code>clip = "off"</code> can cause unexpected results. It allows
+drawing of data points anywhere on the plot, including in the plot margins. If
+limits are set via <code>xlim</code> and <code>ylim</code> and some data points fall outside those
+limits, then those data points may show up in places such as the axes, the
+legend, the plot title, or the plot margins.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>ggplot2</code> plot
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openair::trajPlot()</code>
+</p>
+<p><code>trajMap()</code> for the interactive <code>leaflet</code> equivalent of
+<code>trajMapStatic()</code>
+</p>
+<p>Other static trajectory maps: 
+<code>trajLevelMapStatic()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# colour by height
+trajMapStatic(traj_data) +
+  ggplot2::scale_color_gradientn(colors = openair::openColours())
+
+# colour by PM10, log transform scale
+trajMapStatic(traj_data, colour = "pm10") +
+  ggplot2::scale_color_viridis_c(trans = "log10") +
+  ggplot2::labs(color = openair::quickText("PM10"))
+
+# color by PM2.5, lat/lon projection
+trajMapStatic(traj_data, colour = "pm2.5", crs = sf::st_crs(4326)) +
+  ggplot2::scale_color_viridis_c(option = "turbo") +
+  ggplot2::labs(color = openair::quickText("PM2.5"))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

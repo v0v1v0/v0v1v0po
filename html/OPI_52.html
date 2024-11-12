@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiInitialise_for_Octopus900</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Implementation of opiInitialise for the Octopus900 machine.</h2>
+
+<h3>Description</h3>
+
+<p>This is for internal use only. Use <code>opiInitialise()</code> with
+these Arguments and you will get the Value back.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>serverPort</code></td>
+<td>
+<p>port number on which server is listening for "Octopus900"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eyeSuiteSettingsLocation</code></td>
+<td>
+<p>dir name containing EyeSuite settings for "Octopus900"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eye</code></td>
+<td>
+<p>eye; "right" or "left" for "Octopus900", "Octopus600"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gazeFeed</code></td>
+<td>
+<p>NA or a folder name for "Octopus900"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bigWheel</code></td>
+<td>
+<p>FALSE (standard machine), TRUE for modified aperture wheel for "Octopus900"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pres_buzzer</code></td>
+<td>
+<p>0 (no buzzer),1, 2, 3 (max volume) for "Octopus900"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resp_buzzer</code></td>
+<td>
+<p>0 (no buzzer),1, 2, 3 (max volume) for "Octopus900"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zero_dB_is_10000_asb</code></td>
+<td>
+<p>Is 0 dB 10000 apostilb (TRUE) or or 4000 (FALSE) for "Octopus900"</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the chosen OPI implementation is <code>Octopus900</code>, then you must specify
+a directory and the eye to be tested.
+</p>
+<p><code>serverPort</code> is the TCP/IP port on which the server is listening (on
+localhost).
+</p>
+<p><code>eyeSuiteSettingsLocation</code> is the folder name containing the EyeSuite
+setting files, and should include the trailing slash.
+</p>
+<p><code>eye</code> must be either "left" or "right".
+</p>
+<p><code>gazeFeed</code> is the name of an existing folder into which the video frames
+of eye tracker are recorded. Set to <code>NA</code> for no recording.
+</p>
+<p><code>bigWheel</code> is <code>FALSE</code> for a standard Octopus 900 machine. Some
+research machines are fitted with an alternate aperture wheel that has 24
+sizes, which are accessed with <code>bigWheel</code> is <code>TRUE</code>. The mapping
+from size to 'hole on wheel' is hard coded; see code for details.
+</p>
+<p>If <code>pres_buzzer</code> is greater than zero, a buzzer will sound with each
+stimuli presented.
+</p>
+<p>If <code>resp_buzzer</code> is greater than zero, a buzzer will sound with each
+button press (response). The volume can be one of 0 (no buzzer), 1, 2, or 3
+(max volume). If both buzzers are more than zero, the maximum of the two will
+be used as the volume.
+</p>
+<p>If <code>zero_dB_is_10000_asb</code> is <code>TRUE</code> then 0 dB is taken as 10000
+apostilbs, otherwise 0 dB is taken as 4000 apostilbs.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing <code>err</code> which is
+</p>
+
+<ul>
+<li>
+<p> NULL if successful
+</p>
+</li>
+<li>
+<p> 1 if Octopus900 is already initialised by a previous call to <code>opiInitialize</code>
+</p>
+</li>
+<li>
+<p> 2 if some error occurred that prevented initialisation.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+  chooseOpi("Octopus900")
+  res &lt;- opiInitialize(serverPort = 50001,
+                       eyeSuiteSettingsLocation = "C:/ProgramData/Haag-Streit/EyeSuite/",
+                       eye = "", gazeFeed = "", bigWheel = FALSE,
+                       pres_buzzer = 0, resp_buzzer = 0, zero_dB_is_10000_asb = TRUE)
+  if (!is.null(res$err))
+      stop("opiInitialize failed")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

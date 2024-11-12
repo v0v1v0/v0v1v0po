@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Test functions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Test functions of <code>x</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>Several test functions of varying complexity are available. They are defined on [0,1].
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">guirland(x)
+
+sin1(x)
+
+difficult(x)
+
+difficult2(x)
+
+double_sine(x, rho1 = 0.3, rho2 = 0.8, tmax = 0.5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector specifying the location where the function is to be evaluated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho1, rho2, tmax</code></td>
+<td>
+<p>additional parameters for double_sine.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These test functions are translated from the Matlab and Python codes in the references.
+</p>
+
+
+<h3>References</h3>
+
+<p>M. Valko, A. Carpentier and R. Munos (2013), Stochastic Simultaneous Optimistic Optimization,
+<em>ICML</em>, 19-27 <a href="https://inria.hal.science/hal-00789606">https://inria.hal.science/hal-00789606</a>. Matlab code: <a href="https://team.inria.fr/sequel/software/StoSOO/">https://team.inria.fr/sequel/software/StoSOO/</a>. <br><br>
+J.-B. Grill, M. Valko and R. Munos (2015), Black-box optimization of noisy functions with unknown smoothness,
+<em>NIPS</em>, 667-675 <a href="https://inria.hal.science/hal-01222915">https://inria.hal.science/hal-01222915</a>. Python code: <a href="https://team.inria.fr/sequel/software/POO/">https://team.inria.fr/sequel/software/POO/</a>. <br><br></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">par(mfrow = c(2,3))
+
+curve(guirland, n = 501)
+curve(sin1)
+curve(difficult, xlim = c(1e-8, 1), n = 1001)
+xgrid &lt;- seq(0, 1, length.out = 500)
+plot(xgrid, sapply(xgrid, difficult2), type = 'l', ylab = "difficult2(x)")
+plot(xgrid, sapply(xgrid, double_sine), type = 'l', ylab = "double_sine(x) (default)")
+double_sine2 &lt;- function(x) double_sine(x, rho1 = 0.8, rho2 = 0.3)
+plot(xgrid, sapply(xgrid, double_sine2), type = 'l', ylab = "double_sine(x) (modified)")
+
+par(mfrow = c(1,1))
+</code></pre>
+
+
+</div>

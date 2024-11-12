@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bignum</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Big number arithmetic</h2>
+
+<h3>Description</h3>
+
+<p>Basic operations for working with large integers. The <code>bignum</code>
+function converts a positive integer, string or raw vector into a bignum type.
+All basic Arithmetic and Comparison operators such as
+<code>+</code>, <code>-</code>, <code>*</code>, <code>^</code>, <code>%%</code>, <code>%/%</code>, <code>==</code>,
+<code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code> and <code>&gt;=</code> are implemented for
+bignum objects. The
+<a href="https://en.wikipedia.org/wiki/Modular_exponentiation">Modular exponent</a>
+(<code>a^b %% m</code>) can be calculated using <code>bignum_mod_exp()</code>
+when <code>b</code> is too large for calculating <code>a^b</code> directly.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bignum(x, hex = FALSE)
+
+bignum_mod_exp(a, b, m)
+
+bignum_mod_inv(a, m)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an integer, string (hex or dec) or raw vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hex</code></td>
+<td>
+<p>set to TRUE to parse strings as hex rather than decimal notation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>bignum value for <code>(a^b %% m)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>bignum value for <code>(a^b %% m)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>bignum value for <code>(a^b %% m)</code></p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># create a bignum
+x &lt;- bignum(123L)
+y &lt;- bignum("123456789123456789")
+z &lt;- bignum("D41D8CD98F00B204E9800998ECF8427E", hex = TRUE)
+
+# Basic arithmetic
+div &lt;- z %/% y
+mod &lt;- z %% y
+z2 &lt;- div * y + mod
+stopifnot(z2 == z)
+stopifnot(div &lt; z)
+</code></pre>
+
+
+</div>

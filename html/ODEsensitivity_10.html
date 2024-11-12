@@ -1,0 +1,208 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.ODEsobol</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot of the Results of Sobol' Sensitivity Analysis for Objects of Class 
+<code>ODEsobol</code>
+</h2>
+
+<h3>Description</h3>
+
+<p><code>plot.ODEsobol</code> plots the results of Sobol' SA for objects of class 
+<code>ODEsobol</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ODEsobol'
+plot(x, pars_plot = NULL, state_plot = names(x)[1],
+  colors_pars = NULL, main_title = NULL, legendPos = "outside",
+  type = "l", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>[<code>ODEsobol</code>]<br>
+output of <code>ODEsobol</code> (of class <code>ODEsobol</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pars_plot</code></td>
+<td>
+<p>[<code>character(k)</code>]<br>
+names of the <code>k</code> parameters to be plotted. If <code>NULL</code> (the 
+default), all parameters are plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state_plot</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+name of the state variable to be plotted. Defaults to the name of the
+first state variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors_pars</code></td>
+<td>
+<p>[<code>character(&gt;= k)</code>]<br>
+vector of the colors to be used for the <code>k</code> different parameters. Must
+be at least of length <code>k</code> (only the first <code>k</code> elements will be
+used, though). If <code>NULL</code> (the default), <code>rainbow(k)</code> is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main_title</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+common title for the two graphics. Default is <code>NULL</code>, which means
+an automatic title is generated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legendPos</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+keyword for the legend position, either one of those specified in
+<code>legend</code> or <code>"outside"</code> (the default), which means the 
+legend is placed under the plot (useful, if there are many parameters in 
+the model).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+plot type, i.e. <code>"p", "l", "b", "c", "o", "s", "h"</code> or <code>"n"</code>. 
+Defaults to <code>"l"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>plot.default</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>First order and total Sobol' sensitivity indices are plotted for one state 
+variable (chosen by argument <code>state_plot</code>) and the parameters named
+in <code>pars_plot</code> against time. If no parameters are named in 
+<code>pars_plot</code>, the sensitivity indices for all parameters are plotted.
+</p>
+
+
+<h3>Value</h3>
+
+<p>TRUE (invisible; for testing purposes).
+</p>
+
+
+<h3>Note</h3>
+
+<p>Not all arguments of <code>plot.default</code> can be passed by 
+<code>...</code>, for example <code>xlab</code> and <code>ylab</code> are fixed.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stefan Theers, Frank Weber
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ODEsobol, soboljansen,
+sobolmartinez</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##### Lotka-Volterra equations #####
+LVmod &lt;- function(Time, State, Pars) {
+  with(as.list(c(State, Pars)), {
+    Ingestion    &lt;- rIng  * Prey * Predator
+    GrowthPrey   &lt;- rGrow * Prey * (1 - Prey/K)
+    MortPredator &lt;- rMort * Predator
+    
+    dPrey        &lt;- GrowthPrey - Ingestion
+    dPredator    &lt;- Ingestion * assEff - MortPredator
+    
+    return(list(c(dPrey, dPredator)))
+  })
+}
+LVpars  &lt;- c("rIng", "rGrow", "rMort", "assEff", "K")
+LVbinf &lt;- c(0.05, 0.05, 0.05, 0.05, 1)
+LVbsup &lt;- c(1.00, 3.00, 0.95, 0.95, 20)
+LVinit  &lt;- c(Prey = 1, Predator = 2)
+LVtimes &lt;- c(0.01, seq(1, 50, by = 1))
+set.seed(59281)
+# Warning: The following code might take very long!
+
+LVres_sobol &lt;- ODEsobol(mod = LVmod,
+                        pars = LVpars,
+                        state_init = LVinit,
+                        times = LVtimes,
+                        n = 500,
+                        rfuncs = "runif",
+                        rargs = paste0("min = ", LVbinf,
+                                       ", max = ", LVbsup),
+                        sobol_method = "Martinez",
+                        ode_method = "lsoda",
+                        parallel_eval = TRUE,
+                        parallel_eval_ncores = 2)
+my_cols &lt;- c("firebrick", "orange2", "dodgerblue", 
+             "forestgreen", "black")
+plot(LVres_sobol, colors_pars = my_cols)
+plot(LVres_sobol, pars_plot = c("rGrow", "rMort"), state_plot = "Predator", 
+     colors_pars = my_cols[2:3])
+
+
+##### A network of 4 mechanical oscillators connected in a circle #####
+M_mat &lt;- rep(2, 4)
+K_mat &lt;- diag(rep(2 * (2*pi*0.17)^2, 4))
+K_mat[1, 2] &lt;- K_mat[2, 3] &lt;- 
+  K_mat[3, 4] &lt;- K_mat[1, 4] &lt;- 2 * (2*pi*0.17)^2 / 10
+D_mat &lt;- diag(rep(0.05, 4))
+library("ODEnetwork")
+lfonet &lt;- ODEnetwork(masses = M_mat, dampers = D_mat, springs = K_mat)
+LFOpars &lt;- c("k.1", "k.2", "k.3", "k.4",
+             "d.1", "d.2", "d.3", "d.4")
+LFObinf &lt;- c(rep(0.2, 4), rep(0.01, 4))
+LFObsup &lt;- c(rep(20, 4), rep(0.1, 4))
+lfonet &lt;- setState(lfonet, state1 = rep(2, 4), state2 = rep(0, 4))
+LFOtimes &lt;- seq(25, 150, by = 2.5)
+set.seed(1739)
+# Warning: The following code might take very long!
+
+suppressWarnings(
+  LFOres_sobol &lt;- ODEsobol(mod = lfonet,
+                           pars = LFOpars,
+                           times = LFOtimes,
+                           n = 500,
+                           rfuncs = "runif",
+                           rargs = paste0("min = ", LFObinf,
+                                          ", max = ", LFObsup),
+                           sobol_method = "Martinez",
+                           parallel_eval = TRUE,
+                           parallel_eval_ncores = 2)
+)
+plot(LFOres_sobol, pars_plot = paste0("k.", 1:4), state_plot = "x.2",
+     colors_pars = my_cols)
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rand_pvals</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate P-values using empirical randomization null distribution</h2>
+
+<h3>Description</h3>
+
+<p>Randomize the treatment assignment within strata to generate the randomization distribution of covariate balance
+given the strata and observed covariate values. Compare the observed covariate balance to this null distribution
+to calculate P-values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rand_pvals(
+  object = NULL,
+  z = NULL,
+  X = NULL,
+  base_strata = NULL,
+  refined_strata = NULL,
+  options = list()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an optional object of class <code>strat</code>,
+typically created using <code>strat()</code>
+or as a result of a call to <code>prop_strat()</code> or <code>refine()</code>.
+If not provided, <code>z</code> and <code>X</code> must be specified</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>vector of treatment assignment; only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>covariate matrix/data.frame; only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_strata</code></td>
+<td>
+<p>optional initial stratification for which to calculate
+the empirical randomization null distribution;
+only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refined_strata</code></td>
+<td>
+<p>optional refined stratification for which to calculate
+the empirical randomization null distribution;
+only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>list of additional options, listed in the <code>details</code> below</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The literature on multivariate matching has recently developed a new way of evaluating covariate imbalances,
+comparing the imbalances found in an observational matched sample to
+the imbalances that would have been produced in the same data by randomization
+(Pimentel et al. 2015, Yu 2021).
+We modify that approach for use with strata, randomizing patients within strata.
+For a given stratification, we create a large number of stratified randomized experiments,
+taking the actual patients in their actual strata, and randomizing them to
+treatment or control with fixed within-stratum sample sizes.
+</p>
+<p>To investigate how the actual observational imbalance in covariates compares to
+covariate imbalance in the randomized experiments built from the same strata, patients and covariates,
+we look at 4 metrics– the scaled objective value, which is a weighted combination
+of the maximum and the sum of all SMDs, depending on the <code>criterion</code> argument,
+the maximum and average SMDs across covariates and strata,
+and the average SMD across strata for each covariate individually.
+For each of these metrics, we record the observational value,
+the median and minimum of the randomized values,
+and the proportion of randomized values more imbalanced than the observational value (the P-value).
+</p>
+<p>The <code>options</code> list argument can contain any of the following elements:
+</p>
+
+<ul>
+<li>
+<p>nrand: how many times to randomize the treatment assignment when forming the null distribution.
+Default is 10000
+</p>
+</li>
+<li>
+<p>criterion: which optimization criterion to use when calculating the objective value.
+Options are "max", "sum", or "combo", referring to whether to include the
+maximum standardized mean difference (SMD), the sum of all SMDs,
+or a combination of the maximum and the sum. The default is "combo"
+</p>
+</li>
+<li>
+<p>wMax: how much to weight the maximum standardized mean difference compared to the sum.
+Only used if criterion is set to "combo". Default is 5
+</p>
+</li>
+<li>
+<p>incl_base: whether to include columns for the initial stratification in the table.
+Default is <code>TRUE</code> if a base stratification is provided
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>List with three components:
+</p>
+
+<ul>
+<li>
+<p>pvals: list containing <code>base</code> and <code>refined</code> elements, each of which is a list with randomization P-values
+for the objective value (<code>NULL</code> for the base stratification),
+the maximum standardized mean difference (SMD),
+the average SMD across covariates and strata,
+and for the average SMD across strata for each covariate (this element is a vector)
+</p>
+</li>
+<li>
+<p>obs_details: list containing <code>base</code> and <code>refined</code> elements, each of which is a list with
+the observed values for
+the objective value (<code>NULL</code> for the base stratification),
+the maximum standardized mean difference (SMD),
+and for the average SMD across strata for each covariate (this element is a vector)
+</p>
+</li>
+<li>
+<p>rand_details: list containing <code>base</code> and <code>refined</code> elements, each of which is a list with
+a vector of <code>nrand</code> randomized values for
+the objective value (<code>NULL</code> for the base stratification),
+the maximum standardized mean difference (SMD),
+and for the average SMD across strata for each covariate
+(this element is a matrix with <code>nrand</code> rows and a column for each covariate)
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Choose 500 patients and 5 covariates to work with for the example
+set.seed(15)
+samp &lt;- sample(1:nrow(rhc_X), 500)
+cov_samp &lt;- sample(1:26, 5)
+
+# Let it create propensity score strata for you and then refine them
+ref &lt;- refine(X = rhc_X[samp, cov_samp], z = rhc_X[samp, "z"])
+
+# Calculate info for covariate balance randomization distribution
+rpvals &lt;- rand_pvals(object = ref, options = list(nrand = 100))
+
+# Look at pvals before and after
+rpvals$pvals
+</code></pre>
+
+
+</div>

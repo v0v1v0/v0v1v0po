@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>avg_dist_closest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>avg_dist_closest()</h2>
+
+<h3>Description</h3>
+
+<p>This function computes average distances between levels of two categorical variables located in two distinct databases.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">avg_dist_closest(proxim, percent_closest = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>proxim</code></td>
+<td>
+<p>a <code>proxim_dist</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent_closest</code></td>
+<td>
+<p>a ratio between 0 and 1 corresponding to the desired part of rows (or statistical units, or individuals) that will participate to the computation of the average distances between levels of factors or
+between an individual (a row) and levels of only one factor. Indeed, target variables are factors and each level of factor is characterized by a subset of rows, themselves characterized by their covariate profiles.
+These rows can be ordered according to their distances at their factor level. When this ratio is set to 1 (default setting), all rows participate to the computation, nevertheless when this ratio is less than 1, only rows with
+the smallest factor level distances will be kept for the computation (see 'Details').</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>avg_dist_closest</code> is an intermediate function for the implementation of original algorithms dedicated to the solving of recoding problems in data fusion using Optimal Transportation theory (for more details, consult the corresponding algorithms called
+<code>OUTCOME</code>, <code>R_OUTCOME</code>, <code>JOINT</code> and <code>R_JOINT</code>, in the reference (2)). The function <code>avg_dist_closest</code> is so directly implemented in the <code>OT_outcome</code> and <code>OT_joint</code> functions but can also be used separately.
+The function <code>avg_dist_closest</code> uses, in particular, the distance matrix D (that stores distances between rows of A and B) from the function <code>proxim_dist</code> to produce three distinct matrices saved in a list object.
+Therefore, the function requires in input, the specific output of the function <code>proxim_dist</code> which is available in the package and so must be used beforehand.
+In consequence, do not use this function directly on your database, and do not hesitate to consult the provided examples provided for a better understanding.
+</p>
+<p>DEFINITION OF THE COST MATRIX
+</p>
+<p>Assuming that A and B are two databases with a set of shared variables and that a same information (referred to a same target population) is stored as a variable <code class="reqn">Y</code> in A and <code class="reqn">Z</code> in B, such that <code class="reqn">Y</code> is unknown in B and <code class="reqn">Z</code> is unknown in A, whose encoding depends on the database (<code class="reqn">n_Y</code> levels in A and <code class="reqn">n_Z</code> levels in B).
+A distance between one given level y of <code class="reqn">Y</code> and one given level z of <code class="reqn">Z</code> is estimated by averaging the distances between the two subsets of individuals (units or rows) assigned to y in A and z in B, characterized by their vectors of covariates.
+The distance between two individuals depends on the variations between the shared covariates, and so depends on the chosen distance function using the function <code>proxim_dist</code>.
+For these computations, all the individuals concerned by these two levels can be taken into account, or only a part of them, depending on the argument <code>percent_closest</code>.
+When <code>percent_closest</code> &lt; 1, the average distance between an individual <code class="reqn">i</code> and a given level of factor z only uses the corresponding part of individuals related to z that are the closest to <code class="reqn">i</code>.
+Therefore, this choice influences the estimations of average distances between levels of factors but also permits to reduce time computation when necessary.
+</p>
+<p>The average distance between each individual of <code class="reqn">Y</code> (resp. <code class="reqn">Z</code>) and each levels of <code class="reqn">Z</code> (resp. <code class="reqn">Y</code>) are returned in output, in the object <code>DindivA</code> (<code>DindivB</code> respectively).
+The average distance between each levels of <code class="reqn">Y</code> and each levels of <code class="reqn">Z</code> are returned in a matrix saved in output (the object <code>Davg</code>).
+<code>Davg</code> returns the computation of the cost matrix D, whose dimensions (<code class="reqn">n_Y \times n_Z</code>) correspond to the number of levels of <code class="reqn">Y</code> (rows) and <code class="reqn">Z</code> (columns).
+This matrix can be seen as the ability for an individual (row) to move from a given level of the target variable (<code class="reqn">Y</code>) in A to a given level of <code class="reqn">Z</code> in the database B (or vice versa).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of 3 matrices is returned:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Davg</code></td>
+<td>
+<p>the cost matrix whose number of rows corresponds to <code class="reqn">n_Y</code>, the number of levels of the target variable <code class="reqn">Y</code> in the database A, and whose number of columns corresponds to <code class="reqn">n_Z</code>: the number of levels of the target variable in B.
+In this case, the related cost matrix can be interpreted as the ability to move from one level of <code class="reqn">Y</code> in A to one level of <code class="reqn">Z</code> in B.
+Davg[P,Q] refers to the average distance between the modality P of <code class="reqn">Y</code> (only known in A) and modality <code class="reqn">Q</code> of <code class="reqn">Z</code> (only known in B).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DindivA</code></td>
+<td>
+<p>a matrix whose number of rows corresponds to the number of rows of the first database A and number of columns corresponds to <code class="reqn">n_Z</code>, the number of levels of the target variable <code class="reqn">Z</code> in the second database B.
+DindivA[i,Q] refers to the average distance between the <code class="reqn">i^{th}</code> individual (or row) of the first database and a chosen proportion of individuals (<code>percent_closest</code> set by the user) of the second database having the modality <code class="reqn">Q</code> of <code class="reqn">Z</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DindivB</code></td>
+<td>
+<p>a matrix whose number of rows corresponds to the number of rows of the second database B and number of columns corresponds to nA, the number of levels of the target variable in the first database A.
+DindivB[k,P] refers to the average distance between the <code class="reqn">k^{th}</code> individual (or row) of the second database and a chosen proportion of individuals (depending on <code>percent_closest</code>) of the first database having the modality P of <code class="reqn">Y</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gregory Guernec, Valerie Gares, Jeremy Omer
+</p>
+<p><a href="mailto:otrecod.pkg@gmail.com">otrecod.pkg@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li>
+<p> Gares V, Dimeglio C, Guernec G, Fantin F, Lepage B, Korosok MR, savy N (2019). On the use of optimal transportation theory to recode variables and application to database merging. The International Journal of Biostatistics.
+Volume 16, Issue 1, 20180106, eISSN 1557-4679. doi:10.1515/ijb-2018-0106
+</p>
+</li>
+<li>
+<p> Gares V, Omer J (2020) Regularized optimal transport of covariates and outcomes in data recoding. Journal of the American Statistical Association. doi: <a href="https://doi.org/10.1080/01621459.2020.1775615">10.1080/01621459.2020.1775615</a>
+</p>
+</li>
+</ol>
+<h3>See Also</h3>
+
+<p><code>proxim_dist</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(simu_data)
+### The covariates of the data are prepared according to the distance chosen
+### using the transfo_dist function
+
+### Example with The Manhattan distance
+
+man1 &lt;- transfo_dist(simu_data,
+  quanti = c(3, 8), nominal = c(1, 4:5, 7),
+  ordinal = c(2, 6), logic = NULL, prep_choice = "M"
+)
+mat_man1 &lt;- proxim_dist(man1, norm = "M")
+
+# proxim_dist() fixes the chosen distance function,
+# and defines neighborhoods between profiles and individuals
+
+# The following row uses only 80 percents of individuals of each level
+# of factors for the computation of the average distances:
+
+neig_man1 &lt;- avg_dist_closest(mat_man1, percent_closest = 0.80)
+
+</code></pre>
+
+
+</div>

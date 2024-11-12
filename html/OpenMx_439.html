@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxRowObjective</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>DEPRECATED: Create MxRowObjective Object</h2>
+
+<h3>Description</h3>
+
+<p>WARNING: Objective functions have been deprecated as of OpenMx 2.0.  
+</p>
+<p>Please use mxFitFunctionRow() instead.  As a temporary workaround, mxRowObjective returns a list containing a NULL MxExpectation object and an MxFitFunctionRow object.
+</p>
+<p>All occurrences of
+</p>
+<p>mxRowObjective(rowAlgebra, reduceAlgebra, dimnames,
+rowResults = "rowResults", filteredDataRow = "filteredDataRow",
+existenceVector = "existenceVector")
+</p>
+<p>Should be changed to
+</p>
+<p>mxFitFunctionRow(rowAlgebra, reduceAlgebra, dimnames,
+rowResults = "rowResults", filteredDataRow = "filteredDataRow",
+existenceVector = "existenceVector")
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rowAlgebra</code></td>
+<td>
+<p>A character string indicating the name of the algebra to be evaluated row-wise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reduceAlgebra</code></td>
+<td>
+<p>A character string indicating the name of the algebra that collapses the row results into a single number which is then optimized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dimnames</code></td>
+<td>
+<p>A character vector of names corresponding to columns be extracted from the data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowResults</code></td>
+<td>
+<p>The name of the auto-generated "rowResults" matrix.  See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filteredDataRow</code></td>
+<td>
+<p>The name of the auto-generated "filteredDataRow" matrix. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>existenceVector</code></td>
+<td>
+<p>The name of the auto-generated "existenceVector" matrix. See details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Objective functions are functions for which free parameter values are chosen such that the value of the objective function is minimized. The mxRowObjective function evaluates a user-defined MxAlgebra object called the ‘rowAlgebra’ in a row-wise fashion.  It then stores results of the row-wise evaluation in another MxAlgebra object called the ‘rowResults’.  Finally, the mxRowObjective function collapses the row results into a single number which is then used for optimization.  The MxAlgebra object named by the ‘reduceAlgebra’ collapses the row results into a single number.
+</p>
+<p>The ‘filteredDataRow’ is populated in a row-by-row fashion with all the non-missing data from the current row.  You cannot assume that the length of the filteredDataRow matrix remains constant (unless you have no missing data). The ‘existenceVector’ is populated in a row-by-row fashion with a value of 1.0 in column j if a non-missing value is present in the data set in column j, and a value of 0.0 otherwise. Use the functions omxSelectRows, omxSelectCols, and omxSelectRowsAndCols to shrink other matrices so that their dimensions will be conformable to the size of ‘filteredDataRow’. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Please use mxFitFunctionRow() instead.  As a temporary workaround, mxRowObjective returns a list containing a NULL MxExpectation object and an MxFitFunctionRow object.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Model that adds two data columns row-wise, then sums that column
+# Notice no optimization is performed here.
+
+library(OpenMx)
+
+xdat &lt;- data.frame(a=rnorm(10), b=1:10) # Make data set
+amod &lt;- mxModel(model="example1",
+            mxData(observed=xdat, type='raw'),
+            mxAlgebra(sum(filteredDataRow), name = 'rowAlgebra'),
+            mxAlgebra(sum(rowResults), name = 'reduceAlgebra'),
+            mxFitFunctionRow(
+                rowAlgebra='rowAlgebra',
+                reduceAlgebra='reduceAlgebra',
+                dimnames=c('a','b'))
+)
+amodOut &lt;- mxRun(amod)
+mxEval(rowResults, model=amodOut)
+mxEval(reduceAlgebra, model=amodOut)
+
+# Model that find the parameter that minimizes the sum of the
+#  squared difference between the parameter and a data row.
+
+bmod &lt;- mxModel(model="example2",
+            mxData(observed=xdat, type='raw'),
+            mxMatrix(values=.75, ncol=1, nrow=1, free=TRUE, name='B'),
+            mxAlgebra((filteredDataRow - B) ^ 2, name='rowAlgebra'),
+            mxAlgebra(sum(rowResults), name='reduceAlgebra'),
+            mxFitFunctionRow(
+                rowAlgebra='rowAlgebra',
+                reduceAlgebra='reduceAlgebra',
+                dimnames=c('a'))
+)
+bmodOut &lt;- mxRun(bmod)
+mxEval(B, model=bmodOut)
+mxEval(reduceAlgebra, model=bmodOut)
+mxEval(rowResults, model=bmodOut)
+</code></pre>
+
+
+</div>

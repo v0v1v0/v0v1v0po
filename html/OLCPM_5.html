@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getcv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>calculate critical values</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates critical values for the partial-sum and worst-case
+statistics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getcv(alpha = 0.05, method = "ps", eta = 0.5, simul = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>a number in <code class="reqn">(0,1)</code>, indicating the significance level of
+the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>“ps” for the partial-sum staistic, others for the worst-case
+statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>a number in <code class="reqn">[0,1]</code>, a scaling parameter required for "ps"
+method; see more details in He et al. (2021).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simul</code></td>
+<td>
+<p>logical value, woking only for "ps" method with
+<code class="reqn">\eta</code> not equal to 0.5.  When <em>simul</em> is true, the
+function will return approximated critical values based on 50000
+replications of simulated Wiener process on a grid of 10000 points in
+<code class="reqn">[0,1]</code>. Otherwise, the function first checks for the nearest pair of
+<code class="reqn">(\eta,\alpha)</code> in the preserved <em>cv.table</em>, and
+then returns the corresponding critical value.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For the partial-sum statistic with <code class="reqn">\eta=0.5</code> or the worst-case
+statistic, the critical value is simply <code class="reqn">-log(-log(1-alpha))</code>. For the
+partial-sum statistic with <code class="reqn">\eta</code> not equal to 0.5, the critical
+value of the scaled Wiener process is approximated by simulated data or from
+our preserved table <em>cv.table</em>, covering <code class="reqn">\eta</code> in
+<code class="reqn">[0.01,0.49]</code> with step size equal to 0.01 and <code class="reqn">\alpha</code> in
+<code class="reqn">[0.001,0.500]</code> with step size equal to 0.001. See more details for the
+test statistics in He et al. (2021).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a real number.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Yong He, Xinbing Kong, Lorenzo Trapani, Long Yu
+</p>
+
+
+<h3>References</h3>
+
+<p>He Y, Kong X, Trapani L, &amp; Yu L(2021). Online change-point
+detection for matrix-valued time series with latent two-way factor
+structure. <em>arXiv preprint</em>, arXiv:2112.13479.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+getcv(0.05,method="ps",eta=0.25)
+getcv(0.05,method="ps",eta=0.25,simul=1)
+getcv(0.10,method="wc")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

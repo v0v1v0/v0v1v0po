@@ -1,0 +1,215 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otrimleg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OTRIMLE for a range of numbers of clusters with density-based cluster quality statistic</h2>
+
+<h3>Description</h3>
+
+<p>Computes Optimally Tuned Robust Improper Maximum Likelihood Clustering
+(OTRIMLE), see <code>otrimle</code>,
+together with the
+density-based cluster quality statistics Q (Hennig and Coretto 2021)
+for a range of values of the number of clusters. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otrimleg(dataset, G=1:6, multicore=TRUE, ncores=detectCores(logical=FALSE)-1,
+   erc=20, beta0=0, fixlogicd=NULL, monitor=1, dmaxq=qnorm(0.9995))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataset</code></td>
+<td>
+<p>something that can be coerced into an
+observations times variables matrix. The dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+<p>vector of integers (normally starting from 1). Numbers of
+clusters to be considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multicore</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, parallel computing is used
+through the function <code>mclapply</code> from package
+<code>parallel</code>; read warnings there if you intend to use this; it
+won't work on Windows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p>integer. Number of cores for parallelisation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>erc</code></td>
+<td>
+<p>A number larger or equal than one specifying the maximum
+allowed ratio between within-cluster covariance matrix
+eigenvalues. See <code>otrimle</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta0</code></td>
+<td>
+<p>A non-negative constant, penalty term for noise, to be
+passed as <code>beta</code> to  <code>otrimle</code>, see documentation
+there.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixlogicd</code></td>
+<td>
+<p>numeric of <code>NULL</code>. Value for the
+logarithm of the improper
+constant density <code>logicd</code>, see
+<code>rimle</code>, which is run instead of <code>otrimle</code>
+if this is not <code>NULL</code>. <code>NULL</code> means that <code>otrimle</code>
+determines it from the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>monitor</code></td>
+<td>
+<p>0 or 1. If 1, progress messages are printed on screen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dmaxq</code></td>
+<td>
+<p>numeric. Passed as <code>maxq</code> to
+<code>kerndensmeasure</code>. The interval considered for the
+one-dimensional density estimator is <code>(-maxq,maxq)</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For estimating the number of clusters this is meant to be called by
+<code>otrimlesimg</code>. The output of <code>otrimleg</code> is not
+meant to be used directly for estimating the number of clusters, see
+Hennig and Coretto (2021).</p>
+
+
+<h3>Value</h3>
+
+<p><code>otrimleg</code> returns a list
+containing the components <code>solution, iloglik, ibic, criterion,
+    logicd, noiseprob, denscrit, ddpm</code>. All of these are lists or
+vectors of which the component number is the number of clusters.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>solution</code></td>
+<td>
+<p>list of output objects of <code>otrimle</code> or
+<code>rimle</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iloglik</code></td>
+<td>
+<p>vector of improper likelihood values from
+<code>otrimle</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ibic</code></td>
+<td>
+<p>vector of improper BIC-values (small is good) computed
+from <code>iloglik</code> and the numbers of parameters. Note that the
+behaviour of the improper likelihood is not compatible with the standard
+use of the BIC, so this is experimental and should not be trusted
+for choosing the number of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>criterion</code></td>
+<td>
+<p>vector of values of OTRIMLE criterion, see
+<code>otrimle</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noiseprob</code></td>
+<td>
+<p>vector of estimated noise proportions,
+<code>exproportion[1]</code> from <code>otrimle</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>denscrit</code></td>
+<td>
+<p>vector of density-based cluster quality statistics Q
+(Hennig and Coretto 2021) as provided by the
+<code>measure</code>-component of
+<code>kerndensmeasure</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ddpm</code></td>
+<td>
+<p>list of the vector of cluster-wise density-based cluster
+quality measures as provided by the
+<code>ddpm</code>-component of <code>kerndensmeasure</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Christian Hennig
+<a href="mailto:christian.hennig@unibo.it">christian.hennig@unibo.it</a>
+<a href="https://www.unibo.it/sitoweb/christian.hennig/en/">https://www.unibo.it/sitoweb/christian.hennig/en/</a></p>
+
+
+<h3>References</h3>
+
+<p>Coretto, P.  and C. Hennig (2016).  Robust improper maximum
+likelihood: tuning, computation, and a comparison with other
+methods for robust Gaussian clustering.  <em>Journal of the American
+Statistical Association</em>, Vol. 111(516), pp. 1648-1659.  doi:
+10.1080/01621459.2015.1100996
+</p>
+<p>P. Coretto and C. Hennig (2017).  Consistency, breakdown
+robustness, and algorithms for robust improper maximum likelihood
+clustering.  <em>Journal of Machine Learning Research</em>, Vol. 18(142),
+pp. 1-39.  <a href="https://jmlr.org/papers/v18/16-382.html">https://jmlr.org/papers/v18/16-382.html</a>
+</p>
+<p>Hennig, C. and P.Coretto (2021). An adequacy approach for deciding the
+number of clusters for OTRIMLE robust Gaussian mixture based
+clustering. To appear in <em>Australian and New Zealand Journal of
+Statistics</em>, <a href="https://arxiv.org/abs/2009.00921">https://arxiv.org/abs/2009.00921</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>otrimle</code>, <code>rimle</code>, <code>otrimlesimg</code>,
+<code>kerndensmeasure</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">   data(banknote)
+   selectdata &lt;- c(1:30,101:110,117:136,160:161)
+   x &lt;- banknote[selectdata,5:7]
+   obanknote &lt;- otrimleg(x,G=1:2,multicore=FALSE)
+</code></pre>
+
+
+</div>

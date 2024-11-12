@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxAlgebraObjective</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>DEPRECATED:  Create MxAlgebraObjective Object</h2>
+
+<h3>Description</h3>
+
+<p>WARNING: Objective functions have been deprecated as of OpenMx 2.0.  
+</p>
+<p>Please use MxFitFunctionAlgebra() instead.  As a temporary workaround, MxAlgebraObjective returns a list containing a NULL MxExpectation object and an MxFitFunctionAlgebra object.
+</p>
+<p>All occurrences of
+</p>
+<p>mxAlgebraObjective(algebra, numObs = NA, numStats = NA)
+</p>
+<p>Should be changed to
+</p>
+<p>mxFitFunctionAlgebra(algebra, numObs = NA, numStats = NA)
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>algebra</code></td>
+<td>
+<p>A character string indicating the name of an MxAlgebra or MxMatrix object to use for optimization.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numObs</code></td>
+<td>
+<p>(optional) An adjustment to the total number of observations in the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numStats</code></td>
+<td>
+<p>(optional) An adjustment to the total number of observed statistics in the model.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>NOTE: THIS DESCRIPTION IS DEPRECATED.  Please change to using mxFitFunctionAlgebra as shown in the example below.
+</p>
+<p>Fit functions are functions for which free parameter values are chosen such that the value of the objective function is minimized. While the other fit functions in OpenMx require an expectation function for the model, the <code>mxAlgebraObjective</code> function uses the referenced <code>MxAlgebra</code> or <code>MxMatrix</code> object as the function to be minimized.
+</p>
+<p>If a model's primary objective function is a <code>mxAlgebraObjective</code> objective function, then the referenced algebra in the objective function must return a 1 x 1 matrix (when using OpenMx's default optimizer).  There is no restriction on the dimensions of an objective function that is not the primary, or ‘topmost’, objective function.
+</p>
+<p>To evaluate an algebra objective function, place the following objects in a <code>MxModel</code> object: a <code>MxAlgebraObjective</code>, <code>MxAlgebra</code> and <code>MxMatrix</code> entities referenced by the <code>MxAlgebraObjective</code>, and optional <code>MxBounds</code> and <code>MxConstraint</code> entities. This model may then be evaluated using the <code>mxRun</code> function. The results of the optimization may be obtained using the <code>mxEval</code> function on the name of the <code>MxAlgebra</code>, after the model has been run.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list containing a NULL MxExpectation object and an MxFitFunctionAlgebra object.  MxFitFunctionAlgebra objects should be included with models with referenced <code>MxAlgebra</code> and <code>MxMatrix</code> objects.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>mxAlgebra to create an algebra suitable as a reference function to be minimized. More information about the OpenMx package may be found here. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create and fit a very simple model that adds two numbers using mxFitFunctionAlgebra
+
+library(OpenMx)
+
+# Create a matrix 'A' with no free parameters
+A &lt;- mxMatrix('Full', nrow = 1, ncol = 1, values = 1, name = 'A')
+
+# Create an algebra 'B', which defines the expression A + A
+B &lt;- mxAlgebra(A + A, name = 'B')
+
+# Define the objective function for algebra 'B'
+objective &lt;- mxFitFunctionAlgebra('B')
+
+# Place the algebra, its associated matrix and 
+# its objective function in a model
+tmpModel &lt;- mxModel(model="Addition", A, B, objective)
+
+# Evalulate the algebra
+tmpModelOut &lt;- mxRun(tmpModel)
+
+# View the results
+tmpModelOut$output$minimum
+</code></pre>
+
+
+</div>

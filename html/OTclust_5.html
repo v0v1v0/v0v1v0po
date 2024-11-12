@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ensemble</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate an ensemble of partitions.</h2>
+
+<h3>Description</h3>
+
+<p>Generate multiple clustering results (that is, partitions) based on multiple versions of perturbed data using a specified baseline clustering method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ensemble(data, nbs, clust_param, clustering = "kmeans", perturb_method = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>– data that will be perturbed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nbs</code></td>
+<td>
+<p>– the number of clustering partitions to be generated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clust_param</code></td>
+<td>
+<p>– parameters for pre-defined clustering methods. If clustering is "kmeans", "Mclust", "hclust", this is an integer indicating the number of clusters. For "dbscan", a numeric indicating epsilon. For "HMM-VB", a list of parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clustering</code></td>
+<td>
+<p>– baseline clustering methods. User specified functions or example methods included in package ("kmeans", "Mclust", "hclust", "dbscan", "HMM-VB") can be used. Refer to the Detail.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>perturb_method</code></td>
+<td>
+<p>– adding noise is <code>0</code> and bootstrap resampling is <code>1</code>. Default is bootstrap resampling.
+# perturb_method=0 perturbed by adding Gaussian noise.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a matrix of cluster labels of the ensemble partitions. Each column is cluster labels of an individual clustering result.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sim1)
+# the number of clusters.
+C = 4
+ens.data = ensemble(sim1$X[1:10,], nbs=10, clust_param=C, clustering="kmeans", perturb_method=1)
+</code></pre>
+
+
+</div>

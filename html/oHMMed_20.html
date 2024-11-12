@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>posterior_prob_normal</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Forward-Backward Algorithm to Calculate the Posterior Probabilities of Hidden States in Normal Model</h2>
+
+<h3>Description</h3>
+
+<p>Forward-Backward Algorithm to Calculate the Posterior Probabilities of Hidden States in Normal Model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">posterior_prob_normal(data, pi, mat_T, means, sdev)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>(numeric) normal data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pi</code></td>
+<td>
+<p>(numeric) prior probability of states</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mat_T</code></td>
+<td>
+<p>(matrix) transition probability matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>means</code></td>
+<td>
+<p>(numeric) vector with prior means</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sdev</code></td>
+<td>
+<p>(numeric) prior standard deviation</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Please see <a href="https://static-content.springer.com/esm/art%3A10.1186%2Fs12859-024-05751-4/MediaObjects/12859_2024_5751_MOESM1_ESM.pdf">supplementary information</a> at <a href="https://doi.org/10.1186/s12859-024-05751-4">doi:10.1186/s12859-024-05751-4</a> for more details on the algorithm.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with the following elements: 
+</p>
+
+<ul>
+<li> <p><code>F</code>: auxiliary forward variables
+</p>
+</li>
+<li> <p><code>B</code>: auxiliary backward variables
+</p>
+</li>
+<li> <p><code>s</code>: weights
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">prior_mat &lt;- rbind(c(1-0.05, 0.05, 0),
+                  c(0.05, 1-0.1, 0.05),
+                  c(0, 0.05, 1-0.05))
+
+prior_means &lt;- c(-0.1, 0.0, 0.1)
+prior_sd  &lt;- sqrt(0.1)
+L &lt;- 100
+
+# Simulate HMM model based on normal data based on prior information
+sim_data_normal &lt;- hmm_simulate_normal_data(L = L,
+                                            mat_T = prior_mat,
+                                            means = prior_means,
+                                            sigma = prior_sd)
+pi &lt;- sim_data_normal$pi
+# pi &lt;- get_pi(prior_mat)
+hmm_norm_data &lt;- sim_data_normal$data
+
+# Calculate posterior probabilities of hidden states
+post_prob &lt;-  posterior_prob_normal(data = hmm_norm_data,
+                                    pi = pi,
+                                    mat_T = prior_mat,
+                                    means = prior_means,
+                                    sdev = prior_sd)
+str(post_prob)
+</code></pre>
+
+
+</div>

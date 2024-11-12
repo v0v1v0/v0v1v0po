@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OrderKmeansCpp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Detect Location of Change Points of Independent Data using Rcpp
+</h2>
+
+<h3>Description</h3>
+
+<p>Detect the location of change points based on minimizing within segment quadratic
+loss with fixed number of change points.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OrderKmeansCpp(x, K = 4, num_init = 10)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The data to find change points with dimension N x D, must be matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>The number of change points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_init</code></td>
+<td>
+<p>The number of repetition times, in order to avoid local minimal.
+Default is 10. Must be integer.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The K change points form K+1 segments (1 2 ... change_point(1)) ...
+(change_point(K) ... N).
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wgss_sum</code></td>
+<td>
+<p>total within segment sum of squared distances to the segment
+mean (wgss) of all segments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_each</code></td>
+<td>
+<p>number of observations of each segment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wgss</code></td>
+<td>
+<p>total wgss of each segment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_point</code></td>
+<td>
+<p>location of optimal change points.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>J. Ding, Y. Xiang, L. Shen, and V. Tarokh, <em>Multiple Change Point Analysis:
+Fast Implementation and Strong Consistency</em>. IEEE Transactions on Signal
+Processing, vol. 65, no. 17, pp. 4495-4510, 2017.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">a&lt;-matrix(rnorm(40,mean=-1,sd=1),nrow=20,ncol=2)
+b&lt;-matrix(rnorm(120,mean=0,sd=1),nrow=60,ncol=2)
+c&lt;-matrix(rnorm(40,mean=1,sd=1),nrow=20,ncol=2)
+x&lt;-rbind(a,b,c)
+OrderKmeansCpp(x,K=3)
+OrderKmeansCpp(x,K=3,num_init=8)
+</code></pre>
+
+
+</div>

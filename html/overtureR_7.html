@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sf_as_dbplyr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Registeran sf object as a DuckDB virtual table</h2>
+
+<h3>Description</h3>
+
+<p>A thin wrapper around <code>duckdb::duckdb_register()</code> that creates a virtual
+table, then selects the geometry column to DuckDB.'s GEOMETRY type in the
+returned <code>dbplyr</code> representation. Mostly useful for join and spatial
+operations within DuckDB. No data is copied.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sf_as_dbplyr(
+  conn,
+  name,
+  sf_obj,
+  geom_only = isFALSE(inherits(sf_obj, "sf")),
+  overwrite = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>conn</code></td>
+<td>
+<p>A DuckDB connection, created by <code>dbConnect()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>The name for the virtual table that is registered or unregistered</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sf_obj</code></td>
+<td>
+<p>sf object to be registered to duckdb</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geom_only</code></td>
+<td>
+<p>if TRUE, only the geometry column is registered. Always
+FALSE for sfc or sfg objects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>Should an existing registration be overwritten?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to duckdb_register</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Behind the scenes, this function creates an initial view (<code>name</code>_init) with
+the geometry stored as text via <code>sf::st_as_text</code>. It then creates the view
+<code>name</code> which replaces the geometry column with DuckDB's internal geometry
+type.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code>dbplyr</code> lazy table
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(sf)
+
+con &lt;- stage_conn()
+sf_obj &lt;- st_sf(a = 3, geometry = st_sfc(st_point(1:2)))
+sf_as_dbplyr(con, "test", sf_obj)
+
+DBI::dbDisconnect(con)
+
+</code></pre>
+
+
+</div>

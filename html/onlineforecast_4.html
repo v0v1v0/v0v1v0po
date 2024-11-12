@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>AR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Auto-Regressive (AR) input</h2>
+
+<h3>Description</h3>
+
+<p>Generate auto-regressive (AR) inputs in a model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">AR(lags)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>lags</code></td>
+<td>
+<p>integer vector: The lags of the AR to include.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The AR function can be used in an onlineforecast model formulation. It
+creates the input matrices for including AR inputs in a model during the
+transformation stage. It takes the values from the model output in the provided data
+does the needed lagging.
+</p>
+<p>The lags must be given according to the one-step ahead model, e.g.:
+</p>
+<p><code>AR(lags=c(0,1))</code> will give: <code class="reqn">Y_{t+1|t} = \phi_1 y_{t-0} + \phi_2 y_{t-1} + \epsilon_{t+1}</code>
+</p>
+<p>and:
+</p>
+<p><code>AR(lags=c(0,3,12))</code> will give: <code class="reqn">Y_{t+1|t} = \phi_1 y_{t-0} + \phi_2 y_{t-3} + \phi_3 y_{t-12} + \epsilon_{t+1}</code>
+</p>
+<p>Note, that 
+</p>
+<p>For k&gt;1 the coefficients will be fitted individually for each horizon, e.g.:
+</p>
+<p><code>AR(lags=c(0,1))</code> will be the multi-step AR: <code class="reqn">Y_{t+k|t} = \phi_{1,k} y_{t-0} + \phi_{2,k} y_{t-1} + \epsilon_{t+k|t}</code>
+</p>
+<p>See the details in examples on <a href="https://onlineforecasting.org">https://onlineforecasting.org</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of matrices, one for each lag in lags, each with columns according to model$kseq.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Setup data and a model for the example
+D &lt;- Dbuilding
+model &lt;- forecastmodel$new()
+model$output = "heatload"
+# Use the AR in the transformation stage
+model$add_inputs(AR = "AR(c(0,1))")
+# Regression parameters
+model$add_regprm("rls_prm(lambda=0.9)")
+# kseq must be added
+model$kseq &lt;- 1:4
+# In the transformation stage the AR input will be generated
+# See that it generates two input matrices, simply with the lagged heat load at t for every k
+model$transform_data(subset(D, 1:10))
+
+# Fit with recursive least squares (no parameters prm in the model)
+fit &lt;- rls_fit(c(lambda=0.99), model, D, returnanalysis=TRUE)
+
+# Plot the result, see "?plot_ts.rls_fit"
+plot_ts(fit, xlim=c(ct("2010-12-20"),max(D$t)))
+# Plot for a short period with peaks
+plot_ts(fit, xlim=c("2011-01-05","2011-01-07"))
+
+# For online updating, see ??ref{vignette, not yet available}:
+# the needed lagged output values are stored in the model for next time new data is available
+model$yAR
+# The maximum lag needed is also kept
+model$maxlagAR
+
+</code></pre>
+
+
+</div>

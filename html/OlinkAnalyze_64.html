@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_ttest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function which performs a t-test per protein</h2>
+
+<h3>Description</h3>
+
+<p>Performs a Welch 2-sample t-test or paired t-test at confidence level 0.95 for every protein (by OlinkID)
+for a given grouping variable using stats::t.test and corrects for multiple testing by
+the Benjamini-Hochberg method (“fdr”) using stats::p.adjust.
+Adjusted p-values are logically evaluated towards adjusted p-value&lt;0.05.
+The resulting t-test table is arranged by ascending p-values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_ttest(df, variable, pair_id, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>NPX data frame in long format with at least protein name (Assay), OlinkID, UniProt and a factor with 2 levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p>Character value indicating which column should be used as the grouping variable. Needs to have exactly 2 levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pair_id</code></td>
+<td>
+<p>Character value indicating which column indicates the paired sample identifier.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Options to be passed to t.test. See <code>?t.test</code> for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A "tibble" containing the t-test results for every protein.
+Columns include:
+</p>
+
+<ul>
+<li>
+<p>Assay: "character" Protein symbol
+</p>
+</li>
+<li>
+<p>OlinkID: "character" Olink specific ID
+</p>
+</li>
+<li>
+<p>UniProt: "character" UniProt ID
+</p>
+</li>
+<li>
+<p>Panel: "character" Name of Olink Panel
+</p>
+</li>
+<li>
+<p>estimate: "numeric" difference in mean NPX between groups
+</p>
+</li>
+<li>
+<p>Group 1: "numeric" Column is named first level of variable when converted to factor, contains mean NPX for that group
+</p>
+</li>
+<li>
+<p>Group 2: "numeric" Column is named second level of variable when converted to factor, contains mean NPX for that group
+</p>
+</li>
+<li>
+<p>statistic: "named numeric" value of the t-statistic
+</p>
+</li>
+<li>
+<p>p.value: "numeric" p-value for the test
+</p>
+</li>
+<li>
+<p>parameter: "named numeric" degrees of freedom for the t-statistic
+</p>
+</li>
+<li>
+<p>conf.low: "numeric" confidence interval for the mean (lower end)
+</p>
+</li>
+<li>
+<p>conf.high: "numeric" confidence interval for the mean (upper end)
+</p>
+</li>
+<li>
+<p>method: "character" which t-test method was used
+</p>
+</li>
+<li>
+<p>alternative: "character" describes the alternative hypothesis
+</p>
+</li>
+<li>
+<p>Adjusted_pval: "numeric" adjusted p-value for the test (Benjamini&amp;Hochberg)
+</p>
+</li>
+<li>
+<p>Threshold: "character" if adjusted p-value is significant or not (&lt; 0.05)
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(dplyr)
+
+npx_df &lt;- npx_data1 %&gt;% filter(!grepl('control',SampleID, ignore.case = TRUE))
+
+ttest_results &lt;- olink_ttest(df=npx_df,
+                             variable = 'Treatment',
+                             alternative = 'two.sided')
+
+#Paired t-test
+npx_df %&gt;%
+   filter(Time %in% c("Baseline","Week.6")) %&gt;%
+   olink_ttest(variable = "Time", pair_id = "Subject")
+
+</code></pre>
+
+
+</div>

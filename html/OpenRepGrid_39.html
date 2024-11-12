@@ -1,0 +1,174 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cluster</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cluster analysis (of constructs or elements).</h2>
+
+<h3>Description</h3>
+
+<p><code>cluster</code> is a preliminary implementation of a cluster function. It supports various distance measures as well as
+cluster methods. More is to come.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cluster(
+  x,
+  along = 0,
+  dmethod = "euclidean",
+  cmethod = "ward.D",
+  p = 2,
+  align = TRUE,
+  trim = NA,
+  main = NULL,
+  mar = c(4, 2, 3, 15),
+  cex = 0,
+  lab.cex = 0.8,
+  cex.main = 0.9,
+  print = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>along</code></td>
+<td>
+<p>Along which dimension to cluster. 1 = constructs only, 2= elements only, 0=both (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dmethod</code></td>
+<td>
+<p>The distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra",
+"binary" or "minkowski". Any unambiguous substring can be given. For additional information on the different types
+type <code>?dist</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cmethod</code></td>
+<td>
+<p>The agglomeration method to be used. This should be (an unambiguous abbreviation of) one of
+<code>"ward.D"</code>, <code>"ward.D2"</code>, <code>"single"</code>, <code>"complete"</code>, <code>"average"</code>, <code>"mcquitty"</code>, <code>"median"</code> or <code>"centroid"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The power of the Minkowski distance, in case <code>"minkowski"</code> is used as argument for <code>dmethod</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>align</code></td>
+<td>
+<p>Whether the constructs should be aligned before clustering (default is <code>TRUE</code>). If not, the grid matrix
+is clustered as is. See Details section for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>the number of characters a construct is trimmed to (default is <code>10</code>). If <code>NA</code> no trimming is done.
+Trimming simply saves space when displaying the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>Title of plot. The default is a name indicating the distance function and cluster method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mar</code></td>
+<td>
+<p>Define the plot region (bottom, left, upper, right).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>Size parameter for the nodes. Usually not needed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lab.cex</code></td>
+<td>
+<p>Size parameter for the constructs on the right side.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.main</code></td>
+<td>
+<p>Size parameter for the plot title (default is <code>.9</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print</code></td>
+<td>
+<p>Logical. Whether to print the dendrogram (default is <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to be passed to plotting function from <code>as.dendrogram</code>. Type <code>?as.dendrogram</code> for
+further information. This option is usually not needed, except if special designs are needed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><strong>align</strong>: Aligning will reverse constructs if necessary to yield a
+maximal similarity between constructs. In a first step the constructs are clustered including both directions. In a
+second step the direction of a construct that yields smaller distances to the adjacent constructs is preserved and
+used for the final clustering. As a result, every construct is included once but with an orientation that guarantees
+optimal clustering. This approach is akin to the procedure used in FOCUS (Jankowicz &amp; Thomas, 1982).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Reordered <code>repgrid</code> object.
+</p>
+
+
+<h3>References</h3>
+
+<p>Jankowicz, D., &amp; Thomas, L. (1982). An Algorithm for the Cluster Analysis of Repertory Grids in Human Resource
+Development. <em>Personnel Review, 11</em>(4), 15-22. doi:10.1108/eb055464.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>bertinCluster()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+cluster(bell2010)
+cluster(bell2010, main = "My cluster analysis") # new title
+cluster(bell2010, type = "t") # different drawing style
+cluster(bell2010, dmethod = "manhattan") # using manhattan metric
+cluster(bell2010, cmethod = "single") # do single linkage clustering
+cluster(bell2010, cex = 1, lab.cex = 1) # change appearance
+cluster(bell2010, lab.cex = .7, edgePar = list(lty = 1:2, col = 2:1)) # advanced appearance changes
+
+</code></pre>
+
+
+</div>

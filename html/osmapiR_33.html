@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_get_points_gps</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get GPS Points</h2>
+
+<h3>Description</h3>
+
+<p>Use this to retrieve the GPS track points that are inside a given bounding box (formatted in a GPX format).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_get_points_gps(
+  bbox,
+  page_number = 0,
+  format = c("R", "sf", "sf_lines", "sf_points", "gpx")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>Coordinates for the area to retrieve the notes from (<code style="white-space: pre;">⁠left,bottom,right,top⁠</code>). Floating point numbers in
+degrees, expressing a valid bounding box. The maximal width (<code>right - left</code>) and height (<code>top - bottom</code>) of the
+bounding box is 0.25 degree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page_number</code></td>
+<td>
+<p>Specifies which groups of 5,000 points, or page, to return. The API call does not return more
+than 5,000 points at a time. In order to retrieve all of the points for a bounding box, set <code>page_number = -1</code>.
+When this parameter is 0 (zero), the command returns the first 5,000 points; when it is 1, the command returns
+points 5,001–10,000, etc. A vector is also valid (e.g. <code>0:2</code> to get the first 3 pages).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default), <code>"sf_lines"</code> (<code>"sf"</code> is a synonym for <code>"sf_lines"</code>),
+<code>"sf_points"</code> or <code>"gpx"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If <code>format = "R"</code>, returns a list of data frames with the points for each trace. For public and identifiable traces,
+the data frame include the attributes <code>track_url</code>, <code>track_name</code>, and <code>track_desc</code>.
+If <code>format = "sf_lines"</code>, returns a <code>sf</code> object from <span class="pkg">sf</span>. For <code>format = "sf_points"</code>, returns a list of <code>sf</code>
+object (see <code>st_as_sf()</code> for details).
+</p>
+
+
+<h4><code>format = "gpx"</code></h4>
+
+<p>Returns a xml2::xml_document with the following format:
+</p>
+<div class="sourceCode xml"><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;gpx version="1.0" creator="OpenStreetMap.org" xmlns="http://www.topografix.com/GPX/1/0"&gt;
+	&lt;trk&gt;
+		&lt;name&gt;20190626.gpx&lt;/name&gt;
+		&lt;desc&gt;Footpaths near Blackweir Pond, Epping Forest&lt;/desc&gt;
+		&lt;url&gt;https://api.openstreetmap.org/user/John%20Leeming/traces/3031013&lt;/url&gt;
+		&lt;trkseg&gt;
+			&lt;trkpt lat="51.6616100" lon="0.0534560"&gt;
+				&lt;time&gt;2019-06-26T14:27:58Z&lt;/time&gt;
+			&lt;/trkpt&gt;
+			...
+		&lt;/trkseg&gt;
+		...
+	&lt;/trk&gt;
+	...
+&lt;/gpx&gt;
+</pre></div>
+
+<ul>
+<li>
+<p> This response is NOT wrapped in an OSM xml parent element.
+</p>
+</li>
+<li>
+<p> The file format is GPX Version 1.0 which is not the current version. Verify that your tools support it.
+</p>
+</li>
+</ul>
+<h3>Note</h3>
+
+<p>In violation of the <a href="https://www.topografix.com/GPX/1/1/#type_trksegType">GPX standard</a> when downloading public
+GPX traces through the API, all waypoints of non-trackable traces are randomized (or rather sorted by lat/lon) and
+delivered as one trackSegment for privacy reasons. Trackable traces are delivered, sorted by descending upload
+time, before the waypoints of non-trackable traces.
+</p>
+<p>Private traces without <code>name</code>, <code>desc</code> and <code>url</code> can be separated in different items in the result if they get
+split due to server pagination. Public traces are united using matching URL.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other get GPS' functions: 
+<code>osm_get_data_gpx()</code>,
+<code>osm_get_gpx_metadata()</code>,
+<code>osm_list_gpxs()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">pts_gps &lt;- osm_get_points_gps(bbox = c(-0.3667545, 40.2153246, -0.3354263, 40.2364915))
+## bbox as a character value also works (bbox = "-0.3667545,40.2153246,-0.3354263,40.2364915").
+pts_gps
+
+## get attributes
+lapply(pts_gps, function(x) attributes(x)[c("track_url", "track_name", "track_desc")])
+attr(pts_gps, "gpx_attributes")
+</code></pre>
+
+
+</div>

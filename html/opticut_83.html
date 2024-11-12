@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>warblers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Warblers Data Set
+</h2>
+
+<h3>Description</h3>
+
+<p>Five species of warblers were studied to determine the factors
+controlling the species abundances and competition (MacArthur 1958).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data("warblers")</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A list with 3 elements: <code>xtab</code> is a list of sample x species matrices
+(<code>sec_prc</code>: percentages of total number of seconds of observations,
+<code>num_prc</code>: percentages of total number of observations in seconds,
+<code>sec_cnt</code>: counts based on percentages and totals of seconds,
+<code>num_cnt</code>: counts based on percentages and totals),
+<code>samp</code> is a data frame with sample level attributes such as height
+(6 is the base, 1 is the top of trees, most trees were 50–60 feet tall)
+and depth of branches in the canopy
+(B: bare or lichen- covered base, M: middle zone of old needles,
+T: terminal zone of new, less than 1.5 years old, needles or buds) ,
+<code>taxa</code> is a data frame with scientific and common names for the species.
+</p>
+
+
+<h3>Source</h3>
+
+<p>MacArthur 1958.
+</p>
+
+
+<h3>References</h3>
+
+<p>MacArthur, R. H., 1958.
+Population ecology of some warblers of northeastern coniferous forests.
+Ecology 39:599–619.
+&lt;doi:10.2307/1931600&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(warblers)
+str(warblers)
+
+warbh &lt;- mefa4::groupSums(warblers$xtab$num_cnt, 1, warblers$samp$height)
+warbd &lt;- mefa4::groupSums(warblers$xtab$num_cnt, 1, warblers$samp$depth)
+op &lt;- par(mfrow=c(1,2))
+matplot(rownames(warbh), warbh, type="b", xlab="height")
+matplot(warbd, type="b", axes=FALSE, xlab="depth")
+box()
+axis(2)
+axis(1, 1:3, rownames(warbd))
+par(op)
+</code></pre>
+
+
+</div>

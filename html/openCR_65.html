@@ -1,0 +1,258 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.openCR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Print or Summarise openCR Object </h2>
+
+<h3>Description</h3>
+
+<p>Print results from fitting a spatially explicit capture–recapture model, or generate a list of summary data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'openCR'
+ print(x, newdata = NULL, alpha = 0.05, svtol = 1e-5,...)
+## S3 method for class 'openCR'
+ summary(object, newdata = NULL, alpha = 0.05, svtol = 1e-5, deriv = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+ <p><code>openCR</code> object output from <code>openCR.fit</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+ <p><code>openCR</code> object output from <code>openCR.fit</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p> optional dataframe of values at which to evaluate model </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p> alpha level </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>svtol</code></td>
+<td>
+<p> threshold for non-null eigenvalues when computing numerical rank </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deriv</code></td>
+<td>
+<p>logical; if TRUE then table of derived parameters is calculated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> other arguments passed to <code>derived.openCR</code> by <code>summary.openCR</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Results are potentially complex and depend upon the analysis (see below). Optional <code>newdata</code> should be a dataframe with a column for each of the variables in the model. If <code>newdata</code> is missing then a dataframe is constructed automatically.  Default <code>newdata</code> are for a naive animal on the first occasion; numeric covariates are set to zero and factor covariates to their base (first) level. Confidence intervals are 100 (1 – alpha) % intervals.
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+call           </td>
+<td style="text-align: left;"> the function call </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+time           </td>
+<td style="text-align: left;"> date and time fitting started </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+N animals      </td>
+<td style="text-align: left;"> number of distinct animals detected </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+N captures     </td>
+<td style="text-align: left;"> number of detections </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+N sessions     </td>
+<td style="text-align: left;"> number of sampling occasions </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Model          </td>
+<td style="text-align: left;"> model formula for each `real' parameter </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Fixed          </td>
+<td style="text-align: left;"> fixed real parameters </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+N parameters   </td>
+<td style="text-align: left;"> number of parameters estimated  </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Log likelihood </td>
+<td style="text-align: left;"> log likelihood </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+AIC            </td>
+<td style="text-align: left;"> Akaike's information criterion </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+AICc           </td>
+<td style="text-align: left;"> AIC with small sample adjustment (Burnham and Anderson 2002) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Beta parameters </td>
+<td style="text-align: left;"> coef of the fitted model, SE and confidence
+intervals </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Eigenvalues     </td>
+<td style="text-align: left;"> scaled eigenvalues of Hessian matrix (maximum 1.0) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Numerical rank  </td>
+<td style="text-align: left;"> number of eigenvalues exceeding svtol </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+vcov            </td>
+<td style="text-align: left;"> variance-covariance matrix of beta parameters  </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+Real parameters </td>
+<td style="text-align: left;"> fitted (real) parameters evaluated at base levels of covariates </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>AICc is computed with the default sample size (number of individuals) and parameter count (use.rank = FALSE).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code>summary</code> method constructs a list of outputs similar to those printed by the <code>print</code> method, 
+but somewhat more concise and re-usable:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+versiontime     </td>
+<td style="text-align: left;"> secr version, and date and time fitting started </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+traps*           </td>
+<td style="text-align: left;"> detector summary </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+capthist        </td>
+<td style="text-align: left;"> capthist summary (primary and secondary sessions, numbers of animals and detections)</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+intervals        </td>
+<td style="text-align: left;"> intervals between primary sessions </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+mask*            </td>
+<td style="text-align: left;"> mask summary </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+modeldetails    </td>
+<td style="text-align: left;"> miscellaneous model characteristics (type etc.) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+AICtable        </td>
+<td style="text-align: left;"> single-line output of AIC.openCR </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+coef            </td>
+<td style="text-align: left;"> table of fitted coefficients with CI </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+predicted       </td>
+<td style="text-align: left;"> predicted values (`real' parameter estimates) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+derived         </td>
+<td style="text-align: left;"> output of derived.openCR (optional) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>* spatial models only
+</p>
+
+
+<h3>References</h3>
+
+ 
+<p>Burnham, K. P. and Anderson, D. R. (2002) <em>Model selection and multimodel inference: a practical information-theoretic approach</em>. Second edition. New York: Springer-Verlag.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>AIC.openCR</code>, <code>openCR.fit</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+c1 &lt;- openCR.fit(ovenCH, type='CJS', model=phi~session)
+c1
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,522 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OT_outcome</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OT_outcome()</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>OT_outcome</code> integrates two algorithms called (<code>OUTCOME</code>) and (<code>R-OUTCOME</code>) dedicated to the solving of recoding problems in data fusion
+using optimal transportation (OT) of the joint distribution of outcomes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OT_outcome(
+  datab,
+  index_DB_Y_Z = 1:3,
+  quanti = NULL,
+  nominal = NULL,
+  ordinal = NULL,
+  logic = NULL,
+  convert.num = NULL,
+  convert.class = NULL,
+  FAMD.coord = "NO",
+  FAMD.perc = 0.8,
+  dist.choice = "E",
+  percent.knn = 1,
+  maxrelax = 0,
+  indiv.method = "sequential",
+  prox.dist = 0,
+  solvR = "glpk",
+  which.DB = "BOTH"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datab</code></td>
+<td>
+<p>a data.frame made up of two overlayed databases with at least four columns sorted in a random order. One column must be a column dedicated to the identification of the two databases ranked in ascending order
+(For example: 1 for the top database and 2 for the database from below, or more logically here A and B  ...But not B and A!). One column (<code class="reqn">Y</code> here but other names are allowed)
+must correspond to the target variable related to the information of interest to merge with its specific encoding in the database A (corresponding encoding should be missing in the database B). In the same way,
+one column (<code class="reqn">Z</code> here) corresponds to the second target variable with its specific encoding in the database B (corresponding encoding should be missing in the database A).
+Finally, the input database must have at least one shared covariate with same encoding in A and B. Please notice that, if your data.frame has only one shared covariate (four columns) with missing values (because no imputation is desired)
+then a warning will appear and the algorithm will only run with complete cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index_DB_Y_Z</code></td>
+<td>
+<p>a vector of three indexes of variables. The first index must correspond to the index of the databases identifier column. The second index corresponds
+to the index of the target variable in the first database (A) while the third index corresponds to the column index related to the target variable in the second database (B).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quanti</code></td>
+<td>
+<p>a vector of column indexes of all the quantitative variables (database identifier and target variables included if it is the case for them).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nominal</code></td>
+<td>
+<p>a vector of column indexes of all the nominal (not ordered) variables (database identifier and target variables included if it is the case for them).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ordinal</code></td>
+<td>
+<p>a vector of column indexes of all the ordinal variables (database identifier and target variables included if it is the case for them).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logic</code></td>
+<td>
+<p>a vector of column indexes of all the boolean variables of the data.frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convert.num</code></td>
+<td>
+<p>indexes of the continuous (quantitative) variables to convert in ordered factors if necessary. All declared indexes in this argument must have been declared in the argument <code>quanti</code> (no conversion by default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convert.class</code></td>
+<td>
+<p>a vector indicating for each continuous variable to convert, the corresponding desired number of levels. If the length of the argument <code>convert_num</code> exceeds 1 while the length of <code>convert_class</code> equals 1 (only one integer),
+each discretization will count the same number of levels (quantiles).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FAMD.coord</code></td>
+<td>
+<p>a logical that must be set to TRUE when user decides to work with principal components of a factor analysis for mixed data (FAMD) instead of the set of raw covariates (FALSE is the default value).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FAMD.perc</code></td>
+<td>
+<p>a percent (between 0 and 1) linked to the <code>FAMD.coord</code> argument (0.8 is the default value). When this latter equals TRUE, this argument corresponds to the minimum part of variability that must be taken into account by the principal components of the FAMD method.
+This option fixes the remaining number of principal components for the rest of the study.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.choice</code></td>
+<td>
+<p>a character string (with quotes) corresponding to the distance function chosen between: the euclidean distance ("E", by default), The Manhattan distance ("M"),
+the Gower distance ("G"), the Hamming distance ("H") for binary covariates only, and the Euclidean or Manhattan distance computed from principal components of a factor analysis of mixed data ("FAMD"). See (1) for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent.knn</code></td>
+<td>
+<p>the ratio of closest neighbors involved in the computations of the cost matrices. 1 is the default value that includes all rows in the computation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxrelax</code></td>
+<td>
+<p>the maximum percentage of deviation from expected probability masses. It must be equal to 0 (default value) for the <code>OUTCOME</code> algorithm, and equal to a strictly positive value for the R-OUTCOME algorithm. See (2) for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indiv.method</code></td>
+<td>
+<p>a character string indicating the chosen method to get individual predictions from the joint probabilities assessed, "sequential" by default, or "optimal". See the <code>details</code> section and (2) for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prox.dist</code></td>
+<td>
+<p>a probability (between 0 and 1) used to calculate the distance threshold below which an individual (a row) is considered as a neighbor of a given profile of covariates. When shared variables are all factors or categorical, it is suggested to keep this option to 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solvR</code></td>
+<td>
+<p>a character string that specifies the type of method selected to solve the optimization algorithms. The default solver is "glpk".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.DB</code></td>
+<td>
+<p>a character string indicating the database to complete ("BOTH" by default, for the prediction of <code class="reqn">Y</code> and <code class="reqn">Z</code> in the two databases), "A" only for the imputation of <code class="reqn">Z</code> in A, "B" only for the imputation of <code class="reqn">Y</code> in B.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A. THE RECODING PROBLEM IN DATA FUSION
+</p>
+<p>Assuming that <code class="reqn">Y</code> and <code class="reqn">Z</code> are two target variables which refered to the same target population in two separate databases A and B respectively (no overlapping rows),
+so that <code class="reqn">Y</code> and <code class="reqn">Z</code> are never jointly observed. Assuming also that A and B share a subset of common covariates <code class="reqn">X</code> of any types (same encodings in A and B)
+completed or not. Merging these two databases often requires to solve a recoding problem by creating an unique database where
+the missing information of <code class="reqn">Y</code> and <code class="reqn">Z</code> is fully completed.
+</p>
+<p>B. INFORMATIONS ABOUT THE ALGORITHM
+</p>
+<p>The algorithm integrated in the function <code>OT_outcome</code> provides a solution to the recoding problem previously described by proposing an
+application of optimal transportation which aims is to search for a bijective mapping between the distributions of of <code class="reqn">Y</code> in A and <code class="reqn">Z</code> in B.
+Mathematically, the principle of the algorithm is based on the resolution of an optimization problem which provides an optimal solution <code class="reqn">\gamma</code> (as called in the related articles)
+that transfers the distribution of <code class="reqn">Y</code> in A to the distribution of <code class="reqn">Z</code> in B (or conversely, according to the sense of the transport)and can be so interpreted as an estimator of the joint distribution
+<code class="reqn">(Y,Z)</code> in A (or B respetively). According to this result, a second step of the algorithm provides individual predictions of <code class="reqn">Y</code> in B (resp. of <code class="reqn">Z</code> in A, or both, depending on the choice
+specified by user in the argument <code>which.DB</code>). Two possible approaches are available depending on the argument <code>indiv.method</code>:
+</p>
+
+<ul>
+<li>
+<p> When <code>indiv.method = "sequential"</code>, a nearest neighbor procedure is applied. This corresponds to the use of the function <code>indiv_grp_closest</code>
+implemented in the function <code>OT_outcome</code>.
+</p>
+</li>
+<li>
+<p> When <code>indiv.method = "optimal"</code>, a linear optimization problem is solved to determine the individual predictions that minimize the sum of the individual distances
+in A (resp. in B) with the modalities of <code class="reqn">Z</code> in B (resp. <code class="reqn">Y</code> in A). This approach is applied via the function <code>indiv_grp_optimal</code> implemented in the function <code>OT_outcome</code>.
+</p>
+</li>
+</ul>
+<p>This algorithm supposes the respect of the two following assumptions:
+</p>
+
+<ol>
+<li> <p><code class="reqn">Y</code> must follow the same distribution in A and B. In the same way, <code class="reqn">Z</code> follows the same distribution in the two databases.
+</p>
+</li>
+<li>
+<p> The conditional distribution <code class="reqn">(Y|X)</code> must be identical in A and B. Respectively, <code class="reqn">(Z|X)</code> is supposed identical in A and B.
+</p>
+</li>
+</ol>
+<p>Because the first assumption can be too strong in some situations, a relaxation of the constraints of marginal distribution is possible using the argument <code>maxrelax</code>.
+When <code>indiv.method = "sequential"</code> and <code>maxrelax = 0</code>, the algorithm called <code>OUTCOME</code> (see (1) and (2))
+is applied. In all other situations, the algorithm applied corresponds to an algorithm called <code>R_OUTCOME</code> (see (2)).
+A posteriori estimates of conditional probabilities <code class="reqn">P[Y|X,Z]</code> and <code class="reqn">P[Z|X,Y]</code> are available for each profile of covariates (see the output objects <code>estimatorYB</code> and <code>estimatorZA</code>).
+Estimates of <code class="reqn">\gamma</code> are also available according to the desired direction of the transport (from A to B and/or conversely. See <code class="reqn">\gamma_A</code> and <code class="reqn">\gamma_B</code>).
+</p>
+<p>C. EXPECTED STRUCTURE FOR THE INPUT DATABASE
+</p>
+<p>The input database is a data.frame that must be saved in a specific form by users:
+</p>
+
+<ul>
+<li>
+<p> Two overlayed databases containing a common column of database identifiers (A and B, 1 or 2, by examples, encoded in numeric or factor form)
+</p>
+</li>
+<li>
+<p> A column corresponding to the target variable with its specific encoding in A (For example a factor <code class="reqn">Y</code> encoded in <code class="reqn">n_Y</code> levels, ordered or not, with NAs in the corresponding rows of B)
+</p>
+</li>
+<li>
+<p> A column corresponding to the second target outcome with its specific endoded in B (For example a factor <code class="reqn">Z</code> in <code class="reqn">n_Z</code> levels, with NAs in rows of A)
+</p>
+</li>
+<li>
+<p> The order of the variables in the database have no importance but the column indexes related to the three columns previously described (ie ID, <code class="reqn">Y</code> and <code class="reqn">Z</code>) must be rigorously specified
+in the argument <code>index_DB_Y_Z</code>.
+</p>
+</li>
+<li>
+<p> A set of shared common covariates (at least one but more is recommended) of any type, complete or not (provided that the number of covariates exceeds 1) is required.
+</p>
+</li>
+</ul>
+<p>The function <code>merge_dbs</code> is available in this package to assist user in the preparation of their databases, so please, do not hesitate to use it beforehand if necessary.
+</p>
+<p>Remarks about the target variables:
+</p>
+
+<ul>
+<li>
+<p> A target variable can be of categorical type, but also discrete, stored in factor, ordered or not. Nevertheless, notice that, if the variable is stored in numeric it will be automatically converted in ordered factors.
+</p>
+</li>
+<li>
+<p> If a target outcome is incomplete, the corresponding rows will be automatically dropped during the execution of the function.
+</p>
+</li>
+</ul>
+<p>The type of each variables (including <code class="reqn">ID</code>, <code class="reqn">Y</code> and <code class="reqn">Z</code>) of the database must be rigorously specified once, in one of the four arguments <code>quanti</code>,<code>nominal</code>, <code>ordinal</code> and <code>logic</code>.
+</p>
+<p>D. TRANSFORMATIONS OF CONTINUOUS COVARIATES
+</p>
+<p>The function <code>OT_outcome</code> integrates in its syntax a process dedicated to the categorization of continuous covariates. For this, it is necessary to rigorously fill in the arguments <code>convert.num</code> and <code>convert.class</code>.
+The first one informs about the indexes in database of the continuous variables to transform in ordered factor while the second one specifies the corresponding number of desired balanced levels (for unbalanced levels, users must do transformations by themselves).
+Therefore <code>convert.num</code> and <code>convert.class</code> must be vectors of same length, but if the length of <code>convert.num</code> exceeds 1, while the length of <code>convert.class</code> is 1, then, by default, all the covariates to convert will have the same number of classes,
+that corresponds to the value specified in the argument <code>convert.class</code>.
+Please notice that only covariates can be transformed (not outcomes) and missing informations are not taken into account for the transformations.
+Moreover, all the indexes informed in the argument <code>convert.num</code> must also be informed in the argument <code>quanti</code>.
+</p>
+<p>E. INFORMATIONS ABOUT DISTANCE FUNCTIONS
+</p>
+<p>Each individual (or row) of a given database is here characterized by their covariates, so the distance between two individuals or groups of individuals depends on similarities between covariates
+according to the distance function chosen by user (via the argument <code>dist.choice</code>). Actually four distance functions are implemented in <code>OT_outcome</code> to take into account the most frequently encountered situation (see (3)):
+</p>
+
+<ul>
+<li>
+<p> the Manhattan distance ("M")
+</p>
+</li>
+<li>
+<p> the Euclidean distance ("E")
+</p>
+</li>
+<li>
+<p> the Gower distance for mixed data (see (4): "G")
+</p>
+</li>
+<li>
+<p> the Hamming distance for binary data ("H")
+</p>
+</li>
+</ul>
+<p>Moreover, it is also possible to directly apply the first three distances mentioned on coordinates extracted from a multivariate analysis (Factor Analysis for Mixed Data, see (5)) applied on raw covariates using the arguments <code>FAMD.coord</code> and <code>FAMD.perc</code>.
+This method is used (1).
+</p>
+<p>As a decision rule, for a given profile of covariates <code class="reqn">P_j</code>, an individual <code class="reqn">i</code> will be considered as a neighbor of <code class="reqn">P_j</code> if <code class="reqn">dist(i,P_j) &lt; \mbox{prox.dist} \times max(dist(i,P_j))</code> where <code class="reqn">prox.dist</code> must be fixed by user.
+</p>
+<p>F. INFORMATIONS ABOUT THE SOLVER
+</p>
+<p>The argument <code>solvR</code> permits user to choose the solver of the optimization algorithm. The default solver is "glpk" that corresponds to the GNU Linear Programming Kit (see (6) for more details).
+Moreover, the function actually uses the <code>R</code> optimization infrastructure of the package <span class="pkg">ROI</span> which offers a wide choice of solver to users by easily loading the associated plugins of <span class="pkg">ROI</span> (see (7)).
+</p>
+<p>For more details about the algorithms integrated in <code>OT_outcome</code>, please consult (1) and (2).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A "otres" class object of 9 elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>time_exe</code></td>
+<td>
+<p>the running time of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma_A</code></td>
+<td>
+<p>a matrix corresponding to an estimation of the joint distribution of <code class="reqn">(Y,Z)</code> in A</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma_B</code></td>
+<td>
+<p>a matrix corresponding to an estimation of the joint distribution of <code class="reqn">(Y,Z)</code> in B</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>profile</code></td>
+<td>
+<p>a data.frame that gives all details about the remaining <code class="reqn">P</code> profiles of covariates. These informations can be linked to the <code>estimatorZA</code> and the <code>estimatorYB</code> objects for a better interpretation of the results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res_prox</code></td>
+<td>
+<p>the outputs of the function <code>proxim_dist</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimatorZA</code></td>
+<td>
+<p>an array that corresponds to estimates of the probability distribution of <code class="reqn">Z</code> conditional to <code class="reqn">X</code> and <code class="reqn">Y</code> in database A. The number of rows of each table corresponds to the total number of profiles of covariates.
+The first dimension of each table (rownames) correspond to the profiles of covariates sorted by order of appearance in the merged database. The second dimension of the array (columns of the tables) corresponds to the levels of <code class="reqn">Y</code> while the third element corresponds to the levels of <code class="reqn">Z</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimatorYB</code></td>
+<td>
+<p>an array that corresponds to estimates of the probability distribution of <code class="reqn">Y</code> conditional to <code class="reqn">X</code> and <code class="reqn">Z</code> in database B. The number of rows of each table corresponds to the total number of profiles of covariates.
+The first dimension of each table (rownames) correspond to the profiles of covariates sorted by order of appearance in the merged database. The second dimension of the array (columns of the tables) corresponds to the levels of <code class="reqn">Z</code> while the third element corresponds to the levels of <code class="reqn">Y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DATA1_OT</code></td>
+<td>
+<p>the database A with the individual predictions of <code class="reqn">Z</code> using an optimal transportation algorithm (<code>OUTCOME</code>) or <code>R-OUTCOME</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DATA2_OT</code></td>
+<td>
+<p>the database B with the individual predictions of <code class="reqn">Y</code> using an optimal transportation algorithm (<code>OUTCOME</code>) or <code>R-OUTCOME</code></p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gregory Guernec, Valerie Gares, Jeremy Omer
+</p>
+<p><a href="mailto:otrecod.pkg@gmail.com">otrecod.pkg@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li>
+<p> Gares V, Dimeglio C, Guernec G, Fantin F, Lepage B, Korosok MR, savy N (2019). On the use of optimal transportation theory to recode variables and application to database merging. The International Journal of Biostatistics.
+Volume 16, Issue 1, 20180106, eISSN 1557-4679. doi:10.1515/ijb-2018-0106
+</p>
+</li>
+<li>
+<p> Gares V, Omer J (2020) Regularized optimal transport of covariates and outcomes in data recoding. Journal of the American Statistical Association. doi: <a href="https://doi.org/10.1080/01621459.2020.1775615">10.1080/01621459.2020.1775615</a>
+</p>
+</li>
+<li>
+<p> Anderberg, M.R. (1973), Cluster analysis for applications, 359 pp., Academic Press, New York, NY, USA.
+</p>
+</li>
+<li>
+<p> Gower J.C. (1971). A general coefficient of similarity and some of its properties. Biometrics, 27, 623–637.
+</p>
+</li>
+<li>
+<p> Pages J. (2004). Analyse factorielle de donnees mixtes. Revue Statistique Appliquee. LII (4). pp. 93-111.
+</p>
+</li>
+<li>
+<p> Makhorin A (2011). GNU Linear Programming Kit Reference Manual Version 4.47.<a href="http://www.gnu.org/software/glpk/">http://www.gnu.org/software/glpk/</a>
+</p>
+</li>
+<li>
+<p> Theussl S, Schwendinger F, Hornik K (2020). ROI: An Extensible R Optimization Infrastructure.Journal of Statistical Software,94(15), 1-64. doi: <a href="https://doi.org/10.18637/jss.v094.i15">10.18637/jss.v094.i15</a>
+</p>
+</li>
+</ol>
+<h3>See Also</h3>
+
+<p><code>transfo_dist</code>,<code>proxim_dist</code>, <code>avg_dist_closest</code>, <code>indiv_grp_closest</code>, <code>indiv_grp_optimal</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+### Using a sample of simu_data dataset
+### Y and Z are a same variable encoded in 2 different forms:
+### (3 levels for Y and 5 levels for Z)
+#--------
+data(simu_data)
+simu_dat &lt;- simu_data[c(1:200, 301:500), ]
+
+### An example of OUTCOME algorithm that uses:
+#-----
+# - A nearest neighbor procedure for the estimation of individual predictions
+# - The Manhattan distance function
+# - 90% of individuals from each modalities to calculate average distances
+#   between individuals and modalities
+# Predictions are assessed for Y in B and Z in A
+#-----
+
+OUTC1 &lt;- OT_outcome(simu_dat,
+                    quanti = c(3, 8), nominal = c(1, 4:5, 7), ordinal = c(2, 6),
+                    dist.choice = "M", maxrelax = 0,
+                    indiv.method = "sequential"
+)
+head(OUTC1$DATA1_OT) # Part of the completed database A
+head(OUTC1$DATA2_OT) # Part of the completed database B
+
+head(OUTC1$estimatorZA[, , 1])
+# ... Corresponds to P[Z = 1|Y,P1] when P1 corresponds to the 1st profile of covariates (P_1)
+# detailed in the 1st row of the profile object:
+OUTC1$profile[1, ] # Details of P_1
+
+# So estimatorZA[1,1,1]= 0.2 corresponds to an estimation of:
+# P[Z = 1|Y=[20-40],Gender_2=0,Treatment_2=1,Treatment_3=0,Smoking_2=1,Dosage=3,Age=65.44]
+# Thus, we can conclude that all individuals with the P_1 profile of covariates have
+# 20% of chance to be affected to the 1st level of Z in database A.
+# ... And so on, the reasoning is the same for the estimatorYB object.
+
+
+
+### An example of OUTCOME algorithm with same conditions as the previous example, excepted that;
+# - Only the individual predictions of Y in B are required
+# - The continuous covariates "age" (related index = 8) will be converted in an ordinal factors
+#   of 3 balanced classes (tertiles)
+# - The Gower distance is now used
+### -----
+
+OUTC2_B &lt;- OT_outcome(simu_dat,
+                      quanti = c(3, 8), nominal = c(1, 4:5, 7), ordinal = c(2, 6),
+                      dist.choice = "G", maxrelax = 0,
+                      convert.num = 8, convert.class = 3,
+                      indiv.method = "sequential", which.DB = "B"
+)
+
+
+### An example of OUTCOME algorithm with same conditions as the first example, excepted that;
+# - Only the individual predictions of Z in A are required
+# - The continuous covariates "age" (related index = 8) will be converted in an ordinal factors
+#   of 3 balanced classes (tertiles)
+# - Here, the Hamming distance can be applied because, after conversion, all covariates are factors.
+#   Disjunctive tables of each covariates will be automatically used to work with a set of binary
+#   variables.
+### -----
+
+OUTC3_B &lt;- OT_outcome(simu_data,
+                      quanti = c(3, 8), nominal = c(1, 4:5, 7), ordinal = c(2, 6),
+                      dist.choice = "H", maxrelax = 0,
+                      convert.num = 8, convert.class = 3,
+                      indiv.method = "sequential", which.DB = "B"
+)
+
+
+### An example of R-OUTCOME algorithm using:
+# - An optimization procedure for individual predictions on the 2 databases
+# - The Manhattan distance
+# - Raw covariates
+### -----
+
+R_OUTC1 &lt;- OT_outcome(simu_data,
+                      quanti = c(3, 8), nominal = c(1, 4:5, 7), ordinal = c(2, 6),
+                      dist.choice = "M", maxrelax = 0,
+                      indiv.method = "optimal"
+)
+
+
+### An example of R-OUTCOME algorithm with:
+# - An optimization procedure for individual predictions on the 2 databases
+# - The use of Euclidean distance on coordinates from FAMD
+# - Raw covariates
+### -----
+
+R_OUTC2 &lt;- OT_outcome(simu_data,
+                      quanti = c(3, 8), nominal = c(1, 4:5, 7), ordinal = c(2, 6),
+                      dist.choice = "E",
+                      FAMD.coord = "YES", FAMD.perc = 0.8,
+                      indiv.method = "optimal"
+)
+
+
+### An example of R-OUTCOME algorithm with relaxation on marginal distributions and:
+# - An optimization procedure for individual predictions on the 2 databases
+# - The use of the euclidean distance
+# - An arbitrary coefficient of relaxation
+# - Raw covariates
+#-----
+
+R_OUTC3 &lt;- OT_outcome(simu_data,
+                      quanti = c(3, 8), nominal = c(1, 4:5, 7), ordinal = c(2, 6),
+                      dist.choice = "E", maxrelax = 0.4,
+                      indiv.method = "optimal"
+)
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>importEurope</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import air quality data from European database</h2>
+
+<h3>Description</h3>
+
+<p>This function is a simplified version of the <code>saqgetr</code> package (see
+<a href="https://github.com/skgrange/saqgetr">https://github.com/skgrange/saqgetr</a>) for accessing European air quality
+data. The function only returns valid hourly data and is meant as a fast and
+convenient way of accessing the most common type of hourly air quality data.
+The function works in the same way as other <code>openair</code> functions that
+import air quality data that generally need a site code and year to be
+supplied.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">importEurope(
+  site = "debw118",
+  year = 2018,
+  tz = "UTC",
+  meta = FALSE,
+  to_narrow = FALSE,
+  progress = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>site</code></td>
+<td>
+<p>The code of the site(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>Year or years to import. To import a sequence of years from 1990
+to 2000 use <code>year = 1990:2000</code>. To import several specific years use
+<code>year = c(1990, 1995, 2000)</code> for example.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tz</code></td>
+<td>
+<p>Not used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta</code></td>
+<td>
+<p>Should meta data be returned? If <code>TRUE</code> the site type,
+latitude and longitude are returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to_narrow</code></td>
+<td>
+<p>By default the returned data has a column for each
+pollutant/variable. When <code>to_narrow = TRUE</code> the data are stacked into
+a narrow format with a column identifying the pollutant name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>Show a progress bar when many sites/years are being imported?
+Defaults to <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function can however return key site meta data.
+</p>
+<p>The <code>saqgetr</code> package is much more comprehensive and provides data at
+other time averages e.g. daily data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a tibble
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other import functions: 
+<code>importADMS()</code>,
+<code>importAURN()</code>,
+<code>importKCL()</code>,
+<code>importMeta()</code>,
+<code>importTraj()</code>,
+<code>importUKAQ()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# import data for Stuttgart Am Neckartor (S)
+## Not run: 
+stuttgart &lt;- importEurope("debw118", year = 2010:2019, meta = TRUE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

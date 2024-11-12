@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>unname_osmdata_sf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>unname_osmdata_sf</h2>
+
+<h3>Description</h3>
+
+<p>Remove names from <code>osmdata</code> geometry objects, for cases in which these cause
+issues, particularly with plotting, such as
+<a href="https://github.com/rstudio/leaflet/issues/631">https://github.com/rstudio/leaflet/issues/631</a>, or
+<a href="https://github.com/r-spatial/sf/issues/1177">https://github.com/r-spatial/sf/issues/1177</a>. Note that removing these
+names also removes any ability to inter-relate the different components of an
+<code>osmdata</code> object, so use of this function is only recommended to resolve
+issues such as those linked to above.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">unname_osmdata_sf(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An 'osmdata_sf' object returned from function of same name</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Same object, yet with no row names on geometry objects.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other transform: 
+<code>osm_elevation()</code>,
+<code>osm_poly2line()</code>,
+<code>trim_osmdata()</code>,
+<code>unique_osmdata()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+hampi_sf &lt;- opq ("hampi india") %&gt;%
+    add_osm_feature (key = "historic", value = "ruins") %&gt;%
+    osmdata_sf ()
+hampi_clean &lt;- unname_osmdata_sf (hampi_sf)
+
+# All coordinate matrices include rownames with OSM ID values:
+head (as.matrix (hampi_sf$osm_lines$geometry [[1]]))
+# But 'unname_osmdata_sf' removes both row and column names:
+head (as.matrix (hampi_clean$osm_lines$geometry [[1]]))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

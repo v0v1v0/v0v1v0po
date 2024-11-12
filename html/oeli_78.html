@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>diff_cov</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Difference and un-difference covariance matrix</h2>
+
+<h3>Description</h3>
+
+<p>These functions difference and un-difference a covariance matrix with respect
+to row <code>ref</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">diff_cov(cov, ref = 1)
+
+undiff_cov(cov_diff, ref = 1)
+
+delta(ref = 1, dim)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cov, cov_diff</code></td>
+<td>
+<p>[<code>matrix()</code>]<br>
+A (differenced) covariance matrix of dimension <code>dim</code>
+(or <code>dim</code> - 1, respectively).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+The reference row between <code>1</code> and <code>dim</code> for
+differencing that maps <code>cov</code> to <code>cov_diff</code>, see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dim</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+The matrix dimension.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For differencing: Let <code class="reqn">\Sigma</code> be a covariance matrix of dimension
+<code class="reqn">n</code>. Then </p>
+<p style="text-align: center;"><code class="reqn">\tilde{\Sigma} = \Delta_k \Sigma \Delta_k'</code>
+</p>
+
+<p>is the differenced covariance matrix with respect to row <code class="reqn">k = 1,\dots,n</code>,
+where <code class="reqn">\Delta_k</code> is a difference operator that depends on the reference
+row <code class="reqn">k</code>. More precise, <code class="reqn">\Delta_k</code> the identity matrix of dimension
+<code class="reqn">n</code> without row <code class="reqn">k</code> and with <code class="reqn">-1</code>s in column <code class="reqn">k</code>.
+It can be computed with <code>delta(ref = k, dim = n)</code>.
+</p>
+<p>For un-differencing: The "un-differenced" covariance matrix <code class="reqn">\Sigma</code>
+cannot be uniquely computed from <code class="reqn">\tilde{\Sigma}</code>.
+For a non-unique solution, we add a column and a row of zeros
+at column and row number <code class="reqn">k</code> to <code class="reqn">\tilde{\Sigma}</code>, respectively, and
+add <code class="reqn">1</code> to each matrix entry to make the result a proper covariance
+matrix.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A (differenced or un-differenced) covariance <code>matrix</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other matrix helpers: 
+<code>check_correlation_matrix()</code>,
+<code>check_covariance_matrix()</code>,
+<code>check_transition_probability_matrix()</code>,
+<code>cov_to_chol()</code>,
+<code>insert_matrix_column()</code>,
+<code>matrix_diagonal_indices()</code>,
+<code>matrix_indices()</code>,
+<code>sample_correlation_matrix()</code>,
+<code>sample_covariance_matrix()</code>,
+<code>sample_transition_probability_matrix()</code>,
+<code>stationary_distribution()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 3
+Sigma &lt;- sample_covariance_matrix(dim = n)
+k &lt;- 2
+
+# build difference operator
+delta(ref = k, dim = n)
+
+# difference Sigma
+(Sigma_diff &lt;- diff_cov(Sigma, ref = k))
+
+# un-difference Sigma
+undiff_cov(Sigma_diff, ref = k)
+</code></pre>
+
+
+</div>

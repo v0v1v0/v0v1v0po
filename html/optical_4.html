@@ -1,0 +1,289 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optical</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal item calibration</h2>
+
+<h3>Description</h3>
+
+<p>Calibrate items following a 2PL, 3PL, mixture of 2PL and 3PL
+model, or 2PL with common discrimination for all items (Rasch-type).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optical(
+  ip,
+  oc = "D",
+  uncert = FALSE,
+  ipop,
+  imf = c(0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.45),
+  maxiter = rep(300, 6),
+  eps = rep(0.002, 6),
+  nnn = c(0, 50, 50, 200, 200, 200),
+  nsp = c(0.001, 1e-04, 1e-04, 1e-05, 1e-05, 1e-05),
+  sss = 0.001,
+  falpha = 1.08,
+  sdr = TRUE,
+  ig = 3,
+  ex = 0,
+  integ = TRUE,
+  show_progress = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ip</code></td>
+<td>
+<p>matrix with item parameters for all items (number of rows determines
+number of items; number of column is 2 (2PL or Rasch-type with NA from second
+item in first column) or 3 (3PL or mixed 2/3-PL with NA for
+2PL-items in third column).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oc</code></td>
+<td>
+<p>optimality criterion: "D" (D-optimality, default),
+"I" (I-optimality with standard normal weight function), "A" (A-optimality).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uncert</code></td>
+<td>
+<p>if false (default), abilities are assumed to be known; if true,
+handling of uncertainties of Bjermo et al. (2021) is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ipop</code></td>
+<td>
+<p>matrix with item parameters for operational items
+(used if uncert=TRUE, only).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imf</code></td>
+<td>
+<p>the vector of step-lengths; default
+c(0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.45).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxiter</code></td>
+<td>
+<p>maximal number of iterations in each inner loop, the length
+of this vector defines the number of outer loops.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>convergence criterion (maximum violation of eq.th.), vector with
+value for each iteration in the outer loop, but the same number for all
+iterations is recommended.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nnn</code></td>
+<td>
+<p>number of new nodes added at each position in the adaptive grid,
+vector with value for each iteration in the outer loop (nnn [1] not used).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsp</code></td>
+<td>
+<p>node spacing between new nodes, vector with value for each iteration
+in the outer loop (nsp [1] is the spacing between nodes of the starting grid).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sss</code></td>
+<td>
+<p>step size stopping criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>falpha</code></td>
+<td>
+<p>factor alpha for adjusting the step size vector (should be &gt; 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sdr</code></td>
+<td>
+<p>stop if design repeated (flag TRUE/FALSE).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ig</code></td>
+<td>
+<p>inner grid between -ig and ig.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ex</code></td>
+<td>
+<p>intervals of size &lt; ex will be removed (consolidate);
+if ex=0, no consolidation will be done.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>integ</code></td>
+<td>
+<p>if true (default), integrate() is used for computation of partial
+information matrices; if false, Riemann rule is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show_progress</code></td>
+<td>
+<p>if 1 (default), no output will be printed for each iteration.
+If 2, the + symbols will be printed on a line for each Iteration
+If 3, some output of the function will be printed.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Result of this function is a list with following instances:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>dd</code></td>
+<td>
+<p>directional derivatives of optimal solution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xi</code></td>
+<td>
+<p>optimal solution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>final grid of ability values which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>viomax</code></td>
+<td>
+<p>largest violation of eq.th. from final solution (if &lt; eps, alg.
+has converged, otherwise not).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h1</code></td>
+<td>
+<p>interval boundaries for optimal solution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ht</code></td>
+<td>
+<p>Refined table of interval boundaries for optimal design with
+calibrated items and their corresponding probabilities</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mooiter</code></td>
+<td>
+<p>monitoring iterations; information about each iteration to produce
+convergence plots.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>running time of algorithm in minutes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oc</code></td>
+<td>
+<p>optimality criterion ("D", "I", "A", "L").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>L-matrix (not for D-optimality).</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Mahmood Ul Hassan (<a href="mailto:scenic555@gmail.com">scenic555@gmail.com</a>);
+Frank Miller (<a href="mailto:frank.miller@liu.se">frank.miller@liu.se</a>)
+</p>
+
+
+<h3>References</h3>
+
+<p>Ul Hassan and Miller (2021). <a href="https://www.sciencedirect.com/science/article/pii/S0167947321000116?via%3Dihub">An exchange algorithm for optimal calibration of items in computerized achievement tests</a>.<em>Computational Statistics and
+Data Analysis, 157</em>: 107177.
+</p>
+<p>Ul Hassan and Miller (2019). <a href="https://link.springer.com/article/10.1007/s11336-019-09673-6">Optimal item calibration for computerized achievement tests</a>. Psychometrika, 84, 1101-1128.
+</p>
+<p>Bjermo, Fackle-Fornius, and Miller (2021). <a href="https://urn.kb.se/resolve?urn=urn%3Anbn%3Ase%3Asu%3Adiva-198065">Optimizing Calibration Designs with Uncertainty in Abilities</a>. Manuscript.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>drawdesign</code>, <code>convergenceplot</code>,
+<code>efficiency</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># 2PL-models for two items; parameters (a, b)=(1.6, -1) and (1.6, 1), respectively
+
+ip &lt;- cbind(c(1.6, 1.6),c(-1, 1))
+
+yyy &lt;- optical(ip)
+
+# Table of interval boundaries for D-optimal design with items and
+# probabilities (expected proportion of examinees in this interval)
+yyy$ht
+
+
+
+# 1PL-models with common discrimination parameter for two items
+# (model assumption is that both have same discrimination);
+# parameters (a, b)=(1.6, -1) and (1.6, 1), respectively;
+# NA for discrimination means that item has same parameter as preceeding item
+ip &lt;- cbind(c(1.6, NA), c(-1, 1))
+
+yyy &lt;- optical(ip)
+
+# Table of interval boundaries for D-optimal design with items and
+# probabilities (expected proportion of examinees in this interval)
+yyy$ht
+
+
+# 3PL-models for three items; parameters (a, b, c)=(1, 2, 2.5),
+# (-1.5, 0.5, 2) and (0.2, 0.1, 0.05), respectively.
+ip &lt;- cbind(c(1, 2, 2.5),c(-1.5, 0.5, 2),c(0.2, 0.1, 0.05))
+
+yyy &lt;- optical(ip)
+
+# Table of interval boundaries for D-optimal design with items and
+# probabilities (expected proportion of examinees in this interval)
+yyy$ht
+
+</code></pre>
+
+
+</div>

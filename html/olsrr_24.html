@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_plot_dffits</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>DFFITS plot</h2>
+
+<h3>Description</h3>
+
+<p>Plot for detecting influential observations using DFFITs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_plot_dffits(model, size_adj_threshold = TRUE, print_plot = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size_adj_threshold</code></td>
+<td>
+<p>logical; if <code>TRUE</code> (the default), size
+adjusted threshold is used to determine influential observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_plot</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, prints the plot else returns a
+plot object.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>DFFIT - difference in fits, is used to identify influential data points. It
+quantifies the number of standard deviations that the fitted value changes
+when the ith data point is omitted.
+</p>
+<p>Steps to compute DFFITs:
+</p>
+
+<ul>
+<li>
+<p> Delete observations one at a time.
+</p>
+</li>
+<li>
+<p> Refit the regression model on remaining <code class="reqn">n - 1</code> observations
+</p>
+</li>
+<li>
+<p> examine how much all of the fitted values change when the ith observation is deleted.
+</p>
+</li>
+</ul>
+<p>An observation is deemed influential if the absolute value of its DFFITS value is greater than:
+</p>
+<p style="text-align: center;"><code class="reqn">2\sqrt((p + 1) / (n - p -1))</code>
+</p>
+
+<p>A size-adjusted cutoff recommended by Belsley, Kuh, and Welsch is
+</p>
+<p style="text-align: center;"><code class="reqn">2\sqrt(p / n)</code>
+</p>
+<p> and is used by default in <strong>olsrr</strong>.
+</p>
+<p>where <code>n</code> is the number of observations and <code>p</code> is the number of predictors including intercept.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>ols_plot_dffits</code> returns  a list containing the
+following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>outliers</code></td>
+<td>
+<p>a <code>data.frame</code> with observation number and <code>DFFITs</code> that exceed <code>threshold</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p><code>threshold</code> for classifying an observation as an outlier</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Belsley, David A.; Kuh, Edwin; Welsh, Roy E. (1980). Regression
+Diagnostics: Identifying Influential Data and Sources of Collinearity.
+</p>
+<p>Wiley Series in Probability and Mathematical Statistics.
+New York: John Wiley &amp; Sons. ISBN 0-471-05856-4.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ols_plot_dfbetas()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">model &lt;- lm(mpg ~ disp + hp + wt + qsec, data = mtcars)
+ols_plot_dffits(model)
+ols_plot_dffits(model, size_adj_threshold = FALSE)
+
+</code></pre>
+
+
+</div>

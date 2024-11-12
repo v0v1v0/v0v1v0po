@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gof</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Goodness-of-fit assessment of the fitted model.</h2>
+
+<h3>Description</h3>
+
+<p><code>gof()</code> calculates omnibus discrepancy measures and
+their Bayesian <code class="reqn">p</code>-values for the fitted model using the posterior
+predictive check approach.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gof(fit, stats = c("Freeman_Tukey", "deviance"), cores = 1L, plot = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p>An <code>occumbFit</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stats</code></td>
+<td>
+<p>The discrepancy statistics to be applied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cores</code></td>
+<td>
+<p>The number of cores to use for parallelization.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Logical, determine if draw scatter plots of the fit statistics.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to the default <code>plot</code> method.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A discrepancy statistic for the fitted model is obtained using a
+posterior predictive checking procedure.
+The following statistics are currently available:
+</p>
+
+<dl>
+<dt>Freeman-Tukey statistics (default)</dt>
+<dd>
+<p><code class="reqn">T_{\textrm{FT}} = \sum_{i,j,k}\left(\sqrt{y_{ijk}} - \sqrt{E(y_{ijk} \mid \pi_{ijk})}\right)^2</code></p>
+</dd>
+<dt>Deviance statistics</dt>
+<dd>
+<p><code class="reqn">T_{\textrm{deviance}} = -2 \sum_{j,k} \log \textrm{Multinomial}(\boldsymbol{y}_{jk} \mid \boldsymbol{\pi}_{jk})</code></p>
+</dd>
+</dl>
+<p>where <code class="reqn">i</code>, <code class="reqn">j</code>, and <code class="reqn">k</code> are the subscripts of species, site, and
+replicate, respectively,
+<code class="reqn">y_{ijk}</code> is sequence read count data,
+<code class="reqn">\pi_{ijk}</code> is multinomial cell probabilities of sequence read
+counts,
+<code class="reqn">E(y_{ijk} \mid \pi_{ijk})</code> is expected
+value of the sequence read counts conditional on their cell probabilities,
+and <code class="reqn">\log \textrm{Multinomial}(\boldsymbol{y}_{jk} \mid \boldsymbol{\pi}_{jk})</code>
+is the multinomial log-likelihood of the sequence read counts in replicate
+<code class="reqn">k</code> of site <code class="reqn">j</code> conditional on their cell probabilities.
+</p>
+<p>The Bayesian <code class="reqn">p</code>-value is estimated as the probability that the value of
+the discrepancy statistics of the replicated dataset is more extreme than that
+of the observed dataset.
+An extreme Bayesian <code class="reqn">p</code>-value may indicate inadequate model fit.
+See Gelman et al. (2014), Kéry and Royle (2016), and
+Conn et al. (2018) for further details on the procedures used for posterior
+predictive checking.
+</p>
+<p>Computations can be run in parallel on multiple CPU cores where the <code>cores</code>
+argument controls the degree of parallelization.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following named elements:
+</p>
+
+<dl>
+<dt><code>stats</code></dt>
+<dd>
+<p>The discrepancy statistics applied.</p>
+</dd>
+<dt><code>p_value</code></dt>
+<dd>
+<p>Bayesian <code class="reqn">p</code>-value.</p>
+</dd>
+<dt><code>stats_obs</code></dt>
+<dd>
+<p>Discrepancy statistics for observed data.</p>
+</dd>
+<dt><code>stats_rep</code></dt>
+<dd>
+<p>Discrepancy statistics for repeated data.</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>P. B. Conn, D. S. Johnson, P. J. Williams, S. R. Melin and M. B. Hooten.
+(2018) A guide to Bayesian model checking for ecologists.
+<em>Ecological Monographs</em> <strong>88</strong>:526–542.
+<a href="https://doi.org/10.1002/ecm.1314">doi:10.1002/ecm.1314</a>
+</p>
+<p>A. Gelman, J. B. Carlin, H. S. Stern D. B. Dunson, A. Vehtari and
+D. B. Rubin (2013) <em>Bayesian Data Analysis</em>. 3rd edition.
+Chapman and Hall/CRC. <a href="http://www.stat.columbia.edu/~gelman/book/">http://www.stat.columbia.edu/~gelman/book/</a>
+</p>
+<p>M. Kéry and J. A. Royle (2016) <em>Applied Hierarchical Modeling in
+Ecology — Analysis of Distribution, Abundance and Species Richness in R
+and BUGS. Volume 1: Prelude and Static Models</em>. Academic Press.
+<a href="https://www.mbr-pwrc.usgs.gov/pubanalysis/keryroylebook/">https://www.mbr-pwrc.usgs.gov/pubanalysis/keryroylebook/</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Generate the smallest random dataset (2 species * 2 sites * 2 reps)
+I &lt;- 2 # Number of species
+J &lt;- 2 # Number of sites
+K &lt;- 2 # Number of replicates
+data &lt;- occumbData(
+    y = array(sample.int(I * J * K), dim = c(I, J, K)),
+    spec_cov = list(cov1 = rnorm(I)),
+    site_cov = list(cov2 = rnorm(J),
+                    cov3 = factor(1:J)),
+    repl_cov = list(cov4 = matrix(rnorm(J * K), J, K)))
+
+# Fitting a null model
+fit &lt;- occumb(data = data)
+
+# Goodness-of-fit assessment
+gof_result &lt;- gof(fit)
+gof_result
+
+</code></pre>
+
+
+</div>

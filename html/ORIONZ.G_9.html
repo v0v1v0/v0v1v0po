@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ORIONz</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+EAP scoring in exploratory FA solutions with correlated residuals
+</h2>
+
+<h3>Description</h3>
+
+<p><code>ORIONz</code> implements procedures for obtaining Bayes EAP: a) individual score estimates; b) conditional standard errors; c) conditional and marginal reliability estimates derived from linear and non-linear extended Exploratoy Factor Analysis solutions that include a correlated-residual structure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ORIONz(X, LAM, PHI, THRES, Ree, PSI, model = "linear", disp = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>Raw data matrix (dimension: respondents x items).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LAM</code></td>
+<td>
+
+<p>A matrix containing the item loading estimates in the factor-analytic (FA) solution (dimension: items x factors).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PHI</code></td>
+<td>
+
+<p>Inter-factor correlation matrix (dimension: factors x factors).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>THRES</code></td>
+<td>
+
+<p>A matrix containing the item thresholds (dimension: thresholds x items). Only required when a non-linear graded FA solution is requested.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ree</code></td>
+<td>
+
+<p>Residual inter-item correlation matrix (dimension: items x items).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PSI</code></td>
+<td>
+
+<p>Diagonal matrix contanining the residual item standard deviations (dimension: items x items).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>The factor-analytic model used for item calibration, where: 'linear' refers to the standard FA model and 'graded' refers to the non-linear ordered-categorical FA model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disp</code></td>
+<td>
+
+<p>Determines if the output will be displayed in the console, TRUE by default. If it is TRUE, the output is printed in console and if it is FALSE, the output is returned silently to the output variable.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>ORIONz implements procedures for obtaining individual score estimates and accompanying measures of accuracy that are based on extended exploratory factor-analytic oblique linear and nonlinear solutions with a residual correlation structure. In the linear case, ORIONz provides closed-form results that use all the structural information available from the calibration stage (including the inter-factor correlations). In the nonlinear case, ORIONz proposes a simple scaling bias correction that, allows more realistic estimates of the accuracy of the factor score estimates to be obtained. In both types of solutions, the outcome includes: individual score estimates, conditional standard errors, and measures of conditional and marginal reliability. An article describing the foundations and technical details of the ORIONz procedures is in preparation, and hopefully, all this information will be available for the interested practitioners very soon.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>th_corrected</code></td>
+<td>
+<p>Unbiased Bayes EAP individual factor scores estimates obtained by taking into account the residual correlations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reli_corrected</code></td>
+<td>
+<p>Only if a non-linear graded solutions is required. Unbiased conditional reliability estimates obtained by taking into account the residual correlations. Because residual correlations are generally positive, these corrected estimates are usually deflated compared to the uncorrected ones.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>marginal_reli_corrected</code></td>
+<td>
+<p>Unbiased marginal overall reliability estimates obtained by taking into account the residual correlations. Because residual correlations are generally positive, these corrected estimates are usually deflated compared to the uncorrected ones.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>se_corrected</code></td>
+<td>
+<p>Only if a non-linear graded solution is required. Unbiased standard errors of measurement corresponding to each individual score estimate. Strictly speaking, these standard errors are Bayes Posterior Standard Deviations.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Navarro-Gonzalez
+</p>
+<p>Urbano Lorenzo-Seva
+</p>
+<p>Pere Joan Ferrando
+</p>
+
+
+<h3>References</h3>
+
+<p>Ferrando, P.J., Navarro-Gonzalez, D., &amp; Lorenzo-Seva, U. (2024). ORION-z: a simple and comprehensive proposal for EAP score estimation in Exploratory FA solutions with correlated residuals (forthcoming).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example data set, containing the fitted model of a simulated set of 1000 responders and
+## 10 items, with a 2 factor confirmatory structure, and containing 2 doublets
+## (items 1-2 and 5-6) :
+
+ORIONz(X = dataconti, LAM = LAM, PHI = PHI, Ree = Ree, PSI = PSI)
+
+</code></pre>
+
+
+</div>

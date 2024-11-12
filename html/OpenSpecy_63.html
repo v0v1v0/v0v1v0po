@@ -1,0 +1,286 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cor_spec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Identify and filter spectra</h2>
+
+<h3>Description</h3>
+
+<p><code>match_spec()</code> joins two <code>OpenSpecy</code> objects and their metadata
+based on similarity.
+<code>cor_spec()</code> correlates two <code>OpenSpecy</code> objects, typically one with
+knowns and one with unknowns.
+<code>ident_spec()</code> retrieves the top match values from a correlation matrix
+and formats them with metadata.
+<code>get_metadata()</code> retrieves metadata from OpenSpecy objects.
+<code>max_cor_named()</code> formats the top correlation values from a correlation
+matrix as a named vector.
+<code>filter_spec()</code> filters an Open Specy object.
+<code>fill_spec()</code> adds filler values to an <code>OpenSpecy</code> object where it doesn't have intensities.
+<code>os_similarity()</code> EXPERIMENTAL, returns a single similarity metric between two OpenSpecy objects based on the method used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cor_spec(x, ...)
+
+## Default S3 method:
+cor_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+cor_spec(x, library, na.rm = T, conform = F, type = "roll", ...)
+
+match_spec(x, ...)
+
+## Default S3 method:
+match_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+match_spec(
+  x,
+  library,
+  na.rm = T,
+  conform = F,
+  type = "roll",
+  top_n = NULL,
+  order = NULL,
+  add_library_metadata = NULL,
+  add_object_metadata = NULL,
+  fill = NULL,
+  ...
+)
+
+ident_spec(
+  cor_matrix,
+  x,
+  library,
+  top_n = NULL,
+  add_library_metadata = NULL,
+  add_object_metadata = NULL,
+  ...
+)
+
+get_metadata(x, ...)
+
+## Default S3 method:
+get_metadata(x, ...)
+
+## S3 method for class 'OpenSpecy'
+get_metadata(x, logic, rm_empty = TRUE, ...)
+
+max_cor_named(cor_matrix, na.rm = T)
+
+filter_spec(x, ...)
+
+## Default S3 method:
+filter_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+filter_spec(x, logic, ...)
+
+ai_classify(x, ...)
+
+## Default S3 method:
+ai_classify(x, ...)
+
+## S3 method for class 'OpenSpecy'
+ai_classify(x, library, fill = NULL, ...)
+
+fill_spec(x, ...)
+
+## Default S3 method:
+fill_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+fill_spec(x, fill, ...)
+
+os_similarity(x, ...)
+
+## Default S3 method:
+os_similarity(x, ...)
+
+## S3 method for class 'OpenSpecy'
+os_similarity(x, y, method = "hamming", na.rm = T, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>OpenSpecy</code> object, typically with unknowns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>library</code></td>
+<td>
+<p>an <code>OpenSpecy</code> or <code>glmnet</code> object representing the
+reference library of spectra or model to use in identification.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>logical; indicating whether missing values should be removed
+when calculating correlations. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conform</code></td>
+<td>
+<p>Whether to conform the spectra to the library wavenumbers or not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of conformation to make returned by <code>conform_spec()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top_n</code></td>
+<td>
+<p>integer; specifying the number of top matches to return.
+If <code>NULL</code> (default), all matches will be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>an <code>OpenSpecy</code> used for sorting, ideally the unprocessed
+one; <code>NULL</code> skips sorting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_library_metadata</code></td>
+<td>
+<p>name of a column in the library metadata to be
+joined; <code>NULL</code> if you don't want to join.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_object_metadata</code></td>
+<td>
+<p>name of a column in the object metadata to be
+joined; <code>NULL</code> if you don't want to join.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fill</code></td>
+<td>
+<p>an <code>OpenSpecy</code> object with a single spectrum to be used to
+fill missing values for alignment with the AI classification.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor_matrix</code></td>
+<td>
+<p>a correlation matrix for object and library,
+can be returned by <code>cor_spec()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logic</code></td>
+<td>
+<p>a logical or numeric vector describing which spectra to keep.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rm_empty</code></td>
+<td>
+<p>logical; whether to remove empty columns in the metadata.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>an <code>OpenSpecy</code> object to perform similarity search against x.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the type of similarity metric to return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed <code>cor()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>match_spec()</code> and <code>ident_spec()</code> will return
+a <code>data.table-class()</code> containing correlations
+between spectra and the library.
+The table has three columns: <code>object_id</code>, <code>library_id</code>, and
+<code>match_val</code>.
+Each row represents a unique pairwise correlation between a spectrum in the
+object and a spectrum in the library.
+If <code>top_n</code> is specified, only the top <code>top_n</code> matches for each
+object spectrum will be returned.
+If <code>add_library_metadata</code> is <code>is.character</code>, the library metadata
+will be added to the output.
+If <code>add_object_metadata</code> is <code>is.character</code>, the object metadata
+will be added to the output.
+<code>filter_spec()</code> returns an <code>OpenSpecy</code> object.
+<code>fill_spec()</code> returns an <code>OpenSpecy</code> object.
+<code>cor_spec()</code> returns a correlation matrix.
+<code>get_metadata()</code> returns a <code>data.table-class()</code>
+with the metadata for columns which have information.
+<code>os_similarity()</code> returns a single numeric value representing the type
+of similarity metric requested. 'wavenumber' similarity is based on the
+proportion of wavenumber values that overlap between the two objects,
+'metadata' is the proportion of metadata column names,
+'hamming' is something similar to the hamming distance where we discretize
+all spectra in the OpenSpecy object by wavenumber intensity values and then
+relate the wavenumber intensity value distributions by mean difference in
+min-max normalized space. 'pca' tests the distance between the OpenSpecy
+objects in PCA space using the first 4 component values and calculating the
+max-range normalized distance between the mean components. The first two
+metrics are pretty straightforward and definitely ready to go, the 'hamming'
+and 'pca' metrics are pretty experimental but appear to be working under our
+current test cases.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>adj_intens()</code> converts spectra;
+<code>get_lib()</code> retrieves the Open Specy reference library;
+<code>load_lib()</code> loads the Open Specy reference library into an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>
+object of choice
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("test_lib")
+
+unknown &lt;- read_extdata("ftir_ldpe_soil.asp") |&gt;
+  read_any() |&gt;
+  conform_spec(range = test_lib$wavenumber,
+               res = spec_res(test_lib)) |&gt;
+  process_spec()
+cor_spec(unknown, test_lib)
+
+match_spec(unknown, test_lib, add_library_metadata = "sample_name",
+           top_n = 1)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>efficient_round</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Efficient Round</h2>
+
+<h3>Description</h3>
+
+<p>Takes an approximate design, and a number of points and converts the design to
+an approximate design. It uses the multiplier (n - l/2) and evens the total
+number of observations afterwards.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">efficient_round(design, n, tol = 1e-05)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>design</code></td>
+<td>
+<p>a dataframe with columns "Point" and "Weight" that represents a design</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>an integer that represents the desired number of observations of the exact design</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>optional parameter for the consideration of an integer in the rounding process</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data.frame with columns "Point" and "Weight" representing an exact design
+with n observations
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">design_test &lt;- data.frame("Point" = seq(1, 5, length.out = 7),
+         "Weight" = c(0.1, 0.0001, 0.2, 0.134, 0.073, 0.2111, 0.2818))
+
+efficient_round(design_test, 20)
+
+exact_design &lt;- efficient_round(design_test, 21)
+aprox_design &lt;- exact_design
+aprox_design$Weight &lt;- aprox_design$Weight/sum(aprox_design$Weight)
+</code></pre>
+
+
+</div>

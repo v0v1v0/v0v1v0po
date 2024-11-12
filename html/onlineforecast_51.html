@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>First-order low-pass filtering</h2>
+
+<h3>Description</h3>
+
+<p>First-order low-pass filtering of time series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lp(X, a1, usestate = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Dataframe or matrix (or list of them) of forecasts in columns to be low-pass filtered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a1</code></td>
+<td>
+<p>The low-pass filter coefficient.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>usestate</code></td>
+<td>
+<p>logical: Use the state kept in the model$input? if <code>lp()</code> is used outside model$transform_data(), then it must be set to FALSE, otherwise the input$state (which is not there) will be read leading to an error.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function applies a first order unity gain low-pass filter to the columns of <code>X</code>.
+The low-pass filter is applied to each column seperately. The stationary gain of the filter i one.
+</p>
+<p>If a list of dataframes (or matrices) is given, then the low-pass filtering is recursively applied on each.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The low-pass filtered dataframe (as a matrix)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Make a dataframe for the examples
+X &lt;- data.frame(k1=rep(c(0,1),each=5))
+X$k2 &lt;- X$k1
+Xf &lt;- lp(X, 0.5, usestate=FALSE)
+Xf
+
+# See the input and the low-pass filtered result
+plot(X$k1)
+lines(Xf[ ,"k1"])
+# Slower response with higher a1 value
+lines(lp(X, 0.8, usestate=FALSE)[ ,"k1"])
+
+# If a list of dataframes is given, then lp() is recursively applied on each
+lp(list(X,X), 0.5, usestate=FALSE)
+
+
+</code></pre>
+
+
+</div>

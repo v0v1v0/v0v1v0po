@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>view_layout</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate Annotated Layout for Report Templates</h2>
+
+<h3>Description</h3>
+
+<p>Produces a report with each layout element labeled.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">view_layout(
+  template = file.path(system.file(package = "onbrand"), "templates", "report.pptx"),
+  output_file = NULL,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>template</code></td>
+<td>
+<p>Name of PowerPoint or Word file to annotate (defaults to included PoerPoint template)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output_file</code></td>
+<td>
+<p>name of file to place the annotated layout information, set to <code>NULL</code> and it will generate a file named layout with the appropriate extension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean variable when set to TRUE (default) messages will be</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Generates an Annotated report based on the template provided.  
+Elements of slide masters are identified by placeholder labels. As PowerPoint 
+masters are created the labels can be difficult to predict. Word documents are 
+identified by style names. This function will create a layout file identifying 
+all of the elements of each slide master for a PowerPoint template or each 
+paragraph and table style for a Word template.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with the following elements
+</p>
+
+<ul>
+<li>
+<p>isgood: Boolean variable indicating success or failure
+</p>
+</li>
+<li>
+<p>rpt: Officer with the annotated layout
+</p>
+</li>
+<li>
+<p>msgs: Vector of messages
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">lpptx = view_layout(
+     template = file.path(system.file(package="onbrand"), "templates", "report.pptx"),
+     output_file   = file.path(tempdir(), "layout.pptx"))
+
+ldocx = view_layout(
+     template = file.path(system.file(package="onbrand"), "templates", "report.docx"),
+     output_file   = file.path(tempdir(), "layout.docx"))
+</code></pre>
+
+
+</div>

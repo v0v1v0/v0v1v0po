@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OGD</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Online gradient descent algorithm for online single-view data clustering</h2>
+
+<h3>Description</h3>
+
+<p>Online gradient descent is an optimisation algorithm in machine learning for when the amount of data is too large to process all the data at the same time. In this algorithm, the model parameters are updated based on a single training sample, rather than using the entire training set. The direction of each update is determined by the direction of the gradient of the current sample, and the local or global extremes of the gradient descent algorithm depend on the order of the sampled samples. Compared to Batch Gradient Descent (BGD) algorithm, online gradient descent algorithms can process data streams and update the model as they process the data, and are therefore more efficient for large-scale data. However, online gradient descent algorithm should only be used if the data stream is continuously present and updated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OGD(X, K, gamma, max.m, chushi, yita, epsilon, truere, method = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+  
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>data matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>number of cluster</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p>step size</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yita</code></td>
+<td>
+<p>the regularized parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truere</code></td>
+<td>
+<p>true cluster result</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.m</code></td>
+<td>
+<p>max iter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>epsilon</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chushi</code></td>
+<td>
+<p>the initial value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>caculate the index of NMI</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>result,NMI,M
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Miao Yu
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">yita=0.5;V=2;K=3;chushi=100;epsilon=1;gamma=0.1;max.m=10;n1=n2=n3=70
+ X1&lt;-rnorm(n1,20,2);X2&lt;-rnorm(n2,25,1.5);X3&lt;-rnorm(n3,30,2) 
+ Xv&lt;-c(X1,X2,X3)
+ data&lt;-matrix(Xv,n1+n2+n3,2)
+ data[1:70,2]&lt;-1;data[71:140,2]&lt;-2;data[141:210,2]&lt;-3
+ X&lt;-matrix(data[,1],n1+n2+n3,1) 
+ truere=data[,2]
+ lamda1&lt;-0.2;lamda2&lt;-0.8
+ lamda&lt;-matrix(c(lamda1,lamda2),nrow=1,ncol=2)
+ sol.svd &lt;- svd(lamda)
+  U1&lt;-sol.svd$u
+ D1&lt;-sol.svd$d
+ V1&lt;-sol.svd$v
+ C1&lt;-t(U1)
+ Y1&lt;-C1/D1
+ view&lt;-V1
+ view1&lt;-matrix(view[1,])
+ view2&lt;-matrix(view[2,])
+ X1&lt;-matrix(view1,n1+n2+n3,1)
+ X2&lt;-matrix(view2,n1+n2+n3,1)
+ OGD(X=X1,K=K,gamma=gamma,max.m=max.m,chushi=chushi,
+yita=yita,epsilon=epsilon,truere=truere,method=0)
+</code></pre>
+
+
+</div>

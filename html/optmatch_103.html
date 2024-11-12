@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>setMaxProblemSize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set the maximum problem size</h2>
+
+<h3>Description</h3>
+
+<p>Helper function to ease setting the largest problem size to be
+accepted by <code>pairmatch</code> or <code>fullmatch</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">setMaxProblemSize(size = Inf)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>Positive integer, or <code>Inf</code></p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The function sets the optmatch_max_problem_size global option. The
+option ships with the option pre-set to a value that's relatively small,
+smaller than what most modern computers can handle.  Invoking this
+function with no argument
+re-sets the optmatch_max_problem_size option to <code>Inf</code>, effectively
+disabling checks on problem size.  Unless you're working with an older
+computer, it probably makes sense for most users to do this, at least
+until they determine what problem sizes are too large for their machines.
+(You'll know that when your R crashes, or simply takes too long for
+your taste.)
+</p>
+<p>To determine the size of a problem without subproblems, i.e. exact
+matching categories, use <code>match_on</code> to set up and store
+the problem distance, then apply <code>length</code> to the result. If
+there were exact matching constraints imposed during the creation
+of the distance, then you'll want to look at the largest size of a
+subproblem.  Apply <code>findSubproblems</code> to your distance,
+creating a list, say <code>dlist</code>, of your distances; then do
+<code>sapply(dlist, length)</code> to determine the sizes of the subproblems.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Ben B. Hansen
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>getMaxProblemSize</code>
+</p>
+
+
+</div>

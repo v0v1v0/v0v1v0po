@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matrixT</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Multiple T Tests by Matrix Multiplication </h2>
+
+<h3>Description</h3>
+
+<p>Utility functions for computing vectors of row-by-row means,
+variances, and t-statistics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matrixMean(x,na.rm=FALSE)
+matrixVar(x, xmean, na.rm=FALSE)
+matrixT(m, v, na.rm=FALSE)
+matrixUnequalT(m, v)
+matrixPairedT(m, v, pf)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a matrix </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmean</code></td>
+<td>
+<p> a numeric vector or single-column matrix </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p> a matrix </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p> a logical value indicating whether means, variances, and
+t-statistics should be computed after omitting NA values
+from individual rows of the data matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p> a logical vector of length equal to the number of columns of <code>m</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pf</code></td>
+<td>
+<p> a numerical vector of length equal to the number of columns
+of <code>m</code>, indicating which samples should be paired </p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>matrixMean</code> returns a single-column matrix containing the
+row-by-row means of <code>x</code>.
+</p>
+<p><code>matrixVar</code> returns a single-column matrix containing the
+row-by-row means of <code>x</code>, assuming that <code>xmean</code> contains the
+corresponding mean values.
+</p>
+<p><code>matrixT</code> returns a single-column matrix of t-statistics from a
+two-sample t-test comparing the columns for which <code>v</code> is true to
+those for which <code>v</code> is false.
+</p>
+<p><code>matrixPairedT</code> returns a single-column matrix of t-statistics from a
+paired t-test.
+</p>
+<p><code>matrixUnequalT</code> returns a list with two components: <code>tt</code> is
+a single-column matrix of t-statistics from a two-sample unequal
+variance t-test comparing the columns for which <code>v</code> is true to
+those for which <code>v</code> is false, and <code>df</code> is a single-column
+matrix of the degrees of freedom associated with each row.. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kevin R. Coombes &lt;krc@silicovore.com&gt;</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ng &lt;- 1000
+ns &lt;- 50
+dat &lt;- matrix(rnorm(ng*ns), ncol=ns)
+clas &lt;- factor(rep(c('Good', 'Bad'), each=25))
+myMean &lt;- matrixMean(dat)
+myVar  &lt;- matrixVar(dat, myMean)
+plot(myMean, myVar)
+
+
+myT &lt;- matrixT(dat, clas)
+hist(myT)
+
+rm(ng, ns, dat, myMean, myVar, myT)
+</code></pre>
+
+
+</div>

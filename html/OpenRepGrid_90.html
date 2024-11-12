@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grids_leave_n_out</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Resample constructs</h2>
+
+<h3>Description</h3>
+
+<p>The goal of resampling is to build variations of a single grid.
+Two variants are implemented: The first is the <em>leave-n-out</em> approach which
+builds all possible grids when dropping n constructs. The second is a
+<em>bootstrap</em> approach, randomly drawing n constructs from the grid.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">grids_leave_n_out(x, n = 0)
+
+grids_bootstrap(x, n = nrow(x), reps = 100, replace = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A repgrid object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of constructs to drop or to sample in each generated grid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reps</code></td>
+<td>
+<p>Number of grids to generate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replace</code></td>
+<td>
+<p>Resample constructs with replacement?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>List of grids.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## All results for PVAFF index when one construct is left out 
+p &lt;- indexPvaff(boeker)
+l &lt;- grids_leave_n_out(boeker, n = 1)
+pp &lt;- sapply(l, indexPvaff)  # apply indexPvaff function to all grids
+range(pp)   # min and max PVAFF
+hist(pp, xlab = "PVAFF values")    # visualize
+abline(v = p, col = "blue", lty = 2)
+</code></pre>
+
+
+</div>

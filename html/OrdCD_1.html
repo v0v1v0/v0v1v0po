@@ -1,0 +1,150 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OrdCD</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Causal Discovery for Ordinal Categorical Data</h2>
+
+<h3>Description</h3>
+
+<p>Estimate a causal directed acyclic graph (DAG) for ordinal categorical data with greedy or exhaustive search.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OrdCD(
+  y,
+  search = "greedy",
+  ic = "bic",
+  edge_list = NULL,
+  link = "probit",
+  G = NULL,
+  nstart = 1,
+  verbose = FALSE,
+  maxit = 50,
+  boot = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a data frame with each column being an ordinal categorical variable, which must be a factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>search</code></td>
+<td>
+<p>the search method used to find the best-scored DAG. The default search method is "greedy". When the number of nodes is less than 4, "exhaust" search is available.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ic</code></td>
+<td>
+<p>the information criterion (AIC or BIC) used to score DAGs. The default is "bic".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edge_list</code></td>
+<td>
+<p>an edge list of a CPDAG, which may contain both directed and undirected edges. This option can significantly speed up the algorithm by restricting the search space to DAGs that are Markov equivalent to the input CPDAG. Such CPDAG may be obtained by e.g., the PC algorithm; see the example below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>the link function for ordinal regression. The default is "probit". Other choices are "logistic", "loglog", "cloglog", and "cauchit".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+<p>a list of DAG adjacency matrices that users want to restrict their search on for the "exhaust" search. The default is "NULL" meaning no restriction imposed on the search.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nstart</code></td>
+<td>
+<p>number of random graph initializations for the "greedy" search.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>if TRUE, messages are printed during the run of the greedy search algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>the maximum number of iterations for the greedy search algorithm. The default is 50. When the maximum number of iteration is achieved, a warning message will be generated to caution the user that the algorithm has not converged.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boot</code></td>
+<td>
+<p>the number of bootstrap samples. Default is no bootstrapping.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with "boot" elements. Each element is a list with two elements, gam and ic_best. gam is an estimated DAG adjacency matrix whose (i,j)th entry is 1 if j-&gt;i is present in the graph and 0 otherwise. ic_best is the corresponding information criterion value.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2020)
+n=1000 #sample size
+q=3 #number of nodes
+y = u = matrix(0,n,q)
+u[,1] = 4*rnorm(n)
+y[,1] = (u[,1]&gt;1) + (u[,1]&gt;2)
+for (j in 2:q){
+  u[,j] = 2*y[,j-1] + rnorm(n)
+  y[,j]=(u[,j]&gt;1) + (u[,j]&gt;2)
+}
+A=matrix(0,q,q) #true DAG adjacency matrix
+A[2,1]=A[3,2]=1
+y=as.data.frame(y)
+for (j in 1:q){
+  y[,j]=as.factor(y[,j])
+}
+
+time=proc.time()
+G=OrdCD(y) #estimated DAG adjacency matrix
+time=proc.time() - time
+print(A) #display the true adjacency
+print(G) #display the estimated adjacency
+print(time[3]) #elapsed time
+
+time2=proc.time()
+colnames(y)=1:ncol(y)
+PC=bnlearn::pc.stable(y,test="mi-sh",alpha=0.01)
+edge_list=matrix(as.numeric(PC$arcs),ncol=2)
+G2=OrdCD(y, edge_list=edge_list) #estimated DAG with an input CPDAG from PC algorithm
+time2=proc.time()-time2
+print(G2) #display the estimated adjacency
+print(time2[3]) #elapsed time
+
+## Not run: 
+time3=proc.time()
+G3=OrdCD(y,boot=10) #estimated DAG adjacency matrix with bootstrapping
+time3=proc.time() - time3
+#average over bootstrap samples
+G_avg = matrix(colMeans(matrix(unlist(G3),nrow=q^2+1,byrow=TRUE))[1:(q^2)],q,q)
+print(G_avg) #display the estimated adjacency averaged over 10 bootstrap samples
+print(time3[3]) #elapsed time
+
+## End(Not run)
+</code></pre>
+
+
+</div>

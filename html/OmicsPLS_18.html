@@ -1,0 +1,347 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>o2m</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform O2PLS data integration with two-way orthogonal corrections</h2>
+
+<h3>Description</h3>
+
+<p>NOTE THAT THIS FUNCTION DOES NOT CENTER NOR SCALE THE MATRICES! Any normalization you will have to do yourself. It is best practice to at least center the variables though.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">o2m(
+  X,
+  Y,
+  n,
+  nx,
+  ny,
+  stripped = FALSE,
+  p_thresh = 3000,
+  q_thresh = p_thresh,
+  tol = 1e-10,
+  max_iterations = 1000,
+  sparse = F,
+  groupx = NULL,
+  groupy = NULL,
+  keepx = NULL,
+  keepy = NULL,
+  max_iterations_sparsity = 1000
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Numeric matrix. Vectors will be coerced to matrix with <code>as.matrix</code> (if this is possible)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Numeric matrix. Vectors will be coerced to matrix with <code>as.matrix</code> (if this is possible)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Integer. Number of joint PLS components. Must be positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nx</code></td>
+<td>
+<p>Integer. Number of orthogonal components in <code class="reqn">X</code>. Negative values are interpreted as 0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ny</code></td>
+<td>
+<p>Integer. Number of orthogonal components in <code class="reqn">Y</code>. Negative values are interpreted as 0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stripped</code></td>
+<td>
+<p>Logical. Use the stripped version of o2m (usually when cross-validating)?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p_thresh</code></td>
+<td>
+<p>Integer. If <code>X</code> has more than <code>p_thresh</code> columns, a power method optimization is used, see <code>o2m2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q_thresh</code></td>
+<td>
+<p>Integer. If <code>Y</code> has more than <code>q_thresh</code> columns, a power method optimization is used, see <code>o2m2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Double. Threshold for which the NIPALS method is deemed converged. Must be positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_iterations</code></td>
+<td>
+<p>Integer. Maximum number of iterations for the NIPALS method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sparse</code></td>
+<td>
+<p>Boolean. Default value is <code>FALSE</code>, in which case O2PLS will be fitted. Set to <code>TRUE</code> for GO2PLS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupx</code></td>
+<td>
+<p>Vector. Used when <code>sparse = TRUE</code>. A vector of strings indicating group names of each X-variable. Its length must be equal to the number of variables in <code class="reqn">X</code>. The order of group names must corresponds to the order of the variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupy</code></td>
+<td>
+<p>Vector. Used when <code>sparse = TRUE</code>. A vector of strings indicating group names of each Y-variable. The length must be equal to the number of variables in <code class="reqn">Y</code>. The order of group names must corresponds to the order of the variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepx</code></td>
+<td>
+<p>Vector. Used when <code>sparse = TRUE</code>. A vector of length <code>n</code> indicating how many variables (or groups if <code>groupx</code> is provided) to keep in each of the joint component of <code class="reqn">X</code>. If the input is an integer, all the components will have the same amount of variables or groups retained.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepy</code></td>
+<td>
+<p>Vector. Used when <code>sparse = TRUE</code>. A vector of length <code>n</code> indicating how many variables (or groups if <code>groupx</code> is provided) to keep in each of the joint component of <code class="reqn">Y</code>. If the input is an integer, all the components will have the same amount of variables or groups retained.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_iterations_sparsity</code></td>
+<td>
+<p>Integer. Used when <code>sparse = TRUE</code>. Maximum number of iterations for the NIPALS method for GO2PLS.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If both <code>nx</code> and <code>ny</code> are zero, <code>o2m</code> is equivalent to PLS2 with orthonormal loadings.
+This is a ‘slower’ (in terms of memory) implementation of O2PLS, and is using <code>svd</code>, use <code>stripped=T</code> for a stripped version with less output.
+If either <code>ncol(X) &gt; p_thresh</code> or <code>ncol(Y) &gt; q_thresh</code>, the NIPALS method is used which does not store the entire covariance matrix.
+The squared error between iterands in the NIPALS approach can be adjusted with <code>tol</code>.
+The maximum number of iterations in the NIPALS approach is tuned by <code>max_iterations</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Tt</code></td>
+<td>
+<p>Joint <code class="reqn">X</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W.</code></td>
+<td>
+<p>Joint <code class="reqn">X</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>Joint <code class="reqn">Y</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C.</code></td>
+<td>
+<p>Joint <code class="reqn">Y</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>E</code></td>
+<td>
+<p>Residuals in <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ff</code></td>
+<td>
+<p>Residuals in <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>T_Yosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">X</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P_Yosc.</code></td>
+<td>
+<p>Orthogonal <code class="reqn">X</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W_Yosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">X</code> weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U_Xosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">Y</code> scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P_Xosc.</code></td>
+<td>
+<p>Orthogonal <code class="reqn">Y</code> loadings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C_Xosc</code></td>
+<td>
+<p>Orthogonal <code class="reqn">Y</code> weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_U</code></td>
+<td>
+<p>Regression coefficient in <code>Tt</code> ~ <code>U</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_T.</code></td>
+<td>
+<p>Regression coefficient in <code>U</code> ~ <code>Tt</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H_TU</code></td>
+<td>
+<p>Residuals in <code>Tt</code> in <code>Tt</code> ~ <code>U</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H_UT</code></td>
+<td>
+<p>Residuals in <code>U</code> in <code>U</code> ~ <code>Tt</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X_hat</code></td>
+<td>
+<p>Prediction of <code class="reqn">X</code> with <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y_hat</code></td>
+<td>
+<p>Prediction of <code class="reqn">Y</code> with <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2X</code></td>
+<td>
+<p>Variation (measured with <code>ssq</code>) of the modeled part in <code class="reqn">X</code> (defined by joint + orthogonal variation) as proportion of variation in <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Y</code></td>
+<td>
+<p>Variation (measured with <code>ssq</code>) of the modeled part in <code class="reqn">Y</code> (defined by joint + orthogonal variation) as proportion of variation in <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Xcorr</code></td>
+<td>
+<p>Variation (measured with <code>ssq</code>) of the joint part in <code class="reqn">X</code> as proportion of variation in <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Ycorr</code></td>
+<td>
+<p>Variation (measured with <code>ssq</code>) of the joint part in <code class="reqn">Y</code> as proportion of variation in <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2X_YO</code></td>
+<td>
+<p>Variation (measured with <code>ssq</code>) of the orthogonal part in <code class="reqn">X</code> as proportion of variation in <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Y_XO</code></td>
+<td>
+<p>Variation (measured with <code>ssq</code>) of the orthogonal part in <code class="reqn">Y</code> as proportion of variation in <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Xhat</code></td>
+<td>
+<p>Variation (measured with <code>ssq</code>) of the predicted <code class="reqn">X</code> as proportion of variation in <code class="reqn">X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R2Yhat</code></td>
+<td>
+<p>Variation (measured with <code>ssq</code>) of the predicted <code class="reqn">Y</code> as proportion of variation in <code class="reqn">Y</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W_gr</code></td>
+<td>
+<p>Joint loadings of <code class="reqn">X</code> at group level (only available when GO2PLS is used)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C_gr</code></td>
+<td>
+<p>Joint loadings of <code class="reqn">Y</code> at group level (only available when GO2PLS is used)</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>summary.o2m</code>, <code>plot.o2m</code>, <code>crossval_o2m_adjR2</code>, <code>crossval_sparsity</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">test_X &lt;- scale(matrix(rnorm(100*10),100,10))
+test_Y &lt;- scale(matrix(rnorm(100*11),100,11))
+#  --------- Default run ------------ 
+o2m(test_X, test_Y, 3, 2, 1)
+#  ---------- Stripped version ------------- 
+o2m(test_X, test_Y, 3, 2, 1, stripped = TRUE)
+#  ---------- High dimensional version ---------- 
+o2m(test_X, test_Y, 3, 2, 1, p_thresh = 1)
+#  ------ High D and stripped version --------- 
+o2m(test_X, test_Y, 3, 2, 1, stripped = TRUE, p_thresh = 1)
+#  ------ Now with more iterations -------- 
+o2m(test_X, test_Y, 3, 2, 1, stripped = TRUE, p_thresh = 1, max_iterations = 1e6)
+#  ---------------------------------- 
+
+</code></pre>
+
+
+</div>

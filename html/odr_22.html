@@ -1,0 +1,368 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>power.4</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Budget and/or sample size, power, MDES calculation for
+four-level CRTs detecting main effects</h2>
+
+<h3>Description</h3>
+
+<p>This function can calculate required budget for desired power,
+power or minimum detectable effect size (MDES) under fixed budget
+for four-level cluster randomized trials (CRTs).
+It also can perform conventional power analyses
+(e.g., required sample size, power, and MDES calculation).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">power.4(
+  cost.model = TRUE,
+  expr = NULL,
+  constraint = NULL,
+  sig.level = 0.05,
+  two.tailed = TRUE,
+  d = NULL,
+  power = NULL,
+  m = NULL,
+  n = NULL,
+  J = NULL,
+  K = NULL,
+  L = NULL,
+  p = NULL,
+  icc2 = NULL,
+  icc3 = NULL,
+  icc4 = NULL,
+  r12 = NULL,
+  r22 = NULL,
+  r32 = NULL,
+  r42 = NULL,
+  q = NULL,
+  c1 = NULL,
+  c2 = NULL,
+  c3 = NULL,
+  c4 = NULL,
+  c1t = NULL,
+  c2t = NULL,
+  c3t = NULL,
+  c4t = NULL,
+  dlim = NULL,
+  powerlim = NULL,
+  Llim = NULL,
+  mlim = NULL,
+  rounded = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cost.model</code></td>
+<td>
+<p>Logical; power analyses accommodating costs and budget
+(e.g., required budget for desired power, power/MDES under fixed budget)
+if TRUE, otherwise conventional power analyses
+(e.g., required sample size, power, or MDES calculation); default value is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expr</code></td>
+<td>
+<p>Returned objects from function <code>od.4</code>; default value is NULL;
+if <code>expr</code> is specified, parameter values of <code>icc2</code>, <code>icc3</code>, <code>icc4</code>,
+<code>r12</code>, <code>r22</code>, <code>r32</code>, <code>r42</code>,
+<code>c1</code>, <code>c2</code>, <code>c3</code>, <code>c4</code>,
+<code>c1t</code>, <code>c2t</code>, <code>c3t</code>, <code>c4t</code>, <code>p</code>, <code>n</code>, <code>J</code>, and <code>K</code>
+used or solved in function <code>od.4</code> will
+be passed to current function;
+only the values of <code>p</code>, <code>n</code>, <code>J</code>, and/or <code>K</code> that specified or solved in
+function <code>od.4</code> can be overwritten
+if <code>constraint</code> is specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>constraint</code></td>
+<td>
+<p>Specify the constrained values of <code>p</code>, <code>n</code>, <code>J</code>,
+and/or <code>K</code> in list format to overwrite
+those from <code>expr</code>; default value is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig.level</code></td>
+<td>
+<p>Significance level or type I error rate, default value is 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>two.tailed</code></td>
+<td>
+<p>Logical; two-tailed tests if TRUE,
+otherwise one-tailed tests; default value is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>Effect size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Statistical power.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Total budget.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The level-1 sample size per level-2 unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>The level-2 sample size per level-3 unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>The level-3 sample size per level-4 unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>The total level-4 sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The proportion of level-4 clusters/units to be assigned to treatment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icc2</code></td>
+<td>
+<p>The unconditional intraclass correlation coefficient (ICC) at level 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icc3</code></td>
+<td>
+<p>The unconditional intraclass correlation coefficient (ICC) at level 3.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icc4</code></td>
+<td>
+<p>The unconditional intraclass correlation coefficient (ICC) at level 4.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r12</code></td>
+<td>
+<p>The proportion of level-1 variance explained by covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r22</code></td>
+<td>
+<p>The proportion of level-2 variance explained by covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r32</code></td>
+<td>
+<p>The proportion of level-3 variance explained by covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r42</code></td>
+<td>
+<p>The proportion of level-4 variance explained by covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>The number of covariates at level 4.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1</code></td>
+<td>
+<p>The cost of sampling one level-1 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c2</code></td>
+<td>
+<p>The cost of sampling one level-2 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c3</code></td>
+<td>
+<p>The cost of sampling one level-3 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c4</code></td>
+<td>
+<p>The cost of sampling one level-4 unit in control condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c1t</code></td>
+<td>
+<p>The cost of sampling one level-1 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c2t</code></td>
+<td>
+<p>The cost of sampling one level-2 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c3t</code></td>
+<td>
+<p>The cost of sampling one level-3 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c4t</code></td>
+<td>
+<p>The cost of sampling one level-4 unit in treatment condition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dlim</code></td>
+<td>
+<p>The range for solving the root of effect size (<code>d</code>) numerically,
+default value is c(0, 5).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>powerlim</code></td>
+<td>
+<p>The range for solving the root of power (<code>power</code>) numerically,
+default value is c(1e-10, 1 - 1e-10).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Llim</code></td>
+<td>
+<p>The range for solving the root of level-4 sample size (<code>L</code>) numerically,
+default value is c(4, 1e+10).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mlim</code></td>
+<td>
+<p>The range for searching the root of budget (<code>m</code>) numerically,
+default value is the costs sampling <code>Llim</code> level-4 units across treatment conditions
+or c(4 * Lcost, 1e+10 * Lcost) with Lcost =
+((1 - p) * (c1 * n * J * K + c2 * J * K + c3 * K + c4) +
+p * (c1t * n * J * K + c2t * J * K + c3t * K + c4t)).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rounded</code></td>
+<td>
+<p>Logical; round the values of <code>p</code>, <code>n</code>/<code>J</code>/<code>K</code>
+that are from functions <code>od.4</code>
+to two decimal places and integer, respectively if TRUE,
+otherwise no rounding; default value is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Required budget (and/or required level-4 sample size), statistical power, or MDES
+depending on the specification of parameters.
+The function also returns the function name, design type,
+and parameters used in the calculation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Unconstrained optimal design
+  myod1 &lt;- od.4(icc2 = 0.2, icc3 = 0.1, icc4 = 0.05,
+              r12 = 0.5, r22 = 0.5, r32 = 0.5, r42 = 0.5,
+              c1 = 1, c2 = 5, c3 = 25, c4 = 125,
+              c1t = 1, c2t = 50, c3t = 250, c4t = 2500)
+  myod1$out # output # n = 7.1, J = 3.2, K = 4.2, p = 0.23
+
+# ------- Power analyses by default considering costs and budget -------
+# Required budget and sample size
+  mym.1 &lt;- power.4(expr = myod1, d = 0.2, q = 1, power = 0.8)
+  mym.1$out  # m = 71161, L = 57.1
+  #mym.1$par  # parameters and their values used for the function
+# Or, equivalently, specify every argument in the function
+  mym.1 &lt;- power.4(d = 0.2, power = 0.8, q = 1,
+                 icc2 = 0.2, icc3 = 0.1, icc4 = 0.05,
+                 r12 = 0.5, r22 = 0.5, r32 = 0.5, r42 = 0.5,
+                 c1 = 1, c2 = 5, c3 = 25, c4 = 125,
+                 c1t = 1, c2t = 50, c3t = 250, c4t = 2500,
+                 n = 7, J = 3, K = 4, p = 0.23)
+# Required budget and sample size with constrained p (p = 0.5)
+  mym.2 &lt;- power.4(expr = myod1, d = 0.2, q = 1, power = 0.8,
+                 constraint = list(p = 0.5))
+  mym.2$out  # m = 93508, L = 41.1
+# Required budget and sample size with constrained p and K
+  mym.3 &lt;- power.4(expr = myod1, d = 0.2, q = 1, power = 0.8,
+                 constraint = list(p = 0.5, K = 20))
+  mym.3$out  # m = 157365, L = 25.7
+
+# Power calculation
+  mypower &lt;- power.4(expr = myod1, q = 1, d = 0.2, m = 71161)
+  mypower$out  # power = 0.80
+# Power calculation under constrained p (p = 0.5)
+  mypower.1 &lt;- power.4(expr = myod1, q = 1, d = 0.2, m = 71161,
+                 constraint = list(p = 0.5))
+  mypower.1$out  # power = 0.68
+
+# MDES calculation
+  mymdes &lt;- power.4(expr = myod1, q = 1, power = 0.80, m = 71161)
+  mymdes$out  # d = 0.20
+
+
+# ------- Conventional power analyses with cost.model = FALSE-------
+# Required sample size
+  myL &lt;- power.4(cost.model = FALSE, expr = myod1, d = 0.2, q = 1, power = 0.8)
+  myL$out  # L = 57.1
+#myL$par  # parameters and their values used for the function
+# Or, equivalently, specify every argument in the function
+  myL &lt;- power.4(cost.model = FALSE, d = 0.2, power = 0.8, q = 1,
+                  icc2 = 0.2, icc3 = 0.1, icc4 = 0.05,
+                  r12 = 0.5, r22 = 0.5, r32 = 0.5, r42 = 0.5,
+                  n = 7, J = 3, K = 4, p = 0.23)
+
+# Power calculation
+  mypower1 &lt;- power.4(cost.model = FALSE, expr = myod1, L = 57, d = 0.2, q = 1)
+  mypower1$out  # power = 0.80
+
+# MDES calculation
+  mymdes1 &lt;- power.4(cost.model = FALSE, expr = myod1, L = 57, power = 0.8, q = 1)
+  mymdes1$out  # d = 0.20
+
+</code></pre>
+
+
+</div>

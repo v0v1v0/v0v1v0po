@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_get_gpx_metadata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download GPS Track Metadata</h2>
+
+<h3>Description</h3>
+
+<p>Use this to access the metadata about GPX files. Available without authentication if the file is marked public.
+Otherwise only usable by the owner account and requires authentication.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_get_gpx_metadata(gpx_id, format = c("R", "sf", "xml"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>gpx_id</code></td>
+<td>
+<p>A vector of track ids represented by a numeric or a character value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default), <code>"sf"</code>, or <code>"xml"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If <code>format = "R"</code>, returns a data frame with one trace per row. If <code>format = "sf"</code>, returns a <code>sf</code> object from
+<span class="pkg">sf</span>. If <code>format = "xml"</code>, returns a xml2::xml_document with the following format:
+</p>
+<div class="sourceCode xml"><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;osm version="0.6" generator="OpenStreetMap server"&gt;
+	&lt;gpx_file id="836619" name="track.gpx" lat="52.0194" lon="8.51807" uid="1234" user="Hartmut Holzgraefe" visibility="public" pending="false" timestamp="2010-10-09T09:24:19Z"&gt;
+		&lt;description&gt;PHP upload test&lt;/description&gt;
+		&lt;tag&gt;test&lt;/tag&gt;
+		&lt;tag&gt;php&lt;/tag&gt;
+	&lt;/gpx_file&gt;
+	&lt;gpx_file&gt;
+	  ...
+	&lt;/gpx_file&gt;
+&lt;/osm&gt;
+</pre></div>
+
+
+<h3>See Also</h3>
+
+<p>Other get GPS' functions: 
+<code>osm_get_data_gpx()</code>,
+<code>osm_get_points_gps()</code>,
+<code>osm_list_gpxs()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+trk_meta &lt;- osm_get_gpx_metadata(gpx_id = 3498170)
+trk_meta
+
+## End(Not run)
+</code></pre>
+
+
+</div>

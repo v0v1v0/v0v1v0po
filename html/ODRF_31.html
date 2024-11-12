@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>RotMatMake</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create rotation matrix used to determine the linear combination of features.</h2>
+
+<h3>Description</h3>
+
+<p>Create any projection matrix with a self-defined projection matrix function and projection optimization model function
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">RotMatMake(
+  X = NULL,
+  y = NULL,
+  RotMatFun = "RotMatPPO",
+  PPFun = "PPO",
+  FunDir = getwd(),
+  paramList = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>An n by d numeric matrix (preferable) or data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A response vector of length n.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>RotMatFun</code></td>
+<td>
+<p>A self-defined projection matrix function name, which can also be <code>RotMatRand</code> and <code>RotMatPPO</code>. Note that <code>(,...)</code> is necessary.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PPFun</code></td>
+<td>
+<p>A self-defined projection function name, which can also be <code>PPO</code>. Note that <code>(,...)</code> is necessary.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FunDir</code></td>
+<td>
+<p>The path to the <code>function</code> of the user-defined <code>NodeRotateFun</code> (default current Workspace).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paramList</code></td>
+<td>
+<p>List of parameters used by the functions <code>RotMatFun</code> and <code>PPFun</code>. If left unchanged, default values will be used, for details see <code>defaults</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Used to handle superfluous arguments passed in using paramList.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>There are two ways for the user to define a projection direction function. The first way is to connect two custom functions with the function <code>RotMatMake()</code>.
+Specifically, <code>RotMatFun()</code> is defined to determine the variables to be projected, the projection dimensions and the number of projections (the first two columns of the rotation matrix).
+<code>PPFun()</code> is defined to determine the projection coefficients (the third column of the rotation matrix). After that let the argument <code>RotMatFun="RotMatMake"</code>,
+and the argument <code>paramList</code> must contain the parameters <code>RotMatFun</code> and <code>PPFun</code>. The second way is to define a function directly,
+and just let the argument <code>RotMatFun</code> be the name of the defined function and let the argument <code>paramList</code> be the arguments list used in the defined function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A random matrix to use in running <code>ODT</code>.
+</p>
+
+<ul>
+<li>
+<p>Variable: Variables to be projected.
+</p>
+</li>
+<li>
+<p>Number: Number of projections.
+</p>
+</li>
+<li>
+<p>Coefficient: Coefficients of the projection matrix.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>RotMatPPO</code> <code>RotMatRand</code> <code>RotMatRF</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(220828)
+X &lt;- matrix(rnorm(1000), 100, 10)
+y &lt;- (rnorm(100) &gt; 0) + 0
+(RotMat &lt;- RotMatMake(X, y, "RotMatRand", "PPO"))
+library(nnet)
+(RotMat &lt;- RotMatMake(X, y, "RotMatPPO", "PPO", paramList = list(model = "Log")))
+
+## Define projection matrix function makeRotMat and projection pursuit function makePP.##
+##  Note that '...' is necessary.
+makeRotMat &lt;- function(dimX, dimProj, numProj, ...) {
+  RotMat &lt;- matrix(1, dimProj * numProj, 3)
+  for (np in seq(numProj)) {
+    RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 1] &lt;-
+      sample(1:dimX, dimProj, replace = FALSE)
+    RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 2] &lt;- np
+  }
+  return(RotMat)
+}
+
+makePP &lt;- function(dimProj, prob, ...) {
+  pp &lt;- sample(c(1L, -1L), dimProj, replace = TRUE, prob = c(prob, 1 - prob))
+  return(pp)
+}
+
+RotMat &lt;- RotMatMake(
+  RotMatFun = "makeRotMat", PPFun = "makePP",
+  paramList = list(dimX = 8, dimProj = 5, numProj = 4, prob = 0.5)
+)
+head(RotMat)
+#&gt;      Variable Number Coefficient
+#&gt; [1,]        6      1           1
+#&gt; [2,]        8      1           1
+#&gt; [3,]        1      1          -1
+#&gt; [4,]        4      1          -1
+#&gt; [5,]        5      1          -1
+#&gt; [6,]        6      2           1
+
+
+# train ODT with defined projection matrix function
+tree &lt;- ODT(X, y,
+  split = "entropy", NodeRotateFun = "makeRotMat",
+  paramList = list(dimX = ncol(X), dimProj = 5, numProj = 4)
+)
+# train ODT with defined projection matrix function and projection optimization model function
+tree &lt;- ODT(X, y,
+  split = "entropy", NodeRotateFun = "RotMatMake", paramList =
+    list(
+      RotMatFun = "makeRotMat", PPFun = "makePP",
+      dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5
+    )
+)
+
+</code></pre>
+
+
+</div>

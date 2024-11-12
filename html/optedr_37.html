@@ -1,0 +1,228 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opt_des</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculates the optimal design for a specified Criterion</h2>
+
+<h3>Description</h3>
+
+<p>The opt_des function calculates the optimal design for an optimality Criterion and a model input from the user.
+The parameters allows for the user to customize the parameters for the cocktail algorithm in case the default
+set does not provide a satisfactory output. Depending on the criterion, additional details are necessary.
+For 'Ds-Optimality' the par_int parameter is necessary. For 'I-Optimality' either the matB or reg_int must
+be provided.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opt_des(
+  Criterion,
+  model,
+  parameters,
+  par_values = c(1),
+  design_space,
+  init_design = NULL,
+  join_thresh = -1,
+  delete_thresh = 0.02,
+  delta = 1/2,
+  tol = 1e-05,
+  tol2 = 1e-05,
+  par_int = NULL,
+  matB = NULL,
+  reg_int = NULL,
+  desired_output = c(1, 2),
+  distribution = NA,
+  weight_fun = function(x) 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Criterion</code></td>
+<td>
+<p>character variable with the chosen optimality criterion. Can be one of the following:
+</p>
+
+<ul>
+<li>
+<p> 'D-Optimality'
+</p>
+</li>
+<li>
+<p> 'Ds-Optimality'
+</p>
+</li>
+<li>
+<p> 'A-Optimality'
+</p>
+</li>
+<li>
+<p> 'I-Optimality'
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>formula describing the model to calculate the optimal design. Must use x as the variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p>character vector with the parameters of the models, as written in the <code>formula</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>par_values</code></td>
+<td>
+<p>numeric vector with the parameters nominal values, in the same order as given in <code>parameters</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design_space</code></td>
+<td>
+<p>numeric vector with the limits of the space of the design.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>init_design</code></td>
+<td>
+<p>optional dataframe with the initial design for the algorithm. A dataframe with two columns:
+</p>
+
+<ul>
+<li> <p><code>Point</code> contains the support points of the design.
+</p>
+</li>
+<li> <p><code>Weight</code> contains the corresponding weights of the <code>Point</code>s.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>join_thresh</code></td>
+<td>
+<p>optional numeric value that states how close, in real units, two points must be in order to
+be joined together by the join heuristic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delete_thresh</code></td>
+<td>
+<p>optional numeric value with the minimum weight, over 1 total, that a point needs to have
+in order to not be deleted from the design.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>optional numeric value in (0, 1), parameter of the algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>optional numeric value for the convergence of the weight optimizing algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol2</code></td>
+<td>
+<p>optional numeric value for the stop criterion: difference between maximum of sensitivity function
+and optimality criterion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>par_int</code></td>
+<td>
+<p>optional numeric vector with the index of the <code>parameters</code> of interest for Ds-optimality.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>matB</code></td>
+<td>
+<p>optional matrix of dimensions k x k, integral of the information matrix of the model over the
+interest region for I-optimality.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reg_int</code></td>
+<td>
+<p>optional numeric vector of two components with the bounds of the interest region for I-Optimality.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>desired_output</code></td>
+<td>
+<p>not functional yet: decide which kind of output you want.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>character variable specifying the probability distribution of the response. Can be one of the following:
+</p>
+
+<ul>
+<li>
+<p> 'Homoscedasticity'
+</p>
+</li>
+<li>
+<p> 'Gamma', which can be used for exponential or normal heteroscedastic with constant relative error
+</p>
+</li>
+<li>
+<p> 'Poisson'
+</p>
+</li>
+<li>
+<p> 'Logistic'
+</p>
+</li>
+<li>
+<p> 'Log-Normal' (work in progress)
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight_fun</code></td>
+<td>
+<p>optional one variable function that represents the square of the structure of variance, in case of heteroscedastic variance of the response</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list of two objects:
+</p>
+
+<ul>
+<li>
+<p> optdes: a dataframe with the optimal design in two columns, <code>Point</code> and <code>Weight</code>.
+</p>
+</li>
+<li>
+<p> sens: a plot with the sensitivity function to check for optimality of the design.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">opt_des("D-Optimality", y ~ a * exp(-b / x), c("a", "b"), c(1, 1500), c(212, 422))
+</code></pre>
+
+
+</div>

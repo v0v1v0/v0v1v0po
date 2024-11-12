@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>online.ODT</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>using new training data to update an existing <code>ODT</code>.</h2>
+
+<h3>Description</h3>
+
+<p>Update existing <code>ODT</code> using new data to improve the model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ODT'
+online(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+<p>an object of class <code>ODT</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>An new n by d numeric matrix (preferable) or data frame  used to update the object of class <code>ODT</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A new response vector of length n used to update the object of class <code>ODT</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Vector of non-negative observational weights; fractional weights are allowed (default NULL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MaxDepth</code></td>
+<td>
+<p>The maximum depth of the tree (default <code>Inf</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>optional parameters to be passed to the low level function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The same result as <code>ODT</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ODT</code> <code>prune.ODT</code> <code>online.ODRF</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Classification with Oblique Decision Tree
+data(seeds)
+set.seed(221212)
+train &lt;- sample(1:209, 100)
+train_data &lt;- data.frame(seeds[train, ])
+test_data &lt;- data.frame(seeds[-train, ])
+index &lt;- seq(floor(nrow(train_data) / 2))
+tree &lt;- ODT(varieties_of_wheat ~ ., train_data[index, ], split = "gini")
+online_tree &lt;- online(tree, train_data[-index, -8], train_data[-index, 8])
+pred &lt;- predict(online_tree, test_data[, -8])
+# classification error
+(mean(pred != test_data[, 8]))
+
+# Regression with Oblique Decision Tree
+data(body_fat)
+set.seed(221212)
+train &lt;- sample(1:252, 100)
+train_data &lt;- data.frame(body_fat[train, ])
+test_data &lt;- data.frame(body_fat[-train, ])
+index &lt;- seq(floor(nrow(train_data) / 2))
+tree &lt;- ODT(Density ~ ., train_data[index, ], split = "mse")
+online_tree &lt;- online(tree, train_data[-index, -1], train_data[-index, 1])
+pred &lt;- predict(online_tree, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
+
+</code></pre>
+
+
+</div>

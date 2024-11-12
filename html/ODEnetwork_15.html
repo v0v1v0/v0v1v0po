@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>updateOscillators</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Update oscillator parameter of an existing ODE network.</h2>
+
+<h3>Description</h3>
+
+<p>Updates the parameters of an existing ODE network.
+Possible parameters are the oscillator configuration and the starting values.
+The function overwrites the parameters in the vector and matrices.
+It will not change the size of the network.
+It is possible to set a new vector and new matrices, or single parameters in a names vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">updateOscillators(
+  odenet,
+  ParamVec = NULL,
+  masses = NULL,
+  dampers = NULL,
+  springs = NULL,
+  distances = NULL,
+  state1 = NULL,
+  state2 = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>odenet</code></td>
+<td>
+<p>[<code>ODEnetwork</code>]<br>
+List of class <code>ODEnetwork</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ParamVec</code></td>
+<td>
+<p>[<code>vector</code>] of length n<br>
+Named vector to overwrite corresponding parameters.
+Masses start with "m." followed by a number (e.g.: "m.12").
+Dampers start with "d." followed by one or two numbers separated by a dot (e.g.: "d.2", "d.5.6").
+Springs start with "k.", like dampers (e.g.: "k.4", "k.3.9")
+Distances start with "r.", like dampers (e.g.: "r.7", "r.1.9")
+The triangle elements of the dampers, springs, and distances are characterised by increasing numbers.
+A name "d.3.5" is correct, in contrast to "d.5.3" which is ignored.
+This is done to speed up, because the matrices are symmetric.
+State1 and state2 start with "st1." or "st2." respectively, followed by a number (e.g.: "st1.15", "st2.8").
+If the vector is set, the following parameters are ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>masses</code></td>
+<td>
+<p>[<code>vector</code>] of length n<br>
+The masses of the mechanical oscillators.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dampers</code></td>
+<td>
+<p>[<code>matrix</code>] quadratic of size n<br>
+The dampers of the mechanical oscillators on the main diagonal.
+Connecting dampers between oscillators on the upper triangle.
+(Will be copied automatically to create a symmetric matrix.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>springs</code></td>
+<td>
+<p>[<code>matrix</code>] quadratic of size n<br>
+The springs are defined in the network like matrix of dampers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distances</code></td>
+<td>
+<p>[<code>matrix</code>] quadratic of size n<br>
+Describe spring distance between two masses i &lt; j.
+Negative value will be copied automatically to lower triangle.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state1</code></td>
+<td>
+<p>[<code>vector</code>] of length n<br>
+Starting values of state 1 (position or angle).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state2</code></td>
+<td>
+<p>[<code>vector</code>] of length n<br>
+Starting values of state 2 (velocity or magnitude).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>an extended list of class [<code>ODEnetwork</code>].
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">masses &lt;- c(1:5)
+dampers &lt;- diag(11:15)
+springs &lt;- diag(21:25)
+odenet &lt;- ODEnetwork(masses, dampers, springs)
+odenet &lt;- updateOscillators(odenet, masses = c(3:7))
+odenet &lt;- updateOscillators(odenet, c(k.1.2 = 201, k.3.5 = 202, r.1 = 2))
+# Warning: Following value is ignored, because it is on the lower triangle
+odenet &lt;- updateOscillators(odenet, c(d.2.1 = 101))
+</code></pre>
+
+
+</div>

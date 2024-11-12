@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extract_tsfeatures</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract features from a collection of time series</h2>
+
+<h3>Description</h3>
+
+<p>This function extract time series features from a collection of time series.
+This is a modification oftsmeasures function of anomalous package
+package .
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extract_tsfeatures(y, normalise = TRUE, width = ifelse(frequency(y) &gt;
+  1, frequency(y), 10), window = width)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A multivariate time serie</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalise</code></td>
+<td>
+<p>If TRUE, each time series is scaled to be normally distributed with mean 0 and sd 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>A window size for variance change, level shift and lumpiness</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window</code></td>
+<td>
+<p>A window size for KLscore</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class features with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>mean</code></td>
+<td>
+<p>Mean</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variance</code></td>
+<td>
+<p>Variance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lumpiness</code></td>
+<td>
+<p>Variance of annual variances of remainder</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lshift</code></td>
+<td>
+<p>Level shift using rolling window</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vchange</code></td>
+<td>
+<p>Variance change</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>linearity</code></td>
+<td>
+<p>Strength of linearity</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>curvature</code></td>
+<td>
+<p>Strength of curvature</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spikiness</code></td>
+<td>
+<p>Strength of spikiness</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>season</code></td>
+<td>
+<p>Strength of seasonality</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>peak</code></td>
+<td>
+<p>Strength of peaks</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trough</code></td>
+<td>
+<p>Strength of trough</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BurstinessFF</code></td>
+<td>
+<p>Burstiness of time series using Fano Factor</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minimum</code></td>
+<td>
+<p>Minimum value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maximum</code></td>
+<td>
+<p>Maximum value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rmeaniqmean</code></td>
+<td>
+<p>Ratio between interquartile mean and the arithmetic mean </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moment3</code></td>
+<td>
+<p>Third moment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>highlowmu</code></td>
+<td>
+<p>Ratio between the means of data that is below and upper the global mean</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Hyndman, R. J., Wang, E., &amp; Laptev, N. (2015). Large-scale unusual time series detection.
+In 2015 IEEE International Conference on Data Mining Workshop (ICDMW), (pp. 1616-1619). IEEE.<br></p>
+<p>Fulcher, B. D. (2012). Highly comparative time-series analysis. PhD thesis, University of Oxford.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>find_odd_streams</code>, <code>get_pc_space</code>,
+<code>set_outlier_threshold</code>, <code>gg_featurespace</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+mvtsplot::mvtsplot(anomalous_stream, levels=8, gcol=2, norm="global")
+features &lt;- extract_tsfeatures(anomalous_stream[500:550, ])
+plot.ts(features[, 1:10])
+
+
+</code></pre>
+
+
+</div>

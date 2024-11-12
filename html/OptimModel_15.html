@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nlogLik_cauchy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Negative log-likelihood function for Cauchy regression</h2>
+
+<h3>Description</h3>
+
+<p> The negative log-likelihood function for Cauchy regression, for use with <code>rout_fitter</code>. Usually not called by the end user.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> 
+       nlogLik_cauchy(theta, x, y, f.model, lbs)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>Parameters for f.model and an extra parameter for the scale parameter; e.g., f.model=hill.model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Explanatory variable(s).  Can be vector, matrix, or data.frame </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p> Response variable. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f.model</code></td>
+<td>
+<p>Name of mean model function. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lbs</code></td>
+<td>
+<p>Logical. lbs = log both sides. See details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function provides the negative log-likelihood for Cauchy regression
+</p>
+<p>Let mu = f.model(theta[1:(p-1)], x) and sigma = exp(theta[p]), where p = number of parameters in theta.
+</p>
+<p>The Cauchy likelihood is
+</p>
+<p style="text-align: center;"><code class="reqn"> L = \prod \frac{1}{\pi \sigma} ( 1 + ( \frac{y_i - \mu_i}{\sigma} )^2 )^{-1} </code>
+</p>
+<p>.
+</p>
+<p>The function returns <code class="reqn">\log(L)</code>.  
+</p>
+<p>If <code>lbs == TRUE</code>, then <code class="reqn">\mu</code> is replaced with <code class="reqn">\log(mu)</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a single numerical value.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rout_fitter</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123L)
+x = rep( c(0, 2^(-4:4)), each=4 )
+theta = c(emin=0, emax=100, lec50=log(.5), m=2)
+y = hill_model(theta, x)  + rnorm( length(x), mean=0, sd=2 )
+
+theta1 = c(theta, lsigma=log(2))
+nlogLik_cauchy(theta1, x=x, y=y, f.model=hill_model, lbs=FALSE)
+
+  ## Cauchy regression via maximum likelihood
+optim( theta1, nlogLik_cauchy, x=x, y=y, f.model=hill_model, lbs=FALSE )
+
+</code></pre>
+
+
+</div>

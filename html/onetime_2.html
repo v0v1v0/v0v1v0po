@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_ok_to_store</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check if the package has permission to store files on the user's computer</h2>
+
+<h3>Description</h3>
+
+<p>The onetime package works by storing lockfiles in
+<code>rappdirs::user_config_dir()</code>. It won't do so unless permission has been
+granted. Before using <code>onetime</code> functions, package authors should call
+<code>check_ok_to_store(ask = TRUE)</code> in an interactive session, in functions which
+are called directly from the command line.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check_ok_to_store(
+  ask = FALSE,
+  message = "The onetime package requests to store files in '%s'.",
+  confirm_prompt = "Is this OK? [Yn] ",
+  confirm_answers = c("Y", "y", "Yes", "yes", "YES"),
+  default_answer = "Y"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ask</code></td>
+<td>
+<p><code>TRUE</code> to ask the user for permission.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>message</code></td>
+<td>
+<p>Message to display to the user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>confirm_prompt</code></td>
+<td>
+<p>Character string. Question to prompt the user to hide
+the message in future.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>confirm_answers</code></td>
+<td>
+<p>Character vector. Answers which will cause
+the message to be hidden in future.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default_answer</code></td>
+<td>
+<p>Character string. Default answer if user
+simply presses return.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If your package is not used interactively, a workaround is to call
+<code>set_ok_to_store()</code>. This grants permission and prints an informative
+message. Package owners should <em>only</em> call this if they cannot ask
+explicitly.
+</p>
+<p><code>onetime_message_confirm()</code> is an exception: by default it doesn't require
+global permission to store files, since the user accepting "Don't show this
+again" is considered sufficient.
+</p>
+<p><code>ask = TRUE</code> asks the user, if he or she has not already given permission,
+and if the session is <code>interactive()</code>.
+</p>
+<p>Remaining parameters are passed to <code>onetime_message_confirm()</code> in this case,
+and ignored otherwise. A <code>"%s"</code> in <code>message</code> will be replaced by the
+onetime storage directory.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>TRUE</code> if:
+</p>
+
+<ul>
+<li>
+<p> We already have permission;
+</p>
+</li>
+<li> <p><code>ask</code> is <code>TRUE</code>, we are in an interactive session and the user
+gives us permission;
+</p>
+</li>
+<li> <p><code>options("onetime.dir")</code> is set to a non-<code>NULL</code> value.
+</p>
+</li>
+</ul>
+<p>Otherwise <code>FALSE</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+check_ok_to_store()
+
+</code></pre>
+
+
+</div>

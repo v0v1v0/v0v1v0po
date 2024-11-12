@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>adj_wave</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adjust wavelength to wavenumbers for Raman</h2>
+
+<h3>Description</h3>
+
+<p>Functions for converting between wave* units.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">adj_wave(x, ...)
+
+## Default S3 method:
+adj_wave(x, laser, ...)
+
+## S3 method for class 'OpenSpecy'
+adj_wave(x, laser, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>OpenSpecy</code> object with wavenumber units specified as
+wavelength in nm or a wavelength vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>laser</code></td>
+<td>
+<p>the wavelength in nm of the Raman laser.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to submethods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>OpenSpecy</code> object with new units converted from wavelength
+to wavenumbers or a vector with the same conversion.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("raman_hdpe")
+raman_wavelength &lt;- raman_hdpe
+raman_wavelength$wavenumber &lt;- (-1*(raman_wavelength$wavenumber/10^7-1/530))^(-1)
+adj_wave(raman_wavelength, laser = 530)
+adj_wave(raman_wavelength$wavenumber, laser = 530)
+
+</code></pre>
+
+
+</div>

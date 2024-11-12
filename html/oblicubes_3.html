@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cheap_darken</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>'light' effect helper functions</h2>
+
+<h3>Description</h3>
+
+<p>Helper functions to generate a “light” effect
+for <code>oblicubesGrob()</code>, <code>grid.oblicubes()</code>, <code>oblicuboidsGrob()</code>, and <code>grid.oblicuboids()</code>.
+<code>darken_face()</code> is the default <code>light</code> argument for <code>oblicubesGrob()</code>, <code>grid.oblicubes()</code>,
+<code>oblicuboidsGrob()</code>, and <code>grid.oblicuboids()</code>.
+<code>cheap_darken()</code> is the default darkening function used by <code>darken_face()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cheap_darken(col, amount)
+
+darken_face(
+  face,
+  col,
+  top = 0,
+  west = 0.2,
+  east = 0.2,
+  south = 0.4,
+  north = 0.4,
+  darken_fn = cheap_darken
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Vector of colors to darken</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>amount</code></td>
+<td>
+<p>Fraction to darken by</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>face</code></td>
+<td>
+<p>Cube/cuboid face to color.  One of "top", "west", "east", "south", or "north".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top</code></td>
+<td>
+<p>Amount to darken the "top" face.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>west</code></td>
+<td>
+<p>Amount to darken the "west" face.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>east</code></td>
+<td>
+<p>Amount to darken the "east" face.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>south</code></td>
+<td>
+<p>Amount to darken the "south" face.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>north</code></td>
+<td>
+<p>Amount to darken the "north" face.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>darken_fn</code></td>
+<td>
+<p>Function to darken with.  Should take two arguments:
+the first should be the colour and the second should be numeric amount to darken by.
+Default will be to use <code>cheap_darken()</code>.
+<code>colorspace::darken()</code> is a slower, “better” alternative.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>light</code> argument of <code>oblicubesGrob()</code>, <code>grid.oblicubes()</code>, <code>geom_oblicubes()</code>,
+<code>oblicuboidsGrob()</code>, <code>grid.oblicuboids()</code>, and <code>geom_oblicuboids()</code>
+needs a function that that takes two arguments: the first is <code>face</code> one of its five faces:
+"top", "west", "east", "south", or "north" and the second is <code>col</code> the cube/cuboid's fill color
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector of darkened colors.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">demo_light &lt;- function(light = darken_face, ...) {
+  df &lt;- data.frame(x=1, y=1, z=1)
+  grid::grid.newpage()
+  grid.oblicubes(df, ..., light=light, angle=45, lwd=4,
+                 vp = grid::viewport(0.25, 0.25, 0.5, 0.5))
+  grid.oblicubes(df, ..., light=light, angle=135, lwd=4,
+                 vp = grid::viewport(0.75, 0.25, 0.5, 0.5))
+  grid.oblicubes(df, ..., light=light, angle=-45, lwd=4,
+                 vp = grid::viewport(0.25, 0.75, 0.5, 0.5))
+  grid.oblicubes(df, ..., light=light, angle=-135, lwd=4,
+                 vp = grid::viewport(0.75, 0.75, 0.5, 0.5))
+}
+demo_light()
+demo_light(fill = "gold")
+demo_light(light = function(face, col)
+             darken_face(face, col, top = 0.3,
+                         west = 0.6, east = 0.6,
+                         south = 0.0, north = 0.0)
+)
+demo_light(light = function(face, col) {
+             n &lt;- length(col)
+             switch(face,
+               top = rep_len("grey90", n),
+               west = rep_len("red", n),
+               east = rep_len("green", n),
+               south = rep_len("blue", n),
+               north = rep_len("yellow", n))
+           })
+</code></pre>
+
+
+</div>

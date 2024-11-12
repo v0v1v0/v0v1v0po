@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>H_I</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The family of two-sided cross-validation kernels <code class="reqn">H_I</code>.</h2>
+
+<h3>Description</h3>
+
+<p>The family of two-sided cross-validation kernels <code class="reqn">H_I</code> defined by equation (15) of Savchuk and Hart (2017).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">H_I(u, alpha, sigma)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>u</code></td>
+<td>
+<p>numerical vector of argument values,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>first parameter of the cross-validation kernel <code class="reqn">H_I</code>,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>second parameter of the cross-validation kernel <code class="reqn">H_I</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The family of the two-sided cross-validation kernels <code class="reqn">H_I(u;\alpha,\sigma)=(1+\alpha)\phi(u)-\alpha\phi(u/\sigma)/\sigma</code>, where <code class="reqn">\phi</code> denotes the Gaussian kernel, <code class="reqn">-\infty&lt;\alpha&lt;\infty</code> and <code class="reqn">\sigma&gt;0</code> are the parameters of the kernel. See expression (15) of Savchuk and Hart (2017). The robust kernel plotted in Figure 1 of Savchuk and Hart (2017) is obtained by setting <code class="reqn">\alpha=16.8954588</code> and <code class="reqn">\sigma=1.01</code>. Note that the kernels <code class="reqn">H_I</code> are also used for the bandwidth selection purposes in the indirect cross-validation (ICV) method (see expression (4) of Savchuk, Hart, and Sheather (2010)). The kernel <code class="reqn">H_I</code> is a two-sided analog of the one-sided kernel <code>L_I</code>. The Gaussian kernel <code class="reqn">\phi</code> is the special case of <code class="reqn">H_I</code> obtained by either setting <code class="reqn">\alpha=0</code> or <code class="reqn">\sigma=1</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The value of <code class="reqn">H_I(u;\alpha,\sigma)</code>.
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Savchuk, O.Y., Hart, J.D. (2017). Fully robust one-sided cross-validation for regression functions. <em>Computational Statistics</em>, doi:10.1007/s00180-017-0713-7.
+</p>
+</li>
+<li>
+<p> Savchuk, O.Y., Hart, J.D., Sheather, S.J. (2010). Indirect cross-validation for density estimation. <em>Journal of the American Statistical Association</em>, 105(489), 415-423.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>L_I</code>, <code>C_smooth</code>, <code>OSCV_reg</code>, <code>loclin</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Plotting the robust kernel from Savchuk and Hart (2017) with alpha=16.8954588 and sigma=1.01.
+u=seq(-5,5,len=1000)
+ker=H_I(u,16.8954588,1.01)
+dev.new()
+plot(u,ker,'l',lwd=3,cex.axis=1.7, cex.lab=1.7)
+title(main="Robust kernel H_I along with the Gaussian kernel (phi)",cex=1.7)
+lines(u,dnorm(u),lty="dashed",lwd=3)
+legend(-4.85,0.3,lty=c("solid","dashed"),lwd=c(3,3),legend=c("H_I","phi"),cex=1.5)
+legend(1,0.4,legend=c("alpha=16.8955","sigma=1.01"),cex=1.5,bty="n")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

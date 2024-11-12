@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getPlottingData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get plotting data</h2>
+
+<h3>Description</h3>
+
+<p>This function creates the input data that <code>plotStudy</code> passes to
+custom plotting functions added with <code>addPlots</code>. You can use it
+directly when you are interactively creating your custom plotting functions.
+Note that for multiModel plots testID is required to be a named vector, with
+each testID named after the related modelID.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getPlottingData(study, modelID, featureID, testID = NULL, libraries = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>study</code></td>
+<td>
+<p>An OmicNavigator study. Either an object of class <code>onStudy</code>,
+or the name of an installed study package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modelID</code></td>
+<td>
+<p>Filter by modelID</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>featureID</code></td>
+<td>
+<p>Filter by featureID</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testID</code></td>
+<td>
+<p>Filter by testID</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>libraries</code></td>
+<td>
+<p>The directories to search for installed study packages. If
+left as <code>NULL</code> (the default), then
+<code>installed.packages</code> will use the result of
+<code>.libPaths</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list of 4 data frames:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>assays</code></td>
+<td>
+<p>A data frame that contains the assay measurements,
+filtered to only include the row(s) corresponding to the input featureID(s)
+(see <code>getAssays</code>). If multiple featureIDs are requested, the rows
+are reordered to match the order of this input. The column order is
+unchanged.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>samples</code></td>
+<td>
+<p>A data frame that contains the sample metadata for the
+given modelID (see <code>getSamples</code>). The rows are reordered to match
+the columns of the assays data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>features</code></td>
+<td>
+<p>A data frame that contains the feature metadata,
+filtered to only include the row(s) corresponding to the input featureID(s)
+(see <code>getFeatures</code>). If multiple featureIDs are requested, the
+rows are reordered to match the order of this input (and thus match the order
+of the assays data frame).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>results</code></td>
+<td>
+<p>A data frame that contains the test results,
+filtered to only include the row(s) corresponding to the input featureID(s).
+If multiple featureIDs are requested, the rows are reordered to match the
+order of this input. The column order is unchanged. If multiple testIDs are
+provided, they are stored in a list object.</p>
+</td>
+</tr>
+</table>
+<p>The data frame <code>results</code> is only returned if you pass a testID. By
+default the app will always pass the currently selected testID. To make
+<code>results</code> a list of data frames (one for each testID for the currently
+selected modelID), set the plotType to be "multiTest" when adding the plot
+with <code>addPlots</code>. For "multiModel" plots, testID and modelID
+should be vectors of same length, where the index position indicate which
+test in testID relate to which model in modelID.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>addPlots</code>, <code>plotStudy</code>
+</p>
+
+
+</div>

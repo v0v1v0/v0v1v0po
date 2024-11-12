@@ -1,0 +1,300 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>RLum.OSL_correction</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check and correct CW-OSL curves in RLum.Analysis data sets</h2>
+
+<h3>Description</h3>
+
+<p>CW-OSL measurements are often affected by background signals or might be measured under
+inconsistent detection settings. This function provides tools
+to test and solve some common problems.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">RLum.OSL_correction(
+  object,
+  record_type = "OSL",
+  background_sequence = NULL,
+  subtract_offset = 0,
+  check_consistency = TRUE,
+  remove_light_off = TRUE,
+  limit_duration = 20,
+  PMT_pulse_pair_resolution = 18,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>RLum.Analysis or list of RLum.Analysis (<strong>required</strong>):
+Data set of one or multiple CW-OSL measured aliquots.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>record_type</code></td>
+<td>
+<p>character (<em>with default</em>):
+Type of records selected from the input <code>object</code>, see
+<code>object[[]]@records[[]]@recordType</code>. Common are: <code>"OSL"</code>,<code>"SGOSL"</code> or <code>"IRSL"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>background_sequence</code></td>
+<td>
+<p>numeric vector (<em>optional</em>):
+Indices of list items with CW-OSL measurements of empty aliquots.
+The records in these list items are used to calculate one average CW-OSL background curve
+with sum_OSLcurves. This background curve is subtracted from each
+CW-OSL record of the data set. The attributes <code style="white-space: pre;">⁠@recordType⁠</code> of the background
+measurements will be renamed to <code>"{record_type}background"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subtract_offset</code></td>
+<td>
+<p>numeric (<em>optional</em>):
+Signal offset value in counts per second (<em>cts/s</em>). Value is handled as background
+level and will be subtracted from each CW-OSL record.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check_consistency</code></td>
+<td>
+<p>logical (<em>with default</em>):
+The CW-OSL component identification and separation procedure requires uniform detection parameters
+throughout the whole data set. If <code>TRUE</code>, all records are compared for their
+channel width and their number of channels. Those records with the most frequent
+set of channel parameters keep their <code style="white-space: pre;">⁠@recordType⁠</code> attribute, while records
+with other sets of measurement parameter will be enumerated <code>record_type</code>
+<code>"{record_type}2"</code>, <code>"{record_type}3"</code> and so on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove_light_off</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Checks if the records contain zero-signal intervals at beginning and/or end of the
+measurement and removes them. Useful to tailor single-grain measurements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit_duration</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Reduce measurement duration to input value in seconds (<em>s</em>).
+Long measurement duration can lead to over-fitting at the component identification
+of Step 1 which may induce systematic errors, see Mittelstrass (2019). Thus, limiting
+the OSL record length ensures sufficient accuracy regarding the Fast and Medium component analysis.
+If however, slow decaying components are of interest, <code>limit_duration = NA</code> is recommended.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PMT_pulse_pair_resolution</code></td>
+<td>
+<p>numeric (<em>with default</em>):
+Time span of the pulse-pair resolution of the PMT in nanoseconds (<em>ns</em>).
+If a value is given, the signal values will be corrected for time-resolution related
+non-linearity at height counting rates, see <em>Details</em>.
+Set <code>PMT_pulse_pair_resolution = NA</code> if algorithm shall be omitted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical (<em>with default</em>):
+Enables console text output.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function processes data sets created within the Luminescence-package (Kreutzer et al. 2012).
+Those data sets must be formatted as RLum.Analysis objects. Output objects will also be
+RLum.Analysis objects and are meant for further analysis with RLum.OSL_global_fitting.
+</p>
+<p>The data preparation tools are executed in the following order:
+</p>
+
+<ol>
+<li>
+<p><code>check_consistency</code>
+</p>
+</li>
+<li>
+<p><code>remove_light_off</code>
+</p>
+</li>
+<li>
+<p><code>limit_duration</code>
+</p>
+</li>
+<li>
+<p><code>PMT_pulse_pair_resolution</code>
+</p>
+</li>
+<li>
+<p><code>background_sequence</code>
+</p>
+</li>
+<li>
+<p><code>subtract_offset</code>
+</p>
+</li>
+</ol>
+<p><strong>Currently, not all functions are available.</strong>
+</p>
+<p><strong>Details to</strong> <code>remove_light_off</code>:
+The algorithm does the following: (1) Create global reference curve with sum_OSLcurves
+(2) Search for the maximum in the first half of the reference curve and remove all data points
+before the maximum . Do this for all curves of the selected 'record_type'.
+(3) Search for an infliction point with
+negative curvature (minimum of second differential) in the second half of the reference curve.
+If the next data point has at least 50% less signal, remove all data points after the infliction
+point. Do this for all curves of the selected 'record_type'.
+</p>
+<p><strong>Details to</strong> <code>PMT_pulse_pair_resolution</code>:
+</p>
+<p>The algorithm corrects non-linearity of signal values due to insufficient pulse-pair resolution
+of the photo-multiplier tube (PMT). Equation (6-2) of the <em>Hamamatsu Photomultiplier Handbook</em> is used:
+</p>
+<p style="text-align: center;"><code class="reqn">I_corrected = I_measured / (1 - I_measured * resolution)</code>
+</p>
+
+<p>The algorithm does not account for PMT saturation and PMT aging effects.
+As default pulse-pair resolution 18 <em>ns</em> is pre-defined, the <em>Hamamatsu</em> H7360 series pulse-pair resolution according to the data sheet.
+The H7360-02 is the default PMT in <em>Freiberg Instruments lexsyg</em> OSL/TL readers.
+<em>DTU Physics Risoe</em> TL/OSL reader deploy <em>ET Enterprise</em> 9235B series PMTs as default.
+For these PMTs, the pulse-pair resolutions is not given in the data sheets and relies on the operation voltage.
+However, due to the pulse properties given in the data sheets, it is unlikely
+that those PMTs have a better pulse-pair resolution than 18 <em>ns</em>.
+</p>
+<p><strong>Impact of a pulse-pair resolution correction of 18 ns</strong></p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   Measured signal </td>
+<td style="text-align: left;"> Corrected signal </td>
+<td style="text-align: left;"> Signal underestimation </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   1000 cts/s </td>
+<td style="text-align: left;"> 1000 cts/s </td>
+<td style="text-align: left;"> 0.00 % </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   10000 cts/s </td>
+<td style="text-align: left;"> 10002 cts/s </td>
+<td style="text-align: left;"> 0.02 % </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   50000 cts/s </td>
+<td style="text-align: left;"> 50045 cts/s </td>
+<td style="text-align: left;"> 0.09 % </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   100000 cts/s </td>
+<td style="text-align: left;"> 100180 cts/s </td>
+<td style="text-align: left;"> 0.18 % </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   500000 cts/s </td>
+<td style="text-align: left;"> 504541 cts/s </td>
+<td style="text-align: left;"> 0.91 % </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   1000000 cts/s </td>
+<td style="text-align: left;"> 1018330 cts/s </td>
+<td style="text-align: left;"> 1.83 % </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The input <code>object</code>, a list of RLum.Analysis objects, is given back with eventual changes
+in the elements <code>object[[]]@records[[]]@recordType</code> and <code>object[[]]@records[[]]@data</code>.
+</p>
+<p>The returned data set contains a new list element <code>object[["CORRECTION"]]</code> which provides
+a list of the input parameters and additional data depending on the applied tools.
+</p>
+
+
+<h3>Last updates</h3>
+
+<p>2022-01-02, DM: Revised <code>PMT_pulse_pair_resolution</code> algorithm.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dirk Mittelstrass, <a href="mailto:dirk.mittelstrass@luminescence.de">dirk.mittelstrass@luminescence.de</a>
+</p>
+<p>Please cite the package the following way:
+</p>
+<p>Mittelstraß, D., Schmidt, C., Beyer, J., Heitmann, J. and Straessner, A.:
+R package OSLdecomposition: Automated identification and separation of quartz CW-OSL signal components, <em>in preparation</em>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hamamatsu, 2007. Photomultiplier Tubes: Basics and Applications, Third Edition (Edition 3A).
+Hamamatsu Photonics K. K., Hamamatsu City.
+</p>
+<p>Kreutzer, S., Schmidt, C., Fuchs, M.C., Dietze, M., Fischer, M., Fuchs, M., 2012.
+Introducing an R package for luminescence dating analysis. Ancient TL, 30 (1), 1-8.
+</p>
+<p>Mittelstraß, D., 2019. Decomposition of weak optically stimulated luminescence signals and
+its application in retrospective dosimetry at quartz (Master thesis). TU Dresden, Dresden.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>RLum.OSL_global_fitting, RLum.OSL_decomposition, sum_OSLcurves
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# 'FB_10Gy' is a dose recovery test with the Fontainebleau quartz
+# measured with a lexsyg research with green LED stimulation
+data_path &lt;- system.file("examples", "FB_10Gy_SAR.bin", package = "OSLdecomposition")
+data_set &lt;- Luminescence::read_BIN2R(data_path, fastForward = TRUE)
+
+# To correct for the background signal, subtracted the average curve from the
+# OSL curves of an empty aliquot (list item 11) from all other OSL records:
+data_set_corrected &lt;- RLum.OSL_correction(data_set, background = 11, remove_light_off = FALSE)
+
+
+# Plot background corrected global average CW-OSL curve
+sum_OSLcurves(data_set_corrected, output.plot = TRUE, record_type = "OSL")
+
+# Plot background curve
+sum_OSLcurves(data_set_corrected, output.plot = TRUE, record_type = "OSLbackground")
+
+
+</code></pre>
+
+
+</div>

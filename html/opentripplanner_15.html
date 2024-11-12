@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otp_make_surface</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make a Surface</h2>
+
+<h3>Description</h3>
+
+<p>Requires OTP 1.x and the analyst
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otp_make_surface(
+  otpcon = NULL,
+  fromPlace = c(-1.17502, 50.6459),
+  mode = "CAR",
+  date_time = Sys.time(),
+  maxWalkDistance = 1000,
+  arriveBy = FALSE,
+  routeOptions = NULL,
+  timezone = otpcon$timezone,
+  ncores = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otpcon</code></td>
+<td>
+<p>OTP connection object produced by otp_connect()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fromPlace</code></td>
+<td>
+<p>Numeric vector, Longitude/Latitude pair, e.g.
+'c(-0.134649,51.529258)', or 2 column matrix of Longitude/Latitude pairs,
+or sf data frame of POINTS with CRS 4326</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>character vector of one or more modes of travel valid values
+TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, SUBWAY, TRAM, FERRY, default CAR.
+Not all combinations are valid e.g. c("WALK","BUS") is valid but
+c("WALK","CAR") is not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_time</code></td>
+<td>
+<p>POSIXct, a date and time, defaults to current date and time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxWalkDistance</code></td>
+<td>
+<p>Numeric passed to OTP in metres</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arriveBy</code></td>
+<td>
+<p>Logical, Whether the trip should depart or arrive at the
+specified date and time, default FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>routeOptions</code></td>
+<td>
+<p>Named list of values passed to OTP use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timezone</code></td>
+<td>
+<p>Character, what timezone to use, see as.POSIXct, default is
+local timezone</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p>How many cores to use default = 1</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>THis function requires the analysis and pointset features to be
+enabled during 'otp_setup()'. Thus it will only work with OTP 1.x. For more
+detail see the analyst vignette.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with information about the surface created
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other analyst: 
+<code>otp_traveltime()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+surface &lt;- otp_make_surface(otpcon, c(-1.17502, 50.64590))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_detection</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot detection and reference annotations</h2>
+
+<h3>Description</h3>
+
+<p><code>plot_detection</code> evaluates the performance of a sound event detection procedure comparing the output selection table to a reference selection table
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_detection(reference, detection, mid.point = FALSE, size = 20, positions = c(1, 2))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>reference</code></td>
+<td>
+<p>Data frame or 'selection.table' (following the warbleR package format) with the reference selections (start and end of the sound events) that will be used to evaluate the performance of the detection, represented by those selections in 'detection'. Must contained at least the following columns: "sound.files", "selec", "start" and "end". <strong>It must contain the reference selections that will be used for detection optimization</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detection</code></td>
+<td>
+<p>Data frame or 'selection.table' with the detections (start and end of the sound events) that will be compared against the 'reference' selections. Must contained at least the following columns: "sound.files", "selec", "start" and "end". It can contain data for additional sound files not found in 'references'. In this case the routine assumes that no sound events are found in those files, so detection from those files are all false positives.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mid.point</code></td>
+<td>
+<p>Logical argument to control if each annotations is shown as a rectangle with fix width center at the mid point of the time position (if <code>TRUE</code>) or the true time range of the annotations is used (if <code>FALSE</code>,  default). 'mid.point' can be useful to make visible annotations in very long sound files that would otherwise look to thin.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>Numeric. Controls the size of the rectangles if <code>mid.point = TRUE</code>. Default is 20.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>positions</code></td>
+<td>
+<p>Numeric. Controls the vertical position of the rectangles representing anotations. Default is c(1, 2). This can be used to get reference and detection annotations closer in the vertical axis. Note that the height of rectangles is 0.5.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function helps to visualize the match between reference and detection annotations by plotting them next to each other as rectangles along the time axis. If the annotations contain data for several sound files each sound file will be plotted in its own panel. The plot can be further modify by users using regular ggplot syntax.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A ggplot graph (i.e. an object of class "ggplot").
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas <a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+<p>Araya-Salas, M., Smith-Vidaurre, G., Chaverri, G., Brenes, J. C., Chirino, F., Elizondo-Calvo, J., &amp; Rico-Guevara, A. 2022. ohun: an R package for diagnosing and optimizing automatic sound event detection. BioRxiv, 2022.12.13.520253. https://doi.org/10.1101/2022.12.13.520253
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>label_spectro</code>, <code>diagnose_detection</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  # load data
+  data("lbh_reference")
+
+  # mid point and regular size
+  plot_detection(
+    reference = lbh_reference[-14, ],
+    detection = lbh_reference[-1, ], mid.point = TRUE
+  )
+
+  # mid point and larger size
+  plot_detection(
+    reference = lbh_reference[-14, ],
+    detection = lbh_reference[-1, ], mid.point = TRUE, size = 25
+  )
+
+  # true time rectangles
+  plot_detection(
+    reference = lbh_reference[-14, ],
+    detection = lbh_reference[-1, ]
+  )
+
+  # use position to make reference and anotations overlap vertically
+  plot_detection(
+    reference = lbh_reference[-14, ],
+    detection = lbh_reference[-1, ], positions = c(1, 1.4)
+  )
+
+  # modified using ggplot
+  gg_pd &lt;- plot_detection(
+    reference = lbh_reference[-14, ],
+    detection = lbh_reference[-1, ], positions = c(1, 1.4)
+  )
+
+  gg_pd + ggplot2::theme_classic(base_size = 25)
+}
+</code></pre>
+
+
+</div>

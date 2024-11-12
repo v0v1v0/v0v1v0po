@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>omxParallelCI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculate confidence intervals without re-doing the primary optimization.
+</h2>
+
+<h3>Description</h3>
+
+<p>OpenMx provides two functions to calculate confidence intervals for already-run MxModel objects that contain an MxInterval object (i.e., an <code>mxCI()</code> statement), without recalculating point estimates, fitfunction derivatives, or expectations.
+</p>
+<p>The primary function is <code>omxRunCI()</code>. This is a wrapper for <code>omxParallelCI()</code> with arguments <code>run=TRUE</code> and <code>independentSubmodels=FALSE</code>, and is the recommended interface.
+</p>
+<p><code>omxParallelCI()</code> does the work of calculating confidence intervals. The "parallel" in the function's name refers to the not-yet-implemented feature of running independent submodels in parallel.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">omxRunCI(model, verbose = 0, optimizer = "SLSQP")
+
+omxParallelCI(model, run = TRUE, verbose = 0, independentSubmodels = TRUE,
+optimizer = mxOption(NULL, "Default optimizer"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An MxModel object that contains an MxInterval object (i.e., an <code>mxCI()</code> statement).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run</code></td>
+<td>
+<p>Logical; For <code>omxParallelCI()</code>, determines if the model with its new compute plan is <code>mxRun()</code> before being returned. Hard-coded <code>TRUE</code> for omxRunCI.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Integer; defaults to zero; verbosity level passed to MxCompute* objects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>independentSubmodels</code></td>
+<td>
+<p>Logical; For <code>omxParallelCI()</code> defaults to <code>TRUE</code>. Hard coded FALSE for <code>omxRunCI()</code>. Also see "Details."</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>optimizer</code></td>
+<td>
+<p>Character string selecting the gradient-descent optimizer to be used to find confidence limits; one of "NPSOL", "CSOLNP", or "SLSQP".  The default for <code>omxParallelCI()</code> is the current value of mxOption "Default optimizer", and for <code>omxRunCI()</code>, is "SLSQP".</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When <code>independentSubmodels=TRUE</code>, <code>omxParallelCI()</code> creates an independent MxModel object for each quantity specified in the 'reference' slot of <code>model</code>'s MxInterval object, and places these independent MxModels inside <code>model</code>.  Each of these independent submodels calculates the confidence limits of its own quantity when the container model is run.  When <code>independentSubmodels=FALSE</code>, no submodels are added to <code>model</code>.  Instead, <code>model</code> is provided with a dedicated compute plan consisting only of an MxComputeConfidenceInterval step.  Note that using <code>independentSubmodels=FALSE</code> will overwrite any compute plan already inside <code>model</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The functions return <code>model</code>, augmented with independent submodels (if <code>independentSubmodels=TRUE</code>) or with a non-default compute plan (if <code>independentSubmodels=FALSE</code>), and possibly having been passed through <code>mxRun()</code> (if <code>run=TRUE</code>).  Naturally, if <code>run=FALSE</code>, the user can subsequently run the returned model to obtain confidence intervals.  Users are cautioned that the returned model may not be very amenable to being further modified and re-fitted (e.g., having some free parameters fixed via <code>omxSetParameters()</code> and passed through <code>mxRun()</code> to get new point estimates) unless the added submodels or the non-default compute plan are eliminated.  The exception is if <code>run=TRUE</code> and <code>independentSubmodels=TRUE</code> (which is always the case with <code>omxRunCI()</code>), since the non-default compute plan is set to be non-persistent, and will automatically be replaced with a default compute plan the next time the model is passed to <code>mxRun()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mxCI()</code>, MxInterval, <code>mxComputeConfidenceInterval()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">require(OpenMx)
+# 1. Build and run a model, don't compute intervals yet
+data(demoOneFactor)
+manifests &lt;- names(demoOneFactor)
+latents &lt;- c("G")
+factorModel &lt;- mxModel("One Factor", type="RAM",
+	manifestVars=manifests, 
+	latentVars=latents,
+	mxPath(from=latents, to=manifests),
+ 	mxPath(from=manifests, arrows=2),
+	mxPath(from=latents, arrows=2, free=FALSE, values=1.0),
+	mxData(observed=cov(demoOneFactor), type="cov", numObs=500),
+	# Add confidence intervals for (free) params in A and S matrices.
+	mxCI(c('A', 'S'))
+)
+factorRun &lt;- mxRun(factorModel)
+
+# 2. Compute the CIs on factorRun, and view summary
+factorCI1 &lt;- omxRunCI(factorRun)
+summary(factorCI1)$CI
+
+# 3. Use low-level omxParallelCI interface
+factorCI2 &lt;- omxParallelCI(factorRun) 
+
+# 4. Build, but don't run the newly-created model
+factorCI3 &lt;- omxParallelCI(factorRun, run= FALSE)  
+</code></pre>
+
+
+</div>

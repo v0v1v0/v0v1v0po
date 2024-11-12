@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cbc_lm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Case-by-Case Linear Regression (cbc_lm)</h2>
+
+<h3>Description</h3>
+
+<p>Implements the case-by-case ordinary least squares (OLS) regression method,
+as detailed in Rogosa &amp; Saner (1995). The cbc_lm function provides unbiased
+estimators of the mean population intercept and slope by calculating the mean
+values of the OLS intercepts and slopes for each case (Carrig et al, 2004).
+The standard errors reported are the standard deviations across bootstrap
+replicates. Additionally, 95% confidence intervals are calculated using the
+empirical distributions from the resampling.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cbc_lm(
+  data,
+  formula,
+  .case,
+  n_bootstrap = 4000,
+  lm_options = list(),
+  boot_options = list(),
+  boot.ci_options = list(),
+  na.rm = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame containing the variables in the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>An object of class formula (or a string that can be converted
+to a formula object) detailing the model's specifications.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.case</code></td>
+<td>
+<p>A quoted variable name used to subset data into cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_bootstrap</code></td>
+<td>
+<p>The number of bootstrap replicates for standard errors and
+confidence intervals of mean coefficients. Default is 4000, as in Rogosa &amp; Saner
+(1995).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lm_options</code></td>
+<td>
+<p>Pass additional arguments to the lm function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boot_options</code></td>
+<td>
+<p>Pass additional arguments to the boot function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boot.ci_options</code></td>
+<td>
+<p>Pass additional arguments to the boot.ci function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>Pass na.rm to: the mean function used to obtain mean_coef and bm_coef;
+the sd function used to obtain se_coef; the mean function used in the statistic
+parameter of boot.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class cbc_lm, which contains the results of the case-by-case
+OLS regression, including the mean, standard error, and confidence intervals
+for each coefficient.
+</p>
+
+
+<h3>References</h3>
+
+<p>Carrig, M. M., Wirth, R. J., &amp; Curran, P. J. (2004).
+A SAS Macro for Estimating and Visualizing Individual Growth Curves.
+Structural Equation Modeling: A Multidisciplinary Journal, 11(1), 132-149.
+<a href="https://doi.org/10.1207/S15328007SEM1101_9">doi:10.1207/S15328007SEM1101_9</a>
+</p>
+<p>Rogosa, D., &amp; Saner, H. (1995).
+Longitudinal Data Analysis Examples with Random Coefficient Models.
+Journal of Educational and Behavioral Statistics, 20(2), 149-170.
+<a href="https://doi.org/10.3102/10769986020002149">doi:10.3102/10769986020002149</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">df &lt;- data.frame(ids = rep(1:5, 5),
+                 vals = stats::rnorm(25),
+                 outs = stats::rnorm(25, 10, 25))
+
+cbc_lm(data = df, formula = outs ~ vals, .case = "ids")
+</code></pre>
+
+
+</div>

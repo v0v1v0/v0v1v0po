@@ -1,0 +1,278 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_slicer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a slicer/timeline to a pivot table</h2>
+
+<h3>Description</h3>
+
+<p>Add a slicer/timeline to a previously created pivot table. This function is still experimental and might be changed/improved in upcoming releases.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_slicer(
+  wb,
+  x,
+  dims = "A1",
+  sheet = current_sheet(),
+  pivot_table,
+  slicer,
+  params
+)
+
+wb_remove_slicer(wb, sheet = current_sheet())
+
+wb_add_timeline(
+  wb,
+  x,
+  dims = "A1",
+  sheet = current_sheet(),
+  pivot_table,
+  timeline,
+  params
+)
+
+wb_remove_timeline(wb, sheet = current_sheet())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object containing a worksheet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>data.frame</code> that inherits the <code>wb_data</code> class.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>The worksheet cell where the pivot table is placed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pivot_table</code></td>
+<td>
+<p>The name of a pivot table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>slicer, timeline</code></td>
+<td>
+<p>A variable used as slicer/timeline for the pivot table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>params</code></td>
+<td>
+<p>A list of parameters to modify pivot table creation. See <strong>Details</strong> for available options.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This assumes that the slicer/timeline variable initialization has happened before. Unfortunately, it is unlikely that we can guarantee this for loaded workbooks, and we <em>strictly</em> discourage users from attempting this. If the variable has not been initialized properly, this may cause the spreadsheet software to crash.
+Although it is documented that slicers should use "TimelineStyleLight[1-6]" and "TimelineStyleDark[1-6]" they use slicer styles.
+</p>
+<p>Possible <code>params</code> arguments for slicers are listed below.
+</p>
+
+<ul>
+<li>
+<p> edit_as: "twoCell" to place the slicer into the cells
+</p>
+</li>
+<li>
+<p> column_count: integer used as column count
+</p>
+</li>
+<li>
+<p> sort_order: "descending" / "ascending"
+</p>
+</li>
+<li>
+<p> choose: select variables in the form of a named logical vector like
+<code>c(agegp = 'x &gt; "25-34"')</code> for the <code>esoph</code> dataset.
+</p>
+</li>
+<li>
+<p> locked_position
+</p>
+</li>
+<li>
+<p> start_item
+</p>
+</li>
+</ul>
+<p>Possible <code>params</code> arguments for timelines are listed below.
+</p>
+
+<ul>
+<li>
+<p> beg_date/end_date: dates when the timeline should begin or end
+</p>
+</li>
+<li>
+<p> choose_beg/choose_end: dates when the selection should begin or end
+</p>
+</li>
+<li>
+<p> scroll_position
+</p>
+</li>
+<li>
+<p> show_selection_label
+</p>
+</li>
+<li>
+<p> show_time_level
+</p>
+</li>
+<li>
+<p> show_horizontal_scrollbar
+</p>
+</li>
+</ul>
+<p>Possible common <code>params</code>:
+</p>
+
+<ul>
+<li>
+<p> caption: string used for a caption
+</p>
+</li>
+<li>
+<p> style: "SlicerStyleLight[1-6]", "SlicerStyleDark[1-6]" only for slicer "SlicerStyleOther[1-2]"
+</p>
+</li>
+<li>
+<p> level: the granularity of the slicer (for timeline 0 = year, 1 = quarter, 2 = month)
+</p>
+</li>
+<li>
+<p> show_caption: logical if caption should be shown or not
+</p>
+</li>
+</ul>
+<p>Removing works on the spreadsheet level. Therefore all slicers/timelines are removed from a worksheet. At the moment the drawing reference remains on the spreadsheet. Therefore spreadsheet software that does not handle slicers/timelines will still show the drawing.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>grouping-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+<p>Other worksheet content functions: 
+<code>col_widths-wb</code>,
+<code>filter-wb</code>,
+<code>grouping-wb</code>,
+<code>named_region-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_conditional_formatting()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_thread()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># prepare data
+df &lt;- data.frame(
+  AirPassengers = c(AirPassengers),
+  time = seq(from = as.Date("1949-01-01"), to = as.Date("1960-12-01"), by = "month"),
+  letters = letters[1:4]
+)
+
+# create workbook
+wb &lt;- wb_workbook()$
+  add_worksheet("pivot")$
+  add_worksheet("data")$
+  add_data(x = df)
+
+# get pivot table data source
+df &lt;- wb_data(wb, sheet = "data")
+
+# create pivot table
+wb$add_pivot_table(
+  df,
+  sheet = "pivot",
+  rows = "time",
+  cols = "letters",
+  data = "AirPassengers",
+  pivot_table = "airpassengers",
+  params = list(
+    compact = FALSE, outline = FALSE, compact_data = FALSE,
+    row_grand_totals = FALSE, col_grand_totals = FALSE)
+)
+
+# add slicer
+wb$add_slicer(
+  df,
+  dims = "E1:I7",
+  sheet = "pivot",
+  slicer = "letters",
+  pivot_table = "airpassengers",
+  params = list(choose = c(letters = 'x %in% c("a", "b")'))
+)
+
+# add timeline
+wb$add_timeline(
+  df,
+  dims = "E9:I14",
+  sheet = "pivot",
+  timeline = "time",
+  pivot_table = "airpassengers",
+  params = list(
+    beg_date = as.Date("1954-01-01"),
+    end_date = as.Date("1961-01-01"),
+    choose_beg = as.Date("1957-01-01"),
+    choose_end = as.Date("1958-01-01"),
+    level = 0,
+    style = "TimeSlicerStyleLight2"
+  )
+)
+</code></pre>
+
+
+</div>

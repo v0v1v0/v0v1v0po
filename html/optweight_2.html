@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check.tols</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Construct and Check Tolerance Input</h2>
+
+<h3>Description</h3>
+
+<p>Checks whether proposed tolerance values for <code>tols</code> are suitable in number and order for submission to <code>optweight</code>. Users should include one value per item in <code>formula</code>. The output can also be used as an input to <code>tols</code> in <code>optweight</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check.tols(formula,
+           data = NULL,
+           tols,
+           stop = FALSE)
+
+## S3 method for class 'optweight.tols'
+print(x, internal = FALSE, digits = 5, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+
+<p>A formula with the covariates to be balanced with <code>optweight</code> on the right hand side. See <code>glm</code> for more details. Interactions and functions of covariates are allowed. Lists of formulas are not allowed; multiple formulas must be checked one at a time.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>An optional data set in the form of a data frame that contains the variables in <code>formula</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tols</code></td>
+<td>
+
+<p>A vector of balance tolerance values in standardized mean difference units for each covariate. These should be in the order corresponding to the order of the corresponding variable in <code>formula</code>, except for interactions, which will appear after all lower-order terms. If only one value is supplied, it will be applied to all covariates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stop</code></td>
+<td>
+
+<p><code>logical</code>; if <code>TRUE</code>, an error will be thrown if the number of values in <code>tols</code> is not equal to the correct number of covariates in <code>formula</code>, and no messages will be displayed if the <code>tols</code> input is satisfactory. If <code>FALSE</code>, a message will be displayed if the number of values in <code>tols</code> is not equal to the correct number of covariates in <code>formula</code>, and other messages will be displayed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>An <code>optweight.tols</code> object; the output of a call to <code>check.tols</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>internal</code></td>
+<td>
+
+<p><code>logical</code>; whether to print the tolerance values that are to be used internally by <code>optweight</code>. See Value section.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+
+<p>How many digits to print.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Ignored.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The purpose of <code>check.tols</code> is to allow users to ensure that their proposed input to <code>tols</code> in <code>optweight</code> is correct both in the number of entries and their order. This is especially important when factor variables and interactions are included in the formula because factor variables are split into several dummies and interactions are moved to the end of the variable list, both of which can cause some confusion and potential error when entering <code>tols</code> values.
+</p>
+<p>Factor variables are internally split into a dummy variable for each level, but the user only needs to specify one tolerance value per original variable; <code>check.tols</code> automatically expands the <code>tols</code> input to match the newly created variables.
+</p>
+<p>Interactions (e.g., <code>a:b</code> or <code>a*b</code> in the <code>formula</code> input) are always sent to the end of the variable list even if they are specified elsewhere in the <code>formula</code>. It is important to run <code>check.tols</code> to ensure the order of the proposed <code>tols</code> corresponds to the represented order of covariates used in <code>optweight</code>. You can run <code>check.tols</code> with no <code>tols</code> input to see the order of covariates that is required.
+</p>
+<p><code>check.tols</code> was designed to be used primarily for its message printing and <code>print</code> method, but you can also assign its output to an object for use as an input to <code>tols</code> in <code>optweight</code>.
+</p>
+<p>Note that only one formula and vector of tolerance values can be assessed at a time; for multiple treatment periods, each formula and tolerance vector must be entered seperately.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>optweight.tols</code> object, which is a named vector of tolerance values, one for each variable specified in <code>formula</code>. This should be used as user inputs to <code>optweight</code>. The <code>"internal.tols"</code> attribute contains the tolerance values to be used internally by <code>optweight</code>. These will differ from the vector values when there are factor variables that are split up; the user only needs to submit one tolerance per factor variable, but seperate tolerance values are produced for each new dummy created.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Noah Greifer
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>check.targets</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library("cobalt")
+data("lalonde", package = "cobalt")
+
+#Checking if the correct number of entries are included:
+check.tols(treat ~ age + educ + married +
+                nodegree + re74, data = lalonde,
+                tols = c(.01, .02, .03, .04))
+
+#Checking the order of interactions; notice they go
+#at the end even if specified at the beginning. The
+#.09 values are where the interactions might be expected
+#to be, but they are in fact not.
+c &lt;- check.tols(treat ~ age:educ + married*race +
+                nodegree + re74, data = lalonde,
+                tols = c(.09, .01, .01, .09, .01, .01))
+
+print(c, internal = TRUE)
+</code></pre>
+
+
+</div>

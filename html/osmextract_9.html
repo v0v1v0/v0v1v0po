@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oe_get_boundary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get the administrative boundary for a given place</h2>
+
+<h3>Description</h3>
+
+<p>This function can be used to obtain polygon/multipolygon objects representing
+an administrative boundary. The objects are extracted from the
+<code>multipolygons</code> layer of a given OSM extract.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oe_get_boundary(place, name = place, exact = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>place</code></td>
+<td>
+<p>Description of the geographical area that should be matched with
+a <code>.osm.pbf</code> file. Can be either a length-1 character vector, an
+<code>sf</code>/<code>sfc</code>/<code>bbox</code> object, or a numeric vector of coordinates with length 2.
+In the last case, it is assumed that the EPSG code is 4326 specified as
+c(LON, LAT), while you can use any CRS with <code>sf</code>/<code>sfc</code>/<code>bbox</code> objects. See
+Details and Examples in <code>oe_match()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>A character vector of length 1 that describes the relevant area.
+By default, this is equal to <code>place</code>, but this parameter can be tuned to
+obtain more granular results starting from the same OSM extract. See
+examples. It must be always set when the <code>place</code> argument is specified
+using numeric or spatial objects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exact</code></td>
+<td>
+<p>Boolean of length 1. If <code>TRUE</code>, then the function returns only
+those features where the field <code>name</code> is exactly equal to <code>name</code>. If
+<code>FALSE</code>, it performs a (case-sensitive) pattern matching.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments (e.g. <code>quiet</code> or <code>force_vectortranslate</code>) that
+are passed to <code>oe_get()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function may return an empty result when the corresponding GPKG file
+already exists and contains partial results. In that case, you can try
+running the function setting <code>never_skip_vectortranslate = TRUE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>sf</code> object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(sf)
+my_cols = sf.colors(5, categorical = TRUE)
+gabon = oe_get_boundary("Gabon", quiet = TRUE) # country
+libreville = oe_get_boundary("Gabon", "Libreville", quiet = TRUE) # capital
+
+opar = par(mar = rep(0, 4))
+plot(st_geometry(st_boundary(gabon)), reset = FALSE, col = "grey")
+plot(st_geometry(libreville), add = TRUE, col = my_cols[1])
+
+# Exact match
+komo = oe_get_boundary("Gabon", "Komo", quiet = TRUE)
+# Pattern matching
+komo_pt = oe_get_boundary("Gabon", "Komo", exact = FALSE, quiet = TRUE)
+plot(st_geometry(komo), add = TRUE, col = my_cols[2])
+plot(st_geometry(komo_pt), add = TRUE, col = my_cols[3:5])
+par(opar)
+
+# Get all boundaries
+(oe_get_boundary("Gabon", name = "%", exact = FALSE, quiet = TRUE)[, 1:2])
+
+# If the basic approach doesn't work, i.e.
+oe_get_boundary("Leeds")
+
+# try to consider larger regions, i.e.
+oe_get_boundary("West Yorkshire", "Leeds")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

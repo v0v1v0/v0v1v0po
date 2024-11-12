@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_that</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check your data</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>check_that</code> returns <code>FALSE</code> 
+if any of the predicates tested fails, <code>TRUE</code> otherwise. 
+</p>
+<p>Where <code>check_that</code> would return <code>FALSE</code>, the function 
+<code>ensure_that</code> throws an error instead; otherwise it returns 
+<code>.data</code> unchanged.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check_that(.data, ...)
+
+check_that_(.data, ..., .dots)
+
+check(.data, ...)
+
+ensure_that(.data, ...)
+
+ensure_that_(.data, ..., .dots)
+
+ensure(.data, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>A tbl or data.frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Logical predicates. 
+Multiple conditions are considered as separate observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.dots</code></td>
+<td>
+<p>Used to work around non-standard evaluation.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>check_that</code> returns a logical, <code>TRUE</code> if all checks have passed, 
+<code>FALSE</code> otherwise. 
+</p>
+<p><code>ensure_that</code> throws an error if a check fails; otherwise, 
+<code>.data</code> is returned (with <code>NULL</code> assigned to 
+the <code>observations</code> attribute).
+</p>
+
+
+<h3>Note</h3>
+
+<p>These functions are inspired by eponymous functions in 
+package <span class="pkg">ensurer</span>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>observe_if</code> in this package; 
+</p>
+<p><code>check_that</code> and <code>ensure_that</code> 
+from package <span class="pkg">ensurer</span>; 
+<code>check_that</code> from package <span class="pkg">validate</span>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+
+observe.mydata &lt;- function(.data, ...) {
+  observe_if_(.data, 
+              ~ Year &gt; 2010, 
+              ~ City %in% c("Paris", "New York"), 
+              ~ Population &gt; 0)
+}
+
+df &lt;- data.frame(City = c("Paris", "New York", "Amsterdam"), 
+                 Year = c(2011, 2015, 2016), 
+                 Population = c(2249975, 8550405, 840486))
+class(df) &lt;- c("mydata", "data.frame")
+observe(df)
+observe(df) %&gt;% obs()
+check(df)  # FALSE
+## Not run: 
+ensure(df) # throws an error
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

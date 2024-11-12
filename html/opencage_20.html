@@ -1,0 +1,200 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oc_reverse_df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reverse geocoding with data frames</h2>
+
+<h3>Description</h3>
+
+<p>Reverse geocoding from latitude and longitude pairs to the names and
+addresses of a location.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oc_reverse_df(...)
+
+## S3 method for class 'data.frame'
+oc_reverse_df(
+  data,
+  latitude,
+  longitude,
+  bind_cols = TRUE,
+  output = c("short", "all"),
+  language = NULL,
+  min_confidence = NULL,
+  roadinfo = FALSE,
+  no_annotations = TRUE,
+  no_dedupe = FALSE,
+  abbrv = FALSE,
+  ...
+)
+
+## S3 method for class 'numeric'
+oc_reverse_df(
+  latitude,
+  longitude,
+  output = c("short", "all"),
+  language = NULL,
+  min_confidence = NULL,
+  no_annotations = TRUE,
+  no_dedupe = FALSE,
+  abbrv = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latitude, longitude</code></td>
+<td>
+<p>Unquoted variable names of numeric columns or
+vectors of latitude and longitude values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bind_cols</code></td>
+<td>
+<p>When <code>bind_col = TRUE</code>, the default, the results are column
+bound to <code>data</code>. When <code>FALSE</code>, the results are returned as a new tibble.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>A character vector of length one indicating whether only the
+formatted address (<code>"short"</code>, the default) or all variables (<code>"all"</code>)
+variables should be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>Character vector, or an unquoted variable name of such a
+vector, of <a href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF BCP 47 language tags</a> (such as "es" for
+Spanish or "pt-BR" for Brazilian Portuguese). OpenCage will attempt to
+return results in that language. Alternatively you can specify the "native"
+tag, in which case OpenCage will attempt to return the response in the
+"official" language(s). In case the <code>language</code> parameter is set to <code>NULL</code>
+(which is the default), the tag is not recognized, or OpenCage does not
+have a record in that language, the results will be returned in English.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_confidence</code></td>
+<td>
+<p>Numeric vector of integer values, or an unquoted
+variable name of such a vector, between 0 and 10 indicating the precision
+of the returned result as defined by its geographical extent, (i.e. by the
+extent of the result's bounding box). See the <a href="https://opencagedata.com/api#confidence">API documentation</a> for details. Only
+results with at least the requested confidence will be returned. Default is
+<code>NULL</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>roadinfo</code></td>
+<td>
+<p>Logical vector, or an unquoted variable name of such a
+vector, indicating whether the geocoder should attempt to match the nearest
+road (rather than an address) and provide additional road and driving
+information. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no_annotations</code></td>
+<td>
+<p>Logical vector, or an unquoted variable name of such a
+vector, indicating whether additional information about the result location
+should be returned. <code>TRUE</code> by default, which means that the results will
+not contain annotations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no_dedupe</code></td>
+<td>
+<p>Logical vector, or an unquoted variable name of such a
+vector. Default is <code>FALSE</code>. When <code>TRUE</code> the results will not be
+deduplicated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abbrv</code></td>
+<td>
+<p>Logical vector, or an unquoted variable name of such a vector.
+Default is <code>FALSE</code>. When <code>TRUE</code> addresses in the <code>oc_formatted</code> variable of
+the results are abbreviated (e.g. "Main St." instead of "Main Street").</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble. Column names coming from the OpenCage API are prefixed with
+<code>"oc_"</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>oc_reverse()</code> for inputs as vectors, or <code>oc_forward()</code> and
+<code>oc_forward()</code> for forward geocoding. For more information about the API
+and the various parameters, see the <a href="https://opencagedata.com/api">OpenCage API documentation</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(tibble)
+df &lt;- tibble(id = 1:4,
+             lat = c(-36.85007, 47.21864, 53.55034, 34.05369),
+             lng = c(174.7706, -1.554136, 10.000654, -118.242767))
+
+# Return formatted address of lat/lng values
+oc_reverse_df(df, latitude = lat, longitude = lng)
+
+# Return more detailed information about the locations
+oc_reverse_df(df, latitude = lat, longitude = lng,
+              output = "all")
+
+# Return results in a preferred language if possible
+oc_reverse_df(df, latitude = lat, longitude = lng,
+              language = "fr")
+
+# oc_reverse_df accepts unquoted column names for all
+# arguments except bind_cols and output.
+# This makes it possible to build up more detailed queries
+# through the data frame passed to the data argument.
+
+df2 &lt;- add_column(df,
+                  language = c("en", "fr", "de", "en"),
+                  confidence = c(8, 10, 10, 10))
+
+# Use language column to specify preferred language of results
+# and confidence column to allow different confidence levels
+oc_reverse_df(df2, latitude = lat, longitude = lng,
+              language = language,
+              min_confidence = confidence)
+
+</code></pre>
+
+
+</div>

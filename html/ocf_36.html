@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tree_info</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Tree Information in Readable Format</h2>
+
+<h3>Description</h3>
+
+<p>Extracts tree information from a <code>ocf.forest</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tree_info(object, tree = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p><code>ocf.forest</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tree</code></td>
+<td>
+<p>Number of the tree of interest.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Nodes and variables IDs are 0-indexed, i.e., node 0 is the root node. <br></p>
+<p>All values smaller than or equal to <code>splitval</code> go to the left and all values larger go to the right.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> with the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>nodeID</code></td>
+<td>
+<p>Node IDs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>leftChild</code></td>
+<td>
+<p>IDs of the left child node.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rightChild</code></td>
+<td>
+<p>IDs of the right child node.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>splitvarID</code></td>
+<td>
+<p>IDs of the splitting variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>splitvarName</code></td>
+<td>
+<p>Name of the splitting variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>splitval</code></td>
+<td>
+<p>Splitting value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>terminal</code></td>
+<td>
+<p>Logical, TRUE for terminal nodes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prediction</code></td>
+<td>
+<p>One column with the predicted conditional class probabilities.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Riccardo Di Francesco
+</p>
+
+
+<h3>References</h3>
+
+
+<ul><li>
+<p> Di Francesco, R. (2023). Ordered Correlation Forest. arXiv preprint <a href="https://arxiv.org/abs/2309.08755">arXiv:2309.08755</a>.
+</p>
+</li></ul>
+<h3>See Also</h3>
+
+<p><code>ocf</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate synthetic data.
+set.seed(1986)
+
+data &lt;- generate_ordered_data(1000)
+sample &lt;- data$sample
+Y &lt;- sample$Y
+X &lt;- sample[, -1]
+
+## Fit ocf.
+forests &lt;- ocf(Y, X)
+
+## Extract information from tenth tree of first forest.
+info &lt;- tree_info(forests$forests.info$forest.1, tree = 10)
+head(info)
+  
+</code></pre>
+
+
+</div>

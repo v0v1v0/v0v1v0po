@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rpp_fft</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>SPP Analysis via fourier</h2>
+
+<h3>Description</h3>
+
+<p>applies the SPP Analysis by means of a fourier series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rpp_fft(time_wave, resp_wave, L, omega, M, p)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>time_wave</code></td>
+<td>
+<p>Lx1 vector of time at each measurement point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resp_wave</code></td>
+<td>
+<p>Lx3 matrix of the strain, rate and stress data,with each row representing a measuring point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>number of measurement points in the extracted data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omega</code></td>
+<td>
+<p>frequency of oscilation (rad/s)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>number of harmonics for stress</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>number of cycles</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list with the following data frame
+spp_data_in= the data frame with the data
+spp_params=spp_params, 
+spp_data_out= Length,frequency,harmonics,cycles,max_harmonics,step_size
+fsf_data_out= Tx,Ty,Tz,Nx,Ny,Nz,Bx,By,Bz coordinates of the trajectory (T=tangent,N=principal Normal,B=Binormal Vectors)
+ft_out=data frame with that includes time_wave,strain,rate,stress,Gp_t,Gpp_t,G_star_t,tan_delta_t,delta_t,disp_stress,eq_strain_est,Gp_t_dot,Gpp_t_dot,G_speed,delta_t_dot)
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Simon Rogers Group for Soft Matter (matlab version), Giorgio Luciano and Serena Berretta (R version)
+</p>
+
+
+<h3>References</h3>
+
+<p>Simon A. Rogersa, M. Paul Letting, A sequence of physical processes determined and quantified in large-amplitude oscillatory shear (LAOS): Application to theoretical nonlinear models
+Journal of Rheology 56:1, 1-25
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mydata)
+df &lt;- rpp_read2(mydata , selected=c(2, 3, 4, 0, 0, 1, 0, 0))
+time_wave &lt;- df$raw_time
+resp_wave &lt;- data.frame(df$strain,df$strain_rate,df$stress) 
+out &lt;- rpp_fft(time_wave,resp_wave,L=1024,omega=3.16 , M=15,p=1)
+</code></pre>
+
+
+</div>

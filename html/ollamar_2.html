@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>chat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a chat completion with message history</h2>
+
+<h3>Description</h3>
+
+<p>Generate a chat completion with message history
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">chat(
+  model,
+  messages,
+  tools = list(),
+  stream = FALSE,
+  keep_alive = "5m",
+  output = c("resp", "jsonlist", "raw", "df", "text", "req"),
+  endpoint = "/api/chat",
+  host = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A character string of the model name such as "llama3".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>messages</code></td>
+<td>
+<p>A list with list of messages for the model (see examples below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tools</code></td>
+<td>
+<p>Tools for the model to use if supported. Requires stream = FALSE. Default is an empty list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stream</code></td>
+<td>
+<p>Enable response streaming. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_alive</code></td>
+<td>
+<p>The duration to keep the connection alive. Default is "5m".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>The output format. Default is "resp". Other options are "jsonlist", "raw", "df", "text", "req" (httr2_request object).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endpoint</code></td>
+<td>
+<p>The endpoint to chat with the model. Default is "/api/chat".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>host</code></td>
+<td>
+<p>The base URL to use. Default is NULL, which uses Ollama's default base URL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional options to pass to the model.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A response in the format specified in the output parameter.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-chat-completion">API documentation</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# one message
+messages &lt;- list(
+    list(role = "user", content = "How are you doing?")
+)
+chat("llama3", messages) # returns response by default
+chat("llama3", messages, output = "text") # returns text/vector
+chat("llama3", messages, temperature = 2.8) # additional options
+chat("llama3", messages, stream = TRUE) # stream response
+chat("llama3", messages, output = "df", stream = TRUE) # stream and return dataframe
+
+# multiple messages
+messages &lt;- list(
+    list(role = "user", content = "Hello!"),
+    list(role = "assistant", content = "Hi! How are you?"),
+    list(role = "user", content = "Who is the prime minister of the uk?"),
+    list(role = "assistant", content = "Rishi Sunak"),
+    list(role = "user", content = "List all the previous messages.")
+)
+chat("llama3", messages, stream = TRUE)
+
+# image
+image_path &lt;- file.path(system.file("extdata", package = "ollamar"), "image1.png")
+messages &lt;- list(
+   list(role = "user", content = "What is in the image?", images = image_path)
+)
+chat("benzie/llava-phi-3", messages, output = 'text')
+
+</code></pre>
+
+
+</div>

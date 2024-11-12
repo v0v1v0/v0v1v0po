@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rls_fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit an onlineforecast model with Recursive Least Squares (RLS).</h2>
+
+<h3>Description</h3>
+
+<p>This function fits the onlineforecast model to the data and returns either: model validation data or just the score value.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rls_fit(
+  prm = NA,
+  model,
+  data,
+  scorefun = NA,
+  returnanalysis = TRUE,
+  runcpp = TRUE,
+  printout = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>prm</code></td>
+<td>
+<p>vector with the parameters for fitting. Deliberately as the first element to be able to use <code>optim</code> or other optimizer. If NA then the model will be fitted with the current values in the input expressions, see examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>as an object of class forecastmodel: The model to be fitted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>as a data.list with the data to fit the model on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scorefun</code></td>
+<td>
+<p>as a function (optional), default is <code>rmse</code>. If the score function is given it will be applied to the residuals of each horizon (only data$scoreperiod is included).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnanalysis</code></td>
+<td>
+<p>as a logical. If FALSE then the sum of the scoreval on all horizons are returned, if TRUE a list with values for analysis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>runcpp</code></td>
+<td>
+<p>logical: If true the c++ implementation of RLS is run, if false the R implementation is run (slower).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printout</code></td>
+<td>
+<p>logical: If TRUE the offline parameters and the score function value are printed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function has three main purposes (in the examples these three are demonstrated in the examples):
+</p>
+<p>- Returning model validation data, such as residuals and recursive estimated parameters.
+</p>
+<p>- For optimizing the parameters using an R optimizer function. The parameters to optimize for is given in <code>prm</code>
+</p>
+<p>- Fitting a model to data and saving the final state in the model object (such that from that point the model can be updated recursively as new data is received).
+</p>
+<p>Note, if the <code>scorefun</code> is given the <code>data$scoreperiod</code> must be set to (int or logical) define which points to be evaluated in the scorefun.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Depends on:
+</p>
+<p>- If <code>returnanalysis</code> is TRUE a list containing:
+</p>
+<p>* <code>Yhat</code>: data.frame with forecasts for <code>model$kseq</code> horizons.
+</p>
+<p>* <code>model</code>: The forecastmodel object cloned deep, so can be modified without changing the original object.
+</p>
+<p>* <code>data</code>: data.list with the data used, see examples on how to obtain the transformed data.
+</p>
+<p>* <code>Lfitval</code>: list with RLS coefficients in a data.frame for each horizon, use <code>plot_ts.rls_fit</code> to plot them and to obtain them as a data.frame for each coefficient.
+</p>
+<p>* <code>scoreval</code>: data.frame with the scorefun result on each horizon (only scoreperiod is included).
+</p>
+<p>- If <code>returnanalysis</code> is FALSE (and <code>scorefun</code> is given): The sum of the score function on all horizons (specified with model$kseq).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>For optimizing parameters <code>rls_optim()</code>, for summary <code>summary.rls_fit</code>, for plotting <code>plot_ts.rls_fit()</code>, and the other functions starting with 'rls_'.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+# Take data
+D &lt;- subset(Dbuilding, c("2010-12-15", "2011-01-01"))
+D$y &lt;- D$heatload
+# Define a simple model 
+model &lt;- forecastmodel$new()
+model$output &lt;- "y"
+model$add_inputs(Ta = "Ta",
+		    mu = "one()")
+model$add_regprm("rls_prm(lambda=0.99)")
+
+# Before fitting the model, define which points to include in the evaluation of the score function
+D$scoreperiod &lt;- in_range("2010-12-20", D$t)
+# And the sequence of horizons to fit for
+model$kseq &lt;- 1:6
+
+# Now we can fit the model with RLS and get the model validation analysis data
+fit &lt;- rls_fit(model = model, data = D)
+# What did we get back?
+names(fit)
+# The one-step forecast
+plot(D$y, type="l")
+lines(fit$Yhat$k1, col=2)
+# The one-step RLS coefficients over time (Lfitval is a list of the fits for each horizon)
+plot(fit$Lfitval$k1$Ta, type="l")
+
+# A summary
+summary(fit)
+# Plot the fit
+plot_ts(fit, kseq=1)
+
+# Fitting with lower lambda makes the RLS coefficients change faster
+fit2 &lt;- rls_fit(prm = c(lambda=0.9), model, D)
+plot_ts(fit2, kseq=1)
+
+
+# It can return a score
+rls_fit(c(lambda=0.9), model, D, scorefun=rmse, returnanalysis=FALSE)
+
+# Such that it can be passed to an optimzer (see ?rls_optim for a nice wrapper of optim)
+val &lt;- optim(c(lambda=0.99), rls_fit, model = model, data = D, scorefun = rmse,
+             returnanalysis=FALSE)
+val$par
+# Which can then simply be applied
+rls_fit(val$par, model, D, scorefun=rmse, returnanalysis=FALSE)
+# see ?rls_optim, how optim is wrapped for a little easiere use
+
+# See rmse as a function of horizon
+fit &lt;- rls_fit(val$par, model, D, scorefun = rmse)
+plot(fit$scoreval, xlab="Horizon k", ylab="RMSE")
+# See ?score for a little more consistent way of calculating this
+
+
+# Try adding a low-pass filter to Ta
+model$add_inputs(Ta = "lp(Ta, a1=0.92)")
+# To obtain the transformed data, i.e. the data which is used as input to the RLS
+model$reset_state()
+# Generate the the transformed data
+datatr &lt;- model$transform_data(D)
+# What did we get?
+str(datatr)
+# See the effect of low-pass filtering
+plot(D$Ta$k1, type="l")
+lines(datatr$Ta$k1, col=2)
+# Try changing the 'a1' coefficient and rerun
+# ?rls_optim for how to optimize also this coefficient
+
+
+</code></pre>
+
+
+</div>

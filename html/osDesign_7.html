@@ -1,0 +1,174 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotPower</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plot function for power, based on two-phase and case-control design
+</h2>
+
+<h3>Description</h3>
+
+<p>The <code>plotPower</code> function plots estimates of power obtained from objects returned by either the <code>tpsPower</code> or <code>ccPower</code> functions. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotPower(x, coefNum=1, include="All", yAxis=seq(from=0, to=100, by=20),
+          xAxis=NULL, main=NULL, legendXY=NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>An object in a class <code>tpsPower</code> or <code>ccPower</code> obtained as a result of <code>tpsPower</code> or <code>ccPower</code> functions, respectively.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coefNum</code></td>
+<td>
+
+<p>A numeric vector number specifying the regression coefficient in <code>beta</code> for the plot.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include</code></td>
+<td>
+
+<p>Character string indicating which estimators from a <code>tpsPower</code> object are to be printed. The default is "All" in which case all four estimators (two-phase WL, PL, ML and case-control CC) are presented. Other options include "TPS" which solely presents the three two-phase estimators; options "WL", "PL", "ML" and "CC" solely present the corresponding estimators. If the object is of class <code>ccPower</code> then only the case-control MLE (CC) is presented (i.e., the <code>include</code> argument is ignored).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yAxis</code></td>
+<td>
+
+<p>A scale marking the y-axis for the plot.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xAxis</code></td>
+<td>
+
+<p>A scale marking the x-axis for the plot. If left as the default <code>NULL</code>, the x-axis scale is taken from <code>nII</code> in the <code>tpsResults</code> object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+
+<p>Title for the plot. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legendXY</code></td>
+<td>
+
+<p>Optional vector indicating the co-ordinates for the top-left hand corner of the legend box.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Produces a plot of statistical power (to reject a null hypothesis H0: beta = 0), for estimators of a regression coefficient from a logistic regression model, based on a two-phase and/or case-control design.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sebastien Haneuse, Takumi Saegusa
+</p>
+
+
+<h3>References</h3>
+
+<p>Haneuse, S. and Saegusa, T. and Lumley, T. (2011) "osDesign: An R Package for the Analysis, Evaluation, and Design of Two-Phase and Case-Control Studies." Journal of Statistical Software, 43(11), 1-29.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>tpsPower</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##
+data(Ohio)
+
+##
+XM   &lt;- cbind(Int=1, Ohio[,1:3])
+fitM &lt;- glm(cbind(Death, N-Death) ~ factor(Age) + Sex + Race, data=Ohio,
+            family=binomial)
+betaNamesM &lt;- c("Int", "Age1", "Age2", "Sex", "Race")
+
+## Power for the TPS design where phase I stratification is based on Age
+##
+newBetaM      &lt;- fitM$coef
+newBetaM[2:3] &lt;- newBetaM[2:3] / 2
+##
+
+powerRaceTPS &lt;- tpsPower(B=10000, betaTruth=fitM$coef, X=XM, N=Ohio$N,
+                    strata=4,
+                    nII=seq(from=100, to=1000, by=100),
+		 betaNames=c("Int", "Age1", "Age2", "Sex", "Race"), monitor=1000)
+##
+old.par &lt;- par()
+par(mfrow=c(2,2))
+plotPower(powerRaceTPS, include="TPS", coefNum=2,
+          xAxis=seq(from=100, to=1000, by=100),
+          main=expression("Age effect (65-74 vs. 55-64 years), " * beta[A1]),
+          legendXY=c(800, 65))
+plotPower(powerRaceTPS, include="ML", coefNum=2,
+          xAxis=seq(from=100, to=1000, by=100),
+          main=expression("Age effect (65-74 vs. 55-64 years), " * beta[A1]),
+          legendXY=c(800, 65))
+plotPower(powerRaceTPS, include="WL", coefNum=2,
+          xAxis=seq(from=100, to=1000, by=100),
+          main=expression("Age effect (65-74 vs. 55-64 years), " * beta[A1]),
+          legendXY=c(800, 65))
+plotPower(powerRaceTPS, include="CC", coefNum=2,
+          xAxis=seq(from=100, to=1000, by=100),
+          main=expression("Age effect (65-74 vs. 55-64 years), " * beta[A1]),
+          legendXY=c(800, 65))
+##
+par(old.par)
+
+## Power 
+##
+
+ccResult &lt;- ccPower(B=1000, betaTruth=newBetaM, X=XM, N=Ohio$N, r=0.5,
+                    nCC=seq(from=100, to=500, by=50), betaNames=betaNamesM,
+                    monitor=100)
+##
+par(mfrow=c(2,2))
+plotPower(ccResult, coefNum=2, yAxis=seq(from=0, to=100, by=20),
+            xAxis=seq(from=100, to=500, by=100),
+            main=expression("Age effect (65-74 vs. 55-64 years), " * beta[A1]))
+plotPower(ccResult, coefNum=3, yAxis=seq(from=0, to=100, by=20),
+            xAxis=seq(from=100, to=500, by=100),
+            main=expression("Age effect (75-84 vs. 55-64 years), " * beta[A2]))
+plotPower(ccResult, coefNum=4, yAxis=seq(from=0, to=100, by=20),
+            xAxis=seq(from=100, to=500, by=100),
+            main=expression("Sex effect, " * beta[S]))
+plotPower(ccResult, coefNum=5, yAxis=seq(from=0, to=100, by=20),
+            xAxis=seq(from=100, to=500, by=100),
+            main=expression("Race effect, " * beta[R]))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>trimImages</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove Whitespace from Images</h2>
+
+<h3>Description</h3>
+
+<p>This is a wrapper function around <code>convert -trim</code> to automatically remove any
+whitespace from locally saved images. Note that 'ImageMagick' must be
+installed on your local system, see Source.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">trimImages(path = ".", pattern = c(".png$", ".tiff$"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>File path leading to image files as <code>character</code>, defaults to the
+current working directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p>A regular expression as <code>character</code> accepted by
+<code>list.files()</code>, defaults to <code>c(".png$", ".tiff$")</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>character</code> vector containing the names of the processed images.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Florian Detsch
+</p>
+
+
+<h3>Source</h3>
+
+<p>Ooms J (2018) The <strong>magick</strong> package: Advanced Image-Processing in R.
+Available online: <a href="https://cran.r-project.org/package=magick/vignettes/intro.html">https://cran.r-project.org/package=magick/vignettes/intro.html</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>system()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## trim image of bart simpson
+download.file("http://pngimg.com/uploads/simpsons/simpsons_PNG93.png?i=1"
+              , destfile = (ofl &lt;- file.path(tempdir(), "bart.png", fsep = "\\"))
+              , mode = "wb")
+
+par(mfrow = c(1, 2))
+
+img = brick(ofl)
+plotRGB(img)
+
+jnk = trimImages(tempdir(), "bart.png")
+trm = brick(jnk)
+plotRGB(trm)
+
+dev.off()
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

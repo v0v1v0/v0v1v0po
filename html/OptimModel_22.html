@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rout_outlier_test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ROUT Outlier Testing</h2>
+
+<h3>Description</h3>
+
+<p> Perform ROUT outlier testing on <code>rout.fitter</code> object.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rout_outlier_test(fit, Q = 0.01)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p> A ‘rout.fitter’ object from the <code>rout_fitter</code> function. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Q</code></td>
+<td>
+<p> Test size for ROUT outlier detection.  </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>rout_outlier_test</code>() is typically called from <code>rout_fitter</code>(), but may also be called directly by the user.
+</p>
+
+
+<h3>Value</h3>
+
+<p>outlier = logical vector.  TRUE indicates observation is an outlier via hypothesis testing with unadjust p-values.
+</p>
+<p>outlier.adj = logical vector.  TRUE indicates observation is an outlier via hypothesis testing with FDR-adjust p-values.
+</p>
+<p>attr(object, "Q") = test size for outlier detection
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rout_fitter</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123L)
+
+x = rep( c(0, 2^(-4:4)), each=4 )
+theta = c(0, 100, log(.5), 2)
+y = hill_model(theta, x) + rnorm( length(x), sd=2 )
+
+ii = sample( 1:length(y), 2 )
+y[ii] = hill_model(theta, x[ii]) + 5.5*2 + rnorm( length(ii), sd=2 )
+
+fit = rout_fitter(c( theta, log(2) ), hill_model, x=x, y=y, Q=0.01)
+rout_outlier_test(fit, Q=0.001)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>buildAxis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Axis function substitute</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>buildAxis</code> is built to provide more control of the number
+of labels on the axis. This function is still under development.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">buildAxis(side, limits, n, nMin = 2, nMax = 10, extend = 2, eps = 10^-12, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>side</code></td>
+<td>
+<p>The side of the plot where to add the axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits</code></td>
+<td>
+<p>Either lower and upper limits on the axis or a dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The preferred number of axis labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nMin</code></td>
+<td>
+<p>The minimum number of axis labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nMax</code></td>
+<td>
+<p>The maximum number of axis labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extend</code></td>
+<td>
+<p>How far the axis may extend beyond <code>range(limits)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>The smallest increment allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed to <code>axis</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The primary reason behind building this function was to allow a plot to be
+created with similar features but with different datasets. For instance, if
+a set of code was written for one dataset and the function <code>axis</code> had
+been utilized with pre-specified values, the axis may not match the plot of
+a new set of data. The function <code>buildAxis</code> addresses this problem by
+allowing the number of axis labels to be specified and controlled.
+</p>
+<p>The axis is built by assigning penalties to a variety of potential axis
+setups, ranking them based on these penalties and then selecting the axis
+with the best score.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of the axis plotted.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Diez
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>histPlot</code>, <code>dotPlot</code>,
+<code>boxPlot</code>, <code>densityPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# ===&gt; 0 &lt;===#
+limits &lt;- rnorm(100, 605490, 10)
+hist(limits, axes = FALSE)
+buildAxis(1, limits, 2, nMax = 4)
+
+# ===&gt; 1 &lt;===#
+x &lt;- seq(0, 500, 10)
+y &lt;- 8 * x + rnorm(length(x), mean = 6000, sd = 200)
+plot(x, y, axes = FALSE)
+buildAxis(1, limits = x, n = 5)
+buildAxis(2, limits = y, n = 3)
+
+# ===&gt; 2 &lt;===#
+x &lt;- 9528412 + seq(0, 200, 10)
+y &lt;- 8 * x + rnorm(length(x), mean = 6000, sd = 200)
+plot(x, y, axes = FALSE)
+temp &lt;- buildAxis(1, limits = x, n = 4)
+buildAxis(2, y, 3)
+
+# ===&gt; 3 &lt;===#
+x &lt;- seq(367, 1251, 10)
+y &lt;- 7.5 * x + rnorm(length(x), mean = 6000, sd = 800)
+plot(x, y, axes = FALSE)
+buildAxis(1, limits = x, n = 4, nMin = 3, nMax = 3)
+buildAxis(2, limits = y, n = 4, nMin = 3, nMax = 5)
+
+# ===&gt; 4 &lt;===#
+x &lt;- seq(367, 367.1, 0.001)
+y &lt;- 7.5 * x + rnorm(length(x), mean = 6000, sd = 0.01)
+plot(x, y, axes = FALSE)
+buildAxis(1, limits = x, n = 4, nMin = 5, nMax = 6)
+buildAxis(2, limits = y, n = 2, nMin = 3, nMax = 4)
+
+# ===&gt; 5 &lt;===#
+x &lt;- seq(-0.05, -0.003, 0.0001)
+y &lt;- 50 + 20 * x + rnorm(length(x), sd = 0.1)
+plot(x, y, axes = FALSE)
+buildAxis(1, limits = x, n = 4, nMin = 5, nMax = 6)
+buildAxis(2, limits = y, n = 4, nMax = 5)
+abline(lm(y ~ x))
+
+# ===&gt; 6 &lt;===#
+x &lt;- seq(-0.0097, -0.008, 0.0001)
+y &lt;- 50 + 20 * x + rnorm(length(x), sd = 0.1)
+plot(x, y, axes = FALSE)
+buildAxis(1, limits = x, n = 4, nMin = 2, nMax = 5)
+buildAxis(2, limits = y, n = 4, nMax = 5)
+abline(lm(y ~ x))
+
+# ===&gt; 7 &lt;===#
+x &lt;- seq(0.03, -0.003099, -0.00001)
+y &lt;- 50 + 20 * x + rnorm(length(x), sd = 0.1)
+plot(x, y, axes = FALSE)
+buildAxis(1, limits = x, n = 4, nMin = 2, nMax = 5)
+buildAxis(2, limits = y, n = 4, nMax = 6)
+abline(lm(y ~ x))
+
+# ===&gt; 8 - repeat &lt;===#
+m &lt;- runif(1) / runif(1) +
+  rgamma(1, runif(1) / runif(1), runif(1) / runif(1))
+s &lt;- rgamma(1, runif(1) / runif(1), runif(1) / runif(1))
+x &lt;- rnorm(50, m, s)
+hist(x, axes = FALSE)
+buildAxis(1, limits = x, n = 5, nMin = 4, nMax = 6, eps = 10^-12)
+if (diff(range(x)) &lt; 10^-12) {
+  cat("too small\n")
+}
+</code></pre>
+
+
+</div>

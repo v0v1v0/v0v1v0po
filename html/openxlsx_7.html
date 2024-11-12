@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addStyle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a style to a set of cells</h2>
+
+<h3>Description</h3>
+
+<p>Function adds a style to a specified set of cells.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addStyle(wb, sheet, style, rows, cols, gridExpand = FALSE, stack = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object containing a worksheet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A worksheet to apply the style to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>A style object returned from createStyle()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows</code></td>
+<td>
+<p>Rows to apply style to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>columns to apply style to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gridExpand</code></td>
+<td>
+<p>If <code>TRUE</code>, style will be applied to all combinations of rows and cols.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stack</code></td>
+<td>
+<p>If <code>TRUE</code> the new style is merged with any existing cell styles.  If FALSE, any
+existing style is replaced by the new style.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Alexander Walker
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>createStyle()</code>
+</p>
+<p>expand.grid
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## See package vignette for more examples.
+
+## Create a new workbook
+wb &lt;- createWorkbook("My name here")
+
+## Add a worksheets
+addWorksheet(wb, "Expenditure", gridLines = FALSE)
+
+## write data to worksheet 1
+writeData(wb, sheet = 1, USPersonalExpenditure, rowNames = TRUE)
+
+## create and add a style to the column headers
+headerStyle &lt;- createStyle(
+  fontSize = 14, fontColour = "#FFFFFF", halign = "center",
+  fgFill = "#4F81BD", border = "TopBottom", borderColour = "#4F81BD"
+)
+
+## style for body
+bodyStyle &lt;- createStyle(border = "TopBottom", borderColour = "#4F81BD")
+addStyle(wb, sheet = 1, bodyStyle, rows = 2:6, cols = 1:6, gridExpand = TRUE)
+setColWidths(wb, 1, cols = 1, widths = 21) ## set column width for row names column
+## Not run: 
+saveWorkbook(wb, "addStyleExample.xlsx", overwrite = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

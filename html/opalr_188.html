@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.table_create</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an Opal table or view</h2>
+
+<h3>Description</h3>
+
+<p>Create an Opal table if it does not already exist. If a list of table references are provided,
+the table will be a view. The table/view created will have no dictionary, use 
+opal.table_dictionary_update to apply a dictionary.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.table_create(opal, project, table, type = "Participant", tables = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal connection object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Project name where the table will be located.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+<p>Table name to be created</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Entity type, default is "Participant". Ignored if some table references are 
+provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tables</code></td>
+<td>
+<p>List of the fully qualified table names that are referred by the view.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other table functions: 
+<code>opal.perms()</code>,
+<code>opal.resource_view_create()</code>,
+<code>opal.resource_view_reconnect()</code>,
+<code>opal.table_delete()</code>,
+<code>opal.table_dictionary_get()</code>,
+<code>opal.table_dictionary_update()</code>,
+<code>opal.table_exists()</code>,
+<code>opal.table_export()</code>,
+<code>opal.table_get()</code>,
+<code>opal.table_import()</code>,
+<code>opal.table_perm()</code>,
+<code>opal.table_perm_add()</code>,
+<code>opal.table_perm_delete()</code>,
+<code>opal.table_save()</code>,
+<code>opal.table_truncate()</code>,
+<code>opal.table_view_create()</code>,
+<code>opal.table_view_update()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+# make a raw table
+opal.table_create(o, "CNSIM", "CNSIM4")
+# make a view
+opal.table_create(o, "CNSIM", "CNSIM123", 
+                  tables = c("CNSIM.CNSIM1", "CNSIM.CNSIM2", "CNSIM.CNSIM3"))
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

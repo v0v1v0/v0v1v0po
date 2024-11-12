@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>outqrf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>find outliers</h2>
+
+<h3>Description</h3>
+
+<p>This function finds outliers in a dataset using quantile random forests.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">outqrf(
+  data,
+  quantiles_type = 1000,
+  threshold = 0.025,
+  impute = TRUE,
+  verbose = 1,
+  weight = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantiles_type</code></td>
+<td>
+<p>'1000':seq(from = 0.001, to = 0.999, by = 0.001), '400':seq(0.0025,0.9975,0.0025)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>a threshold for outlier detection</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute</code></td>
+<td>
+<p>a boolean value indicating whether to impute missing values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>a boolean value indicating whether to print verbose output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>a boolean value indicating whether to use weight. if TRUE, The actual threshold will be threshold*r2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to the ranger function</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class "outqrf" and a list with the following elements.
+</p>
+
+<ul>
+<li> <p><code>Data</code>: Original data set in unchanged row order
+</p>
+</li>
+<li> <p><code>outliers</code>: Compact representation of outliers. Each row corresponds to an outlier and contains the following columns:
+</p>
+
+<ul>
+<li> <p><code>row</code>: Row number of the outlier
+</p>
+</li>
+<li> <p><code>col</code>: Variable name of the outlier
+</p>
+</li>
+<li> <p><code>observed</code>: value of the outlier
+</p>
+</li>
+<li> <p><code>predicted</code>: predicted value of the outlier
+</p>
+</li>
+<li> <p><code>rank</code>: Rank of the outlier
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>outMatrix</code>: Predicted value at different quantiles for each observation
+</p>
+</li>
+<li> <p><code>r.squared</code>: R-squared value of the quantile random forest model
+</p>
+</li>
+<li> <p><code>outMatrix</code>: Predicted value at different quantiles for each observation
+</p>
+</li>
+<li> <p><code>r.squared</code>: R-squared value of the quantile random forest model
+</p>
+</li>
+<li> <p><code>oob.error</code>: Out-of-bag error of the quantile random forest model
+</p>
+</li>
+<li> <p><code>rmse</code>: RMSE of the quantile random forest model
+</p>
+</li>
+<li> <p><code>threshold</code>: Threshold for outlier detection
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">iris_with_outliers &lt;- generateOutliers(iris, p=0.05)
+qrf = outqrf(iris_with_outliers)
+qrf$outliers
+evaluateOutliers(iris,iris_with_outliers,qrf$outliers)
+</code></pre>
+
+
+</div>

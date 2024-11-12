@@ -1,0 +1,216 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_pure_error_anova</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Lack of fit F test</h2>
+
+<h3>Description</h3>
+
+<p>Assess how much of the error in prediction is due to lack of model fit.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_pure_error_anova(model, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The residual sum of squares resulting from a regression can be decomposed
+into 2 components:
+</p>
+
+<ul>
+<li>
+<p> Due to lack of fit
+</p>
+</li>
+<li>
+<p> Due to random variation
+</p>
+</li>
+</ul>
+<p>If most of the error is due to lack of fit and not just random error, the
+model should be discarded and a new model must be built.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>ols_pure_error_anova</code> returns an object of class
+<code>"ols_pure_error_anova"</code>. An object of class <code>"ols_pure_error_anova"</code> is a
+list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lackoffit</code></td>
+<td>
+<p>lack of fit sum of squares</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pure_error</code></td>
+<td>
+<p>pure error sum of squares</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rss</code></td>
+<td>
+<p>regression sum of squares</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ess</code></td>
+<td>
+<p>error sum of squares</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>total</code></td>
+<td>
+<p>total sum of squares</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rms</code></td>
+<td>
+<p>regression mean square</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ems</code></td>
+<td>
+<p>error mean square</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lms</code></td>
+<td>
+<p>lack of fit mean square</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pms</code></td>
+<td>
+<p>pure error mean square</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rf</code></td>
+<td>
+<p>f statistic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lf</code></td>
+<td>
+<p>lack of fit f statistic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pr</code></td>
+<td>
+<p>p-value of f statistic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pl</code></td>
+<td>
+<p>p-value pf lack of fit f statistic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mpred</code></td>
+<td>
+<p><code>data.frame</code> containing data for the response and predictor of the <code>model</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df_rss</code></td>
+<td>
+<p>regression sum of squares degrees of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df_ess</code></td>
+<td>
+<p>error sum of squares degrees of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df_lof</code></td>
+<td>
+<p>lack of fit degrees of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df_error</code></td>
+<td>
+<p>pure error degrees of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>final</code></td>
+<td>
+<p>data.frame; contains computed values used for the lack of fit f test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resp</code></td>
+<td>
+<p>character vector; name of <code>response variable</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preds</code></td>
+<td>
+<p>character vector; name of <code>predictor variable</code></p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The lack of fit F test works only with simple linear regression.
+Moreover, it is important that the data contains repeat observations i.e.
+replicates for at least one of the values of the predictor x. This
+test generally only applies to datasets with plenty of replicates.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kutner, MH, Nachtscheim CJ, Neter J and Li W., 2004, Applied Linear Statistical Models (5th edition).
+Chicago, IL., McGraw Hill/Irwin.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">model &lt;- lm(mpg ~ disp, data = mtcars)
+ols_pure_error_anova(model)
+
+</code></pre>
+
+
+</div>

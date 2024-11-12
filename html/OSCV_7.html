@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>h_OSCV_dens</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The OSCV bandwidth in the density estimation context.</h2>
+
+<h3>Description</h3>
+
+<p>Computing the OSCV bandwidth for the Gaussian density estimator. The one-sided Gaussian kernel <code class="reqn">L_G</code> is used in the bandwidth selection stage. The (anticipated) smoothness of the density function is to be specified by the user.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">h_OSCV_dens(dat, stype)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>numerical vecror of data values,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stype</code></td>
+<td>
+<p>specifies (anticipated) smoothness of the density function. Thus, <code class="reqn">stype=0</code> corresponds to the <em>smooth</em> density, whereas <code class="reqn">stype=1</code> corresponds to the <em>nonsmooth</em> density.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Computing the OSCV bandwidth for the data vector <code class="reqn">dat</code>. The one-sided Gaussian kernel <code class="reqn">L_G</code> is used for the cross-validation purposes and the Gaussian kernel is used for computing the ultimate density estimate. The (anticipated) smoothness of the underlying density function is to be specified. Thus, </p>
+<ul>
+<li> <p><code class="reqn">stype=0</code> corresponds to the smooth density; </p>
+</li>
+<li> <p><code class="reqn">stype=1</code> corresponds to the nonsmooth density.</p>
+</li>
+</ul>
+<p> It is usually assumed that the density is smooth if no preliminary information about its nonsmoothness is available. No additional rescaling of the computed bandwidth is needed. The smoothness of the density function <code class="reqn">stype</code>, essentially, determines the value of the bandwidth rescaling constant that is used in the body of the function. Thus, the constant is equal to 0.6168471 in the smooth case, whereas it is equal to 0.5730 in the nonsmooth case. See Savchuk (2017) for details. The OSCV bandwidth is the minimizer of the OSCV function <code>OSCV_Gauss_dens</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The OSCV bandwidth (scalar).
+</p>
+
+
+<h3>References</h3>
+
+<p>Savchuk, O.Y. (2017). One-sided cross-validation for nonsmooth densty functions, arXiv:1703.05157.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OSCV_Gauss_dens</code>,  <code>C_smooth</code>, <code>h_OSCV_reg</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data=faithful[,1]         # Data on n=272 eruption duration of the Old Faithful geyser.
+harray=seq(0.025,0.6,len=100)
+OSCV_array=OSCV_Gauss_dens(harray,data,0)
+dev.new()
+plot(harray,OSCV_array,lwd=3,'l',xlab="h",ylab="L_G-based OSCV",
+main="OSCV_G(h) for the data on eruption duration",cex.main=1.5,cex.lab=1.7,cex.axis=1.7)
+h_oscv=round(h_OSCV_dens(data,0),digits=4) #smoothness of the underlying density is assumed
+legend(0.04,-0.25,legend=c("n=272",paste("h_OSCV=",h_oscv)),cex=2,bty="n")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

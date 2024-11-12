@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>edgeplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot edge profiles and contMap</h2>
+
+<h3>Description</h3>
+
+<p>Wrapper function for plotting edge profiles and contmap from NHPP.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">edgeplot(map_stat, prof_stat, plot.cont = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map_stat</code></td>
+<td>
+<p>contMap object. A contMap obtained using the 'make_contMap_KDE' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prof_stat</code></td>
+<td>
+<p>tibble. A tibble with the edgeplot information obtained using the 'edge_profiles4plotting' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.cont</code></td>
+<td>
+<p>logical. Whether to plot also the contMap or not.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plot with the edge profiles and contMap of the selected statistic (e.g. branch rates).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Diego Porto
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("hym_tree", "hym_kde")
+# Get reference tree.
+tree_discr &lt;- discr_Simmap(hym_tree, res = 200)
+# Get smoothing of normalized edge KDE data for mean rates.
+Edge_KDE &lt;- hym_kde$head
+Edge_KDE_stat &lt;- Edge_KDE$loess.lambda.mean
+# Make contmap nhpp data.
+map_stat &lt;- make_contMap_KDE(tree_discr, Edge_KDE_stat)
+# Make edgeplot nhpp data.
+prof_stat &lt;- edge_profiles4plotting(tree_discr, Edge_KDE_stat)
+# Plot.
+suppressWarnings(edgeplot(map_stat, prof_stat))
+
+</code></pre>
+
+
+</div>

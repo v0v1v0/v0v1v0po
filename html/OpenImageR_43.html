@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>superpixel_bbox</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bounding box for the superpixel labels</h2>
+
+<h3>Description</h3>
+
+<p>Bounding box for the superpixel labels
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">superpixel_bbox(superpixel_labels, non_overlapping_superpixels = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>superpixel_labels</code></td>
+<td>
+<p>a matrix. The <em>superpixel_labels</em> parameter corresponds to the output <em>labels</em> of the <em>superpixels</em> function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>non_overlapping_superpixels</code></td>
+<td>
+<p>either TRUE or FALSE. If TRUE then besides the (x,y) coordinates of each superpixel-segment (matrix), the overlapping indices for each superpixel will be returned (list). See the details section for more information</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the <em>non_overlapping_superpixels</em> parameter is set to <em>FALSE</em> then : the <em>superpixel_bbox</em> function returns the bounding box for the labels of the <em>superpixels</em> function. The
+output is a matrix which contains the min and max indices of the x-y-coordinates and the corresponding unique superpixel labels.
+</p>
+<p>If the <em>non_overlapping_superpixels</em> parameter is set to <em>TRUE</em> then : the <em>superpixel_bbox</em> function returns besides the previously explained matrix also the overlapping indices for each
+superpixel. These indices can be used to overwrite pixels with a specific value (say 0.0), which might appear in two superpixels simultaneously. This feature might be useful in case a user
+intends to use an algorithm and the separability of superpixel-segments is of importance.
+</p>
+<p>Therefore in both cases overlapping superpixels will be computed, however if the <em>non_overlapping_superpixels</em> parameter is set to <em>TRUE</em> then also a list of overlapping indices will be returned.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(OpenImageR)
+
+
+#-----------
+# read image
+#-----------
+
+path = system.file("tmp_images", "slic_im.png", package = "OpenImageR")
+
+im = readImage(path)
+
+im = im[,, 1:3]
+
+
+#--------------------
+# compute superpixels
+#--------------------
+
+res = superpixels(input_image = im, method = "slic", superpixel = 200,
+
+                  compactness = 20, return_labels = TRUE)
+
+
+#-------------------------
+# compute the bounding box
+#-------------------------
+
+bbox = superpixel_bbox(res$labels, non_overlapping_superpixels = FALSE)
+
+
+#-------------------------------------------
+# plot the bounding boxes of the superpixels ( for illustration purposes )
+#-------------------------------------------
+
+
+graphics::plot(1:ncol(im), type='n', xlim = c(ncol(im), 1), ylim = c(1, nrow(im)))
+
+graphics::rasterImage( flipImage(im), 1, 1, ncol(im), nrow(im))
+
+
+for (i in 1:nrow(bbox)) {
+
+  # the order of the bounding box is c('xmin', 'ymin', 'xmax', 'ymax')
+  graphics::rect(bbox[i,3], bbox[i,1], bbox[i,4], bbox[i,2], border = "red", lwd = 2)
+}
+
+</code></pre>
+
+
+</div>

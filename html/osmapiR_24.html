@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_details_logged_user</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Details of the logged-in user</h2>
+
+<h3>Description</h3>
+
+<p>You can get the home location, the display name of the user and other details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_details_logged_user(format = c("R", "xml", "json"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default), <code>"xml"</code>, or <code>"json"</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>If <code>format = "R"</code>, returns a list with the user details.
+</p>
+
+
+<h4><code>format = "xml"</code></h4>
+
+<p>Returns a xml2::xml_document with the following format:
+</p>
+<div class="sourceCode xml"><pre>&lt;osm version="0.6" generator="OpenStreetMap server"&gt;
+	&lt;user display_name="Max Muster" account_created="2006-07-21T19:28:26Z" id="1234"&gt;
+		&lt;contributor-terms agreed="true" pd="true"/&gt;
+		&lt;img href="https://www.openstreetmap.org/attachments/users/images/000/000/1234/original/someLongURLOrOther.JPG"/&gt;
+		&lt;roles&gt;&lt;/roles&gt;
+		&lt;changesets count="4182"/&gt;
+		&lt;traces count="513"/&gt;
+		&lt;blocks&gt;
+			&lt;received count="0" active="0"/&gt;
+		&lt;/blocks&gt;
+		&lt;home lat="49.4733718952806" lon="8.89285988577866" zoom="3"/&gt;
+		&lt;description&gt;The description of your profile&lt;/description&gt;
+		&lt;languages&gt;
+			&lt;lang&gt;de-DE&lt;/lang&gt;
+			&lt;lang&gt;de&lt;/lang&gt;
+			&lt;lang&gt;en-US&lt;/lang&gt;
+			&lt;lang&gt;en&lt;/lang&gt;
+		&lt;/languages&gt;
+		&lt;messages&gt;
+			&lt;received count="1" unread="0"/&gt;
+			&lt;sent count="0"/&gt;
+		&lt;/messages&gt;
+	&lt;/user&gt;
+&lt;/osm&gt;
+</pre></div>
+
+
+
+<h4><code>format = "json"</code></h4>
+
+<div class="sourceCode json"><pre>{
+ "version": "0.6",
+ "generator": "OpenStreetMap server",
+ "user": {
+  "id": 1234,
+  "display_name": "Max Muster",
+  "account_created": "2006-07-21T19:28:26Z",
+  "description": "The description of your profile",
+  "contributor_terms": {"agreed": True, "pd": True},
+  "img": {"href": "https://www.openstreetmap.org/attachments/users/images/000/000/1234/original/someLongURLOrOther.JPG"},
+  "roles": [],
+  "changesets": {"count": 4182},
+  "traces": {"count": 513},
+  "blocks": {"received": {"count": 0, "active": 0}},
+  "home": {"lat": 49.4733718952806, "lon": 8.89285988577866, "zoom": 3},
+  "languages": ["de-DE", "de", "en-US", "en"],
+  "messages": {"received": {"count": 1, "unread": 0},
+  "sent": {"count": 0}}
+ }
+}
+</pre></div>
+
+
+
+<h3>See Also</h3>
+
+<p>Other users' functions: 
+<code>osm_get_preferences_user()</code>,
+<code>osm_get_user_details()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+usr_details &lt;- osm_details_logged_user()
+usr_details
+
+## End(Not run)
+</code></pre>
+
+
+</div>

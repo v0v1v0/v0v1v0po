@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bsoipca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Block Stochastic Orthononal Iteration (BSOI)</h2>
+
+<h3>Description</h3>
+
+<p>The online PCA algorithm of Mitliagkas et al. (2013) is a block-wise stochastic variant of the classical power-method.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bsoipca(x, q, U, B, center, byrow = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>data matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>number of PC to compute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>matrix of initial PCs in columns (optional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>size of block updates (optional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>centering vector (optional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+<p>are the data vectors in <code>x</code> stored in rows (TRUE) or columns (FALSE)?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The default value of <code>B</code> is <code class="reqn">floor(n/nblock)</code> with <code class="reqn">n</code> the number of data vectors in <code>x</code>, <code class="reqn">d</code> the number of variables, and <code class="reqn">nblock=ceiling(log(d))</code> the number of blocks.<br>
+If <code>U</code> is specified, <code>q</code> defaults to <code>ncol(U)</code>; otherwise the initial PCs are computed from the first block of data and <code>q</code> must be specified explicitly. <br>
+Although the algorithm does not give eigenvalues, they can easily be estimated by computing the variance of the data along the PCs.  
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix with the <code>q</code> first eigenvectors/PCs in columns.
+</p>
+
+
+<h3>References</h3>
+
+<p>Mitliagkas et al. (2013). Memory limited, streaming PCA. <em>Advances in Neural Information Processing Systems</em>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Simulate Brownian Motion
+n &lt;- 100 # number of sample paths
+d &lt;- 50 # number of observation points
+x &lt;- matrix(rnorm(n*d,sd=1/sqrt(d)),n,d)
+x &lt;- t(apply(x,1,cumsum)) # dim(x) = c(100,50)
+
+q &lt;- 10 # number of PC to compute
+B &lt;- 20 # block size
+
+## BSOI PCA 
+U &lt;- bsoipca(x, q, B=B, byrow=TRUE) # PCs
+lambda &lt;- apply(x %*% U, 2, var) # eigenvalues 
+</code></pre>
+
+
+</div>

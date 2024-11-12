@@ -1,0 +1,273 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_config</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve orderly config object.</h2>
+
+<h3>Description</h3>
+
+<p>Retrieve orderly config object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_config(root = NULL, locate = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An R6 object representing the orderly config.
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>root</code></dt>
+<dd>
+<p>Root dir of the orderly repository</p>
+</dd>
+<dt><code>raw</code></dt>
+<dd>
+<p>The raw orderly config yaml</p>
+</dd>
+<dt><code>destination</code></dt>
+<dd>
+<p>DB connection configuration for where
+to store orderly output database. Defaults to local SQLite
+db <code>orderly.sqlite</code></p>
+</dd>
+<dt><code>fields</code></dt>
+<dd>
+<p>Configuration of fields in reports, specifying
+which are required</p>
+</dd>
+<dt><code>remote</code></dt>
+<dd>
+<p>Configuration of remote sources i.e. shared
+copy of orderly on a remote machine</p>
+</dd>
+<dt><code>vault</code></dt>
+<dd>
+<p>Vault server connection information</p>
+</dd>
+<dt><code>global_resources</code></dt>
+<dd>
+<p>Path to dir containing global resources.</p>
+</dd>
+<dt><code>changelog</code></dt>
+<dd>
+<p>Changelog type configuration</p>
+</dd>
+<dt><code>tags</code></dt>
+<dd>
+<p>List of available tags for orderly reports.</p>
+</dd>
+<dt><code>database</code></dt>
+<dd>
+<p>Database configuration specifying driver and
+connection args for (possibly multiple) databases</p>
+</dd>
+<dt><code>archive_version</code></dt>
+<dd>
+<p>Orderly version number of the archive</p>
+</dd>
+<dt><code>run_options</code></dt>
+<dd>
+<p>List of run options</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-new"><code>orderly_config_$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-server_options"><code>orderly_config_$server_options()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-add_run_option"><code>orderly_config_$add_run_option()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-get_run_option"><code>orderly_config_$get_run_option()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Create an object representing orderly config
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>orderly_config_$new(root, validate = TRUE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>root</code></dt>
+<dd>
+<p>Root dir of the orderly repository</p>
+</dd>
+<dt><code>validate</code></dt>
+<dd>
+<p>If TRUE migrate cfg to handle any
+format changes and validate structure if well formed
+for each of the cfg fields</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-server_options"></a>
+
+
+
+<h4>Method <code>server_options()</code>
+</h4>
+
+<p>Get connection options for the current server. This is
+the details from the "remote" section for the server
+being run on. Server identified via env var
+<code>ORDERLY_API_SERVER_IDENTITY</code>
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>orderly_config_$server_options()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>Options for current server if can be identified,
+otherwise NULL
+</p>
+
+
+<hr>
+<a id="method-add_run_option"></a>
+
+
+
+<h4>Method <code>add_run_option()</code>
+</h4>
+
+<p>Add a key-value pair run option
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>orderly_config_$add_run_option(name, value)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>Name of run option</p>
+</dd>
+<dt><code>value</code></dt>
+<dd>
+<p>Value for run option</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-get_run_option"></a>
+
+
+
+<h4>Method <code>get_run_option()</code>
+</h4>
+
+<p>Retrieve value of a run option
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>orderly_config_$get_run_option(name)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>Name of run option</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The orderly demo, with lots of potential reports:
+path &lt;- orderly::orderly_example("demo")
+
+orderly::orderly_config(path)
+</code></pre>
+
+
+</div>

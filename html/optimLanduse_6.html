@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>solveScenario</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform the optimization</h2>
+
+<h3>Description</h3>
+
+<p>The function solves the optimization framework specified by the initialized <em>optimLanduse</em> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">solveScenario(x, digitsPrecision = 4, lowerBound = 0, upperBound = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The initialized <em>optimLanduse</em> object. See <code>initScenario</code> for the initialization.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digitsPrecision</code></td>
+<td>
+<p>Precision of the loss value. digitsPrecision is the
+possibility to influence the calculation time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lowerBound</code></td>
+<td>
+<p>Optional lower bounds for the land-use options. Must be 0 or a vector in the dimension of the land-use options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upperBound</code></td>
+<td>
+<p>Optional upper bounds for the land-use options. Must be 1 or a vector in the dimension of the land-use options.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The methodological background and the formulation of the optimization
+framework are described in Knoke et al. (2016) and in Husmann et al. (2022)
+</p>
+
+
+<h3>Value</h3>
+
+<p>A solved landUse portfolio ready for export or further data processing.
+</p>
+
+
+<h3>References</h3>
+
+<p>Knoke, T., Paul, C., Hildebrandt, P. et al. (2016): Compositional diversity
+of rehabilitated tropical lands supports multiple ecosystem services and
+buffers uncertainties. <em>Nat Commun</em> <strong>7</strong>, 11877. <a href="https://doi.org/10.1038/ncomms11877">doi:10.1038/ncomms11877</a>
+</p>
+<p>Husmann, K., von Groß, V., Bödeker, K., Fuchs, J. M., Paul, C., &amp; Knoke, T. (2022). optimLanduse: A package for multiobjective land-cover composition optimization under uncertainty. Methods in Ecology and Evolution, 00, 1– 10. https://doi.org/10.1111/2041-210X.14000
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">require(readxl)
+dat &lt;- read_xlsx(exampleData("exampleGosling.xlsx"))
+init &lt;- initScenario(dat, uValue = 2,
+                     optimisticRule = "expectation",
+                     fixDistance = 3)
+result &lt;- solveScenario(x = init)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,205 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_legende_</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a legend on a 'leaflet' map</h2>
+
+<h3>Description</h3>
+
+<p>Add a legend on a 'leaflet' map for proportional circles, chroropleth,
+typology, proportional and sapphire arrows.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_legende_fonds_simples(map, titre = NULL, lng = NULL, lat = NULL,
+labels = NULL, choixLeg = NULL, zoom = 8, map_leaflet = NULL)
+
+add_legende_ronds(map, titre = NULL, lng = NULL, lat = NULL, precision = 0,
+zoom = 8, map_leaflet = NULL)
+
+add_legende_classes(map, titre = NULL, lng = NULL, lat = NULL, typeLegende =
+1, zoom = 8, map_leaflet = NULL)
+
+add_legende_typo(map, titre = NULL, lng = NULL, lat = NULL, labels = NULL,
+zoom = 8, map_leaflet = NULL)
+
+add_legende_typo_symboles(map, titre = NULL, lng = NULL, lat = NULL, labels
+= NULL, zoom = 8, map_leaflet = NULL)
+
+add_legende_joignantes(map, titre = NULL, lng = NULL, lat = NULL, precision
+= 0, zoom = 8, map_leaflet = NULL)
+
+add_legende_saphirs(map, titre = NULL, lng = NULL, lat = NULL, precision =
+0, zoom = 8, map_leaflet = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>objet leaflet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>titre</code></td>
+<td>
+<p>chaine de caracteres (character). Titre de la legende des
+classes. Par defaut a NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng</code></td>
+<td>
+<p>valeur numerique (numeric). Longitude (x) de la legende des
+classes dans le systeme de projection WGS84 (code EPSG 4326). Par defaut a
+NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat</code></td>
+<td>
+<p>valeur numerique (numeric). Latitude (y) de la legende des
+classes dans le systeme de projection WGS84 (code EPSG 4326). Par defaut a
+NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>typeLegende</code></td>
+<td>
+<p>valeur numerique (numeric). 1 (par defaut) pour une
+legende litterale, 2 pour une legende en echelle.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>vecteur de caracteres (character). Labels personnalises pour
+la legende de la carte en typologie. Par defaut a NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>choixLeg</code></td>
+<td>
+<p>vecteur de numeriques (numeric). Choix des couches a
+afficher dans la legende. Par defaut a NULL (toutes les couches presentes).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>precision</code></td>
+<td>
+<p>valeur numerique (numeric). Arrondit les valeurs de la
+legende des ronds ou des fleches. 0 (par defaut) pour arrondir a l'unite, -1
+pour arrondir a la dizaine, -2 a la centaine...</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zoom</code></td>
+<td>
+<p>valeur numerique (numeric). Valeur entre 6 et 10 (8 par defaut).
+Definit le niveau de zoom de la carte pour un affichage optimal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map_leaflet</code></td>
+<td>
+<p>objet leaflet. Pour l'integration des fonctions leaflet
+dans les applications shiny (cf vignette). Par defaut a NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Par defaut, <code>lng</code> et <code>lat</code> sont NULL ; la legende est alors
+positionnee en haut a droite de la carte sauf pour l'analyse en classes ou
+elle est positionnee en bas.
+</p>
+<p>Les valeurs <code>lng</code> et <code>lat</code> peuvent etre negatives. Une longitude a
+0 correspond au meridien de Greenwich.
+</p>
+<p>Pour deplacer la legende, reexecutez la fonction add_legende_xxx en
+specifiant les parametres <code>lng</code> et <code>lat</code>.
+</p>
+<p>Pour supprimer la legende, reexecutez la fonction add_legende_xxx en
+laissant les parametres <code>lng</code> et <code>lat</code> a NULL.
+</p>
+<p>Pour supprimer le titre, reexecutez la fonction add_legende_xxx en laissant
+le parametre <code>titre</code> a NULL.
+</p>
+<p>Concernant la legende des ronds proportionnels, le grand cercle correspond a
+la valeur max en volume et le petit cercle au tiers de la valeur max.
+</p>
+<p>Idem pour la largeur des fleches joignantes et des fleches saphirs.
+</p>
+<p>Les valeurs de la legende des ronds et des fleches peuvent etre arrondies
+grace au parametre <code>precision</code>.
+</p>
+<p>Pour la légende des cartes en typologie, il est possible de specifier ses
+propres labels sans avoir besoin de modifier les noms de variables dans la
+table de donnees.
+</p>
+<p>Si le titre et les valeurs de legende sont trop decales, il faut modifier la
+valeur du zoom : entre 6 (zoom maximal, niveau commune) et 10 (zoom minimal,
+niveau France metro)
+</p>
+
+
+<h3>Value</h3>
+
+<p>Retourne un objet de type leaflet.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>coord_legende</code>
+</p>
+<p><code>leaflet_fonds_simples</code>
+</p>
+<p><code>leaflet_ronds leaflet_classes
+leaflet_ronds_classes leaflet_classes_ronds
+leaflet_typo</code>
+</p>
+<p><code>leaflet_oursins leaflet_joignantes
+leaflet_saphirs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("depm")
+data("regm")
+
+data("donnees_monoloc")
+
+# Ronds proportionnels sur une analyse en classes
+map &lt;- leaflet_classes_ronds(data = donnees_monoloc, fondMaille = depm, idData = "COD_DEP",
+varVolume = "POP_2015", varRatio = "VAR_AN_MOY", nbClasses = 4)
+map &lt;- add_legende_classes(map = map, titre = "VAR_AN_MOY", lng = 9, lat = 48, zoom = 6)
+map &lt;- add_legende_ronds(map = map, titre = "POP_2015", lng = 9, lat = 50, zoom = 6)
+
+ map
+
+
+data("donnees_biloc")
+
+# Fleches joignantes
+map &lt;- leaflet_joignantes(data = donnees_biloc, fondMaille = regm, typeMaille = "REG",
+idDataDepart = "REG_DEPART", idDataArrivee = "REG_ARRIVEE",
+varFlux = "MIGR", filtreDist = 1000, filtreMajeurs = 3)
+map &lt;- add_legende_joignantes(map = map, titre = "MIGR")
+
+ map
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_latest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find most recent report</h2>
+
+<h3>Description</h3>
+
+<p>Find most recent version of an orderly report.  The most recent
+report is always the most recently run report that has been
+committed (regardless of the order in which they were committed).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_latest(
+  name = NULL,
+  root = NULL,
+  locate = TRUE,
+  draft = FALSE,
+  must_work = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>Name of the report to find; if <code>NULL</code> returns the
+most recent report across all names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draft</code></td>
+<td>
+<p>Should draft reports be used searched? Valid values
+are logical (<code>TRUE</code>, <code>FALSE</code>) or use the string
+<code>newer</code> to use draft reports where they are newer than
+archive reports. For consistency, <code>always</code> and <code>never</code>
+are equivalent to <code>TRUE</code> and <code>FALSE</code>, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>must_work</code></td>
+<td>
+<p>Throw an error if no report is found.  If <code>FALSE</code>,
+returns <code>NA_character_</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A character string with the id of the most recent report
+</p>
+
+
+<h3>See Also</h3>
+
+<p>orderly_list and
+orderly_list_archive for listing report names and
+versions.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path &lt;- orderly::orderly_example("minimal")
+id1 &lt;- orderly::orderly_run("example", root = path, echo = FALSE)
+id2 &lt;- orderly::orderly_run("example", root = path, echo = FALSE)
+
+# With no reports committed there is no latest report:
+orderly::orderly_latest("example", root = path, must_work = FALSE)
+
+# Commit the first report and it will be reported as latest:
+orderly::orderly_commit(id1, root = path)
+orderly::orderly_latest("example", root = path)
+
+# Commit the second report and it will be reported as latest instead:
+orderly::orderly_commit(id2, root = path)
+orderly::orderly_latest("example", root = path)
+</code></pre>
+
+
+</div>

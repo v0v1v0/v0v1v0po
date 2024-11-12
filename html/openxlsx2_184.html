@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>xl_open</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Open an xlsx file or a <code>wbWorkbook</code> object</h2>
+
+<h3>Description</h3>
+
+<p>This function tries to open a Microsoft Excel (xls/xlsx) file or,
+an wbWorkbook with the proper application, in a portable manner.
+</p>
+<p>On Windows it uses <code>base::shell.exec()</code> (Windows only function) to
+determine the appropriate program.
+</p>
+<p>On Mac, (c) it uses system default handlers, given the file type.
+</p>
+<p>On Linux, it searches (via <code>which</code>) for available xls/xlsx reader
+applications (unless <code>options('openxlsx2.excelApp')</code> is set to the app bin
+path), and if it finds anything, sets <code>options('openxlsx2.excelApp')</code> to the
+program chosen by the user via a menu (if many are present, otherwise it
+will set the only available). Currently searched for apps are
+Libreoffice/Openoffice (<code>soffice</code> bin), Gnumeric (<code>gnumeric</code>) and Calligra
+Sheets (<code>calligrasheets</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">xl_open(x, interactive = NA)
+
+## S3 method for class 'wbWorkbook'
+xl_open(x, interactive = NA)
+
+## Default S3 method:
+xl_open(x, interactive = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A path to the Excel (xls/xlsx) file or wbWorkbook object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interactive</code></td>
+<td>
+<p>If <code>FALSE</code> will throw a warning and not open the path.
+This can be manually set to <code>TRUE</code>, otherwise when <code>NA</code> (default) uses the
+value returned from <code>base::interactive()</code></p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (interactive()) {
+  xlsx_file &lt;- system.file("extdata", "openxlsx2_example.xlsx", package = "openxlsx2")
+  xl_open(xlsx_file)
+
+  # (not yet saved) Workbook example
+  wb &lt;- wb_workbook()
+  x &lt;- mtcars[1:6, ]
+  wb$add_worksheet("Cars")
+  wb$add_data("Cars", x, start_col = 2, start_row = 3, row_names = TRUE)
+  xl_open(wb)
+}
+
+</code></pre>
+
+
+</div>

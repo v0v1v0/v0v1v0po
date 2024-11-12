@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fitLS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitting splines with penalized least squares.</h2>
+
+<h3>Description</h3>
+
+<p>Estimates the control vector for a spline fit by penalized least squares.
+The penalty being the penalty parameter times the functional inner product of the second derivative of the spline curve.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fitLS(object, x, y, penalty = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p> The <code>SplineBasis</code> object to be used to make the fit </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> predictor variable. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p> response variable. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty</code></td>
+<td>
+<p> The penalty multiplier. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For numeric vector y, and x, and a set of basis functions, represented in <code>object</code>, defined on the knots <code class="reqn">(k_0,\ldots,k_m)</code>.
+The likelihood is defined by</p>
+<p style="text-align: center;"><code class="reqn">
+	\sum\limits_{i=1}^n(y_i-b(x_i)\mu) + \int\limits_{k_0}^{k_m} \mu^Tb^{\prime\prime}(t)^Tb^{\prime\prime}(t)\mu dt
+	</code>
+</p>
+
+<p>The function estimates <code class="reqn">\mu</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a vector of the control points.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>SplineBasis</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">knots&lt;-c(0,0,0,0:5,5,5,5)
+base&lt;-SplineBasis(knots)
+x&lt;-seq(0,5,by=.5)
+y&lt;-exp(x)+rnorm(length(x),sd=5)
+fitLS(base,x,y)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotVolumePercentiles</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Visualise available limit order book liquidity through time.</h2>
+
+<h3>Description</h3>
+
+<p>Plots the available volume in 25bps increments on each side of the order
+book in the form of a stacked area graph.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotVolumePercentiles(depth.summary,
+  start.time = head(depth.summary$timestamp, 1),
+  end.time = tail(depth.summary$timestamp, 1), volume.scale = 1,
+  perc.line = T, side.line = T)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>depth.summary</code></td>
+<td>
+<p><code>depth.summary</code> data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start.time</code></td>
+<td>
+<p>Plot events from this time onward.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end.time</code></td>
+<td>
+<p>Plot events up until this time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>volume.scale</code></td>
+<td>
+<p>Volume scale factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>perc.line</code></td>
+<td>
+<p>If true, separate percentiles with subtle line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>side.line</code></td>
+<td>
+<p>If true, separate bid/ask side with subtle line.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The top of the graph depicts the ask side of the book, whilst the bottom
+depicts the bid side. Percentiles and order book sides can be separated by an
+optional subtle line for improved legibility.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# visualise 2 hours of order book liquidity.
+# data will be aggregated to minute-by-minute resolution.
+plotVolumePercentiles(lob.data$depth.summary,
+    start.time=as.POSIXct("2015-05-01 02:30:00.000", tz="UTC"),
+    end.time=as.POSIXct("2015-05-01 04:30:00.000", tz="UTC"),
+    volume.scale=10^-8)
+
+## Not run: 
+
+# visualise 15 minutes of order book liquidity.
+# data will be aggregated to second-by-second resolution.
+plotVolumePercentiles(lob.data$depth.summary,
+    start.time=as.POSIXct("2015-05-01 04:30:00.000", tz="UTC"),
+    end.time=as.POSIXct("2015-05-01 04:35:00.000", tz="UTC"),
+    volume.scale=10^-8)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

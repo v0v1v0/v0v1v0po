@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_heatmap_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function to plot a heatmap of the NPX data</h2>
+
+<h3>Description</h3>
+
+<p>Generates a heatmap using <code>pheatmap::pheatmap</code> of all samples from NPX data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_heatmap_plot(
+  df,
+  variable_row_list = NULL,
+  variable_col_list = NULL,
+  center_scale = TRUE,
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,
+  show_rownames = TRUE,
+  show_colnames = TRUE,
+  colnames = "both",
+  annotation_legend = TRUE,
+  fontsize = 10,
+  na_col = "black",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>Data frame in long format with SampleID, NPX, OlinkID, Assay and columns of choice for annotations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable_row_list</code></td>
+<td>
+<p>Columns in <code>df</code> to be annotated for rows in the heatmap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable_col_list</code></td>
+<td>
+<p>Columns in <code>df</code> to be annotated for columns in the heatmap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center_scale</code></td>
+<td>
+<p>Logical. If data should be centered and scaled across assays (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster_rows</code></td>
+<td>
+<p>Logical. Determining if rows should be clustered (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster_cols</code></td>
+<td>
+<p>Logical. Determining if columns should be clustered (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show_rownames</code></td>
+<td>
+<p>Logical. Determining if row names are shown (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show_colnames</code></td>
+<td>
+<p>Logical. Determining if column names are shown (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colnames</code></td>
+<td>
+<p>Character. Determines how to label the columns. Must be 'assay', 'oid', or 'both' (default 'both').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotation_legend</code></td>
+<td>
+<p>Logical. Determining if legend for annotations should be shown (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fontsize</code></td>
+<td>
+<p>Fontsize (default 10)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na_col</code></td>
+<td>
+<p>Color of cells with <code>NA</code> (default black)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments used in <code>pheatmap::pheatmap</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The values are by default scaled across and centered in the heatmap. Columns
+and rows are by default sorted by by dendrogram.
+Unique sample names are required.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>ggplot</code>, generated from the <code>gtable</code> returned by <code>pheatmap::pheatmap</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+npx_data &lt;- npx_data1 %&gt;%
+      filter(!stringr::str_detect(SampleID,'CONT'))
+try({ # This will fail if ggplotify is not installed
+#Heatmap
+  olink_heatmap_plot(df=npx_data)
+
+#Heatmap with annotation
+  olink_heatmap_plot(df=npx_data, variable_row_list = c('Time','Site'))
+
+#Heatmap with calls from pheatmap
+  olink_heatmap_plot(df=npx_data, cutree_rows = 3)
+})
+
+
+
+</code></pre>
+
+
+</div>

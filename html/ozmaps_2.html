@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>abs-data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Australian Bureau of Statistics (ABS) map data</h2>
+
+<h3>Description</h3>
+
+<p>These data sets are simplifications of the formal statistical areas
+and regions published by the ABS in 2016.
+</p>
+
+
+<h3>Format</h3>
+
+<p>Simple features data frame with
+</p>
+
+<dl>
+<dt>NAME</dt>
+<dd>
+<p>Area name</p>
+</dd>
+<dt>geometry</dt>
+<dd>
+<p>Geometry column in 'sfc' format</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>Each layer was read from the source file with 'sf' package and attributes were removed, leaving a single 'NAME'
+column from the year-specific column names. The geometry has been
+simplified using 'rmapshaper::ms_simplify' with default arguments (0.05 detail).
+</p>
+<p>Several layers are not included from the total available.
+</p>
+<p>The entire nation layer 'AUST' is not included
+as it is the union of the State and Territory layer.
+</p>
+<p>Statistical Areas Level 1 is not included as it is very large (56Mb after simplification).
+</p>
+<p>The mesh blocks are not included, nor Greater Capital City Statistical Areas,
+Indigenous Regions, Remoteness Structure, Statistical Areas (L2, L3, L4),
+State Electoral Divisions. See 'ozmaps.data' for these.
+</p>
+
+
+<h3>Data layers</h3>
+
+
+<dl>
+<dt>abs_ced</dt>
+<dd>
+<p>Commonwealth Electoral Divisions</p>
+</dd>
+<dt>abs_lga</dt>
+<dd>
+<p>Local Government Areas</p>
+</dd>
+<dt>abs_ste</dt>
+<dd>
+<p>State and Territory</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>The script to create the data set: data-raw/abs-inbuilt.R
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ozmap("abs_ste")
+
+ozmap("abs_lga", col = sample(rainbow(nrow(abs_lga), alpha = .4)))
+pal &lt;- rainbow(12, alpha = 0.6)  ## boring!  install paletteer for ochRe palettes
+
+if (isTRUE(requireNamespace("paletteer", quietly = TRUE))) {
+  if (utils::packageVersion("paletteer") &lt; '1.0.0') {
+   pal &lt;- paletteer::paletteer_d(package = "ochRe", palette = "namatjira_qual")
+ } else {
+   pal &lt;- paletteer::paletteer_d(palette = "ochRe::namatjira_qual")
+ }
+}
+opal &lt;- colorRampPalette(pal)
+ozmap("abs_ced", col = opal(30))
+</code></pre>
+
+
+</div>

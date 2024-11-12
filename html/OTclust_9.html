@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Visualize a partition on 2 dimensional space</h2>
+
+<h3>Description</h3>
+
+<p>This function plots a partition on 2 dimensional reduced space.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otplot(
+  data,
+  labels,
+  convex.hull = F,
+  title = "",
+  xlab = "",
+  ylab = "",
+  legend.title = "",
+  legend.labels = NULL,
+  add.text = T
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>– coordinates matrix of data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>– cluster labels in a vector, the first cluster is labeled as 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convex.hull</code></td>
+<td>
+<p>– logical. If it is <code>True</code>, the plot draws convex hull for each cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>– title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>– xlab</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>– ylab</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.title</code></td>
+<td>
+<p>– legend title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.labels</code></td>
+<td>
+<p>– legend labels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.text</code></td>
+<td>
+<p>– default True</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>none
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sim1)
+# the number of clusters.
+C = 4
+ens.data = ensemble(sim1$X[1:50,], nbs=50, clust_param=C, clustering="kmeans", perturb_method=1)
+
+# find mean partition and uncertainty statistics.
+ota = otclust(ens.data)
+# calculate baseline method for comparison.
+kcl = kmeans(sim1$X[1:50],C)
+
+# align clustering results for convenience of comparison.
+compar = align(cbind(sim1$z[1:50],kcl$cluster,ota$meanpart))
+lab.match = lapply(compar$weight,function(x) apply(x,2,which.max))
+kcl.algnd = match(kcl$cluster,lab.match[[1]])
+ota.algnd = match(ota$meanpart,lab.match[[2]])
+# plot the result on two dimensional space.
+otplot(sim1$X[1:50,],ota.algnd,con=FALSE,title='Mean partition')   # mean partition by OTclust
+</code></pre>
+
+
+</div>

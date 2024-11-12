@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>diving</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Olympic Diving Data</h2>
+
+<h3>Description</h3>
+
+<p>One hundred years of Men's Olympic Platform Diving records.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(diving)
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A <code>data.frame</code> object with 695 observations and 13 columns. 
+</p>
+<p>The columns are defined as follows:
+</p>
+
+<dl>
+<dt><code>Name</code></dt>
+<dd>
+<p>The participant's name.</p>
+</dd>
+<dt><code>Age</code></dt>
+<dd>
+<p>The age of the participant at the time of the Olympics. Some values missing.</p>
+</dd>
+<dt><code>Height</code></dt>
+<dd>
+<p>The height of the participant at the time of the Olympics, in centimeters. Many values missing.</p>
+</dd>
+<dt><code>Weight</code></dt>
+<dd>
+<p>The height of the participant at the time of the Olympics, in kilograms. Many values missing.</p>
+</dd>
+<dt><code>Team</code></dt>
+<dd>
+<p>The string name of the team (country) which the participant represented.</p>
+</dd>
+<dt><code>NOC</code></dt>
+<dd>
+<p>The string name of the National Olympic Committee which the participant represented. This is a three character code.</p>
+</dd>
+<dt><code>Games</code></dt>
+<dd>
+<p>The string name of the Olympic games, including a year.</p>
+</dd>
+<dt><code>Year</code></dt>
+<dd>
+<p>The integer year of the Olympics. These range from 1906
+through 2016.</p>
+</dd>
+<dt><code>City</code></dt>
+<dd>
+<p>The string name of the host city.</p>
+</dd>
+<dt><code>Medal</code></dt>
+<dd>
+<p>A string of “Gold”, “Silver”,
+“Bronze” or <code>NA</code>.</p>
+</dd>
+<dt><code>EventId</code></dt>
+<dd>
+<p>A unique integer ID for each Olympics.</p>
+</dd>
+<dt><code>AthleteId</code></dt>
+<dd>
+<p>A unique integer ID for each participant.</p>
+</dd>
+<dt><code>HOST_NOC</code></dt>
+<dd>
+<p>The string name of the National Olympic Committee of the nation hosting the Olympics. This is a three character code.</p>
+</dd>
+</dl>
+<h3>Note</h3>
+
+<p>The author makes no guarantees regarding correctness of this data.
+</p>
+<p>Please attribute this data to the upstream harvester.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>Source</h3>
+
+<p>Data were collected by Randi Griffin from the website
+“sports-reference.com”, and staged on Kaggle at
+<a href="https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results">https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+library(forcats)
+data(diving)
+
+fitdat &lt;- diving %&gt;%
+  mutate(Finish=case_when(grepl('Gold',Medal)   ~ 1,
+                          grepl('Silver',Medal) ~ 2,
+                          grepl('Bronze',Medal) ~ 3,
+                          TRUE ~ 4)) %&gt;%
+  mutate(weight=ifelse(Finish &lt;= 3,1,0)) %&gt;%
+  mutate(cut_age=cut(coalesce(Age,22.0),c(12,19.5,21.5,22.5,25.5,99),include.lowest=TRUE)) %&gt;%
+  mutate(country=forcats::fct_relevel(forcats::fct_lump(factor(NOC),n=5),'Other')) %&gt;%
+  mutate(home_advantage=NOC==HOST_NOC)
+
+hensm(Finish ~ cut_age + country + home_advantage,data=fitdat,weights=weight,group=EventId,ngamma=3)
+
+</code></pre>
+
+
+</div>

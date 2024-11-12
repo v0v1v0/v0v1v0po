@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gompertz_model</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Four-parameter Gompertz model, gradient, starting values, and back-calculation functions</h2>
+
+<h3>Description</h3>
+
+<p> Four-parameter Gompertz model, gradient, starting values, and back-calculation functions.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> 
+        gompertz_model(theta, x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p> Vector of four parameters:  (A, B, m, offset).  See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Vector of concentrations for the Gompertz model. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The four parameter Gompertz model is given by:
+</p>
+<p style="text-align: center;"><code class="reqn">y = A + (B-A)\times\exp( -\exp( m(x-\text{offset}) ) )\text{, where}</code>
+</p>
+
+<p><code class="reqn">A = \min y</code> (minimum y value), <code class="reqn">A+(B-A)\exp(-\exp( -m*\text{offset} ))</code> is the maximum y value, m is the shape parameter, and offset shifts the curve, relative to the concentration x.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Let N = length(x).  Then
+</p>
+
+<ul>
+<li>
+<p> gompertz_model(theta, x) returns a numeric vector of length N.
+</p>
+</li>
+<li>
+<p> gompertz_model(hill_model, "gradient")(theta, x) returns an N x 4 matrix.
+</p>
+</li>
+<li>
+<p> attr(gompertz_model, "start")(x, y) returns a numeric vector of length 4 with starting values for
+(A, B, m, offset).
+</p>
+</li>
+<li>
+<p> attr(gompertz_model, "backsolve")(theta, y) returns a numeric vector of length=length(y).
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_fit</code>, <code>rout_fitter</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(100)
+x = rep( c(0, 2^(-4:4)), each=4 )
+theta = c(0, 100, log(.5), 2)
+y = gompertz_model(theta, x)  + rnorm( length(x), mean=0, sd=1 )
+attr(gompertz_model, "gradient")(theta, x)
+attr(gompertz_model, "start")(x, y)
+attr(gompertz_model, "backsolve")(theta, 50)
+</code></pre>
+
+
+</div>

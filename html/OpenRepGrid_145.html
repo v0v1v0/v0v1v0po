@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perturbate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perturbate grid ratings</h2>
+
+<h3>Description</h3>
+
+<p>Randomly subtract or add an amount to a proportion of the grid ratings. This
+emulates randomness during the rating process, producing a grid which might
+also have resulted.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perturbate(x, prop = 0.1, amount = c(-1, 1), prob = c(0.5, 0.5))
+
+grids_perturbate(x, n = 10, prop = 0.1, amount = c(-1, 1), prob = c(0.5, 0.5))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prop</code></td>
+<td>
+<p>The proportion of ratings to be perturbated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>amount</code></td>
+<td>
+<p>The amount set of possible perturbations. Will depend on scale
+range. Usually <code style="white-space: pre;">⁠{-1, 1}⁠</code> are reasonable settings.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+<p>Probability for each amount to occur.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of perturbated grid to generate.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## All results for PVAFF index when ratings are slightly perturbated
+p &lt;- indexPvaff(boeker)
+l &lt;- grids_perturbate(boeker, n = 100, prop = .1)
+pp &lt;- sapply(l, indexPvaff)  # apply indexPvaff function to all perturbated grids
+range(pp)   # min and max PVAFF
+hist(pp, xlab = "PVAFF values")    # visualize
+abline(v = p, col = "blue", lty = 2)
+</code></pre>
+
+
+</div>

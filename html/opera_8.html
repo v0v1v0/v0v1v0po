@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>loss</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Errors suffered by a sequence of predictions</h2>
+
+<h3>Description</h3>
+
+<p>The
+function <code>loss</code> computes the sequence of instantaneous losses suffered
+by the predictions in <code>x</code> to predict the observation in <code>y</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">loss(
+  x,
+  y,
+  pred = NULL,
+  loss.type = list(name = "square"),
+  loss.gradient = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>numeric</code>. A vector of length <code>T</code> containing the sequence of prediction to be evaluated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p><code>numeric</code>. A vector of length <code>T</code> that contains the observations to be predicted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pred</code></td>
+<td>
+<p><code>numeric</code>. A vector of length <code>T</code> containing the sequence of real values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loss.type</code></td>
+<td>
+<p><code>character, list or function</code> ("square").
+</p>
+
+<ul>
+<li>
+<p>character Name of the loss to be applied ('square', 'absolute', 'percentage', or 'pinball');
+</p>
+</li>
+<li>
+<p>list List with field <code>name</code> equal to the loss name. If using pinball loss, field <code>tau</code> 
+equal to the required quantile in [0,1];
+</p>
+</li>
+<li>
+<p>function A custom loss as a function of two parameters.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loss.gradient</code></td>
+<td>
+<p><code>boolean, function</code> (TRUE). 
+</p>
+
+<ul>
+<li>
+<p>boolean If TRUE, the aggregation rule will not be directly applied to the loss function at hand,
+but to a gradient version of it. The aggregation rule is then similar to gradient descent aggregation rule. 
+</p>
+</li>
+<li>
+<p>function If loss.type is a function, the derivative should be provided to be used (it is not automatically 
+computed).
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector of length <code>T</code> containing the sequence of
+instantaneous losses suffered by the expert previsions (x) or the gradient computed on the aggregated previsions (pred).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Pierre Gaillard &lt;pierre@gaillard.me&gt;
+</p>
+
+
+</div>

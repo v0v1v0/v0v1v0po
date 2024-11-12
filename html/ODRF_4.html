@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>best.cut.node</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>find best splitting variable and node</h2>
+
+<h3>Description</h3>
+
+<p>A function to select the splitting variables and nodes using one of three criteria.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">best.cut.node(
+  X,
+  y,
+  split,
+  lambda = "log",
+  weights = 1,
+  MinLeaf = 10,
+  numLabels = ifelse(split == "mse", 0, length(unique(y)))
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>An n by d numeric matrix (preferable) or data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A response vector of length n.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split</code></td>
+<td>
+<p>One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification)
+or 'mse': mean square error (regression).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>The argument of <code>split</code> is used to determine the penalty level of the partition criterion. Three options are provided including, <code>lambda=0</code>: no penalty; <code>lambda=2</code>: AIC penalty; <code>lambda='log'</code> (Default): BIC penalty. In Addition, lambda can be any value from 0 to n (training set size).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>A vector of values which weigh the samples when considering a split.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MinLeaf</code></td>
+<td>
+<p>Minimal node size (Default 10).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numLabels</code></td>
+<td>
+<p>The number of categories.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list which contains:
+</p>
+
+<ul>
+<li>
+<p> BestCutVar: The best split variable.
+</p>
+</li>
+<li>
+<p> BestCutVal: The best split points for the best split variable.
+</p>
+</li>
+<li>
+<p> BestIndex: Each variable corresponds to maximum decrease in gini impurity index, information gain, and mean square error.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">### Find the best split variable ###
+data(iris)
+X &lt;- as.matrix(iris[, 1:4])
+y &lt;- iris[[5]]
+bestcut &lt;- best.cut.node(X, y, split = "gini")
+print(bestcut)
+
+</code></pre>
+
+
+</div>

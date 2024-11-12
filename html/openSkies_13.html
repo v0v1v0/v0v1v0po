@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getRouteMetadata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve metadata for a specified route
+</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves the available metadata for a specified flight route. These include the 
+airports of origin and destination, the operator IATA code and the flight
+number.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getRouteMetadata(route, includeAirportsMetadata=FALSE, timeOut=60, maxQueryAttempts=1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>route</code></td>
+<td>
+<p>string with the call sign of a route (for example, "AAL683" for 
+American Airlines flight number 683.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeAirportsMetadata</code></td>
+<td>
+<p>logical indicating if the data about the origin and destination
+airports of the route should also be retrieved. If not, only the ICAO24 code of the airports will be
+included.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeOut</code></td>
+<td>
+<p>number of seconds after which the query will time out and return
+a NULL result. In the default behavior, timeout will be reached after 60 seconds.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxQueryAttempts</code></td>
+<td>
+<p>On rare occassions, queries to the OpenSky Network
+live API can return malformed responses. This is the maximum number of attempts 
+to obtain a properly formatted response when carrying out the requested query. 
+It should be noted that the query will still terminate if a timeout is reached.
+In the default behavior, a single attempt will be performed. It is not recommended
+to change this to a very large number, since it can lead to long running times.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>openSkiesRoute</code>. See the <code>openSkiesRoute</code>
+documentation for details on the fields for the class.
+</p>
+
+
+<h3>References</h3>
+
+<p>https://en.wikipedia.org/wiki/Flight_number
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Obtain metadata for the route with call sign AAL683
+
+if(interactive()){
+getRouteMetadata("AAL683")
+}
+</code></pre>
+
+
+</div>

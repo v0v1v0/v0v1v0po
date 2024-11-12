@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dictionary.apply</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Apply the dictionary to a tibble</h2>
+
+<h3>Description</h3>
+
+<p>Apply the dictionary described in a Opal Excel format as attributes of the tibble's columns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dictionary.apply(tibble, variables, categories = NULL, merge = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tibble</code></td>
+<td>
+<p>Tibble to be decorated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variables</code></td>
+<td>
+<p>A data frame with one row per variable (column name) and then one column per property/attribute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>categories</code></td>
+<td>
+<p>A data frame with one row per category (columns variable and name) and then column per property/attribute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>merge</code></td>
+<td>
+<p>Either append attributes to existing ones or replace them. Default is FALSE, for dictionary consistency.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data &lt;- tibble::as_tibble(mtcars)
+variables &lt;- tibble::tribble(
+  ~name, ~valueType, ~`label:en`, ~`label:fr`,  ~`Namespace::Name`, ~unit, ~repeatable, ~index,
+  "mpg", "decimal", "Mpg label", "Mpg libellé",  "Value1", "years", 0, 1,
+  "cyl", "decimal", "Cyl label", "Cyl libellé",  "Value2", "kg/m2", 0, 2,
+  "disp", "decimal", "Disp label", "Disp libellé", NA, NA, 1, 3
+)
+categories &lt;- tibble::tribble(
+  ~variable, ~name, ~missing, ~`label:en`, ~`label:fr`,
+  "cyl", "4", 0, "Four", "Quatre",
+  "cyl", "6", 0, "Six", "Six",
+  "cyl", "8", 1, "Height", "Huit"
+)
+data &lt;- dictionary.apply(data, variables, categories)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

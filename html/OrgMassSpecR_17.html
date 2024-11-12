@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>IsotopicDistribution</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Isotopic Distribution of an Organic Molecule.</h2>
+
+<h3>Description</h3>
+
+<p>Simulate the isotopic distribution of an organic molecule using the natural abundances of the isotopes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">IsotopicDistribution(formula = list(), charge = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>a list describing the charged elemental formula.  The
+allowed elements are C, H, N, O, S, P, Br, Cl, F, Si.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>charge</code></td>
+<td>
+<p>an integer specifying the number of positive or negative
+charges. A charge of zero is not allowed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The elemental formula should be that of the charged molecule; i.e, the
+<code>charge</code> argument does not change the elemental formula.
+</p>
+<p>The algorithm used in this function is based on <code>sample</code>,
+and will give a slightly different result each time it is run.
+</p>
+<p>This function is intended for simulating the isotopic distributions of
+small molecules (&lt; approximately 3000 amu and &lt;= 3 charges) as measured on low resolution mass spectrometers. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the following column names.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>mz</code></td>
+<td>
+<p>the <em>m/z</em> value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intensity</code></td>
+<td>
+<p>the number of counts at each <em>m/z</em> value.  The total is 10000.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent</code></td>
+<td>
+<p>the intensity at each <em>m/z</em> value, expressed as a percent of the maximum intensity.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Nathan G. Dodder</p>
+
+
+<h3>References</h3>
+
+<p>The relative atomic masses of the isotopes are from the NIST Physical Reference Data Website <a href="http://physics.nist.gov/PhysRefData/Compositions/">http://physics.nist.gov/PhysRefData/Compositions/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>IsotopicDistributionN</code>, <code>IsotopicDistributionHDX</code>, <code>sample</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- IsotopicDistribution(formula = list(C = 9, H = 4, Br = 5, Cl = 1, N = 2))
+library(lattice)
+xyplot(percent ~ mz, data = x,
+  type = "h",
+  xlab = "m/z",
+  ylab = "intensity (%)",
+  main = "Isotopic Distribution, C9H4Br5ClN2")
+</code></pre>
+
+
+</div>

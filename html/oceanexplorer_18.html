@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_NOAA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plotting the global NOAA World Ocean Atlas</h2>
+
+<h3>Description</h3>
+
+<p>Plots the NOAA World Ocean Atlas on worldmap including optional
+filtered locations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_NOAA(NOAA, depth = 0, points = NULL, epsg = NULL, rng = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>NOAA</code></td>
+<td>
+<p>Dataset of the NOAA World Ocean Atlas
+(with <code>get_NOAA()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>depth</code></td>
+<td>
+<p>Depth in meters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>points</code></td>
+<td>
+<p>Add locations of extracted point geometry (<code>sf</code>
+object).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsg</code></td>
+<td>
+<p>The epsg used to project the data (currently supported <code>4326</code>,
+<code>3031</code>and <code>3995</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rng</code></td>
+<td>
+<p>A vector of two numeric values for the range of the oceanographic
+variable.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A worldmap is plotted as an <code>ggplot</code> object which by
+default will plot the surface layer of the selected  oceanographic variable.
+One can plot different depth slices by selecting the appropriate depth in
+meters (e.g., <code>depth = 100</code>). It is, furthermore possible to visualize the
+locations of data extractions with <code>filter_NOAA()</code>. See the examples below
+for a more detailed overview of this workflow. Different projections of the
+worldmap can be selected by supplying an <code>epsg</code>. Currently only three
+projections are allowed: 4326, 3031, and 3995, besides the original. It is
+possible to fix the range of the color scale (for the oceanographic
+variable) to a custom range. For example, one can fix the color scale
+to the total range of the ocean (instead of the current depth slice).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>ggplot2::ggplot()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# data
+NOAA &lt;- get_NOAA("oxygen", 1, "annual")
+
+# plot
+plot_NOAA(NOAA)
+
+# coordinates
+pts &lt;- filter_NOAA(NOAA, 1, list(lon = c(-160, -120), lat =  c(11,12)))
+
+# plot
+plot_NOAA(NOAA, points = pts)
+
+}
+</code></pre>
+
+
+</div>

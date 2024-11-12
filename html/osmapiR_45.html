@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_search_notes</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search for notes</h2>
+
+<h3>Description</h3>
+
+<p>Returns notes that match the specified query. If no query is provided, the most recently updated notes are returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_search_notes(
+  q,
+  user,
+  bbox,
+  from,
+  to,
+  closed = 7,
+  sort = c("updated_at", "created_at"),
+  order = c("newest", "oldest"),
+  limit = getOption("osmapir.api_capabilities")$api$notes["default_query_limit"],
+  format = c("R", "sf", "xml", "rss", "json", "gpx")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>Text search query, matching either note text or comments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user</code></td>
+<td>
+<p>Search for notes which the given user interacted with. The value can be the user id (<code>numeric</code>) or the
+display name (<code>character</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>Search area expressed as a string or a numeric vector of 4 coordinates of a valid bounding box
+(<code style="white-space: pre;">⁠left,bottom,right,top⁠</code>) in decimal degrees. Area must be at most 25 square degrees (see
+<code>osm_capabilities()$note_area</code> and
+<a href="https://github.com/openstreetmap/openstreetmap-website/blob/master/config/settings.yml#L27">this line in settings</a>
+for the current value).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>Beginning date range for <code>created_at</code> or <code>updated_at</code> (specified by <code>sort</code>). Preferably in
+<a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> date format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>End date range for <code>created_at</code> or <code>updated_at</code> (specified by <code>sort</code>). Preferably in
+<a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> date format. Only works when <code>from</code> is supplied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>closed</code></td>
+<td>
+<p>Specifies the number of days a note needs to be closed to no longer be returned. A value of 0 means
+only open notes are returned. A value of -1 means all notes are returned. 7 is the default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>Sort results by creation (<code>"created_at"</code>) or update date (<code>"updated_at"</code>, the default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>Sorting order. <code>"oldest"</code> is ascending order, <code>"newest"</code> is descending order (the default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>Maximum number of results between 1 and 10000 (may change, see <code>osm_capabilities()$api$notes</code> for the
+current value). Default to 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the the returned list of notes. Can be <code>"R"</code> (default), <code>"sf"</code>, <code>"xml"</code>, <code>"rss"</code>, <code>"json"</code> or
+<code>"gpx"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The notes will be ordered by the date of their last change, the most recent one will be first.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>format = "R"</code>, returns a data frame with one map note per row. If <code>format = "sf"</code>, returns a <code>sf</code> object from
+<span class="pkg">sf</span>. If <code>format = "json"</code>, returns a list with the json structure. For <code>format</code> in <code>"xml"</code>, <code>"rss"</code>, and
+<code>"gpx"</code>, a xml2::xml_document with the corresponding format.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other get notes' functions: 
+<code>osm_feed_notes()</code>,
+<code>osm_get_notes()</code>,
+<code>osm_read_bbox_notes()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">notes &lt;- osm_search_notes(
+  q = "POI", bbox = "0.1594133,40.5229822,3.3222508,42.8615226",
+  from = "2017-10-01", to = "2018-10-27T15:27A", limit = 10
+)
+notes
+
+my_notes &lt;- osm_search_notes(
+  user = "jmaspons", bbox = c(-0.1594133, 40.5229822, 3.322251, 42.861523),
+  closed = -1, format = "json"
+)
+my_notes
+</code></pre>
+
+
+</div>

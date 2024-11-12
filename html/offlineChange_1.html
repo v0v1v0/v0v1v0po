@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ChangePoints</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Detect Number and Location of Change Points of Independent Data</h2>
+
+<h3>Description</h3>
+
+<p>Detect the number and locations of change points based on minimizing within
+segment quadratic loss and applying penalized model selection approach with
+restriction of largest candidate number of change points.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ChangePoints(
+  x,
+  point_max = 5,
+  penalty = "bic",
+  seg_min = 1,
+  num_init = NULL,
+  cpp = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The data to find change points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point_max</code></td>
+<td>
+<p>The largest candidate number of change points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty</code></td>
+<td>
+<p>Penalty type term. Default is "bic". Users can use other penalty term.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seg_min</code></td>
+<td>
+<p>Minimal segment size between change points at transformed sacle, 
+must be positive integer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_init</code></td>
+<td>
+<p>The number of repetition times, in order to avoid local
+minimum. Default is squared root of number of observations. Must be integer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cpp</code></td>
+<td>
+<p>Option to accelerate using rcpp. Default is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The K change points form K+1 segments (1 2 ... change_point(1)) ...
+(change_point(K) ... N).
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>num_change_point</code></td>
+<td>
+<p>optimal number of change points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_point</code></td>
+<td>
+<p>location of change points.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>J. Ding, Y. Xiang, L. Shen, and V. Tarokh, <em>Multiple Change
+Point Analysis: Fast Implementation and Strong Consistency</em>. IEEE
+Transactions on Signal Processing, vol. 65, no. 17, pp. 4495-4510, 2017.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">a&lt;-matrix(rnorm(40,mean=-1,sd=1),nrow=20,ncol=2)
+b&lt;-matrix(rnorm(120,mean=0,sd=1),nrow=60,ncol=2)
+c&lt;-matrix(rnorm(40,mean=1,sd=1),nrow=20,ncol=2)
+x&lt;-rbind(a,b,c)
+ChangePoints(x,point_max=5)
+ChangePoints(x,point_max=5,penalty="hq")
+</code></pre>
+
+
+</div>

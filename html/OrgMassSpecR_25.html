@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ReadMspDirectory</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read in MSP Formatted Mass Spectra</h2>
+
+<h3>Description</h3>
+
+<p>Reads in all <code>.msp</code> files within a directory and makes a single concatenated data frame of <em>m/z</em> values and intensities.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ReadMspDirectory(directory, skip = 2, comment.char = "", 
+                 remove.placeholders = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>directory</code></td>
+<td>
+<p>character string. The path to the directory
+containing the <code>.msp</code> files. Can be “./” for the current
+directory on unix-like systems.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip</code></td>
+<td>
+<p>integer. The number of lines at the top of the input file to skip before reading. Passed internally to read.table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comment.char</code></td>
+<td>
+<p>a character vector of length one containing a single character or an empty string. Use "" to turn off the interpretation of comments altogether. Passed internally to read.table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove.placeholders</code></td>
+<td>
+<p>TRUE or FALSE specifying if zero intensity peaks in the MSP file should be removed from the resulting data frame.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>MSP is a National Institute of Standards and Technology (NIST) text format for centroid spectra.  This format is exported by some instrument software.
+</p>
+<p>The spectral files do not need to have the extension <code>.msp</code>. But an attempt will be made to process all files in the directory, regardless of the extension.  The presense of other file types may cause errors.
+</p>
+<p><code>ReadMspDirectory</code> is a wrapper for <code>ReadMspFile</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the following column names:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>mz</code></td>
+<td>
+<p>the centroid <em>m/z</em> values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intensity</code></td>
+<td>
+<p>the respective intensities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>the corresponding filename (used to identify the spectra within the data frame).</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Nathan G. Dodder</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ReadMspFile</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## The package directory msp contains two .msp files 
+ReadMspDirectory(paste(system.file(package = "OrgMassSpecR"), 
+  "/extdata/msp", sep = ""))
+</code></pre>
+
+
+</div>

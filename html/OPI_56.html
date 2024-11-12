@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiInitialise_for_SimHenson</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>opiInitialise_for_SimHenson</h2>
+
+<h3>Description</h3>
+
+<p>Simulates responses using a Frequency of Seeing (FoS) curve.
+</p>
+<p>For internal use only, use <code>opiInitialize()</code>.
+</p>
+<p>The FoS is modelled as a cumulative Gaussian function over dB with
+standard deviation equal to <code>min(cap, exp( A * t + B))</code>, where
+t is the threshold/mean of the FoS in dB.
+All values are in dB relative to <code>maxStim</code>.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A single character that is:
+</p>
+
+<ul>
+<li> <p><code>N</code> for using the A and B values from the Normals in Henson et al (2000)
+</p>
+</li>
+<li> <p><code>G</code> for using the A and B values from the Glaucomas in Henson et al (2000)
+</p>
+</li>
+<li> <p><code>C</code> for using the A and B values from the Combined in Henson et al (2000)
+</p>
+</li>
+<li> <p><code>X</code> to specify your own A and B values as parameters
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A</code></td>
+<td>
+<p>Coefficient of <code>t</code> in the formula (ignored if <code>type != 'X'</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>Addend of <code>t</code> in the formula (ignored if <code>type != 'X'</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cap</code></td>
+<td>
+<p>Maximum dB value for the stdev of the FoS curve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxStim</code></td>
+<td>
+<p>The maximum stimulus value (0 dB) in cd/<code class="reqn">\mbox{m}^2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Any other parameters you like, they are ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with elements:
+</p>
+
+<ul><li> <p><code>err</code> NULL if initialised, msg otherwise
+</p>
+</li></ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">    # Set up a simple simulation for white-on-white perimetry
+chooseOpi("SimHenson")
+res &lt;- opiInitialize(type = "C", cap = 6)
+if (!is.null(res$err))
+  stop(paste("opiInitialize() failed:", res$err))
+
+</code></pre>
+
+
+</div>

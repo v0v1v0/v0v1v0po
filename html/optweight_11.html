@@ -1,0 +1,216 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optweight.svy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate Targeting Weights Using Optimization</h2>
+
+<h3>Description</h3>
+
+<p>Estimate targeting weights for covariates specified in <code>formula</code>. The target means are specified with <code>targets</code> and the maximum distance between each weighted covariate mean and the corresponding target mean is specified by <code>tols</code>. See Zubizarreta (2015) for details of the properties of the weights and the methods used to fit them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optweight.svy(formula,
+              data = NULL,
+              tols = 0,
+              targets = NULL,
+              s.weights = NULL,
+              verbose = FALSE,
+              ...)
+
+## S3 method for class 'optweight.svy'
+print(x, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+
+<p>A formula with nothing on the left hand side and the covariates to be targeted on the right hand side. See <code>glm</code> for more details. Interactions and functions of covariates are allowed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>An optional data set in the form of a data frame that contains the variables in <code>formula</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tols</code></td>
+<td>
+
+<p>A vector of target balance tolerance values for each covariate. The resulting weighted covariate means will be no further away from the targets than the specified values. If only one value is supplied, it will be applied to all covariates. Can also be the output of a call to <code>check.tols</code>. See Details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>targets</code></td>
+<td>
+
+<p>A vector of target populaton mean values for each covariate. The resulting weights will yield sample means within <code>tols</code> units of the target values for each covariate. If any target values are <code>NA</code>, the corresponding variable will not be targeted and its weighted mean will be wherever the weights yield the smallest variance. To ensure the weighted mean for a covairate is equal to its unweighted mean (i.e., so that its orginal mean is its target mean), its original mean must be supplied as a target.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s.weights</code></td>
+<td>
+
+<p>A vector of sampling weights or the name of a variable in <code>data</code> that contains sampling weights. Optimization occurs on the product of the sampling weights and the estimated weights.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+
+<p>Whether information on the optimization problem solution should be printed. This information contains how many iterations it took to estimate the weights and whether the solution is optimal.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>For <code>optweight.svy</code>, arguments passed to <code>optweight.svy.fit</code>. Ignored otherwise.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>An <code>optweight.svy</code> object; the output of a call to <code>optweight.svy()</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The optimization is performed by the lower-level function <code>optweight.svy.fit</code> using <code>solve_osqp</code> in the <span class="pkg">osqp</span> package, which provides a straightforward interface to specifying the constraints and objective function for quadratic optimization problems and uses a fast and flexible solving algorithm.
+</p>
+<p>Weights are estimated so that the standardized differences between the weighted covariate means and the corresponding targets are within the given tolerance thresholds (unless <code>std.binary</code> or <code>std.cont</code> are <code>FALSE</code>, in which case unstandardized mean differences are considered for binary and continuous variables, respectively). For a covariate <code class="reqn">x</code> with specified tolerance <code class="reqn">\delta</code>, the weighted mean will be within <code class="reqn">\delta</code> of the target. If standardized tolerance values are requested, the standardization factor is the standard deviation of the covariate in the whole sample. The standardization factor is always unweighted.
+</p>
+<p>See the <code>optweight</code> help page for information on interpreting dual variables and solving convergence failure.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>optweight.svy</code> object with the following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>The estimated weights, one for each unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covs</code></td>
+<td>
+<p>The covariates used in the fitting. Only includes the raw covariates, which may have been altered in the fitting process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s.weights</code></td>
+<td>
+<p>The provided sampling weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>The function call.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tols</code></td>
+<td>
+<p>The tolerance values for each covariate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>duals</code></td>
+<td>
+<p>A data.frame containing the dual variables for each covariate. See Details for interpretation of these values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>info</code></td>
+<td>
+<p>The <code>info</code> component of the output of <code>solve_osqp</code>, which contains information on the performance of the optimization at termination.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Noah Greifer
+</p>
+
+
+<h3>References</h3>
+
+<p>Anderson, E. (2018). osqp: Quadratic Programming Solver using the 'OSQP' Library. R package version 0.1.0. <a href="https://CRAN.R-project.org/package=osqp">https://CRAN.R-project.org/package=osqp</a>
+</p>
+<p>Zubizarreta, J. R. (2015). Stable Weights that Balance Covariates for Estimation With Incomplete Outcome Data. Journal of the American Statistical Association, 110(511), 910–922. doi: <a href="https://doi.org/10.1080/01621459.2015.1023805">10.1080/01621459.2015.1023805</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="https://osqp.org/docs/index.html">https://osqp.org/docs/index.html</a> for more information on <span class="pkg">osqp</span>, the underlying solver, and the options for <code>solve_osqp</code>.
+</p>
+<p><code>osqpSettings</code> for details on options for <code>solve_osqp</code>.
+</p>
+<p><code>optweight.svy.fit</code>, the lower-level function that performs the fitting.
+</p>
+<p><code>optweight</code> for estimating weights that balance treatment groups.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library("cobalt")
+data("lalonde", package = "cobalt")
+
+cov.formula &lt;- ~ age + educ + race + married +
+                      nodegree
+
+targets &lt;- check.targets(cov.formula, data = lalonde,
+                        targets = c(23, 9, .3, .3, .4,
+                                    .2, .5))
+
+tols &lt;- check.tols(cov.formula, data = lalonde,
+                   tols = 0)
+
+ows &lt;- optweight.svy(cov.formula,
+                     data = lalonde,
+                     tols = tols,
+                     targets = targets)
+ows
+
+covs &lt;- splitfactor(lalonde[c("age", "educ", "race",
+                  "married", "nodegree")],
+                  drop.first = FALSE)
+#Unweighted means
+apply(covs, 2, mean)
+
+#Weighted means; same as targets
+apply(covs, 2, weighted.mean, w = ows$weights)
+
+</code></pre>
+
+
+</div>

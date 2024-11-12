@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_manual_locked_constraints</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add manually specified locked constraints</h2>
+
+<h3>Description</h3>
+
+<p>Add constraints to a project prioritization <code>problem()</code> to ensure
+that solutions fund (or do not fund) specific actions. This function offers
+more fine-grained control than the <code>add_locked_in_constraints()</code>
+and <code>add_locked_out_constraints()</code> functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_manual_locked_constraints(x, locked)
+
+## S4 method for signature 'ProjectProblem,data.frame'
+add_manual_locked_constraints(x, locked)
+
+## S4 method for signature 'ProjectProblem,tbl_df'
+add_manual_locked_constraints(x, locked)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locked</code></td>
+<td>
+<p><code>data.frame</code> or <code>tibble::tibble()</code> object. See
+the Details section for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The argument to <code>locked</code> must contain the following fields
+(columns):
+</p>
+
+<dl>
+<dt><code>"action"</code></dt>
+<dd>
+<p><code>character</code> action name.</p>
+</dd>
+<dt><code>"status"</code></dt>
+<dd>
+<p><code>numeric</code> values indicating if actions should
+be funded (with a value of 1) or not (with a value of zero).</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>ProjectProblem object with the constraints
+added to it.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>constraints.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+
+# create data frame with locked statuses
+status &lt;- data.frame(action = sim_actions$name[1:2],
+                     status = c(0, 1))
+
+# print locked statuses
+print(status)
+
+# build problem with minimum set objective and targets that require each
+# feature to have a 30% chance of persisting into the future
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+      add_max_richness_objective(budget = 500) %&gt;%
+      add_manual_locked_constraints(status) %&gt;%
+      add_binary_decisions()
+
+# print problem
+print(p)
+
+## Not run: 
+# solve problem
+s &lt;- solve(p)
+
+# print solution
+print(s)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

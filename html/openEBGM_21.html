@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.openEBGM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarize an openEBGM object</h2>
+
+<h3>Description</h3>
+
+<p>Summarize an openEBGM object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'openEBGM'
+summary(object, plot.out = TRUE, log.trans = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An openEBGM object constructed by <code>ebScores</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.out</code></td>
+<td>
+<p>A logical value indicating whether or not a histogram of the
+EBGM scores should be displayed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.trans</code></td>
+<td>
+<p>A logical value indicating whether or not the data should be
+log-transformed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments affecting the summary produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function provides a brief summary of the results of the
+calculations performed in the <code>ebScores</code> function. In
+particular, it provides the numerical summary of the EBGM and
+QUANT_* vectors.
+</p>
+<p>Additionally, calling <code>summary</code> on an openEBGM
+object will produce a histogram of the EBGM scores. By setting the
+log.trans parameter to TRUE, one can convert the EBGM score to
+EBlog2, which is a Bayesian version of the information criterion
+(DuMouchel).
+</p>
+
+
+<h3>References</h3>
+
+<p>DuMouchel W (1999). "Bayesian Data Mining in Large Frequency
+Tables, With an Application to the FDA Spontaneous Reporting System."
+<em>The American Statistician</em>, 53(3), 177-190.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data.table::setDTthreads(2)  #only needed for CRAN checks
+theta_init &lt;- data.frame(
+  alpha1 = c(0.5, 1),
+  beta1  = c(0.5, 1),
+  alpha2 = c(2,   3),
+  beta2  = c(2,   3),
+  p      = c(0.1, 0.2)
+)
+data(caers)
+proc &lt;- processRaw(caers)
+squashed &lt;- squashData(proc, bin_size = 300, keep_pts = 10)
+squashed &lt;- squashData(squashed, count = 2, bin_size = 13, keep_pts = 10)
+suppressWarnings(
+  hypers &lt;- autoHyper(data = squashed, theta_init = theta_init)
+)
+ebout &lt;- ebScores(processed = proc, hyper_estimate = hypers, quantiles = 5)
+summary(ebout)
+## Not run: summary(ebout, plot.out = FALSE)
+## Not run: summary(ebout, log.trans = TRUE)
+
+</code></pre>
+
+
+</div>

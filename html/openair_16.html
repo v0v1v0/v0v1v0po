@@ -1,0 +1,288 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>importADMS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>CERC Atmospheric Dispersion Modelling System (ADMS) data import function(s)
+for openair</h2>
+
+<h3>Description</h3>
+
+<p>Function(s) to import various ADMS file types into openair. Currently handles
+".met", ".bgd", ".mop" and ".pst" file structures. Uses <code>utils::read.csv()</code>
+to read in data, format for R and openair and apply some file structure
+testing.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">importADMS(
+  file = file.choose(),
+  file.type = "unknown",
+  drop.case = TRUE,
+  drop.input.dates = TRUE,
+  keep.units = TRUE,
+  simplify.names = TRUE,
+  test.file.structure = TRUE,
+  drop.delim = TRUE,
+  add.prefixes = TRUE,
+  names = NULL,
+  all = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>The ADMS file to be imported. Default, <code>file.choose()</code> opens
+browser. Use of <code>utils::read.csv()</code> also allows this to be a readable
+text-mode connection or url (although these options are currently not fully
+tested).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file.type</code></td>
+<td>
+<p>Type of ADMS file to be imported. With default, "unknown",
+the import uses the file extension to identify the file type and, where
+recognised, uses this to identify the file structure and import method to
+be applied. Where file extension is not recognised the choice may be forced
+by setting <code>file.type</code> to one of the known <code>file.type</code> options:
+"bgd", "met", "mop" or "pst".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop.case</code></td>
+<td>
+<p>Option to convert all data names to lower case. Default,
+<code>TRUE</code>.  Alternative, <code>FALSE</code>, returns data with name cases as
+defined in file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop.input.dates</code></td>
+<td>
+<p>Option to remove ADMS "hour", "day", and "year" data
+columns after generating openair "date" timeseries. Default, <code>TRUE</code>.
+Alternative, <code>FALSE</code>, returns both "date" and the associated ADMS data
+columns as part of openair data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep.units</code></td>
+<td>
+<p>Option to retain ADMS data units. Default, <code>TRUE</code>,
+retains units (if recoverable) as character vector in data frame comment if
+defined in <code>file</code>.  Alternative, <code>FALSE</code>, discards units. (NOTE:
+currently, only <code>.bgd</code> and <code>.pst</code> files assign units. So, this
+option is ignored when importing <code>.met</code> or <code>.mop</code> files.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simplify.names</code></td>
+<td>
+<p>Option to simplify data names in accordance with common
+<code>openair</code> practices. Default, <code>TRUE</code>. Alternative, <code>FALSE</code>,
+returns data with names as interpreted by standard R. (NOTE: Some ADMS file
+data names include symbols and structures that R does not allow as part of
+a name, so some renaming is automatic regardless of <code>simplify.names</code>
+setting.  For example, brackets or symbols are removed from names or
+replaced with ".", and names in the form "1/x" may be returned as "X1.x" or
+"recip.x".)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test.file.structure</code></td>
+<td>
+<p>Option to test file structure before trying to
+import. Default, <code>TRUE</code>, tests for expected file structure and halts
+import operation if this is not found.  Alternative, <code>FALSE</code>, attempts
+import regardless of structure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop.delim</code></td>
+<td>
+<p>Option to remove delim columns from the data frame. ADMS
+.mop files include two columns, "INPUT_DATA:" and "PROCESSED_DATA:", to
+separate model input and output types.  Default, <code>TRUE</code>, removes
+these. Alternative, <code>FALSE</code>, retains them as part of import.  (Note:
+Option ignored when importing <code>.bgd</code>, <code>.met</code> or <code>.pst</code>
+files.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.prefixes</code></td>
+<td>
+<p>Option to add prefixes to data names. ADMS .mop files
+include a number of input and process data types with shared names.
+Prefixes can be automatically added to these so individual data can be
+readily identified in the R/openair environment. Default, <code>TRUE</code>, adds
+"process." as a prefix to processed data. Other options include:
+<code>FALSE</code> which uses no prefixes and leave all name rationalisation to
+R, and character vectors which are treated as the required prefixes. If one
+vector is sent, this is treated as processed data prefix. If two (or more)
+vectors are sent, the first and second are treated as the input and
+processed data prefixes, respectively. For example, the argument
+(<code>add.prefixes="out"</code>) would add the "out" prefix to processed data
+names, while the argument (<code>add.prefixes=c("in","out")</code>) would add
+"in" and "out" prefixes to input and output data names, respectively.
+(Note: Option ignored when importing <code>.bgd</code>, <code>.met</code> or
+<code>.pst</code> files.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>names</code></td>
+<td>
+<p>Option applied by <code>simplifyNamesADMS</code> when
+<code>simplify.names</code> is enabled.  All names are simplified for the default
+setting, <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>For .MOP files, return all variables or not. If <code>all = TRUE</code>
+a large number of processed variables are returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code>utils::read.csv</code>
+</p>
+
+<dl>
+<dt><code>header</code></dt>
+<dd>
+<p>a logical value indicating whether the file contains the
+names of the variables as its first line.  If missing, the value is
+determined from the file format: <code>header</code> is set to <code>TRUE</code>
+if and only if the first row contains one fewer field than the
+number of columns.</p>
+</dd>
+<dt><code>sep</code></dt>
+<dd>
+<p>the field separator character.  Values on each line of the
+file are separated by this character.  If <code>sep = ""</code> (the
+default for <code>read.table</code>) the separator is ‘white space’,
+that is one or more spaces, tabs, newlines or carriage returns.</p>
+</dd>
+<dt><code>quote</code></dt>
+<dd>
+<p>the set of quoting characters. To disable quoting
+altogether, use <code>quote = ""</code>.  See <code>scan</code> for the
+behaviour on quotes embedded in quotes.  Quoting is only considered
+for columns read as character, which is all of them unless
+<code>colClasses</code> is specified.</p>
+</dd>
+<dt><code>dec</code></dt>
+<dd>
+<p>the character used in the file for decimal points.</p>
+</dd>
+<dt><code>fill</code></dt>
+<dd>
+<p>logical. If <code>TRUE</code> then in case the rows have unequal
+length, blank fields are implicitly added.  See ‘Details’.</p>
+</dd>
+<dt><code>comment.char</code></dt>
+<dd>
+<p>character: a character vector of length one
+containing a single character or an empty string.  Use <code>""</code> to
+turn off the interpretation of comments altogether.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>importADMS</code> function were developed to help import various ADMS
+file types into openair. In most cases the parent import function should work
+in default configuration, e.g. <code>mydata &lt;- importADMS()</code>. The function
+currently recognises four file formats: <code>.bgd</code>, <code>.met</code>, <code>.mop</code>
+and <code>.pst</code>.  Where other file extensions have been set but the file
+structure is known, the import call can be forced by, e.g, <code>mydata &lt;-
+importADMS(file.type="bgd")</code>. Other options can be adjusted to provide fine
+control of the data structuring and renaming.
+</p>
+
+
+<h3>Value</h3>
+
+<p>In standard use <code>importADMS()</code> returns a data frame for use in
+openair. By comparison to the original file, the resulting data frame is
+modified as follows:
+</p>
+<p>Time and date information will combined in a single column "date",
+formatted as a conventional timeseries (<code>as.POSIX*</code>). If
+<code>drop.input.dates</code> is enabled data series combined to generated the
+new "date" data series will also be removed.
+</p>
+<p>If <code>simplify.names</code> is enabled common chemical names may be
+simplified, and some other parameters may be reset to openair standards
+(e.g. "ws", "wd" and "temp") according to operations defined in
+<code>simplifyNamesADMS</code>. A summary of simplification operations can be
+obtained using, e.g., the call <code>importADMS(simplify.names)</code>.
+</p>
+<p>If <code>drop.case</code> is enabled all upper case characters in names will be
+converted to lower case.
+</p>
+<p>If <code>keep.units</code> is enabled data units information may also be retained
+as part of the data frame comment if available.
+</p>
+<p>With <code>.mop</code> files, input and processed data series names may also been
+modified on the basis of <code>drop.delim</code> and <code>add.prefixes</code> settings
+</p>
+
+
+<h3>Note</h3>
+
+<p>Times are assumed to be in GMT. Zero wind directions reset to 360 as
+part of <code>.mop</code> file import.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Karl Ropkins, David Carslaw and Matthew Williams (CERC).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other import functions: 
+<code>importAURN()</code>,
+<code>importEurope()</code>,
+<code>importKCL()</code>,
+<code>importMeta()</code>,
+<code>importTraj()</code>,
+<code>importUKAQ()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##########
+#example 1
+##########
+#To be confirmed
+
+#all current simplify.names operations
+importADMS(simplify.names)
+
+#to see what simplify.names does to adms data series name PHI
+new.name &lt;- importADMS(simplify.names, names="PHI")
+new.name
+</code></pre>
+
+
+</div>

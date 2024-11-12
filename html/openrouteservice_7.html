@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ors_isochrones</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Openrouteservice Isochrones</h2>
+
+<h3>Description</h3>
+
+<p>Obtain areas of reachability from given locations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ors_isochrones(
+  locations,
+  profile = ors_profile(),
+  range = 60,
+  ...,
+  api_key = ors_api_key(),
+  output = c("parsed", "text", "sf")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>locations</code></td>
+<td>
+<p>List of <code style="white-space: pre;">⁠longitude, latitude⁠</code> coordinate pairs, alternatively a two column <code>matrix</code> or <code>data.frame</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>profile</code></td>
+<td>
+<p>Route profile, defaults to <code>"driving-car"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>range</code></td>
+<td>
+<p>Maximum range value of the analysis in seconds for time and
+meters for distance. Alternatively a comma separated list of specific
+single range values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional parameters as described <a href="https://openrouteservice.org/dev/#/api-docs/v2/isochrones/%7Bprofile%7D/post">here</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>Character scalar containing openrouteservice API key</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Output format. By default the response is being parsed to a list-based R object</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Isochrone Service supports time and distance analyses for one single or
+multiple locations. You may also specify the isochrone interval or provide
+multiple exact isochrone range values.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A GeoJSON object containing a FeatureCollection of Polygons
+</p>
+
+<ul><li>
+<p> for <code>"text"</code>, a character vector of length 1 re-encoded to UTF-8.
+</p>
+</li></ul>
+<ul><li>
+<p> for <code>"parsed"</code>, a parsed R object.
+</p>
+</li></ul>
+<ul><li>
+<p> for <code>"sf"</code>, a simple features <code>sf</code> object.
+</p>
+</li></ul>
+<h3>Author(s)</h3>
+
+<p>Andrzej Oleś <a href="mailto:andrzej.oles@gmail.com">andrzej.oles@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ors_isochrones(c(8.34234, 48.23424), interval=20)
+
+locations &lt;- list(c(8.681495, 49.41461), c(8.686507,49.41943))
+ors_isochrones(locations, range=c(300, 200))
+</code></pre>
+
+
+</div>

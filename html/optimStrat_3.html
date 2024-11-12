@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>desvar</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Design variance</h2>
+
+<h3>Description</h3>
+
+<p>Compute the design variance of six sampling strategies.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">desvar(y, x, n, H, d2, d4)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a numeric vector giving the values of the study variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a positive numeric vector giving the values of the auxiliary variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>a positive integer indicating the desired sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H</code></td>
+<td>
+<p>a positive integer giving the desired number of strata/poststrata.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d2</code></td>
+<td>
+<p>a number giving the <em>assumed</em> shape of the trend term in the superpopulation model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d4</code></td>
+<td>
+<p>a number giving the <em>assumed</em> shape of the spread term in the superpopulation model.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The design variance of a sample of size <code>n</code> is computed for six sampling strategies (stsi–HT, <code class="reqn">\pi</code>ps–HT, stsi–pos, <code class="reqn">\pi</code>ps–pos, stsi–reg and <code class="reqn">\pi</code>ps–pos). The strategies are defined assuming that there is an underlying superpopulation model of the form
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{k}=\delta_{0}+\delta_{1}x_{k}^{\delta_{2}}+\epsilon_{k}</code>
+</p>
+
+<p>with <code class="reqn">E\epsilon_{k}=0</code>, <code class="reqn">V\epsilon_{k}=\delta_{3}^{2}x_{k}^{2\delta_{4}}</code> and <code class="reqn">Cov(\epsilon_{k},\epsilon_{l})=0</code>.
+</p>
+<p>The number of strata/poststrata is given by <code>H</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of length six with the variance of the six sampling strategies.</p>
+
+
+<h3>References</h3>
+
+<p>Bueno, E. (2018). <em>A Comparison of Stratified Simple Random Sampling and Probability Proporional-to-size Sampling.</em> Research Report, Department of Statistics, Stockholm University 2018:6. <a href="http://gauss.stat.su.se/rr/RR2018_6.pdf">http://gauss.stat.su.se/rr/RR2018_6.pdf</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>expvar</code> for the expected variance of five sampling strategies.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">f&lt;- function(x,b0,b1,b2,...) {b0+b1*x^b2}
+g&lt;- function(x,b3,...) {x^b3}
+x&lt;- 1 + sort( rgamma(5000, shape=4/9, scale=108) )
+y&lt;- simulatey(x,f,g,dist="gamma",b0=10,b1=1,b2=1.25,b3=0.5,rho=0.90)
+
+desvar(y,x,n=500,H=6,d2=1.25,d4=0.50)
+desvar(y,x,n=500,H=6,d2=1.00,d4=1.00)
+</code></pre>
+
+
+</div>

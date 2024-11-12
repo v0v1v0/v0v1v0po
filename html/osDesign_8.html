@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rmvhyper</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Random generation for the multivariate hypergeometric distribution
+</h2>
+
+<h3>Description</h3>
+
+<p>Generates a single random deviate from a multivariate hypergeometric distribution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rmvhyper(Mk, m)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Mk</code></td>
+<td>
+<p> A numeric vector describing the population from which the sub-sample will be drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p> Number of elements to be drawn from the population</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The multivariate hypergeometric distribution is for sampling without replacement from a population with a finite number of element types. The number of element types is given by the length of the vector <code>Mk</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector of elements, totally to <code>m</code>, drawn without replacement from the population described by <code>Mk</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sebastien Haneuse
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rhyper</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##
+rmvhyper(c(1000, 500, 200, 50), 200)
+
+## Check the properties (first two moments) of the generated deviates
+##
+M  &lt;- 100
+Qx &lt;- c(0.7, 0.15, 0.1, 0.05)
+temp &lt;- matrix(NA, nrow=10000, ncol=length(Qx))
+for(i in 1:nrow(temp)) temp[i,] &lt;- rmvhyper(M*Qx, 1)
+
+##
+rbind(Qx, apply(temp, 2,  mean))
+rbind(sqrt(Qx * (1-Qx)), apply(temp, 2, sd))
+</code></pre>
+
+
+</div>

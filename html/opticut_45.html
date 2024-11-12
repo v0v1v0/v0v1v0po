@@ -1,0 +1,161 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ocoptions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Options for the opticut Package
+</h2>
+
+<h3>Description</h3>
+
+<p>A convenient way of handling options related to the opticut package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ocoptions(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>arguments in <code>tag = value</code> form, or a list of tagged values.
+The tags must come from the parameters described below.
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>When parameters are set by <code>ocoptions</code>, their former values are
+returned in an invisible named list. Such a list can be passed as an
+argument to <code>ocoptions</code> to restore the parameter values.
+Tags are the following:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>collapse</code></td>
+<td>
+<p>character value to be used when merging factor levels,
+the default is <code>"+"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cut</code></td>
+<td>
+<p>log likelihood ratio value, model/species with lower
+values are excluded from summaries and plots,
+the default is <code>2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>logical value indicating if species/partitions
+should be meaningfully sorted, the default is <code>TRUE</code>.
+It can take numeric value when only species (<code>1</code>)
+or partitions (<code>2</code>) are to be sorted (<code>1:2</code> is equivalent to
+<code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theme</code></td>
+<td>
+<p>the color theme to be used based on <code>occolors</code>,
+the default is <code>"br"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check_comb</code></td>
+<td>
+<p>check the design matrices for complementary partitions
+using <code>checkComb</code>,
+the default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>try_error</code></td>
+<td>
+<p>if <code>opticut</code> and <code>multicut</code>
+should <code>try</code> to exclude
+species where the models failed (<code>TRUE</code>), the default
+is to stop when an error is encountered (<code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>the scaling factor used to calculate indicator potential (I)
+based on the estimated contrast (x): I = abs(tanh(x*scale)),
+the default is 0.5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fix_fitted</code></td>
+<td>
+<p><code>bestpart.multicut</code>
+uses <code>lorenz</code> which requires nonnegative fitted values,
+however models with identity link can lead to negative expected values.
+When <code>TRUE</code> the fitted values (x) are adjusted as x' = x + abs(min(x))
+to ensure nonnegativity. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>robust_loglik</code></td>
+<td>
+<p>if ill-defined models resulting in perfect fit
+(infinite log likelihood, or <code>NA</code>, <code>NaN</code>)
+should be allowed. The default <code>TRUE</code> makes such ill-defined
+log likelihoods a very small real number
+<code>-(.Machine$double.xmax^(1/3))</code>.
+<code>FALSE</code> is equivalent to allowing every model to
+safeguard against such cases or not.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Solymos &lt;psolymos@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## simple example from Legendre 2013
+## Indicator Species: Computation, in
+## Encyclopedia of Biodiversity, Volume 4
+## https://dx.doi.org/10.1016/B978-0-12-384719-5.00430-5
+gr &lt;- as.factor(paste0("X", rep(1:5, each=5)))
+spp &lt;- cbind(Species1=rep(c(4,6,5,3,2), each=5),
+    Species2=c(rep(c(8,4,6), each=5), 4,4,2, rep(0,7)),
+    Species3=rep(c(18,2,0,0,0), each=5))
+rownames(spp) &lt;- gr
+## must add some noise to avoid perfect fit
+spp[6, "Species1"] &lt;- 7
+spp[1, "Species3"] &lt;- 17
+spp
+
+## current settings
+print(unlist(ocoptions())) # these give identical answers
+unlist(getOption("ocoptions"))
+summary(ocall &lt;- opticut(spp ~ 1, strata=gr, dist="gaussian", comb="all"))
+
+## resetting pboptions and checking new settings
+ocop &lt;- ocoptions(collapse="&amp;", sort=FALSE)
+unlist(getOption("ocoptions"))
+## running again with new settings
+summary(ocall &lt;- opticut(spp ~ 1, strata=gr, dist="gaussian", comb="all"))
+
+## resetting original
+ocoptions(ocop)
+unlist(getOption("ocoptions"))
+</code></pre>
+
+
+</div>

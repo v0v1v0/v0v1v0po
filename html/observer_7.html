@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>inspect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Inspect observations</h2>
+
+<h3>Description</h3>
+
+<p>Once a table has been observed with <code>observe_if</code>, one may wish to dig 
+into the observations made. The function <code>inspect</code> returns a sub-table 
+of <code>.data</code> whose rows correspond to the rows identified by the 
+observation <code>ob</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">inspect(.data, ob, cols = "all")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>A tbl or data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ob</code></td>
+<td>
+<p>integer. A row of the <code>observations</code> attribute to be inspected.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>character. One of <code>"all"</code>, <code>"most"</code>, <code>"some"</code>. 
+If <code>cols = "all"</code>, all <code>.data</code> columns are kept in the result. 
+If <code>cols = "some"</code>, only columns that are concerned by the 
+observation <code>ob</code> are kept. 
+<code>cols = "most"</code> is like <code>cols = "some"</code>, except that 
+columns which are of type <code>"character"</code> or <code>"factor"</code> are also 
+kept.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>observe_if</code> in this package.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+
+df &lt;- data.frame(id = c("a", "b", "c"), x = 1:3, y = 2:4, z = c(1.1, 10, 5))
+df &lt;- df %&gt;% 
+  observe_if(z==floor(z), 
+             y-x==1, 
+             x &lt; 3) %&gt;% 
+  observe_if(y &lt; 4, 
+             x &gt; 1)
+  
+print(obs(df))
+
+df1 &lt;- df %&gt;%  
+  inspect(ob = 5, cols="most")
+print(obs(df1))
+
+</code></pre>
+
+
+</div>

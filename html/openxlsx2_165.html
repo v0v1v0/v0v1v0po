@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>properties-wb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modify workbook properties</h2>
+
+<h3>Description</h3>
+
+<p>This function is useful for workbooks that are loaded. It can be used to set the
+workbook <code>title</code>, <code>subject</code> and <code>category</code> field. Use <code>wb_workbook()</code>
+to easily set these properties with a new workbook.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_get_properties(wb)
+
+wb_set_properties(
+  wb,
+  creator = NULL,
+  title = NULL,
+  subject = NULL,
+  category = NULL,
+  datetime_created = Sys.time(),
+  modifier = NULL,
+  keywords = NULL,
+  comments = NULL,
+  manager = NULL,
+  company = NULL,
+  custom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>creator</code></td>
+<td>
+<p>Creator of the workbook (your name). Defaults to login username or <code>options("openxlsx2.creator")</code> if set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title, subject, category, keywords, comments, manager, company</code></td>
+<td>
+<p>Workbook property, a string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datetime_created</code></td>
+<td>
+<p>The time of the workbook is created</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modifier</code></td>
+<td>
+<p>A character string indicating who was the last person to modify the workbook</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>custom</code></td>
+<td>
+<p>A named vector of custom properties added to the workbook</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To set properties, the following XML core properties are used.
+</p>
+
+<ul>
+<li>
+<p> title = dc:title
+</p>
+</li>
+<li>
+<p> subject = dc:subject
+</p>
+</li>
+<li>
+<p> creator = dc:creator
+</p>
+</li>
+<li>
+<p> keywords = cp:keywords
+</p>
+</li>
+<li>
+<p> comments = dc:description
+</p>
+</li>
+<li>
+<p> modifier = cp:lastModifiedBy
+</p>
+</li>
+<li>
+<p> datetime_created = dcterms:created
+</p>
+</li>
+<li>
+<p> datetime_modified = dcterms:modified
+</p>
+</li>
+<li>
+<p> category = cp:category
+</p>
+</li>
+</ul>
+<p>In addition, manager and company are used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A wbWorkbook object, invisibly.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wb_workbook()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">file &lt;- system.file("extdata", "openxlsx2_example.xlsx", package = "openxlsx2")
+wb &lt;- wb_load(file)
+wb$get_properties()
+
+# Add a title to properties
+wb$set_properties(title = "my title")
+wb$get_properties()
+</code></pre>
+
+
+</div>

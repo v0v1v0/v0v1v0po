@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>colocalisationsForGene</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieves Colocalisation Statistics for a Given Gene</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves Colocalisation statistics for a gene using ENSEMBL gene IDs or gene symbol.
+Colocalisation analysis is performed between all studies in the Portal with at least one overlapping
+associated locus. This analysis tests whether two independent associations at the same locus are
+consistent with having a shared causal variant. The function supports multiple gene IDs as a list.
+The returned data frame (tibble format) includes studies that have evidence of colocalisation
+with molecular QTLs for the selected gene(s).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">colocalisationsForGene(genes)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>genes</code></td>
+<td>
+<p>Character: Gene ENSEMBL ID (e.g. ENSG00000169174) or gene symbol (e.g. PCSK9). Multiple gene IDs are supported as a character vector.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A data frame (tibble format) including the colocalisation data for the query gene(s).
+</p>
+<p>The output tibble contains the following columns:
+</p>
+
+<ul>
+<li>
+<p><code>Study</code>: Character vector. Study identifier.
+</p>
+</li>
+<li>
+<p><code>Trait_reported</code>: Character vector. Reported trait associated with the colocalisation.
+</p>
+</li>
+<li>
+<p><code>Lead_variant</code>: Character vector. Lead variant associated with the colocalisation.
+</p>
+</li>
+<li>
+<p><code>Molecular_trait</code>: Character vector. Molecular trait associated with the colocalisation.
+</p>
+</li>
+<li>
+<p><code>Gene_symbol</code>: Character vector. Gene symbol associated with the colocalisation.
+</p>
+</li>
+<li>
+<p><code>Tissue</code>: Character vector. Tissue where the colocalisation occurs.
+</p>
+</li>
+<li>
+<p><code>Source</code>: Character vector. Source of the colocalisation data.
+</p>
+</li>
+<li>
+<p><code>H3</code>: Numeric vector. H3 value associated with the colocalisation.
+</p>
+</li>
+<li>
+<p><code>log2_H4_H3</code>: Numeric vector. Log2 ratio of H4 to H3 values.
+</p>
+</li>
+<li>
+<p><code>Title</code>: Character vector. Title of the study.
+</p>
+</li>
+<li>
+<p><code>Author</code>: Character vector. Author(s) of the study.
+</p>
+</li>
+<li>
+<p><code>Has_sumstats</code>: Logical vector. Indicates if the study has summary statistics.
+</p>
+</li>
+<li>
+<p><code>numAssocLoci</code>: Numeric vector. Number of associated loci in the study.
+</p>
+</li>
+<li>
+<p><code>nInitial_cohort</code>: Numeric vector. Number of samples in the initial cohort.
+</p>
+</li>
+<li>
+<p><code>study_nReplication</code>: Numeric vector. Number of samples in the replication cohort.
+</p>
+</li>
+<li>
+<p><code>study_nCases</code>: Numeric vector. Number of cases in the study.
+</p>
+</li>
+<li>
+<p><code>Publication_date</code>: Character vector. Publication date of the study.
+</p>
+</li>
+<li>
+<p><code>Journal</code>: Character vector. Journal where the study was published.
+</p>
+</li>
+<li>
+<p><code>Pubmed_id</code>: Character vector. PubMed identifier of the study.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+result1 &lt;- colocalisationsForGene(gene = c("ENSG00000163946", "ENSG00000169174", "ENSG00000143001"))
+result2 &lt;- colocalisationsForGene(gene = "ENSG00000169174")
+result3 &lt;- colocalisationsForGene(gene = c("TP53", "TASOR"))
+result4 &lt;- colocalisationsForGene(gene = "TP53") 
+## End(Not run)
+
+</code></pre>
+
+
+</div>

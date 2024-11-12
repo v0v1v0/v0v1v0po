@@ -1,0 +1,400 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>biplot-stats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convenience stats for row and column matrix factors</h2>
+
+<h3>Description</h3>
+
+<p>These statistical transformations (stats) adapt
+conventional <strong>ggplot2</strong> stats to one or the other matrix factor
+of a tbl_ord, in lieu of <code>stat_rows()</code> or <code>stat_cols()</code>. They
+accept the same parameters as their corresponding conventional
+stats.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stat_rows_ellipse(
+  mapping = NULL,
+  data = NULL,
+  geom = "path",
+  position = "identity",
+  ...,
+  type = "t",
+  level = 0.95,
+  segments = 51,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+
+stat_cols_ellipse(
+  mapping = NULL,
+  data = NULL,
+  geom = "path",
+  position = "identity",
+  ...,
+  type = "t",
+  level = 0.95,
+  segments = 51,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+
+stat_rows_center(
+  mapping = NULL,
+  data = NULL,
+  geom = "point",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...,
+  fun.data = NULL,
+  fun.center = NULL,
+  fun.min = NULL,
+  fun.max = NULL,
+  fun.args = list()
+)
+
+stat_cols_center(
+  mapping = NULL,
+  data = NULL,
+  geom = "point",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...,
+  fun.data = NULL,
+  fun.center = NULL,
+  fun.min = NULL,
+  fun.max = NULL,
+  fun.args = list()
+)
+
+stat_rows_star(
+  mapping = NULL,
+  data = NULL,
+  geom = "segment",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...,
+  fun.data = NULL,
+  fun.center = NULL,
+  fun.args = list()
+)
+
+stat_cols_star(
+  mapping = NULL,
+  data = NULL,
+  geom = "segment",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...,
+  fun.data = NULL,
+  fun.center = NULL,
+  fun.args = list()
+)
+
+stat_rows_chull(
+  mapping = NULL,
+  data = NULL,
+  geom = "polygon",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...
+)
+
+stat_cols_chull(
+  mapping = NULL,
+  data = NULL,
+  geom = "polygon",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...
+)
+
+stat_rows_cone(
+  mapping = NULL,
+  data = NULL,
+  geom = "path",
+  position = "identity",
+  origin = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...
+)
+
+stat_cols_cone(
+  mapping = NULL,
+  data = NULL,
+  geom = "path",
+  position = "identity",
+  origin = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...
+)
+
+stat_rows_scale(
+  mapping = NULL,
+  data = NULL,
+  geom = "point",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...,
+  mult = 1
+)
+
+stat_cols_scale(
+  mapping = NULL,
+  data = NULL,
+  geom = "point",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...,
+  mult = 1
+)
+
+stat_rows_spantree(
+  mapping = NULL,
+  data = NULL,
+  geom = "segment",
+  position = "identity",
+  engine = "mlpack",
+  method = "euclidean",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...
+)
+
+stat_cols_spantree(
+  mapping = NULL,
+  data = NULL,
+  geom = "segment",
+  position = "identity",
+  engine = "mlpack",
+  method = "euclidean",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mapping</code></td>
+<td>
+<p>Set of aesthetic mappings created by <code>aes()</code>. If specified and
+<code>inherit.aes = TRUE</code> (the default), it is combined with the default mapping
+at the top level of the plot. You must supply <code>mapping</code> if there is no plot
+mapping.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data to be displayed in this layer. There are three
+options:
+</p>
+<p>If <code>NULL</code>, the default, the data is inherited from the plot
+data as specified in the call to <code>ggplot()</code>.
+</p>
+<p>A <code>data.frame</code>, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+<code>fortify()</code> for which variables will be created.
+</p>
+<p>A <code>function</code> will be called with a single argument,
+the plot data. The return value must be a <code>data.frame</code>, and
+will be used as the layer data. A <code>function</code> can be created
+from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geom</code></td>
+<td>
+<p>The geometric object to use to display the data, either as a
+<code>ggproto</code> <code>Geom</code> subclass or as a string naming the geom stripped of the
+<code>geom_</code> prefix (e.g. <code>"point"</code> rather than <code>"geom_point"</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>position</code></td>
+<td>
+<p>Position adjustment, either as a string naming the adjustment
+(e.g. <code>"jitter"</code> to use <code>position_jitter</code>), or the result of a call to a
+position adjustment function. Use the latter if you need to change the
+settings of the adjustment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>ggplot2::layer()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of ellipse.
+The default <code>"t"</code> assumes a multivariate t-distribution, and
+<code>"norm"</code> assumes a multivariate normal distribution.
+<code>"euclid"</code> draws a circle with the radius equal to <code>level</code>,
+representing the euclidean distance from the center.
+This ellipse probably won't appear circular unless <code>coord_fixed()</code> is applied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The level at which to draw an ellipse,
+or, if <code>type="euclid"</code>, the radius of the circle to be drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>segments</code></td>
+<td>
+<p>The number of segments to be used in drawing the ellipse.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>If <code>FALSE</code>, the default, missing values are removed with
+a warning. If <code>TRUE</code>, missing values are silently removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.legend</code></td>
+<td>
+<p>logical. Should this layer be included in the legends?
+<code>NA</code>, the default, includes if any aesthetics are mapped.
+<code>FALSE</code> never includes, and <code>TRUE</code> always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inherit.aes</code></td>
+<td>
+<p>If <code>FALSE</code>, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. <code>borders()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun.data, fun.center, fun.min, fun.max, fun.args</code></td>
+<td>
+<p>Functions and arguments
+treated as in <code>ggplot2::stat_summary()</code>, with <code>fun.center</code>, <code>fun.min</code>, and
+<code>fun.max</code> behaving as <code>fun.y</code>, <code>fun.ymin</code>, and <code>fun.ymax</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>origin</code></td>
+<td>
+<p>Logical; whether to include the origin with the transformed
+data. Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mult</code></td>
+<td>
+<p>Numeric value used to scale the coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>engine</code></td>
+<td>
+<p>A single character string specifying the package implementation
+to use; <code>"mlpack"</code>, <code>"vegan"</code>, or <code>"ade4"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Passed to <code>stats::dist()</code> if <code>engine</code> is <code>"vegan"</code> or <code>"ade4"</code>,
+ignored if <code>"mlpack"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A ggproto layer.
+</p>
+
+
+<h3>Ordination aesthetics</h3>
+
+<p>The convenience function <code>ord_aes()</code> can be used to incorporate all
+coordinates of the ordination model into a statistical transformation. It
+maps the coordinates to the custom aesthetics <code>..coord1</code>, <code>..coord2</code>, etc.
+</p>
+<p>Some transformations, e.g. <code>stat_center()</code>, are commutative with projection
+to the 'x' and 'y' coordinates. If they detect aesthetics of the form
+<code style="white-space: pre;">⁠..coord[0-9]+⁠</code>, then <code>..coord1</code> and <code>..coord2</code> are converted to <code>x</code> and <code>y</code>
+while any remaining are ignored.
+</p>
+<p>Other transformations, e.g. <code>stat_spantree()</code>, yield different results in a
+planar biplot when they are computer before or after projection. If such a
+stat layer detects these aesthetics, then the lot of them are used in the
+transformation.
+</p>
+<p>In either case, the stat layer returns a data frame with position aesthetics
+<code>x</code> and <code>y</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other biplot layers: 
+<code>biplot-geoms</code>,
+<code>stat_rows()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># compute row-principal components of scaled iris measurements
+iris[, -5] %&gt;%
+  prcomp(scale = TRUE) %&gt;%
+  as_tbl_ord() %&gt;%
+  mutate_rows(species = iris$Species) %&gt;%
+  print() -&gt; iris_pca
+
+# row-principal biplot with centroids and confidence elliptical disks
+iris_pca %&gt;%
+  ggbiplot(aes(color = species)) +
+  theme_bw() +
+  geom_rows_point() +
+  geom_polygon(
+    aes(fill = species),
+    color = NA, alpha = .25, stat = "rows_ellipse"
+  ) +
+  geom_cols_vector(color = "#444444") +
+  scale_color_brewer(
+    type = "qual", palette = 2,
+    aesthetics = c("color", "fill")
+  ) +
+  ggtitle(
+    "Row-principal PCA biplot of Anderson iris measurements",
+    "Overlaid with 95% confidence disks"
+  )
+</code></pre>
+
+
+</div>

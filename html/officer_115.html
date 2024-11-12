@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>on_slide</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Change current slide</h2>
+
+<h3>Description</h3>
+
+<p>Change current slide index of an rpptx object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">on_slide(x, index)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rpptx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>slide index</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>read_pptx()</code>, <code>ph_with()</code>
+</p>
+<p>Other functions slide manipulation: 
+<code>add_slide()</code>,
+<code>move_slide()</code>,
+<code>remove_slide()</code>,
+<code>set_notes()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">doc &lt;- read_pptx()
+doc &lt;- add_slide(doc, layout = "Title and Content", master = "Office Theme")
+doc &lt;- add_slide(doc, layout = "Title and Content", master = "Office Theme")
+doc &lt;- add_slide(doc, layout = "Title and Content", master = "Office Theme")
+doc &lt;- on_slide(doc, index = 1)
+doc &lt;- ph_with(
+  x = doc, "First title",
+  location = ph_location_type(type = "title")
+)
+doc &lt;- on_slide(doc, index = 3)
+doc &lt;- ph_with(
+  x = doc, "Third title",
+  location = ph_location_type(type = "title")
+)
+
+file &lt;- tempfile(fileext = ".pptx")
+print(doc, target = file)
+</code></pre>
+
+
+</div>

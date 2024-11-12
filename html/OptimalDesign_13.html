@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>infmat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Information matrix of a design
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the information matrix of a design <code>w</code> in the model determined by the matrix <code>Fx</code> of candidate regressors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">infmat(Fx, w, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> matrix of candidate regressors (as rows), where <code>n</code> is the number of candidate design points and <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) is the number of parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The information matrix of the design <code>w</code> in the model with all candidate regresors given by the rows of <code>Fx</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The information matrix is standardized, i.e., it assumes that the variance of the errors is 1.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optcrit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Compute its information matrix for the design that is
+# uniform on all the points with at most two levels equal to 1
+# in the main effects model with 2 factors.
+
+Fx &lt;- Fx_cube(~x1 + x2 + x3 + x4 + x5, lower = rep(0, 5))
+w &lt;- rep(0, 2^5)
+for (i in 1:(2^5)) if (sum(Fx[i, 2:6]) &lt;= 2) w[i] &lt;- 1
+print(M &lt;- infmat(Fx, w))
+
+## Not run: 
+# Visualize the correlation matrix of the parameter estimators
+
+V &lt;- solve(M); Y &lt;- diag(1/sqrt(diag(V)))
+library(corrplot); corrplot(Y %*% V %*% Y)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

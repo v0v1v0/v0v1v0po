@@ -1,0 +1,196 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>test.multiple.robust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>robust test of multiple change point for matrix-valued online time series</h2>
+
+<h3>Description</h3>
+
+<p>This function tests multiple change points for matrix-valued online time
+series, under a two-way factor structure. A change point will be reported
+only when it's the majority vote in multiple replications. The function <code>KSTP</code>
+is used to determine the initial number of factors in each regime. This function only outputs
+the change points for row factors. For column factors, transpose the data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">test.multiple.robust(
+  Y,
+  k = 1,
+  m = ceiling(max(20, (dim(Y)[3])^(r/(r + 2)))),
+  epsilon1 = 0.25,
+  epsilon2 = 0.05,
+  r = 8,
+  kmax = 4,
+  type = "proj",
+  method = "ps",
+  eta = 0.25,
+  cv = 2.386,
+  S = 100,
+  pr = 0.75
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>data, a <code class="reqn">T\times p1\times p2</code> array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>a non-negative integer indicating the initial number of factors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>a positive integer (<code class="reqn">&gt;1</code>) indicating the bandwidth of the rolling
+windom.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon1</code></td>
+<td>
+<p>the rescaling parameter taking value in <code class="reqn">(0,1)</code>, for the
+test of new factors or the change of loading space; see He et al. (2021).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon2</code></td>
+<td>
+<p>the rescaling parameter taking value in <code class="reqn">(0,1)</code>, for the
+test of vanishing factors; see He et al. (2021).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>a positive integer indicating the order of the transformation
+function <code class="reqn">g(x)=|x|^r</code>; see also  <code>gen.psi.tau.proj</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kmax</code></td>
+<td>
+<p>a positive number determining the column number of the projection
+matrix, should be larger than 0 but smaller than <code class="reqn">p_2</code>, required when
+<em>type</em> not being "flat".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>indicates how to calculate the sample covariance. "flat" for the
+flat version, while others for the projected version. See more details in He
+et al. (2021).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>indicating the test statistic, “ps” for the partial-sum
+method; others for the worst-case method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>a number between <code class="reqn">[0,1)</code>, indicating the parameter <code class="reqn">\eta</code>
+used in the partial-sum statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cv</code></td>
+<td>
+<p>critical value; see also <code>test.once.psi</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>an integer indicating the number of replications.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pr</code></td>
+<td>
+<p>an number in <code class="reqn">(0,1])</code>. The procedure reports a change point only
+when the proportion of positive votes is over <em>pr</em> in the
+<em>S</em> replications.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>#' See empirical study in He et al. (2021).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a matrix with two columns. The first column reports the locations
+of change points. The second column reports the number of row factors
+after each change point.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Yong He, Xinbing Kong, Lorenzo Trapani, Long Yu
+</p>
+
+
+<h3>References</h3>
+
+<p>He Y, Kong X, Trapani L, &amp; Yu L(2021). Online change-point detection for
+matrix-valued time series with latent two-way factor structure. <em>arXiv
+preprint</em>, arXiv:2112.13479.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+k1=3
+k2=3
+Sample_T=100
+p1=40
+p2=40
+kmax=8
+r=8
+m=p2
+
+# generate data
+Y1=gen.data(Sample_T,p1,p2,k1,k2,tau=0.5,change=1,pp=0.5)
+Y2=gen.data(Sample_T,p1,p2,k1,k2,tau=0.5,change=0)
+Y=array(rbind(matrix(Y1,Sample_T,p1*p2),matrix(Y2,Sample_T,p1*p2)),c(Sample_T*2,p1,p2))
+
+# calculate cv for "ps" with eta=0.45 and "wc"
+cv1=getcv(0.05,method="ps",eta=0.45)
+cv2=getcv(0.05,method="wc")
+
+# test with Y
+test.multiple.robust(Y,k1,m,epsilon1=0.25,epsilon2=0.05,r,type="proj",kmax,method="ps")
+
+test.multiple.robust(Y,k1,m,epsilon1=0.25,epsilon2=0.05,r,type="proj",kmax,method="wc",cv=cv2)
+
+test.multiple.robust(Y,k1,m,epsilon1=0.25,epsilon2=0.05,r,type="flat",method="wc",cv=cv2)
+
+test.multiple.robust(Y,k1,m,epsilon1=0.25,epsilon2=0.05,r,type="flat",method="ps",eta=0.45,cv=cv1)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

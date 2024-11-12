@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>export_annotations</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Export annotation data</h2>
+
+<h3>Description</h3>
+
+<p>This function converts character annotations stored in shiny_in object to table format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">export_annotations(
+  ontology,
+  annotations = "auto",
+  incl.names = FALSE,
+  sep.head = ", ",
+  sep.tail = NULL,
+  collapse = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p>Ontology</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotations</code></td>
+<td>
+<p>which annotations to use: "auto" means automatic annotations, "manual" means manual ones.
+Alternatively, any othe list element containing annotations can be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incl.names</code></td>
+<td>
+<p>if TRUE includes terms' names and IDs, otherwise includes just IDs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep.head</code></td>
+<td>
+<p>if incl.names=TRUE, this is a separator attached to the begining of term's ID</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep.tail</code></td>
+<td>
+<p>if incl.names=TRUE, this is a separator attached to the end of term's ID</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collapse</code></td>
+<td>
+<p>if NULL all annotations of a term placed in separate columns, if a value is specified (e.g., "; ") then all anotations
+are collapsed in one line given that values</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a table
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Sharkey_2011)
+data(HAO)
+hao_obo&lt;-onto_process(HAO, Sharkey_2011[,1], do.annot = FALSE)
+ontofast &lt;- new.env(parent = emptyenv())
+ontofast$shiny_in &lt;- make_shiny_in(hao_obo)
+# runOntoFast(is_a = c("is_a"), part_of = c("BFO:0000050"), shiny_in="shiny_in" )
+tb&lt;-export_annotations(ontofast$shiny_in, annotations="manual", incl.names=TRUE,collapse="; ")
+tb&lt;-export_annotations(ontofast$shiny_in, annotations="auto", incl.names=TRUE,collapse="; ")
+tb&lt;-export_annotations(ontofast$shiny_in, annotations="auto", incl.names=TRUE,collapse=NULL)
+# save annotations in csv
+# write.csv(tb, "annotated_characters.csv")
+</code></pre>
+
+
+</div>

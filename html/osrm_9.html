@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osrmTrip</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get the Travel Geometry Between Multiple Unordered Points</h2>
+
+<h3>Description</h3>
+
+<p>Build and send an OSRM API query to get the shortest travel
+geometry between multiple unordered points.
+This function interfaces the <em>trip</em> OSRM service.<br>
+Use this function to resolve the travelling salesman problem.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osrmTrip(
+  loc,
+  exclude = NULL,
+  overview = "simplified",
+  returnclass,
+  osrm.server = getOption("osrm.server"),
+  osrm.profile = getOption("osrm.profile")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>loc</code></td>
+<td>
+<p>starting point and waypoints to reach along the
+route. <code>loc</code> can be: </p>
+
+<ul>
+<li>
+<p> a data.frame of longitudes and latitudes (WGS 84),
+</p>
+</li>
+<li>
+<p> a matrix of longitudes and latitudes (WGS 84),
+</p>
+</li>
+<li>
+<p> an sfc object of type POINT,
+</p>
+</li>
+<li>
+<p> an sf object of type POINT.
+</p>
+</li>
+</ul>
+<p>The first row or element is the starting point.<br>
+Row names, if relevant, or element indexes are used as identifiers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>pass an optional "exclude" request option to the OSRM API.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overview</code></td>
+<td>
+<p>"full", "simplified". Add geometry either full (detailed) or simplified
+according to highest zoom level it could be display on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnclass</code></td>
+<td>
+<p>deprecated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osrm.server</code></td>
+<td>
+<p>the base URL of the routing server.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osrm.profile</code></td>
+<td>
+<p>the routing profile to use, e.g. "car", "bike" or "foot".</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>As stated in the OSRM API, if input coordinates can not be joined by a single trip
+(e.g. the coordinates are on several disconnected islands) multiple trips for
+each connected component are returned.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of connected components is returned. Each component contains:
+</p>
+
+<dl>
+<dt>trip</dt>
+<dd>
+<p>An sf LINESTRING. If loc is a data.frame or a matrix the coordinate
+reference system (CRS) of the route is EPSG:4326 (WGS84). If loc is an sfc or
+sf object, the route has the same CRS as loc.<br>
+Each line of the returned route is a step of the trip. The object has four
+columns: start (identifier of the starting point),
+end (identifier of the destination), duration (duration of the step in minutes),
+distance (length of the step in kilometers).
+</p>
+</dd>
+<dt>summary</dt>
+<dd>
+<p>A list with 2 components: total duration (in minutes)
+and total distance (in kilometers) of the trip.</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(sf)
+apotheke.sf &lt;- st_read(system.file("gpkg/apotheke.gpkg", package = "osrm"),
+  quiet = TRUE
+)
+# Get a trip with a set of points (sf POINT)
+trips &lt;- osrmTrip(loc = apotheke.sf[1:5, ])
+mytrip &lt;- trips[[1]]$trip
+# Display the trip
+plot(st_geometry(mytrip), col = "black", lwd = 4)
+plot(st_geometry(mytrip), col = c("red", "white"), lwd = 1, add = TRUE)
+plot(st_geometry(apotheke.sf[1:5, ]),
+  pch = 21, bg = "red", cex = 1,
+  add = TRUE
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>setIntegerWithRange</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Define a speicific range object</h2>
+
+<h3>Description</h3>
+
+<p>This class creator is used to define a special property for numeric range,
+which could be used for UI design and could be setted as signaling field,
+so it will support validation on the input.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">setIntegerWithRange(prefix = "Integer", min, max, where=topenv(parent.frame()))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>prefix</code></td>
+<td>
+<p>Prefix for new class name. Default is "Integer"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min</code></td>
+<td>
+<p>Minimal value for this range object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max</code></td>
+<td>
+<p>Maximal value for this range object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>where</code></td>
+<td>
+<p>the environment in which to store or remove the definition.
+Defaults to the top-level environment of the calling function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The purpose of creating such a class genenrator is to define a special
+range properties which could be set as singaling field, such as <code>Properties</code>
+object. Then validation will be turned on automatically to make sure the current
+value is within the defined range. This is particular useful when you try to
+design a slider widget of such a property, let's say, a alpha blending slider.</p>
+
+
+<h3>Value</h3>
+
+<p>A S4 class name in R(&lt; 2.15) and a generator function in R(&gt;= 2.15)</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tengfei Yin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">num1to100.gen &lt;- setIntegerWithRange(min = 1L, max = 100L)
+par.gen &lt;- setRefClass("Graph",
+                       properties(list(size = "IntegerWithMin1Max100")))
+pars &lt;- par.gen$new(size = new("IntegerWithMin1Max100", 5.5))
+## Covert to integer
+pars$size #current value is 5
+try(pars$size &lt;- 300) # out of range error
+pars$size &lt;- 4.4 # covert to integer
+pars$size
+</code></pre>
+
+
+</div>

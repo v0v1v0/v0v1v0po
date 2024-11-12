@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.assign.table.tibble</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Data assignment to a tibble</h2>
+
+<h3>Description</h3>
+
+<p>Assign a Opal table to a tibble identified by a R symbol in the current R session.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.assign.table.tibble(
+  opal,
+  symbol,
+  value,
+  variables = NULL,
+  missings = FALSE,
+  identifiers = NULL,
+  id.name = "id",
+  with.factors = FALSE,
+  updated.name = NULL,
+  async = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>symbol</code></td>
+<td>
+<p>Name of the R symbol.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>The fully qualified name of a table in Opal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variables</code></td>
+<td>
+<p>List of variable names or Javascript expression that selects the variables of a table (ignored if value does not refere to a table). See javascript documentation: http://wiki.obiba.org/display/OPALDOC/Variable+Methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>missings</code></td>
+<td>
+<p>If TRUE, missing values will be pushed from Opal to R, default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>identifiers</code></td>
+<td>
+<p>Name of the identifiers mapping to use when assigning entities to R (from Opal 2.0).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id.name</code></td>
+<td>
+<p>Add a vector with the given name representing the entity identifiers (from Opal 2.6). Default is 'id'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>with.factors</code></td>
+<td>
+<p>If TRUE, the categorical variables will be assigned as factors (from Opal 2.14). Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>updated.name</code></td>
+<td>
+<p>Deprecated. Add a vector with the given name representing the creation and last update timestamps (from Opal 2.6 to 2.13). Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>async</code></td>
+<td>
+<p>R script is executed asynchronously within the session (default is FALSE). If TRUE, the value returned is the ID of the command to look for (from Opal 2.1).</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other assignment functions: 
+<code>opal.assign()</code>,
+<code>opal.assign.data()</code>,
+<code>opal.assign.resource()</code>,
+<code>opal.assign.script()</code>,
+<code>opal.assign.table()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+# assign a table and make some operation on it
+opal.assign.table.tibble(o, 'D', 'datashield.CNSIM1')
+opal.execute(o, "class(D)")
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

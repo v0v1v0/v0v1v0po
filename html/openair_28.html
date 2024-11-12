@@ -1,0 +1,324 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>importAURN</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import data from individual UK Air Pollution Networks</h2>
+
+<h3>Description</h3>
+
+<p>These functions act as wrappers for <code>importUKAQ()</code> to import air pollution
+data from a range of UK networks including the Automatic Urban and Rural
+Network (AURN), the individual England (AQE), Scotland (SAQN), Wales (WAQN)
+and Northern Ireland (NI) Networks, and many "locally managed" monitoring
+networks across England. While <code>importUKAQ()</code> allows for data to be imported
+more flexibly, including across multiple monitoring networks, these functions
+are provided for convenience and back-compatibility.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">importAURN(
+  site = "my1",
+  year = 2009,
+  data_type = "hourly",
+  pollutant = "all",
+  hc = FALSE,
+  meta = FALSE,
+  meteo = TRUE,
+  ratified = FALSE,
+  to_narrow = FALSE,
+  verbose = FALSE,
+  progress = TRUE
+)
+
+importAQE(
+  site = "yk13",
+  year = 2018,
+  data_type = "hourly",
+  pollutant = "all",
+  meta = FALSE,
+  meteo = TRUE,
+  ratified = FALSE,
+  to_narrow = FALSE,
+  verbose = FALSE,
+  progress = TRUE
+)
+
+importSAQN(
+  site = "gla4",
+  year = 2009,
+  data_type = "hourly",
+  pollutant = "all",
+  meta = FALSE,
+  meteo = TRUE,
+  ratified = FALSE,
+  to_narrow = FALSE,
+  verbose = FALSE,
+  progress = TRUE
+)
+
+importWAQN(
+  site = "card",
+  year = 2018,
+  data_type = "hourly",
+  pollutant = "all",
+  meta = FALSE,
+  meteo = TRUE,
+  ratified = FALSE,
+  to_narrow = FALSE,
+  verbose = FALSE,
+  progress = TRUE
+)
+
+importNI(
+  site = "bel0",
+  year = 2018,
+  data_type = "hourly",
+  pollutant = "all",
+  meta = FALSE,
+  meteo = TRUE,
+  ratified = FALSE,
+  to_narrow = FALSE,
+  verbose = FALSE,
+  progress = TRUE
+)
+
+importLocal(
+  site = "ad1",
+  year = 2018,
+  data_type = "hourly",
+  pollutant = "all",
+  meta = FALSE,
+  to_narrow = FALSE,
+  verbose = FALSE,
+  progress = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>site</code></td>
+<td>
+<p>Site code of the site to import, e.g., <code>"my1"</code> is Marylebone
+Road. Site codes can be discovered through the use of <code>importMeta()</code>.
+Several sites can be imported at once. For example, <code>site = c("my1", "nott")</code> imports both Marylebone Road and Nottingham.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>Year(s) to import. To import a series of years use, e.g.,
+<code>2000:2020</code>. To import several specific years use <code>year = c(2000, 2010, 2020)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_type</code></td>
+<td>
+<p>The type of data to be returned, defaulting to <code>"hourly"</code>
+data. Alternative data types include:
+</p>
+
+<ul>
+<li> <p><code>"daily"</code>: Daily average data.
+</p>
+</li>
+<li> <p><code>"monthly"</code>: Monthly average data with data capture information for the whole network.
+</p>
+</li>
+<li> <p><code>"annual"</code>: Annual average data with data capture information for the whole network.
+</p>
+</li>
+<li> <p><code>"15_min"</code>: 15-minute average SO2 concentrations.
+</p>
+</li>
+<li> <p><code>"8_hour"</code>: 8-hour rolling mean concentrations for O3 and CO.
+</p>
+</li>
+<li> <p><code>"24_hour"</code>: 24-hour rolling mean concentrations for particulates.
+</p>
+</li>
+<li> <p><code>"daily_max_8"</code>: Maximum daily rolling 8-hour maximum for O3 and CO.
+</p>
+</li>
+<li> <p><code>"daqi"</code>: Daily Air Quality Index (DAQI). See
+<a href="https://uk-air.defra.gov.uk/air-pollution/daqi?view=more-info">here</a> for
+more details of how the index is defined. Note that this <code>data_type</code> is not
+available for locally managed monitoring networks.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>Pollutants to import. If omitted will import all pollutants
+from a site. To import only NOx and NO2 for example use <code>pollutant =
+  c("nox", "no2")</code>. Pollutant names can be upper or lower case.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hc</code></td>
+<td>
+<p>Include hydrocarbon measurements in the imported data? Defaults to
+<code>FALSE</code> as most users will not be interested in using hydrocarbon data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta</code></td>
+<td>
+<p>Append the site type, latitude and longitude of each selected
+<code>site</code>? Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meteo</code></td>
+<td>
+<p>Append modelled meteorological data, if available? Defaults to
+<code>TRUE</code>, which will return wind speed (<code>ws</code>), wind direction (<code>wd</code>) and
+ambient temperature (<code>air_temp</code>). The variables are calculated from using
+the WRF model run by Ricardo Energy &amp; Environment and are available for
+most but not all networks. Setting <code>meteo = FALSE</code> is useful if you have
+other meteorological data to use in preference, for example from
+the <code>worldmet</code> package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ratified</code></td>
+<td>
+<p>Append <code>qc</code> column(s) to hourly data indicating whether each
+species was ratified (i.e., quality-checked)?  Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to_narrow</code></td>
+<td>
+<p>Return the data in a "narrow"/"long"/"tidy" format? By
+default the returned data is "wide" and has a column for each
+pollutant/variable. When <code>to_narrow = TRUE</code> the data are returned with a
+column identifying the pollutant name and a column containing the
+corresponding concentration/statistic. Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Print messages to the console if hourly data cannot be
+imported? Default is <code>FALSE</code>. <code>TRUE</code> is useful for debugging as the
+specific <code>year</code>(s), <code>site</code>(s) and <code>source</code>(s) which cannot be imported will
+be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>Show a progress bar when many sites/years are being imported?
+Defaults to <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Importing UK Air Pollution Data</h3>
+
+<p>This family of functions has been written to make it easy to import data
+from across several UK air quality networks. Ricardo have provided .RData
+files (R workspaces) of all individual sites and years, as well as up to
+date meta data. These files are updated on a daily basis. This approach
+requires a link to the Internet to work.
+</p>
+<p>There are several advantages over the web portal approach where .csv files
+are downloaded.
+</p>
+
+<ul>
+<li>
+<p> First, it is quick to select a range of sites, pollutants
+and periods (see examples below).
+</p>
+</li>
+<li>
+<p> Second, storing the data as .RData
+objects is very efficient as they are about four times smaller than .csv
+files — which means the data downloads quickly and saves bandwidth.
+</p>
+</li>
+<li>
+<p> Third, the function completely avoids any need for data manipulation or
+setting time formats, time zones etc. The function also has the advantage
+that the proper site name is imported and used in
+openair functions.
+</p>
+</li>
+</ul>
+<p>Users should take care if using data from both openair
+<em>and</em> web portals (for example, <a href="https://uk-air.defra.gov.uk/data/">UK AIR</a>). One key difference is that the
+data provided by openair is date <em>beginning</em>, whereas the web portal
+provides date <em>ending</em>. Hourly concentrations may therefore appear offset
+by an hour, for example.
+</p>
+<p>The data are imported by stacking sites on top of one another and will have
+field names <code>site</code>, <code>code</code> (the site code) and <code>pollutant</code>.
+</p>
+<p>By default, the function returns hourly average data. However, annual,
+monthly, daily and 15 minute data (for SO2) can be returned using the
+option <code>data_type</code>. Annual and monthly data provide whole network
+information including data capture statistics.
+</p>
+<p>All units are expressed in mass terms for gaseous species (ug/m3 for NO,
+NO2, NOx (as NO2), SO2 and hydrocarbons; and mg/m3 for CO). PM10
+concentrations are provided in gravimetric units of ug/m3 or scaled to be
+comparable with these units. Over the years a variety of instruments have
+been used to measure particulate matter and the technical issues of
+measuring PM10 are complex. In recent years the measurements rely on FDMS
+(Filter Dynamics Measurement System), which is able to measure the volatile
+component of PM. In cases where the FDMS system is in use there will be a
+separate volatile component recorded as 'v10' and non-volatile component
+'nv10', which is already included in the absolute PM10 measurement. Prior
+to the use of FDMS the measurements used TEOM (Tapered Element Oscillating.
+Microbalance) and these concentrations have been multiplied by 1.3 to
+provide an estimate of the total mass including the volatile fraction.
+</p>
+<p>Some sites report hourly and daily PM10 and / or PM2.5. When <code>data_type = "daily"</code> and there are both hourly and 'proper' daily measurements
+available, these will be returned as e.g. "pm2.5" and "gr_pm2.5"; the
+former corresponding to data based on original hourly measurements and the
+latter corresponding to daily gravimetric measurements.
+</p>
+<p>The function returns modelled hourly values of wind speed (<code>ws</code>), wind
+direction (<code>wd</code>) and ambient temperature (<code>air_temp</code>) if available
+(generally from around 2010). These values are modelled using the WRF model
+operated by Ricardo.
+</p>
+<p>The BAM (Beta-Attenuation Monitor) instruments that have been incorporated
+into the network throughout its history have been scaled by 1.3 if they
+have a heated inlet (to account for loss of volatile particles) and 0.83 if
+they do not have a heated inlet. The few TEOM instruments in the network
+after 2008 have been scaled using VCM (Volatile Correction Model) values to
+account for the loss of volatile particles. The object of all these scaling
+processes is to provide a reasonable degree of comparison between data sets
+and with the reference method and to produce a consistent data record over
+the operational period of the network, however there may be some
+discontinuity in the time series associated with instrument changes.
+</p>
+<p>No corrections have been made to the PM2.5 data. The volatile component of
+FDMS PM2.5 (where available) is shown in the 'v2.5' column.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other import functions: 
+<code>importADMS()</code>,
+<code>importEurope()</code>,
+<code>importKCL()</code>,
+<code>importMeta()</code>,
+<code>importTraj()</code>,
+<code>importUKAQ()</code>
+</p>
+
+
+</div>

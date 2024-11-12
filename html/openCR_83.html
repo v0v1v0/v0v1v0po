@@ -1,0 +1,305 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate Capture Histories</h2>
+
+<h3>Description</h3>
+
+<p>Generate non-spatial or spatial open-population data and fit models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+sim.nonspatial (N, turnover = list(), p, nsessions, noccasions = 1, intervals = NULL, 
+    recapfactor = 1, seed = NULL, savepopn = FALSE, ...)
+    
+runsim.nonspatial (nrepl = 100, seed = NULL, ncores = NULL, fitargs = list(), 
+    extractfn = predict, ...)
+
+runsim.spatial (nrepl = 100, seed = NULL, ncores = NULL, popargs = list(), 
+    detargs = list(), fitargs = list(), extractfn = predict, intervals = NULL)
+
+sumsims (sims, parm = 'phi', session = 1, dropifnoSE = TRUE, svtol = NULL, 
+    maxcode = 3, true = NULL)
+
+runsim.RMark (nrepl = 100, model = "CJS", model.parameters = NULL, extractfn,
+    seed = NULL, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>integer population size</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>turnover</code></td>
+<td>
+<p>list as described for turnover</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>numeric detection probability</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsessions</code></td>
+<td>
+<p>number of primary sessions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noccasions</code></td>
+<td>
+<p>number of secondary sessions per primary session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervals</code></td>
+<td>
+<p>intervals between primary sessions (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recapfactor</code></td>
+<td>
+<p>numeric multiplier for capture probability after
+first capture</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>random number seed see random numbers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>savepopn</code></td>
+<td>
+<p>logical; if TRUE the generated population is saved as an attribute of the capthist object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>sim.popn</code> (sim.nonspatial) or <code>sim.nonspatial</code> (runsims)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrepl</code></td>
+<td>
+<p>number of replicates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p> integer number of cores to be used for parallel processing (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>popargs</code></td>
+<td>
+<p>list of arguments for sim.popn</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detargs</code></td>
+<td>
+<p>list of arguments for sim.capthist</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitargs</code></td>
+<td>
+<p>list of arguments for openCR.fit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extractfn</code></td>
+<td>
+<p>function applied to each fitted openCR model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sims</code></td>
+<td>
+<p>list output from <code>runsim.nonspatial</code> or <code>runsim.spatial</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parm</code></td>
+<td>
+<p>character name of parameter to summarise</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>session</code></td>
+<td>
+<p>integer vector of session numbers to summarise</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dropifnoSE</code></td>
+<td>
+<p>logical; if TRUE then replicates are omitted when SE missing for parm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>svtol</code></td>
+<td>
+<p>numeric; minimum singular value (eigenvalue) considered non-zero</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxcode</code></td>
+<td>
+<p>integer; maximum accepted value of convergence code</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>true</code></td>
+<td>
+<p>true value of requested parm in given session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>character; RMark model type </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.parameters</code></td>
+<td>
+<p>list with RMark model specification (see <code>?mark</code>)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For <code>sim.nonspatial</code> – If <code>intervals</code> is specified then the number of primary and secondary sessions is inferred from <code>intervals</code> and <code>nsessions</code> and <code>noccasions</code> are ignored. If <code>N</code> and <code>p</code> are vectors of length 2 then subpopulations of the given initial size are sampled with the differing capture probabilities and the resulting capture histories are combined.
+</p>
+<p><code>runsim.spatial</code> is a relatively simple wrapper for <code>sim.popn</code>, <code>sim.capthist</code>, and <code>openCR.fit</code>. Some arguments are set automatically: the <code>sim.capthist</code> argument 'renumber' is always FALSE; argument 'seed' is ignored within 'popargs' and 'detargs'; if no 'traps' argument is provided in 'detargs' then 'core' from 'popargs' will be used; detargs$popn and fitargs$capthist are derived from the preceding step. The 'type' specified in fitargs may refer to a non-spatial or spatial open-population model ('CJS', 'JSSAsecrfCL' etc.). If the <code>intervals</code> argument is specified it is used to set the intervals attribute of the simulated capthist object; turnover parameters in <code>sim.popn</code> are not scaled by <code>intervals</code>.
+</p>
+<p>Control of parallel processing changed in <span class="pkg">openCR</span> 1.5.0 to conform to <span class="pkg">secr</span>. In <code>runsim.nonspatial</code> and <code>runsim.spatial</code>, if <code>ncores</code> is NULL (the default) then the number of cores used for multithreading by <code>openCR.fit</code> is controlled by the environment variable RCPP_PARALLEL_NUM_THREADS. Use the secr function <code>setNumThreads</code> to set RCPP_PARALLEL_NUM_THREADS to a value greater than the default (2, from <span class="pkg">openCR</span> 1.5 onwards).
+</p>
+<p>Otherwise, (<code>ncores</code> specified in runsim.nonspatial or runsim.spatial) 'ncores' is set to 1 for each replicate and the replicates are split across the specified number of cores.
+</p>
+<p><code>sumsims</code> assumes output from <code>runsim.nonspatial</code> and <code>runsim.spatial</code> with ‘extractfn = predict’ or ‘extractfn = summary’. Missing SE usually reflects non-identifiability of a parameter or failure of maximisation, so these replicates are dropped by default. If <code>svtol</code> is specified then the rank of the Hessian is determined by counting eigenvalues that exceed svtol, and replicates are dropped if the rank is less than the number of beta parameters. A value of 1e-5 is suggested for svtol in <code>AIC.openCR</code>, but smaller values may be appropriate for larger models (MARK has its own algorithm for this threshold).
+</p>
+<p>Replicates are also dropped by <code>sumsims</code> if the convergence code exceeds 'maxcode'. The maximisation functions <code>nlm</code> (used for method = 'Newton-Raphson', the default), and <code>optim</code> (all other methods) return different convergence codes; their help pages should be consulted. The default is to accept code = 3 from <code>nlm</code>, although the status of such maximisations is ambiguous.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>sim.nonspatial</code> –
+</p>
+<p>A capthist object representing an open-population sample
+</p>
+<p><code>runsim.nonspatial</code> and <code>runsim.spatial</code> –
+</p>
+<p>List with one component (output from extractfn) for each replicate. Each component also has attributes 'eigH' and 'fit' taken from the output of <code>openCR.fit</code>. See Examples to extract convergence codes from 'fit' attribute.
+</p>
+<p><code>sumsims</code> –
+</p>
+<p>Data.frame with rows ‘estimate’, ‘SE.estimate’, ‘lcl’, ‘ucl’, ‘RSE’, ‘CI.length’ and columns for median, mean, SD and n. If ‘true’ is specified there are additional rows are ‘Bias’ and ‘RB’, and columns for ‘rRMSE’ and ‘COV’.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sim.popn</code>, <code>sim.capthist</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+cores &lt;- 2   # for CRAN check; increase as available
+
+ch &lt;- sim.nonspatial(100, list(phi = 0.7, lambda = 1.1), p = 0.3, nsessions = 8, noccasions=2)
+openCR.fit(ch, type = 'CJS')
+
+turnover &lt;- list(phi = 0.85, lambda = 1.0, recrmodel = 'constantN')
+set.seed(123)
+
+## using type = 'JSSAlCL' and extractfn = predict
+
+fitarg &lt;- list(type = 'JSSAlCL', model = list(p~t, phi~t, lambda~t))
+out &lt;- runsim.nonspatial(nrepl = 100, N = 100, ncores = cores, turnover = turnover, 
+   p = 0.2, recapfactor = 4, nsessions = 10, noccasions = 1, fitargs = fitarg)
+sumsims(out, 'lambda', 1:10)
+
+## using type = 'Pradelg' and extractfn = derived
+## homogeneous p
+fitarg &lt;- list(type = 'Pradelg', model = list(p~t, phi~t, gamma~t))
+outg &lt;- runsim.nonspatial(nrepl = 100, N = 100, ncores = cores, turnover = turnover, 
+    p = 0.2, recapfactor = 4, nsessions = 10, noccasions = 1, 
+    fitargs = fitarg, extractfn = derived)
+apply(sapply(outg, function(x) x$estimates$lambda),1,mean)
+
+turnover &lt;- list(phi = 0.85, lambda = 1.0, recrmodel = 'discrete')
+
+## 2-class mixture for p
+outg2 &lt;- runsim.nonspatial(nrepl = 100, N = c(50,50), ncores = cores, turnover = turnover, 
+    p = c(0.3,0.9), recapfactor = 1, nsessions = 10, noccasions = 1, 
+    fitargs = fitarg, extractfn = derived)
+outg3 &lt;- runsim.nonspatial(nrepl = 100, N = c(50,50), ncores = cores, turnover = turnover, 
+    p = c(0.3,0.3), recapfactor = 1, nsessions = 10, noccasions = 1, 
+    fitargs = fitarg, extractfn = derived)
+apply(sapply(outg2, function(x) x$estimates$lambda),1,mean)
+
+plot(2:10, apply(sapply(outg2, function(x) x$estimates$lambda),1,mean)[-1],
+    type='o', xlim = c(1,10), ylim = c(0.9,1.1))
+
+## RMark
+
+extfn &lt;- function(x) x$results$real$estimate[3:11]
+MarkPath &lt;- 'c:/mark'  # customise as needed
+turnover &lt;- list(phi = 0.85, lambda = 1.0, recrmodel = 'discrete')
+outrm &lt;- runsim.RMark (nrepl = 100, model = 'Pradlambda', extractfn = extfn, 
+                       model.parameters = list(Lambda=list(formula=~time)),
+                       N = c(200,200), turnover = turnover, p = c(0.3,0.9),
+                       recapfactor = 1, nsessions = 10, noccasions = 1)
+extout &lt;- apply(do.call(rbind, outrm),1,mean)
+
+## Spatial
+
+grid &lt;- make.grid()
+msk &lt;- make.mask(grid, type = 'trapbuffer', nx = 32)
+turnover &lt;- list(phi = 0.8, lambda = 1)
+poparg &lt;- list(D = 10, core = grid, buffer = 100, Ndist = 'fixed', nsessions = 6, 
+    details = turnover)
+detarg &lt;- list(noccasions = 5, detectfn = 'HHN', detectpar = list(lambda0 = 0.5, sigma = 20))
+fitarg &lt;- list(type = 'JSSAsecrfCL', mask = msk, model = list(phi~1, f~1))
+sims &lt;- runsim.spatial (nrepl = 7, ncores = cores, pop = poparg, det = detarg, fit = fitarg)
+sumsims(sims)
+
+## extract the convergence code from nlm for each replicate in preceding simulation
+sapply(lapply(sims, attr, 'fit'), '[[', 'code')
+## if method != 'Newton-Raphson then optim is used and the code is named 'convergence'
+# sapply(lapply(sims, attr, 'fit'), '[[', 'convergence')
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

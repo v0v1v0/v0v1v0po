@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Fx_CtoA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Transformation of candidate regressors for regularized c-optimality
+</h2>
+
+<h3>Description</h3>
+
+<p>Pre-transforms the matrix of all candidate regressors to the form suitable for computing regularized c-optimal designs via A-optimum algorithms.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Fx_CtoA(Fx, h=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> matrix of candidate regressors (as rows), where <code>n</code> is the number of candidate design points and <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) is the number of parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> nor <code>"c"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> or <code>"c"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The standard c-optimal designs are often singular, which may render them unsuitable for practical use. The regularized c-optimality, which we call C-optimality, is an approach to computing designs that are non-singular, but still efficient with respect to the criterion of c-optimality. See <a href="http://www.iam.fmph.uniba.sk/design/">http://www.iam.fmph.uniba.sk/design/</a> for more details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code>n</code> times <code>m</code> matrix <code>Fx.trans</code> of all candidate regressors with the following property: The A-optimal design for the problem defined by <code>Fx.trans</code> is the same as the regularized c-optimal (i.e., C-optimal) design for the problem defined by <code>Fx</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman and Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Fx_ItoA</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># We will compute a C-efficient (regularized c-optimal) design
+# for estimating the mean response in x=1 for a quadratic regression
+# using and algorithm for A-optimality.
+
+Fx &lt;- Fx_cube(~x1 + I(x1^2), n.levels=101)
+Fx.trans &lt;- Fx_CtoA(Fx, h=c(1, 1, 1))
+w &lt;- od_REX(Fx.trans, crit="A")$w.best
+od_print(Fx, w, h=c(1, 1, 1))
+
+# Compare the design to the (non-regularized) c-optimal design
+w.crisp &lt;- od_REX(Fx, crit="c", h=c(1, 1, 1))$w.best
+od_print(Fx, w.crisp, h=c(1, 1, 1))
+
+# The c-efficiency of the C-optimal design is about 0.68
+# The D-efficiency of the c-optimal design is 0
+# The D-efficiency of the C-optimal design is a very decent
+optcrit(Fx, w) / od_REX(Fx)$Phi.best
+</code></pre>
+
+
+</div>

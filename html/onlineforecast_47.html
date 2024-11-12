@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lm_fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit an onlineforecast model with <code>lm</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>Fit a linear regression model given a onlineforecast model, seperately for each prediction horizon
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lm_fit(
+  prm = NA,
+  model,
+  data,
+  scorefun = NA,
+  returnanalysis = TRUE,
+  printout = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>prm</code></td>
+<td>
+<p>as numeric with the parameters to be used when fitting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>object of class forecastmodel with the model to be fitted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>as data.list with the data to fit the model on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scorefun</code></td>
+<td>
+<p>Optional. If scorefun is given, e.g. <code>rmse</code>, then the value of this is also returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnanalysis</code></td>
+<td>
+<p>as logical determining if the analysis should be returned. See below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printout</code></td>
+<td>
+<p>Defaults to TRUE. Prints the parameters for model.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Depends on:
+</p>
+<p>- If <code>returnanalysis</code> is TRUE a list containing:
+</p>
+<p>* <code>Yhat</code>: data.frame with forecasts for <code>model$kseq</code> horizons.
+</p>
+<p>* <code>model</code>: The forecastmodel object cloned deep, so can be modified without changing the original object.
+</p>
+<p>* <code>data</code>: data.list with the data used, see examples on how to obtain the transformed data.
+</p>
+<p>* <code>Lfitval</code>: a character "Find the fits in model$Lfits", it's a list with the lm fits for each horizon.
+</p>
+<p>* <code>scoreval</code>: data.frame with the scorefun result on each horizon (only scoreperiod is included).
+</p>
+<p>- If <code>returnanalysis</code> is FALSE (and <code>scorefun</code> is given): The sum of the score function on all horizons (specified with model$kseq).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Take data
+D &lt;- subset(Dbuilding, c("2010-12-15", "2011-01-01"))
+D$y &lt;- D$heatload
+# Define a simple model 
+model &lt;- forecastmodel$new()
+model$output &lt;- "y"
+model$add_inputs(Ta = "lp(Ta, a1=0.9)",
+                 mu = "one()")
+
+# Before fitting the model, define which points to include in the evaluation of the score function
+D$scoreperiod &lt;- in_range("2010-12-20", D$t)
+# And the sequence of horizons to fit for
+model$kseq &lt;- 1:6
+
+# Now we can fit the model with RLS and get the model validation analysis data
+fit &lt;- lm_fit(prm=NA, model=model, data=D)
+# What did we get back?
+names(fit)
+class(fit)
+# The one-step forecast
+plot(D$y, type="l")
+lines(lagvec(fit$Yhat$k1,-1), col=2)
+# Get the residuals
+plot(residuals(fit)$h1)
+# Score for each horizon
+score(residuals(fit))
+
+# The lm_fit don't put anything in this field
+fit$Lfitval
+# Find the lm fits here
+model$Lfits
+# See result for k=1 horizon
+summary(model$Lfits$k1)
+# Some diurnal pattern is present
+acf(residuals(fit)$h1, na.action=na.pass, lag.max=96)
+
+# Run with other parameters and return the RMSE
+lm_fit(c(Ta__a1=0.8), model, D, scorefun=rmse, returnanalysis=FALSE)
+lm_fit(c(Ta__a1=0.9), model, D, scorefun=rmse, returnanalysis=FALSE)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ml_subtype</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict the subtypes of selected cancer type using machine learning</h2>
+
+<h3>Description</h3>
+
+<p>Predict the subtypes of selected cancer type using machine learning
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ml_subtype(
+  data,
+  disease = "LUSC",
+  method = "rf",
+  removeBatch = TRUE,
+  seed = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>data set to predict the subtypes which is a numeric matrix with row names of features and column names of samples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disease</code></td>
+<td>
+<p>character string of the disease to predict subtypes, currently support 'LUSC', 'LUAD', and 'BLCA'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>character string of the method to use currently support 'rf'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>removeBatch</code></td>
+<td>
+<p>whether do batch effect correction using <code>limma::removeBatchEffect</code>, default TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>integer seed to use.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class "SubtypeClass" with four slots: genes used for predictiong, predicted subtypes of samples, a matrix of predicting scores, and the method.
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li> <p>Wilkerson MJ, Yin X, Hayes D, et al. (2010).
+“Lung Squamous Cell Carcinoma mRNA Expression Subtypes Are Reproducible, Clinically Important, and Correspond to Normal Cell Types.”
+<em>Clin Cancer Res</em>, <b>16</b>(19), 4864-4875.
+</p>
+</li>
+<li> <p>Wilkerson MJ, Yin X, Hayes D, et al. (2012).
+“Differential pathogenesis of lung adenocarcinoma subtypes involving sequence mutations, copy number, chromosomal instability, and methylation.”
+<em>Plos One</em>, <b>7</b>(5), e36530.
+</p>
+</li>
+<li> <p>Network TCGA (2015).
+“Comprehensive genomic characterization of head and neck squamous cell carcinomas.”
+<em>Nature</em>, <b>517</b>, e36530.
+</p>
+</li>
+</ol>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(OncoSubtype)
+data &lt;- get_median_centered(example_fpkm)
+data &lt;- assays(data)$centered
+rownames(data) &lt;- rowData(example_fpkm)$external_gene_name
+ml_subtype(data, disease = 'LUAD', method = 'rf', seed = 123)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

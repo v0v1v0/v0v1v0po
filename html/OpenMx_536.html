@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>omxRMSEA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get the RMSEA with confidence intervals from model</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the Root Mean Square Error of the Approximation (RMSEA) for a model and computes confidence intervals for that fit statistic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">omxRMSEA(model, lower=.025, upper=.975, null=.05, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An MxModel object for which the RMSEA is desired</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+<p>The lower confidence bound for the confidence interval</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+<p>The upper confidence bound for the confidence interval</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>null</code></td>
+<td>
+<p>Value of RMSEA used to test for close fit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further named arguments passed to summary</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To help users obtain fit statistics related to the RMSEA, this function confidence intervals and a test for close fit.  The user determines how close the fit is required to be by setting the <code>null</code> argument to the value desired for comparison.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A named vector with elements lower, est.rmsea, upper, null, and 'Prob(x &lt;= null)'.
+</p>
+
+
+<h3>References</h3>
+
+<p>Browne, M. W. &amp; Cudeck, R. (1992).  Alternative Ways of Assessing Model Fit. <em>Sociological Methods and Research</em>, <strong>21</strong>, 230-258.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">require(OpenMx)
+data(demoOneFactor)
+manifests &lt;- names(demoOneFactor)
+latents &lt;- c("G")
+factorModel &lt;- mxModel("One Factor", 
+                       type="RAM",
+                       manifestVars=manifests, 
+                       latentVars=latents,
+                       mxPath(from=latents, to=manifests),
+                       mxPath(from=manifests, arrows=2),
+                       mxPath(from=latents, arrows=2, free=FALSE, values=1.0),
+                       mxData(observed=cov(demoOneFactor), type="cov", numObs=500))
+factorRun &lt;- mxRun(factorModel)
+factorSat &lt;- mxRefModels(factorRun, run=TRUE)
+summary(factorRun, refModels=factorSat)
+# Gives RMSEA with 95% confidence interval
+
+omxRMSEA(factorRun, .05, .95, refModels=factorSat)
+# Gives RMSEA with 90% confidence interval
+#  and probability of 'close enough' fit
+</code></pre>
+
+
+</div>

@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Inspecting Option Values</h2>
+
+<h3>Description</h3>
+
+<p>Inspecting Option Values
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opt(x, default, env = parent.frame(), ...)
+
+opt_set(x, value, env = parent.frame(), ...)
+
+opt(x, ...) &lt;- value
+
+opt_source(x, env = parent.frame())
+
+opts(xs = NULL, env = parent.frame())
+
+opt_set_local(
+  x,
+  value,
+  env = parent.frame(),
+  ...,
+  add = TRUE,
+  after = FALSE,
+  scope = parent.frame()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x, xs</code></td>
+<td>
+<p>An option name, vector of option names, or a named list of new
+option values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default</code></td>
+<td>
+<p>A default value if the option is not set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>env</code></td>
+<td>
+<p>An environment, namespace or package name to pull options from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to an optional <code>option_fn</code>. See
+<code>option_spec()</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>A new value to update the associated global option</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add, after, scope</code></td>
+<td>
+<p>Passed to on.exit, with alternative defaults.
+<code>scope</code> is passed to the on.exit <code>envir</code> parameter to disambiguate it
+from <code>env</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>For <code>opt()</code> and <code>opts()</code>; the result of the option (or a list of
+results), either the value from a global option, the result of processing
+the environment variable or the default value, depending on which of the
+alternative sources are defined.
+</p>
+<p>For modifying functions (opt_set and opt&lt;-: the value of the
+option prior to modification
+</p>
+<p>For opt_source; the source that is used for a specific option,
+one of <code>"option"</code>, <code>"envvar"</code> or <code>"default"</code>.
+</p>
+
+
+<h3>Functions</h3>
+
+
+<ul>
+<li> <p><code>opt()</code>: Retrieve an option
+</p>
+</li>
+<li> <p><code>opt_set()</code>: Set an option's value
+</p>
+</li>
+<li> <p><code>opt(x, ...) &lt;- value</code>: An alias for opt_set
+</p>
+</li>
+<li> <p><code>opt_source()</code>: Determine source of option value. Primarily used for diagnosing options
+behaviors.
+</p>
+</li>
+<li> <p><code>opts()</code>: Retrieve multiple options. When no names are provided, return a list
+containing all options from a given environment. Accepts a character
+vector of option names or a named list of new values to modify global
+option values.
+</p>
+</li>
+<li> <p><code>opt_set_local()</code>: Set an option only in the local frame
+</p>
+</li>
+</ul>
+<h3>Note</h3>
+
+<p>Local options are set with on.exit, which can be prone to error if
+subsequent calls are not called with <code>add = TRUE</code> (masking existing
+on.exit callbacks). A more rigorous alternative might make use of
+withr::defer.
+</p>
+<div class="sourceCode"><pre>old &lt;- opt_set("option", value)
+withr::defer(opt_set("option", old))
+</pre></div>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">define_options("Whether execution should emit console output", quiet = FALSE)
+opt("quiet")
+
+define_options("Whether execution should emit console output", quiet = FALSE)
+opt_source("quiet")
+
+Sys.setenv(R_GLOBALENV_QUIET = TRUE)
+opt_source("quiet")
+
+options(globalenv.quiet = FALSE)
+opt_source("quiet")
+
+define_options("Quietly", quiet = TRUE, "Verbosity", verbose = FALSE)
+
+# retrieve multiple options
+opts(c("quiet", "verbose"))
+
+# update multiple options, returns unmodified values
+opts(list(quiet = 42, verbose = TRUE))
+
+# next time we check their values we'll see the modified values
+opts(c("quiet", "verbose"))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,281 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>biplot3d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Draw grid in rgl (3D device).</h2>
+
+<h3>Description</h3>
+
+<p>The 3D biplot opens an interactive
+3D device that can be rotated and zoomed using the mouse.
+A 3D device facilitates the exploration of grid data as
+significant proportions of the sum-of-squares are often
+represented beyond the first two dimensions. Also, in a lot of
+cases it may be of interest to explore the grid space from
+a certain angle, e.g. to gain an optimal view onto the set
+of elements under investigation (e.g. Raeithel, 1998).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">biplot3d(
+  x,
+  dim = 1:3,
+  labels.e = TRUE,
+  labels.c = TRUE,
+  lines.c = TRUE,
+  lef = 1.3,
+  center = 1,
+  normalize = 0,
+  g = 0,
+  h = 1,
+  col.active = NA,
+  col.passive = NA,
+  c.sphere.col = grey(0.4),
+  c.cex = 0.6,
+  c.text.col = grey(0.4),
+  e.sphere.col = grey(0),
+  e.cex = 0.6,
+  e.text.col = grey(0),
+  alpha.sphere = 0.05,
+  col.sphere = "black",
+  unity = FALSE,
+  unity3d = FALSE,
+  scale.e = 0.9,
+  zoom = 1,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dim</code></td>
+<td>
+<p>Dimensions to display.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels.e</code></td>
+<td>
+<p>Logical. whether element labels are displayed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels.c</code></td>
+<td>
+<p>Logical. whether construct labels are displayed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lines.c</code></td>
+<td>
+<p>Numeric. The way lines are drawn through the construct vectors.
+<code style="white-space: pre;">⁠0 =⁠</code> no lines, <code style="white-space: pre;">⁠1 =⁠</code> lines from constructs to outer frame,
+<code style="white-space: pre;">⁠2 =⁠</code> lines from the center to outer frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lef</code></td>
+<td>
+<p>Construct lines extension factor</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>Numeric. The type of centering to be performed.
+0= no centering, 1= row mean centering (construct),
+2= column mean centering (elements), 3= double-centering (construct and element means),
+4= midpoint centering of rows (constructs).
+Default is <code>1</code> (row centering).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>A numeric value indicating along what direction (rows, columns)
+to normalize by standard deviations. <code style="white-space: pre;">⁠0 = none, 1= rows, 2 = columns⁠</code>
+(default is <code>0</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the left singular
+vectors, i.e. the constructs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the right singular
+vectors, i.e. the elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.active</code></td>
+<td>
+<p>Columns (elements) that are no supplementary points, i.e. they are used
+in the SVD to find principal components. default is to use all elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.passive</code></td>
+<td>
+<p>Columns (elements) that are supplementary points, i.e. they are NOT used
+in the SVD but projected into the component space afterwards. They do not
+determine the solution. Default is <code>NA</code>, i.e. no elements are set
+supplementary.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.sphere.col</code></td>
+<td>
+<p>Color of construct spheres.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.cex</code></td>
+<td>
+<p>Size of construct text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.text.col</code></td>
+<td>
+<p>Color for construct text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.sphere.col</code></td>
+<td>
+<p>Color of elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.cex</code></td>
+<td>
+<p>Size of element labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.text.col</code></td>
+<td>
+<p>Color of element labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha.sphere</code></td>
+<td>
+<p>Numeric. alpha blending of the surrounding sphere (default<code>".05"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.sphere</code></td>
+<td>
+<p>Color of surrounding sphere (default<code>"black"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unity</code></td>
+<td>
+<p>Scale elements and constructs coordinates to unit scale (maximum of 1)
+so they are printed more neatly (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unity3d</code></td>
+<td>
+<p>To come.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.e</code></td>
+<td>
+<p>Scaling factor for element vectors. Will cause element points to move a bit more
+to the center (but only if <code>unity</code> or <code>unity3d</code> is <code>TRUE</code>).
+This argument is for visual appeal only.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zoom</code></td>
+<td>
+<p>Not yet used. Scaling factor for all vectors. Can be used to zoom
+the plot in and out (default <code>1</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Parameters to be passed on.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Raeithel, A. (1998). Kooperative Modellproduktion von
+Professionellen und Klienten - erlauetert am Beispiel des
+Repertory Grid. <em>Selbstorganisation, Kooperation, Zeichenprozess:
+Arbeiten zu einer kulturwissenschaftlichen, anwendungsbezogenen
+Psychologie</em> (pp. 209-254). Opladen: Westdeutscher Verlag.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Unsophisticated biplot: <code>biplotSimple()</code>; <br>
+2D biplots:
+<code>biplot2d()</code>,
+<code>biplotEsa2d()</code>,
+<code>biplotSlater2d()</code>;<br>
+Pseudo 3D biplots:
+<code>biplotPseudo3d()</code>,
+<code>biplotEsaPseudo3d()</code>,
+<code>biplotSlaterPseudo3d()</code>;<br>
+Interactive 3D biplots:
+<code>biplot3d()</code>,
+<code>biplotEsa3d()</code>,
+<code>biplotSlater3d()</code>;<br>
+Function to set view in 3D:
+<code>home()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+biplot3d(boeker)
+biplot3d(boeker, unity3d = T)
+
+biplot3d(boeker,
+  e.sphere.col = "red",
+  c.text.col = "blue"
+)
+biplot3d(boeker, e.cex = 1)
+biplot3d(boeker, col.sphere = "red")
+
+biplot3d(boeker, g = 1, h = 1) # INGRID biplot
+biplot3d(boeker,
+  g = 1, h = 1, # ESA biplot
+  center = 4
+)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

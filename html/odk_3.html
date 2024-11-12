@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>odk2spss</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Convert 'ODK' or 'XLSForm' to 'SPSS' Data Frame
+</h2>
+
+<h3>Description</h3>
+
+<p>After develop a <a href="https://build.opendatakit.org/">'ODK' frame</a>, we can <a href="https://www.google.com/earth/outreach/learn/odk-collect-and-google-drive-integration-to-store-and-manage-your-data/">link the frame to 'Google Sheets'</a> and collect data through <a href="https://www.android.com/">'Android'</a>. This data uploaded to a <a href="https://www.google.com/sheets/about/">'Google sheets'</a>. <code>odk2spss()</code> function help to convert the 'ODK' frame into <a href="https://www.ibm.com/analytics/us/en/technology/spss/">'SPSS'</a> frame. Also able to add downloaded 'Google sheets' data by using <code>pc.data</code> or read data from 'Google sheets' by using 'ODK' frame 'submission_url'. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">odk2spss(xlsx, pb.url=NULL, pc.data = NULL, out.path = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xlsx</code></td>
+<td>
+
+<p>path of 'ODK' or <a href="https://opendatakit.org/use/xlsform/">XLSForm</a> questionniare frame in 'xlsx' format.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb.url</code></td>
+<td>
+
+<p>Published link of 'Google Sheets' for data, if <code>pb.url = NULL</code> , then the <code>odk2spss()</code> function try to get data from <code>pc.data</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pc.data</code></td>
+<td>
+
+<p>path of data file in 'xlsx' format, if <code>pc.data = NULL</code> , then the <code>odk2spss()</code> function download data from 'Google Sheets', internet connection needed for this.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>out.path</code></td>
+<td>
+
+<p>path of output file with file name (ex: path/output_file.sps).if <code>out.path=NULL</code>, then <code>odk2spss()</code> function will show the auto output file path.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>odk2spss()</code> create a '*.sps' file. 
+Open '*.sps' file by 'SPSS' softwere and Run.
+Then we will get 'SPSS' data frame with data.
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>odk2spss()</code> worked nicely for taxt, single choice, multiple choice and numeric variable.  Also work on other type variables.
+Do not use ",",".","-" and "_" separator in variable name.
+Do not use group variable in 'ODK' frame.
+Always keep a non-empty variable as your last variable in 'ODK' frame. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Muntashir-Al-Arefin <a href="mailto:muntashir.a2i@gmail.com">muntashir.a2i@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(odk)
+data(odk.frame)
+data(gs.data)
+##--Convert 'odk.frame' to 'SPSS' data frame and input gs.data data set.
+
+odk2spss(xlsx=odk.frame, pc.data=gs.data, out.path="spss.sps")
+
+##### Internet connection needed if pc.data = NULL
+
+</code></pre>
+
+
+</div>

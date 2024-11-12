@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>logLik_o</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Log-Likelihood for the orthogonal residuals</h2>
+
+<h3>Description</h3>
+
+<p>Returns the log-likelihood as calculated from the orthogonal residuals obtained by <code>residuals_o</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">logLik_o(object) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object returned from <code>onls</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>The log-likelihood as calculated from the orthogonal residuals.
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>logLik_o</code> has no other generic functions on top, so for calculating <code>AIC</code>, one has to apply <code>AIC(logLik_o(model))</code>, see 'Examples'. The usual <code>logLik</code> applies to the vertical residuals of the orthogonal model.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Andrej-Nikolai Spiess
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">DNase1 &lt;- subset(DNase, Run == 1)
+DNase1$density &lt;- sapply(DNase1$density, function(x) rnorm(1, x, 0.1 * x))
+mod &lt;- onls(density ~ Asym/(1 + exp((xmid - log(conc))/scal)), 
+             data = DNase1, start = list(Asym = 3, xmid = 0, scal = 1))
+logLik_o(mod)
+
+## compare AIC of vertical versus orthogonal residuals.
+AIC(mod)
+AIC(logLik_o(mod))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>exactMatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate an exact matching set of subproblems.</h2>
+
+<h3>Description</h3>
+
+<p>An exact match is one based on a factor. Within a level, all
+observations are allowed to be matched. An exact match can be
+combined with another distance matrix to create a set of matching
+subproblems.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">exactMatch(x, ...)
+
+## S4 method for signature 'vector'
+exactMatch(x, treatment)
+
+## S4 method for signature 'formula'
+exactMatch(x, data = NULL, subset = NULL, na.action = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A factor vector or a formula, used to select method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments for methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>treatment</code></td>
+<td>
+<p>A logical or binary vector the same length as <code>x</code>
+indicating treatment and control for each unit in the study.
+TRUE or 1 represents a treatment unit, FALSE or 0 represents
+a control unit. NA units are excluded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A <code>data.frame</code> or <code>matrix</code> that contains the
+variables used in the formula <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p>an optional vector specifying a subset of
+observations to be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p>A function which indicates what should happen when
+the data contain <code>NA</code>s</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>exactMatch</code> creates a block diagonal matrix of 0s and
+<code>Inf</code>s. The pairs with 0 entries are within the same level of
+the factor and legitimate matches.  <code>Inf</code> indicates units in
+different levels. <code>exactMatch</code> replaces the
+<code>structure.fmla</code> argument to several functions in previous
+versions of optmatch.  For the <code>factor</code> method, the two
+vectors <code>x</code> and <code>treatment</code> must be the same length. The
+vector <code>x</code> is interpreted as indicating the grouping factors
+for the data, and the vector <code>treatment</code> indicates whether a
+unit is in the treatment or control groups.  At least one of these
+two vectors must have names.  For the <code>formula</code> method, the
+<code>data</code> argument may be omitted, in which case the method
+attempts to find the variables in the environment from which the
+function was called. This behavior, and the arguments <code>subset</code>
+and <code>na.action</code>, mimics the behavior of <code>lm</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix like object, which is suitable to be given as
+<code>distance</code> argument to <code>fullmatch</code> or
+<code>pairmatch</code>. The exact match will be only zeros and
+<code>Inf</code> values, indicating a possible match or no possible
+match, respectively. It can be added to a another distance matrix
+to create a subclassed matching problem.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mark M. Fredrickson
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>caliper</code>, <code>antiExactMatch</code>,
+<code>match_on</code>, <code>fullmatch</code>,
+<code>pairmatch</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(nuclearplants)
+
+### First generate a standard propensity score
+ppty &lt;- glm(pr~.-(pr+cost), family = binomial(), data = nuclearplants)
+ppty.distances &lt;- match_on(ppty)
+
+### Only allow matches within the partial turn key plants
+pt.em &lt;- exactMatch(pr ~ pt, data = nuclearplants)
+as.matrix(pt.em)
+
+### Blunt matches:
+match.pt.em &lt;- fullmatch(pt.em)
+print(match.pt.em, grouped = TRUE)
+
+### Combine the propensity scores with the subclasses:
+match.ppty.em &lt;- fullmatch(ppty.distances + pt.em)
+print(match.ppty.em, grouped = TRUE)
+
+</code></pre>
+
+
+</div>

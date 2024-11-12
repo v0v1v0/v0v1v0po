@@ -1,0 +1,178 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>next_n</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Finds best value of n to sample next</h2>
+
+<h3>Description</h3>
+
+<p>Recommends a value of <code>n</code> at which to next evaluate individual cost in order to most accurately estimate optimal holdout size. Currently only for use with a power-law parametrisation of k2.
+</p>
+<p>Approximately finds a set of n points which, given estimates of cost, minimise width of 95% confidence interval around OHS. Uses a greedy algorithm, so various parameters can be learned along the way.
+</p>
+<p>Given existing training set size/k2 estimates <code>nset</code> and <code>k2</code>, with <code>var_k2[i]=variance(k2[i])</code>, finds, for each candidate point <code>n[i]</code>, the median width of the 90% confidence interval for OHS if
+</p>
+<p><code>nset &lt;- c(nset,n[i])</code>
+<code>var_k2 &lt;- c(var_k2,mean(var_k2))</code>
+<code>k2 &lt;- c(k2,rnorm(powerlaw(n[i],theta),variance=mean(var_k2)))</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">next_n(
+  n,
+  nset,
+  k2,
+  N,
+  k1,
+  nmed = 100,
+  var_k2 = rep(1, length(nset)),
+  mode = "asymptotic",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Set of training set sizes to evaluate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nset</code></td>
+<td>
+<p>Training set sizes for which a loss has been evaluated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2</code></td>
+<td>
+<p>Estimated k2() at training set sizes <code>nset</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Total number of samples on which the model will be fitted/used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k1</code></td>
+<td>
+<p>Mean loss per sample with no predictive score in place</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nmed</code></td>
+<td>
+<p>number of times to re-evaluate d and confidence interval width.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var_k2</code></td>
+<td>
+<p>Variance of error in k2() estimate at each training set size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>Mode for calculating OHS CI (passed to <code>ci_ohs</code>): 'asymptotic' or 'empirical'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to <code>powersolve</code> and <code>powersolve_se</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Vector <code>out</code> of same length as <code>n</code>, where <code>out[i]</code> is the expected width of the 95% confidence interval for OHS should <code>n</code> be added to <code>nset</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Set seed.
+set.seed(24015)
+
+# Kernel width and Gaussian process variance
+kw0=5000
+vu0=1e7
+
+# Include legend on plots or not; inclusion can obscure plot elements on small figures
+inc_legend=FALSE
+
+# Suppose we have population size and cost-per-sample without a risk score as follows
+N=100000
+k1=0.4
+
+# Suppose that true values of a,b,c are given by
+theta_true=c(10000,1.2,0.2)
+theta_lower=c(1,0.5,0.1) # lower bounds for estimating theta
+theta_upper=c(20000,2,0.5) # upper bounds for estimating theta
+
+
+
+# We start with five random holdout set sizes (nset0),
+#  with corresponding cost-per-individual estimates k2_0 derived
+#  with various errors var_k2_0
+nstart=10
+vwmin=0.001; vwmax=0.005
+nset0=round(runif(nstart,1000,N/2))
+var_k2_0=runif(nstart,vwmin,vwmax)
+k2_0=rnorm(nstart,mean=powerlaw(nset0,theta_true),sd=sqrt(var_k2_0))
+
+# We estimate theta from these three points
+theta0=powersolve(nset0,k2_0,y_var=var_k2_0,lower=theta_lower,upper=theta_upper,init=theta_true)$par
+
+# We will estimate the posterior at these values of n
+n=seq(1000,N,length=1000)
+
+# Mean and variance
+p_mu=mu_fn(n,nset=nset0,k2=k2_0,var_k2 = var_k2_0, N=N,k1=k1,theta=theta0,k_width=kw0,var_u=vu0)
+p_var=psi_fn(n,nset=nset0,N=N,var_k2 = var_k2_0,k_width=kw0,var_u=vu0)
+
+# Plot
+yrange=c(-30000,100000)
+plot(0,xlim=range(n),ylim=yrange,type="n",
+  xlab="Training/holdout set size",
+  ylab="Total cost (= num. cases)")
+lines(n,p_mu,col="blue")
+lines(n,p_mu - 3*sqrt(p_var),col="red")
+lines(n,p_mu + 3*sqrt(p_var),col="red")
+points(nset0,k1*nset0 + k2_0*(N-nset0),pch=16,col="purple")
+lines(n,k1*n + powerlaw(n,theta0)*(N-n),lty=2)
+lines(n,k1*n + powerlaw(n,theta_true)*(N-n),lty=3,lwd=3)
+if (inc_legend) {
+  legend("topright",
+    c(expression(mu(n)),
+      expression(mu(n) %+-% 3*sqrt(psi(n))),
+      "prior(n)",
+      "True",
+      "d"),
+    lty=c(1,1,2,3,NA),lwd=c(1,1,1,3,NA),pch=c(NA,NA,NA,NA,16),pt.cex=c(NA,NA,NA,NA,1),
+    col=c("blue","red","black","purple"),bg="white")
+}
+
+## Add line corresponding to recommended new point. This is slow.
+nn=seq(1000,N,length=20)
+exp_imp &lt;- next_n(nn,nset=nset0,k2=k2_0,var_k2 = var_k2_0, N=N,k1=k1,nmed=10,
+                     lower=theta_lower,upper=theta_upper)
+abline(v=nn[which.min(exp_imp)])
+
+
+</code></pre>
+
+
+</div>

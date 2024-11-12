@@ -1,0 +1,551 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Storage</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Storage R6 Object</h2>
+
+<h3>Description</h3>
+
+<p>Provides a simple indexing interface for list elements based on R6.
+Basically, it allows to store items in a list and to regain them based on
+identifiers defined by the user.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The output depends on the method:
+</p>
+
+<ul>
+<li> <p><code>$new()</code> returns a <code>Storage</code> object.
+</p>
+</li>
+<li> <p><code>$add()</code>, <code>$remove()</code>, and <code>$print()</code> invisibly return the
+<code>Storage</code> object (to allow for method chaining)
+</p>
+</li>
+<li> <p><code>$get()</code> returns the requested element(s)
+</p>
+</li>
+<li> <p><code>$number()</code> returns an <code>integer</code>
+</p>
+</li>
+<li> <p><code>$indices()</code> return an <code>integer</code> <code>vector</code>
+</p>
+</li>
+</ul>
+<h3>Setting identifiers</h3>
+
+<p>An identifier is a <code>character</code>, typically a binary property. Identifiers
+can be negated by placing an exclamation mark (<code>"!"</code>) in front of them.
+Identifiers that have been assigned to other elements previously do not need
+to be specified again for new elements; instead, a default value can be used.
+This default value can be defined either globally for all cases (via the
+<code>$missing_identifier</code> field) or separately for each specific case (via
+the method argument).
+</p>
+
+
+<h3>User confirmation</h3>
+
+<p>If desired, the user can be asked for confirmation when adding, extracting,
+or removing elements using identifiers. This behavior can be set globally
+through the <code>$confirm</code> field or customized separately for each specific
+case via the method argument.
+</p>
+
+
+<h3>Active bindings</h3>
+
+<div class="r6-active-bindings">
+
+<dl>
+<dt><code>identifier</code></dt>
+<dd>
+<p>[<code>character()</code>]<br>
+The identifiers used.</p>
+</dd>
+<dt><code>confirm</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+The default value for confirmations.</p>
+</dd>
+<dt><code>missing_identifier</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+The default value for not specified identifiers.</p>
+</dd>
+<dt><code>hide_warnings</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+Hide warnings (for example if unknown identifiers are selected)?</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-Storage-new"><code>Storage$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Storage-add"><code>Storage$add()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Storage-get"><code>Storage$get()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Storage-remove"><code>Storage$remove()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Storage-number"><code>Storage$number()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Storage-indices"><code>Storage$indices()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Storage-print"><code>Storage$print()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-Storage-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Initializing a <code>Storage</code> object.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Storage$new()</pre></div>
+
+
+<hr>
+<a id="method-Storage-add"></a>
+
+
+
+<h4>Method <code>add()</code>
+</h4>
+
+<p>Adding an element.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Storage$add(
+  x,
+  identifier,
+  confirm = interactive() &amp; self$confirm,
+  missing_identifier = self$missing_identifier
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>[<code>any()</code>]<br>
+An object to be saved.</p>
+</dd>
+<dt><code>identifier</code></dt>
+<dd>
+<p>[<code>character()</code>]<br>
+Pne or more identifiers (the identifier <code>"all"</code> is reserved to select
+all elements).</p>
+</dd>
+<dt><code>confirm</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+Prompted for confirmation?</p>
+</dd>
+<dt><code>missing_identifier</code></dt>
+<dd>
+<p>[<code>logical(1)</code> | NA]<br>
+The value for not specified identifiers.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Storage-get"></a>
+
+
+
+<h4>Method <code>get()</code>
+</h4>
+
+<p>Getting elements.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Storage$get(
+  identifier = character(),
+  ids = integer(),
+  logical = "and",
+  confirm = interactive() &amp; self$confirm,
+  missing_identifier = self$missing_identifier,
+  id_names = FALSE
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>identifier</code></dt>
+<dd>
+<p>[<code>character()</code>]<br>
+Pne or more identifiers (the identifier <code>"all"</code> is reserved to select
+all elements).</p>
+</dd>
+<dt><code>ids</code></dt>
+<dd>
+<p>[<code>integer()</code>]<br>
+One or more ids.</p>
+</dd>
+<dt><code>logical</code></dt>
+<dd>
+<p>[<code>character(1)</code>]<br>
+In the case that multiple identifiers are selected, how should they be
+combined? Options are:
+</p>
+
+<ul>
+<li> <p><code>"and"</code> (the default): the identifiers are combined with logical and
+(all identifiers must be <code>TRUE</code>)
+</p>
+</li>
+<li> <p><code>"or"</code>: the identifiers are combined with logical or (at least one
+identifier must be <code>TRUE</code>)
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>confirm</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+Prompted for confirmation?</p>
+</dd>
+<dt><code>missing_identifier</code></dt>
+<dd>
+<p>[<code>logical(1)</code> | NA]<br>
+The value for not specified identifiers.</p>
+</dd>
+<dt><code>id_names</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+Name the elements according to their ids?</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Storage-remove"></a>
+
+
+
+<h4>Method <code>remove()</code>
+</h4>
+
+<p>removing elements
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Storage$remove(
+  identifier = character(),
+  ids = integer(),
+  logical = "and",
+  confirm = interactive() &amp; self$confirm,
+  missing_identifier = self$missing_identifier,
+  shift_ids = TRUE
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>identifier</code></dt>
+<dd>
+<p>[<code>character()</code>]<br>
+Pne or more identifiers (the identifier <code>"all"</code> is reserved to select
+all elements).</p>
+</dd>
+<dt><code>ids</code></dt>
+<dd>
+<p>[<code>integer()</code>]<br>
+One or more ids.</p>
+</dd>
+<dt><code>logical</code></dt>
+<dd>
+<p>[<code>character(1)</code>]<br>
+In the case that multiple identifiers are selected, how should they be
+combined? Options are:
+</p>
+
+<ul>
+<li> <p><code>"and"</code> (the default): the identifiers are combined with logical and
+(all identifiers must be <code>TRUE</code>)
+</p>
+</li>
+<li> <p><code>"or"</code>: the identifiers are combined with logical or (at least one
+identifier must be <code>TRUE</code>)
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>confirm</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+Prompted for confirmation?</p>
+</dd>
+<dt><code>missing_identifier</code></dt>
+<dd>
+<p>[<code>logical(1)</code> | NA]<br>
+The value for not specified identifiers.</p>
+</dd>
+<dt><code>shift_ids</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+Shift ids when in-between elements are removed?</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Storage-number"></a>
+
+
+
+<h4>Method <code>number()</code>
+</h4>
+
+<p>Computing the number of identified elements.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Storage$number(
+  identifier = "all",
+  missing_identifier = self$missing_identifier,
+  logical = "and",
+  confirm = FALSE
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>identifier</code></dt>
+<dd>
+<p>[<code>character()</code>]<br>
+Pne or more identifiers (the identifier <code>"all"</code> is reserved to select
+all elements).</p>
+</dd>
+<dt><code>missing_identifier</code></dt>
+<dd>
+<p>[<code>logical(1)</code> | NA]<br>
+The value for not specified identifiers.</p>
+</dd>
+<dt><code>logical</code></dt>
+<dd>
+<p>[<code>character(1)</code>]<br>
+In the case that multiple identifiers are selected, how should they be
+combined? Options are:
+</p>
+
+<ul>
+<li> <p><code>"and"</code> (the default): the identifiers are combined with logical and
+(all identifiers must be <code>TRUE</code>)
+</p>
+</li>
+<li> <p><code>"or"</code>: the identifiers are combined with logical or (at least one
+identifier must be <code>TRUE</code>)
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>confirm</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+Prompted for confirmation?</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Storage-indices"></a>
+
+
+
+<h4>Method <code>indices()</code>
+</h4>
+
+<p>Returning indices based on defined identifiers.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Storage$indices(
+  identifier = "all",
+  logical = "and",
+  confirm = interactive() &amp; self$confirm
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>identifier</code></dt>
+<dd>
+<p>[<code>character()</code>]<br>
+Pne or more identifiers (the identifier <code>"all"</code> is reserved to select
+all elements).</p>
+</dd>
+<dt><code>logical</code></dt>
+<dd>
+<p>[<code>character(1)</code>]<br>
+In the case that multiple identifiers are selected, how should they be
+combined? Options are:
+</p>
+
+<ul>
+<li> <p><code>"and"</code> (the default): the identifiers are combined with logical and
+(all identifiers must be <code>TRUE</code>)
+</p>
+</li>
+<li> <p><code>"or"</code>: the identifiers are combined with logical or (at least one
+identifier must be <code>TRUE</code>)
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>confirm</code></dt>
+<dd>
+<p>[<code>logical(1)</code>]<br>
+Prompted for confirmation?</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Storage-print"></a>
+
+
+
+<h4>Method <code>print()</code>
+</h4>
+
+<p>Printing details of the saved elements.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Storage$print(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Currently not used.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>See Also</h3>
+
+<p>Other package helpers: 
+<code>Dictionary</code>,
+<code>identical_structure()</code>,
+<code>input_check_response()</code>,
+<code>match_arg()</code>,
+<code>package_logo()</code>,
+<code>print_matrix()</code>,
+<code>renv_development_packages()</code>,
+<code>system_information()</code>,
+<code>unexpected_error()</code>,
+<code>user_confirm()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### 1. Create a `Storage` object:
+my_storage &lt;- Storage$new()
+
+# 2. Add elements along with identifiers:
+my_storage$
+  add(42, c("number", "rational"))$
+  add(pi, c("number", "!rational"))$
+  add("fear of black cats", c("text", "!rational"))$
+  add("wearing a seat belt", c("text", "rational"))$
+  add(mean, "function")
+
+# 3. What elements are stored?
+print(my_storage)
+
+# 4. Extract elements based on identifiers:
+my_storage$get("rational")
+my_storage$get("!rational")
+my_storage$get(c("text", "!rational"))
+my_storage$get("all") # get all elements
+my_storage$get(c("text", "!text"))
+my_storage$get(c("text", "!text"), logical = "or")
+
+# 5. Extract elements based on ids:
+my_storage$get(ids = 4:5)
+my_storage$get(ids = 4:5, id_names = TRUE) # add the ids as names
+</code></pre>
+
+
+</div>

@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>recruits_at_time</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the number of recruits left after given time based on mortality</h2>
+
+<h3>Description</h3>
+
+<p>This function will use the provided mortality function and parameters along
+with the length of time from stocking until the time in question to determine
+how many fish will be left at that time (i.e. how many fish die between
+<code>time_at_stocking</code> and <code>time_at_rec</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">recruits_at_time(
+  time_at_stocking,
+  time_at_rec,
+  fish_init,
+  mort_fun = exp_mort,
+  mort_fun_args
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>time_at_stocking</code></td>
+<td>
+<p>The day that fish are stocked (i.e. synonymous with
+the amount of time that fish are raised in a hatchery)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_at_rec</code></td>
+<td>
+<p>The time at which a fish enters the fishery (i.e. the
+amount of time it takes a fish to grow to a desired length). Use
+<code>inv_vb</code> to calculate this.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fish_init</code></td>
+<td>
+<p>The initial number of fish stocked</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mort_fun</code></td>
+<td>
+<p>The mortality function, see ?mort_funs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mort_fun_args</code></td>
+<td>
+<p>List. Named arguments to be passed to <code>mort_fun</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function calculates how many fish are left at a certain time based on
+the initial number of fish stocked and the integral of the mortality
+function. The number of fish left are computed using the following equation:
+</p>
+
+N<sub>t</sub> = N<sub>0</sub> exp(∫ f(t))
+
+<p>where N<sub>0</sub> is the initial number of fish
+stocked and f(t) is the mortality function. The amount of time is provided
+to the function as the time at which fish are recruited into the fishery
+minus the time at which they are stocked. The time at which fish are
+recruited into the fishery can be calculated using the inverse von
+Bertalanffy growth function (see <code>inv_vb</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The number of fish that will be left given the mortality function,
+its parameters, and the time (<code>time_at_rec</code> - <code>time_at_stocking</code>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">mort_args &lt;- list(
+  m_init = (1 / 365),
+  m_inf = (0.2/365),
+  alpha = 0.005
+)
+recruits_at_time(100, 1000, 1000,
+                 mort_fun = exp_mort,
+                 mort_fun_args = mort_args)
+</code></pre>
+
+
+</div>

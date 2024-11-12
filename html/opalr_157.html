@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.project_restore</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Restore a project</h2>
+
+<h3>Description</h3>
+
+<p>Restore the data of a project from a backup archive file to be found on the Opal file system. 
+The destination project must exist and can have a name different from the original one 
+(beware that this could break views). Default behavior is to stop when an item to restore 
+already exist (override can be forced).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.project_restore(
+  opal,
+  project,
+  archive,
+  key = NULL,
+  override = TRUE,
+  wait = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Name of the project.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>archive</code></td>
+<td>
+<p>Archive directory or zip file path in the Opal file system.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>Archive zip file password (if applies).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>override</code></td>
+<td>
+<p>Overwrite existing items (table, view, resource, report). Project files override is not checked. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wait</code></td>
+<td>
+<p>Wait for restore task completion. Default is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The project command ID if wait parameter is FALSE. See opal.project_command to retrieve asynchronous command state.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+# create the project to restore, with the default database (to store tables)
+opal.project_create(o, 'GREENSPACE2', database = TRUE)
+# upload backup zip and launch restore task
+opal.file_upload(o, 'GREENSPACE.zip', '/home/administrator')
+opal.project_restore(o, 'GREENSPACE2', '/home/administrator/GREENSPACE.zip')
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

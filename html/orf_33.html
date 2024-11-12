@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.orf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prediction of the Ordered Forest</h2>
+
+<h3>Description</h3>
+
+<p>Prediction for new observations based on estimated Ordered Forest of class <code>orf</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'orf'
+predict(object, newdata = NULL, type = NULL, inference = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>estimated Ordered Forest object of class <code>orf</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>numeric matrix X containing the observations for which the outcomes should be predicted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>string, specifying the type of the prediction, These can be either "probs" or  "p" for probabilities and "class" or "c" for classes. (Default is "probs").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inference</code></td>
+<td>
+<p>logical, if TRUE variances for the predictions will be estimated (only feasible for probability predictions).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments (currently ignored)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>predict.orf</code> estimates the conditional ordered choice probabilities,
+i.e. P[Y=m|X=x] for new data points (matrix X containing new observations
+of covariates) based on the estimated Ordered Forest object of class <code>orf</code>.
+Furthermore, weight-based inference for the probability predictions can be
+conducted as well. If inference is desired, the supplied Ordered Forest must be
+estimated with honesty and subsampling. If prediction only is desired, estimation
+without honesty and with bootstrapping is recommended for optimal prediction
+performance. Additionally to the probability predictions, class predictions can
+be estimated as well using the <code>type</code> argument. In this case, the predicted
+classes are obtained as classes with the highest predicted probability.
+</p>
+
+
+<h3>Value</h3>
+
+<p>object of class <code>orf.prediction</code> with following elements
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>info</code></td>
+<td>
+<p>info containing forest inputs and data used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predictions</code></td>
+<td>
+<p>predicted values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variances</code></td>
+<td>
+<p>variances of predicted values</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gabriel Okasa
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summary.orf.prediction</code>, <code>print.orf.prediction</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Ordered Forest
+require(orf)
+
+# load example data
+data(odata)
+
+# specify response and covariates for train and test
+idx &lt;- sample(seq(1, nrow(odata), 1), 0.8*nrow(odata))
+
+# train set
+Y_train &lt;- as.numeric(odata[idx, 1])
+X_train &lt;- as.matrix(odata[idx, -1])
+
+# test set
+Y_test &lt;- as.numeric(odata[-idx, 1])
+X_test &lt;- as.matrix(odata[-idx, -1])
+
+# estimate Ordered Forest
+orf_fit &lt;- orf(X_train, Y_train)
+
+# predict the probabilities with the estimated orf
+orf_pred &lt;- predict(orf_fit, newdata = X_test)
+
+# predict the probabilities with estimated orf together with variances
+orf_pred &lt;- predict(orf_fit, newdata = X_test, inference = TRUE)
+
+# predict the classes with estimated orf
+orf_pred &lt;- predict(orf_fit, newdata = X_test, type = "class")
+
+
+</code></pre>
+
+
+</div>

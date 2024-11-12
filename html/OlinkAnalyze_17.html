@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_boxplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function which plots boxplots of selected variables</h2>
+
+<h3>Description</h3>
+
+<p>Generates faceted boxplots of NPX vs. grouping variable(s) for a given list of proteins (OlinkIDs) using ggplot and ggplot2::geom_boxplot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_boxplot(
+  df,
+  variable,
+  olinkid_list,
+  verbose = FALSE,
+  number_of_proteins_per_plot = 6,
+  posthoc_results = NULL,
+  ttest_results = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>NPX data frame in long format with at least protein name (Assay), OlinkID (unique), UniProt and at least one grouping variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p>A character vector or character value indicating which column to use as the x-axis and fill grouping variable.
+The first or single value is used as x-axis, the second as fill. Further values in a vector are not plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>olinkid_list</code></td>
+<td>
+<p>Character vector indicating which proteins (OlinkIDs) to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean. If the plots are shown as well as returned in the list (default is false).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>number_of_proteins_per_plot</code></td>
+<td>
+<p>Number of boxplots to include in the facet plot (default 6).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>posthoc_results</code></td>
+<td>
+<p>Data frame from ANOVA posthoc analysis using olink_anova_posthoc() function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ttest_results</code></td>
+<td>
+<p>Data frame from ttest analysis using olink_ttest() function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>coloroption passed to specify color order</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of objects of class “ggplot” (the actual ggplot object is entry 1 in the list). Box and whisker plot of NPX (y-axis) by variable (x-axis) for each Assay
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(dplyr)
+npx_df &lt;- npx_data1 |&gt; filter(!grepl('control|ctrl',SampleID, ignore.case = TRUE))
+anova_results &lt;- olink_anova(npx_df, variable = "Site")
+significant_assays &lt;- anova_results |&gt;
+    filter(Threshold == 'Significant') |&gt;
+    pull(OlinkID)
+olink_boxplot(npx_df,
+              variable = "Site",
+              olinkid_list = significant_assays,
+              verbose = TRUE,
+              number_of_proteins_per_plot = 3)
+
+</code></pre>
+
+
+</div>

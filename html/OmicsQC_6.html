@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fit.and.evaluate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fits the QC data to distributions and returns the KS test result and BIC score</h2>
+
+<h3>Description</h3>
+
+<p>This function takes the accumulated QC scores, a vector of distributions
+and a trimming factor. It then returns the results for each distribution
+in a dataframe. This function supports the following distributions:
+</p>
+
+<ul>
+<li>
+<p> 'weibull'
+</p>
+</li>
+<li>
+<p> 'norm'
+</p>
+</li>
+<li>
+<p> 'gamma'
+</p>
+</li>
+<li>
+<p> 'exp'
+</p>
+</li>
+<li>
+<p> 'lnorm'
+</p>
+</li>
+<li>
+<p> 'cauchy'
+</p>
+</li>
+<li>
+<p> 'logis'
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">fit.and.evaluate(
+  quality.scores,
+  distributions = c("weibull", "norm", "gamma", "exp", "lnorm", "cauchy", "logis"),
+  trim.factor = 0.05
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>quality.scores</code></td>
+<td>
+<p>The accumulated QC scores, the output of accumulate.zscores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distributions</code></td>
+<td>
+<p>A vector of distributions to fit and test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim.factor</code></td>
+<td>
+<p>The fraction of extremes on each end to trim before fitting</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A dataframe of the results with the following columns
+</p>
+
+<dl>
+<dt>distribution</dt>
+<dd>
+<p>Name of the fitted distribution</p>
+</dd>
+<dt>KS.rejected</dt>
+<dd>
+<p>Whether the Kolmogorov-Smirnov test rejects the fit; see <code>fitdistrplus::gofstat</code> - kstest</p>
+</dd>
+<dt>BIC.value</dt>
+<dd>
+<p>Bayesian Information Criterion</p>
+</dd>
+</dl>
+</div>

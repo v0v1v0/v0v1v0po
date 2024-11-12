@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osrmNearest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get the Nearest Point on the Street Network</h2>
+
+<h3>Description</h3>
+
+<p>This function interfaces with the <em>nearest</em> OSRM
+service.<br></p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osrmNearest(
+  loc,
+  exclude,
+  osrm.server = getOption("osrm.server"),
+  osrm.profile = getOption("osrm.profile")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>loc</code></td>
+<td>
+<p>a point to snap to the street network. <code>loc</code> can be: </p>
+
+<ul>
+<li>
+<p> a vector of coordinates (longitude and latitude, WGS 84),
+</p>
+</li>
+<li>
+<p> a data.frame of longitudes and latitudes (WGS 84),
+</p>
+</li>
+<li>
+<p> a matrix of longitudes and latitudes (WGS 84),
+</p>
+</li>
+<li>
+<p> an sfc object of type POINT,
+</p>
+</li>
+<li>
+<p> an sf object of type POINT.
+</p>
+</li>
+</ul>
+<p>If <code>src</code> is a data.frame, a matrix, an sfc object or an sf object then
+only the first row or element is considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>pass an optional "exclude" request option to the OSRM API.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osrm.server</code></td>
+<td>
+<p>the base URL of the routing server.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osrm.profile</code></td>
+<td>
+<p>the routing profile to use, e.g. "car", "bike" or "foot".</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The output of this function is an sf POINT of the point on the street
+network.<br>
+It contains 2 fields: </p>
+
+<ul>
+<li>
+<p> id, the point identifierv
+</p>
+</li>
+<li>
+<p> distance, the distance in meters to the supplied input point.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(sf)
+apotheke.sf &lt;- st_read(system.file("gpkg/apotheke.gpkg", package = "osrm"),
+  quiet = TRUE
+)
+pt &lt;- osrmNearest(apotheke.sf[56, ])
+pt$distance
+
+## End(Not run)
+</code></pre>
+
+
+</div>

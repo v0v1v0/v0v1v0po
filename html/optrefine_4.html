@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.strat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot diagnostics for a "strat" object</h2>
+
+<h3>Description</h3>
+
+<p>Plots the standardized mean differences for <code>strat</code> objects in the format of Love (2002).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'strat'
+plot(
+  x,
+  incl_none = TRUE,
+  incl_base = TRUE,
+  by_strata = FALSE,
+  weighted_avg = FALSE,
+  legend = c("No strata", "Base strata", "Refined strata"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>object of S3 class 'strat'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incl_none</code></td>
+<td>
+<p>whether to plot imbalances before any stratification</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incl_base</code></td>
+<td>
+<p>whether to plot imbalances for the base stratification (if one exists)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by_strata</code></td>
+<td>
+<p>whether to generate a list of plots, one for each base stratum if
+<code>incl_base</code> is <code>TRUE</code>, or one for each refined stratum if <code>incl_base</code> is <code>FALSE</code>.
+Not used if <code>incl_none</code> is <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted_avg</code></td>
+<td>
+<p>whether to take the weighted average instead of the straight average
+when collapsing standardized mean differences across strata. Default is <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend</code></td>
+<td>
+<p>a vector of labels to use for the three stratifications on the plot.
+The corresponding label for any stratification that is not to be plotted must
+still be provided but will be ignored and
+can be set to <code>NA</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Either a ggplot object for the Love plot of standardized mean differences or
+a list of such ggplot objects if <code>by_strata</code> is <code>TRUE</code>
+</p>
+
+
+<h3>References</h3>
+
+<p>Love, T. E. (2002), "Displaying covariate balance after adjustment for selection bias",
+Joint Statistical Meetings, yumpu.com/en/document/read/41664623.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Choose 800 patients and 5 covariates to work with for the example
+set.seed(28)
+samp &lt;- sample(1:nrow(rhc_X), 800)
+cov_samp &lt;- sample(1:26, 5)
+ref &lt;- refine(X = rhc_X[samp, cov_samp], z = rhc_X[samp, "z"])
+plot(ref)
+
+</code></pre>
+
+
+</div>

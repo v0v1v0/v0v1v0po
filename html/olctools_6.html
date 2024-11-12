@@ -1,0 +1,58 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>recover_olc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Recover Full Open Location Codes From Shortened Codes</h2>
+
+<h3>Description</h3>
+
+<p><code>shorten_olc</code> (and other sources) shorten a code, reducing
+the space it occupies. They also limit its ability to be translated back into latitude/longitude
+pairs. <code>recover_olc</code> recovers a full code from a shortened one, allowing it to be decoded with
+<code>decode_olc</code>. <em>Some</em> loss of accuracy or precision is expected - and as it finds
+the closest match to the coordinates rather than to the original code, the characters may be very
+different.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">recover_olc(olcs, lats, longs)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>olcs</code></td>
+<td>
+<p>a vector of short open location codes, generated with <code>shorten_olc</code> or through
+any other means.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lats</code></td>
+<td>
+<p>a numeric vector of latitudes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>longs</code></td>
+<td>
+<p>a numeric vector of longitudes, equivalent in size to <code>lats</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Shorten an OLC and then recover the nearest full code. Note the actual characters differ.
+shortened_code &lt;- shorten_olc("8FVC9G8F+6X", 47.5, 8.5);
+recovered_code &lt;- recover_olc(shortened_code, 47.4, 8.6);
+
+</code></pre>
+
+
+</div>

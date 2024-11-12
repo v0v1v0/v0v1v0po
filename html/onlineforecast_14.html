@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cache_name</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generation of a name for a cache file for the value of a function.</h2>
+
+<h3>Description</h3>
+
+<p>Caching of the value returned by a function
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cache_name(..., cachedir = "cache")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>The objects from which to calculate cache file name.
+If no objects given, then all the objects of the calling function are used for generating the checksum for the file name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cachedir</code></td>
+<td>
+<p>Path for saving the cache, i.e. prefixed to the generated name, remember to end with '/' to make a directory.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Use it in the beginning of a function, which runs a time consuming calculation, like fitting a model using optimization.
+</p>
+<p>It makes a cache name, which can be used to save a unique cache file (see <code>cache_save()</code>).
+</p>
+<p>The <code>cache_name</code> function must receive all the objects (in <code>...</code>) which influence the value of the function. It simply calculates a checksum using the <code>digest</code> package.
+</p>
+<p>Further, it finds the name of the calling function and its definition, such that if anything changes in the function definition, then the cache file name changes too.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A generated cache file name.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># A function for demonstrating the using caching
+fun &lt;- function(x, y){
+    # Generate the cache name (no argument given, so both x and y is used)
+    nm &lt;- cache_name(cachedir=cachedir)
+    # If the result is cached, then just return it
+    if(file.exists(nm)){ return(readRDS(nm)) }
+    # Do the calculation
+    res &lt;- x^2 + y + 1
+    # Wait 1 sec
+    Sys.sleep(1)
+    # Save for cache
+    cache_save(res, nm)
+    # Return
+    return(res)
+}
+
+# For this example use a temporary directory 
+# In real use this should not be temporary! (changes between R sessions with tempdir())
+cachedir &lt;- tempdir()
+
+# Uncomment to run:
+# First time it takes at least 1 sec.
+#fun(x=2,y=2)
+# Second time it loads the cache and is much faster
+#fun(x=2,y=2)
+# Try changing the arguments (x,y) and run again
+
+# See the cache file(s)
+#dir(cachedir)
+# Delete the cache folder
+#unlink(cachedir, recursive=TRUE)
+
+# Demonstrate how cache_name() is functioning
+# Cache using the all objects given in the function calling, i.e. both x and y
+fun &lt;- function(x,y){
+    x^2 + y + 1
+    return(cache_name())
+}
+# These are the same (same values)
+fun(x=1,y=2)
+fun(1,2)
+fun(y=2,x=1)
+# But this one is different
+fun(x=2,y=1)
+
+# Test: cache using the values specified in the cache_name call
+fun2 &lt;- function(x,y){
+    x^2 + y + 1
+    return(cache_name(x))
+}
+
+# So now its only the x value that change the name
+fun2(1,2)
+fun2(1,3)
+# But this one is different 
+fun2(3,3)
+# And the function named changed the name
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,55 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>aspre</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes ASPRE score</h2>
+
+<h3>Description</h3>
+
+<p>Computes ASPRE model prediction on a matrix <code>X</code> of covariates
+</p>
+<p>Full ASPRE model from https://www.nejm.org/doi/suppl/10.1056/NEJMoa1704559/suppl_file/nejmoa1704559_appendix.pdf
+</p>
+<p>Model is to predict gestational age at PE; that is, a higher score indicates a lower PE risk, so coefficients are negated for model to predict PE risk.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">aspre(X)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>matrix, assumed to be output of sim_random_aspre with parameter params=params_aspre and transformed using add_aspre_interactions</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>vector of scores.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Load ASPRE related data
+data(params_aspre)
+
+X=sim_random_aspre(1000,params_aspre)
+Xnew=add_aspre_interactions(X)
+
+aspre_score=aspre(Xnew)
+
+plot(density(aspre_score))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>show</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print method for onions</h2>
+
+<h3>Description</h3>
+
+<p>Show methods for onions</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'onion'
+show(object)
+onion_show(x,
+     comp = getOption("show_onions_compactly"),
+     h    = getOption("show_onions_horizontally")
+)
+comp_names(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x,object</code></td>
+<td>
+<p>Onions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comp</code></td>
+<td>
+<p>Boolean, with <code>TRUE</code> meaning to print onions
+compactly and any other value to print in matrix form</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>Boolean, with <code>TRUE</code> meaning to print by columns and any
+other value  meaning to print horizontally</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Default behaviour is to print by rows.  To print by columns, set
+option <code>show_onions_horizontally</code> to <code>TRUE</code>:
+</p>
+<p><code>options("show_onions_horizontally" = TRUE)</code>
+</p>
+<p>Any non-<code>TRUE</code> value (including <code>NULL</code> and its being unset)
+will restore the default.
+</p>
+<p>Similarly, to show onions compactly,  set option
+<code>show_onions_compactly</code> to <code>TRUE</code>:
+</p>
+<p><code>options("show_onions_compactly" = TRUE)</code>
+</p>
+<p>This option works best for simple onions with integer entries (or at
+least values with few decimal places), and especially if there are
+many zero entries.
+</p>
+<p>Function <code>onion_show()</code> is a helper function, not really intended
+for the end-user.
+</p>
+<p>The “names” of the components of an onion (viz <code>Re</code>,
+<code>i</code>, <code>j</code>, <code>k</code> for quaternions and <code>Re</code>, <code>i</code>,
+<code>j</code>, <code>k</code>, <code>l</code>,<code>il</code>,<code>jl</code>,<code>kl</code> for
+octonions) are given by function <code>comp_names()</code> which takes
+either a character string or an onion.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The print method for <code>onionmat</code> objects is also sensitive to
+these options.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robin K. S. Hankin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+x &lt;- roct(15)
+x  #default
+
+options("show_onions_horizontally" = TRUE)
+roct(4) 
+
+options("show_onions_horizontally" = FALSE)  # restore default
+
+options("show_onions_compactly" = TRUE)
+x &lt;- as.quaternion(matrix(sample(c(0,0,0,-1,1),80,replace=TRUE),4,20))
+options("show_onions_compactly" = FALSE) # restore default
+
+</code></pre>
+
+
+</div>

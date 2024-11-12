@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optim_refit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Refined optimization test.</h2>
+
+<h3>Description</h3>
+
+<p>If the potential solution is indeed a local optimum of the objective function, and if it is used to initialize a second optimization, then original and "refined" solutions ought to be close.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optim_refit(xsol, fun, maximize = TRUE, maxit = 5000, reltol = 1e-08, xopt)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xsol</code></td>
+<td>
+<p>Potential solution vector of length <code>nx</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>Objective function to be maximized (or minimized), with first argument the length-<code>nx</code> parameter vector over which optimization is to take place.  Should return a scalar result.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maximize</code></td>
+<td>
+<p>Logical, whether a maximum or a minimum of the objective function is sought.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>Maximum number of iterations for <code>stats::optim()</code> refit (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reltol</code></td>
+<td>
+<p>Relative tolerance for convergence of <code>stats::optim()</code> refit (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xopt</code></td>
+<td>
+<p>Optional refit solution calculated externally from an optimization algorithm of choice (see Details).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By default, a so-called <strong>refi</strong>ned op(<strong>t</strong>)imization (or refit) test is performed by running the default Nelder-Mead simplex method provided by <code>stats::optim()</code>, initialized by the potential solution <code>xsol</code>.  Only a simplified interface to <code>stats::optim()</code>'s control parameters are provided here.
+</p>
+<p>Alternatively, the refit test can be performed with any optimization algorithm of choice.  This is done externally, with the refined solution passed to <code>optim_refit()</code> via the argument <code>xopt</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>optrefit</code> inheriting from <code>optcheck</code>, with elements:
+</p>
+
+<dl>
+<dt><code>xsol</code></dt>
+<dd>
+<p>The potential solution.</p>
+</dd>
+<dt><code>ysol</code></dt>
+<dd>
+<p>The value of <code>fun(xsol)</code>.</p>
+</dd>
+<dt><code>maximize</code></dt>
+<dd>
+<p>Logical indicating whether the potential solution should maximize or minimize the objective function.</p>
+</dd>
+<dt><code>xopt</code></dt>
+<dd>
+<p>The solution found by the general-purpose optimizer.</p>
+</dd>
+<dt><code>yopt</code></dt>
+<dd>
+<p>The function value at the optimal solution, i.e., <code>fun(xopt)</code>.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p><code>summary</code>, <code>print</code>, and <code>diff</code> for <code>optrefit</code> objects are available; see <code>summary.optrefit()</code>, <code>print.optrefit()</code>, and <code>diff.optrefit()</code>.
+</p>
+
+
+</div>

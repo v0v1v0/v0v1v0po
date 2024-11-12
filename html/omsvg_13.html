@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filter_erode</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter: add an erosion effect to an element</h2>
+
+<h3>Description</h3>
+
+<p>The <code>filter_erode()</code> filter effectively thins out a source graphic by a given
+<code>radius</code> value. The higher the <code>radius</code>, the greater the extent of thinning.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filter_erode(radius = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>radius</code></td>
+<td>
+<p>The extent to which the source graphic will be eroded. If a
+vector of two values are provided, the first value represents the x-radius
+and the second one the y-radius. If one value is provided, then that value
+is used for both x and y.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>An <code>svg</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# Add a text element to an
+# SVG drawing and erode it with
+# the `filter_erode()` filter
+SVG(width = 200, height = 100) %&gt;%
+  svg_filter(
+    id = "erode",
+    filters = list(
+      filter_erode(radius = c(1, 0))
+    )
+  ) %&gt;%
+  svg_text(
+    x = 10, y = 40,
+    text = "Erosion",
+    attrs = svg_attrs_pres(
+      font_size = "3em",
+      font_weight = "bolder",
+      filter = "erode"
+    )
+  )
+}
+
+</code></pre>
+
+
+</div>

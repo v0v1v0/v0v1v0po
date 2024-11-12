@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_create_changeset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create, update, or close a changeset</h2>
+
+<h3>Description</h3>
+
+<p>Create, update, or close a changeset
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_create_changeset(
+  comment,
+  ...,
+  created_by = paste("osmapiR", getOption("osmapir.osmapir_version")),
+  verbose = FALSE
+)
+
+osm_update_changeset(
+  changeset_id,
+  comment,
+  ...,
+  created_by = paste("osmapiR", getOption("osmapir.osmapir_version")),
+  verbose = FALSE
+)
+
+osm_close_changeset(changeset_id)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>comment</code></td>
+<td>
+<p>Tag comment is mandatory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arbitrary tags to add to the changeset as named parameters (key = "value").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>created_by</code></td>
+<td>
+<p>Tag with the client data. By default, <code style="white-space: pre;">⁠osmapiR x.y.z⁠</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If <code>TRUE</code>, print the tags of the new changeset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>changeset_id</code></td>
+<td>
+<p>The id of the changeset to update. The user issuing this API call has to be the same that created
+the changeset.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See <a href="https://wiki.openstreetmap.org/wiki/Changeset">https://wiki.openstreetmap.org/wiki/Changeset</a> for details and the most common changeset's tags.
+</p>
+<p>When updating a changeset, unchanged tags have to be repeated in order to not be deleted.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The ID of the newly created changeset or a <code>data.frame</code> inheriting <code>osmapi_changesets</code> with the details of
+the updated changeset.
+</p>
+<p>Nothing is returned upon successful closing of a changeset.
+</p>
+
+
+<h3>Functions</h3>
+
+
+<ul>
+<li> <p><code>osm_create_changeset()</code>: Open a new changeset for editing.
+</p>
+</li>
+<li> <p><code>osm_update_changeset()</code>: Update the tags of an open changeset.
+</p>
+</li>
+<li> <p><code>osm_close_changeset()</code>: Close a changeset. A changeset may already have been closed without the owner
+issuing this API call. In this case an error code is returned.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other edit changeset's functions: 
+<code>osm_diff_upload_changeset()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+set_osmapi_connection("testing") # use the testing server
+
+chset_id &lt;- osm_create_changeset(
+  comment = "Describe the changeset",
+  source = "GPS;survey",
+  hashtags = "#testing;#osmapiR"
+)
+
+chaset &lt;- osm_read_changeset(changeset_id = chset_id)
+chaset
+
+upd_chaset &lt;- osm_update_changeset(
+  changeset_id = chset_id,
+  comment = "Improved description of the changeset",
+  hashtags = "#testing;#osmapiR"
+)
+upd_chaset
+
+## End(Not run)
+</code></pre>
+
+
+</div>

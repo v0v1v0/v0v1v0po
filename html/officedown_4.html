@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rpptx_document</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Advanced R Markdown PowerPoint Format</h2>
+
+<h3>Description</h3>
+
+<p>Format for converting from R Markdown to an MS PowerPoint
+document.
+</p>
+<p>The function will allow you to specify the destination of your chunks in the output
+PowerPoint file. In this case, you must specify the <code>layout</code> and <code>master</code> for the
+layout you want to use, as well as the <code>ph</code> argument, which will allow you to specify
+the placeholder to be generated to place the result. Use the officer package to help
+you choose the identfiers to use.
+</p>
+<p>This function also support Vector graphics output in an editable format (using package
+<code>rvg</code>). Wrap you R plot commands with function <code>dml</code> to use this graphic capability.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rpptx_document(
+  base_format = "rmarkdown::powerpoint_presentation",
+  layout = "Title and Content",
+  master = "Office Theme",
+  tcf = list(),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>base_format</code></td>
+<td>
+<p>a scalar character, format to be used as a base document for
+officedown. default to powerpoint_presentation but
+can also be powerpoint_presentation2 from bookdown</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layout</code></td>
+<td>
+<p>default slide layout name to use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>master</code></td>
+<td>
+<p>default master layout name where <code>layout</code> is located</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tcf</code></td>
+<td>
+<p>default conditional formatting settings
+defined by <code>officer::table_conditional_formatting()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments used by powerpoint_presentation</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>R Markdown output format to pass to render
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(rmarkdown)
+run_ok &lt;- pandoc_available() &amp;&amp; pandoc_version() &gt; numeric_version("2.4")
+
+if(run_ok){
+  example &lt;- system.file(package = "officedown",
+    "examples/minimal_powerpoint.Rmd")
+  rmd_file &lt;- tempfile(fileext = ".Rmd")
+  file.copy(example, to = rmd_file)
+
+  pptx_file_1 &lt;- tempfile(fileext = ".pptx")
+  render(rmd_file, output_file = pptx_file_1)
+}
+</code></pre>
+
+
+</div>

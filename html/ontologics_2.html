@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>edit_matches</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Edit matches manually in a csv-table</h2>
+
+<h3>Description</h3>
+
+<p>Allows the user to match concepts with an already existing ontology, without
+actually writing into the ontology, but instead storing the resulting
+matching table as csv.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">edit_matches(
+  new,
+  target = NULL,
+  source = NULL,
+  ontology = NULL,
+  matchDir = NULL,
+  verbose = TRUE,
+  beep = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>new</code></td>
+<td>
+<p><code>data.frame(.)</code><br> the new concepts that shall be
+manually matched.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+<p><code>data.frame(.)</code><br> the attributes, in terms of
+columns in the ontology, of new concepts that help to match new and target
+concepts manually.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source</code></td>
+<td>
+<p><code>character(1)</code><br> any character uniquely
+identifying the source dataset of the new concepts.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p><code>ontology(1)</code><br> either a path where the ontology is
+stored, or an already loaded ontology.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>matchDir</code></td>
+<td>
+<p><code>character(1)</code><br> the directory where to store
+source-specific matching tables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical(1)</code><br> whether or not to give detailed
+information on the process of this function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beep</code></td>
+<td>
+<p><code>integerish(1)</code><br> Number specifying what sound to be
+played to signal the user that a point of interaction is reached by the
+program, see <code>beep</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In order to match new concepts into an already existing ontology, it
+may become necessary to carry out manual matches of the new concepts with
+already harmonised concepts, for example, when the new concepts are
+described with terms that are not yet in the ontology. This function puts
+together a table, in which the user would edit matches by hand. Whith the
+argument <code>verbose = TRUE</code>, detailed information about the edit process
+are shown to the user. After defining matches, and even if not all
+necessary matches are finished, the function stores a specific "matching
+table" with the name <em>match_SOURCE.csv</em> in the respective directory
+(<code>matchDir</code>), from where work can be picked up and continued at
+another time.
+</p>
+<p>Fuzzy matching is carried out and matches with 0, 1 or 2 differing
+charcters are presented in a respective column.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A table that contains all new matches, or if none of the new concepts
+weren't already in the ontology, a table of the already sucessful matches.
+</p>
+
+
+</div>

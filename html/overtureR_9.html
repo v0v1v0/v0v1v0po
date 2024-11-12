@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stage_conn</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>create a cachable duckdb connection. In dev</h2>
+
+<h3>Description</h3>
+
+<p><code>stage_conn</code> is primarily intended for internal use by other
+<code>overtureR</code> functions.  However, it can be called directly by
+the user whenever it is desirable to have direct access to the
+connection object. The core code is copied from <code>duckdbfs</code>, which deserves
+all credit for the implementation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stage_conn(
+  dbdir = ":memory:",
+  read_only = FALSE,
+  bigint = "numeric",
+  config = list(),
+  ...
+)
+
+strike_stage(conn = stage_conn())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dbdir</code></td>
+<td>
+<p>Location for database files. Should be a path to an existing
+directory in the file system. With the default (or <code>""</code>), all
+data is kept in RAM.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>read_only</code></td>
+<td>
+<p>Set to <code>TRUE</code> for read-only operation.
+For file-based databases, this is only applied when the database file is opened for the first time.
+Subsequent connections (via the same <code>drv</code> object or a <code>drv</code> object pointing to the same path)
+will silently ignore this flag.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bigint</code></td>
+<td>
+<p>How 64-bit integers should be returned. There are two options: <code>"numeric"</code> and <code>"integer64"</code>.
+If <code>"numeric"</code> is selected, bigint integers will be treated as double/numeric.
+If <code>"integer64"</code> is selected, bigint integers will be set to bit64 encoding.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>config</code></td>
+<td>
+<p>Named list with DuckDB configuration flags, see
+<a href="https://duckdb.org/docs/configuration/overview#configuration-reference">https://duckdb.org/docs/configuration/overview#configuration-reference</a> for the possible options.
+These flags are only applied when the database object is instantiated.
+Subsequent connections will silently ignore these flags.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to DBI::dbConnect</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conn</code></td>
+<td>
+<p>A <code>duckdb_connection</code> object</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When first called (by a user or internal function),
+this function both creates a duckdb connection and places
+that connection into a cache (<code>overturer_conn</code> option).
+On subsequent calls, this function returns the cached connection,
+rather than recreating a fresh connection.
+</p>
+<p>This frees the user from the responsibility of managing a
+connection object, because functions needing access to the
+connection can use this to create or access the existing connection.
+At the close of the global environment, this function's finalizer
+should gracefully shutdown the connection before removing the cache.
+</p>
+<p><code>strike_stage</code> closes the connection.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code>duckdb::duckdb()</code>connection object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+con &lt;- stage_conn()
+strike_stage(con)
+
+</code></pre>
+
+
+</div>

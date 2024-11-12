@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>chart_forecast</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Chart forecasts</h2>
+
+<h3>Description</h3>
+
+<p>Chart forecasts
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">chart_forecast(Data, Title, Ylab, Freq, zeroline = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Data</code></td>
+<td>
+<p>data.frame: oos.forecast object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Title</code></td>
+<td>
+<p>string: chart title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ylab</code></td>
+<td>
+<p>string: y-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Freq</code></td>
+<td>
+<p>string: frequency (acts as sub-title)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zeroline</code></td>
+<td>
+<p>boolean: if TRUE then add a horizontal line at zero</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>ggplot2 chart
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+ # simple time series
+ A = c(1:100) + rnorm(100)
+ date = seq.Date(from = as.Date('2000-01-01'), by = 'month', length.out = 100)
+ Data = data.frame(date = date, A)
+
+ # run forecast_univariate
+ forecast.uni =
+   forecast_univariate(
+     Data = Data,
+     forecast.dates = tail(Data$date,10),
+     method = c('naive','auto.arima', 'ets'),
+     horizon = 1,
+     recursive = FALSE,
+     freq = 'month')
+
+ forecasts =
+   dplyr::left_join(
+     forecast.uni,
+     data.frame(date, observed = A),
+     by = 'date'
+   )
+
+ # chart forecasts
+ chart.forecast =
+   chart_forecast(
+     forecasts,
+     Title = 'test',
+     Ylab = 'Index',
+     Freq = 'Monthly',
+     zeroline = TRUE)
+
+
+
+</code></pre>
+
+
+</div>

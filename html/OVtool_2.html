@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_reps</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>add_reps
+</h2>
+
+<h3>Description</h3>
+
+<p>This function will run additional simulations of the unobserved confounder and add the results to the object returned from the previous call to OVtool::ov_sim
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_reps(OVtool_results, model_results, more_reps)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>OVtool_results</code></td>
+<td>
+
+<p>The object returned from OVtool::ov_sim()
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model_results</code></td>
+<td>
+
+<p>The object returned from OVtool::outcome_model()
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>more_reps</code></td>
+<td>
+
+<p>The number of additional repetitions the user wants to simulate the unobserved confounder
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>add_reps returns an updated object returned from OVtool::ov_sim()
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sud)
+sud = data.frame(sud[sample(1:nrow(sud),100),])
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(1, 10, by=.01), size=nrow(sud), replace = TRUE)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_6",
+                            model_covariates = c("sfs8p_0", "eps7p_0"),
+                            estimand = "ATE")
+
+ovtool_results = ov_sim(model_results=outcome_mod,
+                        plot_covariates=c("sfs8p_0"),
+                        es_grid = .1,
+                        rho_grid = .1,
+                        n_reps = 2,
+                        progress=FALSE)
+
+additional = add_reps(OVtool_results = ovtool_results,
+                      model_results = outcome_mod,
+                      more_reps = 2)
+</code></pre>
+
+
+</div>

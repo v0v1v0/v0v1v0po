@@ -1,0 +1,330 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fullmatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimal full matching</h2>
+
+<h3>Description</h3>
+
+<p>Given two groups, such as a treatment and a control group, and a method of
+creating a treatment-by-control discrepancy matrix indicating desirability and
+permissibility of potential matches (or optionally an already created such
+discrepancy matrix), create optimal full matches of members of the groups.
+Optionally, incorporate restrictions on matched sets' ratios of treatment to
+control units.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fullmatch(
+  x,
+  min.controls = 0,
+  max.controls = Inf,
+  omit.fraction = NULL,
+  mean.controls = NULL,
+  tol = 0.001,
+  data = NULL,
+  solver = "",
+  ...
+)
+
+full(
+  x,
+  min.controls = 0,
+  max.controls = Inf,
+  omit.fraction = NULL,
+  mean.controls = NULL,
+  tol = 0.001,
+  data = NULL,
+  solver = "",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Any valid input to <code>match_on</code>. <code>fullmatch</code> will use
+<code>x</code> and any optional arguments to generate a distance before performing
+the matching.
+</p>
+<p>If <code>x</code> is a numeric vector, there must also be passed a vector <code>z</code>
+indicating grouping. Both vectors must be named.
+</p>
+<p>Alternatively, a precomputed distance may be entered. A matrix of
+non-negative discrepancies, each indicating the permissibility and
+desirability of matching the unit corresponding to its row (a 'treatment') to
+the unit corresponding to its column (a 'control'); or, better, a distance
+specification as produced by <code>match_on</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.controls</code></td>
+<td>
+<p>The minimum ratio of controls to treatments that is to
+be permitted within a matched set: should be non-negative and finite.  If
+<code>min.controls</code> is not a whole number, the reciprocal of a whole number,
+or zero, then it is rounded <em>down</em> to the nearest whole number or
+reciprocal of a whole number.
+</p>
+<p>When matching within subclasses (such as those created by
+<code>exactMatch</code>), <code>min.controls</code> may be a named numeric vector
+separately specifying the minimum permissible ratio of controls to treatments
+for each subclass.  The names of this vector should include names of all
+subproblems <code>distance</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.controls</code></td>
+<td>
+<p>The maximum ratio of controls to treatments that is
+to be permitted within a matched set: should be positive and numeric.
+If <code>max.controls</code> is not a whole number, the reciprocal of a
+whole number, or <code>Inf</code>, then it is rounded <em>up</em> to the
+nearest whole number or reciprocal of a whole number.
+</p>
+<p>When matching within subclasses (such as those created by
+<code>exactMatch</code>), <code>max.controls</code> may be a named numeric vector
+separately specifying the maximum permissible ratio of controls to treatments
+in each subclass.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omit.fraction</code></td>
+<td>
+<p>Optionally, specify what fraction of controls or treated
+subjects are to be rejected.  If <code>omit.fraction</code> is a positive fraction
+less than one, then <code>fullmatch</code> leaves up to that fraction of the control
+reservoir unmatched.  If <code>omit.fraction</code> is a negative number greater
+than -1, then <code>fullmatch</code> leaves up to |<code>omit.fraction</code>| of the
+treated group unmatched.  Positive values are only accepted if
+<code>max.controls</code> &gt;= 1; negative values, only if <code>min.controls</code> &lt;= 1.
+If neither <code>omit.fraction</code> or <code>mean.controls</code> are specified, then
+only those treated and control subjects without permissible matches among the
+control and treated subjects, respectively, are omitted.
+</p>
+<p>When matching within subclasses (such as those created by
+<code>exactMatch</code>), <code>omit.fraction</code> specifies the fraction of
+controls to be rejected in each subproblem, a parameter that can be made to
+differ by subclass by setting <code>omit.fraction</code> equal to a named numeric
+vector of fractions.
+</p>
+<p>At most one of <code>mean.controls</code> and <code>omit.fraction</code> can be non-<code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean.controls</code></td>
+<td>
+<p>Optionally, specify the average number of controls per
+treatment to be matched. Must be no less than than <code>min.controls</code> and no
+greater than the either <code>max.controls</code> or the ratio of total number of
+controls versus total number of treated. Some controls will likely not be
+matched to ensure meeting this value. If neither <code>omit.fraction</code> or
+<code>mean.controls</code> are specified, then only those treated and control
+subjects without permissible matches among the control and treated subjects,
+respectively, are omitted.
+</p>
+<p>When matching within subclasses (such as those created by
+<code>exactMatch</code>), <code>mean.controls</code> specifies the average number of
+controls per treatment per subproblem, a parameter that can be made to
+differ by subclass by setting <code>mean.controls</code> equal to a named numeric
+vector.
+</p>
+<p>At most one of <code>mean.controls</code> and <code>omit.fraction</code> can be non-<code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Because of internal rounding, <code>fullmatch</code> may
+solve a slightly different matching problem than the one
+specified, in which the match generated by
+<code>fullmatch</code> may not coincide with an optimal solution of
+the specified problem.  <code>tol</code> times the number of subjects
+to be matched specifies the extent to
+which <code>fullmatch</code>'s output is permitted to differ from an
+optimal solution to the original problem, as measured by the
+sum of discrepancies for all treatments and controls placed
+into the same matched sets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Optional <code>data.frame</code> or <code>vector</code> to use to get order
+of the final matching factor. If a <code>data.frame</code>, the <code>rownames</code>
+are used. If a vector, the <code>names</code> are first tried, otherwise the contents
+is considered to be a character vector of names. Useful to pass if you want to
+combine a match (using, e.g., <code>cbind</code>) with the data that were used to
+generate it (for example, in a propensity score matching).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solver</code></td>
+<td>
+<p>Choose which solver to use. Currently implemented are RELAX-IV
+and LEMON. Default of <code>""</code>, a blank string, will use RELAX-IV if the
+<strong>rrelaxiv</strong> package is installed, otherwise will use LEMON.
+</p>
+<p>To explicitly use RELAX-IV, pass string "RELAX-IV".
+</p>
+<p>To use LEMON, pass string "LEMON". Optionally, to specify which algorithm
+LEMON will use, pass the function LEMON with argument for the
+algorithm name, "CycleCancelling", "CapacityScaling", "CostScaling", and
+"NetworkSimplex". See this site for details on their differences:
+<a href="https://lemon.cs.elte.hu/pub/doc/latest/a00606.html">https://lemon.cs.elte.hu/pub/doc/latest/a00606.html</a>. CycleCancelling is
+the default.
+</p>
+<p>The CycleCancelling algorithm seems to produce results most closely
+resembling those of optmatch versions prior to 1.0. We have observed the
+other LEMON algorithms to produce different results when the
+<code>mean.controls</code> is unspecified, or specified in such a way as to produce
+an infeasible matching problem. When using a LEMON algorithm other than
+CycleCancelling, we recommend setting the <code>fullmatch_try_recovery</code>
+option to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments, passed to <code>match_on</code> (e.g. <code>within</code>)
+or to specific methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If passing an already created discrepancy matrix, finite entries indicate
+permissible matches, with smaller discrepancies indicating more desirable
+matches.  The matrix must have row and column names.
+</p>
+<p>If it is desirable to create the discrepancies matrix beforehand (for example,
+if planning on running several different matching schemes), consider using
+<code>match_on</code> to generate the distances. This generic function has
+several useful methods for handling propensity score models, computing
+Mahalanobis distances (and other arbitrary distances), and using user supplied
+functions. These distances can also be combined with those generated by
+<code>exactMatch</code> and <code>caliper</code> to create very nuanced
+matching specifications.
+</p>
+<p>The value of <code>tol</code> can have a substantial effect on computation time;
+with smaller values, computation takes longer.  Not every tolerance can be
+met, and how small a tolerance is too small varies with the machine and with
+the details of the problem.  If <code>fullmatch</code> can't guarantee that the
+tolerance is as small as the given value of argument <code>tol</code>, then
+matching proceeds but a warning is issued.
+</p>
+<p>By default, <code>fullmatch</code> will attempt, if the given constraints are
+infeasible, to find a feasible problem using the same constraints.  This
+will almost surely involve using a more restrictive <code>omit.fraction</code> or
+<code>mean.controls</code>. (This will never automatically omit treatment units.)
+Note that this does not guarantee that the returned match has the least
+possible number of omitted subjects, it only gives a match that is feasible
+within the given constraints. It may often be possible to loosen the
+<code>omit.fraction</code> or <code>mean.controls</code> constraint and still find a
+feasible match. The auto recovery is controlled by
+<code>options("fullmatch_try_recovery")</code>.
+</p>
+<p>In full matching problems permitting many-one matches (<code>min.controls</code>
+less than 1), the number of controls contributing to matches can exceed
+what was requested by setting a value of <code>mean.controls</code> or
+<code>omit.fraction</code>.  I.e., in this setting <code>mean.controls</code> sets
+the minimum ratio of number of controls to number of treatments placed
+into matched sets.
+</p>
+<p>If the program detects that (what it thinks is) a large problem,
+a warning is issued. Unless you have an older computer, there's a good
+chance that you can handle larger problems (at the cost of increased
+computation time). To check the large problem threshold, use
+<code>getMaxProblemSize</code>; to re-set it, use
+<code>setMaxProblemSize</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>optmatch</code> object (<code>factor</code>) indicating matched groups.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hansen, B.B. and Klopfer, S.O. (2006), ‘ Optimal full matching and related designs via network flows’,
+<em>Journal of Computational and Graphical Statistics</em>, <b>15</b>, 609–627.
+</p>
+<p>Hansen, B.B. (2004), ‘Full Matching in an Observational Study
+of Coaching for the SAT’, <em>Journal of the American
+Statistical Association</em>, <b>99</b>, 609–618.
+</p>
+<p>Rosenbaum, P. (1991), ‘A Characterization of Optimal Designs for Observational
+Studies’, <em>Journal of the Royal Statistical Society, Series B</em>,
+<b>53</b>, 597–610.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(nuclearplants)
+### Full matching on a Mahalanobis distance.
+( fm1 &lt;- fullmatch(pr ~ t1 + t2, data = nuclearplants) )
+summary(fm1)
+
+### Full matching with restrictions.
+( fm2 &lt;- fullmatch(pr ~ t1 + t2, min.controls = .5, max.controls = 4, data = nuclearplants) )
+summary(fm2)
+
+### Full matching to half of available controls.
+( fm3 &lt;- fullmatch(pr ~ t1 + t2, omit.fraction = .5, data = nuclearplants) )
+summary(fm3)
+
+### Full matching attempts recovery when the initial restrictions are infeasible.
+### Limiting max.controls = 1 allows use of only 10 of 22 controls.
+( fm4 &lt;- fullmatch(pr ~ t1 + t2, max.controls = 1, data=nuclearplants) )
+summary(fm4)
+### To recover restrictions
+optmatch_restrictions(fm4)
+
+### Full matching within a propensity score caliper.
+ppty &lt;- glm(pr ~ . - (pr + cost), family = binomial(), data = nuclearplants)
+### Note that units without counterparts within the caliper are automatically dropped.
+### For more complicated models, create a distance matrix and pass it to fullmatch.
+mhd &lt;- match_on(pr ~ t1 + t2, data = nuclearplants) + caliper(match_on(ppty), width = 1)
+( fm5 &lt;- fullmatch(mhd, data = nuclearplants) )
+summary(fm5)
+
+### Propensity balance assessment. Requires RItools package.
+if (require(RItools)) summary(fm5,ppty)
+
+### The order of the names in the match factor is the same
+### as the nuclearplants data.frame since we used the data argument
+### when calling fullmatch. The order would be unspecified otherwise.
+cbind(nuclearplants, matches = fm5)
+
+### Match in subgroups only. There are a few ways to specify this.
+m1 &lt;- fullmatch(pr ~ t1 + t2, data=nuclearplants,
+                within=exactMatch(pr ~ pt, data=nuclearplants))
+m2 &lt;- fullmatch(pr ~ t1 + t2 + strata(pt), data=nuclearplants)
+### Matching on propensity scores within matching in subgroups only:
+m3 &lt;- fullmatch(glm(pr ~ t1 + t2, data=nuclearplants, family=binomial),
+                data=nuclearplants,
+                within=exactMatch(pr ~ pt, data=nuclearplants))
+m4 &lt;- fullmatch(glm(pr ~ t1 + t2 + pt, data=nuclearplants,
+                    family=binomial),
+                data=nuclearplants,
+                within=exactMatch(pr ~ pt, data=nuclearplants))
+m5 &lt;- fullmatch(glm(pr ~ t1 + t2 + strata(pt), data=nuclearplants,
+                    family=binomial), data=nuclearplants)
+# Including `strata(foo)` inside a glm uses `foo` in the model as
+# well, so here m4 and m5 are equivalent. m3 differs in that it does
+# not include `pt` in the glm.
+</code></pre>
+
+
+</div>

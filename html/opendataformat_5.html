@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>merge.odf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Merge method for odf data.frames.</h2>
+
+<h3>Description</h3>
+
+<p>Merge two odf data.frames in R while keeping
+attributes with metadata.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'odf'
+merge(
+  x,
+  y,
+  by = NULL,
+  by.x = NULL,
+  by.y = NULL,
+  all = FALSE,
+  all.x = all,
+  all.y = all,
+  sort = TRUE,
+  suffixes = c(".x", ".y"),
+  no.dups = TRUE,
+  allow.cartesian = getOption("datatable.allow.cartesian"),
+  incomparables = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x, y</code></td>
+<td>
+<p>odf data.frames, or objects to be coerced to one</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by</code></td>
+<td>
+<p>A vector of shared column names in x and y to merge on. This defaults to the
+shared key columns between the two tables. If y has no key columns, this
+defaults to the key of x.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by.x, by.y</code></td>
+<td>
+<p>Vectors of column names in x and y to merge on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>logical; all = TRUE is shorthand to save setting both all.x = TRUE and
+all.y = TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all.x</code></td>
+<td>
+<p>logical; if TRUE, rows from x which have no matching row in y are included.
+These rows will have 'NA's in the columns that are usually filled with values
+from y. The default is FALSE so that only rows with data from both x and y
+are included in the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all.y</code></td>
+<td>
+<p>logical; analogous to all.x above.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>logical. If TRUE (default), the rows of the merged data.table are sorted by
+setting the key to the by / by.x columns. If FALSE, unlike base R's merge for
+which row order is unspecified, the row order in x is retained (including
+retaining the position of missings when all.x=TRUE), followed by y rows that
+don't match x (when all.y=TRUE) retaining the order those appear in y.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suffixes</code></td>
+<td>
+<p>A character(2) specifying the suffixes to be used for making non-by column
+names unique. The suffix behaviour works in a similar fashion as the
+merge.data.frame method does.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no.dups</code></td>
+<td>
+<p>logical indicating that suffixes are also appended to non-by.y column names
+in y when they have the same column name as any by.x.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allow.cartesian</code></td>
+<td>
+<p>See allow.cartesian in <code>data.table</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incomparables</code></td>
+<td>
+<p>values which cannot be matched and therefore are excluded from by columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used at this time.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>merge</code> is a generic function in base R. It dispatches
+to either the merge.data.frame method, merge.odf or merge.data.table method
+depending on the class of its first argument. merge.odf uses the
+merge.data.table to join data.frame and adds the attributes containing
+metadata from the two original odf data.frames.
+Note that, unlike SQL join, NA is matched against NA (and NaN against NaN)
+while merging.
+For a more data.table-centric way of merging two data.tables, see
+<code>data.table</code>. See FAQ 1.11 for a detailed comparison of
+merge.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A new odf data.frame build from the two input data.frames with the
+variable attributes from the original data.frames. Sorted by the columns set
+(or inferred for) the by argument if argument sort is set to TRUE.
+For variables/columns occurring in both x and y, attributes are taken from x.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># get path to example data from the opendataformat package (data.zip)
+path  &lt;-  system.file("extdata", "data.zip", package = "opendataformat")
+
+# read four columns of example data specified as ODF from ZIP file
+df  &lt;-  read_odf(file = path, select = 1:4)
+
+# read other columns of example data specified as ODF from ZIP file
+df2  &lt;-  read_odf(file = path, select = 4:7)
+
+# generate a variable for joining both datasets:
+df$id&lt;-1:20
+df2$id&lt;-1:20
+
+# merge both datasets by id column
+merged_df&lt;-merge(df, df2)
+
+#merge both datasets by shared key columns between the two tables
+merged_df2&lt;-merge(df, df2)
+
+</code></pre>
+
+
+</div>

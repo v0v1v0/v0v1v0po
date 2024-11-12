@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>harsmfit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Experts only softmax regression under Harville model.</h2>
+
+<h3>Description</h3>
+
+<p>An “experts only” softmax fitting function for the Harville
+model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">harsmfit(y, g, X, wt = NULL, eta0 = NULL, normalize_wt = FALSE,
+  method = c("BFGS", "NR", "CG", "NM"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a vector of the ranked outcomes within each group. Only
+the order within a group matters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>a vector giving the group indices. Need not be integers, but
+that is more efficient. Need not be sorted.
+Must be the same length as <code>y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>a matrix of the independent variables. Must have as many rows
+as the length of <code>y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>an optional vector of the observation level weights. These must
+be non-negative, otherwise an error is thrown. Note that the weight of
+the last ranked outcome within a group is essentially ignored.
+Must be the same length as <code>y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta0</code></td>
+<td>
+<p>an optional vector of the consensus odds. These are added to
+the fit odds in odds space before the likelihood caclulation. If given,
+then when the model is used to predict, similar consensus odds must be
+given.
+Must be the same length as <code>y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize_wt</code></td>
+<td>
+<p>if <code>TRUE</code>, we renormalize <code>wt</code>, if given,
+to have mean value 1. Note that the default value has changed
+since version 0.1.0 of this package. Moreover, non-normalized
+weights can lead to incorrect inference. Use with caution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>maximisation method, currently either 
+"NR" (for Newton-Raphson),
+"BFGS" (for Broyden-Fletcher-Goldfarb-Shanno), 
+"BFGSR" (for the BFGS algorithm implemented in <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>),
+"BHHH" (for Berndt-Hall-Hall-Hausman), 
+"SANN" (for Simulated ANNealing), 
+"CG" (for Conjugate Gradients), 
+or "NM" (for Nelder-Mead).  
+Lower-case letters (such as "nr" for Newton-Raphson) are allowed.
+If missing, a suitable method is selected automatically.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given a number of events, indexed by group, and a vector <code class="reqn">y</code> of
+the ranks of each entry within that group, perform maximum likelihood
+estimation under the softmax and proportional probability model.
+</p>
+<p>The user can optionally supply a vector of <code class="reqn">\eta_0</code>, which are
+taken as the fixed, or ‘consensus’ odds. The estimation is
+then conditional on these fixed odds.
+</p>
+<p>Weighted estimation is supported.
+</p>
+<p>The code relies on the likelihood function of <code>harsmlik</code>,
+and MLE code from <code>maxLik</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>harsm</code>, <code>maxLik</code>, and <code>linodds</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Harville, D. A. "Assigning probabilities to the outcomes of multi-entry competitions." 
+Journal of the American Statistical Association 68, no. 342 (1973): 312-316.
+<a href="http://dx.doi.org/10.1080/01621459.1973.10482425">http://dx.doi.org/10.1080/01621459.1973.10482425</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>the likelihood function, <code>harsmlik</code>, and the
+expected rank function (the inverse link), <code>erank</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">nfeat &lt;- 5
+set.seed(1234)
+g &lt;- ceiling(seq(0.1,1000,by=0.1))
+X &lt;- matrix(rnorm(length(g) * nfeat),ncol=nfeat)
+beta &lt;- rnorm(nfeat)
+eta &lt;- X %*% beta
+y &lt;- rsm(eta,g)
+     
+mod0 &lt;- harsmfit(y=y,g=g,X=X)
+summary(mod0)
+# now upweight finishers 1-5
+modw &lt;- harsmfit(y=y,g=g,X=X,wt=1 + as.numeric(y &lt; 6))
+summary(modw)
+</code></pre>
+
+
+</div>

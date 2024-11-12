@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rpe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Relative precision and efficiency (RPE) calculation</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the relative precision and efficiency (RPE) between two designs,
+it returns same results as those from function <code>re</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rpe(od, subod, rounded = TRUE, verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>od</code></td>
+<td>
+<p>Returned object of first design (e.g., unconstrained optimal design)
+from function <code>od.1</code>, <code>od.2</code>,
+<code>od.3</code>, <code>od.4</code>, <code>od.2m</code>,
+<code>od.3m</code>, or <code>od.4m</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subod</code></td>
+<td>
+<p>Returned object of second design (e.g., constrained optimal design)
+from function <code>od.1</code>, <code>od.2</code>,
+<code>od.3</code>, <code>od.4</code>, <code>od.2m</code>,
+<code>od.3m</code>, or <code>od.4m</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rounded</code></td>
+<td>
+<p>Logical; round the values of <code>p</code>, <code>n</code>/<code>J</code>/<code>K</code>
+that are from functions to two decimal places and integer, respectively if TRUE,
+no rounding if FALSE; default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical; print the value of relative precision and efficiency if TRUE,
+otherwise not; default is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Relative precision and efficiency value.
+</p>
+
+
+<h3>References</h3>
+
+<p>(1) Shen, Z., &amp; Kelcey, B. (2020). Optimal sample allocation under
+unequal costs in cluster-randomized trials.
+Journal of Educational and Behavioral Statistics, 45(4): 446–474.
+&lt;https://doi.org/10.3102/1076998620912418&gt;
+(2) Shen, Z., &amp; Kelcey, B. (in press). Optimal sample
+allocation in multisite randomized trials.
+The Journal of Experimental Education.
+&lt;https://doi.org/10.1080/00220973.2020.1830361&gt;
+(3) Shen, Z., &amp; Kelcey, B. (in press).
+Optimal sampling ratios in three-level
+multisite experiments. Journal of Research on Educational Effectiveness.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Unconstrained optimal design of 2-level CRT #----------
+  myod1 &lt;- od.2(icc = 0.2, r12 = 0.5, r22 = 0.5, c1 = 1, c2 = 5, c1t = 1, c2t = 50,
+              varlim = c(0.01, 0.02))
+# Constrained optimal design with n = 20
+  myod2 &lt;- od.2(icc = 0.2, r12 = 0.5, r22 = 0.5, c1 = 1, c2 = 5, c1t = 1, c2t = 50,
+              n = 20, varlim = c(0.005, 0.025))
+# Relative precision and efficiency (RPE)
+  myrpe &lt;- rpe(od = myod1, subod= myod2)
+  myrpe$rpe # RPE = 0.88
+# Constrained optimal design with p = 0.5
+  myod2 &lt;- od.2(icc = 0.2, r12 = 0.5, r22 = 0.5, c1 = 1, c2 = 5, c1t = 1, c2t = 50,
+             p = 0.5, varlim = c(0.005, 0.025))
+# Relative precision and efficiency (RPE)
+  myrpe &lt;- rpe(od = myod1, subod= myod2)
+  myrpe$rpe # RPE = 0.90
+
+# Unconstrained optimal design of 3-level CRT #----------
+  myod1 &lt;- od.3(icc2 = 0.2, icc3 = 0.1, r12 = 0.5, r22 = 0.5, r32 = 0.5,
+             c1 = 1, c2 = 5, c3 = 25, c1t = 1, c2t = 50, c3t = 250,
+             varlim = c(0.005, 0.025))
+# Constrained optimal design with J = 20
+  myod2 &lt;- od.3(icc2 = 0.2, icc3 = 0.1, r12 = 0.5, r22 = 0.5, r32 = 0.5, J = 20,
+             c1 = 1, c2 = 5, c3 = 25, c1t = 1, c2t = 50, c3t = 250,
+             varlim = c(0, 0.025))
+# Relative precision and efficiency (RPE)
+  myrpe &lt;- rpe(od = myod1, subod= myod2)
+  myrpe$rpe # RPE = 0.53
+
+# Unconstrained optimal design of 4-level CRT #---------
+  myod1 &lt;- od.4(icc2 = 0.2, icc3 = 0.1, icc4 = 0.05, r12 = 0.5,
+              r22 = 0.5, r32 = 0.5, r42 = 0.5,
+              c1 = 1, c2 = 5, c3 = 25, c4 = 125,
+              c1t = 1, c2t = 50, c3t = 250, c4t = 2500,
+              varlim = c(0, 0.01))
+# Constrained optimal design with p = 0.5
+  myod2 &lt;- od.4(icc2 = 0.2, icc3 = 0.1, icc4 = 0.05, r12 = 0.5, p = 0.5,
+              r22 = 0.5, r32 = 0.5, r42 = 0.5,
+              c1 = 1, c2 = 5, c3 = 25, c4 = 125,
+              c1t = 1, c2t = 50, c3t = 250, c4t = 2500,
+              varlim = c(0, 0.01))
+# Relative precision and efficiency (RPE)
+  myrpe &lt;- rpe(od = myod1, subod= myod2)
+  myrpe$rpe # RPE = 0.78
+
+</code></pre>
+
+
+</div>

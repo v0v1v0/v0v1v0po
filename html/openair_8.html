@@ -1,0 +1,273 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>conditionalEval</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Conditional quantile estimates with additional variables for model evaluation</h2>
+
+<h3>Description</h3>
+
+<p>This function enhances <code>conditionalQuantile()</code> by also considering how other
+variables vary over the same intervals. Conditional quantiles are very useful
+on their own for model evaluation, but provide no direct information on how
+other variables change at the same time. For example, a conditional quantile
+plot of ozone concentrations may show that low concentrations of ozone tend
+to be under-predicted. However, the cause of the under-prediction can be
+difficult to determine. However, by considering how well the model predicts
+other variables over the same intervals, more insight can be gained into the
+underlying reasons why model performance is poor.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">conditionalEval(
+  mydata,
+  obs = "obs",
+  mod = "mod",
+  var.obs = "var.obs",
+  var.mod = "var.mod",
+  type = "default",
+  bins = 31,
+  statistic = "MB",
+  xlab = "predicted value",
+  ylab = "statistic",
+  col = brewer.pal(5, "YlOrRd"),
+  col.var = "Set1",
+  var.names = NULL,
+  auto.text = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame containing the field <code>obs</code> and <code>mod</code>
+representing observed and modelled values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obs</code></td>
+<td>
+<p>The name of the observations in <code>mydata</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>The name of the predictions (modelled values) in <code>mydata</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.obs</code></td>
+<td>
+<p>Other variable observations for which statistics should be
+calculated. Can be more than length one e.g. <code>var.obs = c("nox.obs", "ws.obs")</code>. Note that including other variables could reduce the number of
+data available to plot due to the need of having non-missing data for all
+variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.mod</code></td>
+<td>
+<p>Other variable predictions for which statistics should be
+calculated. Can be more than length one e.g. <code>var.obs = c("nox.obs", "ws.obs")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>type</code> determines how the data are split i.e. conditioned,
+and then plotted. The default is will produce a single plot using the
+entire data. Type can be one of the built-in types as detailed in
+<code>cutData</code> e.g. "season", "year", "weekday" and so on. For example,
+<code>type = "season"</code> will produce four plots — one for each season.
+</p>
+<p>It is also possible to choose <code>type</code> as another variable in the data
+frame. If that variable is numeric, then the data will be split into four
+quantiles (if possible) and labelled accordingly. If type is an existing
+character or factor variable, then those categories/levels will be used
+directly. This offers great flexibility for understanding the variation of
+different variables and how they depend on one another.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bins</code></td>
+<td>
+<p>Number of bins to be used in calculating the different quantile
+levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>Statistic(s) to be plotted. Can be “MB”,
+“NMB”, “r”, “COE”, “MGE”, “NMGE”,
+“RMSE” and “FAC2”, as described in <code>modStats</code>. When
+these statistics are chosen, they are calculated from <code>var.mod</code> and
+<code>var.mod</code>.
+</p>
+<p><code>statistic</code> can also be a value that can be supplied to
+<code>cutData</code>. For example, <code>statistic = "season"</code> will show how
+model performance varies by season across the distribution of predictions
+which might highlight that at high concentrations of NOx the model tends to
+underestimate concentrations and that these periods mostly occur in winter.
+<code>statistic</code> can also be another variable in the data frame — see
+<code>cutData</code> for more information. A special case is <code>statistic = "cluster"</code> if clusters have been calculated using <code>trajCluster</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>label for the x-axis, by default “predicted value”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>label for the y-axis, by default “observed value”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Colours to be used for plotting the uncertainty bands and median
+line. Must be of length 5 or more.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.var</code></td>
+<td>
+<p>Colours for the additional variables to be compared. See
+<code>openColours</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.names</code></td>
+<td>
+<p>Variable names to be shown on plot for plotting
+<code>var.obs</code> and <code>var.mod</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.text</code></td>
+<td>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code>
+titles and axis labels etc. will automatically try and format pollutant
+names and units properly e.g.  by subscripting the ‘2’ in NO2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other graphical parameters passed onto <code>conditionalQuantile</code>
+and <code>cutData</code>. For example, <code>conditionalQuantile</code> passes the
+option <code>hemisphere = "southern"</code> on to <code>cutData</code> to provide
+southern (rather than default northern) hemisphere handling of <code>type = "season"</code>. Similarly, common axis and title labelling options (such as
+<code>xlab</code>, <code>ylab</code>, <code>main</code>) are passed to <code>xyplot</code> via
+<code>quickText</code> to handle routine formatting.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>conditionalEval</code> function provides information on how other
+variables vary across the same intervals as shown on the conditional quantile
+plot. There are two types of variable that can be considered by setting the
+value of <code>statistic</code>. First, <code>statistic</code> can be another variable in
+the data frame. In this case the plot will show the different proportions of
+<code>statistic</code> across the range of predictions. For example <code>statistic = "season"</code> will show for each interval of <code>mod</code> the proportion of
+predictions that were spring, summer, autumn or winter. This is useful
+because if model performance is worse for example at high concentrations of
+<code>mod</code> then knowing that these tend to occur during a particular season
+etc. can be very helpful when trying to understand <em>why</em> a model fails.
+See <code>cutData()</code> for more details on the types of variable that can
+be <code>statistic</code>. Another example would be <code>statistic = "ws"</code> (if
+wind speed were available in the data frame), which would then split wind
+speed into four quantiles and plot the proportions of each.
+</p>
+<p>Second, <code>conditionalEval</code> can simultaneously plot the model performance
+of other observed/predicted variable <strong>pairs</strong> according to different
+model evaluation statistics. These statistics derive from the
+<code>modStats()</code> function and include “MB”, “NMB”,
+“r”, “COE”, “MGE”, “NMGE”, “RMSE” and
+“FAC2”. More than one statistic can be supplied e.g. <code>statistic = c("NMB", "COE")</code>. Bootstrap samples are taken from the corresponding values
+of other variables to be plotted and their statistics with 95\
+intervals calculated. In this case, the model <em>performance</em> of other
+variables is shown across the same intervals of <code>mod</code>, rather than just
+the values of single variables. In this second case the model would need to
+provide observed/predicted pairs of other variables.
+</p>
+<p>For example, a model may provide predictions of NOx and wind speed (for which
+there are also observations available). The <code>conditionalEval</code> function
+will show how well these other variables are predicted for the same intervals
+of the main variables assessed in the conditional quantile e.g. ozone. In
+this case, values are supplied to <code>var.obs</code> (observed values for other
+variables) and <code>var.mod</code> (modelled values for other variables). For
+example, to consider how well the model predicts NOx and wind speed
+<code>var.obs = c("nox.obs", "ws.obs")</code> and <code>var.mod = c("nox.mod", "ws.mod")</code> would be supplied (assuming <code style="white-space: pre;">⁠nox.obs, nox.mod, ws.obs, ws.mod⁠</code> are present in the data frame). The analysis could show for example,
+when ozone concentrations are under-predicted, the model may also be shown to
+over-predict concentrations of NOx at the same time, or under-predict wind
+speeds. Such information can thus help identify the underlying causes of poor
+model performance. For example, an under-prediction in wind speed could
+result in higher surface NOx concentrations and lower ozone concentrations.
+Similarly if wind speed predictions were good and NOx was over predicted it
+might suggest an over-estimate of NOx emissions. One or more additional
+variables can be plotted.
+</p>
+<p>A special case is <code>statistic = "cluster"</code>. In this case a data frame is
+provided that contains the cluster calculated by <code>trajCluster()</code>
+and <code>importTraj()</code>. Alternatively users could supply their own
+pre-calculated clusters. These calculations can be very useful in showing
+whether certain back trajectory clusters are associated with poor (or good)
+model performance. Note that in the case of <code>statistic = "cluster"</code>
+there will be fewer data points used in the analysis compared with the
+ordinary statistics above because the trajectories are available for every
+three hours. Also note that <code>statistic = "cluster"</code> cannot be used
+together with the ordinary model evaluation statistics such as MB. The output
+will be a bar chart showing the proportion of each interval of <code>mod</code> by
+cluster number.
+</p>
+<p>Far more insight can be gained into model performance through conditioning
+using <code>type</code>. For example, <code>type = "season"</code> will plot conditional
+quantiles and the associated model performance statistics of other variables
+by each season. <code>type</code> can also be a factor or character field e.g.
+representing different models used.
+</p>
+<p>See Wilks (2005) for more details of conditional quantile plots.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>References</h3>
+
+<p>Wilks, D. S., 2005. Statistical Methods in the Atmospheric
+Sciences, Volume 91, Second Edition (International Geophysics), 2nd
+Edition. Academic Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The <code>verification</code> package for comprehensive functions for
+forecast verification.
+</p>
+<p>Other model evaluation functions: 
+<code>TaylorDiagram()</code>,
+<code>conditionalQuantile()</code>,
+<code>modStats()</code>
+</p>
+
+
+</div>

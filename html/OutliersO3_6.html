@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>O3prep</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Identify outliers for different combinations of variables
+</h2>
+
+<h3>Description</h3>
+
+<p>Check the dataset and parameters prior to analysis.  Identify outliers for the variable combinations and methods/tolerance levels specified.  Prepare input for the two plotting functions <code>O3plotT</code> and <code>O3plotM</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">O3prep(data, k1=1, K=ncol(data), method="HDo", tols=0.05, boxplotLimits=c(6, 10, 12),
+       tolHDo=0.05, tolPCS=0.01, tolBAC=0.001, toladj=0.05, tolDDC=0.01, tolMCD=0.000001)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>dataset to be checked for outliers
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k1</code></td>
+<td>
+
+<p>lowest number of variables in a combination
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+
+<p>highest number of variables in a combination
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+
+<p>method(s) used for identifying outliers (up to six can be used)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tols</code></td>
+<td>
+
+<p>outlier tolerance level(s) when only one method is specified.  Up to three can be used.  For consistent use of the argument, it is transformed for some of the methods.  See details below of how the argument is applied for each approach.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boxplotLimits</code></td>
+<td>
+
+<p>up to three boxplot limits are used (matching the number of tolerance levels), if a method does not apply for finding outliers for a single variable.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolHDo</code></td>
+<td>
+
+<p>an individual outlier tolerance level for the HDoutliers method.  The default in <span class="pkg">HDoutliers</span>, alpha, is 0.05.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolPCS</code></td>
+<td>
+
+<p>an individual outlier tolerance level for the FastPCS method.  This equals (1-alpha) for the argument in <span class="pkg">FastPCS</span>, where the default is 0.5.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolBAC</code></td>
+<td>
+
+<p>an individual outlier tolerance level for the mvBACON method.  The default for alpha in <span class="pkg">robustX</span> is 0.95.  This seems high, but it is divided by n, the dataset size.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toladj</code></td>
+<td>
+
+<p>an individual outlier tolerance level for the adjOutlyingness method.  This equals (1-alpha.cutoff) for the argument in <span class="pkg">robustbase</span>, where the default is 0.75.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolDDC</code></td>
+<td>
+
+<p>an individual outlier tolerance level for the DDC method.  This equals (1-tolProb) for the argument in <span class="pkg">cellWise</span>, where the default is 0.99.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolMCD</code></td>
+<td>
+
+<p>an individual outlier tolerance level for the covMcd method.  The default is 0.025 (based on the help page for plot.mcd in <span class="pkg">robustbase</span>). This is NOT the alpha argument in <code>covMcd</code>, which is used for determining subset size and set to 0.9 in OutliersO3.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To check outliers for all possible combinations of variables choose k1=1 and K=number of variables in the dataset (the default).
+</p>
+<p>The optional methods are "HDo" <code>HDoutliers</code> (from  <span class="pkg">HDoutliers</span>), "PCS" <code>FastPCS</code> (<span class="pkg">FastPCS</span>), "BAC" <code>mvBACON</code> (<span class="pkg">robustX</span>), "adjOut" <code>adjOutlyingness</code> (<span class="pkg">robustbase</span>), "DDC" <code>DDC</code> (<span class="pkg">Cellwise</span>), "MCD" <code>covMcd</code> (<span class="pkg">robustbase</span>).  References for all these methods can be found on their help pages, linked below.  (Note that <span class="pkg">Cellwise</span> has renamed its function <code>DetectDeviatingCells</code>.  Since version 2.1.0 <code>DDC</code> is used instead.)
+</p>
+<p>If only one method is specified, then up to three tolerance levels (tols) and three boxplot limits (boxplotLimits) can be specified.  If more than one method is specified, then the individual tol* parameters are used.
+</p>
+<p><code>tol</code> is the argument determining outlyingness and should be set low, as in <code>HDoutliers</code> and <code>mvBACON</code>, where it is called alpha, and in <code>covMcd</code>.  For the other methods <code>(1-tol)</code> is used.  In <code>DDC</code> the argument is called tolProb. Using the same tolerance level for all methods does not make them directly comparable, which is why it is recommended to set them individually when drawing a comparative O3 plot.  The defaults suggested on the methods' help pages mostly found too many outliers and so other defaults have been set.  Users need to decide for themselves, possibly dependent on the dataset they are analysing.
+</p>
+<p>Methods "HDo", "mvBACON", "adjOut", and "MCD" can analyse single variables.  For the other methods boxplot limits are used for single variables and any case &gt; (Q3 + boxplotLimit*IQR) or &lt; (Q1 - boxplotLimit*IQR) is classed an outlier, where <code>boxplotLimit</code> is the limit specified.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>the dataset analysed
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nw</code></td>
+<td>
+
+<p>the number of variable combinations analysed
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mm</code></td>
+<td>
+
+<p>the outlier methods used
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tols</code></td>
+<td>
+
+<p>the individual tolerance levels for the outlier methods used (if more than one), otherwise up to 3 tolerance levels used for one method
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outList</code></td>
+<td>
+
+<p>a list for each method/tolerance level, and within that for each variable combination, of the variables used, the indices of cases identified as outliers, and the outlier distances for all cases in the dataset.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Antony Unwin unwin@math.uni-augsburg.de
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>HDoutliers</code> in <span class="pkg">HDoutliers</span>, <code>FastPCS</code> in <span class="pkg">FastPCS</span>, <code>mvBACON</code> in <span class="pkg">robustX</span>, <code>adjOutlyingness</code> in <span class="pkg">robustbase</span>, <code>DDC</code> in <span class="pkg">cellWise</span>, <code>covMcd</code> in <span class="pkg">robustbase</span>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">a0 &lt;- O3prep(stackloss, method="PCS", tols=0.05, boxplotLimits=3)
+
+b0 &lt;- O3prep(stackloss, method=c("BAC", "adjOut"), k1=2, tols=0.01, boxplotLimits=6)
+
+## Not run: 
+a1 &lt;- O3prep(stackloss, method="PCS", tols=c(0.1, 0.05, 0.01), boxplotLimits=c(3, 6, 10))
+
+b1 &lt;- O3prep(stackloss, method=c("HDo", "BAC", "DDC"), tolHDo=0.025, tolBAC=0.01, tolDDC=0.05)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

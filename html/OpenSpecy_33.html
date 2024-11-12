@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>conform_spec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Conform spectra to a standard wavenumber series</h2>
+
+<h3>Description</h3>
+
+<p>Spectra can be conformed to a standard suite of wavenumbers to be compared
+with a reference library or to be merged to other spectra.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">conform_spec(x, ...)
+
+## Default S3 method:
+conform_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+conform_spec(x, range = NULL, res = 5, allow_na = F, type = "interp", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a list object of class <code>OpenSpecy</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>range</code></td>
+<td>
+<p>a vector of new wavenumber values, can be just supplied as a
+min and max value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>spectral resolution adjusted to or <code>NULL</code> if the raw range
+should be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allow_na</code></td>
+<td>
+<p>logical; should NA values in places beyond the wavenumbers
+of the dataset be allowed?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of wavenumber adjustment to make. <code>"interp"</code>
+results in linear interpolation while <code>"roll"</code> conducts a nearest
+rolling join of the wavenumbers. <code>"mean_up"</code> only works when
+Spectra are being aggregated, we take the mean of the intensities within the
+wavenumber specified. This can maintain smaller peaks and make spectra more
+similar to it's less resolved relatives. mean_up option is still experimental.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to <code>approx()</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>adj_intens()</code> returns a data frame containing two columns
+named <code>"wavenumber"</code> and <code>"intensity"</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>restrict_range()</code> and  <code>flatten_range()</code> for
+adjusting wavenumber ranges;
+<code>subtr_baseline()</code> for spectral background correction
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("raman_hdpe")
+conform_spec(raman_hdpe, c(1000, 2000))
+
+</code></pre>
+
+
+</div>

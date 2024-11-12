@@ -1,0 +1,172 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ohsome_boundary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an <code>ohsome_boundary</code> object</h2>
+
+<h3>Description</h3>
+
+<p>Creates an <code>ohsome_boundary</code> object from various classes of input geometries.
+The <code>ohsome_boundary</code> object is used to set the <code>bpolys</code>, <code>bboxes</code> or
+<code>bcircles</code> parameter of an <code>ohsome_query</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ohsome_boundary(boundary, ...)
+
+## S3 method for class 'ohsome_boundary'
+ohsome_boundary(boundary, ...)
+
+## S3 method for class 'character'
+ohsome_boundary(boundary, ...)
+
+## S3 method for class 'sf'
+ohsome_boundary(boundary, digits = 6, ...)
+
+## S3 method for class 'sfc'
+ohsome_boundary(boundary, ...)
+
+## S3 method for class 'sfg'
+ohsome_boundary(boundary, ...)
+
+## S3 method for class 'bbox'
+ohsome_boundary(boundary, ...)
+
+## S3 method for class 'matrix'
+ohsome_boundary(boundary, ...)
+
+## S3 method for class 'list'
+ohsome_boundary(boundary, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>Bounding geometries specified by WGS84 coordinates in the
+order <code style="white-space: pre;">⁠lon,lat⁠</code>. The geometries of <code>sf</code> are transformed to WGS84 if the CRS
+of the object is known. The following classes are supported:
+</p>
+
+<ul>
+<li> <p><code>sf</code> with (MULTI)POLYGON geometries
+</p>
+</li>
+<li> <p><code>sfc</code> with (MULTI)POLYGON geometries
+</p>
+</li>
+<li> <p><code>sfg</code> with (MULTI)POLYGON geometries and WGS 84 coordinates
+</p>
+</li>
+<li> <p><code>bbox</code> created with <code>sf::st_bbox()</code> or <code>tmaptools::bb()</code>
+</p>
+</li>
+<li> <p><code>matrix</code> created with <code>sp::bbox()</code> or <code>osmdata::getbb()</code>
+</p>
+</li>
+<li> <p><code>character</code> providing textual definitions of bounding polygons, boxes or
+circles as allowed by the ohsome API (see
+<a href="https://docs.ohsome.org/ohsome-api/stable/boundaries.html">ohsome API - Boundaries</a>
+):
+</p>
+
+<ul>
+<li>
+<p> bboxes: WGS84 coordinates in the following format:
+<code>"id1:lon1,lat1,lon2,lat2|id2:lon1,lat1,lon2,lat2|..."</code> OR
+<code>"lon1,lat1,lon2,lat2|lon1,lat1,lon2,lat2|..."</code>
+</p>
+</li>
+<li>
+<p> bcircles: WGS84 coordinates + radius in meter in the following
+format: <code>"id1:lon,lat,r|id2:lon,lat,r|..."</code> OR
+<code>"lon,lat,r|lon,lat,r|..."</code>
+</p>
+</li>
+<li>
+<p> bpolys: WGS84 coordinates given as a list of coordinate pairs (as for
+bboxes) or GeoJSON FeatureCollection. The first point has to be the same
+as the last point and MultiPolygons are only supported in GeoJSON.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>list</code> of <code>bbox</code>, <code>matrix</code> or <code>character</code>. Bounding geometry types of all
+list elements must be the same. Does not work with GeoJSON
+FeatureCollections.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments other than <code>digits</code> are ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>integer; number of decimal places of coordinates in the
+resulting GeoJSON when converting <code>sf</code> to GeoJSON (defaults to 6).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>ohsome_boundary</code> object which contains the following elements:
+</p>
+
+<ul>
+<li> <p><code>boundary</code>: the boundary in textual format
+</p>
+</li>
+<li> <p><code>type</code> of the boundary (<code>bpolys</code>, <code>bcircles</code>, or <code>bboxes</code>).
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Defintion of a bounding circle (lon,lat,radius in meters)
+ohsome_boundary("8.6528,49.3683,1000") 
+
+# Definition of two named bounding circles
+ohsome_boundary("Circle 1:8.6528,49.3683,1000|Circle 2:8.7294,49.4376,1000")
+
+# Definition of two named bounding circles with a character vector
+ohsome_boundary(c("Circle 1:8.6528,49.3683,1000", "Circle 2:8.7294,49.4376,1000"))
+
+# Use franconia from the mapview package as bounding polygons
+
+ohsome_boundary(mapview::franconia, digits = 4)
+
+ 
+# Use the bounding box of franconia
+
+ohsome_boundary(sf::st_bbox(mapview::franconia))
+
+
+# Get bounding box of the city of Berlin from OSM
+## Not run: 
+ohsome_boundary(osmdata::getbb("Berlin"))
+
+## End(Not run)
+ 
+# Use a list of two bounding boxes
+## Not run: 
+ohsome_boundary(list(osmdata::getbb("Berlin"), sf::st_bbox(mapview::franconia)))
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fHill</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate the Hill's diversity numbers </h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the Hill's diversity numbers introduced by M. O. Hill. It is a method for quantifying species biodiversity that can be adapted to the context of onomastic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fHill(x, k, n, location, lambda)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> dataframe of the data values for each species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p> name of a variable which represents absolute frequency for each species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p> name of a variable which represents total number of individuals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p> free parameter.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a community <code class="reqn">i</code>, the Hill's diversity numbers are defined by the expression
+<code class="reqn">J(\lambda) = \left(\sum \limits_{k\in S_i} p_{ki}^\lambda\right)^{\frac{1}{1-\lambda}}</code>
+with the restriction <code class="reqn">\lambda \geq 0</code> where <code class="reqn">p_{ki}</code> represents the relative frequency of species <code class="reqn">k</code> and <code class="reqn">S_i</code> are all species at the community, species richness, and <code class="reqn">\lambda</code> is a free parameter. (This is equivalent to the exponential of Renyi's generalised entropy). The Renyi entropy of order <code class="reqn">\lambda</code>, where <code class="reqn">\lambda \geq 0</code> and <code class="reqn">\lambda \neq 1</code>, is defined as
+<code class="reqn">\mathrm{H}_{\lambda}(X)=\frac{1}{1-\lambda} \log \left(\sum \limits_{i=1}^{n} p_{i}^{\lambda}\right)</code>
+Here, <code class="reqn">X</code> is a discrete random variable with possible outcomes in the set <code class="reqn">\mathcal{A}=\left\{x_{1}, x_{2}, \ldots, x_{n}\right\}</code> and corresponding probabilities <code class="reqn">p_{i} \doteq \operatorname{Pr}\left(X=x_{i}\right)</code> for <code class="reqn">i=1, \ldots, n</code>. The logarithm is conventionally taken to be base 2, especially in the context of information theory where bits are used. If the probabilities are <code class="reqn">p_{i}=1 / n</code> for all <code class="reqn">i=1, \ldots, n</code>, then all the Renyi entropies of the distribution are equal: <code class="reqn">\mathrm{H}_{\lambda}(X)=\log n</code>. In general, for all discrete random variables <code class="reqn">X, \mathrm{H}_{\lambda}(X)</code> is a non-increasing function in <code class="reqn">\lambda</code>.. 
+</p>
+<p>Particular cases of <code class="reqn">\lambda</code> values: <code class="reqn">\lambda = 0, J(0)=S_i</code>, it corresponds species richness; <code class="reqn">\lambda = 1, J(1)=e^{H_{t}}</code>, it corresponds the exponential of Shannon's entropy; and <code class="reqn">\lambda = 2, J(2)= D_{S_i}</code>, it corresponds the 'inverse' Simpson index.
+</p>
+<p>In onomastic context, <code class="reqn">p_{ki}</code> denotes the relative frequency of surname <code class="reqn">k</code> in region (<code class="reqn">\approx</code> community diversity context) <code class="reqn">i</code> and <code class="reqn">S_i</code> are all surnames in region <code class="reqn">i</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element, for example the communities / regions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hill</code></td>
+<td>
+<p> the value of the Hill's diversity index.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Hill, M. O. (1973). Diversity and Evenness: a unifying notation and its consequences. <em>Ecology</em>, <b>54</b>, 427–32.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fCressieRead.</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(surnamesgal14)
+result = fHill (x= surnamesgal14, k="number", n="population",
+location  = "muni", lambda= 0)
+result
+
+data(namesmengal16)
+result = fHill (x= namesmengal16, k="number", n="population",
+location  = "muni", lambda= 0)
+result
+
+data(nameswomengal16)
+result = fHill (x= nameswomengal16, k="number", n="population",
+location  = "muni", lambda= 0)
+result
+</code></pre>
+
+
+</div>

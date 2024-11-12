@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_opus</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read spectral data from Bruker OPUS binary files</h2>
+
+<h3>Description</h3>
+
+<p>Read file(s) acquired with a Bruker Vertex FTIR Instrument. This function
+is basically a fork of <code>opus_read()</code> from
+<a href="https://github.com/pierreroudier/opusreader">https://github.com/pierreroudier/opusreader</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_opus(
+  file,
+  metadata = list(file_name = basename(file), user_name = NULL, contact_info = NULL,
+    organization = NULL, citation = NULL, spectrum_type = NULL, spectrum_identity = NULL,
+    material_form = NULL, material_phase = NULL, material_producer = NULL,
+    material_purity = NULL, material_quality = NULL, material_color = NULL,
+    material_other = NULL, cas_number = NULL, instrument_used = NULL,
+    instrument_accessories = NULL, instrument_mode = NULL, spectral_resolution = NULL,
+    laser_light_used = NULL, number_of_accumulations = NULL, 
+    
+    total_acquisition_time_s = NULL, data_processing_procedure = NULL,
+    level_of_confidence_in_identification = NULL, other_info = NULL, license =
+    "CC BY-NC"),
+  type = "spec",
+  digits = 1L,
+  atm_comp_minus4offset = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>character vector with path to file(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata</code></td>
+<td>
+<p>a named list of the metadata; see
+<code>as_OpenSpecy()</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character vector of spectra types to extract from OPUS binary
+file. Default is <code>"spec"</code>, which will extract the final spectra, e.g.
+expressed in absorbance (named <code>AB</code> in Bruker OPUS programs). Possible
+additional values for the character vector supplied to <code>type</code> are
+<code>"spec_no_atm_comp"</code> (spectrum of the sample without compensation for
+atmospheric gases, water vapor and/or carbon dioxide),
+<code>"sc_sample"</code> (single channel spectrum of the sample measurement), <code>"sc_ref"</code>
+(single channel spectrum of the reference measurement),
+<code>"ig_sample"</code> (interferogram of the sample measurement) and <code>"ig_ref"</code>
+(interferogram of the reference measurement).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>Integer that specifies the number of decimal places used to
+round the wavenumbers (values of x-variables).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>atm_comp_minus4offset</code></td>
+<td>
+<p>Logical whether spectra after atmospheric
+compensation are read with an offset of -4 bytes from Bruker OPUS files;
+default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The type of spectra returned by the function when using
+<code>type = "spec"</code> depends on the setting of the Bruker instrument: typically,
+it can be either absorbance or reflectance.
+</p>
+<p>The type of spectra to extract from the file can also use Bruker's OPUS
+software naming conventions, as follows:
+</p>
+
+<ul>
+<li> <p><code>ScSm</code> corresponds to <code>sc_sample</code>
+</p>
+</li>
+<li> <p><code>ScRf</code> corresponds to <code>sc_ref</code>
+</p>
+</li>
+<li> <p><code>IgSm</code> corresponds to <code>ig_sample</code>
+</p>
+</li>
+<li> <p><code>IgRf</code> corresponds to <code>ig_ref</code>
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>An <code>OpenSpecy</code> object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Philipp Baumann, Zacharias Steinmetz, Win Cowger
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_spec()</code> for reading .y(a)ml, .json, or .rds (OpenSpecy)
+files;
+<code>read_text()</code>, <code>read_asp()</code>, <code>read_spa()</code>,
+<code>read_spc()</code>, and <code>read_jdx()</code> for text files, .asp,
+.spa, .spa, .spc, and .jdx formats, respectively;
+<code>read_text()</code> for reading .dat (ENVI) files;
+<code>read_zip()</code> and <code>read_any()</code> for wrapper functions;
+<code>read_opus_raw()</code>;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">read_extdata("ftir_ps.0") |&gt; read_opus()
+
+</code></pre>
+
+
+</div>

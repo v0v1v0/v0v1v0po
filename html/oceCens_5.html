@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oceFormat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Format ordered composite endpoint.</h2>
+
+<h3>Description</h3>
+
+<p>Usually called from within <code>oceTest</code>. Input data.frame
+with one row for each individual and columns for
+k time-to-event outcomes, k status variables, and a group variable.
+Format output so that each individual has several rows representing
+different intervals at risk. Returns a list with elements used for later
+calculations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oceFormat(
+  data,
+  oceTime,
+  oceStatus,
+  group,
+  id = NULL,
+  oceNames = NULL,
+  outputDataFrame = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>data.frame name, must have variables with names listed in
+<code>oceTime</code>, <code>oceStatus</code>, <code>group</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oceTime</code></td>
+<td>
+<p>character vector with ordered (primary is first) names of
+different time-to-event variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oceStatus</code></td>
+<td>
+<p>character vector with ordered names of status
+(0=censored, 1=event) variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>name of group variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>name of ID variable, NULL creates integer IDs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oceNames</code></td>
+<td>
+<p>long names of ordered endpoints, NULL uses <code>oceTime</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputDataFrame</code></td>
+<td>
+<p>logical, output a data.frame in the list, defaults to
+FALSE for speed in the bootstrap.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following elements:
+</p>
+
+<dl>
+<dt>timeMatrix</dt>
+<dd>
+<p>n by k matrix with input values for k time-to-event values
+for each of n individuals</p>
+</dd>
+<dt>statusMatrix</dt>
+<dd>
+<p>n by k matrix of status values</p>
+</dd>
+<dt>Z</dt>
+<dd>
+<p>n vector of group variable with elements either 0 or 1</p>
+</dd>
+<dt>oceNames</dt>
+<dd>
+<p>k vector of long oceNames (for plotting labels)</p>
+</dd>
+<dt>id</dt>
+<dd>
+<p>m vector of individual ids, one element for each
+interval, so m&gt;n</p>
+</dd>
+<dt>group</dt>
+<dd>
+<p>m vector of group values, either 0 or 1</p>
+</dd>
+<dt>status</dt>
+<dd>
+<p>m vector of status for each interval</p>
+</dd>
+<dt>START</dt>
+<dd>
+<p>m vector, START of interval</p>
+</dd>
+<dt>STOP</dt>
+<dd>
+<p>m vector, end of interval</p>
+</dd>
+<dt>TAU</dt>
+<dd>
+<p>maximum of the time-to-event outcomes</p>
+</dd>
+<dt>IZMatrix</dt>
+<dd>
+<p>m by k matrix, with jth column an indicator of representing
+ordering score 'time' for the jth endpoint</p>
+</dd>
+<dt>data</dt>
+<dd>
+<p>a data.frame output if outputDataFrame=TRUE, with variables:
+id, group, status, START, STOP, IZ1,...,IZk (columns of IZMatrix)</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R"> d.temp&lt;-data.frame(T1=c(1,4,3,6),s1=c(0,0,1,0),T2=c(4,1,5,3),
+   s2=c(1,0,0,1),z=c(0,0,1,1))
+ d.temp
+ x&lt;-oceFormat(data=d.temp,oceTime=c("T1","T2"),oceStatus=c("s1","s2"),
+   group="z",outputDataFrame=TRUE)
+ # put time to second event starting at TAU
+ x$TAU
+ x$data
+
+</code></pre>
+
+
+</div>

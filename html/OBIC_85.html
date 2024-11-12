@@ -1,0 +1,469 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>obic_field</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the Open Bodem Index score for one field</h2>
+
+<h3>Description</h3>
+
+<p>This functions wraps the functions of the OBIC into one main function to calculate the score for Open Bodem Index (OBI) for a single field.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">obic_field(
+  B_SOILTYPE_AGR,
+  B_GWL_CLASS,
+  B_SC_WENR,
+  B_HELP_WENR,
+  B_AER_CBS,
+  B_GWL_GLG,
+  B_GWL_GHG,
+  B_GWL_ZCRIT,
+  B_LU_BRP,
+  A_SOM_LOI,
+  A_SAND_MI,
+  A_SILT_MI,
+  A_CLAY_MI,
+  A_PH_CC,
+  A_N_RT,
+  A_CN_FR,
+  A_S_RT,
+  A_N_PMN,
+  A_P_AL,
+  A_P_CC,
+  A_P_WA,
+  A_CEC_CO,
+  A_CA_CO_PO,
+  A_MG_CO_PO,
+  A_K_CO_PO,
+  A_K_CC,
+  A_MG_CC,
+  A_MN_CC,
+  A_ZN_CC,
+  A_CU_CC,
+  A_C_BCS = NA,
+  A_CC_BCS = NA,
+  A_GS_BCS = NA,
+  A_P_BCS = NA,
+  A_RD_BCS = NA,
+  A_EW_BCS = NA,
+  A_SS_BCS = NA,
+  A_RT_BCS = NA,
+  A_SC_BCS = NA,
+  B_DRAIN = FALSE,
+  B_FERT_NORM_FR = 1,
+  M_COMPOST = NA_real_,
+  M_GREEN = NA,
+  M_NONBARE = NA,
+  M_EARLYCROP = NA,
+  M_SLEEPHOSE = NA,
+  M_DRAIN = NA,
+  M_DITCH = NA,
+  M_UNDERSEED = NA,
+  M_LIME = NA,
+  M_NONINVTILL = NA,
+  M_SSPM = NA,
+  M_SOLIDMANURE = NA,
+  M_STRAWRESIDUE = NA,
+  M_MECHWEEDS = NA,
+  M_PESTICIDES_DST = NA,
+  ID = 1,
+  output = "all"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>B_SOILTYPE_AGR</code></td>
+<td>
+<p>(character) The agricultural type of soil</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_GWL_CLASS</code></td>
+<td>
+<p>(character) The groundwater table class</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_SC_WENR</code></td>
+<td>
+<p>(character) The risk for subsoil compaction as derived from risk assessment study of Van den Akker (2006).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_HELP_WENR</code></td>
+<td>
+<p>(character) The soil type abbreviation, derived from 1:50.000 soil map</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_AER_CBS</code></td>
+<td>
+<p>(character) The agricultural economic region in the Netherlands (CBS, 2016)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_GWL_GLG</code></td>
+<td>
+<p>(numeric) The lowest groundwater level averaged over the most dry periods in 8 years in cm below ground level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_GWL_GHG</code></td>
+<td>
+<p>(numeric) The highest groundwater level averaged over the most wet periods in 8 years in cm below ground level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_GWL_ZCRIT</code></td>
+<td>
+<p>(numeric) The distance between ground level and groundwater level at which the groundwater can supply the soil surface with 2mm water per day (in cm)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_LU_BRP</code></td>
+<td>
+<p>(numeric) a series with crop codes given the crop rotation plan (source: the BRP)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_SOM_LOI</code></td>
+<td>
+<p>(numeric) The percentage organic matter in the soil (%)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_SAND_MI</code></td>
+<td>
+<p>(numeric) The sand content of the soil (%)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_SILT_MI</code></td>
+<td>
+<p>(numeric) The silt content of the soil (%)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_CLAY_MI</code></td>
+<td>
+<p>(numeric) The clay content of the soil (%)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_PH_CC</code></td>
+<td>
+<p>(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_N_RT</code></td>
+<td>
+<p>(numeric) The organic nitrogen content of the soil in mg N / kg</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_CN_FR</code></td>
+<td>
+<p>(numeric) The carbon to nitrogen ratio (-)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_S_RT</code></td>
+<td>
+<p>(numeric) The total Sulfur content of the soil (in mg S per kg)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_N_PMN</code></td>
+<td>
+<p>(numeric) The potentially mineralizable N pool (mg N / kg soil)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_P_AL</code></td>
+<td>
+<p>(numeric) The P-AL content of the soil</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_P_CC</code></td>
+<td>
+<p>(numeric) The plant available P content, extracted with 0.01M CaCl2 (mg / kg)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_P_WA</code></td>
+<td>
+<p>(numeric) The P-content of the soil extracted with water (mg P2O5 / 100 ml soil)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_CEC_CO</code></td>
+<td>
+<p>(numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_CA_CO_PO</code></td>
+<td>
+<p>(numeric) The The occupation of the CEC with Ca (%)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_MG_CO_PO</code></td>
+<td>
+<p>(numeric) The The occupation of the CEC with Mg (%)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_K_CO_PO</code></td>
+<td>
+<p>(numeric) The occupation of the CEC with K (%)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_K_CC</code></td>
+<td>
+<p>(numeric) The plant available K content, extracted with 0.01M CaCl2 (mg / kg)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_MG_CC</code></td>
+<td>
+<p>(numeric) The plant available Mg content, extracted with 0.01M CaCl2 (ug / kg)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_MN_CC</code></td>
+<td>
+<p>(numeric) The plant available Mn content, extracted with 0.01M CaCl2 (ug / kg)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_ZN_CC</code></td>
+<td>
+<p>(numeric) The plant available Zn content, extracted with 0.01M CaCl2 (ug / kg)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_CU_CC</code></td>
+<td>
+<p>(numeric) The plant available Cu content, extracted with 0.01M CaCl2 (ug / kg)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_C_BCS</code></td>
+<td>
+<p>(numeric) The presence of visible cracks in the top layer (optional, score 0-1-2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_CC_BCS</code></td>
+<td>
+<p>(integer) The crop cover on the surface (optional, score 0-1-2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_GS_BCS</code></td>
+<td>
+<p>(numeric) The presence of waterlogged conditions, gley spots (optional, score 0-1-2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_P_BCS</code></td>
+<td>
+<p>(numeric) The presence / occurrence of water puddles on the land, ponding (optional, score 0-1-2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_RD_BCS</code></td>
+<td>
+<p>(integer) The rooting depth (optional, score 0-1-2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_EW_BCS</code></td>
+<td>
+<p>(numeric) The presence of earth worms (optional, score 0-1-2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_SS_BCS</code></td>
+<td>
+<p>(integer) The soil structure (optional, score 0-1-2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_RT_BCS</code></td>
+<td>
+<p>(numeric) The presence of visible tracks / rutting or trampling on the land (optional, score 0-1-2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A_SC_BCS</code></td>
+<td>
+<p>(numeric) The presence of compaction of subsoil (optional, score 0-1-2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_DRAIN</code></td>
+<td>
+<p>(boolean) Are drains installed to drain the field (options: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B_FERT_NORM_FR</code></td>
+<td>
+<p>(numeric) The fraction of the application norm utilized</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_COMPOST</code></td>
+<td>
+<p>(numeric) The frequency that compost is applied (optional, every x years)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_GREEN</code></td>
+<td>
+<p>(boolean) A soil measure. Are catch crops sown after main crop (optional, option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_NONBARE</code></td>
+<td>
+<p>(boolean) A soil measure. Is parcel for 80 percent of the year cultivated and 'green' (optional, option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_EARLYCROP</code></td>
+<td>
+<p>(boolean) A soil measure. Use of early crop varieties to avoid late harvesting (optional, option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_SLEEPHOSE</code></td>
+<td>
+<p>(boolean) A soil measure. Is sleephose used for slurry application (optional, option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_DRAIN</code></td>
+<td>
+<p>(boolean) A soil measure. Are under water drains installed in peaty soils (optional, option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_DITCH</code></td>
+<td>
+<p>(boolean) A soil measure. Are ditched maintained carefully and slib applied on the land (optional, option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_UNDERSEED</code></td>
+<td>
+<p>(boolean) A soil measure. Is grass used as second crop in between maize rows (optional, option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_LIME</code></td>
+<td>
+<p>(boolean) measure. Has field been limed in last three years (option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_NONINVTILL</code></td>
+<td>
+<p>(boolean) measure. Non inversion tillage (option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_SSPM</code></td>
+<td>
+<p>(boolean) measure. Soil Structure Protection Measures, such as fixed driving lines, low pressure tires, and light weighted machinery (option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_SOLIDMANURE</code></td>
+<td>
+<p>(boolean) measure. Use of solid manure (option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_STRAWRESIDUE</code></td>
+<td>
+<p>(boolean) measure. Application of straw residues (option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_MECHWEEDS</code></td>
+<td>
+<p>(boolean) measure. Use of mechanical weed protection (option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M_PESTICIDES_DST</code></td>
+<td>
+<p>(boolean) measure. Use of DST for pesticides (option: yes or no)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ID</code></td>
+<td>
+<p>(character) A field id</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>(character) An optional argument to select output: obic_score, scores, indicators, recommendations, or all. (default = all)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is assumed that the crop series is a continuous series in decreasing order of years. So most recent year first, oldest year last.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The output of the Open Bodem Index Calculator for a specific agricultural field. 
+Depending on the output type, different output objects can be returned.
+These include the estimated OBI scores (both total and aggregated subscores), the value of the underling indicators as well the possible recommendations to improve the soil quality.
+The output is always a data.table.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+obic_field( B_SOILTYPE_AGR = 'rivierklei',B_GWL_CLASS = "II",B_GWL_GLG = 75,B_GWL_GHG = 10,
+B_GWL_ZCRIT = 50,B_SC_WENR = '2',B_HELP_WENR = "MOb72",B_AER_CBS = 'LG01',
+B_LU_BRP = c( 1010, 1010,263,263, 263,265,265,265),A_SOM_LOI = 3.91,A_SAND_MI = 66.3,
+A_SILT_MI = 22.8,A_CLAY_MI = 7.8,A_PH_CC = 5.4,A_N_RT = 1528.33,A_CN_FR = 13.02,
+A_S_RT = 321.26,A_N_PMN = 63.3,A_P_AL = 50.2,A_P_CC = 2.9,A_P_WA = 50.5,
+A_CEC_CO = 56.9,A_CA_CO_PO = 66.87,A_MG_CO_PO = 13.97,A_K_CO_PO = 3.06,
+A_K_CC = 58.6,A_MG_CC = 77.53,A_MN_CC = 7586.61,A_ZN_CC = 726.2,A_CU_CC = 68.8,
+A_C_BCS = 1,A_CC_BCS = 1,A_GS_BCS = 1,A_P_BCS = 1,A_RD_BCS = 1,A_EW_BCS = 1,
+A_SS_BCS = 1,A_RT_BCS = 1,A_SC_BCS = 1,M_COMPOST = 0,M_GREEN = FALSE,M_NONBARE =FALSE,
+M_EARLYCROP = FALSE,M_SLEEPHOSE = FALSE,M_DRAIN = FALSE,M_DITCH = FALSE,
+M_UNDERSEED = FALSE,M_LIME = FALSE,M_MECHWEEDS = FALSE,M_NONINVTILL = FALSE,
+M_PESTICIDES_DST = FALSE,M_SOLIDMANURE = FALSE,M_SSPM = FALSE,M_STRAWRESIDUE = FALSE)
+
+## End(Not run)
+ 
+</code></pre>
+
+
+</div>

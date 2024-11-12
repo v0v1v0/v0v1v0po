@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Risk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Risk</h2>
+
+<h3>Description</h3>
+
+<script id="MathJax-script" async src="../../mathjaxr/doc/mathjax/es5/tex-chtml-full.js"></script><p>Risk measures such as Value at Risk (VaR) and Expected Shortfall (ES) with normal and t-student
+distributions based on variance-covariance method. It is a shortcut for VaR and ES.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Risk(
+  variance,
+  alpha = 0.95,
+  measure = c("both", "VaR", "ES"),
+  weights = NULL,
+  model = c("both", "normal", "t-student"),
+  df = NULL,
+  percentage = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>variance</code></td>
+<td>
+<p>It could be either a scalar or a matrix containing the variances and covariances
+of the losses. Provide a covariance matrix when analyzing correlated losses or a scalar when dealing
+with a single loss.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The confidence level at which either the VaR or the ES will be computed, by default <code>alpha</code> is set to 0.95.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measure</code></td>
+<td>
+<p>An optional character string giving a measure for computing the risk. <code>"VaR"</code> stands for Value at Risk,
+<code>"ES"</code> stands for Expected Shortfall, and if both is chosen, then the function returns both the VaR
+and the ES as a result. By default <code>measure</code> is set to be <code>"both"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>A vector containing the weights. It is only needed if <code>variance</code> is a matrix, if it is not then <code>weights</code> is set to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A character string indicating which probability model has to be used for computing the risk measures, it could only be a
+normal distribution or a t-student distribution with \(v\) degrees of freedom. The normal distribution is the
+default model for this function. <code>model</code> default value is set to <code>'both'</code>
+to show normal and t-student VaR and ES. See example below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>An integer (<code>df</code>&gt;2) denoting the degrees of freedom, only required if <code>model='t-student'</code>. Otherwise it has to be <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentage</code></td>
+<td>
+<p>Logical indicating whether the file names in the VaR table should be presented in percentage or decimal.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> containing each risk measure at its corresponding confidence level.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jilber Urbina
+</p>
+
+
+<h3>References</h3>
+
+<p>Dhaene J., Tsanakas A., Valdez E. and Vanduffel S. (2011). <em>Optimal Capital Allocation Principles</em>. The Journal of Risk and Insurance. Vol. 00, No. 0, 1-28.
+</p>
+<p>Urbina, J. (2013) <em>Quantifying Optimal Capital Allocation Principles based on Risk Measures.</em> Master Thesis, Universitat Politècnica de Catalunya.
+</p>
+<p>Urbina, J. and Guillén, M. (2014). <em>An application of capital allocation principles to operational risk and the cost of fraud</em>. Expert Systems with Applications. 41(16):7023-7031.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>VaR</code>, <code>ES</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Reproducing Table 2.1 in page 47 of
+# McNeal A., Frey R. and Embrechts P (2005).
+alpha &lt;- c(.90, .95, .975, .99, .995)
+(Risk(variance=(0.2/sqrt(250))^2, alpha=alpha, measure='both', model='both', df=4))*10000
+
+# only VaR results
+(Risk(variance=(0.2/sqrt(250))^2, alpha=alpha, measure='VaR', model='both', df=4))*10000
+
+
+# only SE based on a 4 degrees t-student.
+(Risk(variance=(0.2/sqrt(250))^2, alpha=alpha, measure='ES', model='t-student', df=4))*10000
+</code></pre>
+
+
+</div>

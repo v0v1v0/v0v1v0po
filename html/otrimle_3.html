@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>InitClust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Robust Initialization for Model-based Clustering Methods</h2>
+
+<h3>Description</h3>
+
+<p>Computes the initial cluster assignment based on a combination of
+nearest neighbor based noise detection, and agglomerative hierarchical
+clustering based on maximum likelihood criteria for Gaussian
+mixture models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> InitClust(data , G , k = 3 , knnd.trim = 0.5 , modelName='VVV')
+ </code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>A numeric vector, matrix, or data frame of observations. Rows correspond
+to observations and columns correspond to variables. Categorical
+variables and <code>NA</code> values are not allowed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+
+<p>An integer specifying the number of clusters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+
+<p>An integer specifying the number of considered nearest neighbors per point
+used for the denoising step (see <em>Details</em>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>knnd.trim</code></td>
+<td>
+
+<p>A number in [0,1) which defines the proportion of points
+initialized as noise. Tipically <code>knnd.trim&lt;=0.5</code> (see <em>Details</em>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modelName</code></td>
+<td>
+
+<p>A character string indicating the covariance model to be used. Possible models are: <br><code>"E"</code>:   equal variance  (one-dimensional) <br><code>"V"</code> :  spherical, variable variance (one-dimensional) <br><code>"EII"</code>: spherical, equal volume <br><code>"VII"</code>: spherical, unequal volume <br><code>"EEE"</code>: ellipsoidal, equal volume, shape, and orientation <br><code>"VVV"</code>: ellipsoidal, varying volume, shape, and orientation (default).<br>
+See <em>Details</em>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The initialization is based on Coretto and Hennig (2017). First, wwo
+steps are performed:<br></p>
+<p><em>Step 1 (denoising step):</em> for each data point compute its
+<code>k</code>th<code>-</code>nearest neighbors
+distance (<code>k-</code>NND). All points with <code>k-</code>NND  larger
+than the (1-<code>knnd.trim</code>)<code>-</code>quantile  of the <code>k-</code>NND
+are initialized as noise. Intepretaion of
+<code>k</code> is that:  <code>(k-1)</code>, but not <code>k</code>, points close
+together may still be interpreted  as noise or outliers
+</p>
+<p><em>Step 2 (clustering step):</em> perform the model-based hierarchical
+clustering (MBHC) proposed in Fraley (1998). This step is performed using
+<code>hc</code>. The input argument <code>modelName</code> is passed
+to <code>hc</code>. See <em>Details</em> of
+<code>hc</code> for more details.
+</p>
+<p>If the previous <em>Step 2</em> fails to provide <code>G</code> clusters each
+containing at least 2 distinct data points, it is replaced with
+classical hirararchical clustering implemented in
+<code>hclust</code>. Finally, if
+<code>hclust</code> fails to provide a valid partition, up
+to ten random partitions are tried.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An integer vector specifying the initial cluster
+assignment  with <code>0</code> denoting noise/outliers.
+</p>
+
+
+<h3>References</h3>
+
+<p>Fraley, C.  (1998).
+Algorithms for model-based Gaussian hierarchical clustering.
+<em>SIAM Journal on Scientific Computing</em> 20:270-281.
+</p>
+<p>P. Coretto and C. Hennig (2017).
+Consistency, breakdown robustness, and algorithms for robust improper
+maximum  likelihood clustering.
+<em>Journal of Machine Learning Research</em>, Vol. 18(142), pp. 1-39.
+<a href="https://jmlr.org/papers/v18/16-382.html">https://jmlr.org/papers/v18/16-382.html</a>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Pietro Coretto
+<a href="mailto:pcoretto@unisa.it">pcoretto@unisa.it</a>
+<a href="https://pietro-coretto.github.io">https://pietro-coretto.github.io</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>hc
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> ## Load  Swiss banknotes data
+ data(banknote)
+ x &lt;- banknote[,-1]
+
+ ## Initial clusters with default arguments
+ init &lt;- InitClust(data = x, G = 2)
+ print(init)
+
+ ## Perform otrimle
+ a &lt;- otrimle(data = x, G = 2, initial = init,
+              logicd = c(-Inf, -50, -10), ncores = 1)
+ plot(a, what="clustering", data=x)
+ </code></pre>
+
+
+</div>

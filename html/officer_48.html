@@ -1,0 +1,59 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>body_remove</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove an element in a 'Word' document</h2>
+
+<h3>Description</h3>
+
+<p>Remove element pointed by cursor from a
+'Word' document.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">body_remove(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rdocx object</p>
+</td>
+</tr></table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(officer)
+
+str1 &lt;- rep("Lorem ipsum dolor sit amet, consectetur adipiscing elit. ", 20)
+str1 &lt;- paste(str1, collapse = "")
+
+str2 &lt;- "Drop that text"
+
+str3 &lt;- rep("Aenean venenatis varius elit et fermentum vivamus vehicula. ", 20)
+str3 &lt;- paste(str3, collapse = "")
+
+my_doc &lt;- read_docx()
+my_doc &lt;- body_add_par(my_doc, value = str1, style = "Normal")
+my_doc &lt;- body_add_par(my_doc, value = str2, style = "centered")
+my_doc &lt;- body_add_par(my_doc, value = str3, style = "Normal")
+
+new_doc_file &lt;- print(my_doc,
+  target = tempfile(fileext = ".docx")
+)
+
+my_doc &lt;- read_docx(path = new_doc_file)
+my_doc &lt;- cursor_reach(my_doc, keyword = "that text")
+my_doc &lt;- body_remove(my_doc)
+
+print(my_doc, target = tempfile(fileext = ".docx"))
+</code></pre>
+
+
+</div>

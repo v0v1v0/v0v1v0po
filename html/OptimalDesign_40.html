@@ -1,0 +1,295 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Visualization of a design
+</h2>
+
+<h3>Description</h3>
+
+<p>Visualizes selected aspects of an experimental design
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_plot(Fx, w, X=NULL, w.pool=c("sum", "0"), w.color="darkblue",
+        w.size=1, w.pch=16, w.cex=0.8, w.lim=0.01, crit="D",
+        h=NULL, dd.pool=c("max", "mean"), dd.color="orange",
+        dd.size=1.5, dd.pch=15, asp = NA, main.lab="",
+        y.lab="", return.pools=FALSE, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> is the number of parameters
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>the vector of non-negative real numbers of length <code>n</code> representing the design
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>an <code>n</code> times <code>k</code> matrix of coordinates of design points
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.pool</code></td>
+<td>
+
+<p>a vector with components from the set <code>"sum"</code>, <code>"min"</code>, <code>"max"</code>, <code>"mean"</code>, <code>"median"</code>, <code>"0"</code> that determines various "pools" of the design weights along the projections defined by the coordinates provided by <code>X</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.color</code></td>
+<td>
+
+<p>the color string for plotting the design weight (from the standard list of R colors)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.size</code></td>
+<td>
+
+<p>the size of the characters/balls that represent the non-zero design weights
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.pch</code></td>
+<td>
+
+<p>the numerical code of the characters used to plot the non-zero design weights
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.cex</code></td>
+<td>
+
+<p>the size of the text labels representing the magnitudes of the design weights
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.lim</code></td>
+<td>
+
+<p>a threshold fraction of the total design weight to plot the labels
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>the optimality criterion. Possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dd.pool</code></td>
+<td>
+
+<p>a vector with components from the set <code>"sum"</code>, <code>"min"</code>, <code>"max"</code>, <code>"mean"</code>, <code>"median"</code>, <code>"0"</code> that determines various "pools" of the directional derivatives along the projections defined by the coordinates provided by <code>X</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dd.color</code></td>
+<td>
+
+<p>the color string for plotting the directional derivatives (from the standard list of R colors)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dd.size</code></td>
+<td>
+
+<p>the size of the characters that represent the directional derivatives
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dd.pch</code></td>
+<td>
+
+<p>the numerical code of the character used to plot the directional derivatives
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asp</code></td>
+<td>
+
+<p>the aspect ration of the axes
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main.lab</code></td>
+<td>
+
+<p>the main title of the plot
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y.lab</code></td>
+<td>
+
+<p>the label of the y axis
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.pools</code></td>
+<td>
+
+<p>Return the pooled values?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function performs a simple visualization of some aspects of an experimental design. It visualizes (the selected pools of) the design weights and (the selected pools of) the directional derivative. The type of graph depends on the number of columns in <code>X</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>return.pool</code> is set to <code>TRUE</code>, the procedure returns the data used to plot the figure. The data can be used to plot a different figure according to the user's needs.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The labels of the axes correspond to the column names of <code>X</code>. For a large <code>unique(Fx)</code>, rendering the plot can take a considerable time. Note also that using RStudio, it may be a good idea to open an external graphical window (using the command <code>windows()</code>) before running <code>od_plot</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>od_pool</code>, <code>od_print</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Compute a D-optimal approximate design
+# for the 2nd degree Fourier regression on a partial circle
+# Use several types of graphs to visualize the design
+
+Fx &lt;- Fx_cube(~I(cos(x1)) + I(sin(x1)) + I(cos(2*x1)) + I(sin(2*x1)),
+              lower = -2*pi/3, upper = 2*pi/3, n.levels = 121)
+w &lt;- od_REX(Fx)$w.best
+par(mfrow = c(2, 2))
+od_plot(Fx, w, X = seq(-2*pi/3, 2*pi/3, length = 121), main = "Plot 1")
+od_plot(Fx, w, X = Fx[, 2:3], asp = 1, main = "Plot 2")
+od_plot(Fx, w, X = Fx[, c(2,5)], asp = 1, main = "Plot 3")
+od_plot(Fx, w, X = Fx[, c(3,4)], asp = 1, main = "Plot 4")
+par(mfrow = c(1, 1))
+
+## Not run: 
+# Compute an I-efficient exact design of size 20 without replications
+# for the Scheffe mixture model
+# Use several types of graphs to visualize the design
+
+Fx &lt;- Fx_simplex(~x1 + x2 + x3 + I(x1*x2) + I(x1*x3) + I(x2*x3) - 1, 21)
+w &lt;- od_AQUA(Fx, b3=20, bin=TRUE, crit="I")$w.best
+X &lt;- Fx[, 1:2] 
+colnames(X) &lt;- c("", "")
+od_plot(Fx, w, X, asp = 1, main = "Plot 1")
+od_plot(Fx, w, Fx[, 1:3], main = "Plot 2")
+
+# Compute a symmetrized D-optimal approximate design
+# for the full quadratic model with 4 factors
+# Use several types of graphs to visualize the design
+
+form.q &lt;- ~x1 + x2 + x3 + x4 + I(x1^2) + I(x2^2) + I(x3^2) + I(x4^2) +
+           I(x1*x2) + I(x1*x3) + I(x1*x4) + I(x2*x3) + I(x2*x4) + I(x3*x4)
+Fx &lt;- Fx_cube(form.q, n.levels = rep(11, 4))
+w &lt;- od_REX(Fx)$w.best
+od_plot(Fx, w, Fx[, 2:3], dd.size=3)
+od_plot(Fx, w, Fx[, 2:4], w.lim=Inf)
+
+
+# A more complex example:
+
+# Compute the D-optimal 17 point exact design
+# for the spring-balance weighing model with 4 items
+
+Fx &lt;- Fx_cube(~x1 + x2 + x3 + x4 - 1, lower = rep(0, 4))
+w &lt;- od_KL(Fx, 17, t.max = 5)$w.best
+od_print(Fx, w)$design
+U &lt;- eigen(diag(4) - 0.25 * rep(1, 4) 
+
+# A 2D visualization
+
+X &lt;- Fx[, 1:4] 
+X[, 2] &lt;- -2*X[, 2]
+colnames(X) &lt;- c("V", "Number of items on the pan")
+od_plot(Fx, w+0.001, X)
+for(i in 1:16) for(j in 1:16)
+  if(sum(abs(Fx[i,1:4]-Fx[j,1:4]))==1)
+    lines(X[c(i,j),1], X[c(i,j),2])
+
+# A 3D visualization
+
+X &lt;- Fx[, 1:4] 
+colnames(X) &lt;- c("V1", "V2", "V3")
+od_plot(Fx, w+0.001, X)
+for(i in 1:16) for(j in 1:16)
+  if(sum(abs(Fx[i, 1:4] - Fx[j, 1:4])) == 1)
+    rgl::lines3d(X[c(i, j), 1], X[c(i, j), 2], X[c(i, j), 3])
+
+## End(Not run)
+</code></pre>
+
+
+</div>

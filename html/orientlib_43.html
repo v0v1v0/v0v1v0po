@@ -1,0 +1,178 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orientlm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Linear models for orientation data </h2>
+
+<h3>Description</h3>
+
+<p>Regression models for matched pairs of orientations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orientlm(observed, leftformula, trueorient = rotmatrix(diag(3)), 
+         rightformula, data = list(), subset, weights, na.action, 
+         iterations = 5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>observed</code></td>
+<td>
+<p> Observed orientations </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>leftformula</code></td>
+<td>
+<p> Formula for “left” model (see below) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trueorient</code></td>
+<td>
+<p> “True” orientation (see below) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rightformula</code></td>
+<td>
+<p> Formula for “right” model (see below) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p> Optional data frame for predictors in linear model </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p> Optional logical vector indicating subset of data </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p> Optional weights </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p> Optional NA function for predictors </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iterations</code></td>
+<td>
+<p> How many iterations to use.  Ignored unless both 
+<code>leftformula</code> and <code>rightformula</code> are specified.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Prentice (1989) model for matched pairs of orientations was
+</p>
+<p style="text-align: center;"><code class="reqn">E(V_i) = k A_1^t U_i A_2</code>
+</p>
+
+<p>where <code class="reqn">V_i</code> is the observed orientation, <code class="reqn">A_1</code> and <code class="reqn">A_2</code> are orientation matrices,
+and <code class="reqn">U_i</code> is the “true” orientation, and <code class="reqn">k</code> is a constant.  It was assumed that
+errors were symmetrically distributed about the identity matrix.
+</p>
+<p>This function generalizes this model, allowing <code class="reqn">A_1</code> and <code class="reqn">A_2</code> to depend on
+regressor variables through <code>leftformula</code> and <code>rightformula</code> respectively.  
+These formulas should include the predictor variables (right hand side) only, e.g. use
+<code>~ x + y + z</code> rather than <code>response ~ x + y + z</code>.  Specify the response using
+the <code>observed</code> argument.  If 
+both formulas are <code>~ 1</code>, i.e. intercepts only, then Prentice's original model is 
+recovered.  More general models are fit by coordinatewise linear regression in the <code>rotmatrix</code>
+representation of the orientation, with fitted values projected onto SO(3) using the 
+<code>nearest.SO3</code> function.
+</p>
+<p>When both left and right models are given, Prentice's iterative approach is used with
+a fixed number of iterations.  Note that
+Shin (1999) found that Prentice's scheme sometimes fails to find the 
+global minimum; this function presumably suffers from the same failing.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>leftfit </code></td>
+<td>
+<p>Result of <code>lm</code> call based on <code>leftformula</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rightfit </code></td>
+<td>
+<p>Result of <code>lm</code> call based on <code>rightformula</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A1 </code></td>
+<td>
+<p>Fitted values of <code class="reqn">A_1</code> for each observation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A2 </code></td>
+<td>
+<p>Fitted values of <code class="reqn">A_2</code> for each observation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predict</code></td>
+<td>
+<p>Fitted values of <code class="reqn">A_1^t U_i A_2</code> for each observation</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Duncan Murdoch </p>
+
+
+<h3>References</h3>
+
+ 
+<p>Prentice, M.J. (1989).  Spherical regression on matched pairs of orientation statistics.
+JRSS B 51, 241-248.
+</p>
+<p>Shin, H.S.H. (1999).  Experimental Design for Orientation Models.  PhD thesis, Queen's University.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- rep(1:10,10)
+y &lt;- rep(1:10,each=10)
+A1 &lt;- skewvector(cbind(x/10,y/10,rep(0,100)))
+A2 &lt;- skewvector(c(1,1,1))
+trueorientation &lt;- skewvector(matrix(rnorm(300),100))
+noise &lt;- skewvector(matrix(rnorm(300)/10,100))
+obs &lt;- t(A1) %*% trueorientation %*% A2 %*% noise
+
+fit &lt;- orientlm(obs, ~ x + y, trueorientation, ~ 1)
+
+context &lt;- boat3d(A1, x, z=y, col = 'green', graphics='scatterplot3d')
+boat3d(fit$A1, x, z=y, add=context)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,229 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fourTwo.start</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>4-2 Staircase</h2>
+
+<h3>Description</h3>
+
+<p>fourTwo is a 4-2 dB staircase beginning at level <code>est</code>
+terminating after two reversals. The final estimate is the average of the
+last two presentations. It also terminates if the <code>minStimulus</code> is
+not seen twice, or the <code>maxStimulus</code> is seen twice.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fourTwo.start(est = 25, instRange = c(0, 40), verbose = FALSE, makeStim, ...)
+
+fourTwo.step(state, nextStim = NULL)
+
+fourTwo.stop(state)
+
+fourTwo.final(state)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>est</code></td>
+<td>
+<p>Starting estimate in dB</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instRange</code></td>
+<td>
+<p>Dynamic range of the instrument c(min,max) in dB</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>True if you want each presentation printed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>makeStim</code></td>
+<td>
+<p>A function that takes a dB value and numPresentations
+and returns an OPI datatype ready for passing to opiPresent</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Extra parameters to pass to the opiPresent function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state</code></td>
+<td>
+<p>Current state of the fourTwo returned by
+<code>fourTwo.start</code> and <code>fourTwo.step</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nextStim</code></td>
+<td>
+<p>A valid object for <code>opiPresent</code> to
+use as its <code>nextStim</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is an implementation of a 4-2 1-up 1-down staircase. The
+initial staircase starts at <code>est</code> and proceeds in steps of 4 dB until
+the first reversal, and 2dB until the next reversal. The mean of the last
+two presentations is taken as the threshold value. Note this function will
+repeatedly call <code>opiPresent</code> for a stimulus until <code>opiPresent</code>
+returns <code>NULL</code> (ie no error occurred). If more than one fourTwo is to
+be interleaved (for example, testing multiple locations), then the
+<code>fourTwo.start</code>, <code>fourTwo.step</code>, <code>fourTwo.stop</code> and
+<code>fourTwo.final</code> calls can maintain the state of the fourTwo after
+each presentation, and should be used. See examples below.
+</p>
+
+
+<h3>Value</h3>
+
+
+
+<h4>Multiple locations</h4>
+
+<p><code>fourTwo.start</code> returns a list that can be passed to <code>fourTwo.step</code>,
+<code>fourTwo.stop</code>, and <code>fourTwo.final</code>. It represents the state of a fourTwo
+at a single location at a point in time and contains the following.
+</p>
+
+<ul>
+<li> <p><code>name</code> <code>fourTwo</code>
+</p>
+</li>
+<li>
+<p> A copy of all of the parameters supplied to fourTwo.start: <code>startingEstimate=est</code>, <code>minStimulus=instRange[1]</code>, <code>maxStimulus=instRange[2]</code>, <code>makeStim</code>, and <code>opiParams=list(...)</code>
+</p>
+</li>
+<li> <p><code>currentLevel</code> The next stimulus to present.
+</p>
+</li>
+<li> <p><code>lastSeen</code> The last seen stimulus.
+</p>
+</li>
+<li> <p><code>lastResponse</code> The last response given.
+</p>
+</li>
+<li> <p><code>stairResult</code> The final result if finished (initially <code>NA</code>).
+</p>
+</li>
+<li> <p><code>finished</code> <code>"Not"</code> if staircase has not finished, or one of <code>"Rev"</code> (finished due to 2 reversals), <code>"Max"</code> (finished due to 2 <code>maxStimulus</code> seen), <code>"Min"</code> (finished due to 2 <code>minStimulus</code> not seen)
+</p>
+</li>
+<li> <p><code>numberOfReversals</code> Number of reversals so far.
+</p>
+</li>
+<li> <p><code>currSeenLimit</code> Number of times <code>maxStimulus</code> has been seen.
+</p>
+</li>
+<li> <p><code>currNotSeenLimit</code> Number of times <code>minStimulus</code> not seen.
+</p>
+</li>
+<li> <p><code>numPresentations</code> Number of presentations so far.
+</p>
+</li>
+<li> <p><code>stimuli</code> Vector of stimuli shown at each call to <code>fourTwo.step</code>.
+</p>
+</li>
+<li> <p><code>responses</code> Vector of responses received (1 seen, 0 not) received at each call to <code>fourTwo.step</code>.
+</p>
+</li>
+<li> <p><code>responseTimes</code> Vector of response times received at each call to <code>fourTwo.step</code>.
+</p>
+</li>
+</ul>
+<p><code>fourTwo.step</code> returns a list containing
+</p>
+
+<ul>
+<li> <p><code>state</code> The new state after presenting a stimuli and getting a response.
+</p>
+</li>
+<li> <p><code>resp</code> The return from the <code>opiPresent</code> call that was made.
+</p>
+</li>
+</ul>
+<p><code>fourTwo.stop</code> returns <code>TRUE</code> if the staircase is finished (2 reversals, or <code>maxStimulus</code>
+is seen twice or <code>minStimulus</code> is not seen twice).
+</p>
+<p><code>fourTwo.final</code> returns the final estimate of threshold (mean of last
+two reversals). This issues a warning if called before the staircase has
+finished, but still returns a value.
+</p>
+
+
+
+<h3>See Also</h3>
+
+<p><code>dbTocd</code>, <code>opiPresent</code>, <code>FT</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Stimulus is Size III white-on-white as in the HFA
+makeStim &lt;- function(db, n) {
+  s &lt;- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
+            duration=200, responseWindow=1500)
+  class(s) &lt;- "opiStaticStimulus"
+  return(s)
+}
+chooseOpi("SimHenson")
+if (!is.null(opiInitialize(type="C", cap=6)$err))
+  stop("opiInitialize failed")
+
+##############################################
+# This section is for multiple fourTwos
+##############################################
+makeStimHelper &lt;- function(db,n, x, y) {  # returns a function of (db,n)
+  ff &lt;- function(db, n) db+n
+  body(ff) &lt;- substitute({
+    s &lt;- list(x=x, y=y, level=dbTocd(db), size=0.43, color="white",
+              duration=200, responseWindow=1500)
+    class(s) &lt;- "opiStaticStimulus"
+    return(s)}, list(x=x,y=y))
+  return(ff)
+}
+# List of (x, y, true threshold) triples
+locations &lt;- list(c(9,9,30), c(-9,-9,32), c(9,-9,31), c(-9,9,33))
+
+# Setup starting states for each location
+states &lt;- lapply(locations, function(loc) {
+  fourTwo.start(makeStim=makeStimHelper(db,n,loc[1],loc[2]),
+                tt=loc[3], fpr=0.03, fnr=0.01)})
+
+# Loop through until all states are "stop"
+while(!all(st &lt;- unlist(lapply(states, fourTwo.stop)))) {
+  i &lt;- which(!st)                         # choose a random,
+  i &lt;- i[runif(1, min=1, max=length(i))]  # unstopped state
+  r &lt;- fourTwo.step(states[[i]])               # step it
+  states[[i]] &lt;- r$state                  # update the states
+}
+
+finals &lt;- lapply(states, fourTwo.final)    # get final estimates of threshold
+for(i in 1:length(locations)) {
+  cat(sprintf("Location (%+2d,%+2d) ",locations[[i]][1], locations[[i]][2]))
+      cat(sprintf("has threshold %4.2f\n", finals[[i]]))
+}
+
+if (!is.null(opiClose()$err))
+  warning("opiClose() failed")
+</code></pre>
+
+
+</div>

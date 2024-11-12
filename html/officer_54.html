@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>body_set_default_section</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Define Default Section</h2>
+
+<h3>Description</h3>
+
+<p>Define default section of the document. You can
+define section propeerties (page size, orientation, ...) with a prop_section object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">body_set_default_section(x, value)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an rdocx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>a prop_section object</p>
+</td>
+</tr>
+</table>
+<h3>Illustrations</h3>
+
+<p><img src="../help/figures/body_set_default_section_doc_1.png" width="80%" alt="body_set_default_section_doc_1.png"></p>
+
+
+<h3>See Also</h3>
+
+<p>Other functions for Word sections: 
+<code>body_end_block_section()</code>,
+<code>body_end_section_columns()</code>,
+<code>body_end_section_columns_landscape()</code>,
+<code>body_end_section_continuous()</code>,
+<code>body_end_section_landscape()</code>,
+<code>body_end_section_portrait()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">default_sect_properties &lt;- prop_section(
+  page_size = page_size(orient = "landscape"), type = "continuous",
+  page_margins = page_mar(bottom = .75, top = 1.5, right = 2, left = 2)
+)
+
+doc_1 &lt;- read_docx()
+doc_1 &lt;- body_add_table(doc_1, value = mtcars[1:10, ], style = "table_template")
+doc_1 &lt;- body_add_par(doc_1, value = paste(rep(letters, 40), collapse = " "))
+doc_1 &lt;- body_set_default_section(doc_1, default_sect_properties)
+
+print(doc_1, target = tempfile(fileext = ".docx"))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fIsonymy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate the Isonymy within a region</h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the isonymy within a region <code class="reqn">i</code> which has an associated collection <code class="reqn">S_i</code> of surnames.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fIsonymy(x, category)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a vector of relative frequency squared for each surname.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>category</code></td>
+<td>
+<p> represents the grouping element, for example the regions.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Isonymy is defined as <code class="reqn">I_i=\sum\limits_{k\in S_i}p_{ki}^2</code> where <code class="reqn">p_{ki}</code> denotes the relative frequency of surname <code class="reqn">k</code> in region <code class="reqn">i</code>.
+</p>
+<p>In diversity context, <code class="reqn">p_{ki}</code> denotes the relative frequency of species <code class="reqn">k</code> in community (<code class="reqn">\approx</code> region onomastic context) <code class="reqn">i</code> and <code class="reqn">S_i</code> are all species in community <code class="reqn">i</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>category</code></td>
+<td>
+<p> represents the grouping element, for example the regions / communities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> the value of isonymy.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Crow J.F. and Mange A.P., (1965). Measurement of inbreeding from the frequency of marriages between persons of the same surname. <em>Eugenics Quarterly</em>, <b>12</b>(4), 199–203.
+</p>
+<p>Barrai, I., Scapoli, C., Beretta, M., Nesti, C., Mamolini, E., and Rodriguez–Larralde, A., (1996). Isonymy and the genetic structure of Switzerland. I: The distributions of surnames. <em>Annals of Human Biology</em>, <b>23</b>, 431–455.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fIsonymyAll</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(surnamesgal14)
+surnamesgal14$pki2 &lt;- (surnamesgal14$number / surnamesgal14$population)^2
+result = fIsonymy(surnamesgal14$pki2, surnamesgal14$namuni)
+result
+
+data(namesmengal16)
+namesmengal16$pki2 &lt;- (namesmengal16$number / namesmengal16$population)^2
+result = fIsonymy(namesmengal16$pki2, namesmengal16$namuni)
+result
+
+data(nameswomengal16)
+nameswomengal16$pki2 &lt;- (nameswomengal16$number / nameswomengal16$population)^2
+result = fIsonymy(nameswomengal16$pki2, nameswomengal16$namuni)
+result
+</code></pre>
+
+
+</div>

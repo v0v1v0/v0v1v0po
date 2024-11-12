@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anova.clm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ANODE Tables and Likelihood ratio test of cumulative link models</h2>
+
+<h3>Description</h3>
+
+<p>Type I, II, and III analysis of deviance (ANODE) tables for 
+cumulative link models and
+comparison of cumulative link models with likelihood ratio tests.
+Models may differ by terms in location, scale and nominal
+formulae, in link, threshold function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'clm'
+anova(object, ..., type = c("I", "II", "III", "1", "2", "3"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a <code>clm</code> object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>optionally one or more additional <code>clm</code> objects.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of hypothesis test if <code>anova</code> is called with a 
+single model; ignored if more than one model is passed to the method.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The ANODE table returned when <code>anova</code> is called with a single model apply only to 
+terms in <code>formula</code>, that is, terms in <code>nominal</code> and <code>scale</code> are
+ignored. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>An analysis of deviance table based on Wald chi-square test if called with a
+single model and a comparison of
+models with likelihood ratio tests if called with more than one model.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rune Haubo B Christensen</p>
+
+
+<h3>See Also</h3>
+
+<p><code>clm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Analysis of deviance tables with Wald chi-square tests:
+fm &lt;- clm(rating ~ temp * contact, scale=~contact, data=wine)
+anova(fm, type="I")
+anova(fm, type="II")
+anova(fm, type="III")
+
+options(contrasts = c("contr.treatment", "contr.poly"))
+m1 &lt;- clm2(SURENESS ~ PROD, scale = ~PROD, data = soup,
+          link = "logistic")
+
+## anova
+anova(m1, update(m1, scale = ~.-PROD))
+mN1 &lt;- clm2(SURENESS ~ 1, nominal = ~PROD, data = soup,
+           link = "logistic")
+anova(m1, mN1)
+anova(m1, update(m1, scale = ~.-PROD), mN1)
+
+## Fit model from polr example:
+if(require(MASS)) {
+    fm1 &lt;- clm2(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
+    anova(fm1, update(fm1, scale =~ Cont))
+}
+
+</code></pre>
+
+
+</div>

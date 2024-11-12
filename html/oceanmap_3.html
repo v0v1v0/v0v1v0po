@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add.region</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+adding a region to the region_definitions file</h2>
+
+<h3>Description</h3>
+
+<p>adding a region to the region_definitions-file, taking or restoring a backup of region definitions. The basic idea is to provide a region-keyword that is used to access the region-information in later related function-calls (see: v and plotmap, regions). Information consists of a region-keyword, -longname, its spatial extent (longitudes and latitudes), grid resolution, as well as default colorbar position and figure size. 
+</p>
+<p>The required information can be provided by an interactive <b>session</b> (widget) that leads step by step through the region definition (is set <code>default</code>), in parts by an extent-object with the missing information then completed by the <b>session</b> or by a one-row data frame that holds the entire information (see: region_definitions). 
+</p>
+<p><b>ATTENTION!</b> When reinstalling or updating the oceanmap package, previous region definitions are getting lost! It is therefore highly recommanded to take and restore own backups (see: <code>backup</code> and <code>restore</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add.region(add, add.px, cbx, cby, figdim, lib.folder, 
+           widget=T, backup=F, backup.folder='.', backup.name, restore=F,backup.regions)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+
+<p>extent-,raster-object or dataset containing all required region definition entries (<code>label</code>, <code>name</code>, <code>latn</code>, <code>lats</code>, <code>lonw</code>, <code>lone</code>, <code>ncol</code>, <code>nrow</code>, <code>px</code>, <code>cbx1</code>, <code>cbx2</code>, <code>cby1</code>, <code>cby2</code>, <code>figxdim</code>, <code>figydim</code> and <code>grid.res</code>). Ignored when <code>add.px</code> is supplied.
+</p>
+<p>The values <code>latn</code>, <code>lats</code>, <code>lonw</code>, <code>lone</code> define the regions extent, <code>cbx1</code>, <code>cbx2</code>, <code>cby1</code> and <code>cby2</code> define the position of the colorbar,  <code>gradient</code> the orientation of the colorbar (x for horizontal, y for vertical), <code>oticks</code> the margin where to put the colorbar ticks relative to the colorbar rectangle (<code>'l'</code> left, <code>'r'</code> right and <code>'b'</code> for bottom; <code>figxdim</code> and <code>figydim</code> set the default window size of <code>'.gz'</code>-file figures and <code>grid.res</code> the default grid resolution.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.px</code></td>
+<td>
+
+<p>dataframe or list containing region data needed to read gz-compressed <code>'.gz'</code>-files. Required entries include '<code>label</code>' to identify the region, '<code>ncol</code>' and '<code>nrow</code>', to define the number of columns and rows of the 'gz'-file, respectively. These values are automatically set if missing when writing gz-compressed <code>'.gz'</code>-files (see: writebin).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cbx</code></td>
+<td>
+
+<p>the horizontal limits (x1, x2) of the colorbar. If missing, the user will be asked for manual colorbar placement.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cby</code></td>
+<td>
+
+<p>the vertical limits (y1, y2) of the colorbar. If missing, the user will be asked for manual colorbar placement.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figdim</code></td>
+<td>
+
+<p>numeric vector indicating the <code>width</code> and <code>height</code> of the plot device in inches. If missing and <code>force.figdim.widget</code> is set <code>FALSE</code>, figdim is assigned a default <code>width</code> and <code>height</code> of 7in, otherwise the user will be asked to resize the plot device to set plot dimensions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lib.folder</code></td>
+<td>
+
+<p>Character string indicating R-library path in which the oceanmap-package is installed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>widget</code></td>
+<td>
+
+<p>whether an interactive session (<b>widget</b>) shall assist the data entry procedure (default is <code>TRUE</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>backup</code></td>
+<td>
+
+<p>whether the current region_definitions-file should be backuped in the folder '<code>backup.folder</code> in the file <code>backup.name</code> (default is <code>FALSE</code>). <b>ATTENTION!</b> When reinstalling or updating the oceanmap package, previous region_definitions are getting lost!
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>backup.folder</code></td>
+<td>
+
+<p>Character string indicating the folder where to store the region_definitions-file backup (default is the current working directory).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>backup.name</code></td>
+<td>
+
+<p>Character string indicating the filename of the region_definitions-file backup (If <code>restore</code> the default is the original oceanmap-region_definitions file; if <code>backup</code> the default is set to 'region_definitions.bkp.%Y%m%d.rda').
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>restore</code></td>
+<td>
+
+<p>whether to restore a backup of the region_definitions-file (default is <code>FALSE</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>backup.regions</code></td>
+<td>
+
+<p>Vector of region indicators defining which regions should be saved in backup file.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+<p>delete.region, region_definitions, regions, plotmap, v</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Example 1: Add region by supplying a one-row data.frame 
+##            that holds the entire required information
+# data(region_definitions) # load region_definitions
+# lion &lt;- region_definitions[region_definitions$label == 'lion',] # selecting Gulf of Lions region
+# lion
+# junk &lt;- lion 
+# junk$label &lt;- 'junk' # rename region label
+# add.region(junk) # add junk region
+# data(region_definitions) # reload region_definitions
+# region_definitions[,1:9]
+
+## Example 2: Delete region
+#delete.region("junk") # delete junk region
+#data(region_definitions) # reload region_definitions
+#region_definitions[,1:9]
+
+## Example 3: Add region by supplying an extent- or raster-object and running the widget
+library(raster)
+
+ext &lt;- extent(0,10,50,60)
+plotmap(ext)
+#add.region(ext) # extent-object
+
+r &lt;- raster(ext)
+#add.region(r) # raster-object
+
+## Example 4: Add region by supplying raster-object, colorbar positions and running the widget
+#add.region(r,cbx=c(5,9.5),cby=c(51.7,52.4))
+
+## Example 5: Add region by running the widget
+#add.region()
+
+## Example 6: Add region by running the widget
+#add.region(add.px=list(label="lion",nrow=10,ncol=10))
+#data(region_definitions)
+#region_definitions[region_definitions$label =="lion",]
+
+## Example 7: Creating a backup
+#add.region(backup=T)
+#add.region(backup=T, backup.folder=".",backup.regions=c("lion","medw4"))
+
+## Example 8: Restoring the backup of the original region_definitions file
+#add.region(restore=T)
+</code></pre>
+
+
+</div>

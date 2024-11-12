@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxBootstrapEval</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Evaluate Values in a bootstrapped MxModel</h2>
+
+<h3>Description</h3>
+
+<p>This function can be used to evaluate an arbitrary R expression that includes named entities from a MxModel object, or labels from a MxMatrix object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxBootstrapEval(expression, model, defvar.row = 1, ...,
+ bq=c(.25,.75), method=c('bcbci','quantile'))
+
+mxBootstrapEvalByName(name, model, defvar.row = 1, ...,
+ bq=c(.25,.75), method=c('bcbci','quantile'))
+
+omxBootstrapEval(expression, model, defvar.row = 1L, ...)
+
+omxBootstrapEvalCov(expression, model, defvar.row = 1L, ...)
+
+omxBootstrapEvalByName(name, model, defvar.row=1L, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>expression</code></td>
+<td>
+<p>An arbitrary R expression.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>The character name of an object to evaluate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>The model in which to evaluate the expression.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>defvar.row</code></td>
+<td>
+<p>The row to use for definition variables when compute=TRUE (defaults to 1).  When compute=FALSE, values for definition variables are always taken from the first (i.e., first before any automated sorting is done) row of the raw data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Forces remaining arguments to be specified by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bq</code></td>
+<td>
+<p>numeric. A vector of bootstrap quantiles at which to summarize the bootstrap replication.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>character. One of ‘quantile’ or ‘bcbci’.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The argument ‘expression’ is an arbitrary R expression.  Any named entities that are used within the R expression are translated into their current value from the model. Any labels from the matrices within the model are translated into their current value from the model. Finally the expression is evaluated and the result is returned.  To enable debugging, the ‘show’ argument has been provided.  The most common mistake when using this function is to include named entities in the model that are identical to R function names.  For example, if a model contains a named entity named ‘c’, then the following mxEval call will return an error: <code>mxEval(c(A, B, C), model)</code>.
+</p>
+<p>The <code>mxEvalByName</code> function is a wrapper around <code>mxEval</code> that takes a character instead of an R expression.
+</p>
+<p><em>nb</em>: ‘bcbci’ stands for ‘bias-corrected bootstrap confidence interval’
+</p>
+<p>The default behavior is to use the ‘bcbci’ <code>method</code>, due to its superior theoretical properties.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>omxBootstrapEval</code> and <code>omxBootstrapEvalByName</code> return the raw matrix of
+<code>cvectorize</code>'d results. <code>omxBootstrapEvalCov</code> returns the
+covariance matrix of the <code>cvectorize</code>'d results.
+<code>mxBootstrapEval</code> and <code>mxBootstrapEvalByName</code> return
+the <code>cvectorize</code>'d results summarized by <code>method</code> at quantiles <code>bq</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>mxAlgebra to create algebraic expressions inside your model 
+and mxModel for the model object mxEval looks inside when
+evaluating. mxBootstrap to create bootstrap data.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(OpenMx)
+# make a unit-weighted 10-row data set of values 1 thru 10
+myData = mxData(data.frame(weight=1.0, value=1:10), "raw", weight = "weight")
+sum(1:10)
+
+# Model sums data$value (sum(1:10)= 55), subtracts "A", squares the result, 
+# and tries to minimize this (achieved by setting A=55)
+testModel = mxModel(model = "testModel1", myData,
+	mxMatrix(name  = "A", "Full", nrow = 1, ncol = 1, values = 1, free=TRUE),
+	# nb: filteredDataRow is an auto-generated matrix of
+	# non-missing data from the present row.
+	# This is placed into the "rowResults" matrix (also auto-generated)
+	mxAlgebra(name = "rowAlg", data.weight * filteredDataRow),
+	# Algebra to turn the rowResults into a single number
+	mxAlgebra(name = "reduceAlg", (sum(rowResults) - A)^2),
+	mxFitFunctionRow(
+		rowAlgebra    = "rowAlg",
+		reduceAlgebra = "reduceAlg",
+		dimnames      = "value"
+	)
+	# no need for an MxExpectation object when using mxFitFunctionRow
+)
+
+testModel = mxRun(testModel) # A is estimated at 55, with SE= 1
+testBoot = mxBootstrap(testModel)
+summary(testBoot) # A is estimated at 55, with SE= 0
+
+# Let's compute A^2 (55^2 = 3025)
+mxBootstrapEval(A^2, testBoot)
+#      SE 25.0% 75.0%
+# [1,]  0  3025  3025
+
+</code></pre>
+
+
+</div>

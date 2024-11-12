@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>row_heights-wb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modify row heights of a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>Set / remove custom worksheet row heights
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_set_row_heights(
+  wb,
+  sheet = current_sheet(),
+  rows,
+  heights = NULL,
+  hidden = FALSE
+)
+
+wb_remove_row_heights(wb, sheet = current_sheet(), rows)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A wbWorkbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name or index of a worksheet. (A vector is accepted for <code>remove_row_heights()</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows</code></td>
+<td>
+<p>Indices of rows to set / remove (if any) custom height.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>heights</code></td>
+<td>
+<p>Heights to set <code>rows</code> to specified in a spreadsheet column height units.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hidden</code></td>
+<td>
+<p>Option to hide rows. A logical vector of length 1 or length of <code>rows</code></p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>grouping-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+<p>Other worksheet content functions: 
+<code>col_widths-wb</code>,
+<code>filter-wb</code>,
+<code>grouping-wb</code>,
+<code>named_region-wb</code>,
+<code>wb_add_conditional_formatting()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_thread()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Create a new workbook
+wb &lt;- wb_workbook()
+
+## Add a worksheet
+wb$add_worksheet("Sheet 1")
+
+## set row heights
+wb &lt;- wb_set_row_heights(
+  wb, 1,
+  rows = c(1, 4, 22, 2, 19),
+  heights = c(24, 28, 32, 42, 33)
+)
+
+## overwrite row 1 height
+wb &lt;- wb_set_row_heights(wb, 1, rows = 1, heights = 40)
+## remove any custom row heights in row 1
+wb$remove_row_heights(sheet = 1, rows = 1)
+</code></pre>
+
+
+</div>

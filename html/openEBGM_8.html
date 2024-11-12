@@ -1,0 +1,238 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>exploreHypers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Explore various hyperparameter estimates</h2>
+
+<h3>Description</h3>
+
+<p><code>exploreHypers</code> finds hyperparameter estimates using a variety of
+starting points to examine the consistency of the optimization procedure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">exploreHypers(
+  data,
+  theta_init,
+  squashed = TRUE,
+  zeroes = FALSE,
+  N_star = 1,
+  method = c("nlminb", "nlm", "bfgs"),
+  param_limit = 100,
+  max_pts = 20000,
+  std_errors = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame from <code>processRaw</code> containing columns
+named <em>N</em>, <em>E</em>, and (if squashed) <em>weight</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta_init</code></td>
+<td>
+<p>A data frame of initial hyperparameter guesses with
+columns ordered as:
+<code class="reqn">\alpha_1, \beta_1, \alpha_2, \beta_2, P</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>squashed</code></td>
+<td>
+<p>A scalar logical (<code>TRUE</code> or <code>FALSE</code>) indicating
+whether or not data squashing was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zeroes</code></td>
+<td>
+<p>A scalar logical specifying if zero counts are included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N_star</code></td>
+<td>
+<p>A positive scalar whole number value for the minimum count
+size to be used for hyperparameter estimation. If zeroes are used, set
+<code>N_star</code> to <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A scalar string indicating which optimization procedure is to
+be used. Choices are <code>"nlminb"</code>, <code>"nlm"</code>, or <code>"bfgs"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>param_limit</code></td>
+<td>
+<p>A scalar numeric value for the largest acceptable value
+for the <code class="reqn">\alpha</code> and <code class="reqn">\beta</code> estimates. Used to help protect
+against unreasonable/erroneous estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_pts</code></td>
+<td>
+<p>A scalar whole number for the largest number of data points
+allowed. Used to help prevent extremely long run times.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>std_errors</code></td>
+<td>
+<p>A scalar logical indicating if standard errors should be
+returned for the hyperparameter estimates.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>method</code> argument determines which optimization procedure
+is used. All the options use functions from the <code>stats</code>
+package:
+</p>
+
+<ul>
+<li>
+<p><code>"nlminb":</code> <code>nlminb</code>
+</p>
+</li>
+<li>
+<p><code>"nlm":</code> <code>nlm</code>
+</p>
+</li>
+<li>
+<p><code>"bfgs":</code> <code>optim</code> (<em>method = "BFGS"</em>)
+</p>
+</li>
+</ul>
+<p>Since this function runs multiple optimization procedures, it is
+best to start with 5 or less initial starting points (rows in
+<code>theta_init</code>). If the function runs in a reasonable amount of time,
+this number can be increased.
+</p>
+<p>This function should not be used with very large data sets unless
+data squashing is used first since each optimization call will take a long
+time.
+</p>
+<p>It is recommended to use <code>N_star = 1</code> when practical. Data
+squashing (see <code>squashData</code>) can be used to reduce the number
+of data points.
+</p>
+<p>The <em>converge</em> column in the resulting data frame was
+determined by examining the convergence <em>code</em> of the chosen
+optimization method. In some instances, the code is somewhat ambiguous. The
+determination of <em>converge</em> was intended to be conservative (leaning
+towards FALSE when questionable). See the documentation for the chosen
+method for details about <em>code</em>.
+</p>
+<p>Standard errors, if requested, are calculated using the observed
+Fisher information matrix as discussed in DuMouchel (1999).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list including the data frame <code>estimates</code> of hyperparameter
+estimates corresponding to the initial guesses from <code>theta_init</code> (plus
+convergence results):
+</p>
+
+<ul>
+<li>
+<p><em>code</em>: The convergence code returned by the chosen
+optimization function (see <code>nlminb</code>,
+<code>nlm</code>, and <code>optim</code> for details).
+</p>
+</li>
+<li>
+<p><em>converge</em>: A logical indicating whether or not convergence
+was reached. See "Details" section for more information.
+</p>
+</li>
+<li>
+<p><em>in_bounds</em>: A logical indicating whether or not the
+estimates were within the bounds of the parameter space (upper bound
+for <code class="reqn">\alpha_1, \beta_1, \alpha_2, and \beta_2</code> was determined by
+the <code>param_limit</code> argument).
+</p>
+</li>
+<li>
+<p><em>minimum</em>: The negative log-likelihood value corresponding
+to the estimated optimal value of the hyperparameter.
+</p>
+</li>
+</ul>
+<p>Also returns the data frame <code>std_errs</code> if standard errors are
+requested.
+</p>
+
+
+<h3>Warning</h3>
+
+<p>Make sure to properly specify the <code>squashed</code>,
+<code>zeroes</code>, and <code>N_star</code> arguments for your data set, since these
+will determine the appropriate likelihood function. Also, this function
+will not filter out data points. For instance, if you use <code>N_star = 2</code>
+you must filter out the ones and zeroes (if present) from <code>data</code> prior
+to using this function.
+</p>
+
+
+<h3>References</h3>
+
+<p>DuMouchel W (1999). "Bayesian Data Mining in Large Frequency
+Tables, With an Application to the FDA Spontaneous Reporting System."
+<em>The American Statistician</em>, 53(3), 177-190.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>nlminb</code>, <code>nlm</code>, and
+<code>optim</code> for optimization details
+</p>
+<p><code>squashData</code> for data preparation
+</p>
+<p>Other hyperparameter estimation functions: 
+<code>autoHyper()</code>,
+<code>hyperEM()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data.table::setDTthreads(2)  #only needed for CRAN checks
+#Start with 2 or more guesses
+theta_init &lt;- data.frame(
+  alpha1 = c(0.5, 1),
+  beta1  = c(0.5, 1),
+  alpha2 = c(2,   3),
+  beta2  = c(2,   3),
+  p      = c(0.1, 0.2)
+)
+data(caers)
+proc &lt;- processRaw(caers)
+squashed &lt;- squashData(proc, bin_size = 300, keep_pts = 10)
+squashed &lt;- squashData(squashed, count = 2, bin_size = 13, keep_pts = 10)
+suppressWarnings(
+  exploreHypers(squashed, theta_init = theta_init)
+)
+
+</code></pre>
+
+
+</div>

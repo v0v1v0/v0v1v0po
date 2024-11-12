@@ -1,0 +1,212 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combined_dataset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns the combined formatted OULAD</h2>
+
+<h3>Description</h3>
+
+<p>Combines multiple OULAD .csv files into one tibble that is formatted for data analysis and
+where each row represents a unique student.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combined_dataset(
+  module = c("AAA", "BBB", "CCC", "DDD", "EEE", "FFF", "GGG"),
+  presentation = c("2013J", "2014J", "2013B", "2014B", "All"),
+  repeat_students = c("remove", "keep"),
+  withdrawn_students = c("remove", "keep"),
+  demographics = FALSE,
+  registration = FALSE,
+  VLE = c("omit", "daily", "weekly", "activity", "FSLM", "FSLSM", "OLS", "VARK"),
+  VLE_clicks = c("total", "binary", "standardise1", "standardise2", "logarithmic"),
+  week_begin = -4,
+  week_end = 39,
+  assessment = FALSE,
+  na.rm = FALSE,
+  example_data = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>module</code></td>
+<td>
+<p>name of the module to be included, either <code>"AAA"</code>, <code>"BBB"</code>, <code>"CCC"</code>,
+<code>"DDD"</code>, <code>"EEE"</code>, <code>"FFF"</code> or <code>"GGG"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>presentation</code></td>
+<td>
+<p>name of the semester of the module to be included, either <code>"2013B"</code>,
+<code>"2014B"</code>, <code>"2013J"</code>, <code>"2014J"</code>, or <code>"All"</code>.
+<code>"B"</code> indicates a February start time whereas <code>"J"</code> indicates an October start time. <code>"All"</code> indicates that all presentations of the module will be included in the returned data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>repeat_students</code></td>
+<td>
+<p>indicator of whether students who had previous attempts at the module should be removed, either <code>"remove"</code> or <code>"keep"</code>.
+When presentation is set to <code>"All"</code>, this value is set to <code>"remove"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>withdrawn_students</code></td>
+<td>
+<p>indicator of whether students who had withdrawn from the module should be removed, either <code>"remove"</code> or <code>"keep"</code>.
+Students are removed based on whether they have withdrawn by the <code>"week_end"</code> value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>demographics</code></td>
+<td>
+<p>logical. Indicates whether demographic data is included in the outputted data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>registration</code></td>
+<td>
+<p>logical. Indicates whether registration data is included in the outputted data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>VLE</code></td>
+<td>
+<p>indicates whether VLE data is included in the outputted data set
+(default is <code>"omit"</code> - VLE data not to be included).
+If included, the VLE data can be returned based on <code>"weekly"</code> VLE interactions, <code>"daily"</code> VLE
+interactions or interactions according to Open University activities (<code>"activity"</code>).
+The VLE data can also be returned as classified under a
+specific learning model, either <code>"FSLM"</code>, <code>"FSLSM"</code>, <code>"OLS"</code>, or <code>"VARK"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>VLE_clicks</code></td>
+<td>
+<p>indicates the format that the VLE data should be returned as, either <code>"total"</code> views (default),
+<code>"binary"</code> views, <code>"standardise1"</code> (standardises each variable individually by using the scale function),
+<code>"standardise2"</code> (performs global standardisation of the data set), or <code>"logarithmic"</code> values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>week_begin</code></td>
+<td>
+<p>the first semester week of VLE and assessment data to be included in formatted data. Depending on the module presentation, students
+started to view activities four weeks prior to the initial module start date. Weeks prior to the initial module start
+are indicated by a negative integer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>week_end</code></td>
+<td>
+<p>the last semester week of VLE and assessment data to be included in the formatted data.
+Week 39 is the last week material was viewed (and earlier in some module presentations).
+This parameter is also used to remove withdrawn students.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>assessment</code></td>
+<td>
+<p>logical. Indicates whether assessment data is included in the outputted data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>logical. Indicates whether NAs should be omitted from the average continuous assessment calculations
+or treated as zeroes (default). This calculation only includes continuous assessment that
+was due between the period set by <code>"week_begin"</code> and <code>"week_end"</code> inclusive,
+and only occurs when a specific module presentation is requested (e.g., 'BBB 2013J').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>example_data</code></td>
+<td>
+<p>logical. Indicates whether to run a subset of the VLE data as an example.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns the inputs specified for whether assessment, demographics, registration and VLE variables are to be included,
+as well as the other inputs. Also, one <code>tibble</code> (object of class <code>tbl_df</code>) is returned, dataset_combined.
+</p>
+
+
+<h3>dataset_combined tibble</h3>
+
+<p>A <code>tibble</code> where each row represents a unique student. Depending on the inputs specified,
+the <code>tibble</code> includes assessment, demographics, registration and VLE data for each student.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kuzilek, J., Hlosta, M., &amp; Zdrahal, Z. (2017). Open university learning analytics dataset. Scientific Data
+volume 4 , (pp. 1–8). https://doi.org/10.1038/sdata.2017.171.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>For more information on different inputs and variables in the dataset_combined <code>tibble</code>, see:
+</p>
+
+<ul>
+<li> <p><code>dataset_assessment()</code> for information on the assessment performance data,
+</p>
+</li>
+<li>
+<p><code>dataset_demographics()</code> for information on the demographics data,
+</p>
+</li>
+<li>
+<p><code>dataset_registration()</code> for information on the registration data,
+</p>
+</li>
+<li>
+<p><code>dataset_VLE_time()</code> for information on the VLE daily or weekly data,
+</p>
+</li>
+<li>
+<p><code>dataset_VLE_activity()</code> for information on the VLE activity data,
+</p>
+</li>
+<li>
+<p><code>VLE_learning_classification()</code> for information on the VLE activities classified under a learning model, and
+</p>
+</li>
+<li>
+<p><code>convert_VLE()</code> for information on transforming the data type of the VLE data.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Uses subset of the VLE data set for example
+combined_dataset(module = "AAA", presentation = "2013J",
+repeat_students = "remove", withdrawn_students = "remove",
+demographics = TRUE, registration = TRUE,
+assessment = TRUE, na.rm = FALSE,
+VLE = "weekly", VLE_clicks = "total",
+example_data = TRUE)
+
+# Slow to run as it loads the full VLE data set
+combined_dataset(module = "BBB", presentation = "2013J",
+repeat_students = "remove", withdrawn_students = "remove",
+demographics = TRUE, registration = FALSE,
+assessment = TRUE, na.rm = FALSE,
+VLE = "activity", VLE_clicks = "standardise1",
+week_begin = -4, week_end = 14, example_data = FALSE)
+</code></pre>
+
+
+</div>

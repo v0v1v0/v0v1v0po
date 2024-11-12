@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_mips</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>wb get and apply MIP section</h2>
+
+<h3>Description</h3>
+
+<p>Read sensitivity labels from files and apply them to workbooks
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_mips(wb, xml = NULL)
+
+wb_get_mips(wb, single_xml = TRUE, quiet = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>a workbook</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xml</code></td>
+<td>
+<p>a mips string obtained from <code>wb_get_mips()</code> or a global option "openxlsx2.mips_xml_string"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>single_xml</code></td>
+<td>
+<p>option to define if the string should be exported as single string. helpful if storing as option is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>option to print a MIP section name. This is not always a human readable string.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The MIP section is a special user-defined XML section that is used to create
+sensitivity labels in workbooks. It consists of a series of XML property
+nodes that define the sensitivity label. This XML string cannot be created
+and it is necessary to first load a workbook with a suitable sensitivity
+label. Once the workbook is loaded, the string <code>fmips &lt;- wb_get_mips(wb)</code>
+can be extracted. This xml string can later be assigned to an
+<code>options("openxlsx2.mips_xml_string" = fmips)</code> option.
+</p>
+<p>The sensitivity label can then be assigned with <code>wb_add_mips(wb)</code>. If no xml
+string is passed, the MIP section is taken from the option. This should make
+it easier for users to read the section from a specific workbook, save it to
+a file or string and copy it to an option via the .Rprofile.
+</p>
+
+
+<h3>Value</h3>
+
+<p>the workbook invisible (<code>wb_add_mips()</code>) or the xml string (<code>wb_get_mips()</code>)
+</p>
+
+
+</div>

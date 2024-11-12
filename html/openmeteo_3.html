@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>climate_forecast</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve climate change forecasts from the Open-Meteo API</h2>
+
+<h3>Description</h3>
+
+<p><code>climate_forecast()</code> calls the Open-Meteo Climate Change Forecast API to
+obtain long-range weather projections from a range of climate models.
+</p>
+<p>Refer to the API documentation at:
+<a href="https://open-meteo.com/en/docs/climate-api">https://open-meteo.com/en/docs/climate-api</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">climate_forecast(
+  location,
+  start,
+  end,
+  daily = NULL,
+  response_units = NULL,
+  model = NULL,
+  downscaling = TRUE,
+  timezone = "auto"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p>Required. The location for which data will be retrieved.
+Supplied as either a <code>c(latitude,longitude)</code> WGS84 coordinate pair or a
+place name string (with co-ordinates obtained via <code>geocode()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start, end</code></td>
+<td>
+<p>Required. Future start and end dates in ISO 8601 (e.g.
+"2020-12-31").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>daily</code></td>
+<td>
+<p>Required. A weather variable accepted by the API, or list
+thereof. See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_units</code></td>
+<td>
+<p>Supply to convert temperature, windspeed, or
+precipitation units. This defaults to: <code style="white-space: pre;">⁠list(temperature_unit = "celsius",⁠</code>
+<code style="white-space: pre;">⁠windspeed_unit = "kmh", precipitation_unit = "mm")⁠</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>Supply to specify a climate model for forecasted values (refer
+to the API documentation).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>downscaling</code></td>
+<td>
+<p>Enable (default) or disable statistical downscaling with ERA5-Land (10 km).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timezone</code></td>
+<td>
+<p>specify timezone for time data as a string, i.e.
+"australia/sydney" (defaults to "auto", the timezone local to the specified
+<code>location</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>You will need to specify at least one weather variable, such as temperature,
+that you want projected forecasts for. The models currently only provide
+weather data aggregated at <em>daily</em> intervals. Multiple variables can be
+supplied as a list.
+</p>
+<p>Example daily climate forecast variables include:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <strong>Variable</strong> </td>
+<td style="text-align: left;"> <strong>Description</strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>temperature_2m_max</code> </td>
+<td style="text-align: left;"> Maximum daily air temperature at 2 meters above ground </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>precipitation_sum</code> </td>
+<td style="text-align: left;"> Sum of rain, showers, and snow over the preceding day </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>windspeed_10m_max</code> </td>
+<td style="text-align: left;"> Maximum daily wind speed at 10 meters above ground </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>Different climate change models can be specified, which may differ in the
+weather variables predicted. Models include:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <strong>Model</strong> </td>
+<td style="text-align: left;"> <strong>Origin</strong> </td>
+<td style="text-align: left;"> <strong>Resolution</strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>EC_Earth3P_HR</code> </td>
+<td style="text-align: left;"> Europe </td>
+<td style="text-align: left;"> 29 km </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>FGOALS_f3_H</code> </td>
+<td style="text-align: left;"> China </td>
+<td style="text-align: left;"> 28 km </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>MRI_AGCM3_2_S</code> </td>
+<td style="text-align: left;"> Japan </td>
+<td style="text-align: left;"> 20 km </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>For all models and their available fields, refer to the full documentation
+for the climate API at: <a href="https://open-meteo.com/en/docs/climate-api">https://open-meteo.com/en/docs/climate-api</a>
+</p>
+
+
+<h3>Value</h3>
+
+<p>Requested climate forecast data for the given location and time
+period, as a tidy tibble.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Obtain projected precipitation for the North Pole in 2050
+climate_forecast(c(90, 0),
+  "2050-06-01", "2050-07-01",
+  daily = "precipitation_sum"
+)
+
+# Obtain projected temperatures for Madrid in 2050 in Fahrenheit, with ESMI1
+climate_forecast("Madrid",
+  "2050-06-01", "2050-07-01",
+  daily = "temperature_2m_max",
+  model = "MPI_ESM1_2_XR",
+  response_units = list(temperature_unit = "fahrenheit")
+)
+
+</code></pre>
+
+
+</div>

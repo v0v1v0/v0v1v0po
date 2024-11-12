@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>normalize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Normalize Outcome/Response to \[0,1\] Interval</h2>
+
+<h3>Description</h3>
+
+<p>This function takes a continuous (double) column of data and converts it
+to have 0 as the lower bound and 1 as the upper bound.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">normalize(outcome, true_bounds = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>Any non-character vector. Factors will be converted
+to numeric via coercion.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>true_bounds</code></td>
+<td>
+<p>Specify this parameter with the lower and upper bound
+if the observed min/max of the outcome should not be used. Useful when
+an upper or lower bound exists but the observed data is less than/more than
+that bound. The normalization function will respect these bounds.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Beta regression can only be done with a response that is continuous with a
+lower bound of 0 and an upper bound of 1. However, it is
+straightforward to transform any lower and upper-bounded continuous
+variable to the \[0,1\] interval. This function does the transformation
+and saves the original bounds as attributes so that the bounds can be
+reverse-transformed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector with an upper bound of 1 and a lower bound of
+0. The original bounds are saved in the attributes "lower_bound" and
+"upper_bound".
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># set up arbitrary upper and lower-bounded vector
+outcome &lt;- runif(1000, min=-33, max=445)
+
+# normalize to \[0,1\]
+
+trans_outcome &lt;- normalize(outcome=outcome)
+summary(trans_outcome)
+
+# only works with numeric vectors and factors
+
+  try(normalize(outcome=c('a','b')))
+
+</code></pre>
+
+
+</div>

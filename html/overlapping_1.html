@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>boot.overlap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Nonparametric Bootstrap to estimate the overlapping area
+</h2>
+
+<h3>Description</h3>
+
+<p>Resampling via non-parametric bootstrap to estimate the overlapping area between two or more kernel density estimations from empirical data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">boot.overlap( x, B = 1000, pairsOverlap = FALSE, ... )
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a list of numerical vectors to be compared (each vector is an element of the list).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>integer, number of bootstrap draws.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pairsOverlap</code></td>
+<td>
+<p>logical, if <code>TRUE</code>, available only when the list <code>x</code> contains more than two elements, it returns the overlapped area relative to each pair of distributions. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>options, see function <code>overlap</code> for details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the list <code>x</code> contains more than two elements (i.e., more than two distributions) it computes the bootstrap overlapping measure between all the <code class="reqn">q</code> paired distributions. For example, if <code>x</code> contains three elements then <code class="reqn">q = 3</code>; if <code>x</code> contains four elements then <code class="reqn">q = 6</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>It returns a list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>OVboot_stats </code></td>
+<td>
+<p>a data frame <code class="reqn">q \times 3</code> where each row contains the following statistics:
+<code>estOV</code>, estimated overlapping area, <code class="reqn">\hat{\eta}</code>;
+<code>bias</code>,  difference between the expected value over the bootstrap samples and the observed overlapping area: <code class="reqn">E(\hat{\eta}^*)-\hat{\eta}</code>;
+<code>se</code>, bootstrap standard error <code class="reqn">\sigma_{\hat{\eta}}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>OVboot_dist </code></td>
+<td>
+<p>a matrix with <code>B</code> rows (bootstrap replicates) and <code class="reqn">q</code> columns (depending on the number of elements of <code>x</code>); each column is a boostrap distribution of the corresponding overlapping measure. </p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Call function <code>overlap</code>.
+</p>
+<p>Thanks to Jeremy Vollen for suggestions.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Massimiliano Pastore
+</p>
+
+
+<h3>References</h3>
+
+<p>Pastore, M. (2018). Overlapping: a R package for Estimating Overlapping in Empirical Distributions. The Journal of Open Source Software, 3 (32), 1023. doi: <a href="https://doi.org/10.21105/joss.01023">10.21105/joss.01023</a>
+</p>
+<p>Pastore, M., Calcagnì, A. (2019). Measuring Distribution Similarities Between Samples: A Distribution-Free Overlapping Index. Frontiers in Psychology, 10:1089. doi: <a href="https://doi.org/10.3389/fpsyg.2019.01089">10.3389/fpsyg.2019.01089</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(20150605)
+x &lt;- list(X1=rnorm(100), X2=rt(50,8), X3=rchisq(80,2))
+
+## bootstrapping
+out &lt;- boot.overlap( x, B = 10 )
+out$OVboot_stats
+
+# bootstrap quantile intervals
+apply( out$OVboot_dist, 2, quantile, probs = c(.05, .9) )
+
+# plot of bootstrap distributions
+Y &lt;- stack( data.frame( out$OVboot_dist ))
+ggplot( Y, aes( values )) + facet_wrap( ~ind ) + geom_density()
+</code></pre>
+
+
+</div>

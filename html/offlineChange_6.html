@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>MultiWindow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multi-window Change Points Detection</h2>
+
+<h3>Description</h3>
+
+<p>Use a sequence of window sizes to capture ranges of change points.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">MultiWindow(
+  y,
+  window_list = c(100, 50, 20, 10, 5),
+  point_max = 5,
+  prior_range = NULL,
+  get_mle = GetMle,
+  penalty = "bic",
+  seg_min = 1,
+  num_init = NULL,
+  tolerance = 1,
+  cpp = TRUE,
+  ret_score = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>The original data to find change points. Must be one dimensional
+data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window_list</code></td>
+<td>
+<p>The list of window sizes, must be in form
+c(100,50,20,10,5), in descending order and each window_size &gt; 2L. L is the
+lag order of the dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point_max</code></td>
+<td>
+<p>The largest candidate number of change points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior_range</code></td>
+<td>
+<p>The prior ranges that considered to contain change
+points.Each prior range contains one change point. example:
+prior_range=list(c(30,200),c(220,400))</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get_mle</code></td>
+<td>
+<p>The method used to transform dependent data to independent
+data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty</code></td>
+<td>
+<p>Penalty type term. Default is "bic". Users can use other penalty term.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seg_min</code></td>
+<td>
+<p>Minimal segment size between change points at transformed sacle, 
+must be positive integer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_init</code></td>
+<td>
+<p>The number of repetition times, in order to avoid local
+minimum. Default is squared root of number of transformed data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolerance</code></td>
+<td>
+<p>The tolerance level. The maximal difference between the score of 
+selected peak ranges and highest score.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cpp</code></td>
+<td>
+<p>Logical value indicating whether to accelerate using rcpp. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ret_score</code></td>
+<td>
+<p>Logical value indicating whether to return score. Default is FALSE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given time series data y1,y2...yN, a sequence of window sizes w1 &gt; ... &gt; wR
+can be used to capture any true segment of small size. For each wr, the
+original data is turned into a sequence of L + 1 dimensional data that can be
+approximated as independent. Then the change points of independent data can
+be detected by minimizing penalized quadratic loss. By further mapping these
+change points back to the original scale, several short ranges (each of size
+2wr) that probably contain the desired change points are obtained. After
+repeating the above procedure for different wr, the detected ranges of change
+points from each window size are scored by one. The scores are aggregated,
+and the ranges with highest score or around the highest score (determined by
+the tolerance parameter) are finally selected.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n_peak_range</code></td>
+<td>
+<p>The number of peak ranges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>peak_ranges</code></td>
+<td>
+<p>The location of peak ranges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>score</code></td>
+<td>
+<p>score matrix. (only when <em>ret_score</em> is <em>TRUE</em>)</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>J. Ding, Y. Xiang, L. Shen, and V. Tarokh, <em>Multiple Change
+Point Analysis: Fast Implementation and Strong Consistency</em>. IEEE
+Transactions on Signal Processing, vol. 65, no. 17, pp. 4495-4510, 2017.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">N &lt;- 1000
+N1 &lt;- floor(0.1*N)
+N2 &lt;- floor(0.3*N)
+a1 &lt;- c(0.8, -0.3); c1 &lt;- 0
+a2 &lt;- c(-0.5, 0.1); c2 &lt;- 0
+a3 &lt;- c(0.5, -0.5); c3 &lt;- 0
+y &lt;- rep(0,N)
+L&lt;-2
+y[1:L] &lt;- rnorm(L)
+for (n in (L+1):N){
+  if (n &lt;= N1) {
+    y[n] &lt;- y[(n-1):(n-L)] %*% a1 + c1 + rnorm(1)
+  } else if (n &lt;= (N1+N2)) {
+    y[n] &lt;- y[(n-1):(n-L)] %*% a2 + c2 + rnorm(1)
+  }
+  else {
+    y[n] &lt;- y[(n-1):(n-L)] %*% a3 + c3 + rnorm(1)
+  }
+}
+MultiWindow(y,window_list=c(100,50,20,10,5),point_max=5)
+MultiWindow(y,window_list=c(100,50,20,10,5),prior_range=list(c(30,200),c(220,400)))
+</code></pre>
+
+
+</div>

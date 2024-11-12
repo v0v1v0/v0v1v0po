@@ -1,0 +1,226 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>TestCase</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>An R6 class representing a test case</h2>
+
+<h3>Description</h3>
+
+<p>A test case for Ottr. Contains configurations and code to be executed for the test.
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>The name of the test case</p>
+</dd>
+<dt><code>code</code></dt>
+<dd>
+<p>The code to be executed as part of the test case</p>
+</dd>
+<dt><code>points</code></dt>
+<dd>
+<p>The point value of the test case</p>
+</dd>
+<dt><code>hidden</code></dt>
+<dd>
+<p>Whether the test case is hidden</p>
+</dd>
+<dt><code>success_message</code></dt>
+<dd>
+<p>A message to show to students if the test passes</p>
+</dd>
+<dt><code>failure_message</code></dt>
+<dd>
+<p>A message to show to students if the test fails</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-TestCase-new"><code>TestCase$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-TestCase-run"><code>TestCase$run()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-TestCase-to_list"><code>TestCase$to_list()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-TestCase-clone"><code>TestCase$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-TestCase-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Create a test case.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>TestCase$new(
+  name,
+  code,
+  points = 1,
+  hidden = FALSE,
+  success_message = NA,
+  failure_message = NA
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>The name of the test case</p>
+</dd>
+<dt><code>code</code></dt>
+<dd>
+<p>The code to be executed as part of the test case</p>
+</dd>
+<dt><code>points</code></dt>
+<dd>
+<p>The point value of the test case</p>
+</dd>
+<dt><code>hidden</code></dt>
+<dd>
+<p>Whether the test case is hidden</p>
+</dd>
+<dt><code>success_message</code></dt>
+<dd>
+<p>A message to show to students if the test passes</p>
+</dd>
+<dt><code>failure_message</code></dt>
+<dd>
+<p>A message to show to students if the test fails</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-TestCase-run"></a>
+
+
+
+<h4>Method <code>run()</code>
+</h4>
+
+<p>Run the test case against the provided environment.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>TestCase$run(env)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>env</code></dt>
+<dd>
+<p>The environment to run the test case in</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-TestCase-to_list"></a>
+
+
+
+<h4>Method <code>to_list()</code>
+</h4>
+
+<p>Convert this test case to a JSON-compatible list with all of its fields.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>TestCase$to_list()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>The list representation of this test case
+</p>
+
+
+<hr>
+<a id="method-TestCase-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>TestCase$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tc = TestCase$new("q1", {
+  testthat::assert_true(q1.ans)
+})
+env = new.env()
+env$q1.ans = TRUE
+tc$run(env)
+</code></pre>
+
+
+</div>

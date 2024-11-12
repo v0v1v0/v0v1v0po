@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ohsome_parse</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse content from an ohsome API response</h2>
+
+<h3>Description</h3>
+
+<p>Extracts and parses the content from an ohsome API response
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ohsome_parse(
+  response,
+  returnclass = c("default", "sf", "data.frame", "list", "character"),
+  omit_empty = TRUE
+)
+
+ohsome_sf(response, omit_empty = TRUE)
+
+ohsome_df(response, omit_empty = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>response</code></td>
+<td>
+<p>An <code>ohsome_response</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnclass</code></td>
+<td>
+<p>character; one of the following:
+</p>
+
+<ul>
+<li> <p><code>"default"</code> returns <code>sf</code> if the <code>ohsome_response</code> contains GeoJSON, or
+else a <code>data.frame</code>.
+</p>
+</li>
+<li> <p><code>"sf"</code> returns <code>sf</code> if the <code>ohsome_response</code> contains GeoJSON, else
+issues a warning and returns a <code>data.frame</code>.
+</p>
+</li>
+<li> <p><code>"data.frame"</code> returns a <code>data.frame</code>.
+</p>
+</li>
+<li> <p><code>"list"</code> returns a <code>list</code>.
+</p>
+</li>
+<li> <p><code>"character"</code> returns the ohsome API response body as text (JSON or
+semicolon-separated values)
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omit_empty</code></td>
+<td>
+<p>logical; omit features with empty geometries (only if
+<code>returnclass = "sf"</code>)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>ohsome_parse()</code> parses an <code>ohsome_response</code> object into an object of the
+specified class. By default, this is an <code>sf</code> object if the ohsome API
+response contains GeoJSON data or a <code>data.frame</code> if it does not.
+<code>ohsome_sf()</code> and <code>ohsome_df()</code> wrapper functions for specific return
+classes.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>sf</code> object, a <code>data.frame</code>, a <code>list</code> or a <code>character</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Create and send a query to ohsome API
+r &lt;- ohsome_query("elements/centroid", filter = "amenity=*") |&gt;
+    set_boundary(osmdata::getbb("Heidelberg")) |&gt;
+    set_time("2021") |&gt;
+    set_properties("metadata") |&gt;
+    ohsome_post(parse = FALSE)
+
+# Parse response to object of default class (here: sf)
+ohsome_parse(r)
+
+# Parse response to data.frame
+ohsome_df(r)
+
+# Parse response to sf
+ohsome_sf(r)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

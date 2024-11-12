@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pte_disc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>PTE estimation with a discrete surrogate marker</h2>
+
+<h3>Description</h3>
+
+<p>PTE estimation with discrete surrogate marker
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pte_disc(sob, yob, aob, var = TRUE, conf.int = TRUE, rep = 500)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sob</code></td>
+<td>
+<p>DISCRETE surrogate marker</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yob</code></td>
+<td>
+<p>outcome of interest (continuous or binary)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aob</code></td>
+<td>
+<p>treatment assignment (1: treatment; 0: control)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var</code></td>
+<td>
+<p>whether variance should be calculated (TRUE/FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.int</code></td>
+<td>
+<p>whether 95% confidence intervals should be calculated (TRUE/FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rep</code></td>
+<td>
+<p>number of resampling replications (default is 500)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Estimates</code></td>
+<td>
+<p>Estimates of the treatment effect on the priamry outcome, delta, the treatment effect on the transformation of the surrogate, delta.gs, two versions of the proportion of treatment effect explained    by the surrogate, pte1 and pte2; if var = TRUE, standard error estimates are also provided (se); if conf.int = TRUE, 95% confidence intervals are also provided</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Transformed.S</code></td>
+<td>
+<p>the transformed surrogate, g(s), for each value of the surrogate, s; if var = TRUE, standard error estimates are also provided (se); if conf.int = TRUE, 95% confidence intervals are also provided</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(marker_disc)
+out &lt;- pte_disc(
+  sob = marker_disc$sob, 
+  yob = marker_disc$yob, 
+  aob = marker_disc$aob, var = FALSE, conf.int = FALSE)
+out
+
+out &lt;- pte_disc(
+  sob = marker_disc$sob, 
+  yob = marker_disc$yob, 
+  aob = marker_disc$aob, 
+  var = TRUE, conf.int = TRUE, rep = 1000)
+out
+
+</code></pre>
+
+
+</div>

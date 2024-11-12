@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>marker_tag_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot marker tag detections from Oregon RFID antenna readers</h2>
+
+<h3>Description</h3>
+
+<p>Creates a time series plot containing only detection data from a user-specified marker tag (unique tag number).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">marker_tag_plot(x, tag, gap)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>antenna data compiled using <code>import_ORFID</code> or <code>join_multireader_data</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tag</code></td>
+<td>
+<p>marker tag identification (character object).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gap</code></td>
+<td>
+<p>minimum time gap in seconds between detections (optional).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Creates a plot object displaying marker tag detections. If a minimum time gap is specified, time gaps greater than the minimum specified are highlighted in red. This allows the user to identify periods when marker tags were not being detected as frequently as expected.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a <span class="pkg">ggplot2</span> object. If the plot is saved as a named object, <span class="pkg">ggplot2</span> functions, including <code>theme</code> commands can be used to customize plot aesthetics, including axis labels, grid lines, etc.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Hugo Marques &lt;biohmarques@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>import_ORFID</code> for importing data files from Oregon RFID ORMR and ORSR antenna readers.
+<code>join_multireader_data</code> for combining data from Oregon RFID ORMR and ORSR antenna readers into a multi-reader array.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create a list containing compiled reader data:
+readers &lt;- list(reader_1, reader_2, reader_3)
+
+# Join data into a multi-reader array:
+PIT_data &lt;- join_multireader_data(readers)
+
+# Plot marker tag data and highlight gaps greater than 10 minutes.
+marker_tag_plot(PIT_data, "0000_000000004978", gap = 600)
+</code></pre>
+
+
+</div>

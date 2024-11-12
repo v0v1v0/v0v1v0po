@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>confBands.OEFPIL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Confidence and prediction bands for OEFPIL object</h2>
+
+<h3>Description</h3>
+
+<p>Function calculates pointwise confidence bands and prediction bands of estimated function from an object of class <code>"OEFPIL"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'OEFPIL'
+   confBands(object, xx, signif.level = 0.05, new.obs.variance)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>"OEFPIL"</code> (a result of a call to <code>OEFPIL</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xx</code></td>
+<td>
+<p>a sequence of x-coordinates of points for computing confidence and prediction intervals. If missing, the default sequence <code>seq(from = min(x), to = max(x), length.out = 301)</code> is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signif.level</code></td>
+<td>
+<p>a numerical value or a vector of significance levels for confidence bands. If missing, the default value 0.05 is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new.obs.variance</code></td>
+<td>
+<p>the variance of a new observation for prediction interval computing.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An argument <code>signif.level</code> can be one numerical value or vector of numerical values of significance levels for confidence intervals.
+</p>
+<p>If <code>new.obs.variance</code> is not defined by user, the average variance in the dependent variable is used to compute prediction intervals.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of type list containing the following components.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>xx</code></td>
+<td>
+<p>a numerical vector of points where intervals are calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yy</code></td>
+<td>
+<p>a numerical vector with values of estimated function in <code>xx</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PointwiseCB</code></td>
+<td>
+<p>a matrix of confidence intervals at points <code>xx</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PredictCB</code></td>
+<td>
+<p>a matrix of prediction intervals at points <code>xx</code>.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>OEFPIL</code>, <code>plot.OEFPIL</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+##-- Continuing the coef.OEFPIL(.) example:
+
+##Use of confBands function with default parameters
+a &lt;- confBands(st1)
+str(a)
+
+##Computing two different confidence bands in one step
+b &lt;- confBands(st1, signif.level = c(0.01,0.05))
+str(b)
+
+</code></pre>
+
+
+</div>

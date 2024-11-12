@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getSpread</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get the spread.</h2>
+
+<h3>Description</h3>
+
+<p>Extracts the spread from the depth summary, removing any points in which a
+change to bid/ask price/volume did not occur.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getSpread(depth.summary)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>depth.summary</code></td>
+<td>
+<p><code>depth.summary</code> data.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The spread (best bid and ask price) will change following a market order or
+upon the addition/cancellation of a limit order at, or within, the range of
+the current best bid/ask. A change to the spread that is <em>not</em> the
+result of a market order (an impact/market shock) is known as a
+<em>quote</em>.
+</p>
+<p>The following table shows a market spread betwen <code>05:03:22.546</code> and
+<code>05:04:42.957</code>. During this time, the best ask price and volume changes
+whilst the best bid price and volume remains static.
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+  timestamp    </td>
+<td style="text-align: right;"> bid.price </td>
+<td style="text-align: right;"> bid.vol  </td>
+<td style="text-align: right;"> ask.price </td>
+<td style="text-align: right;"> ask.vol </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  05:03:22.546 </td>
+<td style="text-align: right;"> 235.45    </td>
+<td style="text-align: right;"> 16235931 </td>
+<td style="text-align: right;"> 235.72    </td>
+<td style="text-align: right;"> 39375160 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  05:03:24.990 </td>
+<td style="text-align: right;"> 235.45    </td>
+<td style="text-align: right;"> 16235931 </td>
+<td style="text-align: right;"> 235.72    </td>
+<td style="text-align: right;"> 21211607 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  05:03:25.450 </td>
+<td style="text-align: right;"> 235.45    </td>
+<td style="text-align: right;"> 16235931 </td>
+<td style="text-align: right;"> 235.71    </td>
+<td style="text-align: right;"> 39375160 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  05:04:15.477 </td>
+<td style="text-align: right;"> 235.45    </td>
+<td style="text-align: right;"> 16235931 </td>
+<td style="text-align: right;"> 235.72    </td>
+<td style="text-align: right;"> 39058160 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  05:04:16.670 </td>
+<td style="text-align: right;"> 235.45    </td>
+<td style="text-align: right;"> 16235931 </td>
+<td style="text-align: right;"> 235.71    </td>
+<td style="text-align: right;"> 39058160 </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  05:04:42.957 </td>
+<td style="text-align: right;"> 235.45    </td>
+<td style="text-align: right;"> 16235931 </td>
+<td style="text-align: right;"> 235.71    </td>
+<td style="text-align: right;"> 77019160</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Bid/Ask spread quote data.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# get the last 25 quotes (changes to the spread).
+with(lob.data, tail(getSpread(depth.summary), 25))
+
+</code></pre>
+
+
+</div>

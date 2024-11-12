@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxRename</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rename a model or submodel</h2>
+
+<h3>Description</h3>
+
+<p>This function re-names a model. By default, the top model will be renamed. To rename a specific model, set oldname (see examples).
+Importantly, all internal references to the old model name (e.g. in algebras) will be updated to reference the new name.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxRename(model, newname, oldname = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>a MxModel object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newname</code></td>
+<td>
+<p>the new name of the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oldname</code></td>
+<td>
+<p>the name of the target model to rename. If NA then rename top model.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Return a mxModel object with the target model renamed.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OpenMx)
+
+# Create a parent model with two submodels:
+modelC &lt;- mxModel(model= 'modelC', 
+	mxModel(model= 'modelA'),
+	mxModel(model= 'modelB')
+)
+
+# Rename modelC (the top model) to "model1"
+model1 &lt;- mxRename(modelC, 'model_1')
+
+# Rename submodel "modelB" to "model_2"
+model1 &lt;- mxRename(model1, oldname = 'modelB', newname = 'model_2')
+
+model1
+
+</code></pre>
+
+
+</div>

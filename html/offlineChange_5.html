@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetMleAr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate Coefficients using ar Function</h2>
+
+<h3>Description</h3>
+
+<p>Transform N dependent data into approximated independent data (N/window_size) x (L+1).
+Computes the estimated coefficients of each window of original data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetMleAr(y, window_size)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>The original data to find change points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window_size</code></td>
+<td>
+<p>The number of observations each window contains.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The transformed data, which are the estimated coefficients of original data.</p>
+</td>
+</tr></table>
+<h3>References</h3>
+
+<p>J. Ding, Y. Xiang, L. Shen, and V. Tarokh, <em>Multiple Change Point Analysis:
+Fast Implementation and Strong Consistency</em>. IEEE Transactions on Signal
+Processing, vol. 65, no. 17, pp. 4495-4510, 2017.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">N = 1000
+N1 = floor(0.1*N)
+N2 = floor(0.3*N)
+a1 = c(0.8, -0.3); c1 = 0
+a2 = c(-0.5, 0.1); c2 = 0
+a3 = c(0.5, -0.5); c3 = 0
+y = rep(0,N)
+L=2
+y[1:L] = rnorm(L)
+for (n in (L+1):N){
+  if (n &lt;= N1) {
+    y[n] = y[(n-1):(n-L)] %*% a1 + c1 + rnorm(1)
+  } else if (n &lt;= (N1+N2)) {
+    y[n] = y[(n-1):(n-L)] %*% a2 + c2 + rnorm(1)
+  }
+  else {
+    y[n] = y[(n-1):(n-L)] %*% a3 + c3 + rnorm(1)
+  }
+}
+GetMleAr(y,window_size=100)
+</code></pre>
+
+
+</div>

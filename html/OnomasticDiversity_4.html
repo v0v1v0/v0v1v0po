@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fGeometricMean</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate the Geometric Mean </h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the geometric mean introduced by Stephen Terrence Buckland and coauthors. It is a method for quantifying species biodiversity that can be adapted to the context of onomastic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fGeometricMean(x, pki, pki0, s, location)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> dataframe of the data values for each species not null (because if you have a sample, there might be species that are not represented).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pki</code></td>
+<td>
+<p> name of a variable which represents the relative frequency for each species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pki0</code></td>
+<td>
+<p>  name of a variable which represents the relative frequency for each species at initial time point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p> vector which represents total number of species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a community <code class="reqn">i</code>, the geometric mean of relative abundances is defined by
+<code class="reqn">G_t = \exp \left(\frac{1}{S_i} \sum_{k\in S_i} \log \frac{N_{ki}^t}{N_{ki}^{t_0}}\right)</code>, where <code class="reqn">N_{ki}^t</code> denotes the number of individuals of species <code class="reqn">k</code> at times $t$, <code class="reqn">t_0</code> is the baseline year and <code class="reqn">S_i</code> are all species at the community, species richness.
+</p>
+<p>In onomastic context, <code class="reqn">N_{ki}^t</code> denotes the absolute frequency of surname <code class="reqn">k</code> in region (<code class="reqn">\approx</code> community diversity context) <code class="reqn">i</code> at times <code class="reqn">t</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element, for example the communities / regions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geometricMean</code></td>
+<td>
+<p> the value of geometric mean.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Buckland, S.T., Studeny, A.C., Magurran, A.E., Illian, J.B., &amp; Newson, S.E.  (2011). The geometric mean of relative abundance indices: a biodiversity measure with a difference. <em>Ecosphere</em>, <b>2</b>(9), art.100.
+</p>
+<p>Studeny, A.C. (2012). <em>Quantifying Biodiversity Trends in Time and Space</em>. PhD thesis, University of St Andrews.
+</p>
+<p>van Strien, A.J., Soldaat, L.L., &amp; Gregory, R.D. (2012). Desirable mathematical properties of indicators for biodiversity change. <em>Ecological Indicators</em>, <b>14</b>, 202–208.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fMargalef</code>,
+<code>fMenhinick</code>,
+<code>fPielou</code>,
+<code>fShannon</code>,
+<code>fSheldon</code>, 
+<code>fSimpson</code>,
+<code>fSimpsonInf</code>,
+<code>fGeneralisedMean</code>,
+<code>fHeip</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(sqldf)
+data(surnamesgal14)
+loc &lt;- length(unique(surnamesgal14$muni))
+
+apes2=sqldf('select  muni, count(surname) as ni,
+sum(number) as population from surnamesgal14
+group by muni;')
+surnamesgal14$pki0 &lt;- surnamesgal14$pki
+
+result = fGeometricMean (x= surnamesgal14[surnamesgal14$number != 0,],
+pki="pki", pki0="pki0" , location  = "muni",
+s = apes2$ni[1:loc])
+result
+
+data(namesmengal16)
+loc &lt;- length(unique(namesmengal16$muni))
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from namesmengal16
+group by muni;')
+
+namesmengal16$pki &lt;- (namesmengal16$number /
+namesmengal16$population)
+namesmengal16$pki0 &lt;- namesmengal16$pki
+
+result = fGeometricMean (x= namesmengal16[namesmengal16$number != 0,],
+pki="pki", pki0="pki0" , location  = "muni",
+s = names2$ni[1:loc])
+result
+
+data(nameswomengal16)
+loc &lt;- length(unique(nameswomengal16$muni))
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from nameswomengal16
+group by muni;')
+
+nameswomengal16$pki &lt;- (nameswomengal16$number /
+nameswomengal16$population)
+nameswomengal16$pki0 &lt;- nameswomengal16$pki
+
+result = fGeometricMean (x= nameswomengal16[nameswomengal16$number != 0,], 
+pki = "pki", pki0 = "pki0", location  = "muni", 
+s = names2$ni[1:loc])
+result
+</code></pre>
+
+
+</div>

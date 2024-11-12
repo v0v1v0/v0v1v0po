@@ -1,0 +1,172 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>methods-cancor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Functionality for canonical correlations</h2>
+
+<h3>Description</h3>
+
+<p>These methods extract data from, and attribute new data to,
+objects of class <code>"cancor_ord"</code>. This is a class introduced in this package
+to identify objects returned by <code>cancor_ord()</code>, which wraps
+<code>stats::cancor()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'cancor_ord'
+as_tbl_ord(x)
+
+## S3 method for class 'cancor_ord'
+recover_rows(x)
+
+## S3 method for class 'cancor_ord'
+recover_cols(x)
+
+## S3 method for class 'cancor_ord'
+recover_inertia(x)
+
+## S3 method for class 'cancor_ord'
+recover_coord(x)
+
+## S3 method for class 'cancor_ord'
+recover_conference(x)
+
+## S3 method for class 'cancor_ord'
+recover_supp_rows(x)
+
+## S3 method for class 'cancor_ord'
+recover_supp_cols(x)
+
+## S3 method for class 'cancor_ord'
+recover_aug_rows(x)
+
+## S3 method for class 'cancor_ord'
+recover_aug_cols(x)
+
+## S3 method for class 'cancor_ord'
+recover_aug_coord(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An ordination object.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The canonical coefficients (loadings) are obtained directly from the
+underlying singular value decomposition and constitute the active elements.
+If canonical scores are returned, then they and the structure correlations
+are made available as supplementary elements. <strong>ordr</strong> takes rows and columns
+from the intraset correlations <code style="white-space: pre;">⁠$xstructure⁠</code> and <code style="white-space: pre;">⁠$ystructure⁠</code>, on which no
+intertia is conferred; the interset correlations can be obtained by
+conferring inertia onto these.
+</p>
+<p>A biplot of the canonical coefficients can be interpreted as approximating
+the <code class="reqn">X</code>-<code class="reqn">Y</code> inner product matrix, inversely weighted by the <code class="reqn">X</code>
+and <code class="reqn">Y</code> variances. The canonical scores and structure coefficients are
+available as supplementary points if returned by <code>cancor_ord()</code>. These can be
+used to create biplots of the case scores as linear combinations of loadings
+(the coefficients, in standard coordinates, overlaid with the scores) or of
+intraset and interset correlations with respect to either data set (the
+correlations with inertia conferred entirely onto rows or onto columns).
+Greenacre (1984) and ter Braak (1990) describe these families, though ter
+Braak recommends against the first.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The recovery generics <code style="white-space: pre;">⁠recover_*()⁠</code> return core model components, distribution of inertia,
+supplementary elements, and intrinsic metadata; but they require methods for each model class to
+tell them what these components are.
+</p>
+<p>The generic <code>as_tbl_ord()</code> returns its input wrapped in the 'tbl_ord'
+class. Its methods determine what model classes it is allowed to wrap. It
+then provides 'tbl_ord' methods with access to the recoverers and hence to
+the model components.
+</p>
+
+
+<h3>References</h3>
+
+<p>Greenacre MJ (1984) <em>Theory and applications of correspondence analysis</em>.
+London: Academic Press, ISBN 0-12-299050-1.
+<a href="http://www.carme-n.org/?sec=books5">http://www.carme-n.org/?sec=books5</a>
+</p>
+<p>ter Braak CJF (1990) "Interpreting canonical correlation analysis through
+biplots of structure correlations and weights". <em>Psychometrika</em> 55(3),
+519–531. <a href="https://doi.org/10.1007/BF02294765">doi:10.1007/BF02294765</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other methods for singular value decomposition-based techniques: 
+<code>methods-correspondence</code>,
+<code>methods-lda</code>,
+<code>methods-lra</code>,
+<code>methods-mca</code>,
+<code>methods-prcomp</code>,
+<code>methods-princomp</code>,
+<code>methods-svd</code>
+</p>
+<p>Other models from the stats package: 
+<code>methods-cmds</code>,
+<code>methods-factanal</code>,
+<code>methods-kmeans</code>,
+<code>methods-lm</code>,
+<code>methods-prcomp</code>,
+<code>methods-princomp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># data frame of life-cycle savings across countries
+class(LifeCycleSavings)
+head(LifeCycleSavings)
+savings_pop &lt;- LifeCycleSavings[, c("pop15", "pop75")]
+savings_oec &lt;- LifeCycleSavings[, c("sr", "dpi", "ddpi")]
+
+# canonical correlation analysis with scores and correlations included
+savings_cca &lt;- cancor_ord(savings_pop, savings_oec, scores = TRUE)
+savings_cca &lt;- augment_ord(as_tbl_ord(savings_cca))
+head(get_cols(savings_cca))
+head(get_cols(savings_cca, elements = "score"))
+get_rows(savings_cca, elements = "structure")
+get_cols(savings_cca, elements = "structure")
+
+# biplot of interset and intraset correlations with the population data
+savings_cca %&gt;%
+  confer_inertia("cols") %&gt;%
+  ggbiplot(aes(label = name, color = .matrix)) +
+  theme_bw() + theme_biplot() +
+  geom_unit_circle() +
+  geom_rows_vector(arrow = NULL, elements = "structure") +
+  geom_cols_vector(arrow = NULL, elements = "structure", linetype = "dashed") +
+  geom_rows_text(elements = "structure", hjust = "outward") +
+  geom_cols_text(elements = "structure", hjust = "outward") +
+  scale_color_brewer(limits = c("rows", "cols"), type = "qual") +
+  expand_limits(x = c(-1, 1), y = c(-1, 1))
+
+# biplot with scores as supplemental elements
+savings_cca %&gt;%
+  confer_inertia("rows") %&gt;%
+  ggbiplot(aes(label = name), sec.axes = "cols", scale.factor = 5L) +
+  theme_biplot() +
+  geom_cols_vector(elements = "active") +
+  geom_cols_text_radiate(elements = "active") +
+  geom_rows_text(elements = "score", subset = seq(50L))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ore</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Oniguruma regular expressions</h2>
+
+<h3>Description</h3>
+
+<p>Create, test for, and print objects of class <code>"ore"</code>, which represent
+Oniguruma regular expressions. These are unit-length character vectors with
+additional attributes, including a pointer to the compiled version.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ore(..., options = "", encoding = getOption("ore.encoding"),
+  syntax = c("ruby", "fixed"))
+
+is_ore(x)
+
+## S3 method for class 'ore'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>One or more strings or dictionary labels, constituting a valid
+regular expression after being concatenated together. Elements drawn from
+the dictionary will be surrounded by parentheses, turning them into
+groups. Note that backslashes should be doubled, to avoid them being
+interpreted as character escapes by R. The <code>...</code> argument is ignored
+by the <code>print</code> method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>A string composed of characters indicating variations on the
+usual interpretation of the regex. These may currently include <code>"i"</code>
+for case-insensitive matching, and <code>"m"</code> for multiline matching (in
+which case <code>"."</code> matches the newline character).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encoding</code></td>
+<td>
+<p>A string specifying the encoding that matching will take
+place in. The default is given by the <code>"ore.encoding"</code> option, which
+is usually set automatically from the current locale when the package is
+loaded, but can be modified if needed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>syntax</code></td>
+<td>
+<p>The regular expression syntax being used. The default is
+<code>"ruby"</code>, which reflects the syntax of the Ruby language, which is
+very similar to that of Perl. An alternative is <code>"fixed"</code>, for
+literal matching without special treatment of characters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An R object.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The <code>ore</code> function returns the final pattern, with class
+<code>"ore"</code> and the following attributes:
+</p>
+
+<dl>
+<dt>.compiled</dt>
+<dd>
+<p>A low-level pointer to the compiled version of the
+regular expression.</p>
+</dd>
+<dt>options</dt>
+<dd>
+<p>Options, copied from the argument of the same name.</p>
+</dd>
+<dt>encoding</dt>
+<dd>
+<p>The specified or detected encoding.</p>
+</dd>
+<dt>syntax</dt>
+<dd>
+<p>The specified syntax type.</p>
+</dd>
+<dt>nGroups</dt>
+<dd>
+<p>The number of groups in the pattern.</p>
+</dd>
+<dt>groupNames</dt>
+<dd>
+<p>Group names, if applicable.</p>
+</dd>
+</dl>
+<p>The <code>is_ore</code> function returns a logical vector indicating whether
+its argument represents an <code>"ore"</code> object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>For full details of supported syntax, please see
+<a href="https://raw.githubusercontent.com/k-takata/Onigmo/master/doc/RE">https://raw.githubusercontent.com/k-takata/Onigmo/master/doc/RE</a>. The
+<code>regex</code> page is also useful as a quick reference, since
+PCRE (used by base R) and Oniguruma (used by <code>ore</code>) have similar
+features. See <code>ore_dict</code> for details of the pattern dictionary.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># This matches a positive or negative integer
+ore("-?\\d+")
+
+# This matches words of exactly four characters
+ore("\\b\\w{4}\\b")
+</code></pre>
+
+
+</div>

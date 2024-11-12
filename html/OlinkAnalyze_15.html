@@ -1,0 +1,188 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_anova</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function which performs an ANOVA per protein</h2>
+
+<h3>Description</h3>
+
+<p>Performs an ANOVA F-test for each assay (by OlinkID) in every panel using car::Anova and Type III sum of squares.
+The function handles both factor and numerical variables and/or covariates. <br><br>
+Samples that have no variable information or missing factor levels are automatically removed from the analysis (specified in a message if verbose = TRUE).
+Character columns in the input dataframe are automatically converted to factors (specified in a message if verbose = TRUE).
+Numerical variables are not converted to factors.
+Control samples should be removed before using this function.
+Control assays (AssayType is not "assay", or Assay contains "control" or "ctrl") should be removed before using this function.
+If a numerical variable is to be used as a factor, this conversion needs to be done on the dataframe before the function call. <br><br>
+Crossed analysis, i.e. A*B formula notation, is inferred from the variable argument in the following cases: <br></p>
+
+<ul>
+<li>
+<p> c('A','B')
+</p>
+</li>
+<li>
+<p> c('A: B')
+</p>
+</li>
+<li>
+<p> c('A: B', 'B') or c('A: B', 'A')
+</p>
+</li>
+</ul>
+<p>Inference is specified in a message if verbose = TRUE. <br>
+For covariates, crossed analyses need to be specified explicitly, i.e. two main effects will not be expanded with a c('A','B') notation. Main effects present in the variable takes precedence.
+The formula notation of the final model is specified in a message if verbose = TRUE. <br><br>
+Adjusted p-values are calculated by stats::p.adjust according to the Benjamini &amp; Hochberg (1995) method (“fdr”).
+The threshold is determined by logic evaluation of Adjusted_pval &lt; 0.05. Covariates are not included in the p-value adjustment.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_anova(
+  df,
+  variable,
+  outcome = "NPX",
+  covariates = NULL,
+  model_formula,
+  return.covariates = FALSE,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>NPX data frame in long format with at least protein name (Assay), OlinkID, UniProt, Panel and a factor with at least 3 levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+<p>Single character value or character array.
+Variable(s) to test. If length &gt; 1, the included variable names will be used in crossed analyses .
+Also takes ':' or '*' notation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>Character. The dependent variable. Default: NPX.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covariates</code></td>
+<td>
+<p>Single character value or character array. Default: NULL.
+Covariates to include. Takes ':' or '*' notation. Crossed analysis will not be inferred from main effects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model_formula</code></td>
+<td>
+<p>(optional) Symbolic description of the model to be fitted in standard formula notation (e.g. "NPX~A*B"). If provided, this will override the <code>outcome</code>, <code>variable</code> and <code>covariates</code> arguments. Can be a string or of class <code>stats::formula()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.covariates</code></td>
+<td>
+<p>Boolean. Default: False. Returns F-test results for the covariates. Note: Adjusted p-values will be NA for the covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Boolean. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A "tibble" containing the ANOVA results for every protein. The tibble is arranged by ascending p-values.
+Columns include:
+</p>
+
+<ul>
+<li>
+<p>Assay: "character" Protein symbol
+</p>
+</li>
+<li>
+<p>OlinkID: "character" Olink specific ID
+</p>
+</li>
+<li>
+<p>UniProt: "character" UniProt ID
+</p>
+</li>
+<li>
+<p>Panel: "character" Name of Olink Panel
+</p>
+</li>
+<li>
+<p>term: "character" term in model
+</p>
+</li>
+<li>
+<p>df: "numeric" degrees of freedom
+</p>
+</li>
+<li>
+<p>sumsq: "numeric" sum of square
+</p>
+</li>
+<li>
+<p>meansq: "numeric" mean of square
+</p>
+</li>
+<li>
+<p>statistic: "numeric" value of the statistic
+</p>
+</li>
+<li>
+<p>p.value: "numeric" nominal p-value
+</p>
+</li>
+<li>
+<p>Adjusted_pval: "numeric" adjusted p-value for the test (Benjamini&amp;Hochberg)
+</p>
+</li>
+<li>
+<p>Threshold: "character" if adjusted p-value is significant or not (&lt; 0.05)
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(dplyr)
+
+npx_df &lt;- npx_data1 |&gt; filter(!grepl('control|ctrl',SampleID, ignore.case = TRUE))
+
+#One-way ANOVA, no covariates.
+#Results in a model NPX~Time
+anova_results &lt;- olink_anova(df = npx_df, variable = "Time")
+
+#Two-way ANOVA, one main effect covariate.
+#Results in model NPX~Treatment*Time+Site.
+anova_results &lt;- olink_anova(df = npx_df,
+                             variable=c("Treatment:Time"),
+                             covariates="Site")
+
+#One-way ANOVA, interaction effect covariate.
+#Results in model NPX~Treatment+Site:Time+Site+Time.
+anova_results &lt;- olink_anova(df = npx_df,
+                             variable="Treatment",
+                             covariates="Site:Time")
+</code></pre>
+
+
+</div>

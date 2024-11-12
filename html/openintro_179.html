@@ -1,0 +1,205 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>makeTube</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Regression tube</h2>
+
+<h3>Description</h3>
+
+<p>Produce a linear, quadratic, or nonparametric tube for regression data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">makeTube(
+  x,
+  y,
+  Z = 2,
+  R = 1,
+  col = "#00000022",
+  border = "#00000000",
+  type = c("lin", "quad", "robust"),
+  stDev = c("constant", "linear", "other"),
+  length.out = 99,
+  bw = "default",
+  plotTube = TRUE,
+  addLine = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>x</code> coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p><code>y</code> coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>Number of standard deviations out from the regression line to
+extend the tube.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Control of how far the tube extends to the left and right.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Fill color of the tube.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border</code></td>
+<td>
+<p>Border color of the tube.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of model fit to the data. Here <code>'robust'</code> results
+in a nonparametric estimate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stDev</code></td>
+<td>
+<p>Choices are constant variance (<code>'constant'</code>), the standard
+deviation of the errors changes linearly (<code>'linear'</code>), or the standard
+deviation of the errors should be estimated using nonparametric methods
+(<code>'other'</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>length.out</code></td>
+<td>
+<p>The number of observations used to build the regression
+model. This argument may be increased to increase the smoothing of a
+quadratic or nonparametric curve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bw</code></td>
+<td>
+<p>Bandwidth used if <code>type='robust'</code> or <code>homosk=FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotTube</code></td>
+<td>
+<p>Whether the tube should be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addLine</code></td>
+<td>
+<p>Whether the linear model should be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to the <code>lines</code> function if
+<code>addLine=TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p><code>x</code> coordinates for the regression model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p><code>y</code> coordinates for the regression model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tubeX</code></td>
+<td>
+<p><code>x</code> coordinates for the boundary of the tube.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tubeY</code></td>
+<td>
+<p><code>y</code> coordinates for the boundary of the tube.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Diez
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>lmPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# possum example
+plot(possum$total_l, possum$head_l)
+makeTube(possum$total_l, possum$head_l, 1)
+makeTube(possum$total_l, possum$head_l, 2)
+makeTube(possum$total_l, possum$head_l, 3)
+
+# grades and TV example
+plot(gradestv)
+makeTube(gradestv$tv, gradestv$grades, 1.5)
+plot(gradestv)
+makeTube(gradestv$tv, gradestv$grades, 1.5, stDev = "o")
+plot(gradestv)
+makeTube(gradestv$tv, gradestv$grades, 1.5, type = "robust")
+plot(gradestv)
+makeTube(gradestv$tv, gradestv$grades, 1.5, type = "robust", stDev = "o")
+
+# what can go wrong with a basic least squares model
+# 1
+x &lt;- runif(100)
+y &lt;- 25 * x - 20 * x^2 + rnorm(length(x), sd = 1.5)
+plot(x, y)
+makeTube(x, y, type = "q")
+# 2
+x &lt;- c(-0.6, -0.46, -0.091, runif(97))
+y &lt;- 25 * x + rnorm(length(x))
+y[2] &lt;- y[2] + 8
+y[1] &lt;- y[1] + 1
+plot(x, y, ylim = range(y) + c(-10, 5))
+makeTube(x, y)
+# 3
+x &lt;- runif(100)
+y &lt;- 5 * x + rnorm(length(x), sd = x)
+plot(x, y)
+makeTube(x, y, stDev = "l", bw = 0.03)
+</code></pre>
+
+
+</div>

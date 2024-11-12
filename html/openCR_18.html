@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>expected.d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Expected Distance Moved</h2>
+
+<h3>Description</h3>
+
+<p>Movement models in <span class="pkg">openCR</span> differ in their parameterisation so direct 
+comparison can be difficult. The expected distance moved is a convenient 
+statistic common to all models. This function computes the expected distance 
+from various inputs, including fitted models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+expected.d(movementmodel, move.a, move.b, truncate = Inf, mask = NULL, 
+    min.d = 1e-4, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>movementmodel</code></td>
+<td>
+<p>character or function or kernel or openCR object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>move.a</code></td>
+<td>
+<p>numeric parameter of kernel</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>move.b</code></td>
+<td>
+<p>numeric parameter of kernel</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truncate</code></td>
+<td>
+<p>radius of truncation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mask</code></td>
+<td>
+<p>habitat mask object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.d</code></td>
+<td>
+<p>numeric lower bound of integration (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>make.kernel</code> if input is a fitted model</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The input <code>movementmodel</code> may be
+</p>
+
+<ul>
+<li>
+<p> fitted openCR model
+</p>
+</li>
+<li>
+<p> user kernel function g(r)
+</p>
+</li>
+<li>
+<p> kernel object
+</p>
+</li>
+<li>
+<p> character name of kernel model see Movement models 
+</p>
+</li>
+</ul>
+<p>If <code>truncate</code> (R) is finite or <code>movementmodel</code> is a function then the 
+expected value is computed by numerical integration <code class="reqn">E(d) = \int_0^R r.f(r) dr</code>. 
+In the event that f(0) is not finite, <code>min.d</code> is used as the lower bound. 
+</p>
+<p><code>mask</code> is used only for ‘uncorrelated’ and ‘uncorrelatedzi’ movement. 
+For these models the expected movement is merely the average distance 
+between points on the mask, weighted by (1-zi) if zero-inflated (uncorrelatedzi).
+</p>
+<p>The ... argument is useful for (i) selecting a session from a fitted model, or
+(ii) specifying the upper or lower confidence limits from a single-parameter 
+fitted model via the ‘stat’ argument of <code>make.kernel</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric value (zero for 'static' model, NA if model unrecognised).
+</p>
+
+
+<h3>References</h3>
+
+<p>Efford, M. G. and Schofield, M. R. (2022) A review of movement models in open population capture–recapture. <em>Methods in Ecology and Evolution</em> <b>13</b>, 2106–2118. https://doi.org/10.1111/2041-210X.13947
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Movement models, <code>make.kernel</code>, <code>pkernel</code>, <code>qkernel</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+expected.d('BVT', move.a = 20, move.b = 1)
+expected.d('BVT', move.a = 20, move.b = 1, truncate = 300)
+
+k &lt;- make.kernel(movementmodel = 'BVT', spacing = 10, move.a = 20, move.b = 1)
+expected.d(k)
+
+</code></pre>
+
+
+</div>

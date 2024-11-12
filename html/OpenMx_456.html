@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxVersion</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns Current Version String</h2>
+
+<h3>Description</h3>
+
+<p>This function returns a string with the current version number of OpenMx.
+Optionally (with verbose = TRUE (the default)), it prints a message containing
+the version of R, the platform, and the optimizer.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxVersion(model = NULL, verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p> optional <code>MxModel</code> to request optimizer from (default = NULL)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Whether to print version information to the console (default = TRUE)</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Print useful version information.
+mxVersion()
+# If you just want the version, use this call.
+x = mxVersion(verbose=FALSE)
+
+library(OpenMx)
+data(demoOneFactor)  # load the demoOneFactor dataframe
+manifests &lt;- names(demoOneFactor) # set the manifest to the 5 demo variables
+latents   &lt;- c("G")  # define 1 latent variable
+model &lt;- mxModel(model = "One Factor", type = "RAM",
+    manifestVars = manifests,
+    latentVars   = latents,
+    mxPath(from = latents, to = manifests, labels = paste("b", 1:5, sep = "")), 
+    mxPath(from = manifests, arrows = 2  , labels = paste("u", 1:5, sep = "")), 
+    mxPath(from = latents  , arrows = 2  , free = FALSE, values = 1.0), 
+    mxData(cov(demoOneFactor), type = "cov", numObs = 500)
+)
+mxVersion(model, verbose = TRUE)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,202 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>polyopt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>General-purpose optimization - sequential application of methods</h2>
+
+<h3>Description</h3>
+
+<p>Multiple minimization methods are applied in sequence to a single problem,
+with the output parameters of one method being used to start the next.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">polyopt(par, fn, gr=NULL, lower=-Inf, upper=Inf, 
+            methcontrol=NULL, hessian=FALSE,
+            control=list(),
+             ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>par</code></td>
+<td>
+<p>a vector of initial values for the parameters 
+for which optimal values are to be found. Names on the elements
+of this vector are preserved and used in the results data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fn</code></td>
+<td>
+<p>A function to be minimized (or maximized), with first
+argument the vector of parameters over which minimization is to take
+place.  It should return a scalar result.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gr</code></td>
+<td>
+<p>A function to return (as a vector) the gradient for those methods that 
+can use this information.
+</p>
+<p>If 'gr' is <code>NULL</code>, a finite-difference approximation will be used.
+An open question concerns whether the SAME approximation code used for all methods, 
+or whether there are differences that could/should be examined? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower, upper</code></td>
+<td>
+<p>Bounds on the variables for methods such as <code>"L-BFGS-B"</code> that can
+handle box (or bounds) constraints.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>methcontrol</code></td>
+<td>
+<p>An data frame of which each row gives an optimization method, a maximum
+number of iterations and a maximum number of function evaluations allowed for that
+method. Each method will be executed in turn until either the maximum iterations
+or function evaluations are completed, whichever is first. The next method is then
+executed starting with the best parameters found so far, else the function exits.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hessian</code></td>
+<td>
+<p>A logical control that if TRUE forces the computation of an approximation 
+to the Hessian at the final set of parameters. If FALSE (default), the hessian is
+calculated if needed to provide the KKT optimality tests (see <code>kkt</code> in
+‘Details’ for the <code>control</code> list).
+This setting is provided primarily for compatibility with optim().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of control parameters. See ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>For <code>optimx</code> further arguments to be passed to <code>fn</code> 
+and <code>gr</code>; otherwise, further arguments are not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that arguments after <code>...</code> must be matched exactly.
+</p>
+<p>See <code>optimr()</code> for other details.
+</p>
+<p>Note that this function does not (yet?) make use of a hess function
+to compute the hessian.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An array with one row per method. Each row contains:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>par</code></td>
+<td>
+<p>The best set of parameters found for the method in question.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>The value of ‘fn’ corresponding to ‘par’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>counts</code></td>
+<td>
+<p> A two-element integer vector giving the number of calls to
+‘fn’ and ‘gr’ respectively. This excludes those calls needed
+to compute the Hessian, if requested, and any calls to ‘fn’
+to compute a finite-difference approximation to the gradient.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convergence</code></td>
+<td>
+<p> An integer code. ‘0’ indicates successful completion</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code> message</code></td>
+<td>
+<p> A character string giving any additional information returned
+by the optimizer, or ‘NULL’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hessian</code></td>
+<td>
+<p> Always NULL for this routine.</p>
+</td>
+</tr>
+</table>
+<h3>Source</h3>
+
+<p>See the manual pages for <code>optim()</code> and the packages the DESCRIPTION <code>suggests</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fnR &lt;- function (x, gs=100.0) 
+{
+    n &lt;- length(x)
+    x1 &lt;- x[2:n]
+    x2 &lt;- x[1:(n - 1)]
+    sum(gs * (x1 - x2^2)^2 + (1 - x2)^2)
+}
+grR &lt;- function (x, gs=100.0) 
+{
+    n &lt;- length(x)
+    g &lt;- rep(NA, n)
+    g[1] &lt;- 2 * (x[1] - 1) + 4*gs * x[1] * (x[1]^2 - x[2])
+    if (n &gt; 2) {
+        ii &lt;- 2:(n - 1)
+        g[ii] &lt;- 2 * (x[ii] - 1) + 4 * gs * x[ii] * (x[ii]^2 - x[ii + 
+            1]) + 2 * gs * (x[ii] - x[ii - 1]^2)
+    }
+    g[n] &lt;- 2 * gs * (x[n] - x[n - 1]^2)
+    g
+}
+
+x0 &lt;- rep(pi, 4)
+mc &lt;- data.frame(method=c("Nelder-Mead","Rvmmin"), maxit=c(1000, 100), maxfeval= c(1000, 1000))
+
+ans &lt;- polyopt(x0, fnR, grR, methcontrol=mc, control=list(trace=0))
+ans
+mc &lt;- data.frame(method=c("Nelder-Mead","Rvmmin"), maxit=c(100, 100), maxfeval= c(100, 1000))
+
+ans &lt;- polyopt(x0, fnR, grR, methcontrol=mc, control=list(trace=0))
+ans
+
+mc &lt;- data.frame(method=c("Nelder-Mead","Rvmmin"), maxit=c(10, 100), maxfeval= c(10, 1000))
+
+ans &lt;- polyopt(x0, fnR, grR, methcontrol=mc, control=list(trace=0))
+ans
+
+
+
+</code></pre>
+
+
+</div>

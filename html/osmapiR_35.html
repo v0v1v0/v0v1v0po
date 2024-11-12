@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_get_user_details</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Details of users</h2>
+
+<h3>Description</h3>
+
+<p>Details of users
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_get_user_details(user_id, format = c("R", "xml", "json"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>user_id</code></td>
+<td>
+<p>The ids of the users to retrieve the details for, represented by a numeric or a character value (not
+the display names).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Format of the output. Can be <code>"R"</code> (default), <code>"xml"</code>, or <code>"json"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>For users not found, the result is empty. If <code>format = "R"</code>, returns a data frame with one user per row.
+</p>
+
+
+<h4><code>format = "xml"</code></h4>
+
+<p>Returns a xml2::xml_document with the following format:
+</p>
+<div class="sourceCode xml"><pre>&lt;osm version="0.6" generator="OpenStreetMap server"&gt;
+	&lt;user id="12023" display_name="jbpbis" account_created="2007-08-16T01:35:56Z"&gt;
+		&lt;description&gt;&lt;/description&gt;
+		&lt;contributor-terms agreed="false"/&gt;
+		&lt;img href="http://www.gravatar.com/avatar/c8c86cd15f60ecca66ce2b10cb6b9a00.jpg?s=256&amp;amp;d=http%3A%2F%2Fwww.openstreetmap.org%2Fassets%2Fusers%2Fimages%2Flarge-39c3a9dc4e778311af6b70ddcf447b58.png"/&gt;
+		&lt;roles&gt;
+		&lt;/roles&gt;
+		&lt;changesets count="1"/&gt;
+		&lt;traces count="0"/&gt;
+		&lt;blocks&gt;
+			&lt;received count="0" active="0"/&gt;
+		&lt;/blocks&gt;
+	&lt;/user&gt;
+	&lt;user id="210447" display_name="siebh" account_created="2009-12-20T10:11:42Z"&gt;
+		&lt;description&gt;&lt;/description&gt;
+		&lt;contributor-terms agreed="true"/&gt;
+		&lt;roles&gt;
+		&lt;/roles&gt;
+		&lt;changesets count="267"/&gt;
+		&lt;traces count="1"/&gt;
+		&lt;blocks&gt;
+			&lt;received count="0" active="0"/&gt;
+		&lt;/blocks&gt;
+	&lt;/user&gt;
+&lt;/osm&gt;
+</pre></div>
+
+
+
+<h4><code>format = "json"</code></h4>
+
+<p>Returns a list with the following json structure:
+</p>
+<div class="sourceCode json"><pre>{
+ "version": "0.6",
+ "generator": "OpenStreetMap server",
+ "users": [
+  {"user": {"id": 12023, "display_name": "jbpbis", "account_created": "2007-08-16T01:35:56Z", "description": "", "contributor_terms": {"agreed": False}, "roles": [], "changesets": {"count": 1}, "traces": {"count": 0}, "blocks": {"received": {"count": 0, "active": 0}}}},
+  {"user": {"id": 210447, "display_name": "siebh", "account_created": "2009-12-20T10:11:42Z", "description": "", "contributor_terms": {"agreed": True}, "roles": [], "changesets": {"count": 363}, "traces": {"count": 1}, "blocks": {"received": {"count": 0, "active": 0}}}}
+ ]
+}
+</pre></div>
+
+
+
+<h3>See Also</h3>
+
+<p>Other users' functions: 
+<code>osm_details_logged_user()</code>,
+<code>osm_get_preferences_user()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">usrs &lt;- osm_get_user_details(user_id = c(1, 24, 44, 45, 46, 48, 49, 50))
+usrs
+</code></pre>
+
+
+</div>

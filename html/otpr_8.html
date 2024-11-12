@@ -1,0 +1,207 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otp_get_isochrone</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns one or more travel time isochrones (OTPv1 only)</h2>
+
+<h3>Description</h3>
+
+<p>Returns one or more travel time isochrones in either GeoJSON format or as an
+<strong>sf</strong> object. Only works correctly for walk and/or transit modes - a limitation
+of OTP. Isochrones can be generated either <em>from</em> a location or <em>to</em>
+a location.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otp_get_isochrone(
+  otpcon,
+  location,
+  fromLocation = TRUE,
+  format = "JSON",
+  mode = "TRANSIT",
+  date = format(Sys.Date(), "%m-%d-%Y"),
+  time = format(Sys.time(), "%H:%M:%S"),
+  cutoffs,
+  batch = TRUE,
+  arriveBy = FALSE,
+  maxWalkDistance = NULL,
+  walkReluctance = 2,
+  waitReluctance = 1,
+  transferPenalty = 0,
+  minTransferTime = 0,
+  extra.params = list()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otpcon</code></td>
+<td>
+<p>An OTP connection object produced by <code>otp_connect</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p>Numeric vector, Latitude/Longitude pair, e.g. 'c(53.48805, -2.24258)'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fromLocation</code></td>
+<td>
+<p>Logical. If TRUE (default) the isochrone
+will be generated <em>from</em> the <code>location</code>. If FALSE the isochrone will
+be generated <em>to</em> the <code>location</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Character, required format of returned isochrone(s). Either JSON
+(returns GeoJSON) or SF (returns simple feature collection). Default is JSON.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>Character vector, mode(s) of travel. Valid values are: WALK,
+TRANSIT, BUS, RAIL, TRAM, SUBWAY. TRANSIT will use all available transit modes.
+Default is TRANSIT. WALK mode is automatically added to
+TRANSIT, BUS, RAIL, TRAM, and SUBWAY. Due to an OTP limitation this
+function is <em>not</em> suitable for CAR or BICYCLE modes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p>Character, must be in the format mm-dd-yyyy. This is the desired date of travel.
+Only relevant for transit modes. Default is the current system date.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>Character, must be in the format hh:mm:ss.
+If <code>arriveBy</code> is FALSE (the default) this is the desired departure time, otherwise the
+desired arrival time. Only relevant for transit modes. Default is the current system time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutoffs</code></td>
+<td>
+<p>Numeric vector, containing the cutoff times in seconds. for
+example: 'c(900, 1800, 2700)' would request 15, 30 and 60 minute isochrones.
+Can be a single value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>batch</code></td>
+<td>
+<p>Logical. If true, goal direction is turned off and a full path tree is built</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arriveBy</code></td>
+<td>
+<p>Logical. Whether a trip should depart (FALSE) or arrive (TRUE) at the specified
+date and time. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxWalkDistance</code></td>
+<td>
+<p>Numeric. The maximum distance (in meters) that the user is
+willing to walk. Default is NULL (the parameter is not passed to the API and the OTP
+default of unlimited takes effect).
+This is a soft limit in OTPv1 and is ignored if the mode is WALK only. In OTPv2
+this parameter imposes a hard limit on WALK, CAR and BICYCLE modes (see:
+<a href="http://docs.opentripplanner.org/en/latest/OTP2-MigrationGuide/#router-config">http://docs.opentripplanner.org/en/latest/OTP2-MigrationGuide/#router-config</a>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>walkReluctance</code></td>
+<td>
+<p>A single numeric value. A multiplier for how bad walking is
+compared to being in transit for equal lengths of time. Default = 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>waitReluctance</code></td>
+<td>
+<p>A single numeric value. A multiplier for how bad waiting for a
+transit vehicle is compared to being on a transit vehicle. This should be greater
+than 1 and less than <code>walkReluctance</code> (see API docs). Default = 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transferPenalty</code></td>
+<td>
+<p>Integer. An additional penalty added to boardings after
+the first. The value is in OTP's internal weight units, which are roughly equivalent to seconds.
+Set this to a high value to discourage transfers. Default is 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minTransferTime</code></td>
+<td>
+<p>Integer. The minimum time, in seconds, between successive
+trips on different vehicles. This is designed to allow for imperfect schedule
+adherence. This is a minimum; transfers over longer distances might use a longer time.
+Default is 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extra.params</code></td>
+<td>
+<p>A list of any other parameters accepted by the OTP API LIsochrone entry point. For
+advanced users. Be aware that otpr will carry out no validation of these additional
+parameters. They will be passed directly to the API. Do not pass 'fromPlace' or 'toPlace'
+to this function. These parameters are handled internally based on the values of <code>location</code>
+and <code>fromLocation</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list. First element in the list is <code>errorId</code>. This is "OK" if
+OTP successfully returned the isochrone(s), otherwise it is "ERROR". The second
+element of list varies:
+</p>
+
+<ul>
+<li>
+<p> If <code>errorId</code> is "ERROR" then <code>response</code> contains the OTP error message.
+</p>
+</li>
+<li>
+<p> If <code>errorId</code> is "OK" then <code>response</code> contains the the isochrone(s) in
+either GeoJSON format or as an <strong>sf</strong> object, depending on the value of the
+<code>format</code> argument.
+</p>
+</li>
+</ul>
+<p>The third element of the list is <code>query</code> which is a character string containing the URL
+that was submitted to the OTP API.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+otp_get_isochrone(otpcon, location = c(53.48805, -2.24258), cutoffs = c(900, 1800, 2700))
+
+otp_get_isochrone(otpcon, location = c(53.48805, -2.24258), fromLocation = FALSE,
+cutoffs = c(900, 1800, 2700), mode = "BUS")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

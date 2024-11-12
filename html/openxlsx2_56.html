@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_xml</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>read xml file</h2>
+
+<h3>Description</h3>
+
+<p>read xml file
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_xml(
+  xml,
+  pointer = TRUE,
+  escapes = FALSE,
+  declaration = FALSE,
+  whitespace = TRUE,
+  empty_tags = FALSE,
+  skip_control = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xml</code></td>
+<td>
+<p>something to read character string or file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pointer</code></td>
+<td>
+<p>should a pointer be returned?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>escapes</code></td>
+<td>
+<p>bool if characters like "&amp;" should be escaped. The default is
+no escapes. Assuming that the input already provides valid information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>declaration</code></td>
+<td>
+<p>should the declaration be imported</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>whitespace</code></td>
+<td>
+<p>should whitespace pcdata be imported</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>empty_tags</code></td>
+<td>
+<p>should <code style="white-space: pre;">⁠&lt;b/&gt;⁠</code> or <code style="white-space: pre;">⁠&lt;b&gt;&lt;/b&gt;⁠</code> be returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip_control</code></td>
+<td>
+<p>should whitespace character be exported</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Read xml files or strings to pointer and checks if the input is
+valid XML.
+If the input is read into a character object, it will be reevaluated every
+time it is called. A pointer is evaluated once, but lives only for the
+lifetime of the R session or once it is gc().
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  # a pointer
+  x &lt;- read_xml("&lt;a&gt;&lt;b/&gt;&lt;/a&gt;")
+  print(x)
+  print(x, raw = TRUE)
+  str(x)
+
+  # a character
+  y &lt;- read_xml("&lt;a&gt;&lt;b/&gt;&lt;/a&gt;", pointer = FALSE)
+  print(y)
+  print(y, raw = TRUE)
+  str(y)
+
+  # Errors if the import was unsuccessful
+  try(z &lt;- read_xml("&lt;a&gt;&lt;b/&gt;"))
+
+  xml &lt;- '&lt;?xml test="yay" ?&gt;&lt;a&gt;A &amp; B&lt;/a&gt;'
+  # difference in escapes
+  read_xml(xml, escapes = TRUE, pointer = FALSE)
+  read_xml(xml, escapes = FALSE, pointer = FALSE)
+  read_xml(xml, escapes = TRUE)
+  read_xml(xml, escapes = FALSE)
+
+  # read declaration
+  read_xml(xml, declaration = TRUE)
+
+</code></pre>
+
+
+</div>

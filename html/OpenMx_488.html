@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>omxAssignFirstParameters</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Assign First Available Values to Model Parameters</h2>
+
+<h3>Description</h3>
+
+<p>Sometimes you may have a free parameter with two different starting values in your model. OpenMx will not run a model until all instances of a free parameter have the same starting value. It is often sufficient to arbitrarily select one of those starting values for optimization. 
+</p>
+<p>This function accomplishes that task of assigning valid starting values to the free parameters of a model. It selects an arbitrary current value (the "first" value it finds, where "first" is not defined) for each free parameter and uses that value for all instances of that parameter in the model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">omxAssignFirstParameters(model, indep = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>a MxModel object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indep</code></td>
+<td>
+<p>assign parameters to independent submodels.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>omxGetParameters</code>, <code>omxSetParameters</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+A     &lt;- mxMatrix('Full', 3, 3, values = c(1:9), labels = c('a','b', NA),
+                  free = TRUE, name = 'A')
+model &lt;- mxModel(model=A, name = 'model')
+model &lt;- omxAssignFirstParameters(model)
+
+# Note: All cells with the same label now have the same start value.
+# Note also that NAs are untouched.
+
+model$matrices$A
+
+# $labels
+#      [,1] [,2] [,3]
+# [1,] "a"  "a"  "a" 
+# [2,] "b"  "b"  "b" 
+# [3,] NA   NA   NA  
+# 
+# $values
+#      [,1] [,2] [,3]
+# [1,]    1    1    1
+# [2,]    2    2    2
+# [3,]    3    6    9
+
+</code></pre>
+
+
+</div>

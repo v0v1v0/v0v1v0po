@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>glm_offset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit Generalized Linear Models with an Offset</h2>
+
+<h3>Description</h3>
+
+<p>This function is a wrapper around <code>stats::glm()</code> that uses a column from
+<code>data</code> as an offset.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">glm_offset(
+  formula,
+  family = "gaussian",
+  data,
+  offset_col = "offset",
+  weights = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>A model formula</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>A function or character string describing the link function
+and error distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Optional. A data frame containing variables used in the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset_col</code></td>
+<td>
+<p>Character string. The name of a column in <code>data</code> containing
+offsets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Optional weights to use in the fitting process.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Outside of the <code>tidymodels</code> ecosystem, <code>glm_offset()</code> has no advantages over
+<code>stats::glm()</code> since that function allows for offsets to be specified
+in the formula interface or its <code>offset</code> argument.
+</p>
+<p>Within <code>tidymodels</code>, <code>glm_offset()</code> provides an advantage because it will
+ensure that offsets are included in the data whenever resamples are created.
+</p>
+<p>The <code>formula</code>, <code>family</code>, <code>data</code>, and <code>weights</code> arguments have the same
+meanings as <code>stats::glm()</code>. See that function's documentation for full
+details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>glm</code> object. See <code>stats::glm()</code> for full details.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>stats::glm()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">us_deaths$off &lt;- log(us_deaths$population)
+glm_offset(deaths ~ age_group + gender, family = "poisson",
+           us_deaths, offset_col = "off")
+
+</code></pre>
+
+
+</div>

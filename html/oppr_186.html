@@ -1,0 +1,161 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>solve</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Solve</h2>
+
+<h3>Description</h3>
+
+<p>Solve a conservation planning <code>problem()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'OptimizationProblem,Solver'
+solve(a, b, ...)
+
+## S4 method for signature 'ProjectProblem,missing'
+solve(a, b, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>ProjectProblem or an
+OptimizationProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>Solver object. Not used if <code>a</code> is an
+ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to <code>compile()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The type of object returned from this function depends on the
+argument to <code>a</code>. If the argument to <code>a</code> is an
+OptimizationProblem object, then the
+solution is returned as a <code>list</code> containing the prioritization and
+additional information (e.g. run time, solver status). On the other hand,
+if the argument
+to <code>a</code> is an ProjectProblem object,
+then a <code>tibble::tibble()</code> table object will be returned. In this
+table, each row row corresponds to a different solution and each column
+describes a different property or result associated with each solution:
+</p>
+
+<dl>
+<dt><code>"solution"</code></dt>
+<dd>
+<p><code>integer</code> solution identifier.</p>
+</dd>
+<dt><code>"status"</code></dt>
+<dd>
+<p><code>character</code> describing each solution.
+For example, is the solution optimal, suboptimal, or was it returned
+because the solver ran out of time?</p>
+</dd>
+<dt><code>"obj"</code></dt>
+<dd>
+<p><code>numeric</code> objective value for each solution.
+This is calculated using the objective function defined for the
+argument to <code>x</code>.</p>
+</dd>
+<dt><code>"cost"</code></dt>
+<dd>
+<p><code>numeric</code> total cost associated with each
+solution.</p>
+</dd>
+<dt><code>x$action_names()</code></dt>
+<dd>
+<p><code>numeric</code> column for each action
+indicating if they were funded in each solution or not.</p>
+</dd>
+<dt><code>x$project_names()</code></dt>
+<dd>
+<p><code>numeric</code> column for each
+project indicating if it was completely funded (with a value of 1)
+or not (with a value of 0).</p>
+</dd>
+<dt><code>x$feature_names()</code></dt>
+<dd>
+<p><code>numeric</code> column for each
+feature indicating the probability that it will persist into
+the future given each solution.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p><code>problem()</code>, <code>solution_statistics()</code>,
+solvers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# print project data
+print(sim_projects)
+
+# print action data
+print(sim_features)
+
+# print feature data
+print(sim_actions)
+
+# build problem
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 400) %&gt;%
+     add_feature_weights("weight") %&gt;%
+     add_binary_decisions()
+
+# print problem
+print(p)
+
+## Not run: 
+# solve problem
+s &lt;- solve(p)
+
+# print output
+print(s)
+
+# print the solver status
+print(s$obj)
+
+# print the objective value
+print(s$obj)
+
+# print the solution cost
+print(s$cost)
+
+# print which actions are funded in the solution
+s[, sim_actions$name, drop = FALSE]
+
+# print the expected probability of persistence for each feature
+# if the solution were implemented
+s[, sim_features$name, drop = FALSE]
+
+## End(Not run)
+</code></pre>
+
+
+</div>

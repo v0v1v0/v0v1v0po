@@ -1,0 +1,171 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.ocp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot Object</h2>
+
+<h3>Description</h3>
+
+<p>Plot ocpd object, to show the data and the R matrix
+probabilities.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ocp'
+plot(x, data = NULL, Rmat = NULL,
+  graph_changepoints = TRUE, graph_probabilities = TRUE,
+  showmaxes = TRUE, showmeans = TRUE, showcps = TRUE,
+  showdata = TRUE, showRprobs = TRUE, cplistID = 3,
+  main_title = "", trueCPs = NULL, showdataleg = TRUE,
+  timepoints = NULL, timeunits = NULL, grey_digits = 4,
+  varnames = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the ocp object to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>optional input data to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Rmat</code></td>
+<td>
+<p>optional input Rmat to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>graph_changepoints</code></td>
+<td>
+<p>set to TRUE to graph the changepoints</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>graph_probabilities</code></td>
+<td>
+<p>set TRUE to show R matrix graphed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showmaxes</code></td>
+<td>
+<p>set TRUE to show the maxes in each columns
+in the R matrix plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showmeans</code></td>
+<td>
+<p>set TRUE to show the means on the changepoints
+plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showcps</code></td>
+<td>
+<p>set TRUE to show the the locations of changepoints</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showdata</code></td>
+<td>
+<p>set TRUE to show the actual data points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showRprobs</code></td>
+<td>
+<p>set TRUE to show the probabilities in
+the R matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cplistID</code></td>
+<td>
+<p>method of extracting the changepoints:
+either "colmaxes", "threshcps", or "maxCPs" stored in the "changepoints_list"
+in the ocpd object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main_title</code></td>
+<td>
+<p>The main title for both plots, e.g. "Eurogames Data"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trueCPs</code></td>
+<td>
+<p>input the true known changepoints for comparison</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showdataleg</code></td>
+<td>
+<p>Set true to show legend for the data points, set to false
+if there are too many dimensions, legend will be crowded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timepoints</code></td>
+<td>
+<p>List of timepoints to use as x-axis labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeunits</code></td>
+<td>
+<p>Units to display for the timescale on the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grey_digits</code></td>
+<td>
+<p>The limit of decimal places to keep in the probability
+before converting to an index in the grey-scale, controls amount of detail
+and darkness of the shading on the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varnames</code></td>
+<td>
+<p>List of variable names to display in the legend.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>(optional) additional arguments, ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">simdatapts&lt;- c(rnorm(n = 50), rnorm(n=50, 100))
+ocpd1&lt;- onlineCPD(simdatapts, getR=TRUE)
+plot(ocpd1) # basic plot
+plot(ocpd1, data= simdatapts) # plot with the original data
+plot(ocpd1, trueCPs = c(1, 51)) # plot with showing the true changepoints
+plot(ocpd1, main_title="Example plot", showmaxes = FALSE) # not showing max probabilities
+plot(ocpd1, graph_changepoints=FALSE) # not showing the changepoints plot
+plot(ocpd1, graph_probabilities=FALSE) # not showing the R matrix
+plot(ocpd1, showRprobs=FALSE, showcps= FALSE)#plotting r with maxes but no probabilities,
+# and not showing the locations of the found changepoints
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,270 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>query_ngd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query the OS NGD Features API</h2>
+
+<h3>Description</h3>
+
+<p>Retrieve features from a given Collection of the National Geographic
+Database in the Ordnance Survey Data Hub.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">query_ngd(x, ...)
+
+## S3 method for class 'character'
+query_ngd(
+  x,
+  collection,
+  crs = "crs84",
+  key = get_os_key(),
+  returnType = c("geojson", "list", "sf"),
+  ...
+)
+
+## S3 method for class 'qExtent'
+query_ngd(
+  x,
+  collection,
+  crs = "crs84",
+  start_datetime,
+  end_datetime,
+  cql_filter,
+  filter_crs,
+  max_results = 100,
+  offset = 0,
+  key = get_os_key(),
+  returnType = c("geojson", "list", "sf"),
+  ...
+)
+
+## S3 method for class 'geos_geometry'
+query_ngd(
+  x,
+  collection,
+  crs = "crs84",
+  start_datetime,
+  end_datetime,
+  cql_filter,
+  filter_crs,
+  max_results = 100,
+  offset = 0,
+  key = get_os_key(),
+  returnType = c("geojson", "list", "sf"),
+  ...
+)
+
+## S3 method for class 'sf'
+query_ngd(
+  x,
+  collection,
+  crs = "crs84",
+  start_datetime,
+  end_datetime,
+  cql_filter,
+  filter_crs,
+  max_results = 100,
+  offset = 0,
+  key = get_os_key(),
+  returnType = c("geojson", "list", "sf"),
+  ...
+)
+
+## S3 method for class 'sfc'
+query_ngd(
+  x,
+  collection,
+  crs = "crs84",
+  start_datetime,
+  end_datetime,
+  cql_filter,
+  filter_crs,
+  max_results = 100,
+  offset = 0,
+  key = get_os_key(),
+  returnType = c("geojson", "list", "sf"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Object defining the query parameters, including feature IDs,
+extents, or spatial objects from which extents can be determined If
+<code>x</code> is <code>NULL</code> or missing with other options specified by name,
+then the first <code>max_results</code> of the collection will be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters (not currently used).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collection</code></td>
+<td>
+<p>(character) The name of the NGD Collection to query
+(required). See <code>list_ngd_collections()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p>(character or numeric)  The CRS for the returned features, either
+in the format "epsg:xxxx" or an EPSG number. e.g. British National Grid can
+be supplied as "epsg:27700" or 27700. Available CRS values are: EPSG:27700,
+EPSG:4326, EPSG:7405, EPSG:3857, and CRS84. Defaults to CRS84.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>(character) OS API key. Default action is to search for an
+environment variable using <code>get_os_key()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnType</code></td>
+<td>
+<p>(character) Return the query results as the raw
+<code>'geojson'</code>, a nested <code>'list'</code> object containing the returns,
+or convert them into Simple Features and return an object of class
+<code>'sf'</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_datetime</code></td>
+<td>
+<p>(datetime or string)  Selects features that have a
+temporal property after the given start time. If you want to query a single
+timestamp, provide the same value to both <code>start_datetime</code> and
+<code>end_datetime</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_datetime</code></td>
+<td>
+<p>(datetime or string) Selects features that have a
+temporal property before the given end time. If you want to query a single
+timestamp, provide the same value to both <code>start_datetime</code> and
+<code>end_datetime</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cql_filter</code></td>
+<td>
+<p>(character) A filter query in CQL format. More information
+about supported CQL operators can be found at
+<a href="https://osdatahub.os.uk/docs/ofa/technicalSpecification">https://osdatahub.os.uk/docs/ofa/technicalSpecification</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter_crs</code></td>
+<td>
+<p>(character or numeric) The CRS for a given CQL query (if
+required), either in the format “epsg:xxxx” or an epsg number. e.g. British
+National Grid can be supplied as “epsg:27700” or 27700 Available CRS values
+are: EPSG:27700, EPSG:4326, EPSG:7405, EPSG:3857, and CRS84. Defaults to
+CRS84.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_results</code></td>
+<td>
+<p>(numeric) The maximum number of features to return.
+Default is 100 which is the max return per page from the Data Hub.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>(numeric) The offset number skips past the specified number of
+features in the collection. Used to page through results. Default is 0.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The value of <code>x</code> determines the type of query that is executed
+against the NGD API. When <code>x</code> is missing or set to <code>NULL</code> the
+first n=<code>max_results</code> features are returned. If a character string of
+an OSID is supplied as <code>x</code>, then that one feature from the collection
+will be returned.
+</p>
+<p>When <code>x</code> is present <code>query_ngd()</code> will attempt to derive an
+extent from it. The <code>extent_from_*</code> family of functions are used and
+can be passed to <code>query_ngd</code> as a more verbose option. The one
+exception to this, <code>extent_from_grid_ref</code> must be used to create an
+extent and query a BNG grid reference.
+</p>
+<p>The <code>start_datetime</code> and <code>end_datetime</code> parameters specify a
+valid date-time with UTC time zone (Z). Leave either empty to specify an
+open start/end interval. Only features that have a temporal geometry
+('versionavailablefromdate' or 'versionavailabletodate') that intersect the
+value in the datetime parameter are selected. Example
+'2021-12-12T13:20:50Z'.
+</p>
+<p>More information on the structure and data in the NGD is available from:
+<a href="https://osngd.gitbook.io/osngd/">https://osngd.gitbook.io/osngd/</a>. Technical details on the NGD API are
+documented on the Data Hub:
+<a href="https://osdatahub.os.uk/docs/ofa/technicalSpecification">https://osdatahub.os.uk/docs/ofa/technicalSpecification</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A GeoJSON string with the results of the API query, a list object,
+or an object of class <code>sf</code> based on the <code>returnType</code> parameter.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>extent
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Return the first 50 features in the collection.
+results &lt;- query_ngd(collection = 'bld-fts-buildingline-1', max_results = 50)
+
+# Return the most recent representation of a feature ID.
+results &lt;- query_ngd('0000013e-5fed-447d-a627-dae6fb215138',
+                     collection = 'bld-fts-buildingline-1')
+
+# Use an ONS geography to define a query extent.
+results &lt;- query_ngd(extent_from_ons_code('E05002470'),
+                     collection = 'bld-fts-buildingpart-1')
+
+# Use an BNG reference to define a query extent.
+results &lt;- query_ngd(extent_from_bng("SU3715"),
+                     collection = 'bld-fts-buildingpart-1')
+
+# Use a spatial object to define a query extent.
+# Return the features converted to a spatial object.
+results &lt;- query_ngd(sf::st_read('path/to/file.shp'),
+                     collection = 'bld-fts-buildingpart-1',
+                     returnType = 'sf')
+
+# Add a temporal filter to query.
+results &lt;- query_ngd(collection = 'bld-fts-buildingline-1',
+                     max_results = 50,
+                     start_datetime = '2021-12-12 13:20:50')
+
+</code></pre>
+
+
+</div>

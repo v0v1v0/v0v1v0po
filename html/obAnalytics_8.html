@@ -1,0 +1,207 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filterDepth</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter price level volume.</h2>
+
+<h3>Description</h3>
+
+<p>Given depth data calculated by <code>priceLevelVolume</code>, filter
+between a specified time range. The resulting data will contain price level
+volume which is active only within the specified time range.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filterDepth(d, from, to)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p><code>depth</code> data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>Beginning of range.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>End of range.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For price levels with volume &gt; 0 before the time range starts, timestamps
+will be set to the supplied <code>from</code> parameter.
+</p>
+<p>For volume &gt; 0 after the time range ends, timestamps will be set to the
+supplied <code>to</code> parameter and volume set to 0.
+</p>
+<p>For example, the following data taken from <code>priceLevelVolume</code>
+for price level 243.29 shows the available volume through time at that
+price level between <code>00:52:37.686</code> and <code>03:28:49.621</code>.
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+  timestamp               </td>
+<td style="text-align: right;"> price  </td>
+<td style="text-align: right;"> volume    </td>
+<td style="text-align: right;"> side </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 00:52:37.686 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 911500000 </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 01:00:36.243 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 862200000 </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 02:45:43.052 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 0         </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 02:52:24.063 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 614700000 </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 02:52:51.413 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 0         </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 02:53:13.904 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 952300000 </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 03:28:49.621 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 0         </td>
+<td style="text-align: right;"> ask</td>
+</tr>
+</table>
+<p>applying <code>filterDepth</code> to this data for a time range beteen
+<code>02:45</code> and <code>03:00</code> will result in the following:
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+  timestamp               </td>
+<td style="text-align: right;"> price  </td>
+<td style="text-align: right;"> volume    </td>
+<td style="text-align: right;"> side </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 02:45:00.000 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 862200000 </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 02:45:43.052 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 0         </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 02:52:24.063 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 614700000 </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 02:52:51.413 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 0         </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 02:53:13.904 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 952300000 </td>
+<td style="text-align: right;"> ask  </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+  2015-05-01 03:00:00.000 </td>
+<td style="text-align: right;"> 243.29 </td>
+<td style="text-align: right;"> 0         </td>
+<td style="text-align: right;"> ask</td>
+</tr>
+</table>
+<p>Note that the timestamps at the begining and end of the table have been
+<em>clamped</em> to the specified range and the volume set to 0 at the end.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Filtered depth data.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>phil
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# obtain price level volume for a 15 minute window.
+filtered &lt;- with(lob.data, filterDepth(depth,
+    from=as.POSIXct("2015-05-01 02:45:00.000", tz="UTC"),
+    to=as.POSIXct("2015-05-01 03:00:00.000", tz="UTC")))
+
+# top 5 most active price levels during this 15 minute window.
+head(sort(tapply(filtered$volume, filtered$price, length),
+    decreasing=TRUE), 5)
+
+# extract available volume for price level 233.78, then plot it.
+level.233.78 &lt;- filtered[filtered$price == 233.78, c("timestamp", "volume")]
+plotTimeSeries(level.233.78$timestamp, level.233.78$volume*10^-8)
+
+</code></pre>
+
+
+</div>

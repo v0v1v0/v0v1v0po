@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>inv_smax</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The inverse softmax function.</h2>
+
+<h3>Description</h3>
+
+<p>The inverse softmax function: take a logarithm and center.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">inv_smax(mu, g = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>a vector of the probablities.
+Must be the same length as <code>g</code> if <code>g</code> is given.
+If <code>mu</code> and <code>eta</code> are both given, we ignore
+<code>eta</code> and use <code>mu</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>a vector giving the group indices. If <code>NULL</code>,
+then we assume only one group is in consideration.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is the inverse of the softmax function. Given
+vector <code class="reqn">\mu</code> for a single group, finds vector 
+<code class="reqn">\eta</code> such that
+</p>
+<p style="text-align: center;"><code class="reqn">\eta_i = \log{\mu_i} + c,</code>
+</p>
+
+<p>where <code class="reqn">c</code> is chosen such that the <code class="reqn">\eta</code> sum 
+to zero:
+</p>
+<p style="text-align: center;"><code class="reqn">c = \frac{-1}{n} \sum_i \log{\mu_i}.</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>the centered log probabilities.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function can deal with overflow in a semi-coherent way.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>smax</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># we can deal with large values:
+set.seed(2345)
+eta &lt;- rnorm(12,sd=1000)
+mu &lt;- smax(eta)
+eta0 &lt;- inv_smax(mu)
+</code></pre>
+
+
+</div>

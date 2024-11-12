@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>recordCohortAttrition</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Update cohort attrition.</h2>
+
+<h3>Description</h3>
+
+<p>Update cohort attrition.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">recordCohortAttrition(cohort, reason, cohortId = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cohort</code></td>
+<td>
+<p>A cohort_table object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reason</code></td>
+<td>
+<p>A character string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cohortId</code></td>
+<td>
+<p>Cohort definition id of the cohort to update attrition. If
+NULL all cohort_definition_id are updated.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>cohort_table with updated attrition.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(omopgenerics)
+library(dplyr, warn.conflicts = FALSE)
+
+person &lt;- tibble(
+  person_id = 1, gender_concept_id = 0, year_of_birth = 1990,
+  race_concept_id = 0, ethnicity_concept_id = 0
+)
+observation_period &lt;- tibble(
+  observation_period_id = 1, person_id = 1,
+  observation_period_start_date = as.Date("2000-01-01"),
+  observation_period_end_date = as.Date("2023-12-31"),
+  period_type_concept_id = 0
+)
+cohort &lt;- tibble(
+  cohort_definition_id = c(1, 1, 1, 2),
+  subject_id = 1,
+  cohort_start_date = as.Date(c("2020-01-01", "2021-01-01", "2022-01-01", "2022-01-01")),
+  cohort_end_date = as.Date(c("2020-01-01", "2021-01-01", "2022-01-01", "2022-01-01")),
+)
+cdm &lt;- cdmFromTables(
+  tables = list("person" = person, "observation_period" = observation_period),
+  cdmName = "my_example_cdm",
+  cohortTables = list("cohort1" = cohort)
+)
+
+cdm$cohort1
+attrition(cdm$cohort1)
+
+cdm$cohort1 &lt;- cdm$cohort1 |&gt;
+  group_by(cohort_definition_id, subject_id) |&gt;
+  filter(cohort_start_date == min(cohort_start_date)) |&gt;
+  ungroup() |&gt;
+  compute(name = "cohort1", temporary = FALSE) |&gt;
+  recordCohortAttrition("Restrict to first observation")
+
+cdm$cohort1
+attrition(cdm$cohort1)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>online.ODRF</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>using new training data to update an existing <code>ODRF</code>.</h2>
+
+<h3>Description</h3>
+
+<p>Update existing <code>ODRF</code> using new data to improve the model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ODRF'
+online(obj, X, y, weights = NULL, MaxDepth = Inf, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+<p>An object of class <code>ODRF</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>An new n by d numeric matrix (preferable) or data frame  used to update the object of class <code>ODRF</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A new response vector of length n used to update the object of class <code>ODRF</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>A vector of non-negative observational weights; fractional weights are allowed (default NULL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MaxDepth</code></td>
+<td>
+<p>The maximum depth of the tree (default <code>Inf</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional parameters to be passed to the low level function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The same result as <code>ODRF</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ODRF</code> <code>prune.ODRF</code> <code>online.ODT</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Classification with Oblique Decision Random Forest
+data(seeds)
+set.seed(221212)
+train &lt;- sample(1:209, 80)
+train_data &lt;- data.frame(seeds[train, ])
+test_data &lt;- data.frame(seeds[-train, ])
+index &lt;- seq(floor(nrow(train_data) / 2))
+forest &lt;- ODRF(varieties_of_wheat ~ ., train_data[index, ],
+  split = "gini", parallel = FALSE, ntrees = 50
+)
+online_forest &lt;- online(forest, train_data[-index, -8], train_data[-index, 8])
+pred &lt;- predict(online_forest, test_data[, -8])
+# classification error
+(mean(pred != test_data[, 8]))
+
+# Regression with Oblique Decision Random Forest
+
+data(body_fat)
+set.seed(221212)
+train &lt;- sample(1:252, 80)
+train_data &lt;- data.frame(body_fat[train, ])
+test_data &lt;- data.frame(body_fat[-train, ])
+index &lt;- seq(floor(nrow(train_data) / 2))
+forest &lt;- ODRF(Density ~ ., train_data[index, ],
+  split = "mse", parallel = FALSE
+)
+online_forest &lt;- online(
+  forest, train_data[-index, -1],
+  train_data[-index, 1]
+)
+pred &lt;- predict(online_forest, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
+
+
+</code></pre>
+
+
+</div>

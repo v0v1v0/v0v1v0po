@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_drawing</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add drawings to a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>Add drawings to a worksheet. This requires the <code>rvg</code> package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_drawing(
+  wb,
+  sheet = current_sheet(),
+  dims = "A1",
+  xml,
+  col_offset = 0,
+  row_offset = 0,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A <code>wbWorkbook</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A sheet in the workbook</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>The dimension where the drawing is added.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xml</code></td>
+<td>
+<p>the drawing xml as character or file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_offset, row_offset</code></td>
+<td>
+<p>offsets for column and row</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>wb_add_chart_xml()</code> <code>wb_add_image()</code> <code>wb_add_mschart()</code> <code>wb_add_plot()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (requireNamespace("rvg") &amp;&amp; interactive()) {
+
+## rvg example
+require(rvg)
+tmp &lt;- tempfile(fileext = ".xml")
+dml_xlsx(file =  tmp)
+plot(1,1)
+dev.off()
+
+wb &lt;- wb_workbook()$
+  add_worksheet()$
+  add_drawing(xml = tmp)$
+  add_drawing(xml = tmp, dims = NULL)
+}
+</code></pre>
+
+
+</div>

@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>decorate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Sugar function for decoration</h2>
+
+<h3>Description</h3>
+
+<p>Simple wrapper around <code>decorator$new(object, exists)</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">decorate(object, decorators, exists = c("skip", "error", "overwrite"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[R6::R6Class]⁠</code> <br> R6 class to decorate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>decorators</code></td>
+<td>
+<p><code style="white-space: pre;">⁠([DecorateClass]|character())⁠</code> <br>
+One or more decorators (by name or class) to decorate with.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exists</code></td>
+<td>
+<p><code style="white-space: pre;">⁠(character(1)⁠</code> <br> Expected behaviour if method exists in
+<code>object</code> and <code>decorator</code>. One of: 1. <code>exists = "error"</code> (default) - This
+will throw an error and prevent the object being decorated.
+2. <code>exists = "skip"</code> - This will decorate the object with all fields/methods
+that don't already exist. 3. <code>exists = "overwrite"</code> - This will decorate
+the object with all fields/methods from the decorator and overwrite ones
+with the same name if they already exist.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p><code>ANY</code> <br> Additional arguments passed to get.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>DecoratorClass
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(R6)
+
+## Define decorators
+dec1 &lt;- DecoratorClass("dec1", public = list(goodbye = "Goodbye World"))
+dec2 &lt;- DecoratorClass("dec2", public = list(goodbye2 = "Goodbye World 2"))
+
+oop &lt;- ooplah$new()
+oop$goodbye
+dec_oop &lt;- decorate(oop, c(dec1, dec2))
+dec_oop$goodbye
+dec_oop$goodbye2
+
+## Equivalently
+oop &lt;- ooplah$new()
+decorate(oop, c("dec1", "dec2"))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Fx_cube</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Matrix of candidate regressors for a model on a cuboid grid
+</h2>
+
+<h3>Description</h3>
+
+<p>Creates the matrix of all candidate regressors for a factor regression model on a cuboid grid (up to 9 factors).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Fx_cube(formula, lower=NULL, upper=NULL, n.levels=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+
+<p>the formula of the model. The rules for creating the formula are standard for R but: 1) the formula must not contain the dependent variable (it is one-sided); 2) the <code>d</code> factors (variables) must be labeled <code>x1,x2,x3,</code>...
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+
+<p>the <code>d</code>-dimensional vector of the smallest values of factors. If <code>lower=NULL</code>, the program sets <code>lower &lt;- rep(-1, d)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+
+<p>the <code>d</code>-dimensional vector of the largest values of factors. If <code>upper=NULL</code>, the program sets <code>upper &lt;- rep(1, d)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.levels</code></td>
+<td>
+
+<p>the <code>d</code>-dimensional vector of the numbers of levels of each factor. If <code>n.levels=NULL</code>, the program sets <code>n.levels &lt;- rep(2, d)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The <code>n</code> times <code>m</code> matrix of all candidate regressors for a factor regression model on a cuboid grid. The rows of <code>Fx</code> are the regressors <code>f(x)</code> for all candidate design points <code>x</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Note that <code>Fx</code> is <em>not</em> the design matrix (which is also sometimes called the regression matrix, or the model matrix). The design matrix depends on <code>Fx</code> as well as on the exact experimental design <code>w</code>. For this package, an exact experimental design is formalized as the vector of non-negative integer values corresponding to the replication of trials (observations) in individual design points. Thus, if <code>Fx</code> is the matrix of all candidate regressors and <code>w</code> is the exact design then <code>Fx[rep(1:nrow(Fx), w),]</code> is the actual design matrix for the experiment.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Fx_simplex, Fx_blocks, Fx_glm, Fx_survival, Fx_dose</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# The Fx for the cubic model on a discretized interval
+Fx &lt;- Fx_cube(~x1 + I(x1^2) + I(x1^3), lower=0, upper=2, n.levels=101)
+
+# The D-optimal design of size 20
+w &lt;- od_KL(Fx, 20, t.max=5)$w.best
+od_plot(Fx, w, Fx[, 2])
+
+
+# The Fx for the full quadratic response surface model on a non-convex region
+Fx &lt;- Fx_cube(~x1 + x2 + I(x1^2) + I(x2^2) + I(x1*x2), n.levels=c(51, 51))
+keep &lt;- rep(TRUE, nrow(Fx))
+for(i in 1:nrow(Fx)) if(prod(abs(Fx[i, 2:3])) &gt; 0.2) keep[i] &lt;- FALSE
+Fx &lt;- Fx[keep, ]
+
+# The D-optimal design of size 29 without replications
+w &lt;- od_KL(Fx, 29, bin=TRUE, t.max=5)$w.best
+od_plot(Fx, w, Fx[, 2:3])
+
+
+# The Fx for the chemical weighing with 3 items and a bias term
+Fx &lt;- Fx_cube(~x1 + x2 + x3, n.levels=c(3, 3, 3))
+
+# The D-optimal design of size 12
+w &lt;- od_KL(Fx, 12, t.max=2)$w.best
+od_plot(Fx, w, Fx[, 2:4])
+
+## End(Not run)
+</code></pre>
+
+
+</div>

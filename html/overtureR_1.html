@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as_overture</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert a tbl_sql object to a overture_call object</h2>
+
+<h3>Description</h3>
+
+<p>This function adds the overture_call class to a tbl_sql object.  It is
+primarily used internally#' by the open_curtain() function but can also be
+used directly on tbl_sql #' objects representing Overture Maps data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as_overture(x, type, theme = get_theme_from_type(type))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A tbl_sql object representing an Overture Maps dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A string specifying the type of overture dataset to read.
+Setting to "*" or <code>NULL</code> will read all types for a given theme.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theme</code></td>
+<td>
+<p>Inferred from type by default. Must be set if type is "*" or NULL</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function adds the overture_call class as the first class of the object
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tbl_sql object with the additional class overture_call and
+attributes overture_type and overture_theme.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# The open_curtain() function already uses as_overture() internally,
+# but you can also use it directly:
+conn &lt;- stage_conn()
+division &lt;- open_curtain("division", tablename = "test")
+
+class(division)
+
+# views
+division2 &lt;- tbl(conn, "test")
+division2 &lt;- as_overture(division2)
+
+exit_stage(conn)
+
+</code></pre>
+
+
+</div>

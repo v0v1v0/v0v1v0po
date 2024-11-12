@@ -1,0 +1,294 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordFacReg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute least squares or logistic regression for ordered predictors</h2>
+
+<h3>Description</h3>
+
+<p>This function computes estimates in least squares or logistic regression where coefficients corresponding to
+dummy variables of ordered factors are estimated to be in non-decreasing order and at least 0.
+An active set algorithm as described in Duembgen et al. (2007) is used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordFacReg(D, Z, fact, ordfact, ordering = NA, type = c("LS", "logreg"), 
+    intercept = TRUE, display = 0, eps = 0)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>D</code></td>
+<td>
+<p>Response vector, either in <code class="reqn">R^n</code> (least squares) or in <code class="reqn">\{0, 1\}^n</code> (logistic).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>Matrix of predictors. Factors are coded with levels from 1 to <code class="reqn">j</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>Specify columns in <code class="reqn">Z</code> that correspond to unordered factors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ordfact</code></td>
+<td>
+<p>Specify columns in <code class="reqn">Z</code> that correspond to ordered factors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ordering</code></td>
+<td>
+<p>Vector of the same length as <code>ordfact</code>. Specifies ordering of ordered factors: <code>"i"</code> means
+that the coefficients of the corresponding ordered factor are estimated in non-decreasing order and <code>"d"</code> means
+non-increasing order. See the examples below for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Specify type of response variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intercept</code></td>
+<td>
+<p>If <code>TRUE</code>, an intercept (= column of all 1's) is added to the design matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>display</code></td>
+<td>
+<p>If <code>display == 1</code> progress of the algorithm is output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>Quantity to which the criterion in the Basic Procedure 2 in Duembgen et al. (2007) is compared.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a detailed description of the problem and the algorithm we refer to Rufibach (2010).</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>Value of the criterion function at the maximum.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>Computed regression coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A</code></td>
+<td>
+<p>Set <code class="reqn">A</code> of active constraints.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design.matrix</code></td>
+<td>
+<p>Design matrix that was generated.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Kaspar Rufibach (maintainer) <br><a href="mailto:kaspar.rufibach@gmail.com">kaspar.rufibach@gmail.com</a> <br><a href="http://www.kasparrufibach.ch">http://www.kasparrufibach.ch</a></p>
+
+
+<h3>References</h3>
+
+<p>Duembgen, L., Huesler, A. and Rufibach, K. (2010).
+Active set and EM algorithms for log-concave densities based on complete and censored data.
+Technical report 61, IMSV, Univ. of Bern, available at <a href="http://arxiv.org/abs/0707.4643">http://arxiv.org/abs/0707.4643</a>.
+</p>
+<p>Rufibach, K. (2010).
+An Active Set Algorithm to Estimate Parameters in Generalized Linear Models with Ordered Predictors.
+<em>Comput. Statist. Data Anal.</em>, <b>54</b>, 1442-1456.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ordFacRegCox</code> computes estimates for Cox-regression.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## ========================================================
+## To illustrate least squares estimation, we generate the same data
+## that was used in Rufibach (2010), Table 1.
+## ========================================================
+
+## --------------------------------------------------------
+## initialization
+## --------------------------------------------------------
+n &lt;- 200
+Z &lt;- NULL
+intercept &lt;- FALSE
+
+## --------------------------------------------------------
+## quantitative variables
+## --------------------------------------------------------
+n.q &lt;- 3
+set.seed(14012009)
+if (n.q &gt; 0){for (i in 1:n.q){Z &lt;- cbind(Z, rnorm(n, mean = 1, sd = 2))}}
+
+## --------------------------------------------------------
+## unordered factors
+## --------------------------------------------------------
+un.levels &lt;- 3
+for (i in 1:length(un.levels)){Z &lt;- cbind(Z, sample(rep(1:un.levels[i], 
+    each = ceiling(n / un.levels)))[1:n])}
+fact &lt;- n.q + 1:length(un.levels)
+
+## --------------------------------------------------------
+## ordered factors
+## --------------------------------------------------------
+levels &lt;- 8
+for (i in 1:length(un.levels)){Z &lt;- cbind(Z, sample(rep(1:levels[i], 
+    each = ceiling(n / levels)))[1:n])}
+ordfact &lt;- n.q + length(un.levels) + 1:length(levels)
+
+## --------------------------------------------------------
+## generate data matrices
+## --------------------------------------------------------
+Y &lt;- prepareData(Z, fact, ordfact, ordering = NA, intercept)$Y
+
+## --------------------------------------------------------
+## generate response
+## --------------------------------------------------------
+D &lt;- apply(Y * matrix(c(rep(c(2, -3, 0), each = n), rep(c(1, 1), each = n), 
+    rep(c(0, 2, 2, 2, 2, 5, 5), each = n)), ncol = ncol(Y)), 1, sum) + 
+    rnorm(n, mean = 0, sd = 4)
+
+## --------------------------------------------------------
+## compute estimates
+## --------------------------------------------------------
+res1 &lt;- lmLSE(D, Y)
+res2 &lt;- ordFacReg(D, Z, fact, ordfact, ordering = "i", type = "LS", intercept, 
+    display = 1, eps = 0)
+b1 &lt;- res1$beta
+g1 &lt;- lmSS(b1, D, Y)$dL
+b2 &lt;- res2$beta
+g2 &lt;- lmSS(b2, D, Y)$dL
+Ls &lt;- c(lmSS(b1, D, Y)$L, lmSS(b2, D, Y)$L)
+names(Ls) &lt;- c("LSE", "ordFact") 
+disp &lt;- cbind(1:length(b1), round(cbind(b1, g1, cumsum(g1)), 4), 
+    round(cbind(b2, g2, cumsum(g2)), 4))
+
+## --------------------------------------------------------
+## display results
+## --------------------------------------------------------
+disp
+Ls
+
+## ========================================================
+## Artificial data is used to illustrate logistic regression.
+## ========================================================
+
+## --------------------------------------------------------
+## initialization
+## --------------------------------------------------------
+set.seed(1977)
+n &lt;- 500
+Z &lt;- NULL
+intercept &lt;- FALSE
+
+## --------------------------------------------------------
+## quantitative variables
+## --------------------------------------------------------
+n.q &lt;- 2
+if (n.q &gt; 0){for (i in 1:n.q){Z &lt;- cbind(Z, rnorm(n, rgamma(2, 2, 1)))}}
+
+## --------------------------------------------------------
+## unordered factors
+## --------------------------------------------------------
+un.levels &lt;- c(8, 2)
+for (i in 1:length(un.levels)){Z &lt;- cbind(Z, sample(round(runif(n, 0, 
+    un.levels[i] - 1)) + 1))}
+fact &lt;- n.q + 1:length(un.levels)
+
+## --------------------------------------------------------
+## ordered factors
+## --------------------------------------------------------
+levels &lt;- c(2, 4, 10)
+for (i in 1:length(levels)){Z &lt;- cbind(Z, sample(round(runif(n, 0, 
+    levels[i] - 1)) + 1))}
+ordfact &lt;- n.q + length(un.levels) + 1:length(levels)
+
+## --------------------------------------------------------
+## generate response
+## --------------------------------------------------------
+D &lt;- sample(c(rep(0, n / 2), rep(1, n/2)))
+
+## --------------------------------------------------------
+## generate design matrix
+## --------------------------------------------------------
+Y &lt;- prepareData(Z, fact, ordfact, ordering = NA, intercept)$Y
+
+## --------------------------------------------------------
+## compute estimates
+## --------------------------------------------------------
+res1 &lt;- matrix(glm.fit(Y, D, family = binomial(link = logit))$coefficients, ncol = 1)
+res2 &lt;- ordFacReg(D, Z, fact, ordfact, ordering = NA, type = "logreg", 
+    intercept = intercept, display = 1, eps = 0)
+b1 &lt;- res1
+g1 &lt;- logRegDeriv(b1, D, Y)$dL
+b2 &lt;- res2$beta
+g2 &lt;- logRegDeriv(b2, D, Y)$dL
+Ls &lt;- unlist(c(logRegLoglik(res1, D, Y), res2$L))
+names(Ls) &lt;- c("MLE", "ordFact") 
+disp &lt;- cbind(1:length(b1), round(cbind(b1, g1, cumsum(g1)), 4), 
+    round(cbind(b2, g2, cumsum(g2)), 4))
+
+## --------------------------------------------------------
+## display results
+## --------------------------------------------------------
+disp
+Ls
+
+## --------------------------------------------------------
+## compute estimates when the third ordered factor should
+## have *decreasing* estimated coefficients
+## --------------------------------------------------------
+res3 &lt;- ordFacReg(D, Z, fact, ordfact, ordering = c("i", "i", "d"), 
+    type = "logreg", intercept = intercept, display = 1, eps = 0)
+b3 &lt;- res3$beta
+g3 &lt;- logRegDeriv(b3, D, Y)$dL
+Ls &lt;- unlist(c(logRegLoglik(res1, D, Y), res2$L, res3$L))
+names(Ls) &lt;- c("MLE", "ordFact ddd", "ordFact iid") 
+disp &lt;- cbind(1:length(b1), round(cbind(b1, b2, b3), 4))
+
+## --------------------------------------------------------
+## display results
+## --------------------------------------------------------
+disp
+Ls
+</code></pre>
+
+
+</div>

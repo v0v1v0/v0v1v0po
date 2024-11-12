@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OIDCAuth</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OIDC Authentication</h2>
+
+<h3>Description</h3>
+
+<p>defines classes for different OpenID connect interaction mechanisms. The classes are modeled in generalized
+fashion by inheriting functions from <code>IAuth</code> and <code>AbstractOIDCAuthentication</code>.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The openEO conformant back-ends shall offer either a basic authentication and / or an OpenID
+Connect (OIDC) authentication. The first is covered at BasicAuth. And since OIDC is based
+on the OAuth2.0 protocol there are several mechanisms defined to interact with an OIDC provider. The OIDC provider can be the
+back-end provider themselves, but they can also delegate the user management to other platforms like EGI, Github, Google,
+etc, by pointing to the respective endpoints during the service discovery of the back-end. Normally
+users would not create those classes manually, but state the general login type (oidc or basic) and some
+additional information (see login).
+</p>
+<p>This client supports the following interaction mechanisms (grant types):
+</p>
+
+<ul>
+<li>
+<p>authorization_code
+</p>
+</li>
+<li>
+<p>authorization_code+pkce
+</p>
+</li>
+<li>
+<p>urn:ietf:params:oauth:grant-type:device_code+pkce
+</p>
+</li>
+</ul>
+<h4>authorization_code</h4>
+
+<p>During the login process an internet browser window will be opened and you will be asked to enter your credentials.
+The website belongs to the OIDC provider of the chosen openEO back-end. Meanwhile, the client will start a server daemon in
+the background that listens to the callback from the OIDC provider. For this to work the user needs to get in contact with
+the openEO service provider and ask them for a configuration file that will contain information about the <code>client_id</code> and
+<code>secret</code>. The redirect URL requested from the provider is <code style="white-space: pre;">⁠http://localhost:1410/⁠</code>
+</p>
+
+
+
+<h4>authorization_code+pkce</h4>
+
+<p>This procedure also spawns a temporary web server to capture the redirect URL from the OIDC provider. The benefit of this
+mechanism is that it does not require a client secret issued from the OIDC provider anymore. However, it will still open
+the internet browser and asks the user for credentials and authorization.
+</p>
+
+
+
+<h4>device_code+pkce</h4>
+
+<p>This mechanism does not need to spawn a web server anymore. It will poll the endpoint of the OIDC provider until the user
+enters a specific device code that will be printed onto the R console. To enter the code either the URL is printed also to
+the console or if R runs in the interactive mode the internet browser will be opened automatically.
+</p>
+
+
+
+<h4>device_code</h4>
+
+<p>This mechanism uses a designated device code for human confirmation. It is closely related to the device_code+pkce code flow,
+but without the additional PKCE negotiation.
+</p>
+
+
+
+<h3>Fields</h3>
+
+
+<dl>
+<dt><code>access_token</code></dt>
+<dd>
+<p>The access_token to query password restricted  webservices of an openEO back-end</p>
+</dd>
+<dt><code>id_token</code></dt>
+<dd>
+<p>The id_token retrieved when exchanging the access_token at the identity provider</p>
+</dd>
+</dl>
+<h3>Methods</h3>
+
+
+<dl>
+<dt><code style="white-space: pre;">⁠$new(provider, config=NULL, ...)⁠</code></dt>
+<dd>
+<p>the constructor for the authentication</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$login()⁠</code></dt>
+<dd>
+<p>Initiates the authentication / login in order to obtain the access_token</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$logout()⁠</code></dt>
+<dd>
+<p>Terminates the access_token session and logs out the user on the openEO back-end</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$getUserData()⁠</code></dt>
+<dd>
+<p>queries the OIDC provider for the user data like the 'user_id'</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$getAuth()⁠</code></dt>
+<dd>
+<p>returns the internal authentication client as created from package 'httr2'</p>
+</dd>
+</dl>
+<h3>Arguments</h3>
+
+
+<dl>
+<dt><code>provider</code></dt>
+<dd>
+<p>the name of an OIDC provider registered on the back-end or a provider object as returned by <code>list_oidc_providers()</code></p>
+</dd>
+<dt><code>config</code></dt>
+<dd>
+<p>either a JSON file containing information about 'client_id' and
+'secret' or a named list. Experienced user and developer can also add 'scopes' to
+overwrite the default settings of the OIDC provider</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>additional parameter might contain <code>force=TRUE</code> specifying to force the use
+of a specific authentication flow</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+
+<dl>
+<dt>openEO definition on Open ID connect</dt>
+<dd>
+<p><a href="https://openeo.org/documentation/1.0/authentication.html#openid-connect">https://openeo.org/documentation/1.0/authentication.html#openid-connect</a></p>
+</dd>
+<dt>Open ID Connect (OIDC)</dt>
+<dd>
+<p><a href="https://openid.net/connect/">https://openid.net/connect/</a></p>
+</dd>
+<dt>OAuth 2.0 Device Authorization Grant</dt>
+<dd>
+<p><a href="https://datatracker.ietf.org/doc/html/rfc8628">https://datatracker.ietf.org/doc/html/rfc8628</a></p>
+</dd>
+<dt>Proof Key for Code Exchange by OAuth Public Clients</dt>
+<dd>
+<p><a href="https://datatracker.ietf.org/doc/html/rfc7636">https://datatracker.ietf.org/doc/html/rfc7636</a></p>
+</dd>
+</dl>
+</div>

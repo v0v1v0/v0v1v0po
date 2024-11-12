@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dmaxcount</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The Maximum-Count Occupancy Distribution</h2>
+
+<h3>Description</h3>
+
+<p>Density, distribution function, quantile function and random generation for
+the maximum count occupancy distribution with size and shape parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dmaxcount(x, size, space, prob = 1, log = FALSE)
+
+dmaxcount.all(max.x, max.size, space, prob = 1, log = FALSE)
+
+pmaxcount(q, size, space, prob = 1, log.p = FALSE, lower.tail = TRUE)
+
+qmaxcount(p, size, space, prob = 1, log.p = FALSE, lower.tail = TRUE)
+
+rmaxcount(n, size, space, prob = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector of quantiles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>The size parameter for the maximum-count distribution (number of balls)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>space</code></td>
+<td>
+<p>The space parameter for the maximum-count distribution (number of bins)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+<p>The probability parameter for the occupancy distribution (probability of ball occupying its bin)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log</code></td>
+<td>
+<p>logical; if TRUE, probabilities p are given as log(p).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.x</code></td>
+<td>
+<p>A vector of numeric values to be used as arguments for the probability mass function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.size</code></td>
+<td>
+<p>The maximum size parameter for the maximum-count distribution (number of balls)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>vector of quantiles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.p</code></td>
+<td>
+<p>logical; if TRUE, probabilities p are given as log(p).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower.tail</code></td>
+<td>
+<p>logical; if TRUE (default), probabilities are <code class="reqn">P[X \le x]</code> otherwise, <code class="reqn">P[X &gt; x]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>vector of probabilities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>number of observations. If length(n) &gt; 1, the length is taken to be the number required.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>dmaxcount.all</code> returns the entire PMF.
+</p>
+<p>This function computes probabilities or log-probabilities from the probability mass function of the maximum-count
+distribution, which is the distribution for the maximum of the counts for the number of balls in a bin in the extended
+occupancy problem.  Details of the algorithm in the classical case can be found in the papers below.  The extension
+to include the probability parameter is done using the binomial mixture representation of the extended occupancy problem.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If all inputs are correctly specified (i.e., parameters are in allowable range) then the output will be a
+vector of probabilities/log-probabilities up to the maximum argument values
+</p>
+
+
+<h3>References</h3>
+
+<p>Bonetti, M., Corillo, P. and Ogay, A. (2019) Computing the exact distributions of some functions of the ordered multinomial
+counts: maximum, minimum, range and sums of order statistics.
+</p>
+<p>Rappeport, M,A. (1968) Algorithms and computational procedures for the application of order statistics to queuing
+problems. PhD thesis, New York University.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- rmaxcount(10, 2, 2)
+p &lt;- pmaxcount(x, 2, 2)
+stopifnot(x == qmaxcount(p, 2, 2))
+dmaxcount.all(2,2,2)
+</code></pre>
+
+
+</div>

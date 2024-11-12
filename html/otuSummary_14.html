@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rareBiosphere</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Summarize different subgroups in the rare biosphere
+</h2>
+
+<h3>Description</h3>
+
+<p>The function discriminates different fractions of rare biosphere from the input community data, based on the ratio between the maximum and minimum abundance (for details, please see Yang et al. 2017).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rareBiosphere(otutab, siteInCol = TRUE, taxhead= NULL, percent = FALSE,
+    threshold = 1, cutRatio = 100, cutPERare = 5, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otutab</code></td>
+<td>
+
+<p>An OTU table of microbial community, which can contain a taxonomic column (if siteInCol) or row (if site in rows). Note this function requires the otu table must be given in absolute counts, not in relative abundance.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>siteInCol</code></td>
+<td>
+
+<p>Logical, by default it is "TRUE", meaning the OTU table contains samples in columns and taxa in rows. Otherwise, the otu table will be transposed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taxhead</code></td>
+<td>
+
+<p>Character, specify the header of taxonomy. By default the taxonomic column is NULL.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent</code></td>
+<td>
+
+<p>Logical, whether the input otu table is in relative abundance. The default is FALSE.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+
+<p>Numeric, the threshold specify the relative abundance cutoff upon which the rare biosphere is subset.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutRatio</code></td>
+<td>
+
+<p>Numeric, the cutRatio parameter is the ratio between the maximum and minimum non-zero absolute abundance, which specify the threshold of conditionally rare taxa (CRT).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutPERare</code></td>
+<td>
+
+<p>Numeric, the argument cutPERare specify the threshold of permanently rare taxa (PERare) in the community according to the ratio as mentioned above.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>arguments to be passed to/from other methods.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The rare biopshere constitutes different fractions of rarity. The conditionally rare taxa (CRT) are generally rare across samples but can become abundant in some samples. In contrast, the permanently rare taxa (PERare) are persistently low in abundance. Different levels of rarity may have practical implications and suggest potential roles in metabolism and ecological functions (Lynch and Neufeld, 2015; Yang et al., 2017).
+</p>
+<p>This function will filter the rare biophere from the input OTU table and then discriminate different rare fractions based on the ratio between the maximum and minimum non-zero absolute abundance, which has been as an technical alternative of skewness (please see Yang et al. 2017 for details).
+</p>
+<p>The function only works with otu table with absolute abundance, for the absolute reads enable to identify of absolute singletons and doubletons.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns a list of 4 data frames.
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>summaryTable </code></td>
+<td>
+<p>The element "summaryTable" returns a table containing the maximum and the minimum relative abundance, the ratio of the two abundance, the grouping of rarity, whether the taxa is singleton or doubletons, with additional column of taxonomy if it is included in the input otu table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CRT </code></td>
+<td>
+<p>Table "CRT" gives the subset of the above "summaryTable" only for the conditionally rare taxa.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PERare </code></td>
+<td>
+<p>Table "PERare" shows the information of permanently rare taxa.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>otherRare </code></td>
+<td>
+<p>Table "otherRare" summarizes the rare taxa outside the "CRT" and "PERare".</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Sizhong Yang &lt;yanglzu@163.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Lynch MDJ, Neufeld JD (2015). Ecology and exploration of the rare biosphere. Nature Reviews Microbiology 13: 217-229.
+</p>
+<p>Yang S, Winkel M, Wagner D, Liebner S (2017). Community structure of rare methanogenic archaea: insight from a single functional group. FEMS Microbiology Ecology: fix126.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(otumothur)
+
+example &lt;- rareBiosphere(otutab = otumothur, siteInCol = TRUE, taxhead = "taxonomy",
+    percent = FALSE, threshold = 1, cutRatio = 100, cutPERare = 5)
+length(example)
+names(example)
+head(example[["summaryTable"]])
+head(example[["CRT"]])
+
+example2 &lt;- rareBiosphere(otutab = otumothur[,-454], siteInCol = TRUE,
+    taxhead = NULL, percent=FALSE, threshold = 1, cutRatio = 100, cutPERare = 5)
+length(example2)
+names(example2)
+</code></pre>
+
+
+</div>

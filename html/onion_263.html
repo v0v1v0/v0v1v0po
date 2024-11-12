@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Complex</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Complex functionality for onions</h2>
+
+<h3>Description</h3>
+
+<p>Functionality in the Complex group.
+</p>
+<p>The <dfn>norm</dfn> <code>Norm(O)</code> of onion <code class="reqn">O</code> is the product of
+<code class="reqn">O</code> with its conjugate: <code class="reqn">|O|=OO^*</code> but a more efficient
+numerical method is used (see <code>dotprod()</code>).
+</p>
+<p>The <dfn>Mod</dfn> <code>Mod(O)</code> of onion <code class="reqn">O</code> is the square root of its
+norm.
+</p>
+<p>The <dfn>sign</dfn> of onion <code class="reqn">O</code> is the onion with the same direction
+as <code class="reqn">O</code> but with unit Norm: <code>sign(O)=O/Mod(O)</code>.
+</p>
+<p>Function <code>Im()</code> sets the real component of its argument to zero
+and returns that; <code>Conj()</code> flips the sign of its argument's
+non-real components.  Function <code>Re()</code> returns the real component
+(first row) of its argument as a numeric vector.  If <code>x</code> is an
+onion, then <code>x == Re(x) + Im(x)</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'onion'
+Re(z)
+## S4 method for signature 'onion'
+Im(z)
+Re(z) &lt;- value
+Im(x) &lt;- value
+## S4 method for signature 'onion'
+Conj(z)
+## S4 method for signature 'onion'
+Mod(z)
+onion_abs(x)
+onion_conjugate(z)
+## S4 method for signature 'onion'
+sign(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x,z</code></td>
+<td>
+<p>Object of class onion or glub</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>replacement value</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>All functions documented here return a numeric vector or matrix of the
+same dimensions as their argument, apart from functions <code>Im()</code>
+and <code>Conj()</code>, which return an object of the same class as its
+argument.
+</p>
+
+
+<h3>Note</h3>
+
+<p>If <code>x</code> is a numeric vector and <code>y</code> an onion, one might
+expect typing <code>x[1] &lt;- y</code> to result in <code>x</code> being a onion.
+This is impossible, according to John Chambers.
+</p>
+<p>Extract and set methods for components such as <code>i,j,k</code> are
+documented at <code>Extract.Rd</code>
+</p>
+<p>Compare <code>clifford::Conj()</code>, which is more complicated.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robin K. S. Hankin</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Extract</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+a &lt;- rquat()
+Re(a)
+Re(a) &lt;- j(a)
+
+Im(a)
+
+b &lt;- romat()
+
+A &lt;- romat()
+Im(A) &lt;- Im(A)*10
+
+</code></pre>
+
+
+</div>

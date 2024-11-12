@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_classify</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Classify OSM Features</h2>
+
+<h3>Description</h3>
+
+<p>Classifies OSM features into meaningful functional or analytical categories, according to a supplied classification.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_classify(data, classification)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>imported layer from an OSM PBF file. Usually an 'sf' data frame, but the geometry column is unnecessary. Importantly, the data frame should have an 'other_tags' column with OSM PBF formatting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>classification</code></td>
+<td>
+<p>a 2-level nested list providing a classification. The layers of the list are:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <em>categories</em> </td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"> a list of tags and matched values that constitute a feature category. </td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <em>tags</em> </td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"> a character vector of tag values to match, or <code>""</code> to match all possible values.
+  It is also possible to match all except certain tags by negating them with <code>"!"</code> e.g. <code>"!no"</code>.
+  Obviously, it is not sensible to mix negation with other specifications. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>See <code>osm_point_polygon_class</code> and <code>osm_line_class</code> for example classifications.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <em>data.table</em> with rows matching the input frame and columns
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>classified</code></td>
+<td>
+<p>logical. Whether the feature was classified i.e. matched by any tag-value in the <code>classification</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main_cat</code></td>
+<td>
+<p>character. The first category the feature was assigned to, depending on the order of categories in the <code>classification</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main_tag</code></td>
+<td>
+<p>character. The tag matched for the main category. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main_tag_value</code></td>
+<td>
+<p>character. The value matched on. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alt_cats</code></td>
+<td>
+<p>character. Alternative (secondary) categories assigned, comma-separated if multiple. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alt_tags_values</code></td>
+<td>
+<p>character. The tags and double-quoted values matched for secondary categories, comma-separated if multiple.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>It is not necessary to expand the 'other_tags' column, e.g. using <code>osm_tags_df()</code>. <code>osm_classify()</code> efficiently searches the content of that column without expanding it.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>osmclass-package
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># See Examples at ?osmclass for a full examples
+
+# Classify OSM Points in Djibouti
+djibouti_points_class &lt;- osm_classify(djibouti_points, osm_point_polygon_class)
+head(djibouti_points_class)
+collapse::descr(djibouti_points_class)
+</code></pre>
+
+
+</div>

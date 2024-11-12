@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>KSTP</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>determine row factor number - test</h2>
+
+<h3>Description</h3>
+
+<p>This function determines the number of row factors
+under a two-way factor structure, using randomized test method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">KSTP(
+  Y,
+  alpha = 0.05,
+  type = "proj",
+  kmax = 4,
+  epsilon = 0.05,
+  r = 8,
+  M = 100,
+  S = 100,
+  fq = 1/4
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>data, a <code class="reqn">T\times p1\times p2</code> array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>a number in (0,1), indicating the significance of the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>indicates how to calculate the sample covariance. "flat" for the
+flat version, while others for the projected version.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kmax</code></td>
+<td>
+<p>a positive integer smaller than p2, indicating the
+upper bound for the factor numbers, and the dimension of projection matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>a small positive number in (0,1), indicating the size of scaling.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>a positive number indicating the order of the power function
+for transforming the rescaled eigenvalue.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>a large integer for the number of Gaussian variables in the randomized test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>another large integer for the number of replications in the strong rule. Usually <code class="reqn">M=S=T</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fq</code></td>
+<td>
+<p>a number in (0,0.5), controlling the threshold function of the strong rule.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See He et al. (2023)
+</p>
+
+
+<h3>Value</h3>
+
+<p>an integer for the number of row factors. To determine the number of column
+factors, just transpose the observation matrices.
+</p>
+
+
+<h3>References</h3>
+
+<p>He Y, Kong X, Trapani L, &amp; Yu L (2023).
+One-way or two-way factor model for matrix sequences? <em>Journal of Econometrics</em>,
+235(2), 1981-2004.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">k1=3
+k2=3
+Sample_T=100
+p1=40
+p2=20
+
+Y=gen.data(Sample_T,p1,p2,k1,k2,tau=0.5,change=0)
+KSTP(Y)
+KSTP(aperm(Y,c(1,3,2)))
+
+</code></pre>
+
+
+</div>

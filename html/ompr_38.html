@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_solution</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get variable values from a solution</h2>
+
+<h3>Description</h3>
+
+<p>Get variable values from a solution
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_solution(solution, expr, type = "primal")
+
+get_solution_(solution, expr, type = "primal")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>solution</code></td>
+<td>
+<p>the solution object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expr</code></td>
+<td>
+<p>a variable expression. You can partially bind indexes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>optional, either "primal" or "dual". The default value is "primal".
+If "primal" it returns the primal solution, otherwise the column duals.
+Especially the dual values depend on the solver. If no duals are calculated,
+the function stops with an error message.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data.frame. One row for each variable instance
+and a column for each index.
+Unless it is a single variable, then it returns a single number.
+Please note that in case of a <code>data.frame</code> there is no
+guarantee about the ordering of the rows. This could change
+in future <code>ompr</code> versions. Please always use the indexes
+to retrieve the correct values.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(magrittr)
+result &lt;- MIPModel() %&gt;%
+  add_variable(x[i], i = 1:5) %&gt;%
+  add_variable(y[i, j], i = 1:5, j = 1:5) %&gt;%
+  add_constraint(x[i] &gt;= 1, i = 1:5) %&gt;%
+  set_bounds(x[i], lb = 3, i = 1:3) %&gt;%
+  set_objective(0) %&gt;%
+  solve_model(with_ROI("glpk"))
+solution &lt;- get_solution(result, x[i])
+solution2 &lt;- get_solution(result, y[i, 1])
+solution3 &lt;- get_solution(result, y[i, j])
+duals &lt;- get_solution(result, x[i], type = "dual")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

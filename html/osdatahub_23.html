@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>list_os_datapackages</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve information on premium OS data packages</h2>
+
+<h3>Description</h3>
+
+<p>Query the osdatahub Downloads API to gather information on available
+downloads for a specific OS premium data package based on given filters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">list_os_datapackages(product_id, version_id, key = get_os_key(), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>product_id</code></td>
+<td>
+<p>(numeric or character) Retrieve information on a specific
+data product. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version_id</code></td>
+<td>
+<p>(numeric or character) Retrieve information on a specific
+version of a data product. Optional and only available when
+<code>product_id</code> has been specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>(character) OS API key. Default action is to search for an
+environment variable using <code>get_os_key()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional paramters. Not currently used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The OS Downloads API assists with the discovery and download of OS
+OpenData and OS premium data packages. This function is used for initial
+listing and discovery of premium products. Use the product and version IDs
+from this list to filter further or to initiate a download.
+</p>
+<p>Before downloading a data package, it must be ordered online. See:
+<a href="https://osdatahub.os.uk/downloads/packages">https://osdatahub.os.uk/downloads/packages</a>.
+</p>
+<p>When a <code>product_id</code> is not specified then all available data packages
+are listed. The <code>version_id</code> filter can be used to find the specific
+download, but this filter is only valid when a specific product has been
+specified first.
+</p>
+<p>For more information on the Downloads API, see
+<a href="https://osdatahub.os.uk/docs/downloads/technicalSpecification">https://osdatahub.os.uk/docs/downloads/technicalSpecification</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> or a <code>package_list</code>, which extends a
+<code>data.frame</code>, containing the information on downloadable files from
+the Downloads API.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>download_os_datapackages()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Retrieve a data.frame listing all OS Data Packages available.
+# An API key is required and the packages must be ordered online first.
+dp &lt;- list_os_datapackages()
+
+# Retrieve a specific data package.
+# Note: 'product_id' will vary.
+dp &lt;- list_os_datapackages(product_id = 1234)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,199 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitting orthogonal panel models</h2>
+
+<h3>Description</h3>
+
+<p><code>opm</code> is used to fit orthogonal panel models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opm(x, ...)
+
+## Default S3 method:
+opm(x, y, n.samp, add.time.indicators = FALSE, ...)
+
+## S3 method for class 'formula'
+opm(x, data = environment(x), subset = NULL, index = 1:2, n.samp, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a formula (see description of parameter <code>formula</code>
+below) or an array of dimension <code>time x variable x case</code> of terms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to other methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a matrix of dimensions <code>time x case</code> of responses.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.samp</code></td>
+<td>
+<p>number of samples to use to estimate the parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.time.indicators</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, adds dummy
+variables for time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an optional data frame, list, or environment containing
+the variables in the model. If not found in <code>data</code>, the
+variables are taken from <code>environment(x)</code>, typically the
+environment from which <code>opm</code> is called.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p>an optional vector specifying a subset of
+observations to be used in the fitting process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>a two-element vector containing the index of the case
+and time variables, respectively. Variable indices can be specifed
+by name or position. This argument is ignored if the model is not
+specified by the formula, because the index is implicit in the
+organization of the terms and response arrays.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The model can be either specified symbolically with the formula
+<code>response ~ term1 + term2 ...</code> or with the terms and response
+given as a pair of 3- and 2-dimensional arrays, <code>x</code> and
+<code>y</code> respectively. The arrays have to be in the format
+<code>time x variable x case</code> for terms and <code>time x case</code> for
+the response.
+</p>
+<p>The lagged dependent variable does not need to be included in the
+formula or data, as it is included automatically.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>opm</code> with the following elements:
+</p>
+
+<dl>
+<dt><code>samples</code></dt>
+<dd>
+<p>parameter samples used to estimate the model,
+as a list with following elements:</p>
+</dd>
+</dl>
+<dl>
+<dt><code>rho</code></dt>
+<dd>
+<p>a vector of <code>n.samp</code> samples of <code class="reqn">\rho</code>.</p>
+</dd>
+<dt><code>v</code></dt>
+<dd>
+<p>a vector of <code>n.samp</code> samples of <code class="reqn">\frac{1}{\sigma^2}</code>.</p>
+</dd>
+<dt><code>beta</code></dt>
+<dd>
+<p>an <code>n.samp x variable</code> matrix of samples of <code class="reqn">\beta</code>.</p>
+</dd>
+</dl>
+<dl>
+<dt><code>call</code></dt>
+<dd>
+<p>the matched call</p>
+</dd>
+<dt><code>index</code></dt>
+<dd>
+<p>the index variables, when using the formula interface</p>
+</dd>
+<dt><code>time.indicators</code></dt>
+<dd>
+<p><code>TRUE</code> if dummy time variables are used (see Notes), <code>FALSE</code> otherwise</p>
+</dd>
+<dt><code>terms</code></dt>
+<dd>
+<p>the <code>terms</code> object used</p>
+</dd>
+</dl>
+<p>The function <code>summary</code> (i.e., <code>summary.opm</code>) can be used
+to obtain or print a summary of the results. The generic accessor
+functions <code>coefficients</code>, <code>fitted.values</code>,
+<code>residuals</code>, <code>logLik</code>, and <code>df.residual</code> can be used
+to extract various useful features of the value returned by <code>opm</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Dummy time variables exist as an additional column for each
+wave of data, excluding the first and second wave (i.e., at
+<code class="reqn">t=0</code> and <code class="reqn">t=1</code> using the terminology from Lancaster
+(2000)). The new variables are named <code>tind.</code><code class="reqn">t</code>, where
+<code class="reqn">t = 2, ...</code>, and appear as such as elements of the estimated
+<code>beta</code> coefficient.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+N &lt;- 5
+T &lt;- 2
+beta &lt;- .5
+rho &lt;- .5
+v &lt;- 1
+
+f &lt;- runif(N, -2, 2)
+K &lt;- length(beta)
+beta &lt;- matrix(beta, K, 1)
+
+## $x_i = 0.75 f + N(0, 1)$:
+x &lt;- array(.75*f, dim=c(N, K, (T+1))) + rnorm(N*K*(T+1))
+
+## $y_{i,t} = \rho y_{i,t-1} + \beta x_{i,t} + f_i + N(0,1)$:
+y &lt;- matrix(0, N, T+1)
+for (t in seq_len(T+1)) {
+    yy &lt;- if (t&gt;1) y[,t-1] else 0
+    y[,t] &lt;- rho * yy + f  + x[,,t] %*% beta + rnorm(N, sd = sqrt(1/v))
+}
+
+d &lt;- data.frame(i = rep(seq(N), T+1),
+                t = rep(seq(T+1), each = N),
+                as.data.frame(matrix(aperm(x, c(1, 3, 2)), N*(T+1), K,
+                                     dimnames = list(NULL, paste0('x', seq(K))))),
+                y = c(y))
+opm(y~x1, d, n.samp = 10)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_odf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read data specified as Open Data Format.</h2>
+
+<h3>Description</h3>
+
+<p>Import data from the Open Data Format to an R data frame.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_odf(file, languages = "all", nrows = Inf, skip = 0, select = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>the name of the file which the data are to be read from.
+By default all available language variants are imported
+(<code>languages = "all"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>languages</code></td>
+<td>
+<p>integer: the maximum number of rows to read in. Negative and other invalid
+values are ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrows</code></td>
+<td>
+<p>Maximum number of lines to read.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip</code></td>
+<td>
+<p>Select the number of rows to be skipped (without the column names).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>select</code></td>
+<td>
+<p>A vector of column names or numbers to keep, drop the rest. In all forms of
+select, order that the columns are specified determines the order of the
+columns in the result.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>R dataframe with attributes including dataset and variable
+information.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># get path to example data from the opendataformat package (data.zip)
+path  &lt;-  system.file("extdata", "data.zip", package = "opendataformat")
+path
+
+# read example data specified as Open Data Format from ZIP file
+df  &lt;-  read_odf(file = path)
+attributes(df)
+attributes(df$bap87)
+
+# read example data with language selection
+df  &lt;-  read_odf(file = path, languages = "de")
+attributes(df$bap87)
+
+</code></pre>
+
+
+</div>

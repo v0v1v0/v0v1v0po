@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>param_convert</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+converts byte data to absolte values or vise versa (<code>param_unconvert</code>)
+</h2>
+
+<h3>Description</h3>
+
+<p>converts byte data as stored in <code>'.gz'</code>-files to absolte values (<code>param_convert</code>) or vise versa (<code>param_unconvert</code>) using the parameter_definitions-dataset. <code>param_convert</code> is used by readbin, <code>param_unconvert</code> is used by writebin.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">param_convert(x,param)
+
+param_unconvert(x,param)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>vector, matrix or raster-object holding byte-data that that should be converted to absolute values (<code>param_convert</code>) or vise versa (<code>param_unconvert</code>). 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>param</code></td>
+<td>
+
+<p>Character string indicating parameter of the dataset to be treated. See <code>parameter_definitions</code> for available parameters.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+ <p>param_unconvert, readbin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library('fields')
+path &lt;- system.file("test_files", package="oceanmap")
+gz.file &lt;- Sys.glob(paste0(path,'/*.gz'))[1] # load sample-'.gz'-files
+param &lt;- name_split(gz.file)$parameter
+print(param)
+
+## converted data, according to param information
+m &lt;- readbin(gz.file, Raster=FALSE) 
+image.plot(m)
+
+## byte data ("unconverted") according to param information, as stored in ".gz"files
+bin &lt;- param_unconvert(m,param) 
+image.plot(bin)
+
+## reconverting byte data, according to param information
+conv &lt;- param_convert(bin,param) 
+image.plot(conv)
+
+</code></pre>
+
+
+</div>

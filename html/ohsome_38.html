@@ -1,0 +1,196 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ohsome_users_count</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Count OSM users</h2>
+
+<h3>Description</h3>
+
+<p>Create an <code>ohsome_query</code> object for OSM users count
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ohsome_users_count(
+  boundary = NULL,
+  return_value = c("absolute", "density"),
+  grouping = NULL,
+  time = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>Bounding geometries specified by WGS84 coordinates in the
+order <code style="white-space: pre;">⁠lon,lat⁠</code>. The geometries of <code>sf</code> are transformed to WGS84 if the CRS
+of the object is known. The following classes are supported:
+</p>
+
+<ul>
+<li> <p><code>sf</code> with (MULTI)POLYGON geometries
+</p>
+</li>
+<li> <p><code>sfc</code> with (MULTI)POLYGON geometries
+</p>
+</li>
+<li> <p><code>sfg</code> with (MULTI)POLYGON geometries and WGS 84 coordinates
+</p>
+</li>
+<li> <p><code>bbox</code> created with <code>sf::st_bbox()</code> or <code>tmaptools::bb()</code>
+</p>
+</li>
+<li> <p><code>matrix</code> created with <code>sp::bbox()</code> or <code>osmdata::getbb()</code>
+</p>
+</li>
+<li> <p><code>character</code> providing textual definitions of bounding polygons, boxes or
+circles as allowed by the ohsome API (see
+<a href="https://docs.ohsome.org/ohsome-api/stable/boundaries.html">ohsome API - Boundaries</a>
+):
+</p>
+
+<ul>
+<li>
+<p> bboxes: WGS84 coordinates in the following format:
+<code>"id1:lon1,lat1,lon2,lat2|id2:lon1,lat1,lon2,lat2|..."</code> OR
+<code>"lon1,lat1,lon2,lat2|lon1,lat1,lon2,lat2|..."</code>
+</p>
+</li>
+<li>
+<p> bcircles: WGS84 coordinates + radius in meter in the following
+format: <code>"id1:lon,lat,r|id2:lon,lat,r|..."</code> OR
+<code>"lon,lat,r|lon,lat,r|..."</code>
+</p>
+</li>
+<li>
+<p> bpolys: WGS84 coordinates given as a list of coordinate pairs (as for
+bboxes) or GeoJSON FeatureCollection. The first point has to be the same
+as the last point and MultiPolygons are only supported in GeoJSON.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>list</code> of <code>bbox</code>, <code>matrix</code> or <code>character</code>. Bounding geometry types of all
+list elements must be the same. Does not work with GeoJSON
+FeatureCollections.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_value</code></td>
+<td>
+<p>character; the value to be returned by the ohsome API:
+</p>
+
+<ul>
+<li> <p><code>"absolute"</code> returns the absolute number of users. This is the
+default.
+</p>
+</li>
+<li> <p><code>"density"</code> returns the number of users per square kilometer.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grouping</code></td>
+<td>
+<p>character; group type(s) for grouped aggregations (only
+available for queries to aggregation endpoints). The following group types
+are available:
+</p>
+
+<ul>
+<li> <p><code>"boundary"</code> groups the result by the given boundaries that are defined
+through any of the <code>boundary</code> query parameters.
+</p>
+</li>
+<li> <p><code>"key"</code> groups the result by the given keys that are defined through the
+<code>groupByKeys</code> query parameter.
+</p>
+</li>
+<li> <p><code>"tag"</code> groups the result by the given tags that are defined through the
+<code>groupByKey</code> and <code>groupByValues</code> query parameters.
+</p>
+</li>
+<li> <p><code>"type"</code> groups the result by OSM element type.
+</p>
+</li>
+<li> <p><code>c("boundary", "tag")</code> groups the result by the given boundaries and
+tags.
+</p>
+</li>
+</ul>
+<p>Not all of these group types are accepted by all of the aggregation
+endpoints. Check
+<a href="https://docs.ohsome.org/ohsome-api/v1/group-by.html">Grouping</a>
+for available group types.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>character; <code>time</code> parameter of the query (see
+<a href="https://docs.ohsome.org/ohsome-api/v1/time.html">Supported time formats</a>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Parameters of the request to the ohsome API endpoint.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>ohsome_users_count()</code> creates an <code>ohsome_query</code> object for OSM users
+aggregation. Boundary objects are passed via <code>set_boundary()</code> into
+<code>ohsome_boundary()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>ohsome_query</code> object. The object can be sent to the ohsome API
+with <code>ohsome_post()</code>. It consists of the following elements:
+</p>
+
+<ul>
+<li> <p><code>url</code>: The URL of the endpoint.
+</p>
+</li>
+<li> <p><code>encode</code>: The way the information is encoded and then posted to the
+ohsome API. Set as <code>"form"</code>.
+</p>
+</li>
+<li> <p><code>body</code>: The parameters of the query such as <code>format</code>, <code>filter</code> or
+<code>bpolys</code>.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><a href="https://docs.ohsome.org/ohsome-api/stable/endpoints.html#users-aggregation">ohsome API Endpoints – Users Aggregation</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Yearly count of users contributing to man-made objects around "Null Island"
+ohsome_users_count("0,0,10", filter = "man_made=*", time = "2012/2022/P1Y")
+
+</code></pre>
+
+
+</div>

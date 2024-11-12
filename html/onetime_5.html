@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onetime_been_done</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check if a onetime call has already been made</h2>
+
+<h3>Description</h3>
+
+<p>Check if a onetime call has already been made
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onetime_been_done(
+  id = deprecate_calling_package(),
+  path = default_lockfile_dir(),
+  expiry = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Unique ID string. If this is unset, the name of the calling
+package will be used. Since onetime 0.2.0, not setting <code>id</code> is
+deprecated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Directory to store lockfiles. The default uses a unique
+directory corresponding to the calling package, beneath
+<code>rappdirs::user_config_dir()</code>. Normally you should leave this as the
+default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expiry</code></td>
+<td>
+<p><code>difftime()</code> or e.g. <code>lubridate::duration()</code> object.
+After this length of time, code will be run again.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>TRUE</code> if the call has been recorded (within the
+<code>expiry</code> time, if given).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">oo &lt;- options(onetime.dir = tempdir(check = TRUE))
+id &lt;- sample(10000L, 1)
+onetime_been_done(id = id)
+onetime_message("Creating an ID",  id = id)
+onetime_been_done(id = id)
+
+onetime_reset(id = id)
+options(oo)
+</code></pre>
+
+
+</div>

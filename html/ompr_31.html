@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_variable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a variable to the model</h2>
+
+<h3>Description</h3>
+
+<p>A variable can either be a name or an indexed name. See examples.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_variable(.model, .variable, ..., type = "continuous", lb = -Inf, ub = Inf)
+
+add_variable_(
+  .model,
+  .variable,
+  ...,
+  type = "continuous",
+  lb = -Inf,
+  ub = Inf,
+  .dots
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.model</code></td>
+<td>
+<p>the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.variable</code></td>
+<td>
+<p>the variable name/definition</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>quantifiers for the indexed variable. Including filters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>must be either continuous, integer or binary</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lb</code></td>
+<td>
+<p>the lower bound of the variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ub</code></td>
+<td>
+<p>the upper bound of the variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.dots</code></td>
+<td>
+<p>Used to work around non-standard evaluation.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+MIPModel() %&gt;%
+  add_variable(x) %&gt;% # creates 1 variable named x
+  add_variable(y[i],
+    i = 1:10, i %% 2 == 0,
+    type = "binary"
+  ) # creates 4 variables
+</code></pre>
+
+
+</div>

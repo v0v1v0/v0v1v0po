@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>verb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>OAI-PMH Verb Functions</h2>
+
+<h3>Description</h3>
+
+<p>Perform Open Archives Initiative Protocol for Metadata Harvesting
+(OAI-PMH) requests for harvesting repositories.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oaih_get_record(baseurl, identifier, prefix = "oai_dc",
+                transform = TRUE)
+oaih_identify(baseurl, transform = TRUE)
+oaih_list_identifiers(baseurl, prefix = "oai_dc", from = NULL,
+                      until = NULL, set = NULL, transform = TRUE)
+oaih_list_metadata_formats(baseurl, identifier = NULL,
+                           transform = TRUE)
+oaih_list_records(baseurl, prefix = "oai_dc", from = NULL,
+                  until = NULL, set = NULL, transform = TRUE)
+oaih_list_sets(baseurl, transform = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>baseurl</code></td>
+<td>
+<p>a character string giving the base URL of the
+repository.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>identifier</code></td>
+<td>
+<p>a character string giving the unique identifier for
+an item in a repository.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefix</code></td>
+<td>
+<p>a character string to specify the metadata format in
+OAI-PMH requests issued to the repository.  The default
+(<code>"oai_dc"</code>) corresponds to the mandatory OAI unqualified
+Dublin Core metadata schema.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from, until</code></td>
+<td>
+<p>character strings giving datestamps to be used as
+lower or upper bounds, respectively, for datestamp-based selective
+harvesting (i.e., only harvest records with datestamps in the given
+range).  Dates and times must be encoded using ISO 8601 in either
+‘<span class="samp">⁠%F⁠</span>’ or ‘<span class="samp">⁠%FT%TZ⁠</span>’ format (see <code>strptime</code>).
+The trailing ‘<span class="samp">⁠Z⁠</span>’ must be used when including time.  OAI-PMH
+implies <abbr><span class="acronym">UTC</span></abbr> for data/time specifications.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>set</code></td>
+<td>
+<p>a character string giving a set to be used for selective
+harvesting (i.e., only harvest records in the given set).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transform</code></td>
+<td>
+<p>a logical indicating whether the OAI-PMH XML results
+to “useful” R data structures via <code>oaih_transform</code>.
+Default: true.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If the OAI-PMH request was successful, the result of the request as
+XML or (default) transformed to “useful” R data structures.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tryCatch({
+## Run inside tryCatch() so that checks fail gracefully if OAI-PMH
+## requests time out or fail otherwise.
+##
+## Harvest WU Reearch metadata.
+baseurl &lt;- "https://research.wu.ac.at/ws/oai"
+## Identify.
+oaih_identify(baseurl)
+## List metadata formats.
+oaih_list_metadata_formats(baseurl)
+## List sets.
+sets &lt;- oaih_list_sets(baseurl)
+head(sets, 20L)
+## List records in the 'year 1986' set.
+spec &lt;- "publications:year1986"
+x &lt;- oaih_list_records(baseurl, set = spec)
+## Extract the metadata.
+m &lt;- x[, "metadata"]
+m &lt;- oaih_transform(m[lengths(m) &gt; 0L])
+## Find the most frequent keywords.
+keywords &lt;- unlist(m[, "subject"])
+keywords &lt;- keywords[!startsWith(keywords, "/dk/atira/pure")]
+head(sort(table(keywords), decreasing = TRUE))
+##
+}, error = identity)
+</code></pre>
+
+
+</div>

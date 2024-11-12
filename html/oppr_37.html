@@ -1,0 +1,232 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_max_targets_met_objective</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add maximum targets met objective</h2>
+
+<h3>Description</h3>
+
+<p>Set the objective of a project prioritization <code>problem()</code> to
+maximize the total number of persistence targets met for the features, whilst
+ensuring that the cost of the solution is within a pre-specified budget
+(Chades <em>et al.</em> 2015). In some project prioritization exercises,
+decision makers may have a target level of persistence for each feature
+(e.g. a 90% persistence target corresponding to a 90% chance for the
+features persisting into the future). In such exercises, the decision makers
+do not perceive any benefit when a target is not met (e.g. if a feature
+has a persistence target of 90% and a solution only secures a 70% chance
+of persistence then no benefit is accrued for that feature) or when a target
+is surpassed (e.g. if a feature has a persistence target of 50%, then a
+solution which
+secures a 95% chance of persistence will accrue the same benefit as a
+solution which secures a 50% chance of persistence). Furthermore, weights
+can also be used to specify the relative importance of meeting targets
+for specific features (see <code>add_feature_weights()</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_max_targets_met_objective(x, budget)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>budget</code></td>
+<td>
+<p><code>numeric</code> budget for funding actions.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A problem objective is used to specify the overall goal of the
+project prioritization problem.
+Here, the maximum targets met objective seeks to find the set of actions
+that maximizes the total number of features (e.g. populations, species,
+ecosystems) that have met their persistence targets within a
+pre-specified budget. Let <code class="reqn">I</code> represent the set of conservation
+actions (indexed by <code class="reqn">i</code>). Let <code class="reqn">C_i</code> denote the cost for funding
+action <code class="reqn">i</code>, and let <code class="reqn">m</code> denote the maximum expenditure (i.e. the
+budget). Also, let <code class="reqn">F</code> represent each feature (indexed by <code class="reqn">f</code>),
+<code class="reqn">W_f</code> represent the weight for each feature <code class="reqn">f</code> (defaults to one
+for each feature unless specified otherwise), <code class="reqn">T_f</code> represent the
+persistence target for each feature <code class="reqn">f</code>, and <code class="reqn">E_f</code> denote the
+probability that each feature will go extinct given the funded
+conservation projects.
+</p>
+<p>To guide the prioritization, the conservation actions are organized into
+conservation projects. Let <code class="reqn">J</code> denote the set of conservation projects
+(indexed by <code class="reqn">j</code>), and let <code class="reqn">A_{ij}</code> denote which actions
+<code class="reqn">i \in I</code> comprise each conservation project
+<code class="reqn">j \in J</code> using zeros and ones. Next, let <code class="reqn">P_j</code> represent
+the probability of project <code class="reqn">j</code> being successful if it is funded. Also,
+let <code class="reqn">B_{fj}</code> denote the enhanced probability that each feature
+<code class="reqn">f \in F</code> associated with the project <code class="reqn">j \in J</code>
+will persist if all of the actions that comprise project <code class="reqn">j</code> are funded
+and that project is allocated to feature <code class="reqn">f</code>.
+For convenience,
+let <code class="reqn">Q_{fj}</code> denote the actual probability that each
+<code class="reqn">f \in F</code> associated with the project <code class="reqn">j \in J</code>
+is expected to persist if the project is funded. If the argument
+to <code>adjust_for_baseline</code> in the <code>problem</code> function was set to
+<code>TRUE</code>, and this is the default behavior, then
+<code class="reqn">Q_{fj} = (P_{j} \times B_{fj}) + \bigg(\big(1 - (P_{j} B_{fj})\big)
+  \times (P_{n} \times B_{fn})\bigg)</code>, where <code>n</code> corresponds to the
+baseline "do nothing" project. This means that the probability
+of a feature persisting if a project is allocated to a feature
+depends on (i) the probability of the project succeeding, (ii) the
+probability of the feature persisting if the project does not fail,
+and (iii) the probability of the feature persisting even if the project
+fails. Otherwise, if the argument is set to <code>FALSE</code>, then
+<code class="reqn">Q_{fj} = P_{j} \times B_{fj}</code>.
+</p>
+<p>The binary control variables <code class="reqn">X_i</code> in this problem indicate whether
+each project <code class="reqn">i \in I</code> is funded or not. The decision
+variables in this problem are the <code class="reqn">Y_{j}</code>, <code class="reqn">Z_{fj}</code>, <code class="reqn">E_f</code>,
+and <code class="reqn">G_f</code> variables.
+Specifically, the binary <code class="reqn">Y_{j}</code> variables indicate if project <code class="reqn">j</code>
+is funded or not based on which actions are funded; the binary
+<code class="reqn">Z_{fj}</code> variables indicate if project <code class="reqn">j</code> is used to manage
+feature <code class="reqn">f</code> or not; the semi-continuous <code class="reqn">E_f</code> variables
+denote the probability that feature <code class="reqn">f</code> will go extinct; and the
+<code class="reqn">G_f</code> variables indicate if the persistence target for feature
+<code class="reqn">f</code> is met.
+</p>
+<p>Now that we have defined all the data and variables, we can formulate
+the problem. For convenience, let the symbol used to denote each set also
+represent its cardinality (e.g. if there are ten features, let <code class="reqn">F</code>
+represent the set of ten features and also the number ten).
+</p>
+<p style="text-align: center;"><code class="reqn">
+  \mathrm{Maximize} \space \sum_{f = 0}^{F} G_f W_f \space
+  \mathrm{(eqn \space 1a)} \\
+  \mathrm{Subject \space to}
+  \sum_{i = 0}^{I} C_i \leq m \space \mathrm{(eqn \space 1b)} \\
+  G_f (1 - E_f) \geq T_f \space \forall \space f \in F \space
+  \mathrm{(eqn \space 1c)} \\
+  E_f = 1 - \sum_{j = 0}^{J} Z_{fj} Q_{fj} \space \forall \space f \in F
+  \space \mathrm{(eqn \space 1d)} \\
+  Z_{fj} \leq Y_{j} \space \forall \space j \in J \space \mathrm{(eqn \space
+  1e)} \\
+  \sum_{j = 0}^{J} Z_{fj} \times \mathrm{ceil}(Q_{fj}) = 1 \space \forall
+  \space f \in F \space \mathrm{(eqn \space 1f)} \\
+  A_{ij} Y_{j} \leq X_{i} \space \forall \space i \in I, j \in J \space
+  \mathrm{(eqn \space 1g)} \\
+  E_{f} \geq 0, E_{f} \leq 1 \space \forall \space b \in B \space
+  \mathrm{(eqn \space 1h)} \\
+  G_{f}, X_{i}, Y_{j}, Z_{fj} \in [0, 1] \space \forall \space i \in I, j
+  \in J, f \in F \space \mathrm{(eqn \space 1i)}
+  </code>
+</p>
+
+<p>The objective (eqn 1a) is to maximize the weighted total number of the
+features that have their persistence targets met.
+Constraints (eqn 1b) calculate which persistence targets have been met.
+Constraint (eqn 1c) limits the maximum expenditure (i.e. ensures
+that the cost of the funded actions do not exceed the budget).
+Constraints (eqn 1d) calculate the probability that each feature
+will go extinct according to their allocated project.
+Constraints (eqn 1e) ensure that feature can only be allocated to projects
+that have all of their actions funded. Constraints (eqn 1f) state that each
+feature can only be allocated to a single project. Constraints (eqn 1g)
+ensure that a project cannot be funded unless all of its actions are funded.
+Constraints (eqns 1h) ensure that the probability variables
+(<code class="reqn">E_f</code>) are bounded between zero and one. Constraints (eqns 1i) ensure
+that the target met (<code class="reqn">G_f</code>), action funding (<code class="reqn">X_i</code>), project funding
+(<code class="reqn">Y_j</code>), and project allocation (<code class="reqn">Z_{fj}</code>) variables are binary.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ProjectProblem object with the objective
+added to it.
+</p>
+
+
+<h3>References</h3>
+
+<p>Chades I, Nicol S, van Leeuwen S, Walters B, Firn J, Reeson A, Martin TG &amp;
+Carwardine J (2015) Benefits of integrating complementarity into priority
+threat management. <em>Conservation Biology</em>, <strong>29</strong>, 525–536.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>objectives.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load the ggplot2 R package to customize plot
+library(ggplot2)
+
+# load data
+data(sim_projects, sim_features, sim_actions)
+
+# manually adjust feature weights
+sim_features$weight &lt;- c(8, 2, 6, 3, 1)
+
+# build problem with maximum targets met objective, a $200 budget,
+# targets that require each feature to have a 20% chance of persisting into
+# the future, and zero cost actions locked in
+p1 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+      add_max_targets_met_objective(budget = 200) %&gt;%
+      add_absolute_targets(0.2) %&gt;%
+      add_locked_in_constraints(which(sim_actions$cost &lt; 1e-5)) %&gt;%
+      add_binary_decisions()
+
+## Not run: 
+# solve problem
+s1 &lt;- solve(p1)
+
+# print solution
+print(s1)
+
+# plot solution, and add a dashed line to indicate the feature targets
+# we can see the three features meet the targets under the baseline
+# scenario, and the project for F5 was prioritized for funding
+# so that its probability of persistence meets the target
+plot(p1, s1) +
+geom_hline(yintercept = 0.2, linetype = "dashed")
+
+## End(Not run)
+
+# build another problem that includes feature weights
+p2 &lt;- p1 %&gt;%
+      add_feature_weights("weight")
+
+## Not run: 
+# solve problem
+s2 &lt;- solve(p2)
+
+# print solution
+print(s2)
+
+# plot solution, and add a dashed line to indicate the feature targets
+# we can see that adding weights to the problem has changed the solution
+# specifically, the projects for the feature F3 is now funded
+# to enhance its probability of persistence
+plot(p2, s2) +
+geom_hline(yintercept = 0.2, linetype = "dashed")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

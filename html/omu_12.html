@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>omu_anova</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform anova</h2>
+
+<h3>Description</h3>
+
+<p>Performs an anova across all response variables, followed by a Tukeys test on every possible
+contrast in your model and calculates group means and fold changes for each contrast. Returns a list of
+data frames for each contrast, and includes a dataframe of model residuals
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">omu_anova(
+  count_data,
+  metadata,
+  response_variable = "Metabolite",
+  model,
+  log_transform = FALSE,
+  method = "anova"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>count_data</code></td>
+<td>
+<p>A metabolomics count data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata</code></td>
+<td>
+<p>Metadata dataframe for the metabolomics count data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_variable</code></td>
+<td>
+<p>String of the column header for the response variables,
+usually "Metabolite"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A formual class object, see ?formula for more info on formulas in R.
+an interaction between independent variables. Optional parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log_transform</code></td>
+<td>
+<p>Boolean of TRUE or FALSE for whether or not you wish to log transform
+your metabolite counts</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A string of 'anova', 'kruskal', or 'welch'. anova performs an anova with a post hoc
+tukeys test, kruskal performs a kruskal wallis with a post hoc dunn test, welch performs a
+welch's anova with a post hoc games howell test</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+anova_df &lt;- omu_anova(count_data = c57_nos2KO_mouse_countDF, metadata = c57_nos2KO_mouse_metadata,
+response_variable = "Metabolite", model = ~ Treatment, log_transform = TRUE)
+
+anova_df &lt;- omu_anova(count_data = c57_nos2KO_mouse_countDF, metadata = c57_nos2KO_mouse_metadata,
+response_variable = "Metabolite", model = ~ Treatment + Background, log_transform = TRUE)
+
+anova_df &lt;- omu_anova(count_data = c57_nos2KO_mouse_countDF, metadata = c57_nos2KO_mouse_metadata,
+response_variable = "Metabolite", model = ~ Treatment + Background + Treatment*Background,
+log_transform = TRUE)
+
+</code></pre>
+
+
+</div>

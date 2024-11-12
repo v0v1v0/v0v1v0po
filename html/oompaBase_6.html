@@ -1,0 +1,176 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ColorCoding-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Class "ColorCoding"</h2>
+
+<h3>Description</h3>
+
+<p>A class for associating plotting symbols and colors with a logical
+vector or with levels of a factor.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ColorCoding(v, color, mark = 1)
+colorCode(fac, colorScheme = 1:length(levels(fac)), mark = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p> a logical vector </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color</code></td>
+<td>
+<p> a string or integer representing a color </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mark</code></td>
+<td>
+<p> an integer representing a plotting symbol, or list of
+plotting symbols that should be associated with levels of the factor
+<code>fac</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fac</code></td>
+<td>
+<p> A factor </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorScheme</code></td>
+<td>
+<p> A list of colors that should be associated with
+levels of the factor <code>fac</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is often necessary with microarray data to produce multiple plots,
+where each point on the plot corresponds to a gene or a spot on the
+microarray.  Across multiple plots, we often want to use symbols or
+colors to mark subsets of he genes with certain properties.  The
+<code>ColorCoding</code> class works in tandem with the
+<code>ColorCodedPair</code> class to make it easier to maintain
+consistent plotting conventions across multiple graphs.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The constructor returns a valid object of the <code>ColorCoding</code>
+class.
+</p>
+<p>The <code>colorCode</code> function provides a simple interface to associate
+colors and symbols with the levels of a factor. It returns a list of
+valid <code>ColorCoding</code> objects that can be passed directly to the
+constructor of a <code>ColorCodedPair</code> object.
+</p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>Although objects can be created using <code>new</code>, the preferred method
+is to use the constructor function, <code>ColorCoding</code>.  To create a
+set of colors and symbols associated with different levels of a
+factor, use the <code>colorCode</code> function.
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>v</code></dt>
+<dd>
+<p> a logical vector </p>
+</dd>
+<dt><code>color</code></dt>
+<dd>
+<p> a string or integer representing a color </p>
+</dd>
+<dt><code>mark</code></dt>
+<dd>
+<p> an integer representing a plotting symbol </p>
+</dd>
+</dl>
+<h3>Methods</h3>
+
+<p>There are no specialized methods for objects of this class; all
+activities can be performed by directly accessing the documented slots.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kevin R. Coombes <a href="mailto:krc@silicovore.com">krc@silicovore.com</a>,
+P. Roebuck <a href="mailto:proebuck@mdanderson.org">proebuck@mdanderson.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ColorCodedPair</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">showClass("ColorCoding")
+
+theta &lt;- (0:360)*pi/180
+x &lt;- cos(theta)
+y &lt;- sin(theta)
+xp &lt;- x &gt; 0
+yp &lt;- y &gt; 0
+colors &lt;- list(ColorCoding(xp&amp;yp, oompaColor$BORING),
+               ColorCoding(xp&amp;!yp, oompaColor$TOP.TEN),
+               ColorCoding(!xp&amp;yp, oompaColor$BOTTOM.TEN),
+               ColorCoding(!xp&amp;!yp, oompaColor$CONFIDENCE.CURVE))
+plot(ColorCodedPair(x, y, colors))
+
+plot(ColorCodedPair(theta, x, colors))
+
+plot(ColorCodedPair(theta, y, colors),
+     xlab='angle in radians', ylab='sine', main='colored sine')
+
+fac &lt;- factor(rep(c('left', 'right'), c(180, 181)))
+colors &lt;- colorCode(fac, c('blue', 'red'))
+plot(ColorCodedPair(x, y, colors))
+
+## cleanup
+rm(x, y, xp, yp, theta, colors, fac)
+
+colorList &lt;- c(oompaColor$BORING, oompaColor$SIGNIFICANT,
+               oompaColor$EXPECTED, oompaColor$OBSERVED,
+               oompaColor$PERMTEST, oompaColor$FITTED,
+               oompaColor$CENTRAL.LINE, oompaColor$CONFIDENCE.CURVE,
+               oompaColor$BAD.REPLICATE, oompaColor$WORST.REPLICATE,
+               oompaColor$FOLD.DIFFERENCE, oompaColor$BAD.REPLICATE.RATIO,
+               oompaColor$TOP.TEN, oompaColor$BOTTOM.TEN,
+               oompaColor$TOP.TEN.SOLO, oompaColor$BOTTOM.TEN.SOLO
+               )
+plot(c(1,4), c(1,4), type='n')
+for (i in 1:4) {
+  for (j in 1:4) {
+    points(i,j, col=colorList[i + 4*(j-1)], pch=16, cex=4)
+  }
+}
+rm(colorList, i, j)
+</code></pre>
+
+
+</div>

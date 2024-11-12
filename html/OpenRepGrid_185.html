@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>reorder2d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Order grid by angles between construct and/or elements in 2D.</h2>
+
+<h3>Description</h3>
+
+<p>The approach is to reorder the grid matrix by their polar angles on the first two principal components from a data
+reduction technique (here the biplot, i.e. SVD). The function <code>reorder2d</code> reorders the grid according to the angles
+between the x-axis and the element (construct) vectors derived from a 2D biplot solution. This approach is apt to
+identify circumplex structures in data indicated by the diagonal stripe in the display (see examples).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">reorder2d(
+  x,
+  dim = c(1, 2),
+  center = 1,
+  normalize = 0,
+  g = 0,
+  h = 1 - g,
+  rc = TRUE,
+  re = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dim</code></td>
+<td>
+<p>Dimension of 2D solution used to calculate angles
+(default <code>c(1,2)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>Numeric. The type of centering to be performed.
+<code>0</code>= no centering, <code>1</code>= row mean centering (construct),
+<code>2</code>= column mean centering (elements), <code>3</code>= double-centering (construct and element means),
+<code>4</code>= midpoint centering of rows (constructs).
+The default is <code>1</code> (row centering).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>A numeric value indicating along what direction (rows, columns)
+to normalize by standard deviations. <code style="white-space: pre;">⁠0 = none, 1= rows, 2 = columns⁠</code>
+(default is <code>0</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the left singular
+vectors, i.e. the constructs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the right singular
+vectors, i.e. the elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rc</code></td>
+<td>
+<p>Logical. Reorder constructs by similarity (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>re</code></td>
+<td>
+<p>Logical. Reorder elements by similarity (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not evaluated.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Reordered <code>repgrid</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- feixas2004
+reorder2d(x) # reorder grid by angles in first two dimensions
+reorder2d(x, rc = FALSE) # reorder elements only
+reorder2d(x, re = FALSE) # reorder constructs only
+
+</code></pre>
+
+
+</div>

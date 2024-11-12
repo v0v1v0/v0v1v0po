@@ -1,0 +1,169 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OptSig.Chisq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Optimal Significance Level for a Chi-square test
+</h2>
+
+<h3>Description</h3>
+
+<p>The function calculates the optimal level of significance for a Ch-square test 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OptSig.Chisq(w=NULL, N=NULL, ncp=NULL, df, p = 0.5, k = 1, Figure = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>Effect size, Cohen's w</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Total number of observations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncp</code></td>
+<td>
+<p> a value of the non-centality paramter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p> the degrees of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p> prior probability for H0, default is p = 0.5</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p> relative loss from Type I and II errors, k = L2/L1, default is k = 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Figure</code></td>
+<td>
+<p> show graph if TRUE (default); No graph if FALSE </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See Kim and Choi (2020) 
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>alpha.opt </code></td>
+<td>
+<p>Optimal level of significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit.opt </code></td>
+<td>
+<p>Critical value at the optimal level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta.opt </code></td>
+<td>
+<p>Type II error probability at the optimal level</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Applicable to any Chi-square test
+Either ncp or w (with N) should be given. 
+</p>
+<p>The black curve in the figure is the line of enlightened judgement: see Kim and Choi (2020).
+The red dot inticates the optimal significance level that minimizes the expected loss: (alpha.opt,beta.opt).
+The blue horizontal line indicates the case of alpha = 0.05 as a reference point.     
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jae. H Kim
+</p>
+
+
+<h3>References</h3>
+
+<p>Kim and Choi, 2020, Choosing the Level of Significance: A Decision-theoretic Approach: Abacus: a Journal of Accounting, Finance and Business Studies. Wiley. 
+&lt;https://doi.org/10.1111/abac.12172&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Leamer, E. 1978, Specification Searches: Ad Hoc Inference with Nonexperimental Data, Wiley, New York.
+</p>
+<p>Cohen, J. (1988). Statistical power analysis for the behavioral sciences (2nd ed.). Hillsdale,NJ: Lawrence Erlbaum.
+</p>
+<p>Kim, JH and Ji, P. 2015, Significance Testing in Empirical Finance: A Critical Review and Assessment, Journal of Empirical Finance 34, 1-14.
+&lt;DOI:http://dx.doi.org/10.1016/j.jempfin.2015.08.006&gt;
+</p>
+<p>Kim, Jae H., 2020, Decision-theoretic hypothesis testing: A primer with R package OptSig, The American Statistician. 
+&lt;https://doi.org/10.1080/00031305.2020.1750484.&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Optimal level of Significance for the Breusch-Pagan test: Chi-square version
+data(data1)                 # call the data: Table 2.1 of Gujarati (2015)
+
+# Extract Y and X
+y=data1$lnoutput; x=cbind(data1$lncapital,data1$lnlabor)
+
+# Restriction matrices for the slope coefficents sum to 1
+Rmat=matrix(c(0,1,1),nrow=1); rvec=matrix(1,nrow=1)
+
+# Model Estimation
+M=R.OLS(y,x,Rmat,rvec); print(M$coef)
+
+# Breusch-Pagan test for heteroskedasticity
+e = M$resid[,1]                  # residuals from unrestricted model estimation
+
+# Restriction matrices for the slope coefficients being 0
+Rmat=matrix(c(0,0,1,0,0,1),nrow=2); rvec=matrix(0,nrow=2)
+
+# Model Estimation for the auxilliary regression
+M1=R.OLS(e^2,x,Rmat,rvec); 
+
+# Degrees of Freedom and estimate of non-centrality parameter 
+df1=nrow(Rmat); NCP=M1$ncp
+
+# LM stat and p-value
+LM=nrow(data1)*M1$Rsq[1,1]
+pval=pchisq(LM,df=df1,lower.tail = FALSE)
+
+OptSig.Chisq(df=df1,ncp=NCP,p=0.5,k=1, Figure=TRUE)
+</code></pre>
+
+
+</div>

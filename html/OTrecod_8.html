@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>indiv_grp_closest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>indiv_grp_closest()</h2>
+
+<h3>Description</h3>
+
+<p>This function sequentially assigns individual predictions using a nearest neighbors procedure to solve recoding problems of data fusion.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">indiv_grp_closest(
+  proxim,
+  jointprobaA = NULL,
+  jointprobaB = NULL,
+  percent_closest = 1,
+  which.DB = "BOTH"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>proxim</code></td>
+<td>
+<p>a <code>proxim_dist</code> object or an object of similar structure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jointprobaA</code></td>
+<td>
+<p>a matrix whose number of columns corresponds to the number of modalities of the target variable <code class="reqn">Y</code> in database A, and which number of rows corresponds to the number of modalities of Z in database B. It gives an estimation of the joint probability of <code class="reqn">(Y,Z)</code> in A.
+The sum of cells of this matrix must be equal to 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jointprobaB</code></td>
+<td>
+<p>a matrix whose number of columns equals to the number of modalities of the target variable <code class="reqn">Y</code> in database A, and which number of rows corresponds to the number of modalities of <code class="reqn">Z</code> in database B. It gives an estimation of the joint probability of <code class="reqn">(Y,Z)</code> in B.
+The sum of cells of this matrix must be equal to 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent_closest</code></td>
+<td>
+<p>a value between 0 and 1 (by default) corresponding to the fixed <code>percent closest</code> of individuals remained in the computation of the average distances</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.DB</code></td>
+<td>
+<p>a character string (with quotes) that indicates which individual predictions need to be computed: only the individual predictions of <code class="reqn">Y</code> in B ("B"), only those of <code class="reqn">Z</code> in A ("A") or the both ("BOTH" by default)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A. THE RECODING PROBLEM IN DATA FUSION
+</p>
+<p>Assuming that <code class="reqn">Y</code> and <code class="reqn">Z</code> are two variables which refered to the same target population in two separate databases A and B respectively (no overlapping rows),
+so that <code class="reqn">Y</code> and <code class="reqn">Z</code> are never jointly observed. Assuming also that A and B share a subset of common covariates <code class="reqn">X</code> of any types (same encodings in A and B)
+completed or not. Integrating these two databases often requires to solve the recoding problem by creating an unique database where
+the missing information of <code class="reqn">Y</code> and <code class="reqn">Z</code> is fully completed.
+</p>
+<p>B. DESCRIPTION OF THE FUNCTION
+</p>
+<p>The function <code>indiv_grp_closest</code> is an intermediate function used in the implementation of an algorithm called OUTCOME (and its enrichment R-OUTCOME, see the reference (2) for more details) dedicated to the solving of recoding problems in data fusion using Optimal Transportation theory.
+The model is implemented in the function <code>OT_outcome</code> which integrates the function <code>indiv_grp_closest</code> in its syntax as a possible second step of the algorithm.
+The function <code>indiv_grp_closest</code> can also be used separately provided that the argument <code>proxim</code> receives an output object of the function <code>proxim_dist</code>.
+This latter is available in the package and is so directly usable beforehand.
+</p>
+<p>The algorithms <code>OUTCOME</code> (and <code>R-OUTCOME</code>) are made of two independent parts. Assuming that the objective consists in the prediction of <code class="reqn">Z</code> in the database A:
+</p>
+
+<ul>
+<li>
+<p> The first part of the algorithm solves the optimization problem by providing a solution called <code class="reqn">\gamma</code> that corresponds here to an estimation of the joint distribution <code class="reqn">(Y,Z)</code> in A.
+</p>
+</li>
+<li>
+<p> From the first part, a nearest neighbor procedure is carried out as a second part to provide the individual predictions of <code class="reqn">Z</code> in A: this procedure is implemented in the function <code>indiv_group_closest</code>.
+In other words, this function sequentially assigns to each individual of A the modality of <code class="reqn">Z</code> that is closest.
+</p>
+</li>
+</ul>
+<p>Obviously, this algorithm  runs in the same way for the prediction of <code class="reqn">Y</code> in the database B.
+The function <code>indiv_grp_closest</code> integrates in its syntax the function <code>avg_dist_closest</code>. Therefore, the related argument <code>percent_closest</code> is identical in the two functions.
+Thus, when computing average distances between an individual <code class="reqn">i</code> and a subset of individuals assigned to a same level of <code class="reqn">Y</code> or <code class="reqn">Z</code> is required, user can decide if all individuals from the subset of interest can participate to the computation (<code>percent_closest</code>=1) or only a fixed part p (&lt;1) corresponding to the closest neighbors of <code class="reqn">i</code> (in this case <code>percent_closest</code> = p).
+</p>
+<p>The arguments <code>jointprobaA</code> and <code>jointprobaB</code> correspond to the estimations of <code class="reqn">\gamma</code> (sum of cells must be equal to 1) in A and/or B respectively, according to the <code>which.DB</code> argument.
+For example, assuming that <code class="reqn">n_{Y_1}</code> individuals are assigned to the first modality of <code class="reqn">Y</code> in A, the objective consists in the individual predictions of <code class="reqn">Z</code> in A. Then, if <code>jointprobaA</code>[1,2] = 0.10,
+the maximum number of individuals that can be assigned to the second modality of <code class="reqn">Z</code> in A, can not exceed <code class="reqn">0.10 \times n_A</code>.
+If <code class="reqn">n_{Y_1} \leq 0.10 \times n_A</code> then all individuals assigned to the first modality of <code class="reqn">Y</code> will be assigned to the second modality of <code class="reqn">Z</code>.
+At the end of the process, each individual with still no affectation  will receive the same modality of <code class="reqn">Z</code> as those of his nearest neighbor in B.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of two vectors of numeric values:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>YAtrans</code></td>
+<td>
+<p>a vector corresponding to the individual predictions of <code class="reqn">Y</code> (numeric form) in the database B using the Optimal Transportation algorithm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ZBtrans</code></td>
+<td>
+<p>a vector corresponding to the individual predictions of <code class="reqn">Z</code> (numeric form) in  the database A using the Optimal Transportation algorithm</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gregory Guernec, Valerie Gares, Jeremy Omer
+</p>
+<p><a href="mailto:otrecod.pkg@gmail.com">otrecod.pkg@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li>
+<p> Gares V, Dimeglio C, Guernec G, Fantin F, Lepage B, Korosok MR, savy N (2019). On the use of optimal transportation theory to recode variables and application to database merging. The International Journal of Biostatistics.
+Volume 16, Issue 1, 20180106, eISSN 1557-4679. doi:10.1515/ijb-2018-0106
+</p>
+</li>
+<li>
+<p> Gares V, Omer J (2020) Regularized optimal transport of covariates and outcomes in data recoding. Journal of the American Statistical Association. doi: <a href="https://doi.org/10.1080/01621459.2020.1775615">10.1080/01621459.2020.1775615</a>
+</p>
+</li>
+</ol>
+<h3>See Also</h3>
+
+<p><code>proxim_dist</code>,<code>avg_dist_closest</code>, ,<code>OT_outcome</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(simu_data)
+
+### Example with the Manhattan distance
+
+man1 &lt;- transfo_dist(simu_data,
+  quanti = c(3, 8), nominal = c(1, 4:5, 7),
+  ordinal = c(2, 6), logic = NULL, prep_choice = "M"
+)
+mat_man1 &lt;- proxim_dist(man1, norm = "M")
+
+### Y(Yb1) and Z(Yb2) are a same information encoded in 2 different forms:
+### (3 levels for Y and 5 levels for Z)
+### ... Stored in two distinct databases, A and B, respectively
+### The marginal distribution of Y in B is unknown,
+### as the marginal distribution of Z in A ...
+
+# Empirical distribution of Y in database A:
+freqY &lt;- prop.table(table(man1$Y))
+freqY
+
+# Empirical distribution of Z in database B
+freqZ &lt;- prop.table(table(man1$Z))
+freqZ
+
+# By supposing that the following matrix called transport symbolizes
+# an estimation of the joint distribution L(Y,Z) ...
+# Note that, in reality this distribution is UNKNOWN and is
+# estimated in the OT function by resolving an optimisation problem.
+
+
+transport1 &lt;- matrix(c(0.3625, 0, 0, 0.07083333, 0.05666667,
+                      0, 0, 0.0875, 0, 0, 0.1075, 0,
+                      0, 0.17166667, 0.1433333),
+                     ncol = 5, byrow = FALSE)
+
+# ... So that the marginal distributions of this object corresponds to freqY and freqZ:
+apply(transport1, 1, sum) # = freqY
+apply(transport1, 2, sum) # = freqZ
+
+# The affectation of the predicted values of Y in database B and Z in database A
+# are stored in the following object:
+
+pred_man1 &lt;- indiv_grp_closest(mat_man1,
+  jointprobaA = transport1, jointprobaB = transport1,
+  percent_closest = 0.90
+)
+summary(pred_man1)
+
+# For the prediction of Z in A only, add the corresponding argument:
+pred_man1_A &lt;- indiv_grp_closest(mat_man1,
+  jointprobaA = transport1, jointprobaB = transport1,
+  percent_closest = 0.90, which.DB = "A"
+)
+
+</code></pre>
+
+
+</div>

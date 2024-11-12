@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matched.distances</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Determine distances between matched units</h2>
+
+<h3>Description</h3>
+
+<p>From a match (as produced by <code>pairmatch</code> or <code>fullmatch</code>)
+and a distance, extract the distances of matched units from their
+matched counterparts.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matched.distances(matchobj, distance, preserve.unit.names = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>matchobj</code></td>
+<td>
+<p>Value of a call to <code>pairmatch</code> or
+<code>fullmatch</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+<p>Either a distance matrix or the value of a call to
+or <code>match_on</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preserve.unit.names</code></td>
+<td>
+<p>Logical.  If TRUE, for each matched set
+<code>matched.distances</code> returns the submatrix of the distance
+matrix corresponding to it; if FALSE, a vector containing the
+distances in that submatrix is returned.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>From a match (as produced by <code>pairmatch</code> or <code>fullmatch</code>)
+and a distance, extract the distances of matched units from their
+matched counterparts.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of numeric vectors (or matrices) of distances, one
+for each matched set.  Note that a matched set with 1 treatment
+and k controls, or with k treatments and 1 control, has k, not
+k+1, distances.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Ben B. Hansen
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(plantdist)
+plantsfm &lt;- fullmatch(plantdist)
+(plantsfm.d &lt;- matched.distances(plantsfm,plantdist,pres=TRUE))
+unlist(lapply(plantsfm.d, max))
+mean(unlist(plantsfm.d))
+</code></pre>
+
+
+</div>

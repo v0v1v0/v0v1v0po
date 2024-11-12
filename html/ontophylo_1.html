@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_noise_MD</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adding noise to MDS from one stochastic character map</h2>
+
+<h3>Description</h3>
+
+<p>Adds noise to the points in the 2D coordinates in the MDS plot.
+# The noise is calculated as var(V)*add.noise.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_noise_MD(MD, add.noise)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>MD</code></td>
+<td>
+<p>tibble. The output of a MD_morpho function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.noise</code></td>
+<td>
+<p>numeric. A vector of length 2 indicating the amount of noise to be added to the x and y coordinates.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of tibbles as in the output of MD_morpho functions, with noise added.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sergei Tarasov
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("hym_stm_mds")
+# Select a few taxa from main lineages of Hymenoptera.
+tax &lt;- c("Xyela", "Tenthredo", "Orussus", "Pimpla",
+         "Ceraphron", "Evania", "Pison",
+         "Ibalia", "Proctotrupes", "Chiloe") 
+drop_tax &lt;- hym_stm_mds$tip.label[!hym_stm_mds$tip.label %in% tax]
+hym_stm_mds &lt;- phytools::drop.tip.simmap(hym_stm_mds, drop_tax)
+# Get a sample of amalgamated stochastic map (phenome).
+tree &lt;- merge_tree_cat(hym_stm_mds)
+
+
+
+  # Multidimensional scaling for an arbitrary tree.
+  MD &lt;- suppressWarnings(MultiScale.simmap(tree))
+
+  # Add noise.
+  add_noise_MD(MD, c(0.3, 0.3))
+
+
+
+</code></pre>
+
+
+</div>

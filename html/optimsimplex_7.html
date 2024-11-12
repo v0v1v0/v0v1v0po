@@ -1,0 +1,220 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optimsimplex.utils</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Optimsimplex Utility Functions
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions enable various calculations and checks on the current simplex:
+</p>
+
+<dl>
+<dt><code>optimsimplex.center</code></dt>
+<dd>
+<p>Compute the center of the current
+simplex.</p>
+</dd>
+<dt><code>optimsimplex.check</code></dt>
+<dd>
+<p>Check the consistency of the data in the
+current simplex.</p>
+</dd>
+<dt><code>optimsimplex.deltafv</code></dt>
+<dd>
+<p>Compute the vector of function value
+differences with respect to the function value at the first vertex (the
+lowest).</p>
+</dd>
+<dt><code>optimsimplex.deltafvmax</code></dt>
+<dd>
+<p>Compute the difference of function
+value between the lowest and the highest vertices. It is expected that the
+first vertex (<code>this$x[1,]</code>) is associated with the smallest function
+value and that the last vertex (<code>this$x[nbve,]</code>) is associated with
+the highest function value.</p>
+</dd>
+<dt><code>optimsimplex.dirmat</code></dt>
+<dd>
+<p>Compute the matrix of simplex direction,
+i.e. the matrix of differences of vertice coordinates with respect to the
+first vertex.</p>
+</dd>
+<dt><code>optimsimplex.fvmean</code></dt>
+<dd>
+<p>Compute the mean of the function values in
+the current simplex.</p>
+</dd>
+<dt><code>optimsimplex.fvstdev</code></dt>
+<dd>
+<p>Compute the standard deviation of the
+function values in the current simplex.</p>
+</dd>
+<dt><code>optimsimplex.fvvariance</code></dt>
+<dd>
+<p>Compute the variance of the function
+values in the current simplex.</p>
+</dd>
+<dt><code>optimsimplex.size</code></dt>
+<dd>
+<p>Determines the size of the simplex.</p>
+</dd>
+<dt><code>optimsimplex.sort</code></dt>
+<dd>
+<p>Sort the simplex by increasing order of
+function value, so the smallest function is at the first vertex.</p>
+</dd>
+<dt><code>optimsimplex.xbar</code></dt>
+<dd>
+<p>Compute the center of n vertices, by
+excluding the vertex with index <code>iexcl</code>. The default of <code>iexcl</code>
+is the number of vertices: in that case, if the simplex is sorted in
+increasing function value order, the worst vertex is excluded.</p>
+</dd>
+</dl>
+<h3>Usage</h3>
+
+<pre><code class="language-R">  optimsimplex.center(this = NULL)
+  optimsimplex.check(this = NULL)
+  optimsimplex.deltafv(this = NULL)
+  optimsimplex.deltafvmax(this = NULL)
+  optimsimplex.dirmat(this = NULL)
+  optimsimplex.fvmean(this = NULL)
+  optimsimplex.fvstdev(this = NULL)
+  optimsimplex.fvvariance(this = NULL)
+  optimsimplex.size(this = NULL, method = NULL)
+  optimsimplex.sort(this = NULL)
+  optimsimplex.xbar(this = NULL, iexcl = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>this</code></td>
+<td>
+<p>The current simplex.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>The method to use to compute the size of the simplex. The
+available methods are the following: </p>
+
+<dl>
+<dt>'sigmaplus'</dt>
+<dd>
+<p>(this is the default) The sigmamplus size is the
+maximum 2-norm length of the vector from each vertex to the first
+vertex. It requires one loop over the vertices.</p>
+</dd>
+<dt>'sigmaminus'</dt>
+<dd>
+<p>The sigmaminus size is the minimum 2-norm length of
+the vector from each vertex to the first vertex. It requires one loop
+over the vertices.</p>
+</dd>
+<dt>'Nash'</dt>
+<dd>
+<p>The 'Nash' size is the sum of the norm of the norm-1 length
+of the vector from the given vertex to the first vertex. It requires one
+loop over the vertices.</p>
+</dd>
+<dt>'diameter'</dt>
+<dd>
+<p>The diameter is the maximum norm-2 length of all the
+edges of the simplex. It requires 2 nested loops over the vertices.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iexcl</code></td>
+<td>
+<p>The index of the vertex to exclude in center computation.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+
+<dl>
+<dt><code>optimsimplex.center</code></dt>
+<dd>
+<p>Return a vector of length nbve, where nbve
+is the number of vertices in the current simplex.</p>
+</dd>
+<dt><code>optimsimplex.check</code></dt>
+<dd>
+<p>Return an error message if the dimensions
+of the various elements of the current simplex do not match.</p>
+</dd>
+<dt><code>optimsimplex.deltafv</code></dt>
+<dd>
+<p>Return a column vector of length nbve-1.</p>
+</dd>
+<dt><code>optimsimplex.deltafvmax</code></dt>
+<dd>
+<p>Return a numeric scalar.</p>
+</dd>
+<dt><code>optimsimplex.dirmat</code></dt>
+<dd>
+<p>Return a n x n numeric matrix, where n is
+the dimension of the space of the simplex.</p>
+</dd>
+<dt><code>optimsimplex.fvmean</code></dt>
+<dd>
+<p>Return a numeric scalar.</p>
+</dd>
+<dt><code>optimsimplex.fvstdev</code></dt>
+<dd>
+<p>Return a numeric scalar.</p>
+</dd>
+<dt><code>optimsimplex.fvvariance</code></dt>
+<dd>
+<p>Return a numeric scalar.</p>
+</dd>
+<dt><code>optimsimplex.size</code></dt>
+<dd>
+<p>Return a numeric scalar.</p>
+</dd>
+<dt><code>optimsimplex.sort</code></dt>
+<dd>
+<p>Return an updated simplex object.</p>
+</dd>
+<dt><code>optimsimplex.xbar</code></dt>
+<dd>
+<p>Return a row vector of length n.</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Author of Scilab optimsimplex module: Michael Baudin (INRIA - Digiteo)
+</p>
+<p>Author of R adaptation: Sebastien Bihorel (<a href="mailto:sb.pmlab@gmail.com">sb.pmlab@gmail.com</a>)
+</p>
+
+
+<h3>References</h3>
+
+<p>"Compact Numerical Methods For Computers - Linear Algebra and Function
+Minimization", J.C. Nash, 1990, Chapter 14. Direct Search Methods
+</p>
+<p>"Iterative Methods for Optimization", C.T. Kelley, 1999, Chapter 6., section
+6.2
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optimsimplex</code>
+</p>
+
+
+</div>

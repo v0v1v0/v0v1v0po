@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>O3plotM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Draws an Overview of Outliers (O3) plot for more than one method and parallel coordinate plots
+</h2>
+
+<h3>Description</h3>
+
+<p>Function for drawing Overview of Outliers (O3) plots for comparing outlier methods and for drawing supporting parallel coordinate plots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">O3plotM(outResults, caseNames=paste0("X", 1:nrow(outResults$data)),
+ sortVars=TRUE, coltxtsize=14, O3control=O3plotColours())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>outResults</code></td>
+<td>
+
+<p>a list for each method, and within that for each variable combination, of the variables used, the indices of cases identified as outliers, and the outlier distances for all cases in the dataset.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>caseNames</code></td>
+<td>
+
+<p>the ID variable used to identify the cases in an O3 plot, the default is the rownames from the dataset (so that they will then just be X7, X11, etc.)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sortVars</code></td>
+<td>
+
+<p>sort the variable columns by how often the variables occur in combinations, otherwise keep the variable order in the dataset
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coltxtsize</code></td>
+<td>
+
+<p>set the size of text for column names in O3 plots (useful if there are so many columns that names overlap)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>O3control</code></td>
+<td>
+	
+<p>A list of colours for O3 plots. If omitted, <code>O3plotColours</code> gives the defaults.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function takes the output from <code>O3prep</code> and draws an O3 plot.  If there are only two methods, then the default colours are red if both methods identify the case as an outlier for a variable combination and blue or green if only one method does.  With more than two methods the default colours are red if all methods identify the outlier, orange if all but one method do, and shades of slategray otherwise.
+</p>
+<p>The two parallel coordinate plots, one using the raw data and one using outlier distances, are examples of what can be done to explore the results in more detail.  If you want these plots with other highlighting then you can use outsTable with either the dataset or the Cs array to draw them using <code>ggparcoord</code> from <span class="pkg">GGally</span> or whatever graphics tool you prefer.
+</p>
+<p>The plots produced are ggplot objects so that you can work with them—to some extent—directly.  In particular, plot margins can be set using  <code> + theme(plot.margin = unit(c(t, r, b, l), ''cm''))</code>, which is useful when the cases are labelled with the caseNames option and you need more space to the right of the plot.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nOut</code></td>
+<td>
+
+<p>numbers of outliers found by each method
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gpcp</code></td>
+<td>
+
+<p>a parallel coordinate plot of the dataset with cases ever found to be outliers coloured red
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gO3</code></td>
+<td>
+
+<p>an O3 plot
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gO3x</code></td>
+<td>
+
+<p>an O3 plot for three or more methods in which outliers identified by only one method for a variable combination are ignored.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gMethods</code></td>
+<td>
+
+<p>a parallel coordinate plot of the outlier distances calculated by each method for the full dataset with cases ever found to be outliers coloured red
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outsTable</code></td>
+<td>
+
+<p>a table of all outliers found by case, variable combination, and method.  The variable combination labels are a binary coding in the original order of the variables in the dataset.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Cs</code></td>
+<td>
+
+<p>a three-dimensional array of methods by variable combinations by cases of the outlier distances calculated.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Antony Unwin unwin@math.uni-augsburg.de
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>O3plotColours</code>, <code>HDoutliers</code> in <span class="pkg">HDoutliers</span>, <code>FastPCS</code> in <span class="pkg">FastPCS</span>, <code>mvBACON</code> in <span class="pkg">robustX</span>, <code>adjOutlyingness</code> in <span class="pkg">robustbase</span>, <code>DDC</code> in <span class="pkg">cellWise</span>, <code>covMcd</code> in <span class="pkg">robustbase</span>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">c1 &lt;- O3prep(stackloss, k1=2, method=c("HDo", "BAC"), tolHDo=0.025, tolBAC=0.01)
+c2 &lt;- O3plotM(c1)
+c2$nOut
+c2$gpcp
+c2$gO3
+
+## Not run: 
+b1 &lt;- O3prep(stackloss, method=c("HDo", "BAC", "DDC"), tolHDo=0.025, tolBAC=0.01, tolDDC=0.05)
+b2 &lt;- O3plotM(b1)
+b2$nOut
+b2$gpcp
+b2$gO3
+b2$outsTable
+
+## End(Not run)
+
+# It is advisable with large datasets to check the number of outliers identified (nOut)
+# before drawing graphics.  Occasionally methods find very many outliers.
+## Not run:  
+data(diamonds, package="ggplot2")
+data &lt;- diamonds[1:5000, c(1, 5, 6, 8:10)]
+pPa &lt;- O3prep(data, method=c("PCS", "adjOut"), tolPCS=0.01, toladj=0.01, boxplotLimits=10)
+pPx &lt;- O3plotM(pPa)
+pPx$nOut
+
+## End(Not run)
+</code></pre>
+
+
+</div>

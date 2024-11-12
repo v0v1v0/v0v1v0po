@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>monotoneDirection</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The monotone means under increasing/decreasing trend</h2>
+
+<h3>Description</h3>
+
+<p>The function calculates the likelihood for the increasing and decreasing trend in the dose response for all the given genes separately gene-by-gene. The trend with the higher likelihood is chosen and the isotonic regression is applied on the means. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">monotoneDirection(geneData, doseData)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>geneData</code></td>
+<td>
+<p>gene expression matrix for all genes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doseData</code></td>
+<td>
+<p>indicates the dose levels</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with components 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>direction</code></td>
+<td>
+<p>the direction with the higher likelihood of increasing
+(indicated by "up") or decreasing (indicated by "dn") trend.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incData</code></td>
+<td>
+<p>isotonic means with respect to dose for those genes that were classified as following the increasing trend.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>decData</code></td>
+<td>
+<p>isotonic means with respect to dose for those genes that were classified as following the decreasing trend.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obsincData</code></td>
+<td>
+<p>observed gene expression matrix for those genes that were classified as following the increasing trend.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obsdecData</code></td>
+<td>
+<p>observed gene expression matrix for those genes that were classified as following the decreasing trend.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arrayMean</code></td>
+<td>
+<p>isotonic means with respect to dose for all genes.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Adetayo Kasim, Martin Otava and Tobias Verbeke</p>
+
+
+<h3>References</h3>
+
+<p>Lin D., Shkedy Z., Yekutieli D., Amaratunga D., and Bijnens, 
+L. (editors). (2012) Modeling Dose-response Microarray
+Data in Early Drug Development Experiments Using 
+R. Springer.
+</p>
+<p>Cheng, Y. and Church, G. M. (2000). Biclustering of expression data. In:
+Proceedings of the Eighth International Conference on Intelligent Systems for
+Molecular Biology, 1, 93-103.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ORCME</code>, <code>plotIsomeans</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  data(doseData)
+  data(geneData)
+
+  dirData &lt;- monotoneDirection(geneData = geneData,doseData = doseData)
+
+  ## direction of monotone trend
+  Direction &lt;- dirData$direction
+  ## Isotonic means for upward genes
+  incData &lt;- as.data.frame(dirData$incData)
+  ##Isotonic means for downward genes
+  decData &lt;- as.data.frame(dirData$decData)
+  ## observd data upward genes
+  obsIncData &lt;- as.data.frame(dirData$obsincData)
+  ## observed data for downward genes
+  obsDecData &lt;- as.data.frame(dirData$obsdecData)
+  ## isotonic means for all genes
+  isoMeans &lt;- as.data.frame(dirData$arrayMean)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>parsePixelData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse DICOM Pixel or Spectroscopy Data</h2>
+
+<h3>Description</h3>
+
+<p>These subroutines process the information contained after the DICOM header
+and process this information into an image (2D or 3D) or complex-valued
+vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">parsePixelData(rawString, hdr, endian = "little", flipupdown = TRUE)
+
+parseSpectroscopyData(rawString, hdr, endian = "little")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rawString</code></td>
+<td>
+<p>is a vector of <code>raw</code> values taken directly from the
+DICOM file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hdr</code></td>
+<td>
+<p>is the list object of DICOM header information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endian</code></td>
+<td>
+<p>is the endian-ness of the file (default is <code>"little"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flipupdown</code></td>
+<td>
+<p>is a logical variable for vertical flipping of the image
+(default is <code>TRUE</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A <code>while</code> loop is used to traverse the unknown number of DICOM header
+fields contained in a single file.  Information contained in
+“sequences” may be included/excluded according to the logical
+variable <code>skipSequence</code> (default = <code>TRUE</code>).
+</p>
+<p>A recursive implementation of the code breaks the DICOM file into segments
+and calls itself to parse each segment.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing two elements: </p>
+ <dl>
+<dt>hdr</dt>
+<dd>
+<p>all DICOM
+header fields (with or without “sequence” information).</p>
+</dd>
+<dt>img</dt>
+<dd>
+<p>the ‘image’ information.</p>
+</dd> </dl>
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>Source</h3>
+
+<p>See references.
+</p>
+
+
+<h3>References</h3>
+
+<p>Digital Imaging and Communications in Medicine (DICOM)<br><a href="http://medical.nema.org">http://medical.nema.org</a><br><a href="http://en.wikipedia.org/wiki/Digital_Imaging_and_Communications_in_Medicine">http://en.wikipedia.org/wiki/Digital_Imaging_and_Communications_in_Medicine</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>parseDICOMHeader</code>, <code>readDICOMFile</code>.
+</p>
+
+
+</div>

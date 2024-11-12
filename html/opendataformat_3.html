@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>docu_odf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get documentation from R data frame.</h2>
+
+<h3>Description</h3>
+
+<p>Get access to information about the dataset
+and variables via the R-Studio Viewer or the web browser.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">docu_odf(
+  input,
+  languages = "current",
+  style = "viewer",
+  replace_missing_language = FALSE,
+  variables = "yes"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>R data frame (df) or variable from an R data frame (df$var).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>languages</code></td>
+<td>
+<p>Select the language in which the descriptions and labels of
+the data will be displayed.
+</p>
+
+<ul>
+<li>
+<p> By default the language that is set to current is displayed
+(<code>languages = "current"</code>).
+</p>
+</li>
+<li>
+<p> The default-option chooses either the default language(if labels and
+</p>
+</li>
+<li>
+<p> descriptions without a language tag exist)Otherwise the current language
+</p>
+</li>
+<li>
+<p> is displayed.
+(<code>languages = "default"</code>).
+</p>
+</li>
+<li>
+<p> You can choose to view all available language variants by selecting
+(<code>languages = "all"</code>),
+</p>
+</li>
+<li>
+<p> or you can select the language by language code, e.g.
+<code>languages = "en"</code>.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>Selects where the output should be displayed (console ore
+viewer).By default the metadata information is displayed in the viewer if the
+viewer is available.
+(<code>style = "console"</code>)
+(<code>style = "print"</code>)
+</p>
+
+<ul>
+<li>
+<p> You can choose to display the code in both the console and the viewer
+(<code>style = "both"</code>)
+(<code>style = "all"</code>)
+</p>
+</li>
+<li>
+<p> You can choose to display the code only in the viewer
+(<code>style = "viewer"</code>)
+(<code>style = "html"</code>)
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replace_missing_language</code></td>
+<td>
+<p>If only one language is specified in
+languages and replace_missing_language is set to TRUE. In case of a
+missing label or description, the default or english label/description
+is displayed additionally (if one of these is available).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variables</code></td>
+<td>
+<p>Indicate whether a list with all the variables should be
+displayed with the dataset metadata.
+If the input is a variable/column, the variables-argument will be ignored.
+Set (<code>variables = "yes"</code>) to display the list of variables.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Documentation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># get example data from the opendataformat package
+df &lt;- get(data("data_odf"))
+
+# view documentation about the dataset in the language that is currently set
+docu_odf(df)
+
+# view information from a selected variable in language "en"
+docu_odf(df$bap87, languages = "en")
+
+# view dataset information for all available languages
+docu_odf(df, languages = "all")
+
+# print information to the R console
+docu_odf(df$bap87, style = "print")
+
+# print information to the R viewer
+docu_odf(df$bap87, style = "viewer")
+
+# Since the label for language de is missing, in this case the
+# english label will be displayed additionally.
+attributes(df$bap87)["label_de"] &lt;- ""
+docu_odf(df$bap87, languages = "de", replace_missing_language = TRUE)
+
+</code></pre>
+
+
+</div>

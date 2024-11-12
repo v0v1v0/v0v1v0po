@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fd2coef</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Compute the coefficients of functional data in a B-spline basis
+</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the coefficients of functional data in a B-spline basis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fd2coef(x, basis, byrow = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>matrix of functional data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>basis</code></td>
+<td>
+<p>object created by <code>create.basis</code></p>
+</td>
+</tr>
+</table>
+<p>.
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+<p>are the functional data stored in rows (TRUE) or in columns (FALSE)?</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A matrix of B-spline coefficients stored in the same format (row or columns) as functional data.
+</p>
+
+
+<h3>Note</h3>
+
+<p>In view of (online or offline) functional PCA, 
+the coefficients are smoothed and premultiplied by <code>M^{1/2}</code>, 
+with <code>M</code> the Gram matrix associated to the B-spline matrix.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>create.basis</code>, <code>coef2fd</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 100 # number of curves
+d &lt;- 500 # number of observation points
+grid &lt;- (1:d)/d # observation points
+p &lt;- 50 # number of B-spline basis functions 
+
+# Simulate Brownian motion
+x &lt;- matrix(rnorm(n*d,sd=1/sqrt(d)),n,d)
+x &lt;- t(apply(x,1,cumsum))
+
+# Create B-spline basis 
+mybasis &lt;- create.basis(grid, p, 1e-4)
+
+# Compute smooth basis coefficients 
+beta &lt;- fd2coef(x, mybasis)
+
+# Recover smooth functional data
+x.smooth &lt;- coef2fd(beta, mybasis) 
+	
+# Standard PCA and Functional PCA
+pca &lt;- prcomp(x)
+fpca &lt;- prcomp(beta)
+</code></pre>
+
+
+</div>

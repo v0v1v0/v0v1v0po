@@ -1,0 +1,204 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stat_center</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute geometric centers and spreads for ordination factors</h2>
+
+<h3>Description</h3>
+
+<p>Compute geometric centers and spreads for ordination factors
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stat_center(
+  mapping = NULL,
+  data = NULL,
+  geom = "point",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...,
+  fun.data = NULL,
+  fun.center = NULL,
+  fun.min = NULL,
+  fun.max = NULL,
+  fun.args = list()
+)
+
+stat_star(
+  mapping = NULL,
+  data = NULL,
+  geom = "segment",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  ...,
+  fun.data = NULL,
+  fun.center = NULL,
+  fun.args = list()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mapping</code></td>
+<td>
+<p>Set of aesthetic mappings created by <code>aes()</code>. If specified and
+<code>inherit.aes = TRUE</code> (the default), it is combined with the default mapping
+at the top level of the plot. You must supply <code>mapping</code> if there is no plot
+mapping.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data to be displayed in this layer. There are three
+options:
+</p>
+<p>If <code>NULL</code>, the default, the data is inherited from the plot
+data as specified in the call to <code>ggplot()</code>.
+</p>
+<p>A <code>data.frame</code>, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+<code>fortify()</code> for which variables will be created.
+</p>
+<p>A <code>function</code> will be called with a single argument,
+the plot data. The return value must be a <code>data.frame</code>, and
+will be used as the layer data. A <code>function</code> can be created
+from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geom</code></td>
+<td>
+<p>The geometric object to use to display the data, either as a
+<code>ggproto</code> <code>Geom</code> subclass or as a string naming the geom stripped of the
+<code>geom_</code> prefix (e.g. <code>"point"</code> rather than <code>"geom_point"</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>position</code></td>
+<td>
+<p>Position adjustment, either as a string naming the adjustment
+(e.g. <code>"jitter"</code> to use <code>position_jitter</code>), or the result of a call to a
+position adjustment function. Use the latter if you need to change the
+settings of the adjustment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.legend</code></td>
+<td>
+<p>logical. Should this layer be included in the legends?
+<code>NA</code>, the default, includes if any aesthetics are mapped.
+<code>FALSE</code> never includes, and <code>TRUE</code> always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inherit.aes</code></td>
+<td>
+<p>If <code>FALSE</code>, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. <code>borders()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>ggplot2::layer()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun.data, fun.center, fun.min, fun.max, fun.args</code></td>
+<td>
+<p>Functions and arguments
+treated as in <code>ggplot2::stat_summary()</code>, with <code>fun.center</code>, <code>fun.min</code>, and
+<code>fun.max</code> behaving as <code>fun.y</code>, <code>fun.ymin</code>, and <code>fun.ymax</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A ggproto layer.
+</p>
+
+
+<h3>Biplot layers</h3>
+
+<p><code>ggbiplot()</code> uses <code>ggplot2::fortify()</code> internally to produce a single data
+frame with a <code>.matrix</code> column distinguishing the subjects (<code>"rows"</code>) and
+variables (<code>"cols"</code>). The stat layers <code>stat_rows()</code> and <code>stat_cols()</code> simply
+filter the data frame to one of these two.
+</p>
+<p>The geom layers <code style="white-space: pre;">⁠geom_rows_*()⁠</code> and <code style="white-space: pre;">⁠geom_cols_*()⁠</code> call the corresponding
+stat in order to render plot elements for the corresponding factor matrix.
+<code style="white-space: pre;">⁠geom_dims_*()⁠</code> selects a default matrix based on common practice, e.g.
+points for rows and arrows for columns.
+</p>
+
+
+<h3>Ordination aesthetics</h3>
+
+<p>The convenience function <code>ord_aes()</code> can be used to incorporate all
+coordinates of the ordination model into a statistical transformation. It
+maps the coordinates to the custom aesthetics <code>..coord1</code>, <code>..coord2</code>, etc.
+</p>
+<p>Some transformations, e.g. <code>stat_center()</code>, are commutative with projection
+to the 'x' and 'y' coordinates. If they detect aesthetics of the form
+<code style="white-space: pre;">⁠..coord[0-9]+⁠</code>, then <code>..coord1</code> and <code>..coord2</code> are converted to <code>x</code> and <code>y</code>
+while any remaining are ignored.
+</p>
+<p>Other transformations, e.g. <code>stat_spantree()</code>, yield different results in a
+planar biplot when they are computer before or after projection. If such a
+stat layer detects these aesthetics, then the lot of them are used in the
+transformation.
+</p>
+<p>In either case, the stat layer returns a data frame with position aesthetics
+<code>x</code> and <code>y</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other stat layers: 
+<code>stat_chull()</code>,
+<code>stat_cone()</code>,
+<code>stat_scale()</code>,
+<code>stat_spantree()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># scaled PCA of Anderson iris measurements
+iris[, -5] %&gt;%
+  princomp(cor = TRUE) %&gt;%
+  as_tbl_ord() %&gt;%
+  mutate_rows(species = iris$Species) %&gt;%
+  print() -&gt; iris_pca
+
+# row-principal biplot with centroid-based stars
+iris_pca %&gt;%
+  ggbiplot(aes(color = species)) +
+  theme_bw() +
+  scale_color_brewer(type = "qual", palette = 2) +
+  stat_rows_star(alpha = .5, fun.center = "mean") +
+  geom_rows_point(alpha = .5) +
+  stat_rows_center(fun.center = "mean", size = 4, shape = 1L) +
+  ggtitle(
+    "Row-principal PCA biplot of Anderson iris measurements",
+    "Segments connect each observation to its within-species centroid"
+  )
+</code></pre>
+
+
+</div>

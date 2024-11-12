@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ORCME</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Order restricted clustering for dose-response trends in microarray experiments</h2>
+
+<h3>Description</h3>
+
+<p>The function performs delta-clustering of a microarray data. It can be used for
+clustering of both the time-course or dose-response microarray data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ORCME(DRdata, lambda, phi, robust=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>DRdata</code></td>
+<td>
+<p>matrix of a microarray data with rows corresponding to genes and columns 
+corresponding to time points or different doses</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>assumed proportion of coherence relative to the observed data, 
+it ranges between 0 and 1. A lambda value of 1 considers the observed data as a 
+cluster and lambda value of 0 finds every possible pattern within the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi</code></td>
+<td>
+<p>minimum number of genes in a cluster</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>robust</code></td>
+<td>
+<p>logical variable that determines, if algorithm uses robust version based on median polish and 
+absolute values, instead of mean square error. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The matrix of classification into clusters: each row represents one gene and columns found clusters. The matrix consist of the Booleans values, in each row there is only one of them <code>TRUE</code> which means that the gene was classified into the respective cluster.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adetayo Kasim, Martin Otava and Tobias Verbeke</p>
+
+
+<h3>References</h3>
+
+<p>Lin D., Shkedy Z., Yekutieli D., Amaratunga D., and Bijnens, 
+L. (editors). (2012) Modeling Dose-response Microarray Data in EarlyDrug Development Experiments Using 
+R. Springer.
+</p>
+<p>Cheng, Y. and Church, G. M. (2000). Biclustering of expression data. In:
+Proceedings of the Eighth International Conference on Intelligent Systems for
+Molecular Biology, 1, 93-103.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>monotoneDirection</code>, <code>plotIsomeans</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  data(doseData)
+  data(geneData)
+
+  dirData &lt;- monotoneDirection(geneData = geneData,doseData = doseData)
+  incData &lt;- as.data.frame(dirData$incData)
+  
+  
+  print(orcme &lt;- ORCME(DRdata=incData,lambda=0.15,phi=2))
+  orcmeRobust &lt;- ORCME(DRdata=incData,lambda=0.15,phi=2, robust=TRUE)
+  
+  # number of genes within cluster
+  colSums(orcme)
+  colSums(orcmeRobust)
+  
+</code></pre>
+
+
+</div>

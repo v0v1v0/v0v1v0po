@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>set_couleur_</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modify the colors of 'leaflet' map's analysis</h2>
+
+<h3>Description</h3>
+
+<p>Modify the colors of 'leaflet' map's analysis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">set_couleur_ronds(map, colorPos = "#EB617F", colorNeg = "#286AC7",
+map_leaflet = NULL)
+
+set_couleur_classes(map, stylePalette = "defaut", palettePos = NULL,
+paletteNeg = NULL, colBorder = "white", map_leaflet = NULL)
+
+set_couleur_typo(map, paletteTypo = NULL, colBorder = "white", map_leaflet =
+NULL)
+
+set_couleur_joignantes(map, colFleche = "#286AC7", colBorder = "black",
+map_leaflet = NULL)
+
+set_couleur_saphirs(map, colEntree = "#EB617F", colSortie = "#286AC7",
+colBorder = "black", map_leaflet = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>objet leaflet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorPos</code></td>
+<td>
+<p>chaine de caracteres (character). Couleur nommee ou
+hexadecimal. Par defaut "#EB617F".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorNeg</code></td>
+<td>
+<p>chaine de caracteres (character). Couleur nommee ou
+hexadecimal. Par defaut "#286AC7".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stylePalette</code></td>
+<td>
+<p>chaine de caracteres (character). A choisir parmi
+"defaut", "Insee_Rouge", "Insee_Jaune", "Insee_Bleu", "Insee_Turquoise",
+"Insee_Vert", "Insee_Violet" ou "Insee_Gris" (voir
+'affiche_palette(nomPalette)').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palettePos</code></td>
+<td>
+<p>vecteur de caracteres (character). Specifier le vecteur de
+couleurs (nommees ou hexadecimal) des valeurs positives (au choix). Par
+defaut a NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paletteNeg</code></td>
+<td>
+<p>vecteur de caracteres (character). Specifier le vecteur de
+couleurs (nommees ou hexadecimal) des valeurs negatives (au choix). Par
+defaut a NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paletteTypo</code></td>
+<td>
+<p>vecteur de caracteres (character). Specifier le vecteur
+de couleurs (nommees ou hexadecimal) de la typologie (au choix). Par defaut
+a NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colBorder</code></td>
+<td>
+<p>chaine de caracteres (character). Couleur nommee (par
+exemple "white") ou hexadecimal (par exemple "#FFFFFF"). Par defaut "white"
+pour classes et typo, "black" pour joignantes et saphirs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colFleche</code></td>
+<td>
+<p>chaine de caracteres (character). Couleur nommee ou
+hexadecimal. Par defaut "#286AC7".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colEntree</code></td>
+<td>
+<p>chaine de caracteres (character). Couleur nommee ou
+hexadecimal. Par defaut "#EB617F".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colSortie</code></td>
+<td>
+<p>chaine de caracteres (character). Couleur nommee ou
+hexadecimal. Par defaut "#286AC7".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map_leaflet</code></td>
+<td>
+<p>objet leaflet. Pour l'integration des fonctions leaflet
+dans les applications shiny (cf vignette). Par defaut a NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Les palettes proposées pour l'analyse en classes sont celles
+utilisées par la Charte Graphique INSEE. Utilisez la fonction
+affiche_palette(nomPalette) pour visualiser les couleurs d'une palette.
+L'argument 'nomPalette' peut prendre comme valeur : "defaut", "Insee_Rouge",
+"Insee_Jaune", "Insee_Bleu", "Insee_Turquoise", "Insee_Vert", "Insee_Violet"
+ou "Insee_Gris".
+</p>
+<p>Le code des couleurs est le code hexadécimal. Pour récupérer les codes
+hexadécimaux des différentes palettes proposées : data("palettes_insee")
+</p>
+
+
+<h3>Value</h3>
+
+<p>Retourne un objet de type leaflet.
+</p>
+
+
+<h3>References</h3>
+
+<p>Un convertisseur de couleurs pour visualiser une couleur a
+partir de son nom, son code hexadecimal ou RGB :
+http://www.proftnj.com/RGB3.htm
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>recup_palette,</code>
+</p>
+<p><code>leaflet_ronds, leaflet_classes,
+leaflet_ronds_classes, leaflet_classes_ronds,
+leaflet_typo,</code>
+</p>
+<p><code>leaflet_oursins, leaflet_joignantes,
+leaflet_saphirs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("depm")
+
+data("donnees_monoloc")
+
+# Ronds proportionnels
+map &lt;- leaflet_ronds(data = donnees_monoloc, fondMaille = depm, idData = "COD_DEP",
+varVolume = "POP_2015")
+map &lt;- set_couleur_ronds(map = map, colorPos = "orange")
+
+ map
+
+
+# Ronds proportionnels sur une analyse en classes
+map &lt;- leaflet_classes_ronds(data = donnees_monoloc, fondMaille = depm, idData = "COD_DEP",
+varVolume = "POP_2015", varRatio = "VAR_AN_MOY", nbClasses = 4)
+map &lt;- set_couleur_classes(map = map, stylePalette = "Insee_Rouge", colBorder = "black")
+
+ map
+
+
+data("donnees_biloc_saphirs")
+data("regm")
+
+# Fleches saphirs
+map &lt;- leaflet_saphirs(data = donnees_biloc_saphirs, fondMaille = regm, typeMaille = "REG",
+idDataDepart = "REG_DEPART", idDataArrivee = "REG_ARRIVEE",
+varFlux = "MIGR", largeurFlecheMax = 500, direction = "Ent")
+map &lt;- set_couleur_saphirs(map = map, colEntree = "#4BB375", colBorder = "grey")
+
+ map
+
+
+</code></pre>
+
+
+</div>

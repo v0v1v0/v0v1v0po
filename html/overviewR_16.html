@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>overview_tab</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>overview_tab</h2>
+
+<h3>Description</h3>
+
+<p>Provides an overview table for the time and scope conditions of
+a data set. If a data.table object is provided, the function uses
+data.table's syntax to perform the evaluation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">overview_tab(
+  dat,
+  id,
+  time = list(year = NULL, month = NULL, day = NULL),
+  complex_date = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>A data frame or data table object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Scope (e.g., country codes or individual IDs)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>Time (e.g., time periods given by years, months, ...). There are three options to add a date variable: 1) Time can be a character vector containing **one** time variable, 2) a time variable following the YYYY-MM-DD format, or 3) or a list containing multiple time variables ('time = list(year = NULL, month = NULL, day = NULL)').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>complex_date</code></td>
+<td>
+<p>Boolean argument identifying if there is a more complex (list-wise) date_time parameter (FALSE is the default)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame object that contains a summary of a sample that
+can later be converted to a 'LaTeX' output using <code>overview_latex</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># With version 1 (and also 2):
+
+data(toydata)
+output_table &lt;- overview_tab(dat = toydata, id = ccode, time = year)
+
+# With version 3:
+overview_tab(dat = toydata, id = ccode, time = list(
+  year = toydata$year,
+  month = toydata$month, day = toydata$day
+), complex_date = TRUE)
+
+</code></pre>
+
+
+</div>

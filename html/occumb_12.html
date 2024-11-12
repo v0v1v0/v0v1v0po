@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>occumbData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Constructor for occumbData data class.</h2>
+
+<h3>Description</h3>
+
+<p><code>occumbData()</code> creates a data list compatible with the model fitting
+function <code>occumb()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">occumbData(y, spec_cov = NULL, site_cov = NULL, repl_cov = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A 3-D array of sequence read counts (<code>integer</code> values) that may
+have a <code>dimnames</code> attribute.
+The dimensions are ordered by species, site, and replicate.
+The data for missing replicates are represented by zero vectors.
+<code>NA</code>s are not allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spec_cov</code></td>
+<td>
+<p>A named list of species covariates.
+Each covariate can be a vector of continuous (<code>numeric</code>
+or <code>integer</code>) or discrete (<code>logical</code>,
+<code>factor</code>, or <code>character</code>) variables whose length
+is <code>dim(y)[1]</code> (i.e., the number of species).
+<code>NA</code>s are not allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>site_cov</code></td>
+<td>
+<p>A named list of site covariates.
+Each covariate can be a vector of continuous (<code>numeric</code>
+or <code>integer</code>) or discrete (<code>logical</code>,
+<code>factor</code>, or <code>character</code>) variables whose length
+is <code>dim(y)[1]</code> (i.e., the number of sites).
+<code>NA</code>s are not allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>repl_cov</code></td>
+<td>
+<p>A named list of replicate covariates.
+Each covariate can be a matrix of continuous (<code>numeric</code>
+or <code>integer</code>) or discrete (<code>logical</code> or
+<code>character</code>) variables with dimensions equal to
+<code>dim(y)[2:3]</code> (i.e., number of sites <code class="reqn">\times</code>
+number of replicates).
+<code>NA</code>s are not allowed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The element (i.e., covariate) names for <code>spec_cov</code>, <code>site_cov</code>, and
+<code>repl_cov</code> must all be unique.
+If <code>y</code> has a <code>dimnames</code> attribute, it is retained in the resulting
+<code>occumbData</code> object, and can be referenced in subsequent analyses.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An S4 object of the <code>occumbData</code> class.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate the smallest random dataset (2 species * 2 sites * 2 reps)
+I &lt;- 2 # Number of species
+J &lt;- 2 # Number of sites
+K &lt;- 2 # Number of replicates
+data &lt;- occumbData(
+    y = array(sample.int(I * J * K), dim = c(I, J, K)),
+    spec_cov = list(cov1 = rnorm(I)),
+    site_cov = list(cov2 = rnorm(J), cov3 = factor(1:J)),
+    repl_cov = list(cov4 = matrix(rnorm(J * K), J, K))
+)
+
+# A case for named y (with species and site names)
+y_named &lt;- array(sample.int(I * J * K), dim = c(I, J, K))
+dimnames(y_named) &lt;- list(c("common species", "uncommon species"),
+                          c("good site", "bad site"), NULL)
+data_named &lt;- occumbData(
+    y = y_named,
+    spec_cov = list(cov1 = rnorm(I)),
+    site_cov = list(cov2 = rnorm(J), cov3 = factor(1:J)),
+    repl_cov = list(cov4 = matrix(rnorm(J * K), J, K))
+)
+
+# A real data example
+data(fish_raw)
+fish &lt;- occumbData(
+    y = fish_raw$y,
+    spec_cov = list(mismatch = fish_raw$mismatch),
+    site_cov = list(riverbank = fish_raw$riverbank)
+)
+
+# Get an overview of the datasets
+summary(data)
+summary(data_named)
+summary(fish)
+</code></pre>
+
+
+</div>

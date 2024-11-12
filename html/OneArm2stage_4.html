@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>LRT</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Conduct the Interim or Final Analysis Using the One-Sample Log-Rank
+Test for Two-Stage TTE Trials</h2>
+
+<h3>Description</h3>
+
+<p>Performs the one-sample log-rank test (OSLR) for the time-to-event data from
+two-stage Phase II clinical trials assuming the failure time follows a
+Weibull distribution. This can be used for designs with either unrestricted
+or restricted follow-up .
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">LRT(shape, S0, x0, data)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>shape</code></td>
+<td>
+<p>shape parameter for the Weibull distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S0</code></td>
+<td>
+<p>the survival probability at a fixed time point x0 under the null
+hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x0</code></td>
+<td>
+<p>a fixed time point when the survival probability is S0 under null.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the time-to-event data for either the interim or final analysis
+from a two-stage survival trial, contains 2 variables:<br><em>time</em> the time period under observation before the time of
+interim analysis (for interim analysis) or during entire trial
+(for final analysis) for each patient.<br><em>status</em> the status indicator of patients (event = 1,
+censored  = 0).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><em>z</em> the OSLR test statistic for the interim or final analysis,
+depending on data used.<br><em>O</em> the observed number of events.<br><em>E</em> the expected number of events.
+</p>
+
+
+<h3>References</h3>
+
+<p>Wu, J, Chen L, Wei J, Weiss H, Chauhan A. (2020). Two-stage phase II survival trial design. Pharmaceutical Statistics. 2020;19:214-229. https://doi.org/10.1002/pst.1983
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dat&lt;- read.csv(system.file("extdata", "kj1_final.csv", package = "OneArm2stage"))
+LRT(shape=1, S0=0.62, x0=2, data=dat)
+# O       E       Z
+# 18.0000 16.3598 -0.4055
+</code></pre>
+
+
+</div>

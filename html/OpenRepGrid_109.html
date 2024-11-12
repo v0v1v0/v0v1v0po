@@ -1,0 +1,196 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>indexConflict3</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Conflict or inconsistency measure for grids (Bell, 2004) based on distances.</h2>
+
+<h3>Description</h3>
+
+<p>Measure of conflict or inconsistency as proposed by Bell (2004). The
+identification of conflict is based on distances rather than correlations as
+in other measures of conflict <code>indexConflict1()</code> and
+<code>indexConflict2()</code>. It assesses if the distances between all
+components of a triad, made up of one element and two constructs, satisfies
+the "triangle inequality" (cf. Bell, 2004). If not, a triad is regarded as
+conflictive. An advantage of the measure is that it can be interpreted not
+only as a global measure for a grid but also on an element, construct, and
+element by construct level making it valuable for detailed feedback. Also,
+differences in conflict can be submitted to statistical testing procedures.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">indexConflict3(
+  x,
+  p = 2,
+  e.out = NA,
+  e.threshold = NA,
+  c.out = NA,
+  c.threshold = NA,
+  trim = 20
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The power of the Minkowski distance. <code>p=2</code> (default) will result
+in euclidean distances, <code>p=1</code> in city block
+distances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.out</code></td>
+<td>
+<p>Numeric. A vector giving the indexes of the elements
+for which detailed stats (number of conflicts per element,
+discrepancies for triangles etc.) are prompted
+(default <code>NA</code>, i.e. no detailed stats for any element).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.threshold</code></td>
+<td>
+<p>Numeric. Detailed stats are prompted for those elements with a an
+attributable percentage to the overall conflicts
+higher than the supplied threshold
+(default <code>NA</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.out</code></td>
+<td>
+<p>Numeric. A vector giving the indexes of the constructs
+for which detailed stats (discrepancies for triangles etc.)
+are prompted (default <code>NA</code>, i. e. no detailed stats).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.threshold</code></td>
+<td>
+<p>Numeric. Detailed stats are prompted for those constructs with a an
+attributable percentage to the overall conflicts
+higher than the supplied threshold
+(default <code>NA</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>The number of characters a construct (element) is trimmed to (default is
+<code>10</code>). If <code>NA</code> no trimming is done. Trimming
+simply saves space when displaying the output.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Status:  working; output for euclidean and manhattan distance
+checked against Gridstat output. <br>
+TODO:    standardization and z-test for discrepancies;
+Index of Conflict Variation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list (invisibly) containing:
+</p>
+
+<ul>
+<li> <p><code>potential</code>: number of potential conflicts
+</p>
+</li>
+<li> <p><code>actual</code>: count of actual conflicts
+</p>
+</li>
+<li> <p><code>overall</code>: percentage of conflictive relations
+</p>
+</li>
+<li> <p><code>e.count</code>: number of involvements of each element in conflictive relations
+</p>
+</li>
+<li> <p><code>e.perc</code>: percentage of involvement of each element in total of conflictive relations
+</p>
+</li>
+<li> <p><code>c.count</code>: number of involvements of each construct in conflictive relation
+</p>
+</li>
+<li> <p><code>c.perc</code>: percentage of involvement of each construct in total of conflictive relations
+</p>
+</li>
+<li> <p><code>e.stats</code>: detailed statistics for prompted elements
+</p>
+</li>
+<li> <p><code>c.stats</code>: detailed statistics for prompted constructs
+</p>
+</li>
+<li> <p><code>e.threshold</code>: threshold percentage. Used by print method
+</p>
+</li>
+<li> <p><code>c.threshold</code>: threshold percentage. Used by print method
+</p>
+</li>
+<li> <p><code>enames</code>: trimmed element names. Used by print method
+</p>
+</li>
+<li> <p><code>cnames</code>: trimmed construct names. Used by print method
+</p>
+</li>
+</ul>
+<h3>output</h3>
+
+<p>For further control over the output see <code>print.indexConflict3()</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Bell, R. C. (2004). A new approach to measuring inconsistency
+or conflict in grids. <em>Personal Construct Theory &amp; Practice</em>, (1), 53-59.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See <code>indexConflict1()</code> and <code>indexConflict2()</code> for conflict measures based on triads of correlations.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># calculate conflicts
+indexConflict3(bell2010)
+
+# show additional stats for elements 1 to 3
+indexConflict3(bell2010, e.out = 1:3)
+
+# show additional stats for constructs 1 and 5
+indexConflict3(bell2010, c.out = c(1, 5))
+
+# finetune output
+## change number of digits
+x &lt;- indexConflict3(bell2010)
+print(x, digits = 4)
+
+## omit discrepancy matrices for constructs
+x &lt;- indexConflict3(bell2010, c.out = 5:6)
+print(x, discrepancies = FALSE)
+
+</code></pre>
+
+
+</div>

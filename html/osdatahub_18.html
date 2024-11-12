@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_ons_geom</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve ONS geographies</h2>
+
+<h3>Description</h3>
+
+<p>Query the Office for National Statistics online geography resources.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_ons_geom(ons_code, returnType = c("wkt", "geojson", "geos", "sf"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ons_code</code></td>
+<td>
+<p>(character) A single ONS code representing a statistical
+area.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnType</code></td>
+<td>
+<p>(character) Representation for the returned geometry.
+Choose <code>'wkt'</code> or <code>'geojson'</code> to return the geometry in
+Well-Known Text format or GeoJSON, respectively, <code>'geos'</code> to return an
+object of class <code>geos</code> or <code>'sf'</code> for a Simple Features object of
+class <code>sf</code>. Default is WKT format.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Office for National Statistics (ONS) maintains a source of
+official geographies for the UK, such as county boundaries, electoral
+wards, parishes, and census output areas. These boundaries are commonly
+used for data analysis, particularly of socio-economic factors. A full list
+of available ONS geographies can be found here:
+<a href="https://statistics.data.gov.uk:443/atlas/resource?uri=http://statistics.data.gov.uk/id/statistical-geography/K02000001">https://statistics.data.gov.uk:443/atlas/resource?uri=http://statistics.data.gov.uk/id/statistical-geography/K02000001</a>.
+</p>
+<p>When returning a <code>geos</code> object, the coordinate reference system
+attribute will be set to CRS code 84 by default and not to a full CRS
+definition. The <code>sf</code> package must be installed in order to return an
+object of class <code>sf</code>.
+</p>
+<p>Data from the ONS are provided under the terms of the Open Government
+Licence
+<a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/</a>.
+For more information, please see:
+<a href="https://www.ons.gov.uk/methodology/geography/licences">https://www.ons.gov.uk/methodology/geography/licences</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The coordinates of the polygon boundary in either Well-Known Text
+(WKT) format, GeoJSON format, an object of class <code>geos</code> or as a Simple
+Features object of class <code>sf</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Retrieve geography.
+geog &lt;- get_ons_geom("E05002470")
+
+
+</code></pre>
+
+
+</div>

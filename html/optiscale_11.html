@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>shepard</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Shepard diagram for opscale
+</h2>
+
+<h3>Description</h3>
+
+<p>Graph showing data (assumed quantitative) on vertical axis, optimally-scaled
+data on horizontal axis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">shepard(x, ...)
+
+shep.plot(x.quant, os.data, main.title = "Shepard Diagram")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>An object of class <code>opscale</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.quant</code></td>
+<td>
+
+<p>Data vector, assumed to be quantitative.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>os.data</code></td>
+<td>
+
+<p>Optimally-scaled data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main.title</code></td>
+<td>
+
+<p>Main title for graph.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Ignored
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>shepard()</code> and <code>shep.plot()</code> both
+produce an object of class <code>trellis</code>
+</p>
+
+
+<h3>Warning </h3>
+
+<p>If using <code>shep.plot()</code>,
+the Shepard diagram should be created using "raw" optimally scaled values.
+That is, the OS values should NOT be rescaled to the mean and standard
+deviation of the original qualitative data.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  ###   x1 is vector of qualitative data
+  ###   x2 is vector of quantitative values
+            x1 &lt;- c(1,1,1,1,2,2,2,3,3,3,3,3,3)     
+            x2 &lt;- c(3,2,2,2,1,2,3,4,5,2,6,6,4)     
+  ###   Optimal scaling, specifying that x1
+  ###   is ordinal-discrete, optimally scaled
+  ###   values are not rescaled
+     op.scaled &lt;- opscale(x.qual=x1, x.quant=x2,   
+                  level=2, process=1,
+                  rescale=FALSE)              
+  ###   Create Shepard diagram
+     shepard(op.scaled)
+  ###   Same results are produced by:
+     shep.plot(op.scaled$quant, op.scaled$os)       
+</code></pre>
+
+
+</div>

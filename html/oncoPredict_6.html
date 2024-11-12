@@ -1,0 +1,55 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>idwas</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>This function will test every drug against every CNV or somatic mutation for your cancer type.</h2>
+
+<h3>Description</h3>
+
+<p>This function will test every drug against every CNV or somatic mutation for your cancer type.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">idwas(drug_prediction, data, n = 10, cnv)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>drug_prediction</code></td>
+<td>
+<p>The drug prediction data. Must be a data frame. rownames are samples, colnames are drugs. Make sure sample names are of the same form as the sample names in your cnv or mutation data. e.g. if the rownames() are TCGA barcodes of the form TCGA-##-####-###, make sure your cnv/mutation data also uses samples in the form TCGA-##-####-###</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The cnv or mutation data. Must be a data frame. If you wish to use cnv data, use the output from map_cnv(), transpose it so that colnames() are samples. Or use data of similar form. If you wish to use mutation data, use the method for downloading mutation data outlined in the vignette, and make sure the TCGA barcodes use '-' instead of '.'; if you use another dataset (and don't download data from TCGA), make sure your data file includes the following columns: 'Variant_Classification', 'Hugo_Symbol', 'Tumor_Sample_Barcode'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The minimum number of samples you want CNVs or mutations to be amplified in. The default is 10 (arbitrarily chosen).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cnv</code></td>
+<td>
+<p>TRUE or FALSE. Indicate whether or not you would like to test cnv data. If TRUE, you will test cnv data. If FALSE, you will test mutation data.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Raw p-value and beta-values for cnv and somatic mutations.
+</p>
+
+
+</div>

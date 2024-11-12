@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>coef.OEFPIL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract model coefficients from OEFPIL</h2>
+
+<h3>Description</h3>
+
+<p>Function which extracts the estimated model coefficients from an object of class <code>"OEFPIL"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'OEFPIL'
+coef(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>"OEFPIL"</code> (a result of a call to <code>OEFPIL</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A named vector of estimated model coefficients extracted from an <code>"OEFPIL"</code> object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OEFPIL</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+##Creating a data file (using steam data from MASS library)
+library(MASS)
+steamdata &lt;- steam
+colnames(steamdata) &lt;- c("x","y")
+startsteam &lt;- list(b1 = 5, b2 = 8, b3 = 200)
+k &lt;- nrow(steamdata)
+CM &lt;- diag(rep(0.1,2*k))
+
+##Creating an OEFPIL object
+st1 &lt;- OEFPIL(steamdata, y ~ b1 * 10^(b2 * x/ (b3 + x)), startsteam, CM, useNLS = FALSE)
+
+##Use of coef function
+coef(st1)
+
+</code></pre>
+
+
+</div>

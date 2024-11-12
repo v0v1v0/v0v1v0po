@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oc_bbox</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List of bounding boxes for OpenCage queries</h2>
+
+<h3>Description</h3>
+
+<p>Create a list of bounding boxes for OpenCage queries.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oc_bbox(...)
+
+## S3 method for class 'numeric'
+oc_bbox(xmin, ymin, xmax, ymax, ...)
+
+## S3 method for class 'data.frame'
+oc_bbox(data, xmin, ymin, xmax, ymax, ...)
+
+## S3 method for class 'bbox'
+oc_bbox(bbox, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmin</code></td>
+<td>
+<p>Minimum longitude (also known as <code>min_lon</code>, <code>southwest_lng</code>,
+<code>west</code>, or <code>left</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ymin</code></td>
+<td>
+<p>Minimum latitude (also known as <code>min_lat</code>, <code>southwest_lat</code>,
+<code>south</code>, or <code>bottom</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmax</code></td>
+<td>
+<p>Maximum longitude (also known as <code>max_lon</code>, <code>northeast_lng</code>,
+<code>east</code>, or <code>right</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ymax</code></td>
+<td>
+<p>Maximum latitude (also known as <code>max_lat</code>, <code>northeast_lat</code>,
+<code>north</code>, or <code>top</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A <code>data.frame</code> containing at least 4 columns with <code>xmin</code>, <code>ymin</code>,
+<code>xmax</code>, and <code>ymax</code> values, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>A <code>bbox</code> object, see <code>sf::st_bbox</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of bounding boxes, each of class <code>bbox</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">oc_bbox(-5.63160, 51.280430, 0.278970, 51.683979)
+
+xdf &lt;-
+  data.frame(
+    place = c("Hamburg", "Hamburg"),
+    northeast_lat = c(54.0276817, 42.7397729),
+    northeast_lng = c(10.3252805, -78.812825),
+    southwest_lat = c(53.3951118, 42.7091669),
+    southwest_lng = c(8.1053284, -78.860521)
+  )
+oc_bbox(
+  xdf,
+  southwest_lng,
+  southwest_lat,
+  northeast_lng,
+  northeast_lat
+)
+
+# create bbox list column with dplyr
+library(dplyr)
+xdf %&gt;%
+  mutate(
+    bbox =
+      oc_bbox(
+        southwest_lng,
+        southwest_lat,
+        northeast_lng,
+        northeast_lat
+      )
+  )
+
+# create bbox list from a simple features bbox
+if (requireNamespace("sf", quietly = TRUE)) {
+  library(sf)
+  bbox &lt;- st_bbox(c(xmin = 16.1, xmax = 16.6, ymax = 48.6, ymin = 47.9),
+    crs = 4326
+  )
+  oc_bbox(bbox)
+}
+
+</code></pre>
+
+
+</div>

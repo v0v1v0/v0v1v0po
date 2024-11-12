@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grpracma</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A reorganization of the call to numDeriv grad() function.</h2>
+
+<h3>Description</h3>
+
+<p>Provides a wrapper for the numDeriv approximation to the
+gradient of a user supplied objective function <code>userfn</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">       grpracma(par, userfn, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>par</code></td>
+<td>
+<p>A vector of parameters to the user-supplied function <code>fn</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>userfn</code></td>
+<td>
+<p>A user-supplied function </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other data needed to evaluate the user function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Richardson method is used in this routine.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>grpracma</code> returns an approximation to the gradient of the function userfn
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">cat("Example of use of grpracma\n")
+require(numDeriv)
+myfn&lt;-function(xx, shift=100){
+    ii&lt;-1:length(xx)
+    result&lt;-shift+sum(xx^ii)
+}
+xx&lt;-c(1,2,3,4)
+ii&lt;-1:length(xx)
+print(xx)
+gn&lt;-grpracma(xx,myfn, shift=0)
+print(gn)
+ga&lt;-ii*xx^(ii-1)
+cat("compare to\n")
+print(ga)
+</code></pre>
+
+
+</div>

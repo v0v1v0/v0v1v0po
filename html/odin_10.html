@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>odin_parse</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse an odin model</h2>
+
+<h3>Description</h3>
+
+<p>Parse an odin model, returning an intermediate representation.
+The <code>odin_parse_</code> version is a "standard evaluation" escape
+hatch.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">odin_parse(x, type = NULL, options = NULL)
+
+odin_parse_(x, options = NULL, type = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An expression, character vector or filename with the odin
+code</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>An optional string indicating the the type of input -
+must be one of <code>expression</code>, <code>file</code> or <code>text</code> if
+provided.  This skips the type detection code used by odin and
+makes validating user input easier.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>odin options; see odin_options.  The
+primary options that affect the parse stage are <code>validate</code>
+and <code>pretty</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A schema for the intermediate representation is available in the
+package as <code>schema.json</code>.  It is subject to change at this
+point.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>odin_validate, which wraps this function
+where parsing might fail, and odin_build for
+building odin models from an intermediate representation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Parse a model of exponential decay
+ir &lt;- odin::odin_parse({
+  deriv(y) &lt;- -0.5 * y
+  initial(y) &lt;- 1
+})
+
+# This is odin's intermediate representation of the model
+ir
+
+# If parsing odin models programmatically, it is better to use
+# odin_parse_; construct the model as a string, from a file, or as a
+# quoted expression:
+code &lt;- quote({
+  deriv(y) &lt;- -0.5 * y
+  initial(y) &lt;- 1
+})
+
+odin::odin_parse_(code)
+</code></pre>
+
+
+</div>

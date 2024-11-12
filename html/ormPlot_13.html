@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.lrm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the prediction with confidence intervals</h2>
+
+<h3>Description</h3>
+
+<p>This function plots the model predictions given that all variables that are
+not included in the plot are kept constant. Hence it requires at least one
+variable to produce a plot.
+returns a <code>ggplot</code> object that can be further customized like any
+other <code>ggplot</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'lrm'
+plot(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object created by <code>Predict</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional parameters that will be passed to <code>Predict</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>ggplot</code> plot object
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Predict</code>, <code>datadist</code>, <code>orm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#load the libraries
+library(rms)
+library(ormPlot)
+
+#make the datadist
+dd&lt;-datadist(educ_data)
+options(datadist='dd')
+
+#create the model
+cran_model &lt;- orm(educ_3 ~ Rural + sex + max_SEP_3 + cran_rzs, data = educ_data)
+
+#plot the predictions of the model for varying one variable only
+plot(cran_model, cran_rzs)
+
+#customize the plotting varying all variables
+plot(cran_model, cran_rzs,
+      plot_cols = max_SEP_3,
+      plot_rows = c(Rural, sex),
+
+      #setting new x-label (optional)
+     xlab = "Cranial volume (residuals to age an birth date)",
+
+     #setting new facet labels (optional)
+     facet_labels = list(Rural = c("Urban", "Rural"),
+                          sex = c("Boys","Girls"))
+     )
+</code></pre>
+
+
+</div>

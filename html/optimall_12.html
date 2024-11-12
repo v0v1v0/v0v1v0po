@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>merge_samples</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Merge Sampled Data based on IDs</h2>
+
+<h3>Description</h3>
+
+<p>In an object of class <code>"Mutiwave"</code>, <code>merge_samples</code> creates
+a dataframe in the <code>"data"</code> slot of the specified wave by merging
+the dataframe in the <code>"sampled data"</code> slot with the dataframe in
+the <code>"data"</code> slot of the previous wave.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">merge_samples(
+  x,
+  phase,
+  wave,
+  id = NULL,
+  phase_sample_ind = "sampled_phase",
+  wave_sample_ind = "sampled_wave",
+  include_probs = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class <code>"Multiwave"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phase</code></td>
+<td>
+<p>A numeric value specifying the phase of the
+Multiwave object that
+the specified wave is in. Cannot be phase 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wave</code></td>
+<td>
+<p>A numeric value specifying the wave of the Multiwave
+object that the merge should be
+performed in. This wave must have a valid dataframe in the
+<code>"sampled data"</code> slot. The previous wave, taken as the final
+wave of the previous phase if <code>wave</code> = 1, must have a valid
+dataframe in the <code>"data"</code> slot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>A character value specifying the name of the column holding unit
+ids. Taken from wave, phase, or overall metadata (searched for in that
+order) if <code>NULL</code>. Defaults to <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phase_sample_ind</code></td>
+<td>
+<p>a character value specifying the name of the column
+that should hold the indicator of whether each unit has already been sampled
+in the current <em>phase</em>. The specified phase number will be appended
+to the end of the given character name. Defaults to "sampled_phase".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wave_sample_ind</code></td>
+<td>
+<p>a character value specifying the name of the column
+that should hold the indicator of whether each unit has already been sampled
+in the current <em>wave</em>. The specified phase and wave numbers separated
+by "." will be appended o the end of the given character name.
+If FALSE, no such column is created. Defaults to "sampled_wave".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_probs</code></td>
+<td>
+<p>A logical value. If TRUE, looks for "probs" in
+the <code>design_data</code> slot and includes the corresponding sampling
+probability for each element sampled in the current wave in the merged data
+in a column named "sampling_prob". If this column already exists, it keeps
+the existing column and adds (or replaces) the values for units sampled in
+the current wave. Returns an error if specified but
+<code>wave_sample_wave</code> is FALSE.
+Defaults to NULL, which looks for "probs" argument in
+metadata and does not create (or add to existing) "sampling_prob" column if
+none is found.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Columns in <code>"sampled_data"</code> that do not match names of the
+<code>"data"</code> from the previous wave will be added as new columns in
+the output dataframe. All ids that do not appear in
+<code>"sampled_data"</code> will receive NA values for these new variables.
+</p>
+<p>If a column name in the <code>"sampled_data"</code> matches a column name in
+the <code>"data"</code> slot of the previous wave, these columns will be
+merged into one column with the same name in the output dataframe.
+For ids that have non-missing values in both columns of the merge,
+the value from <code>"sampled_data"</code> will overwrite the previous value
+and a warning will be printed. All ids present in the <code>"data"</code> from the
+previous wave but missing from <code>"sampled_data"</code> will be given NA values
+for the newly merged variables.
+</p>
+<p>If columns with the name produced by <code>phase_sample_ind</code> or
+<code>wave_sample_ind</code> already exist, they will be overwritten.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A Multiwave object with the merged dataframe in the
+<code>"data"</code> slot of the specified wave.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(datasets)
+iris &lt;- data.frame(iris, id = 1:150)
+
+MySurvey &lt;- multiwave(phases = 2, waves = c(1, 3))
+set_mw(MySurvey, phase = 1, slot = "data") &lt;-
+  data.frame(dplyr::select(iris, -Sepal.Width))
+set_mw(MySurvey, phase = 2, wave = 1, slot = "sampled_data") &lt;-
+  dplyr::select(iris, id, Sepal.Width)[1:40, ]
+set_mw(MySurvey, phase = 2, wave = 1, slot = "samples") &lt;-
+   list(ids = 1:40)
+MySurvey &lt;- merge_samples(MySurvey, phase = 2, wave = 1, id = "id")
+</code></pre>
+
+
+</div>

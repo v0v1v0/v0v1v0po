@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>estimate_band_W</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate bandwidth</h2>
+
+<h3>Description</h3>
+
+<p>Estimate the bandwidth for the Markov KDE.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">estimate_band_W(
+  tree.discr,
+  data.path,
+  band.width = c("bw.nrd0", "bw.nrd0", "bw.ucv", "bw.bcv", "bw.SJ")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tree.discr</code></td>
+<td>
+<p>simmap or phylo object. A discretized tree using the 'discr_Simmap' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.path</code></td>
+<td>
+<p>list. A list of path data obtained from the 'make_data_NHPP_KDE_Markov_kernel' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>band.width</code></td>
+<td>
+<p>character. Bandwidth selectors for the KDE, as in density.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A numeric vector.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sergei Tarasov
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("hym_hm", "hym_tree")
+# Get reference tree.
+tree_discr &lt;- discr_Simmap(hym_tree, res = 200)
+# Get hamming data from the head characters.
+hm &lt;- hym_hm$head
+# Make NHPP path data.
+nhpp_psd &lt;- make_data_NHPP_KDE_Markov_kernel(hm, add.psd = TRUE)
+# Calculate bandwidth.
+bdw &lt;- estimate_band_W(tree_discr, nhpp_psd, band.width = "bw.nrd0")
+mean(bdw)
+
+</code></pre>
+
+
+</div>

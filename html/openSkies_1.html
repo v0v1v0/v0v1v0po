@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ADSBDecoder</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>An object of class <code>adsbDecoder</code> object representing a decoder used 
+to decode ADS-B v2 messages</h2>
+
+<h3>Description</h3>
+
+<p><code>R6Class</code> object of class <code>adsbDecoder</code> representing a decoder 
+used to decode ADS-B v2 messages. Provides methods for decoding a single message 
+or a batch. Additionally, it includes methods for transforming hex strings into 
+bits vectors and decoding some individual fields. Decoded messages are returned 
+as lists with each decoded field.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ADSBDecoder
+</code></pre>
+
+
+<h3>Fields</h3>
+
+
+<dl>
+<dt><code>lastOddPosition</code></dt>
+<dd>
+<p>Last ground or airborne position message decoded with 
+<code>decodeGroundPositionMessage</code> or <code>decodeAirbornePositionMessage</code>
+</p>
+</dd>
+<dt><code>lastEvenPosition</code></dt>
+<dd>
+<p>Last ground or airborne position message decoded with 
+<code>decodeGroundPositionMessage</code> or <code>decodeAirbornePositionMessage</code>
+</p>
+</dd>
+</dl>
+<h3>Methods</h3>
+
+
+<dl>
+<dt>
+<code>hexToBits(hex)</code>
+</dt>
+<dd>
+<p>Transform a hexadecimal string into its corresponding bits representation, with higher 
+bits in the first positions.
+</p>
+</dd>
+</dl>
+<p>,
+</p>
+<dl>
+<dt>
+<code>decodeCPR(cprLatEven, cprLonEven, cprLatOdd, cprLonOdd, isAirborne=TRUE)</code>
+</dt>
+<dd>
+<p>Decodes a pair of CPR-encoded positions given as longitudes and latitudes,
+corresponding to a pair of even and odd messages, obtaining the actual positions
+for both. The isAirborne argument indicates whether or not the CPR-encoded positions correspond to 
+isAirborne position messages or not (ground position messages). The result is given as a vector with
+the decoded positions for both the even and odd messages, in the following order: even latitude, 
+even longitude, odd latitude, odd longitude.
+</p>
+</dd>
+</dl>
+<p>,
+</p>
+<dl>
+<dt>
+<code>decodeMessage(message)</code>
+</dt>
+<dd>
+<p>Decodes a single ADS-B v2 message in the form of a bits vector (higher bits 
+in the first positions). The last even and odd positional messages are cached to
+decode following positional messages. The following message types are supported: 
+aircraft identification, airborne position, ground position, airborne velocity,
+and operation status.
+</p>
+</dd>
+</dl>
+<p>,
+</p>
+<dl>
+<dt>
+<code>decodeMessages(messages)</code>
+</dt>
+<dd>
+<p>Decodes several ADS-B v2 messages in the form of a list of bits vector (higher bits 
+in the first positions). The following message types are supported: aircraft 
+identification, airborne position, ground position, airborne velocity, and operation
+status.
+</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Decode three messages, using both individual decoding and batch decoding. 
+# The two first messages contain the airborne position.
+# The third one, the aircraft identification
+
+msg0 &lt;- ADSBDecoder$hexToBits("8D40621D58C386435CC412692AD6")
+msg1 &lt;- ADSBDecoder$hexToBits("8D40621D58C382D690C8AC2863A7")
+msg2 &lt;- ADSBDecoder$hexToBits("8D4840D6202CC371C32CE0576098")
+
+decoded0 &lt;- ADSBDecoder$decodeMessage(msg0)
+decoded1 &lt;- ADSBDecoder$decodeMessage(msg1)
+decoded2 &lt;- ADSBDecoder$decodeMessage(msg2)
+
+decodedAll &lt;- ADSBDecoder$decodeMessages(list(msg0, msg1, msg2))
+</code></pre>
+
+
+</div>

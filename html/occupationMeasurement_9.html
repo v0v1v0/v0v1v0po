@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_app_settings</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create app_settings.</h2>
+
+<h3>Description</h3>
+
+<p>This is the primary and most convenient way of configuring the app.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_app_settings(
+  save_to_file,
+  suggestion_type = "auxco-1.2.x",
+  default_num_suggestions = 5,
+  require_respondent_id = FALSE,
+  warn_before_leaving = FALSE,
+  skip_followup_types = c(),
+  response_output_dir = file.path("output", "responses"),
+  handle_data = NULL,
+  get_job_suggestion_params = NULL,
+  display_page_ids = TRUE,
+  default_tense = "present",
+  default_extra_instructions = "on",
+  verbose = TRUE,
+  .validate = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>save_to_file</code></td>
+<td>
+<p>Should responses be saved as files in
+response_output_dir? Defaults to use the SAVE_TO_FILE environment variable.
+We recommend setting this to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suggestion_type</code></td>
+<td>
+<p>Which type of suggestion to use / provide.
+Possible options are "auxco-1.2.x" and "kldb-2010".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default_num_suggestions</code></td>
+<td>
+<p>The number of suggestions to generate and
+display to users. Accepts all positive integers.
+Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>require_respondent_id</code></td>
+<td>
+<p>Are respondent_ids required?
+Defaults to FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn_before_leaving</code></td>
+<td>
+<p>Should users be warned that their progress will
+be lost upon leaving the site? Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip_followup_types</code></td>
+<td>
+<p>A vector of strings corresponding to the
+question_type of followup_question that should be skipped. Allowed '
+values: c("anforderungsniveau", "aufsicht", "spezialisierung", "sonstige")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_output_dir</code></td>
+<td>
+<p>Path to the directory in which to store data
+from the app. Defaults to <code style="white-space: pre;">⁠./output/responses/⁠</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>handle_data</code></td>
+<td>
+<p>Callback function to handle data from the app.
+This setting takes a function that get's passed 3 parameters:
+table_name (A reference name indicating which data to save),
+data (A dataframe of data to save), session (the user's current session).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get_job_suggestion_params</code></td>
+<td>
+<p>List of parameters to pass to
+get_job_suggestion. Refer to <code>get_job_suggestions()</code> for a list of
+supported parameters. Note that the parameter aggregate_score_threshold
+needs to be set on <code>page_first_freetext()</code> or <code>page_second_freetext()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>display_page_ids</code></td>
+<td>
+<p>Whether <code>page_ids</code> should be displayed within the
+questionnaires.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default_tense</code></td>
+<td>
+<p>We may not always want to ask for the current
+occupation, but maybe also for the previous occupation in case of
+pensioners etc. with a value of "past".
+Possible values are "present" (default), "past".
+This setting can be overwritten on a session-by-session basis with the
+URL-Query parameter "tense".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default_extra_instructions</code></td>
+<td>
+<p>Display additional instructions for e.g.
+an interviewer conducting an interview.
+Possible values are "on" (default), "off".
+This setting can be overwritten on a session-by-session basis with the
+URL-Query parameter "extra_instructions".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Should additional output be printed when running?
+Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.validate</code></td>
+<td>
+<p>Whether the created app_settings should be validated.
+Defaults to TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of app_settings.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+app_settings &lt;- create_app_settings(
+  # Important to save results from the app
+  save_to_file = TRUE,
+  require_respondent_id = TRUE
+)
+</code></pre>
+
+
+</div>

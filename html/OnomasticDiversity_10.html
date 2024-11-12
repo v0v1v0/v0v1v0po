@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fMenhinick</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate the Menhinick's diversity index </h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the Menhinick's diversity index introduced by Edward F. Menhinick. It is a method for quantifying species biodiversity that can be adapted to the context of onomastic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fMenhinick(x, s, n, location)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> dataframe which contains the number of species and population for each location.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p> name of a variable which represents number of species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p> name of a variable which represents total number of individuals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> name of a variable which represents represents the grouping element.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a community <code class="reqn">i</code>, the Menhinick's diversity index is defined by
+<code class="reqn">R_2 = \frac{s_i}{\sqrt{N_i}}</code>, where <code class="reqn">s_i</code> represents the number of species (richness) and <code class="reqn">N_i</code> represents the total number of  individuals in all <code class="reqn">s_i</code>.
+</p>
+<p>In onomastic context, <code class="reqn">N_i</code> denotes the number of  individuals in region  (<code class="reqn">\approx</code> community diversity context) <code class="reqn">i</code> and <code class="reqn">s_i</code> represents the total number of surnames.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element, for example the communities / regions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>menhinick</code></td>
+<td>
+<p> the value of the Menhinick's diversity index.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Menhinick E.F. (1964) A comparison of some species-individuals diversity indices applied to samples of field insects. <em>Ecology</em>, <b>45</b>, 859–861.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fMargalef</code>,
+<code>fPielou</code>,
+<code>fShannon</code>, 
+<code>fSheldon</code>, 
+<code>fSimpson</code>, 
+<code>fSimpsonInf</code>, 
+<code>fGeneralisedMean</code>, <code>fGeometricMean</code>, 
+<code>fHeip</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(sqldf)
+data(surnamesgal14)
+
+apes2=sqldf('select  muni, count(surname) as ni,
+sum(number) as population from surnamesgal14
+group by muni;')
+
+result = fMenhinick(x= apes2, s="ni", n="population",
+location  = "muni")
+result
+
+data(namesmengal16)
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from namesmengal16
+group by muni;')
+
+result = fMenhinick(x= names2, s="ni", n="population",
+location  = "muni")
+result
+
+data(nameswomengal16)
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from nameswomengal16
+group by muni;')
+
+result = fMenhinick(x= names2, s="ni", n="population",
+location  = "muni")
+result
+</code></pre>
+
+
+</div>

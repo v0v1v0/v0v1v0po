@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>octo900.presentStatic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Present static on O900 (internal use)</h2>
+
+<h3>Description</h3>
+
+<p>Implementation of opiPresent for the Octopus090 machine.
+Version for opiStaticStimulus.
+</p>
+<p>This is for internal use only. Use <code>opiPresent()</code> with
+<code>stim</code> as class <code>opiStaticStimulus</code> and you will get the Value back.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stim</code></td>
+<td>
+<p>Stimulus to present (a list, see details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nextStim</code></td>
+<td>
+<p>The stimulus to present after stim
+(it is not presented, but projector can move to it during response window)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>F310</code></td>
+<td>
+<p>If <code>F310</code> is <code>FALSE</code>, response is taken from internal button.
+If <code>F310</code> is <code>TRUE</code> , response is taken from external controller</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>stim</code> is a list containing at least the following 3 elements:
+</p>
+
+<ul>
+<li> <p><code>x</code>, x-coordinate in degrees (floating point) (range $[-30,30]$).
+</p>
+</li>
+<li> <p><code>y</code>, y-coordinate in degrees (floating point) (range $[-30,30]$).
+</p>
+</li>
+<li> <p><code>level</code> is luminance in cd/<code class="reqn">\mbox{m}^2</code>, and is rounded to the nearest
+whole dB for display (range 0 to 50). 0dB is 10000aps.
+</p>
+</li>
+</ul>
+<p>It can also contain:
+</p>
+
+<ul>
+<li> <p><code>responseWindow</code> from start of stimulus presentation in milliseconds (default is 1500).
+</p>
+</li>
+<li> <p><code>duration</code> of stimulus on in milliseconds (default 200).
+</p>
+</li>
+<li> <p><code>color</code> one of <code>.opi_env$O900$STIM_WHITE</code>, <code>.opi_env$O900$STIM_BLUE</code> or
+<code>.opi_env$O900$STIM_RED</code>.  It must be same as that initialised
+by <code>opiSetup()</code> or <code>opiInitialize()</code>
+(default <code>.opi_env$O900$STIM_WHITE</code>).
+</p>
+</li>
+<li> <p><code>size</code> of stimulus diameter in degrees (default Size III == 0.43).
+This is rounded to the nearest support Goldmann size.
+</p>
+</li>
+</ul>
+<p>If responses are taken from the F310 Controller then
+</p>
+
+<ul>
+<li>
+<p> If the L button is pressed, <code>seen</code> is set to 1.
+</p>
+</li>
+<li>
+<p> If the R button is pressed, <code>seen</code> is set to 2.
+</p>
+</li>
+<li>
+<p> If no button is pressed within <code>responseWindow</code>, then <code>seen</code> is set to 0.
+</p>
+</li>
+</ul>
+<p>If stim is null, always return err = NULL status.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing
+</p>
+
+<ul>
+<li> <p><code>err</code>  String message or NULL for no error.
+</p>
+</li>
+<li> <p><code>seen</code> 1 if seen, 0 otherwise. (See details for F310)
+</p>
+</li>
+<li> <p><code>time</code> Reaction time (if seen).
+</p>
+</li>
+</ul>
+</div>

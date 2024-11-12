@@ -1,0 +1,354 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>control.cutpoints</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Controlling the optimal-cutpoint selection process</h2>
+
+<h3>Description</h3>
+
+<p>Used to set various parameters controlling the optimal-cutpoint selection process</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">control.cutpoints(costs.ratio = 1, CFP = 1, CFN = 1,
+  valueSp = 0.85, valueSe = 0.85, 
+  maxSp = TRUE,
+  generalized.Youden = FALSE,
+  costs.benefits.Youden = FALSE,
+  costs.benefits.Efficiency = FALSE,
+  weighted.Kappa = FALSE,
+  standard.deviation.accuracy = FALSE,
+  valueNPV = 0.85, valuePPV = 0.85,
+  maxNPV = TRUE,
+  valueDLR.Positive = 2,
+  valueDLR.Negative = 0.5,
+  adjusted.pvalue = c("PADJMS","PALT5","PALT10"),
+  ci.SeSp = c("Exact","Quadratic","Wald","AgrestiCoull","RubinSchenker"),
+  ci.PV = c("Exact","Quadratic","Wald","AgrestiCoull","RubinSchenker",
+  "Transformed","NotTransformed","GartNam"),
+  ci.DLR = c("Transformed","NotTransformed","GartNam"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>costs.ratio</code></td>
+<td>
+
+<p>a numerical value meaningful only in the "CB" method. It specifies the costs ratio: </p>
+<p style="text-align: center;"><code class="reqn">CR=\frac{C_{FP}-C_{TN}}{C_{FN}-C_{TP}}</code>
+</p>
+
+<p>where <code class="reqn">C_{FP}</code>, <code class="reqn">C_{TN}</code>, <code class="reqn">C_{FN}</code> and <code class="reqn">C_{TP}</code> are the costs of False Positive, True Negative, False Negative and True Positive decisions, respectively. The default value is 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CFP</code></td>
+<td>
+
+<p>a numerical value meaningful only in the "MCT", "Youden" and "MaxKappa" methods. It specifies the cost of a False Positive decision. The default value is 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CFN</code></td>
+<td>
+
+<p>a numerical value meaningful only in the "MCT", "Youden" and "MaxKappa" methods. It specifies the cost of a False Negative decision. The default value is 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>valueSp</code></td>
+<td>
+
+<p>a numerical value meaningful only in the "MinValueSp", "ValueSp" and "MinValueSpSe" methods. It specifies the (minimum or specific) value set for Specificity. The default value is 0.85.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>valueSe</code></td>
+<td>
+
+<p>a numerical value meaningful only in the "MinValueSe", "ValueSe" and "MinValueSpSe" methods. It specifies the (minimum or specific) value set for Sensitivity. The default value is 0.85.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxSp</code></td>
+<td>
+
+<p>a logical value meaningful only in the "MinValueSpSe" method, in a case where there is more than one cutpoint fulfilling the conditions. If TRUE, those of the cutpoints which yield maximum Specificity are computed. Otherwise the cutoff that yields maximum Sensitivity is computed. The default is TRUE.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>generalized.Youden</code></td>
+<td>
+
+<p>a logical value meaningful only in the "Youden" method. If TRUE, the Generalized Youden Index is computed. The default is FALSE.       
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>costs.benefits.Youden</code></td>
+<td>
+
+<p>a logical value meaningful only in the "Youden" method. If TRUE, the optimal cutpoint based on cost-benefit methodology is computed. The default is FALSE. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>costs.benefits.Efficiency</code></td>
+<td>
+
+<p>a logical value meaningful only in the "MaxEfficiency" method. If TRUE, the optimal cutpoint based on cost-benefit methodology is computed. The default is FALSE.       
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted.Kappa</code></td>
+<td>
+
+<p>a logical value meaningful only in the "MaxKappa" method. If TRUE, the Weighted Kappa Index is computed. The default is FALSE.      
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>standard.deviation.accuracy</code></td>
+<td>
+
+<p>a logical value meaningful only in the "MaxEfficiency" method. If TRUE, standard deviation associated with accuracy (or efficiency) at the optimal cutpoint is computed. The default is FALSE.         
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>valueNPV</code></td>
+<td>
+
+<p>a numerical value meaningful only in the "MinValueNPV", "ValueNPV" and "MinValueNPVPPV" methods. It specifies the minimum value set for Negative Predictive Value. The default value is 0.85.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>valuePPV</code></td>
+<td>
+
+<p>a numerical value meaningful only in the "MinValuePPV", "ValuePPV" and "MinValueNPVPPV" methods. It specifies the minimum value set for Positive Predictive Value. The default value is 0.85.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxNPV</code></td>
+<td>
+
+<p>a logical value meaningful only in the "MinValueNPVPPV" method, in a case where there is more than one cutpoint fulfilling the conditions. If TRUE, those of the cutpoints which yield the maximum Negative Predictive Value are computed. Otherwise the cutoff that yields the maximum Positive Predictive Value is computed. The default is TRUE.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>valueDLR.Positive</code></td>
+<td>
+
+<p>a numerical value meaningful only in the "ValueDLR.Positive" method. It specifies the value set for the Positive Diagnostic Likelihood Ratio. The default value is 2.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>valueDLR.Negative</code></td>
+<td>
+
+<p>a numerical value meaningful only in the "ValueDLR.Negative" method. It specifies the value set for the Negative Diagnostic Likelihood Ratio. The default value is 0.5.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjusted.pvalue</code></td>
+<td>
+
+<p>a character string meaningful only in the "MinPvalue" method. It specifies the method for adjusting the p-value, i.e., "PADJMS" for the Miller and Siegmund method, and "PALT5", "PALT10" for the Altman method (see details). The default is "PADJMS".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.SeSp</code></td>
+<td>
+
+<p>a character string meaningful only when the argument ci.fit of the <code>optimal.cutpoints</code> function is TRUE. It indicates how the confidence interval for Sensitivity and Specificity measures is estimated. Options are "Exact" (Clopper and Pearson 1934), "Quadratic" (Fleiss 1981), "Wald" (Wald and Walfowitz 1939), "AgrestiCoull" (Agresti and Coull 1998) and "RubinSchenker" (Rubin and Schenker 1987) (see details). The default is "Exact".                                                                                                                                                                            
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.PV</code></td>
+<td>
+
+<p>a character string meaningful only when the argument ci.fit of the <code>optimal.cutpoints</code> function is TRUE. It indicates how the confidence interval for Predictive Values is estimated. Options are "Exact" (Clopper and Pearson 1934), "Quadratic" (Fleiss 1981), "Wald" (Wald and Walfowitz 1939), "AgrestiCoull" (Agresti and Coull 1998), "RubinSchenker" (Rubin and Schenker 1987), "Transformed" (Simel et al. 1991), "NotTransformed" (Koopman 1984) and "GartNam" (Gart and Nam 1988) (see details). The default is "Exact".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.DLR</code></td>
+<td>
+
+<p>a character string meaningful only when the argument ci.fit of the function <code>optimal.cutpoints</code> is TRUE. It indicates how the confidence interval for Diagnostic Likelihood Ratios is estimated. Options are "Transformed" (Simel et al. 1991), "NotTransformed" (Koopman 1984) and "GartNam" (Gart and Nam 1988)(see details). The default is "Transformed".
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The value yielded by this function is used as the control argument of the <code>optimal.cutpoints()</code> function. 
+</p>
+<p>Several methods for correcting the increase in type-I error associated with the "MinPvalue" criterion have been proposed. In this package, two methods for adjusting the p-value have been implemented, i.e., the Miller and Siegmund (1982) and Altman (1994) methods. The first of these ("PADJMS" option) uses the minimum observed p-value (<code class="reqn">pmin</code>) and the proportion (<code class="reqn">\epsilon</code>) of sample data which is below the lowest (<code class="reqn">\epsilon_{low}</code>) (or above the highest, <code class="reqn">\epsilon_{high}</code>) cutpoint considered: 
+</p>
+<p style="text-align: center;"><code class="reqn">p_{acor}=\phi(z)(z-\frac{1}{z})log\left(\frac{\epsilon_{high}(1-\epsilon_{low})}{(1-\epsilon_{high})\epsilon_{low}}\right)+4\frac{\phi(z)}{z}</code>
+</p>
+
+<p>where <code class="reqn">z</code> is the <code class="reqn">(1- pmin/2)</code> quantile of the standard normal distribution and <code class="reqn">\phi</code> its corresponding density function. The second method is a simplification of the above formula, which considers specific values for <code class="reqn">\epsilon</code>: with <code class="reqn">\epsilon=\epsilon_{low} = \epsilon_{high}</code> = 5% ("PALT5" option): <code class="reqn">p_{alt5}=-3.13p_{min}\left(1+1.65ln(p_{min})\right)</code> with <code class="reqn">\epsilon=\epsilon_{low} = \epsilon_{high}</code> = 10% ("PALT10" option): <code class="reqn">p_{alt10}=-1.63p_{min}\left(1+2.35ln(p_{min})\right)</code>. These approaches work well for low <code class="reqn">pmin</code> values (0.0001&lt;<code class="reqn">pmin</code>&lt;0.1) and are easy to apply.
+</p>
+<p>For inference performed on Sensitivity and Specificity measures (which are proportions), some of the most common confidence intervals have been considered. If <code class="reqn">pr=x/n</code> is the proportion to be estimated and 1-<code class="reqn">\alpha</code> is the confidence level, the options are as follows:                                                                                                                                                                                                                                        
+</p>
+<p><code>"Exact"</code>: The exact confidence interval of Clopper and Pearson (1934) based on the exact distribution of a proportion:
+</p>
+<p style="text-align: center;"><code class="reqn">\left[\frac{x}{(n-x+1)F_{\alpha/2,2(n-x+1),2x}+x}, \frac{(x+1)F_{\alpha/2,2(x+1),2(n-x)}}{(n-x)+(x+1)F_{\alpha/2,2(x+1),2(n-x)}}\right]</code>
+</p>
+ 
+<p>where <code class="reqn">F_{\alpha/2,a,b}</code> is the (1-<code class="reqn">\alpha</code>/2) quantile of a Fisher-Snedecor distribution with <code class="reqn">a</code> and <code class="reqn">b</code> degrees of freedom. Note that the "exact" method cannot be applied when x or n-x is equal to zero, since the quantile of the Fisher-Snedecor distribution is not defined for zero degrees of freedom. In that cases, the program returns a NaN for the limit of the confidence interval that could not be computed.    
+</p>
+<p><code>"Quadratic"</code>: Fleiss' quadratic confidence interval (Fleiss 1981). It is based on the asymptotic normality of the estimator of a proportion but adding a continuity correction. This approach is valid in a situation where <code class="reqn">x</code> and <code class="reqn">n-x</code> are greater than 5:                                                                 
+</p>
+<p style="text-align: center;"><code class="reqn">\frac{1}{n+z^{2}_{1-\alpha/2}}\left[(x \mp 0.5)+\frac{z^{2}_{1-\alpha/2}}{2} \mp z_{1-\alpha/2}\sqrt{\frac{z^{2}_{1-\alpha/2}}{4}+\frac{(x \mp 0.5)(n-x \mp 0.5)}{n}}\right]</code>
+</p>
+
+<p>where <code class="reqn">z_{1-\alpha/2}</code> is the (1-<code class="reqn">\alpha</code>/2) quantile of the standard normal distribution.     
+</p>
+<p><code>"Wald"</code>: Wald's confidence interval (Wald and Wolfowitz 1939) with a continuity correction. It is based on maximum-likelihood estimation of a proportion, and adds a continuity correction. This approach is valid where <code class="reqn">x</code> and <code class="reqn">n-x</code> are greater than 20:
+</p>
+<p style="text-align: center;"><code class="reqn">\hat{pr} \mp z_{1-\alpha/2}\sqrt{\frac{\hat{pr}(1-\hat{pr})}{n}}+\frac{1}{2n}</code>
+</p>
+    
+<p><code>"AgrestiCoull"</code>: The confidence interval proposed by Agresti and Coull (1998). It is a score confidence interval that does not use the standard calculation for the binomial proportion:
+</p>
+<p style="text-align: center;"><code class="reqn">\frac{\hat{pr}+\frac{z^{2}_{1-\alpha/2}}{2n} \mp z_{1-\alpha/2}\sqrt{\frac{\hat{pr}(1-\hat{pr})+\frac{ z^{2}_{1-\alpha/2}}{4n}}{n}}} {1+\frac{ z^{2}_{1-\alpha/2}}{n}}</code>
+</p>
+ 
+<p><code>"RubinSchenker"</code>: Rubin and Schenker's logit confidence interval (1987). It uses logit transformation and Bayesian arguments with an a priori Jeffreys distribution.
+</p>
+<p style="text-align: center;"><code class="reqn">logit\left[logit\left(\frac{x+0.5}{n+1}\right) \mp \frac{z_{1-\alpha/2}}{\sqrt{(n+1)\left(\frac{x+0.5}{n+1}\right)\left(1-\frac{x+0.5}{n+1}\right)}}\right]</code>
+</p>
+
+<p>where the <code class="reqn">logit</code> function is <code class="reqn">logit(q)=log\left(\frac{q}{1-q}\right)</code>.
+</p>
+<p>Since Diagnostic Likelihood Ratios represent a ratio between two probabilities, obtaining a confidence interval for them is less direct than it is for Sensitivity and Specificity. Let <code class="reqn">pr_{1}=x_{1}/n_{1}</code> be the proportion in the numerator and <code class="reqn">pr_{2}=x_{2}/n_{2}</code>, the proportion in the denominator. Based on the logarithmic transformation of the Likelihood Ratio (<code>"Transformed"</code> option), the 100(1-<code class="reqn">\alpha</code>)% confidence interval is (Simel et al., 1991):
+</p>
+<p style="text-align: center;"><code class="reqn">exp\left[ln\left(\frac{\widehat{pr}_{1}}{\widehat{pr}_{2}}\right) \mp z_{1-\alpha/2}\sqrt{\frac{1-\widehat{pr}_{1}}{n_{1}\widehat{pr}_{1}} +\frac{1-\widehat{pr}_{2}} {n_{2}\widehat{pr}_{2}}}\right]</code>
+</p>
+
+<p>These confidence intervals tend to perform better than do untransformed confidence intervals (Koopman 1984) (<code>"NotTransformed"</code> option) because the distribution of the Likelihood Ratios is asymmetric (Simel et al., 1991; Roldan Nofuentes and Luna del Castillo, 2007):
+</p>
+<p style="text-align: center;"><code class="reqn">\frac{\widehat{pr}_{1}}{\widehat{pr}_{2}} \mp \sqrt{\frac{\widehat{pr}_{1}(1-\widehat{pr}_{1})}{n_{1}\widehat{pr}^{2}_{2}} +\frac{\widehat{pr}^{2}_{1}\widehat{pr}_{2}(1-\widehat{pr}_{2})}{n_{2}\widehat{pr}^{4}_{2}}}</code>
+</p>
+
+<p>Another confidence interval (<code>"GartNam"</code> option) is based on the calculation of the interval for the ratio between two independent proportions (Gart and Nam, 1988). The following quadratic equation must be solved:
+</p>
+<p style="text-align: center;"><code class="reqn">\frac{\left(\widehat{pr}_{1}-\frac{pr_{1}}{pr_{2}}\widehat{pr}_{2}\right)^{2}}{\frac{\widehat{pr}_{1}(1-\widehat{pr}_{1}}{n_{1}} +\frac{\left(\frac{pr_{1}}{pr_{2}}\right)^{2}\widehat{pr}_{2}(1-\widehat{pr}_{2})}{n_{2}}}  =z^{2}_{1-\alpha/2}</code>
+</p>
+
+<p>Inference of the Predictive Values depends on the type of study, i.e., whether cross-sectional(prevalence can be estimated on the basis of the sample) or case-control. In the former case, the approaches for computing the confidence intervals of the Predictive Values are exactly the same as for the Sensitivity and Specificity measures. However, in a case control study, where prevalence is not estimated from the sample, the confidence intervals are based on the intervals of the Likelihood Ratios. Hence, once a prevalence estimator <code class="reqn">\hat{p}</code> is computed and substituting each limit of these intervals into the expressions 
+</p>
+<p style="text-align: center;"><code class="reqn">\left(1+\frac{1-\hat{p}}{\hat{p}\widehat{DLR}^{+}}\right)^{-1}</code>
+</p>
+<p> and 
+</p>
+<p style="text-align: center;"><code class="reqn">\left(1+\frac{\hat{p}}{1-\hat{p}}\widehat{DLR}^{-}\right)^{-1}</code>
+</p>
+<p> confidence intervals for the Positive and Negative Predictive Values are obtained, where <code class="reqn">DLR+</code> and <code class="reqn">DLR-</code> are the Positive and Negative Diagnostic Likelihood Ratios, respectively.                                                                                                                                                                                                                                                                                                                                                                                            
+</p>
+
+
+<h3>Value</h3>
+
+                                                                                                                                                                                                                                     
+<p>A list with components for each of the possible arguments. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Monica Lopez-Raton and Maria Xose Rodriguez-Alvarez
+</p>
+
+
+<h3>References</h3>
+
+<p>Agresti, A. and Coull, B.A. (1998). Approximate is better than "exact" for interval estimation of binomial proportions. <em>The American Statistician</em> <b>52</b>, 119–126.
+</p>
+<p>Altman, D.G., Lausen, B., Sauerbrei, W. and Schumacher, M. (1994). Dangers of using "optimal" cutpoints in the evaluation of prognostic factors. <em>Journal of the National Cancer Institute</em> <b>86</b>(11), 829–835.
+</p>
+<p>Clopper, C. and Pearson, E.S. (1934). The use of confidence or fiducial limits illustrated in the case of the binomial. <em>Biometrika</em> <b>26</b>, 404–413.
+</p>
+<p>Fleiss, J.L. (1981). Statistical methods for rates and proportions. John Wiley &amp; Sons, New York.
+</p>
+<p>Gart, J.J. and Nam, J. (1998). Aproximate interval estimation of the ratio of binomial parameters: a review and corrections for skewness. <em>Biometrics</em> <b>44</b>, 323–338.
+</p>
+<p>Koopman PAR (1984). Confidence limits for the ratio of two binomial proportions. <em>Biometrics</em> <b>40</b>, 513–517.
+</p>
+<p>Miller, R. and Siegmund, D. (1982). Maximally selected chi square statistics. <em>Biometrics</em> <b>38</b>, 1011–1016.
+</p>
+<p>Roldan Nofuentes, J.A. and Luna del Castillo, J.D. (2007). Comparing of the likelihood ratios of two binary diagnostic tests in paired designs. <em>Statistics in Medicine</em> <b>26</b>, 4179–4201.
+</p>
+<p>Rubin, D.B. and Schenker, N. (1987). Logit-based interval estimation for binomial data using the Jeffreys prior. <em>Sociological Methodology</em> <b>17</b>, 131–144.
+</p>
+<p>Simel, D.L., Samsa, G.P. and Matchar, D.B. (1991). Likelihood ratios with confidence: sample size estimation for diagnostic test studies. <em>Journal of Clinical Epidemiology</em> <b>44</b>(8), 763–770.
+</p>
+<p>Wald A, Wolfowitz J (1939). Confidence limits for continuous distribution functions. <em>The Annals of Mathematical Statistics</em> <b>10</b> 105–118.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optimal.cutpoints</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(OptimalCutpoints)
+data(elas)
+
+###########################################################
+# Youden Index Method ("Youden"): Covariate gender
+###########################################################
+optimal.cutpoint.Youden&lt;-optimal.cutpoints(X = "elas", status = "status", tag.healthy = 0, 
+methods = "Youden", data = elas, pop.prev = NULL, categorical.cov = 
+"gender", control = control.cutpoints(), ci.fit = TRUE, conf.level = 0.95, trace = FALSE)
+
+summary(optimal.cutpoint.Youden)
+
+# Change the method for computing the confidence interval 
+# of Sensitivity and Specificity measures
+optimal.cutpoint.Youden&lt;-optimal.cutpoints(X = "elas", status = "status", tag.healthy = 0, 
+methods = "Youden", data = elas, pop.prev = NULL, categorical.cov = "gender", 
+control = control.cutpoints(ci.SeSp = "AgrestiCoull"), ci.fit = TRUE, conf.level = 0.95, 
+trace = FALSE)
+
+summary(optimal.cutpoint.Youden)
+
+# Compute the Generalized Youden Index
+optimal.cutpoint.Youden&lt;-optimal.cutpoints(X = "elas", status = "status", tag.healthy = 0, 
+methods = "Youden", data = elas, pop.prev = NULL, categorical.cov = "gender", 
+control = control.cutpoints(generalized.Youden = TRUE), ci.fit = TRUE, conf.level = 0.95, 
+trace = FALSE)
+
+summary(optimal.cutpoint.Youden)
+                                 
+</code></pre>
+
+
+</div>

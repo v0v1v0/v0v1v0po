@@ -1,0 +1,139 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>snlpca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Subspace Network Learning PCA</h2>
+
+<h3>Description</h3>
+
+<p>Online PCA with the SNL algorithm of Oja (1992).</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">snlpca(lambda, U, x, gamma, q = length(lambda), center, 
+	type = c("exact", "nn"), sort = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>optional vector of eigenvalues.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>matrix of eigenvectors (PC) stored in columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>new data vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p>vector of learning rates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>number of eigenvectors to compute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>optional centering vector for <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>algorithm implementation: "exact" or "nn" (neural network).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>Should the new eigenpairs be sorted?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+ 
+<p>The vector <code>gamma</code> determines the weight placed on the new data in updating each PC. For larger values of <code>gamma</code>, more weight is placed on <code>x</code> and less on <code>U</code>. A common choice is of the form <code>c/n</code>, with <code>n</code> the sample size and <code>c</code> a suitable positive constant. Argument <code>gamma</code> can be specified as a single positive number (common to all PCs) or as a vector of length <code>q</code>. <br>
+If <code>sort</code> is TRUE and <code>lambda</code> is not missing, the updated eigenpairs are sorted by decreasing eigenvalue. Otherwise, they are not sorted.</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components  
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>updated eigenvalues or NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vectors</code></td>
+<td>
+<p>updated (rotated) eigenvectors.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The Subspace Network Learning PCA can be implemented exactly or through a neural network. The latter is less accurate but much faster. Unlike the GHA and SGA algorithms, the SNL algorithm does not consistently estimate  principal components. It provides only the linear space spanned by the PCs.
+</p>
+
+
+<h3>References</h3>
+
+<p>Oja (1992). Principal components, Minor components, and linear neural networks. <em>Neural Networks.</em>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ghapca, sgapca</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Initialization
+n &lt;- 1e4  # sample size
+n0 &lt;- 5e3 # initial sample size
+d &lt;- 10   # number of variables
+q &lt;- d # number of PC to compute
+x &lt;- matrix(runif(n*d), n, d)
+x &lt;- x %*% diag(sqrt(12*(1:d)))
+# The eigenvalues of x are close to 1, 2, ..., d
+# and the corresponding eigenvectors are close to 
+# the canonical basis of R^d
+
+## SNL PCA
+xbar &lt;- colMeans(x[1:n0,])
+pca &lt;- batchpca(x[1:n0,], q, center=xbar, byrow=TRUE)
+for (i in (n0+1):n) {
+  xbar &lt;- updateMean(xbar, x[i,], i-1)
+  pca &lt;- snlpca(pca$values, pca$vectors, x[i,], 1/i, q, xbar)
+}
+</code></pre>
+
+
+</div>

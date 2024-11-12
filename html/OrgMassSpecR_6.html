@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>DrawChromatogram</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a Chromatogram</h2>
+
+<h3>Description</h3>
+
+<p>Plot a chromatogram, color the area under specified peak(s), and calculate the peak area(s).</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">DrawChromatogram(time, intensity, range = list(start, stop), color = "blue", 
+                 xlab = "retention time", ylab = "intensity", 
+                 ylim = c(0, max(intensity) * 1.1), las = 1, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>numeric vector containing the time points (the x-axis).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intensity</code></td>
+<td>
+<p>numeric vector containing the respective signal intensities at each time point (the y-axis).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>range</code></td>
+<td>
+<p>list describing the start and stop time points for each peak, defined as <code>range = list(start, stop)</code>, where <code>start</code> is the numeric vector of starting time points and <code>stop</code> is the numeric vector of the respective ending time points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color</code></td>
+<td>
+<p>vector of character strings specifying the color for each peak given in <code>range</code>.  If a single color is specified, it is applied to all peaks.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>character string specifying the x-axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>character string specifying the y-axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>numeric vector of length 2 specifying the range of the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>las</code></td>
+<td>
+<p>numeric value specifying the rotation of the axis labels, see par for options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional parameters to be passed to plot().</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The area under the peak(s) is rendered using the <code>polygon</code> function.  The area calculation assumes that the polygon does not self-intersect.</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the following column names.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>retention.time</code></td>
+<td>
+<p>retention times of the peaks specified in <code>range</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>area</code></td>
+<td>
+<p>the respective peak areas</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>apex.intensity</code></td>
+<td>
+<p>the respective intensities at each peak apex</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Nathan G. Dodder</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## single peak
+x &lt;- DrawChromatogram(example.chromatogram.single$time,  
+                      example.chromatogram.single$intensity/100, 
+                      range = list(start = 25.4, stop = 26.1), 
+                      main = "example chromatogram 1",
+                      ylab = "intensity x 100")
+# label peak with retention time and area
+text(x$retentionTime, x$apexIntensity + 1500, 
+     labels = paste("RT = ", round(x$retentionTime, digits = 1),
+                    ", Area = ", round(x$peakArea), sep = ""), cex = 0.9) 
+
+## multiple peaks 
+y &lt;- DrawChromatogram(example.chromatogram.multiple$time, 
+                      example.chromatogram.multiple$intensity / 1000, 
+                      range = list(start = c(21.5, 21.925, 23.1, 25.5, 27.35), 
+                        stop = c(21.925, 22.4, 23.6, 26.2, 28.0)),
+                      color = c("blue", "red", "green", "yellow", "orange"), 
+                      xlab = "retention time (min)", 
+                      ylab = "intensity x 1000 (cps)", 
+                      main = "Example Chromatogram")
+## label peaks
+text(y$retentionTime, y$apexIntensity + 50, labels = c("a", "b", "c", "d", "e"))
+</code></pre>
+
+
+</div>

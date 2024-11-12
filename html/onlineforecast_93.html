@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>score</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the score for each horizon.</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the score for each horizon for a matrix with residuals for each horizon.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">score(object, scoreperiod = NA, usecomplete = TRUE, scorefun = rmse, ...)
+
+## S3 method for class 'list'
+score(object, scoreperiod = NA, usecomplete = TRUE, scorefun = rmse, ...)
+
+## S3 method for class 'data.frame'
+score(object, scoreperiod = NA, usecomplete = TRUE, scorefun = rmse, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>??list or A matrix with residuals (columns named <code>hxx</code>) for which to calculate the score for each horizon.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scoreperiod</code></td>
+<td>
+<p>as a logical vector controlling which points to be included in the score calculation. If NA then all values are included (depeding on 'complete').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>usecomplete</code></td>
+<td>
+<p>TRUE then only the values available for all horizons are included (i.e. if at one time point there is a missing value, then values for this time point is removed for all horizons in the calculation).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scorefun</code></td>
+<td>
+<p>The score function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>is passed on to the score function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Applies the <code>scorefun</code> on all horizons (each column) of the residuals matrix. See the description of each parameter for more details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the a numeric vector with the score value for each horizon and the applied <code>scoreperiod</code> (note can be different from the given scoreperiod, if only complete observations are used (as per default)).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Just a vector to be forecasted
+y &lt;- c(filter(rnorm(100), 0.95, "recursive"))
+# Generate a forecast matrix with a simple persistence model
+Yhat &lt;- persistence(y, kseq=1:4)
+# The residuals for each horizon
+Resid &lt;- residuals(Yhat, y)
+
+# Calculate the score for the k1 horizon
+score(Resid)
+
+# In the beginning the horizons have NAs
+head(Resid)
+# Default is that only complete cases over all horizons are included
+score(Resid)
+# So including all cases for each horizon will give different values
+score(Resid, usecomplete=FALSE)
+
+# Given a list
+# The residuals for each horizon
+Resid2 &lt;- residuals(persistence(y,kseq=1:4)+rnorm(100), y)
+
+score(list(Resid,Resid2))
+</code></pre>
+
+
+</div>

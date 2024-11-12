@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_pool</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Pool of a vector
+</h2>
+
+<h3>Description</h3>
+
+<p>A function <code>pool.fun</code> is applied to all the elements of a vector <code>val</code> that appear within the groups formed by identical rows of a matrix <code>X</code>. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_pool(X, val=NULL, pool.fun="sum", echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>the <code>n</code> times <code>k</code> matrix of real values.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>val</code></td>
+<td>
+
+<p>a real vector of length <code>n</code>. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pool.fun</code></td>
+<td>
+
+<p>a string denoting the function to be applied to the subgroups of elements of <code>val</code> corresponding to the identical rows of <code>X</code>. Possible values are  <code>"sum"</code>, <code>"min"</code>, <code>"max"</code>, <code>"mean"</code>, <code>"median"</code> and <code>"0"</code>. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is useful for plotting (and understanding) of designs of experiments with more factors than the dimension of the plot.  
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the call of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X.unique</code></td>
+<td>
+<p>the matrix of unique rows of <code>X</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>val.pooled</code></td>
+<td>
+<p>the vector of the length <code>nrows(X.unique)</code> containing the values of <code>val</code> pooled using <code>pool.fun</code></p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The function performs a non-trivial operation only if some of the rows of <code>X</code> are identical.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>od_plot</code>, <code>od_print</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">v1 &lt;- c(1, 2, 3); v2 &lt;- c(2, 4, 6); v3 &lt;- c(2, 5, 3)
+X &lt;- rbind(v1, v1, v1, v1, v2, v3, v2, v3, v3)
+val &lt;- c(1, 2, 7, 9, 5, 8, 4, 3, 6)
+od_pool(X, val, "sum")
+
+# The result $val.pooled is a vector with components:
+# 19 (=1+2+7+9) because the first 4 rows of X are identical
+# 9 (=5+4) because the 5th and the 7th rows of X are identical
+# 17 (=8+3+6) because the 6th, the 8th and the 9th rows of X are identical
+</code></pre>
+
+
+</div>

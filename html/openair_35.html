@@ -1,0 +1,408 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>polarAnnulus</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bivariate polarAnnulus plot</h2>
+
+<h3>Description</h3>
+
+<p>Typically plots the concentration of a pollutant by wind direction and as a
+function of time as an annulus. The function is good for visualising how
+concentrations of pollutants vary by wind direction and a time period e.g. by
+month, day of week.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">polarAnnulus(
+  mydata,
+  pollutant = "nox",
+  resolution = "fine",
+  local.tz = NULL,
+  period = "hour",
+  type = "default",
+  statistic = "mean",
+  percentile = NA,
+  limits = NULL,
+  cols = "default",
+  width = "normal",
+  min.bin = 1,
+  exclude.missing = TRUE,
+  date.pad = FALSE,
+  force.positive = TRUE,
+  k = c(20, 10),
+  normalise = FALSE,
+  key.header = statistic,
+  key.footer = pollutant,
+  key.position = "right",
+  key = TRUE,
+  auto.text = TRUE,
+  alpha = 1,
+  plot = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame minimally containing <code>date</code>, <code>wd</code> and a
+pollutant.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>Mandatory. A pollutant name corresponding to a variable in a
+data frame should be supplied e.g. <code>pollutant = "nox"</code>. There can also
+be more than one pollutant specified e.g. <code>pollutant = c("nox",
+  "no2")</code>. The main use of using two or more pollutants is for model
+evaluation where two species would be expected to have similar
+concentrations. This saves the user stacking the data and it is possible to
+work with columns of data directly. A typical use would be <code>pollutant
+  = c("obs", "mod")</code> to compare two columns “obs” (the observations)
+and “mod” (modelled values).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resolution</code></td>
+<td>
+<p>Two plot resolutions can be set: “normal” and
+“fine” (the default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>local.tz</code></td>
+<td>
+<p>Should the results be calculated in local time that includes
+a treatment of daylight savings time (DST)? The default is not to consider
+DST issues, provided the data were imported without a DST offset. Emissions
+activity tends to occur at local time e.g. rush hour is at 8 am every day.
+When the clocks go forward in spring, the emissions are effectively
+released into the atmosphere typically 1 hour earlier during the summertime
+i.e. when DST applies. When plotting diurnal profiles, this has the effect
+of “smearing-out” the concentrations. Sometimes, a useful approach
+is to express time as local time. This correction tends to produce
+better-defined diurnal profiles of concentration (or other variables) and
+allows a better comparison to be made with emissions/activity data. If set
+to <code>FALSE</code> then GMT is used. Examples of usage include <code>local.tz
+  = "Europe/London"</code>, <code>local.tz = "America/New_York"</code>. See
+<code>cutData</code> and <code>import</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p>This determines the temporal period to consider. Options are
+“hour” (the default, to plot diurnal variations), “season” to
+plot variation throughout the year, “weekday” to plot day of the
+week variation and “trend” to plot the trend by wind direction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>type</code> determines how the data are split i.e. conditioned,
+and then plotted. The default is will produce a single plot using the
+entire data. Type can be one of the built-in types as detailed in
+<code>cutData</code> e.g. “season”, “year”, “weekday” and so
+on. For example, <code>type = "season"</code> will produce four plots — one for
+each season.
+</p>
+<p>It is also possible to choose <code>type</code> as another variable in the data
+frame. If that variable is numeric, then the data will be split into four
+quantiles (if possible) and labelled accordingly. If type is an existing
+character or factor variable, then those categories/levels will be used
+directly. This offers great flexibility for understanding the variation of
+different variables and how they depend on one another.
+</p>
+<p>Type can be up length two e.g. <code>type = c("season", "site")</code> will
+produce a 2x2 plot split by season and site. The use of two types is mostly
+meant for situations where there are several sites. Note, when two types
+are provided the first forms the columns and the second the rows.
+</p>
+<p>Also note that for the <code>polarAnnulus</code> function some type/period
+combinations are forbidden or make little sense. For example, <code>type =
+  "season"</code> and <code>period = "trend"</code> (which would result in a plot with
+too many gaps in it for sensible smoothing), or <code>type = "weekday"</code> and
+<code>period = "weekday"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>The statistic that should be applied to each wind
+speed/direction bin. Can be “mean” (default), “median”,
+“max” (maximum), “frequency”. “stdev” (standard
+deviation), “weighted.mean” or “cpf” (Conditional Probability
+Function). Because of the smoothing involved, the colour scale for some of
+these statistics is only to provide an indication of overall pattern and
+should not be interpreted in concentration units e.g. for <code>statistic =
+  "weighted.mean"</code> where the bin mean is multiplied by the bin frequency and
+divided by the total frequency. In many cases using <code>polarFreq</code> will
+be better. Setting <code>statistic = "weighted.mean"</code> can be useful because
+it provides an indication of the concentration * frequency of occurrence
+and will highlight the wind speed/direction conditions that dominate the
+overall mean.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentile</code></td>
+<td>
+<p>If <code>statistic = "percentile"</code> or <code>statistic =
+  "cpf"</code> then <code>percentile</code> is used, expressed from 0 to 100. Note that
+the percentile value is calculated in the wind speed, wind direction
+‘bins’. For this reason it can also be useful to set <code>min.bin</code>
+to ensure there are a sufficient number of points available to estimate a
+percentile. See <code>quantile</code> for more details of how percentiles are
+calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits</code></td>
+<td>
+<p>The function does its best to choose sensible limits
+automatically. However, there are circumstances when the user will wish to
+set different ones. An example would be a series of plots showing each year
+of data separately. The limits are set in the form <code>c(lower, upper)</code>,
+so <code>limits = c(0, 100)</code> would force the plot limits to span 0-100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>Colours to be used for plotting. Options include
+“default”, “increment”, “heat”, “jet” and
+<code>RColorBrewer</code> colours — see the <code>openair</code> <code>openColours</code>
+function for more details. For user defined the user can supply a list of
+colour names recognised by R (type <code>colours()</code> to see the full list).
+An example would be <code>cols = c("yellow", "green", "blue")</code>. <code>cols</code>
+can also take the values <code>"viridis"</code>, <code>"magma"</code>,
+<code>"inferno"</code>, or <code>"plasma"</code> which are the viridis colour maps
+ported from Python's Matplotlib library.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>The width of the annulus; can be “normal” (the default),
+“thin” or “fat”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.bin</code></td>
+<td>
+<p>The minimum number of points allowed in a wind speed/wind
+direction bin.  The default is 1. A value of two requires at least 2 valid
+records in each bin an so on; bins with less than 2 valid records are set
+to NA. Care should be taken when using a value &gt; 1 because of the risk of
+removing real data points. It is recommended to consider your data with
+care. Also, the <code>polarFreq</code> function can be of use in such
+circumstances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude.missing</code></td>
+<td>
+<p>Setting this option to <code>TRUE</code> (the default)
+removes points from the plot that are too far from the original data. The
+smoothing routines will produce predictions at points where no data exist
+i.e. they predict. By removing the points too far from the original data
+produces a plot where it is clear where the original data lie. If set to
+<code>FALSE</code> missing data will be interpolated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.pad</code></td>
+<td>
+<p>For <code>type = "trend"</code> (default), <code>date.pad = TRUE</code>
+will pad-out missing data to the beginning of the first year and the end of
+the last year. The purpose is to ensure that the trend plot begins and ends
+at the beginning or end of year.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force.positive</code></td>
+<td>
+<p>The default is <code>TRUE</code>. Sometimes if smoothing data
+with steep gradients it is possible for predicted values to be negative.
+<code>force.positive = TRUE</code> ensures that predictions remain positive. This
+is useful for several reasons. First, with lots of missing data more
+interpolation is needed and this can result in artefacts because the
+predictions are too far from the original data. Second, if it is known
+beforehand that the data are all positive, then this option carries that
+assumption through to the prediction. The only likely time where setting
+<code>force.positive = FALSE</code> would be if background concentrations were
+first subtracted resulting in data that is legitimately negative. For the
+vast majority of situations it is expected that the user will not need to
+alter the default option.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>The smoothing value supplied to <code>gam</code> for the temporal and wind
+direction components, respectively. In some cases e.g. a trend plot with
+less than 1-year of data the smoothing with the default values may become
+too noisy and affected more by outliers. Choosing a lower value of <code>k</code>
+(say 10) may help produce a better plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalise</code></td>
+<td>
+<p>If <code>TRUE</code> concentrations are normalised by dividing by
+their mean value. This is done <em>after</em> fitting the smooth surface.
+This option is particularly useful if one is interested in the patterns of
+concentrations for several pollutants on different scales e.g. NOx and CO.
+Often useful if more than one <code>pollutant</code> is chosen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.header</code></td>
+<td>
+<p>Adds additional text/labels to the scale key. For example,
+passing the options <code>key.header = "header", key.footer = "footer1"</code>
+adds addition text above and below the scale key. These arguments are
+passed to <code>drawOpenKey</code> via <code>quickText</code>, applying the
+<code>auto.text</code> argument, to handle formatting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.footer</code></td>
+<td>
+<p>see <code>key.footer</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.position</code></td>
+<td>
+<p>Location where the scale key is to plotted. Allowed
+arguments currently include <code>"top"</code>, <code>"right"</code>, <code>"bottom"</code>
+and <code>"left"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>Fine control of the scale key via <code>drawOpenKey</code>. See
+<code>drawOpenKey</code> for further details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.text</code></td>
+<td>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code>
+titles and axis labels will automatically try and format pollutant names
+and units properly e.g.  by subscripting the ‘2’ in NO2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The alpha transparency to use for the plotting surface (a value
+between 0 and 1 with zero being fully transparent and 1 fully opaque).
+Setting a value below 1 can be useful when plotting surfaces on a map using
+the package <code>openairmaps</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should a plot be produced? <code>FALSE</code> can be useful when
+analysing data to extract plot components and plotting them in other ways.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other graphical parameters passed onto <code>lattice:levelplot</code>
+and <code>cutData</code>. For example, <code>polarAnnulus</code> passes the option
+<code>hemisphere = "southern"</code> on to <code>cutData</code> to provide southern
+(rather than default northern) hemisphere handling of <code>type =
+  "season"</code>. Similarly, common axis and title labelling options (such as
+<code>xlab</code>, <code>ylab</code>, <code>main</code>) are passed to <code>levelplot</code> via
+<code>quickText</code> to handle routine formatting.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>polarAnnulus</code> function shares many of the properties of the
+<code>polarPlot</code>. However, <code>polarAnnulus</code> is focussed on displaying
+information on how concentrations of a pollutant (values of another variable)
+vary with wind direction and time. Plotting as an annulus helps to reduce
+compression of information towards the centre of the plot. The circular plot
+is easy to interpret because wind direction is most easily understood in
+polar rather than Cartesian coordinates.
+</p>
+<p>The inner part of the annulus represents the earliest time and the outer part
+of the annulus the latest time. The time dimension can be shown in many ways
+including "trend", "hour" (hour or day), "season" (month of the year) and
+"weekday" (day of the week). Taking hour as an example, the plot will show
+how concentrations vary by hour of the day and wind direction. Such plots can
+be very useful for understanding how different source influences affect a
+location.
+</p>
+<p>For <code>type = "trend"</code> the amount of smoothing does not vary linearly with
+the length of the time series i.e. a certain amount of smoothing per unit
+interval in time. This is a deliberate choice because should one be
+interested in a subset (in time) of data, more detail will be provided for
+the subset compared with the full data set. This allows users to investigate
+specific periods in more detail. Full flexibility is given through the
+smoothing parameter <code>k</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an openair object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other polar directional analysis functions: 
+<code>percentileRose()</code>,
+<code>polarCluster()</code>,
+<code>polarDiff()</code>,
+<code>polarFreq()</code>,
+<code>polarPlot()</code>,
+<code>pollutionRose()</code>,
+<code>windRose()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># diurnal plot for PM10 at Marylebone Rd
+## Not run: polarAnnulus(mydata, pollutant = "pm10",
+main = "diurnal variation in pm10 at Marylebone Road")
+## End(Not run)
+
+# seasonal plot for PM10 at Marylebone Rd
+## Not run: polarAnnulus(mydata, poll="pm10", period = "season")
+
+# trend in coarse particles (PMc = PM10 - PM2.5), calculate PMc first
+
+mydata$pmc &lt;- mydata$pm10 - mydata$pm25
+## Not run: polarAnnulus(mydata, poll="pmc", period = "trend",
+main = "trend in pmc at Marylebone Road")
+## End(Not run)
+</code></pre>
+
+
+</div>

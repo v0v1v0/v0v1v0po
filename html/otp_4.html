@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>TOTP</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Time based One Time Password (TOTP)</h2>
+
+<h3>Description</h3>
+
+<p>An R6 class that implements the Time based One Time Password (TOTP) algorithm.
+</p>
+
+
+<h3>Initialization</h3>
+
+<pre>
+TOTP$new(secret, digits = 6L, period = 30, algorithm = "sha1")
+</pre>
+<p>Create an One Time Password object
+</p>
+
+<ul>
+<li> <p><strong>secret</strong> a scalar character, the base32-based secret key.
+</p>
+</li>
+<li> <p><strong>digits</strong> an integer, the number of digits of the password.
+</p>
+</li>
+<li> <p><strong>period</strong> a positive number, the number of seconds in a time step.
+</p>
+</li>
+<li> <p><strong>algorithm</strong> the hash algorithm used, possible values are
+"sha1", "sha256" and "sha512".
+</p>
+</li>
+</ul>
+<h3>Methods</h3>
+
+<pre>
+TOTP$at_time(t)
+</pre>
+<p>Generate an one time password at a given time value.
+</p>
+
+<ul><li> <p><strong>t</strong> a POSIXct object or an integer that represents the numbers of second since UNIX epoch.
+</p>
+</li></ul>
+<pre>
+HOTP$verify(code, t, behind = 0L)
+</pre>
+<p>Verify if a given one time password is valid. Returns the beginning time of the time
+step window if there is a match within the <code>behind</code> window. Otherwise return <code>NULL</code>.
+</p>
+
+<ul>
+<li> <p><strong>code</strong> a string of digits.
+</p>
+</li>
+<li> <p><strong>t</strong> a POSIXct object or an integer that represents the number of seconds since UNIX epoch.
+</p>
+</li>
+<li> <p><strong>behind</strong> a non-negative integer, the amount of time steps to look behind. A value of <code>1</code>
+means to accept the code before <code>period</code> seconds ago.
+</p>
+</li>
+</ul>
+<pre>
+HOTP$provisioning_uri(name, issuer = NULL)
+</pre>
+<p>Return a provisioning uri which is compatible with google authenticator format.
+</p>
+
+<ul>
+<li> <p><strong>name</strong> account name.
+</p>
+</li>
+<li> <p><strong>issuer</strong> issuer name.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><a href="https://datatracker.ietf.org/doc/html/rfc6238">https://datatracker.ietf.org/doc/html/rfc6238</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">p &lt;- TOTP$new("JBSWY3DPEHPK3PXP")
+(code &lt;- p$now())
+p$verify(code, behind = 1)
+
+(current_time &lt;- Sys.time())
+(code &lt;- p$at_time(current_time))
+p$verify(code, current_time + 30, behind = 1)
+
+p$provisioning_uri("Alice", issuer = "example.com")
+</code></pre>
+
+
+</div>

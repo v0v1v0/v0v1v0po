@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>openSkiesAircraft</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>An <code>R6Class</code> object representing an aircraft</h2>
+
+<h3>Description</h3>
+
+<p><code>R6Class</code> object representing an aircraft. Contains information
+about the ICAO 24-bit code of the aircraft, its registration code, its country
+of origin, its manufacturer and its operator. New instances can be manually 
+created by providing values for at least the <code>ICAO24</code> field. Alternatively, 
+<code>getAircraftMetadata</code> will return an <code>openSkiesAirport</code> object 
+corresponding to the airport with the provided ICAO 24-bit code.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">openSkiesAircraft
+</code></pre>
+
+
+<h3>Fields</h3>
+
+
+<dl>
+<dt><code>ICAO24</code></dt>
+<dd>
+<p>String with the ICAO 24-bit aicraft address associated to
+the aircraft in hexadecimal format
+</p>
+</dd>
+<dt><code>registration</code></dt>
+<dd>
+<p>String with the aircraft registration code, also 
+called tail number
+</p>
+</dd>
+<dt><code>origin_country</code></dt>
+<dd>
+<p>String with the country where the aircraft is 
+registered
+</p>
+</dd>
+<dt><code>last_state_vector</code></dt>
+<dd>
+<p>An object of class <code>openSkiesStateVector</code>
+representing the last known state vector for the aircraft
+</p>
+</dd>
+<dt><code>state_vector_history</code></dt>
+<dd>
+<p>An object of class <code>openSkiesStateVectorSet</code>
+representing the history of all known state vectors for the aircraft
+</p>
+</dd>
+<dt><code>manufacturer_name</code></dt>
+<dd>
+<p>String with the name of the manufacturer of 
+the aircraft
+</p>
+</dd>
+<dt><code>manufacturer_ICAO</code></dt>
+<dd>
+<p>String with the ICAO code of the manufacturer 
+of the aircraft
+</p>
+</dd>
+<dt><code>model</code></dt>
+<dd>
+<p>String with the aicraft model
+</p>
+</dd>
+<dt><code>serial_number</code></dt>
+<dd>
+<p>String with the serial number of the aircraft
+</p>
+</dd>
+<dt><code>line_number</code></dt>
+<dd>
+<p>String with the line number of the aircraft.
+Usually only provided for Boeing aircrafts. Line numbers specify the order in 
+which airframes of a particular product line were assembled.
+</p>
+</dd>
+<dt><code>ICAO_type_code</code></dt>
+<dd>
+<p>String with the ICAO code for the model of 
+aircraft
+</p>
+</dd>
+<dt><code>ICAO_aircraft_class</code></dt>
+<dd>
+<p>String with the ICAO code for the type of 
+aircraft. ICAO aircraft classes provide more general groups than ICAO type 
+codes
+</p>
+</dd>
+<dt><code>owner</code></dt>
+<dd>
+<p>String with the name of the registered aircraft owner
+</p>
+</dd>
+<dt><code>operator</code></dt>
+<dd>
+<p>String with the name of the aircraft operator
+</p>
+</dd>
+<dt><code>operator_call_sign</code></dt>
+<dd>
+<p>String with the callsign of the aircraft 
+operator
+</p>
+</dd>
+<dt><code>operator_ICAO</code></dt>
+<dd>
+<p>String with the ICAO code of the aircraft operator
+</p>
+</dd>
+<dt><code>operator_IATA</code></dt>
+<dd>
+<p>String with the IATA code of the aircraft operator
+</p>
+</dd>
+<dt><code>first_flight_date</code></dt>
+<dd>
+<p>String with the date when the first flight 
+for the aircraft was registered. This information is usually not available
+when retrieving information from the OpenSky API
+</p>
+</dd>
+<dt><code>category_description</code></dt>
+<dd>
+<p>String with physical information about the 
+aircraft provided by the ADS-B emitter unit
+</p>
+</dd>
+</dl>
+<h3>Methods</h3>
+
+
+<dl>
+<dt>
+<code>get_values(field, removeNAs=FALSE)</code>
+</dt>
+<dd>
+<p>This method retrieves the value of <code>field</code> for all the state vectors
+stored in the <code>openSkiesStateVectorSet</code> object. If <code>removeNAs=TRUE</code>
+(by default, <code>removeNAs=FALSE</code>), missing values are removed from the
+output. Otherwise, NA is returned in place of missing items.
+</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create an openSkiesAircraft object corresponding to the aircraft with
+# ICAO 24-bit address 3922e2
+
+if(interactive()){
+test_aircraft &lt;- getAircraftMetadata("3922e2")
+test_aircraft
+}
+</code></pre>
+
+
+</div>

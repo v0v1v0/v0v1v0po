@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>or_glm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate Odds Ratios of Generalized Linear (Mixed) Models</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates odds ratio(s) for specific increment
+steps of GLMs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">or_glm(data, model, incr, ci = 0.95)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data used for model fitting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A fitted GLM(M).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incr</code></td>
+<td>
+<p>Increment values of each predictor given in a named list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+<p>Which confidence interval to calculate. Must be between 0
+and 1. Default to 0.95</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>ci_low</code> and <code>ci_high</code> are only calculated for GLM models because
+<code>MASS::glmmPQL()</code> does not return confident intervals due to its penalizing
+behavior.
+</p>
+<p>Currently supported functions: stats::glm,MASS::glmmPQL
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with five columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>predictor</code></td>
+<td>
+<p>Predictor name(s)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oddsratio</code></td>
+<td>
+<p>Calculated odds ratio(s)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci_low</code></td>
+<td>
+<p>Lower confident interval of odds ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci_high</code></td>
+<td>
+<p>Higher confident interval of odds ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>increment</code></td>
+<td>
+<p>Increment of the predictor(s)</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>or_gam()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example with glm()
+library(oddsratio)
+# load data (source: http://www.ats.ucla.edu/stat/r/dae/logit.htm) and
+# fit model
+fit_glm &lt;- glm(admit ~ gre + gpa + rank,
+  data = data_glm,
+  family = "binomial"
+) # fit model
+
+# Calculate OR for specific increment step of continuous variable
+or_glm(data = data_glm, model = fit_glm, incr = list(gre = 380, gpa = 5))
+
+# Calculate OR and change the confidence interval level
+or_glm(
+  data = data_glm, model = fit_glm,
+  incr = list(gre = 380, gpa = 5), ci = .70
+)
+
+## Example with MASS:glmmPQL()
+# load data
+library(MASS)
+data(bacteria)
+fit_glmmPQL &lt;- glmmPQL(y ~ trt + week,
+  random = ~ 1 | ID,
+  family = binomial, data = bacteria,
+  verbose = FALSE
+)
+
+# Apply function
+or_glm(data = bacteria, model = fit_glmmPQL, incr = list(week = 5))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,239 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OptRegionQuad</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Confidence region for optima of quadratic polynomial models (2 regressors)</h2>
+
+<h3>Description</h3>
+
+<p>Computes and displays an approximated (1 - alpha)*100
+the linear-constrained maximum of a quadratic polynomial regression model
+in 2 controllable factors
+(Del Castillo et al. 2020).
+Grey region on output plot is the approximate CR.
+The CR is computed as the convex hull of the coordinates of the optima found
+from simulating and optimizing nosim quadratic polynomial regressions from the data (therefore,
+it is an approximate CR). The mean value of the optimum is shown as a red point,
+and a smoothed contour plot of the X,y data obtained via thin plate splines is
+shown as well.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OptRegionQuad(
+  X,
+  y,
+  nosim = 200,
+  alpha = 0.05,
+  LB,
+  UB,
+  triangularRegion = FALSE,
+  vertex1 = NULL,
+  vertex2 = NULL,
+  maximization = TRUE,
+  xlab = "Protein eaten, mg",
+  ylab = "Carbohydrates eaten, mg",
+  outputPDFFile = "CRplot.pdf"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>n*2 matrix with the values of the 2 regressors (experimental factors)
+in the n observations. Note: this can have replicates.
+They will be eliminated by the program and the corresponding
+y-values averaged</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>n*1 vector of response value observations, in the same order corresponding
+to the rows of X</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nosim</code></td>
+<td>
+<p>number of simulations (default = 200)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>confidence level (0 &lt; alpha &lt; 1; default = 0.05)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LB</code></td>
+<td>
+<p>vector of lower bounds for x (2*1 vector) above which the maximum is sought</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>UB</code></td>
+<td>
+<p>vector of upper bounds for x (2*1 vector) below which the maximum is sought</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>triangularRegion</code></td>
+<td>
+<p>logical: if TRUE it will constrain the maximum points to lie
+inside a triangle defined by the coordinates (0,0), and those
+in 'vertex1', and 'vertex2', see below (in addition to being
+constrained to lie inside the region defined by LB and UB).
+NOTE: use TRUE when the treatments form a triangular
+experimental region in shape. If FALSE, maxima will only be
+constrained to lie inside the rectangular region defined by
+LB and UB. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vertex1</code></td>
+<td>
+<p>2 times 1 vector with coordinates defining one of the 3 vertices of
+a triangular region. Must be provided if triangularRegion is TRUE
+(NOTE: vertices numbered clockwise)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vertex2</code></td>
+<td>
+<p>2 times 1 vector with coordinates defining a second vertex of a
+triangular region (third vertex is (0,0) by default). Must be provided
+if triangularRegion is TRUE (NOTE: vertices numbered clockwise)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maximization</code></td>
+<td>
+<p>logical: if TRUE (default) it maximizes it FALSE it minimizes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>text label for x axis in confidence region plot
+(default: "Protein eaten (mg)")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>text label for y axis in confidence region plot
+(default: "Carbohydrates eaten (mg)")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputPDFFile</code></td>
+<td>
+<p>name of the PDF file where the CR plot is saved
+(default: "CR_plot.pdf")</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This program approximates the confidence region (CR) of the location of
+the optimum of a regression function in 2 regressors constrained inside
+a rectangular region defined by LB and UB. If triangularRegion = TRUE it will also
+contrain the optimum to lie inside the experimental region (assumed to be well
+approximated by a triangle). The CR is generated pointwise by simulating from the
+posterior of the regression parameters and solving the corresponding
+constrained maximization problem. The confidence region is approximated by the convex
+hull of all the solutions found.
+The simulation approach is based on the "CS"
+bootstrapping approach for building a confidence set described in
+Woutersen and Ham (2013).
+This version of the program uses nonparamteric
+bootstrapping confidence regions to get the posteazrior of the parameters of the
+regression equation using the notion of data depth according to
+Yeh and Singh (1997).
+Hence, this version does not rely on any normality assumption on the data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Upon completion, a PDF file containing the CR plot with name as set in
+ouputPDFFile is created and the function also returns a list containing
+the following 2 components:
+</p>
+
+<dl>
+<dt>meanPoint</dt>
+<dd>
+<p>a 2x1 vector with the coordinates of the mean
+optimum point (displayed as a red dot in the CR
+plot in output PDF file)</p>
+</dd>
+<dt>xin</dt>
+<dd>
+<p>an mx2 matrix with the x,y coordinates of all simulated
+points that belong to the confidence region (dim(m) is
+(1-alpha)*nosim)</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Enrique del Castillo <a href="mailto:exd13@psu.edu">exd13@psu.edu</a>,
+Peng Chen <a href="mailto:pfc5098@psu.edu">pfc5098@psu.edu</a>,
+Adam Meyers <a href="mailto:akm5733@psu.edu">akm5733@psu.edu</a>,
+John Hunt <a href="mailto:J.Hunt@westernsydney.edu.au">J.Hunt@westernsydney.edu.au</a> and
+James Rapkin <a href="mailto:jr297@exeter.ac.uk">jr297@exeter.ac.uk</a>.
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Del Castillo E, Chen P, Meyers A, Hunt J, Rapkin J (2020).
+“Confidence regions for the location of response surface optima: the R package OptimaRegion.”
+<em>Communications in Statistics-Simulation and Computation</em>, 1–21.<br><br> Woutersen T, Ham JC (2013).
+“Confidence sets for Continuous and Discontinuous functions of parameters.”
+<em>Technical report, University of Arizona</em>.<br><br> Yeh AB, Singh K (1997).
+“Balanced confidence regions based on Tukey’s depth and the bootstrap.”
+<em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em>, <b>59</b>(3), 639–652.
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Example 1: randomly generated 2-variable response surface data
+X &lt;- cbind(runif(100, -2, 2), runif(100, -2, 2))
+y &lt;- as.matrix(72 - 11.78 * X[, 1] + 0.74 * X[, 2] - 7.25 * X[, 1]^2 - 7.55 * X[, 2]^2 -
+  4.85 * X[, 1] * X[, 2] + rnorm(100, 0, 8))
+# Find a 95 percent confidence region for the maximum of a quadratic polynomial
+# fitted to these data
+out &lt;- OptRegionQuad(
+  X = X, y = y, nosim = 200, LB = c(-2, -2), UB = c(2, 2),
+  xlab = "X1", ylab = "X2"
+)
+
+# Example 2: a mixture-amount experiment in two components (Drug dataset) with
+# non-normal data. Note triangular experimental region. Resulting 95%
+# confidence region is pushed against the constraint and results in a
+# "thin line"
+out &lt;- OptRegionQuad(
+  X = Drug[, 1:2], y = Drug[, 3], nosim = 500,
+  LB = c(0, 0), UB = c(0.08, 11), xlab = "Component 1 (mg.)",
+  ylab = "Component 2 (mg.)", triangularRegion = TRUE,
+  vertex1 = c(0.02, 11), vertex2 = c(0.08, 1.8), outputPDFFile = "Mixture_plot.pdf"
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_typo_symboles</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add symbols on a 'leaflet' map</h2>
+
+<h3>Description</h3>
+
+<p>Add a symbols on a 'leaflet' map for typology.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_typo_symboles(map, fondPoints, types = NULL, couleurs = NULL,
+tailles = NULL, epaisseurs = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>objet leaflet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fondPoints</code></td>
+<td>
+<p>objets sf. Fond de points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>types</code></td>
+<td>
+<p>vecteur de numeriques (numeric). Par defaut a NULL. Voir
+details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>couleurs</code></td>
+<td>
+<p>vecteur de caracteres (character). Par defaut a NULL. Voir
+details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tailles</code></td>
+<td>
+<p>vecteur de numeriques (numeric). Par defaut a NULL. Voir
+details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epaisseurs</code></td>
+<td>
+<p>vecteur de numeriques (numeric). Par defaut a NULL. Voir
+details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Pour ajouter des symboles a la carte leaflet, il faut fournir un fond de
+points et si besoin preciser le type des points (par defaut un carre plein -
+voir l'aide de ?graphics::points), leurs couleurs (par defaut rouge), leurs
+tailles (par defaut 30) et l'epaisseur de la bordure du symbole si ce
+dernier n'est pas plein.
+</p>
+<p>Attention a l'ordre des elements des vecteurs qui doivent correspondre a
+l'ordre du fond de points.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Retourne un objet de type leaflet.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>coord_legende</code>
+</p>
+<p><code>leaflet_fonds_simples</code>
+</p>
+<p><code>leaflet_ronds leaflet_classes
+leaflet_ronds_classes leaflet_classes_ronds
+leaflet_typo</code>
+</p>
+<p><code>leaflet_oursins leaflet_joignantes
+leaflet_saphirs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("depm")
+data("regm")
+
+# Typologie en symboles
+map &lt;- leaflet_fonds_simples(listFonds = list(depm))
+points &lt;- suppressWarnings(sf::st_centroid(depm[depm$CODE=="75",]))
+points &lt;- rbind(points,suppressWarnings(sf::st_centroid(depm[depm$CODE=="13",])))
+points &lt;- rbind(points,suppressWarnings(sf::st_centroid(depm[depm$CODE=="69",])))
+types &lt;- c(16,15,15)
+couleurs &lt;- c("blue","red","red")
+tailles &lt;- c(25,20,20)
+map &lt;- add_typo_symboles(map, fondPoints=points, types = types,
+couleurs = couleurs, tailles = tailles)
+
+ map
+
+
+</code></pre>
+
+
+</div>

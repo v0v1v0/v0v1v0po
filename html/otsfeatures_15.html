@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordinal_asymmetry</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the estimated asymmetry of an ordinal time series</h2>
+
+<h3>Description</h3>
+
+<p><code>ordinal_asymmetry</code> computes the estimated asymmetry
+of an ordinal time series
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordinal_asymmetry(series, states, distance = "Block", normalize = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>series</code></td>
+<td>
+<p>An OTS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>states</code></td>
+<td>
+<p>A numerical vector containing the corresponding
+states.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+<p>A function defining the underlying distance between
+states. The Hamming, block and Euclidean distances are already
+implemented by means of the arguments "Hamming", "Block" (default)
+and "Euclidean". Otherwise, a function taking as input two states must
+be provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>Logical. If <code>normalize = FALSE</code> (default), the value of the estimated asymmetry is returned. Otherwise, the function
+returns the normalized estimated asymmetry.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given an OTS of length <code class="reqn">T</code> with range <code class="reqn">\mathcal{S}=\{s_0, s_1, s_2, \ldots, s_n\}</code> (<code class="reqn">s_0 &lt; s_1 &lt; s_2 &lt; \ldots &lt; s_n</code>),
+<code class="reqn">\overline{X}_t=\{\overline{X}_1,\ldots, \overline{X}_T\}</code>, the function computes the
+estimated asymmetry given by <code class="reqn">\widehat{asym}_{d}=\widehat{\boldsymbol p}^\top (\boldsymbol J-\boldsymbol I)\boldsymbol D\widehat{\boldsymbol p}</code>,
+where <code class="reqn">\widehat{\boldsymbol p}=(\widehat{p}_0, \widehat{p}_1, \ldots, \widehat{p}_n)^\top</code>,
+with <code class="reqn">\widehat{p}_k</code> being the standard estimate of the marginal probability for state
+<code class="reqn">s_k</code>, <code class="reqn">\boldsymbol I</code> and <code class="reqn">\boldsymbol J</code> are the identity and counteridentity
+matrices of order <code class="reqn">n + 1</code>, respectively, and <code class="reqn">\boldsymbol D</code> is a pairwise distance
+matrix for the elements in the set <code class="reqn">\mathcal{S}</code> considering a specific distance
+between ordinal states, <code class="reqn">d(\cdot, \cdot)</code>. If <code>normalize = TRUE</code>, then the normalized estimate is computed, namely
+<code class="reqn">\frac{\widehat{asym}_{d}}{max_{s_i, s_j \in \mathcal{S}}d(s_i, s_j)}</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The estimated asymmetry.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Ángel López-Oriona, José A. Vilar
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Weiß CH (2019).
+“Distance-based analysis of ordinal data and ordinal time series.”
+<em>Journal of the American Statistical Association</em>.
+</p>
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">estimated_asymmetry &lt;- ordinal_asymmetry(series = AustrianWages$data[[100]],
+states = 0 : 5) # Computing the asymmetry estimate
+# for one series in dataset AustrianWages using the block distance
+</code></pre>
+
+
+</div>

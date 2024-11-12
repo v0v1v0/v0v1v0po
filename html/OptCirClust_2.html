@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>FramedClust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Framed Data Clustering</h2>
+
+<h3>Description</h3>
+
+<p>Find a frame of given size, among all possible such frames
+on the input data, to minimize the minimum within-cluster
+sum of square distances.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">FramedClust(
+  X,
+  K,
+  frame.size,
+  first.frame = 1,
+  last.frame = length(X) - frame.size + 1,
+  method = c("linear.polylog", "kmeans", "Ckmeans.1d.dp")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>a vector of data points to perform framed clustering</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>the number of clusters in each frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>frame.size</code></td>
+<td>
+<p>the number of points from X to be included in each frame.
+It is not the width of the frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first.frame</code></td>
+<td>
+<p>starting index of the first frame to be clustered.
+The first point in the first frame is <code>X[first.frame]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>last.frame</code></td>
+<td>
+<p>starting index of the last frame to be clustered.
+The first point in the first frame is <code>X[last.frame]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the framed clustering method. See Details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The method option <code>"linear.polylog"</code> (default) performs
+fast optimal framed clustering. The runtime is
+<code class="reqn">O(K N \log^2 N)</code> (Debnath and Song 2021).
+</p>
+<p>The <code>"kmeans"</code> option repeatedly calling the heuristic
+k-means algorithm in all frames without any guarantee of
+cluster optimality.
+</p>
+<p>The method option <code>"Ckmeans.1d.dp"</code> performs optimal framed
+clustering by repeatedly finding the best clustering within
+each frame using the <code>"Ckmeans.1d.dp"</code> method. At a runtime
+of <code class="reqn">O(K N^2)</code>, the algorithm is slow but optimal.
+It is included to provide a baseline.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"FramedClust"</code> which has a <code>plot</code>
+method. It is a list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>a vector of clusters assigned to each element in x.
+Each cluster is indexed by an integer from 1 to K.
+NA represents points from X that are outside the optimal frame,
+thus not part of any cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centers</code></td>
+<td>
+<p>a numeric vector of the means for each cluster
+in the frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>withinss</code></td>
+<td>
+<p>a numeric vector of the within-cluster sum of
+squared distances for each cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>a vector of the number of elements in each cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>totss</code></td>
+<td>
+<p>total sum of squared distances between each element
+and the sample mean. This statistic is not dependent on
+the clustering result.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tot.withinss</code></td>
+<td>
+<p>total sum of within-cluster squared
+distances between each element and its cluster mean.
+This statistic is minimized given the number of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betweenss</code></td>
+<td>
+<p>sum of squared distances between each
+cluster mean and sample mean. This statistic is maximized
+given the number of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X_name</code></td>
+<td>
+<p>a character string. The actual name of
+the <code>X</code> argument.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Debnath T, Song M (2021).
+“Fast optimal circular clustering and applications on round genomes.”
+<em>IEEE/ACM Transactions on Computational Biology and Bioinformatics</em>.
+doi: <a href="https://doi.org/10.1109/TCBB.2021.3077573">10.1109/TCBB.2021.3077573</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">N &lt;- 100
+X &lt;- rnorm(N)
+K &lt;- 5
+frame.size &lt;- 60
+
+result &lt;- FramedClust(X, K, frame.size)
+plot(result, main="Example 1. Framed clustering on all frames")
+
+frame.size &lt;- 40
+first.frame &lt;- 30
+last.frame &lt;- 50
+method &lt;- "linear.polylog"
+
+result &lt;- FramedClust(X, K, frame.size, first.frame,
+                      last.frame, method)
+plot(result, main="Example 2. Framed clustering on a subset of frames")
+
+</code></pre>
+
+
+</div>

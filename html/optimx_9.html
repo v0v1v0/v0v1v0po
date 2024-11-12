@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>coef</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarize opm object</h2>
+
+<h3>Description</h3>
+
+<p>Summarize an <code>"opm"</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  ## S3 method for class 'opm'
+coef(object, ...) 
+  ## S3 replacement method for class 'opm'
+coef(x) &lt;- value 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Object returned by <code>opm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments to be passed to the function. Currently not
+used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An <code>opm</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>Set parameters equal to this value.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>coef.opm</code> returns the best parameters found by each method that
+returned such parameters. The returned coefficients are in the form of a
+matrix with the rows named by the relevant methods and the columns named
+according to parameter names provided by the user in the vector of starting
+values, or else by "p1", "p2", ..., if names are not provided.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ans &lt;- opm(fn = function(x) sum(x*x), par = 1:2, method="ALL", control=list(trace=0))
+print(coef(ans))
+
+ansx &lt;- optimx(fn = function(x) sum(x*x), par = 1:2, control=list(all.methods=TRUE, trace=0))
+print(coef(ansx))
+
+
+## Not run: 
+proj &lt;- function(x) x/sum(x)
+f &lt;- function(x) -prod(proj(x))
+ans &lt;- opm(1:2, f)
+print(ans)
+coef(ans) &lt;- apply(coef(ans), 1, proj)
+print(ans)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

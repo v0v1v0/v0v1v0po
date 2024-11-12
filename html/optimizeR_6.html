@@ -1,0 +1,813 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Optimizer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Specify numerical optimizer as R6 object</h2>
+
+<h3>Description</h3>
+
+<p>A <code>Optimizer</code> R6 object defines a numerical optimizer based on an
+optimization function implemented in R.
+</p>
+<p>The main advantage of working with an <code>Optimizer</code> object instead of
+using the optimization function directly lies in the standardized inputs and
+outputs.
+</p>
+<p>Any R function that fulfills the following four constraints can be defined as
+an <code>Optimizer</code> object:
+</p>
+
+<ol>
+<li>
+<p> It must have an input for a <code>function</code>, the objective function to be
+optimized.
+</p>
+</li>
+<li>
+<p> It must have an input for a <code>numeric</code> vector, the initial values from
+where the optimizer starts.
+</p>
+</li>
+<li>
+<p> It must have a <code>...</code> argument for additional parameters passed on to
+the objective function.
+</p>
+</li>
+<li>
+<p> The output must be a named <code>list</code>, including the optimal function
+value and the optimal parameter vector.
+</p>
+</li>
+</ol>
+<h3>Active bindings</h3>
+
+<div class="r6-active-bindings">
+
+<dl>
+<dt><code>label</code></dt>
+<dd>
+<p>A <code>character</code>, the label for the optimizer.</p>
+</dd>
+<dt><code>algorithm</code></dt>
+<dd>
+<p>A <code>function</code>, the optimization algorithm.</p>
+</dd>
+<dt><code>arg_objective</code></dt>
+<dd>
+<p>A <code>character</code>, the argument name for the objective function in
+<code>algorithm</code>.</p>
+</dd>
+<dt><code>arg_initial</code></dt>
+<dd>
+<p>A <code>character</code>, the argument name for the initial values in
+<code>algorithm</code>.</p>
+</dd>
+<dt><code>out_value</code></dt>
+<dd>
+<p>A <code>character</code>, the element name for the optimal function value in
+the output <code>list</code> of <code>algorithm</code>.</p>
+</dd>
+<dt><code>out_parameter</code></dt>
+<dd>
+<p>A <code>character</code>, the element name for the optimal parameters in the
+output <code>list</code> of <code>algorithm</code>.</p>
+</dd>
+<dt><code>direction</code></dt>
+<dd>
+<p>Either <code>"min"</code> (if the optimizer minimizes) or <code>"max"</code>
+(if the optimizer maximizes).</p>
+</dd>
+<dt><code>arguments</code></dt>
+<dd>
+<p>A named <code>list</code> of custom arguments for <code>algorithm</code>. Defaults
+are used for arguments that are not specified.</p>
+</dd>
+<dt><code>seconds</code></dt>
+<dd>
+<p>A <code>numeric</code>, a time limit in seconds. Optimization is interrupted
+prematurely if <code>seconds</code> is exceeded.
+</p>
+<p>No time limit if <code>seconds = Inf</code> (the default).
+</p>
+<p>Note the limitations documented in <code>setTimeLimit</code>.</p>
+</dd>
+<dt><code>hide_warnings</code></dt>
+<dd>
+<p>Either <code>TRUE</code> to hide warnings during optimization, or <code>FALSE</code>
+(default) else.</p>
+</dd>
+<dt><code>output_ignore</code></dt>
+<dd>
+<p>A <code>character</code> <code>vector</code> of elements to ignore in the
+optimization output.</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-Optimizer-new"><code>Optimizer$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Optimizer-definition"><code>Optimizer$definition()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Optimizer-set_arguments"><code>Optimizer$set_arguments()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Optimizer-validate"><code>Optimizer$validate()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Optimizer-minimize"><code>Optimizer$minimize()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Optimizer-maximize"><code>Optimizer$maximize()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Optimizer-optimize"><code>Optimizer$optimize()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Optimizer-print"><code>Optimizer$print()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Optimizer-clone"><code>Optimizer$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-Optimizer-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Initializes a new <code>Optimizer</code> object.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Optimizer$new(which, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>which</code></dt>
+<dd>
+<p>A <code>character</code>, either one of <code>optimizer_dictionary$keys</code> or
+<code>"custom"</code> (in which case <code>$definition()</code> must be used to
+define the optimizer details).</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to be passed to the optimizer algorithm.
+Without specifications, default values are used.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A new <code>Optimizer</code> object.
+</p>
+
+
+<hr>
+<a id="method-Optimizer-definition"></a>
+
+
+
+<h4>Method <code>definition()</code>
+</h4>
+
+<p>Defines an optimizer.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Optimizer$definition(
+  algorithm,
+  arg_objective,
+  arg_initial,
+  out_value,
+  out_parameter,
+  direction
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>algorithm</code></dt>
+<dd>
+<p>A <code>function</code>, the optimization algorithm.</p>
+</dd>
+<dt><code>arg_objective</code></dt>
+<dd>
+<p>A <code>character</code>, the argument name for the objective function in
+<code>algorithm</code>.</p>
+</dd>
+<dt><code>arg_initial</code></dt>
+<dd>
+<p>A <code>character</code>, the argument name for the initial values in
+<code>algorithm</code>.</p>
+</dd>
+<dt><code>out_value</code></dt>
+<dd>
+<p>A <code>character</code>, the element name for the optimal function value in
+the output <code>list</code> of <code>algorithm</code>.</p>
+</dd>
+<dt><code>out_parameter</code></dt>
+<dd>
+<p>A <code>character</code>, the element name for the optimal parameters in the
+output <code>list</code> of <code>algorithm</code>.</p>
+</dd>
+<dt><code>direction</code></dt>
+<dd>
+<p>Either <code>"min"</code> (if the optimizer minimizes) or <code>"max"</code>
+(if the optimizer maximizes).</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>Invisibly the <code>Optimizer</code> object.
+</p>
+
+
+<hr>
+<a id="method-Optimizer-set_arguments"></a>
+
+
+
+<h4>Method <code>set_arguments()</code>
+</h4>
+
+<p>Sets optimizer arguments.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Optimizer$set_arguments(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to be passed to the optimizer algorithm.
+Without specifications, default values are used.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>Optimizer</code> object.
+</p>
+
+
+<hr>
+<a id="method-Optimizer-validate"></a>
+
+
+
+<h4>Method <code>validate()</code>
+</h4>
+
+<p>Validates the <code>Optimizer</code> object. A time limit in seconds for
+the optimization can be set via the <code>$seconds</code> field.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Optimizer$validate(
+  objective = optimizeR::test_objective,
+  initial = round(stats::rnorm(2)),
+  ...,
+  direction = "min"
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>objective</code></dt>
+<dd>
+<p>A <code>function</code> to be optimized that
+</p>
+
+<ol>
+<li>
+<p> has at least one argument that receives a <code>numeric</code> <code>vector</code>
+</p>
+</li>
+<li>
+<p> and returns a single <code>numeric</code> value.
+</p>
+</li>
+</ol>
+<p>Alternatively, it can also be a <code>Objective</code> object for more
+flexibility.</p>
+</dd>
+<dt><code>initial</code></dt>
+<dd>
+<p>A <code>numeric</code> vector with starting parameter values for the optimization.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to be passed to the optimizer algorithm.
+Without specifications, default values are used.</p>
+</dd>
+<dt><code>direction</code></dt>
+<dd>
+<p>Either <code>"min"</code> for minimization or <code>"max"</code> for maximization.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The <code>Optimizer</code> object.
+</p>
+
+
+<hr>
+<a id="method-Optimizer-minimize"></a>
+
+
+
+<h4>Method <code>minimize()</code>
+</h4>
+
+<p>Performing minimization.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Optimizer$minimize(objective, initial, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>objective</code></dt>
+<dd>
+<p>A <code>function</code> to be optimized that
+</p>
+
+<ol>
+<li>
+<p> has at least one argument that receives a <code>numeric</code> <code>vector</code>
+</p>
+</li>
+<li>
+<p> and returns a single <code>numeric</code> value.
+</p>
+</li>
+</ol>
+<p>Alternatively, it can also be a <code>Objective</code> object for more
+flexibility.</p>
+</dd>
+<dt><code>initial</code></dt>
+<dd>
+<p>A <code>numeric</code> vector with starting parameter values for the optimization.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to be passed to the optimizer algorithm.
+Without specifications, default values are used.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A named <code>list</code>, containing at least these five elements:
+</p>
+
+<dl>
+<dt><code>value</code></dt>
+<dd>
+<p>A <code>numeric</code>, the minimum function value.</p>
+</dd>
+<dt><code>parameter</code></dt>
+<dd>
+<p>A <code>numeric</code> vector, the parameter vector
+where the minimum is obtained.</p>
+</dd>
+<dt><code>seconds</code></dt>
+<dd>
+<p>A <code>numeric</code>, the optimization time in seconds.</p>
+</dd>
+<dt><code>initial</code></dt>
+<dd>
+<p>A <code>numeric</code>, the initial parameter values.</p>
+</dd>
+<dt><code>error</code></dt>
+<dd>
+<p>Either <code>TRUE</code> if an error occurred, or <code>FALSE</code>, else.</p>
+</dd>
+</dl>
+<p>Appended are additional output elements of the optimizer.
+</p>
+<p>If an error occurred, then the error message is also appended as element
+<code>error_message</code>.
+</p>
+<p>If the time limit was exceeded, this also counts as an error. In addition,
+the flag <code>time_out = TRUE</code> is appended.
+</p>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>Optimizer$new("stats::nlm")$
+  minimize(objective = function(x) x^4 + 3*x - 5, initial = 2)
+</pre>
+</div>
+
+
+<hr>
+<a id="method-Optimizer-maximize"></a>
+
+
+
+<h4>Method <code>maximize()</code>
+</h4>
+
+<p>Performing maximization.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Optimizer$maximize(objective, initial, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>objective</code></dt>
+<dd>
+<p>A <code>function</code> to be optimized that
+</p>
+
+<ol>
+<li>
+<p> has at least one argument that receives a <code>numeric</code> <code>vector</code>
+</p>
+</li>
+<li>
+<p> and returns a single <code>numeric</code> value.
+</p>
+</li>
+</ol>
+<p>Alternatively, it can also be a <code>Objective</code> object for more
+flexibility.</p>
+</dd>
+<dt><code>initial</code></dt>
+<dd>
+<p>A <code>numeric</code> vector with starting parameter values for the optimization.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to be passed to the optimizer algorithm.
+Without specifications, default values are used.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A named <code>list</code>, containing at least these five elements:
+</p>
+
+<dl>
+<dt><code>value</code></dt>
+<dd>
+<p>A <code>numeric</code>, the maximum function value.</p>
+</dd>
+<dt><code>parameter</code></dt>
+<dd>
+<p>A <code>numeric</code> vector, the parameter vector
+where the maximum is obtained.</p>
+</dd>
+<dt><code>seconds</code></dt>
+<dd>
+<p>A <code>numeric</code>, the optimization time in seconds.</p>
+</dd>
+<dt><code>initial</code></dt>
+<dd>
+<p>A <code>numeric</code>, the initial parameter values.</p>
+</dd>
+<dt><code>error</code></dt>
+<dd>
+<p>Either <code>TRUE</code> if an error occurred, or <code>FALSE</code>, else.</p>
+</dd>
+</dl>
+<p>Appended are additional output elements of the optimizer.
+</p>
+<p>If an error occurred, then the error message is also appended as element
+<code>error_message</code>.
+</p>
+<p>If the time limit was exceeded, this also counts as an error. In addition,
+the flag <code>time_out = TRUE</code> is appended.
+</p>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>Optimizer$new("stats::nlm")$
+  maximize(objective = function(x) -x^4 + 3*x - 5, initial = 2)
+</pre>
+</div>
+
+
+<hr>
+<a id="method-Optimizer-optimize"></a>
+
+
+
+<h4>Method <code>optimize()</code>
+</h4>
+
+<p>Performing minimization or maximization.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Optimizer$optimize(objective, initial, direction = "min", ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>objective</code></dt>
+<dd>
+<p>A <code>function</code> to be optimized that
+</p>
+
+<ol>
+<li>
+<p> has at least one argument that receives a <code>numeric</code> <code>vector</code>
+</p>
+</li>
+<li>
+<p> and returns a single <code>numeric</code> value.
+</p>
+</li>
+</ol>
+<p>Alternatively, it can also be a <code>Objective</code> object for more
+flexibility.</p>
+</dd>
+<dt><code>initial</code></dt>
+<dd>
+<p>A <code>numeric</code> vector with starting parameter values for the optimization.</p>
+</dd>
+<dt><code>direction</code></dt>
+<dd>
+<p>Either <code>"min"</code> for minimization or <code>"max"</code> for maximization.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to be passed to the optimizer algorithm.
+Without specifications, default values are used.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A named <code>list</code>, containing at least these five elements:
+</p>
+
+<dl>
+<dt><code>value</code></dt>
+<dd>
+<p>A <code>numeric</code>, the maximum function value.</p>
+</dd>
+<dt><code>parameter</code></dt>
+<dd>
+<p>A <code>numeric</code> vector, the parameter vector
+where the maximum is obtained.</p>
+</dd>
+<dt><code>seconds</code></dt>
+<dd>
+<p>A <code>numeric</code>, the optimization time in seconds.</p>
+</dd>
+<dt><code>initial</code></dt>
+<dd>
+<p>A <code>numeric</code>, the initial parameter values.</p>
+</dd>
+<dt><code>error</code></dt>
+<dd>
+<p>Either <code>TRUE</code> if an error occurred, or <code>FALSE</code>, else.</p>
+</dd>
+</dl>
+<p>Appended are additional output elements of the optimizer.
+</p>
+<p>If an error occurred, then the error message is also appended as element
+<code>error_message</code>.
+</p>
+<p>If the time limit was exceeded, this also counts as an error. In addition,
+the flag <code>time_out = TRUE</code> is appended.
+</p>
+
+
+
+<h5>Examples</h5>
+
+<div class="r example copy">
+<pre>objective &lt;- function(x) -x^4 + 3*x - 5
+optimizer &lt;- Optimizer$new("stats::nlm")
+optimizer$optimize(objective = objective, initial = 2, direction = "min")
+optimizer$optimize(objective = objective, initial = 2, direction = "max")
+</pre>
+</div>
+
+
+<hr>
+<a id="method-Optimizer-print"></a>
+
+
+
+<h4>Method <code>print()</code>
+</h4>
+
+<p>Prints the optimizer label.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Optimizer$print(...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>...</code></dt>
+<dd>
+<p>Optionally additional arguments to be passed to the optimizer algorithm.
+Without specifications, default values are used.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>Invisibly the <code>Optimizer</code> object.
+</p>
+
+
+<hr>
+<a id="method-Optimizer-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Optimizer$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### Task: compare minimization with 'stats::nlm' and 'pracma::nelder_mead'
+
+# 1. define objective function and initial values
+objective &lt;- TestFunctions::TF_ackley
+initial &lt;- c(3, 3)
+
+# 2. get overview of optimizers in dictionary
+optimizer_dictionary$keys
+
+# 3. define 'nlm' optimizer
+nlm &lt;- Optimizer$new(which = "stats::nlm")
+
+# 4. define the 'pracma::nelder_mead' optimizer (not contained in the dictionary)
+nelder_mead &lt;- Optimizer$new(which = "custom")
+nelder_mead$definition(
+  algorithm = pracma::nelder_mead, # the optimization function
+  arg_objective = "fn",            # the argument name for the objective function
+  arg_initial = "x0",              # the argument name for the initial values
+  out_value = "fmin",              # the element for the optimal function value in the output
+  out_parameter = "xmin",          # the element for the optimal parameters in the output
+  direction = "min"                # the optimizer minimizes
+)
+
+# 5. compare the minimization results
+nlm$minimize(objective, initial)
+nelder_mead$minimize(objective, initial)
+
+
+## ------------------------------------------------
+## Method `Optimizer$minimize`
+## ------------------------------------------------
+
+Optimizer$new("stats::nlm")$
+  minimize(objective = function(x) x^4 + 3*x - 5, initial = 2)
+
+## ------------------------------------------------
+## Method `Optimizer$maximize`
+## ------------------------------------------------
+
+Optimizer$new("stats::nlm")$
+  maximize(objective = function(x) -x^4 + 3*x - 5, initial = 2)
+
+## ------------------------------------------------
+## Method `Optimizer$optimize`
+## ------------------------------------------------
+
+objective &lt;- function(x) -x^4 + 3*x - 5
+optimizer &lt;- Optimizer$new("stats::nlm")
+optimizer$optimize(objective = objective, initial = 2, direction = "min")
+optimizer$optimize(objective = objective, initial = 2, direction = "max")
+</code></pre>
+
+
+</div>

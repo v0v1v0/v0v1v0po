@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oracle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute oracle predictions</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>oracle</code> performs a strategie that cannot be defined online
+(in contrast to mixture). It requires in advance the knowledge of the whole
+data set <code>Y</code> and the expert advice to be well defined.
+Examples of oracles are the best fixed expert, the best fixed convex
+combination rule, the best linear combination rule, or the best expert
+that can shift a few times.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oracle(
+  Y,
+  experts,
+  model = "convex",
+  loss.type = "square",
+  awake = NULL,
+  lambda = NULL,
+  niter = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>A vector containing the observations
+to be predicted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>experts</code></td>
+<td>
+<p>A matrix containing the experts
+forecasts. Each column corresponds to the predictions proposed by an expert
+to predict <code>Y</code>.  It has as many columns as there are experts.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A character string specifying the oracle to use or a list with a component <code>name</code> specifying the oracle and any additional parameter needed.
+Currently available oracles are:
+</p>
+
+<dl>
+<dt>'expert'</dt>
+<dd>
+<p>The best fixed (constant over time) expert oracle.</p>
+</dd>
+<dt>'convex'</dt>
+<dd>
+<p>The best fixed convex combination (vector of non-negative weights that sum to 1)</p>
+</dd>
+<dt>'linear'</dt>
+<dd>
+<p>The best fixed linear combination of expert</p>
+</dd>
+<dt>'shifting'</dt>
+<dd>
+<p>It computes for all number $m$ of stwitches the
+sequence of experts with at most $m$ shifts that would have performed the
+best to predict the sequence of observations in <code>Y</code>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loss.type</code></td>
+<td>
+<p><code>character, list or function</code>. 
+</p>
+
+<dl>
+<dt>character</dt>
+<dd>
+<p> Name of the loss to be applied ('square', 'absolute', 'percentage', or 'pinball');</p>
+</dd>
+<dt>list</dt>
+<dd>
+<p> When using pinball loss: list with field name equal to 'pinball' and field tau equal to the required quantile in [0,1];</p>
+</dd>
+<dt>function</dt>
+<dd>
+<p> A custom loss as a function of two parameters.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>awake</code></td>
+<td>
+<p>A matrix specifying the
+activation coefficients of the experts. Its entries lie in <code>[0,1]</code>.
+Possible if some experts are specialists and do not always form and suggest
+prediction. If the expert number <code>k</code> at instance <code>t</code> does not
+form any prediction of observation <code>Y_t</code>, we can put
+<code>awake[t,k]=0</code> so that the mixture does not consider expert <code>k</code> in
+the mixture to predict <code>Y_t</code>. Remark that to compute the best expert oracle, 
+the performance of unactive (or partially active) experts is computed by using 
+the prediction of the uniform average of active experts.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>A positive number used by the 'linear' oracle only. 
+A possible $L_2$ regularization parameter for computing the linear oracle 
+(if the design matrix is not identifiable)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>niter</code></td>
+<td>
+<p>A positive integer for 'convex' and 'linear' oracles 
+if direct computation of the oracle is not implemented. 
+It defines the number of optimization steps to perform in 
+order to approximate the oracle (default value is 3).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters
+that are passed to <code>optim</code> function is order to perform convex optimization 
+(see parameter <code>niter</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class 'oracle' that contains:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>loss</code></td>
+<td>
+<p> The average loss suffered by the oracle. For the 'shifting' oracle,
+it is a vector of length <code>T</code> where
+<code>T</code> is the number of instance to be predicted (i.e., the length of the
+sequence <code>Y</code>). The value of $loss(m)$ is the loss
+(determined by the parameter <code>loss.type</code>) suffered by the
+best sequence of expert with at
+most $m-1$ shifts.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coefficients</code></td>
+<td>
+<p> Not for the 'shifting' oracle. A vector containing the best weight vector corresponding to the oracle. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prediction</code></td>
+<td>
+<p> Not for the 'shifting' oracle. A vector containing the
+predictions of the oracle.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rmse</code></td>
+<td>
+<p>If loss.type is the square loss (default) only.
+The root mean square error (i.e., it is the square root of <code>loss</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Pierre Gaillard &lt;pierre@gaillard.me&gt;
+</p>
+
+
+</div>

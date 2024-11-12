@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rowColIndexing</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert between row- and column-style indexing of matrices</h2>
+
+<h3>Description</h3>
+
+<p>These functions converts index values of cells between row- and column-style indexing of cells in matrices. Column indexing (the default for matrices) has the cell "1" in the upper left corner of the matrix. The cell "2" is below it, and so on. The numbering then wraps around to the top of the next column. Row indexing (the default for rasters, for example), also has cell "1" in the upper left, but cell "2" is to its right, and so on. Numbering then wraps around to the next row.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rowColIndexing(x, cell, dir)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Either a matrix, <em>or</em> a vector with two values, one for the number of rows and one for the number of columns in a matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cell</code></td>
+<td>
+<p>One or more cell indices (positive integers).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dir</code></td>
+<td>
+<p>The "direction" in which to convert. If <code>'row'</code>, it is assumed that <code>cell</code> is a column-style index and so should be converted to a row-style index. If <code>'col'</code>, it is assumed that <code>cell</code> is a row-style index and so should be converted to a column-style index.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>One or more positive integers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# column versus row indexing
+colIndex &lt;- matrix(1:40, nrow=5, ncol=8)
+rowIndex &lt;- matrix(1:40, nrow=5, ncol=8, byrow=TRUE)
+colIndex
+rowIndex
+
+# examples
+x &lt;- matrix('a', nrow=5, ncol=8, byrow=TRUE)
+rowColIndexing(x, cell=c(1, 6, 20), 'row')
+rowColIndexing(x, cell=c(1, 6, 20), 'col')
+
+rowColIndexing(c(5, 8), cell=c(1, 6, 20), 'row')
+rowColIndexing(c(5, 8), cell=c(1, 6, 20), 'col')
+
+</code></pre>
+
+
+</div>

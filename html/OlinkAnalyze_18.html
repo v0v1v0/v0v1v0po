@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_bridgeselector</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bridge selection function</h2>
+
+<h3>Description</h3>
+
+<p>The bridge selection function will select a number of bridge samples based on the input data. It selects samples with
+good detection, which passes QC and cover a good range of the data. If possible, Olink recommends 8-16 bridge samples.
+When running the selector, Olink recommends starting at sampleMissingFreq = 0.10 which represents a maximum of 10\
+data below LOD per sample. If there are not enough samples output, increase to 20\
+The function accepts NPX Excel files with data &lt; LOD replaced.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_bridgeselector(df, sampleMissingFreq, n)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>Tibble/data frame in long format such as produced by the Olink Analyze read_NPX function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampleMissingFreq</code></td>
+<td>
+<p>The threshold for sample wise missingness.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of bridge samples to be selected.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A "tibble" with sample IDs and mean NPX for a defined number of bridging samples. Columns include:
+</p>
+
+<ul>
+<li>
+<p>SampleID: Sample ID
+</p>
+</li>
+<li>
+<p>PercAssaysBelowLOD: Percent of Assays that are below LOD for the sample
+</p>
+</li>
+<li>
+<p>MeanNPX: Mean NPX for the sample
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">bridge_samples &lt;- olink_bridgeselector(npx_data1, sampleMissingFreq = 0.1, n = 20)
+</code></pre>
+
+
+</div>

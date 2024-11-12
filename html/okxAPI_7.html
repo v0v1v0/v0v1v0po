@@ -1,0 +1,193 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>restAPItrade</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>restAPItrade Class</h2>
+
+<h3>Description</h3>
+
+<p>Wrapper for <a href="https://www.okx.com/docs-v5/en/#rest-api-trade">REST API TRADE</a>.
+</p>
+
+
+<h3>Super class</h3>
+
+<p><code>okxAPI::restAPI</code> -&gt; <code>restAPItrade</code>
+</p>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-restAPItrade-order"><code>restAPItrade$order()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPItrade-cancel_order"><code>restAPItrade$cancel_order()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-restAPItrade-clone"><code>restAPItrade$clone()</code></a>
+</p>
+</li>
+</ul>
+<details><summary>Inherited methods</summary><ul>
+<li><span class="pkg-link" data-pkg="okxAPI" data-topic="restAPI" data-id="get_body"><a href="../../okxAPI/html/restAPI.html#method-restAPI-get_body"><code>okxAPI::restAPI$get_body()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="okxAPI" data-topic="restAPI" data-id="get_header"><a href="../../okxAPI/html/restAPI.html#method-restAPI-get_header"><code>okxAPI::restAPI$get_header()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="okxAPI" data-topic="restAPI" data-id="get_message"><a href="../../okxAPI/html/restAPI.html#method-restAPI-get_message"><code>okxAPI::restAPI$get_message()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="okxAPI" data-topic="restAPI" data-id="get_request_path"><a href="../../okxAPI/html/restAPI.html#method-restAPI-get_request_path"><code>okxAPI::restAPI$get_request_path()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="okxAPI" data-topic="restAPI" data-id="get_result"><a href="../../okxAPI/html/restAPI.html#method-restAPI-get_result"><code>okxAPI::restAPI$get_result()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="okxAPI" data-topic="restAPI" data-id="get_signature"><a href="../../okxAPI/html/restAPI.html#method-restAPI-get_signature"><code>okxAPI::restAPI$get_signature()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="okxAPI" data-topic="restAPI" data-id="get_timestamp"><a href="../../okxAPI/html/restAPI.html#method-restAPI-get_timestamp"><code>okxAPI::restAPI$get_timestamp()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="okxAPI" data-topic="restAPI" data-id="initialize"><a href="../../okxAPI/html/restAPI.html#method-restAPI-initialize"><code>okxAPI::restAPI$initialize()</code></a></span></li>
+</ul></details><hr>
+<a id="method-restAPItrade-order"></a>
+
+
+
+<h4>Method <code>order()</code>
+</h4>
+
+<p>See <a href="https://www.okx.com/docs-v5/en/#rest-api-trade-place-order">Place order</a> for more information.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPItrade$order(
+  instId,
+  tdMode = c("isolated", "cross", "cash"),
+  side = c("buy", "sell"),
+  sz,
+  ordType = c("market", "limit", "post_only", "fok", "ioc", "optimal_limit_ioc"),
+  process = "identity",
+  ...
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>instId</code></dt>
+<dd>
+<p>Instrument ID, e.g. BTC-USD-190927-5000-C.</p>
+</dd>
+<dt><code>tdMode</code></dt>
+<dd>
+<p>Trade mode. Margin mode: <code>cross</code> or <code>isolated.</code> Non-Margin mode: <code>cash</code>.</p>
+</dd>
+<dt><code>side</code></dt>
+<dd>
+<p>Order side, <code>buy</code> or <code>sell</code>.</p>
+</dd>
+<dt><code>sz</code></dt>
+<dd>
+<p>Quantity to buy or sell.</p>
+</dd>
+<dt><code>ordType</code></dt>
+<dd>
+<p>Order type. <code>market</code>: Market order, <code>limit</code>: Limit order, <code>post_only</code>: Post-only order,
+<code>fok</code>: Fill-or-kill order, <code>ioc</code>: Immediate-or-cancel order,
+<code>optimal_limit_ioc</code>: Market order with immediate-or-cancel order (applicable only to Futures and Perpetual swap).</p>
+</dd>
+<dt><code>process</code></dt>
+<dd>
+<p>A function to process the data received from the API. Default to <code>identity</code>.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Other request parameters.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-restAPItrade-cancel_order"></a>
+
+
+
+<h4>Method <code>cancel_order()</code>
+</h4>
+
+<p>See <a href="https://www.okx.com/docs-v5/en/#rest-api-trade-cancel-order">Cancel order</a> for more information.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPItrade$cancel_order(instId, ordId, clOrdId, process = "identity", ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>instId</code></dt>
+<dd>
+<p>Instrument ID, e.g. BTC-USD-190927.</p>
+</dd>
+<dt><code>ordId</code></dt>
+<dd>
+<p>Order ID, Either <code>ordId</code> or <code>clOrdId</code> is required. If both are passed, <code>ordId</code> will be used.</p>
+</dd>
+<dt><code>clOrdId</code></dt>
+<dd>
+<p>Client Order ID as assigned by the client.</p>
+</dd>
+<dt><code>process</code></dt>
+<dd>
+<p>A function to process the data received from the API. Default to <code>identity</code>.</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>Other request parameters.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-restAPItrade-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>restAPItrade$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+</div>

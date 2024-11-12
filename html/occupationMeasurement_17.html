@@ -1,0 +1,205 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_job_suggestions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make coding suggestions based on a user's open-ended text input.</h2>
+
+<h3>Description</h3>
+
+<p>Given a <code>text</code> input, find up to <code>num_suggestions</code> possible occupation categories.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_job_suggestions(
+  text,
+  suggestion_type = "auxco-1.2.x",
+  num_suggestions = 5,
+  suggestion_type_options = list(),
+  aggregate_score_threshold = 0.02,
+  item_score_threshold = 0,
+  distinctions = TRUE,
+  steps = list(simbased_wordwise = list(algorithm = algo_similarity_based_reasoning,
+    parameters = list(sim_name = "wordwise")), simbased_substring = list(algorithm =
+    algo_similarity_based_reasoning, parameters = list(sim_name = "substring"))),
+  include_general_id = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>The raw text input from the user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suggestion_type</code></td>
+<td>
+<p>Which type of suggestion to use / provide.
+Possible options are "auxco-1.2.x" and "kldb-2010".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_suggestions</code></td>
+<td>
+<p>The maximum number of suggestions to show.
+This is an upper bound and less suggestions may be returned.
+Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suggestion_type_options</code></td>
+<td>
+<p>A list with options for generating
+suggestions. Supported options:
+- <code>datasets</code>: Pass specific datasets to be used whenn adding information
+to predictions e.g. use a specific version of the kldb or auxco.
+Supported datasets are: "auxco-1.2.x", "kldb-2010". By default the datasets
+bundled with this package are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aggregate_score_threshold</code></td>
+<td>
+<p>A single value or named list of thresholds
+between 0 and 1. If it is a list, each entry should correspond to one of
+the <code>steps</code>. If it is a single value, it will apply to all steps.
+Results from that step will only be returned if the sum of
+their scores is equal to or greater than the specified threshold. With a
+aggregate_score_threshold of 0 results will always be returned
+(if there are any).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item_score_threshold</code></td>
+<td>
+<p>A threshold between 0 and 1 (usually
+very small, default 0). Results from any step will only be returned if they
+are greater than the specified threshold. Allows the removal of highly
+implausible suggestions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distinctions</code></td>
+<td>
+<p>Whether or not to add additional distinctions to
+similar occupational categories to the source code.
+Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>steps</code></td>
+<td>
+<p>A list with the algorithms to use and their parameters. Each
+entry of the list should contain a nested list with two entries:
+algorithm (the algorithm's function itself) and parameters (the parameters
+to pass onto the algorithm). Each algorithm will also always have access
+to a default set of three parameters:
+</p>
+
+<ul>
+<li>
+<p> text_processed: The input text after preprocessing
+</p>
+</li>
+<li>
+<p> suggestion_type: Which type of suggestion to output
+</p>
+</li>
+<li>
+<p> num_suggestions: How many suggestions shall be returned
+These parameters must not be specified manually and will be provided
+automatically instead.
+Defaults to:
+</p>
+</li>
+</ul>
+<div class="sourceCode"><pre>list(
+  # try similarity "one word at most 1 letter different" first
+  list(
+    algorithm = algo_similarity_based_reasoning,
+    parameters = list(
+      sim_name = "wordwise",
+      min_aggregate_prob = 0.535
+    )
+  ),
+  # since everything else failed, try "substring" similarity
+  list(
+    algorithm = algo_similarity_based_reasoning,
+    parameters = list(
+      sim_name = "substring",
+      min_aggregate_prob = 0.02
+    )
+  )
+)
+</pre></div>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_general_id</code></td>
+<td>
+<p>Whether a general column, called "id" should always
+be returned. This will automatically contain the appropriate id for
+different suggestion_types i.e. for "auxco-1-2.x" it will contain the same
+data as the column "auxco_id".</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The procedure implemented here is, roughly speaking, as follows:
+</p>
+
+<ol>
+<li>
+<p> Predict categories from KldB 2010, including their scores. The first algorithm mentioned in <code>steps</code> is used (default: <code>algo_similarity_based_reasoning()</code>).
+</p>
+</li>
+<li>
+<p> Convert the predicted KldB 2010 categories to <code>suggestion_type</code> (default: <code style="white-space: pre;">⁠auxco-1.2.x⁠</code>, an n:m mapping, scores are mapped accordingly.). See internal function <code>convert_suggestions()</code> for details.
+</p>
+</li>
+<li>
+<p> Remove predicted categories if their score is below <code>item_score_threshold</code> and only keep the <code>num_suggestions</code> top-ranked suggestions.
+</p>
+</li>
+<li>
+<p> Start anew, trying the next algorithm in <code>steps</code>, if the the top-ranked suggestions have a low chance to be correct. (Technically, this happens if the summed score of the <code>num_suggestions</code> top-ranked suggestions is below <code>aggregate_score_threshold</code>.)
+</p>
+</li>
+<li>
+<p> If <code>suggestion_type == "auxco-1.2.x"</code> and <code>distinctions == TRUE</code>, insert additional and (highly) similar categories or replace existing ones. See internal function <code>add_distinctions_auxco()</code>. Reorder and keep only the <code>num_suggestions</code> top-ranked suggestions. Auxco categories which were added during this step can be identified by their scores: It equals 0.05 for categories with high similarity and 0.005 for categories with medium similarity.
+</p>
+</li>
+</ol>
+<h3>Value</h3>
+
+<p>A data.table with suggestions or NULL if no suggestions were found.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+## Not run: 
+if (interactive()) {
+  get_job_suggestions("Koch")
+}
+
+if (interactive()) {
+  get_job_suggestions("Schlosser")
+}
+
+## End(Not run)
+</code></pre>
+
+
+</div>

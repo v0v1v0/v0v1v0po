@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as.statusCode</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert a numeric or character vector into an optimizer status code factor</h2>
+
+<h3>Description</h3>
+
+<p>Below we provide a brief, technical description of each status code followed by
+a more colloquial, less precise desciption.
+</p>
+
+<ul>
+<li>
+<p> 0,‘OK’: Optimization succeeded.  Everything seems fine.
+</p>
+</li>
+<li>
+<p> 1,‘OK/green’: Optimization succeeded, but the sequence
+of iterates has not yet converged (Mx status GREEN). This condition is only detected by
+NPSOL.  The solution is likely okay.  You might want to re-run the model
+from its final esimates to resolve this.
+</p>
+</li>
+<li>
+<p> 2,‘infeasible linear constraint’:
+The linear constraints and bounds could not be satisfied. The problem has no feasible solution.
+Right now, it should not be possible obtain this status code, so call Ripley's.
+</p>
+</li>
+<li>
+<p> 3,‘infeasible non-linear constraint’:
+The nonlinear constraints and bounds could not be satisfied. The problem may have no feasible solution.
+Sometimes this happens when your starting values do not satisfy the constraints.
+Also, optimization could not satisfy the constraints and get a better fit.
+</p>
+</li>
+<li>
+<p> 4,‘iteration limit’:
+Optimization was stopped prematurely because the iteration limit was
+reached (Mx status BLUE). You might want to rerun: <code>m1 = mxRun(m1)</code> or increase the
+iteration limit (see <code>mxOption</code>).
+The optimizer took all the steps it could and did not finish.  You can
+increase the number of steps or get better starting values.
+</p>
+</li>
+<li>
+<p> 5,‘not convex’:
+The Hessian at the solution does not appear to be convex (Mx status
+RED). There may be more than one solution to the model. See
+<code>mxCheckIdentification</code>.
+I would not trust this solution; it does not appear to be a good one.
+Perhaps, try <code>mxTryHard</code>.
+</p>
+</li>
+<li>
+<p> 6,‘nonzero gradient’:
+The model does not satisfy the first-order optimality conditions to
+the required accuracy, and no improved point for the merit function
+could be found during the final linesearch (Mx status RED).
+I would not trust this solution; it does not appear to be a good one.
+To search nearby, see <code>mxTryHard</code>.
+</p>
+</li>
+<li>
+<p> 7,‘bad deriv’:
+You have provided analytic derivatives. However,
+your provided derivatives differ too much from numerically
+approximated derivatives. Double check your math.
+</p>
+</li>
+<li>
+<p> 9,‘internal error’: An input parameter was invalid. The
+most likely cause is a bug in the code. Please report occurrences to
+the OpenMx developers.
+</p>
+</li>
+<li>
+<p> 10,‘infeasible start’:
+Starting values were infeasible.
+Modify the start values for one or more parameters. For instance,
+set means to their measured value, or set variances and covariances to
+plausible values. See <code>mxAutoStart</code> and <code>mxTryHard</code>.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">as.statusCode(code)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p>a character or numeric vector of optimizer status code</p>
+</td>
+</tr></table>
+<h3>See Also</h3>
+
+<p><code>mxBootstrap</code>
+<code>summary.MxModel</code>
+</p>
+
+
+</div>

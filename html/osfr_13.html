@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osf_mkdir</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create directories on OSF</h2>
+
+<h3>Description</h3>
+
+<p>Use <code>osf_mkdir()</code> to add new directories to projects, components, or nested
+within existing OSF directories. If <code>path</code> contains multiple directory
+levels (e.g., <code>"data/rawdata"</code>) the intermediate-level directories are
+created automatically. If the directory you're attempting to create already
+exists on OSF it will be silently ignored and included in the output.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osf_mkdir(x, path, verbose = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>One of the following:
+</p>
+
+<ul>
+<li>
+<p> An <code>osf_tbl_node</code> with a single OSF project or component.
+</p>
+</li>
+<li>
+<p> An <code>osf_tbl_file</code> containing a single directory.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Name of the new directory or a path ending with the new directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical, indicating whether to print informative messages
+about interactions with the OSF API (default <code>FALSE</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>osf_tbl_file</code> with one row containing the leaf directory
+specified in <code>path</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other OSF file operations: 
+<code>osf_cp()</code>,
+<code>osf_mv()</code>,
+<code>osf_rm()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+proj &lt;- osf_create_project("Directory Example")
+
+# add directory to the top-level of the Directory Example project
+data_dir &lt;- osf_mkdir(proj, path = "data")
+
+# add a subdirectory nested within data/
+osf_mkdir(data_dir, path = "rawdata")
+
+# recursively create multiple directory levels within data/
+osf_mkdir(data_dir, path = "samples/pcr/qc")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

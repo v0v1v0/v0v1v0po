@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combineDf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine data frames with different fields using a crosswalk table</h2>
+
+<h3>Description</h3>
+
+<p>This function combines multiple "source" data frames, possibly with different column names, into a single "destination" data frame.  Usually <code>merge</code> will be faster and easier to implement if the columns to be merged on have the same names, and <code>rbind</code> will always be faster and much easier if the column names and data types match exactly.<br></p>
+<p>The key tool in this function is a "crosswalk" table (a <code>data.frame</code>) that tells the function which fields in each source data frame match to the final fields in the destination data frame. Values in source data frame fields can be used as-is, combined across fields, or have functions applied to them before they are put into the destination data frame. If a source data frame doe snot gave a field that matches the destination field, a default value (including <code>NA</code>) can be assigned to all cells for that source data frame.<br></p>
+<p>The data frames to be combined can be provided in <code>...</code> or as file names in the first column of the crosswalk table. These can be either CSV files (extension "<code>.csv</code>"), TAB files (extension "<code>.tab</code>"), "Rdata" files (read using <code>load</code> and with a "<code>.rda</code>" or "<code>.rdata</code>" extension), or "RDS" files (read using <code>readRDS</code> and with a "<code>.rds</code>" extension). The file type will be intuited from the extension, and its case does not matter. Note that if an object in an Rdata file has the same name as an object in this function (i.e., any of the arguments plus any objects internal to the function), this may cause a conflict. To help obviate this issue, all internal objects are named with a period at the end (e.g., "<code>crossCell.</code>" and "<code>countDf.</code>").<br></p>
+<p>All cells in each source data frame will have leading and trailing white spaces removed before combining.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combineDf(
+  ...,
+  crosswalk,
+  collapse = "; ",
+  useColumns = NULL,
+  excludeColumns = NULL,
+  useFrames = NULL,
+  classes = NULL,
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Data frames to combine. These <em>must</em> be listed in the order that they appear in the <code>crosswalk</code> table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crosswalk</code></td>
+<td>
+<p>A <code>data.frame</code>. Column names are fields in the destination data frame. Each row corresponds to a different data frame to join. If <code>...</code> is not used then the first column <em>must</em> have the paths and file names to CSV, TAB, Rdata, or RDS files representing data frames to join. All objects will be coerced to <code>data.frame</code>s.<br></p>
+<p>Other than this column, the elements of each cell contain the name of the column in each source data frame that coincides with the column name in the <code>crosswalk</code> table.  For example, suppose the destination data frame is to have a column by the name of "species" with names of species within it. If the first source data frame has a column named "Species" and the second source data frame has a column named "scientificName", then the first value in <code>crosswalk</code> under its "species" column will be "Species" and the second "scientificName". This will take all the values in the "Species" field of the first source data frame and all the values in the "scientificName" field in the second source data frame and put them both into the "species" field of the destination frame.<br></p>
+<p>More complex operations can be done using the following in cells of <code>crosswalk</code>:
+</p>
+
+<ul>
+<li>
+<p> Filling all cells with a single value: If the value in the crosswalk cell begins with "<code>%fill%</code>", then the value that follows it will be repeated in destination data frame in each row. For example,<br></p>
+<p><code>%fill% inspected</code><br></p>
+<p>will repeat the string "inspected" in every row of the output corresponding to the respective source data frame (any spaces immediately after <code>%fill%</code> are ignored).
+</p>
+</li>
+<li>
+<p> Concatenating (pasting) columns together: To combine multiple fields, begin crosswalk cell with "<code>%cat%</code>", then list the fields to combine (with or without commas separating them). For example, if the crosswalk cell has<br></p>
+<p><code>%cat% field1 field2 field3</code><br></p>
+<p>then the resulting column in the destination data frame will have values from <code>field1</code>, <code>field2</code>, and <code>field3</code> pasted together. See also argument <code>collapse</code>.
+</p>
+</li>
+<li>
+<p> Applying a function: You can manipulate values by including functions in the crosswalk cell. The crosswalk cell should begin with "<code>%fun%</code>", then be followed an expression to evaluate. Expressions should generally <em>not</em> use the "<code>&lt;-</code>" operator (or the equals operator used in the same way).  For example:<br></p>
+<p><code>%fun% ifelse(as.numeric(field1) &gt;20, NA, as.numeric(field1))</code><br></p>
+<p>will create a column that is <code>NA</code> whenever values in <code>field1</code> are &gt;20, and the value in <code>field1</code> otherwise. Note that for mathematical operations, it is almost always necessary to use <code>as.numeric</code> around column names representing numbers since fields are read in as characters.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collapse</code></td>
+<td>
+<p>Character, specifies the string to put between fields combined with the <code>%cat%</code> operator in the <code>crosswalk</code> table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useColumns, excludeColumns</code></td>
+<td>
+<p>Logical, character vector, integer vector, or <code>NULL</code>. Indicates which columns in the crosswalk table are to be used or not to be used. These can be given as a <code>TRUE</code>/<code>FALSE</code> vector, a vector of column names, or a vector of column index values (integers). You can only specify <code>useColumns</code> or <code>excludeColumns</code> at a time (one or both must be <code>NULL</code>).  If both are <code>NULL</code> (default), then all columns in the crosswalk will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useFrames</code></td>
+<td>
+<p>Logical, character, or <code>NULL</code>.  Indicates if a particular source data frame should be used.  This should be a <code>TRUE</code>/<code>FALSE</code> vector or the name of a column in the crosswalk table that has <code>TRUE</code>/<code>FALSE</code> values. If this is the name of a column, the column will be removed from the columns in <code>useColumns</code>. If <code>NULL</code> (default). then all data frames in the crosswalk will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>classes</code></td>
+<td>
+<p>Character or character list, specifies the classes (e.g., character, logical, numeric, integer) to be assigned to each column in the output table. If <code>NULL</code>, all classes will be assumed to be character.  If just one value is listed, all columns will be set to this class. If a list, it must be the same length as the number of columns in <code>crosswalk</code> and specify the class of each column. If it has names, then the names must correspond to the columns in <code>crosswalk</code> and will be used to assign the data type to the corresponding columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical, if <code>TRUE</code> prints extra information during execution.  Useful for debugging the <code>crosswalk</code> table.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>merge</code>, <code>rbind</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">df1 &lt;- data.frame(x1=1:5, x2=FALSE, x3=letters[1:5], x4=LETTERS[1:5],
+       x5='stuff', x6=11:15)
+df2 &lt;- data.frame(y1=11:15, y2=rev(letters)[1:5], y3=runif(5))
+
+crosswalk &lt;- data.frame(
+  a = c('x1', 'y1'),
+  b = c('x2', '%fill% TRUE'),
+  c = c('%cat% x3 x4', 'y2'),
+  d = c('x5', '%fill% NA'),
+ e = c('%fun% as.numeric(x6) &gt; 12', '%fun% round(as.numeric(y3), 2)')
+)
+
+combined &lt;- combineDf(df1, df2, crosswalk=crosswalk)
+combined
+
+</code></pre>
+
+
+</div>

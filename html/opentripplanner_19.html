@@ -1,0 +1,187 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otp_setup</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set up an OTP instance.</h2>
+
+<h3>Description</h3>
+
+<p>OTP is run in Java and requires Java commands to be typed into the
+command line. The function allows the parameters to be defined in
+R and automatically passed to Java. This function sets up a local
+instance of OTP, for remote versions see documentation.
+</p>
+<p>The function assumes you have run otp_build_graph()
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otp_setup(
+  otp = NULL,
+  dir = NULL,
+  memory = 2048,
+  router = "default",
+  port = 8080,
+  securePort = 8081,
+  analyst = FALSE,
+  pointsets = FALSE,
+  wait = TRUE,
+  flag64bit = TRUE,
+  quiet = TRUE,
+  otp_version = NULL,
+  open_browser = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otp</code></td>
+<td>
+<p>A character string, path to the OTP .jar file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dir</code></td>
+<td>
+<p>A character string, path to a directory containing the
+necessary files, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>memory</code></td>
+<td>
+<p>A positive integer. Amount of memory to assign to
+the OTP in MB, default is 2048</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>router</code></td>
+<td>
+<p>A character for the name of the router to use, must
+be subfolder of dir/graphs, default "default". See
+vignettes for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>port</code></td>
+<td>
+<p>A positive integer. Optional, default is 8080.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>securePort</code></td>
+<td>
+<p>A positive integer. Optional, default is 8081.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>analyst</code></td>
+<td>
+<p>Logical. Should the analyst features be loaded?
+Default FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pointsets</code></td>
+<td>
+<p>Logical. Should the pointsets be loaded?
+Default FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wait</code></td>
+<td>
+<p>Logical, Should R wait until OTP has loaded before
+running next line of code, default TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flag64bit</code></td>
+<td>
+<p>Logical, if true the -d64 flag is added to Java instructions,
+ignored if otp_version &gt;= 2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>Logical, if FALSE the Java commands will be printed to console</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>otp_version</code></td>
+<td>
+<p>Numeric, version of OTP to build, default NULL when version
+is auto-detected</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>open_browser</code></td>
+<td>
+<p>Logical, if TRUE web browser is loaded when OTP is ready</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To run an OTP graph must have been created using otp_build_graph
+and the following files to be in the directory specified by the
+dir variable.
+</p>
+<p>/graphs - A sub-directory
+</p>
+<p>/default - A sub-directory with the name of the OTP router used in 'router' variable
+</p>
+<p>graph.obj  OTP graph
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function does not return a value to R. If wait is TRUE R
+will wait until OTP is running (maximum of 5 minutes).
+After 5 minutes (or if wait is FALSE) the function will return
+R to your control, but the OTP will keep loading.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other setup: 
+<code>otp_build_graph()</code>,
+<code>otp_check_java()</code>,
+<code>otp_check_version()</code>,
+<code>otp_dl_demo()</code>,
+<code>otp_dl_jar()</code>,
+<code>otp_make_config()</code>,
+<code>otp_stop()</code>,
+<code>otp_validate_config()</code>,
+<code>otp_write_config()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+otp_setup(
+  otp = "C:/otp/otp.jar",
+  dir = "C:/data"
+)
+otp_setup(
+  otp = "C:/otp/otp.jar",
+  dir = "C:/data",
+  memory = 5000,
+  analyst = TRUE
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

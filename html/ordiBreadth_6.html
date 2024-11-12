@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>null.breadth.focal</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+null.breadth.focal
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the null expectation of ordinated host breadth for each herbivore individually. The ordination for each herbivore is based on PCoA where the focal herbivore is not included.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">null.breadth.focal(dat, dis.method = "jaccard", reps = 100)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+
+<p>A matrix of diet associations. Rows are herbivores and columns are diet items.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dis.method</code></td>
+<td>
+
+<p>Dissimilarity index passed on to vegdist in the vegan package.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reps</code></td>
+<td>
+
+<p>The number of permutations to generate a null distribution.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In situations where the focal herbivore is the only species using a particular diet item, that diet item is not included in the ordination. This is the modified plant richness.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following:
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>species</code></td>
+<td>
+<p>Name of herbivore species (row name of <code>dat</code></p>
+</td>
+</tr></table>
+<p>)
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>observed.breadth</code></td>
+<td>
+<p>Ordinated diet breadth</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.factor</code></td>
+<td>
+<p>Ordinated diet breadth of most extreme generalist herbivore based on ordination</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>observed.breadth.scaled</code></td>
+<td>
+<p>Scaled ordinated diet breadth</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>totalplantrichness</code></td>
+<td>
+<p>Taxonomic diet richness of focal species</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modplantrichness</code></td>
+<td>
+<p>Modified taxonomic diet richness of focal species (see details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>null</code></td>
+<td>
+<p>A vector of null ordinated diet values</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>James Fordyce
+</p>
+
+
+<h3>References</h3>
+
+<p>Fordyce, J.A., C.C. Nice, C.A. Hamm, &amp; M.L. Forister. Quantifying diet breadth through ordination of host association. Ecology
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">testdata&lt;-	
+	c(		
+			0,0,0,0,1,0,0,0,0,0,#1
+			0,0,0,0,0,0,1,1,0,0,#2
+			1,1,1,0,0,0,0,0,0,0,#3
+			0,0,0,0,1,1,0,1,0,1,#4
+			1,1,1,0,0,0,1,0,0,0,#4
+			1,1,0,0,1,0,1,0,0,0,#4
+			0,0,0,1,0,0,1,0,1,1,#4
+			1,0,1,0,1,1,0,0,0,1, #5
+			1,1,0,0,1,0,0,1,1,1,#6
+			1,1,1,0,1,1,0,1,1,1) #8
+
+
+dat&lt;-array(dim=c(10,10),data=testdata)
+dat&lt;-t(dat)
+colnames(dat)&lt;-paste("",LETTERS[1:10],sep="")
+rownames(dat)&lt;-paste("bug",1:10,sep="")
+
+null.breadth.focal(dat)
+</code></pre>
+
+
+</div>

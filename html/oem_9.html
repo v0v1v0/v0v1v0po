@@ -1,0 +1,281 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oem.xtx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Orthogonalizing EM with precomputed XtX</h2>
+
+<h3>Description</h3>
+
+<p>Orthogonalizing EM with precomputed XtX
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oem.xtx(
+  xtx,
+  xty,
+  family = c("gaussian", "binomial"),
+  penalty = c("elastic.net", "lasso", "ols", "mcp", "scad", "mcp.net", "scad.net",
+    "grp.lasso", "grp.lasso.net", "grp.mcp", "grp.scad", "grp.mcp.net", "grp.scad.net",
+    "sparse.grp.lasso"),
+  lambda = numeric(0),
+  nlambda = 100L,
+  lambda.min.ratio = NULL,
+  alpha = 1,
+  gamma = 3,
+  tau = 0.5,
+  groups = numeric(0),
+  scale.factor = numeric(0),
+  penalty.factor = NULL,
+  group.weights = NULL,
+  maxit = 500L,
+  tol = 1e-07,
+  irls.maxit = 100L,
+  irls.tol = 0.001
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xtx</code></td>
+<td>
+<p>input matrix equal to <code>crossprod(x) / nrow(x)</code>. 
+where <code>x</code> is the design matrix.
+It is highly recommended to scale by the number of rows in <code>x</code>.
+If <code>xtx</code> is scaled, <code>xty</code> must also be scaled or else results may be meaningless!</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xty</code></td>
+<td>
+<p>numeric vector of length <code>nvars</code>. Equal to <code>crosprod(x, y) / nobs</code>. 
+It is highly recommended to scale by the number of rows in <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p><code>"gaussian"</code> for least squares problems, <code>"binomial"</code> for binary response. 
+(only <code>gaussian</code> implemented currently)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty</code></td>
+<td>
+<p>Specification of penalty type. Choices include:
+</p>
+
+<ul>
+<li> <p><code>"elastic.net"</code> - elastic net penalty, extra parameters: <code>"alpha"</code>
+</p>
+</li>
+<li> <p><code>"lasso"</code> - lasso penalty
+</p>
+</li>
+<li> <p><code>"ols"</code> - ordinary least squares
+</p>
+</li>
+<li> <p><code>"mcp"</code> - minimax concave penalty, extra parameters: <code>"gamma"</code>
+</p>
+</li>
+<li> <p><code>"scad"</code> - smoothly clipped absolute deviation, extra parameters: <code>"gamma"</code>
+</p>
+</li>
+<li> <p><code>"mcp.net"</code> - minimax concave penalty + l2 penalty, extra parameters: 
+<code>"gamma"</code>, <code>"alpha"</code>
+</p>
+</li>
+<li> <p><code>"scad.net"</code> - smoothly clipped absolute deviation + l2 penalty, extra parameters: 
+<code>"gamma"</code>, <code>"alpha"</code>
+</p>
+</li>
+<li> <p><code>"grp.lasso"</code> - group lasso penalty
+</p>
+</li>
+<li> <p><code>"grp.lasso.net"</code> - group lasso penalty + l2 penalty, extra parameters: <code>"alpha"</code>
+</p>
+</li>
+<li> <p><code>"grp.mcp"</code> - group minimax concave penalty, extra parameters: <code>"gamma"</code>
+</p>
+</li>
+<li> <p><code>"grp.scad"</code> - group smoothly clipped absolute deviation, extra parameters: <code>"gamma"</code>
+</p>
+</li>
+<li> <p><code>"grp.mcp.net"</code> - group minimax concave penalty + l2 penalty, extra parameters: <code>"gamma"</code>, <code>"alpha"</code>
+</p>
+</li>
+<li> <p><code>"grp.scad.net"</code> - group smoothly clipped absolute deviation + l2 penalty, extra parameters: <code>"gamma"</code>, <code>"alpha"</code>
+</p>
+</li>
+<li> <p><code>"sparse.grp.lasso"</code> - sparse group lasso penalty (group lasso + lasso), extra parameters: <code>"tau"</code>
+</p>
+</li>
+</ul>
+<p>Careful consideration is required for the group lasso, group MCP, and group SCAD penalties. Groups as specified by the <code>groups</code> argument 
+should be chosen in a sensible manner.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>A user supplied lambda sequence. By default, the program computes
+its own lambda sequence based on <code>nlambda</code> and <code>lambda.min.ratio</code>. Supplying
+a value of lambda overrides this.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlambda</code></td>
+<td>
+<p>The number of lambda values - default is 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda.min.ratio</code></td>
+<td>
+<p>Smallest value for lambda, as a fraction of <code>lambda.max</code>, the (data derived) entry
+value (i.e. the smallest value for which all coefficients are zero). The default
+depends on the sample size nobs relative to the number of variables nvars. The default is 0.0001</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>mixing value for <code>elastic.net</code>, <code>mcp.net</code>, <code>scad.net</code>, <code>grp.mcp.net</code>, <code>grp.scad.net</code>. 
+penalty applied is (1 - alpha) * (ridge penalty) + alpha * (lasso/mcp/mcp/grp.lasso penalty)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p>tuning parameter for SCAD and MCP penalties. must be &gt;= 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>mixing value for <code>sparse.grp.lasso</code>. penalty applied is (1 - tau) * (group lasso penalty) + tau * (lasso penalty)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groups</code></td>
+<td>
+<p>A vector of describing the grouping of the coefficients. See the example below. All unpenalized variables
+should be put in group 0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.factor</code></td>
+<td>
+<p>of length <code>nvars === ncol(xtx) == length(xty)</code> for scaling columns of <code>x</code>. The standard deviation
+for each column of <code>x</code> is a common choice for <code>scale.factor</code>. Coefficients will be returned on original scale. Default is 
+no scaling.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty.factor</code></td>
+<td>
+<p>Separate penalty factors can be applied to each coefficient. 
+This is a number that multiplies lambda to allow differential shrinkage. Can be 0 for some variables, 
+which implies no shrinkage, and that variable is always included in the model. Default is 1 for all 
+variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group.weights</code></td>
+<td>
+<p>penalty factors applied to each group for the group lasso. Similar to <code>penalty.factor</code>, 
+this is a number that multiplies lambda to allow differential shrinkage. Can be 0 for some groups, 
+which implies no shrinkage, and that group is always included in the model. Default is sqrt(group size) for all
+groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>integer. Maximum number of OEM iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>convergence tolerance for OEM iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>irls.maxit</code></td>
+<td>
+<p>integer. Maximum number of IRLS iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>irls.tol</code></td>
+<td>
+<p>convergence tolerance for IRLS iterations. Only used if <code>family != "gaussian"</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object with S3 class <code>"oem"</code>
+</p>
+
+
+<h3>References</h3>
+
+<p>Huling. J.D. and Chien, P. (2022), Fast Penalized Regression and Cross Validation for Tall Data with the oem Package.
+Journal of Statistical Software 104(6), 1-24. doi:10.18637/jss.v104.i06
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+n.obs &lt;- 1e4
+n.vars &lt;- 100
+
+true.beta &lt;- c(runif(15, -0.25, 0.25), rep(0, n.vars - 15))
+
+x &lt;- matrix(rnorm(n.obs * n.vars), n.obs, n.vars)
+y &lt;- rnorm(n.obs, sd = 3) + x %*% true.beta
+
+fit &lt;- oem(x = x, y = y, 
+           penalty = c("lasso", "elastic.net", 
+                        "ols", 
+                        "mcp",       "scad", 
+                        "mcp.net",   "scad.net",
+                        "grp.lasso", "grp.lasso.net",
+                        "grp.mcp",   "grp.scad",
+                        "sparse.grp.lasso"), 
+           standardize = FALSE, intercept = FALSE,
+           groups = rep(1:20, each = 5))
+           
+xtx &lt;- crossprod(x) / n.obs
+xty &lt;- crossprod(x, y) / n.obs
+
+fit.xtx &lt;- oem.xtx(xtx = xtx, xty = xty, 
+                   penalty = c("lasso", "elastic.net", 
+                               "ols", 
+                               "mcp",       "scad", 
+                               "mcp.net",   "scad.net",
+                               "grp.lasso", "grp.lasso.net",
+                               "grp.mcp",   "grp.scad",
+                               "sparse.grp.lasso"), 
+                   groups = rep(1:20, each = 5))    
+                   
+max(abs(fit$beta[[1]][-1,] - fit.xtx$beta[[1]]))
+max(abs(fit$beta[[2]][-1,] - fit.xtx$beta[[2]]))       
+
+layout(matrix(1:2, ncol = 2))
+plot(fit.xtx)
+plot(fit.xtx, which.model = 2)
+
+</code></pre>
+
+
+</div>

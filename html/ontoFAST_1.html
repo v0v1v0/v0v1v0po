@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>annot_all_chars</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Annotate all character statements with ontology terms</h2>
+
+<h3>Description</h3>
+
+<p>Matches character statement and returns most similar ontology terms using
+grep and distance-based matching
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">annot_all_chars(ontology, use.synonyms = TRUE, min_set = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p>ontology_index object with character names (ontology$name_characters) and ids (ontology$id_characters)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use.synonyms</code></td>
+<td>
+<p>using synonyms list during search. It has to be included in ontology,
+see syn_extract()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_set</code></td>
+<td>
+<p>if TRUE eliminates higher order inferred ontology terms</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The list of matched ontology terms and their character ids.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#getting ontology
+data(HAO)
+data(Sharkey_2011)
+ontology&lt;-HAO
+#parsing synonyms
+ontology$parsed_synonyms&lt;-syn_extract(HAO)
+# reading in characters
+char_et_states&lt;-Sharkey_2011
+# embedding characters and character ids into ontology
+id_characters&lt;-paste("CHAR:",c(1:392), sep="")
+name_characters&lt;-char_et_states[,1]
+names(name_characters)&lt;-id_characters
+ontology$name_characters&lt;-name_characters
+ontology$id_characters&lt;-id_characters
+# running annotations
+
+auto_annotations&lt;-annot_all_chars(ontology)
+
+</code></pre>
+
+
+</div>

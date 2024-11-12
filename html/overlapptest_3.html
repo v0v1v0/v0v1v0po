@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check.ventana</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Checks for Anticlockwise Vertices
+</h2>
+
+<h3>Description</h3>
+
+<p>Checks that the vertices of polygons in a multi-polygon <code>owin</code> object are listed anticlockwise and, if some are not, tries to correct them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check.ventana(ventana)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>ventana</code></td>
+<td>
+
+<p>A multiple-polygon window with the format <code>owin</code> of <span class="pkg">spatstat</span>.
+</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This functions should be employed after importing shapefiles into <code>owin</code> objetcs (see vignette). Vertices of the individual polygons in the multiple-polygon  <code>owin</code> objects should be listed anticlockwise to avoid errors in the computations of area overlapp (clockwise listed polygons represent "holes" in <span class="pkg">spatstat</span>). This functions checks this and, in case that the vertices of some polygons are listed clockwise, tries to revert their order. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A multiple-polygon window with the format <code>owin</code> of <span class="pkg">spatstat</span> with the vertices of all polygons listed anticockwise. The order number of the corrected polygons are included in the attribute "malos1".  If there has been any polygon whose vertices have not been corrected, their orden number are included in the attribute "malos2": these polygons should be corrected manually.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelino de la Cruz Rot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Astragalus)
+# For illustrative purposes, make the vertices of some individual polygon to be listed clockwise
+Astragalus.malo&lt;-Astragalus
+Astragalus.malo$bdry[[14]]&lt;-lapply(Astragalus.malo$bdry[[14]], rev)
+# check and correct
+Astragalus.corrected&lt;-(check.ventana(Astragalus.malo))
+attributes(Astragalus.corrected)
+
+
+</code></pre>
+
+
+</div>

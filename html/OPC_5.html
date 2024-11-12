@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>SAPC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The stochastic approximate component method can handle online data sets.</h2>
+
+<h3>Description</h3>
+
+<p>The stochastic approximate component method can handle online data sets.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">SAPC(data, m, eta, alpha)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>is a online data set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>is the number of principal component</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>is the proportion of online data to total data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>is the step size</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>T2,T2k,V,Vhat,lambdahat,time
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(MASS)
+n=2000;p=20;m=9;
+mu=t(matrix(rep(runif(p,0,1000),n),p,n))     
+mu0=as.matrix(runif(m,0))
+sigma0=diag(runif(m,1))
+F=matrix(mvrnorm(n,mu0,sigma0),nrow=n)
+A=matrix(runif(p*m,-1,1),nrow=p)
+D=as.matrix(diag(rep(runif(p,0,1))))
+epsilon=matrix(mvrnorm(n,rep(0,p),D),nrow=n)
+data=mu+F%*%t(A)+epsilon
+SAPC(data=data,m=m,eta=0.8,alpha=1) 
+</code></pre>
+
+
+</div>

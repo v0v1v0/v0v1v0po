@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>classMembership</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Class Membership Probability for Mixture Models</h2>
+
+<h3>Description</h3>
+
+<p>Finite mixture models treat class membership as a latent random variable. The probability of an individual's membership in each class may be inferred retrospectively from the relative likelihoods.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+## S3 method for class 'openCR'
+classMembership(object, fullCH = NULL, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>fitted model of class openCR</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fullCH</code></td>
+<td>
+<p>capthist object (optional)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments (not used)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is assumed that the input model includes finite mixture terms (h2 or h3).
+</p>
+<p>As the detection histories are saved in compressed (“squeezed”) form in openCR objects the original animal identifiers are lost and the order of animals may change. These may be restored by providing <code>fullCH</code>.
+</p>
+<p>No class can be assigned from a CJS model for animals detected only in the final session.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Matrix with one row per individual and columns for each class and the class number of the most likely class.
+</p>
+
+
+<h3>Note</h3>
+
+<p>In earlier versions <code>openCR.fit</code> always computed class membership and saved it in component ‘posterior’ of the fitted model. <code>classMembership</code> replaces that functionality.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openCR.fit</code>, 
+<code>squeeze</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+jch &lt;- join(ovenCH)   
+fit &lt;- openCR.fit(ovenCH, model=p~h2)
+classMembership(fit, jch)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

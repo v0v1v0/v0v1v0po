@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>descrip-methods</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract Image Attribute <code>descrip</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>Methods that act on the <code>descrip</code> field in the
+NIfTI/ANALYZE header.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">descrip(object)
+
+## S4 method for signature 'nifti'
+descrip(object)
+
+## S4 method for signature 'anlz'
+descrip(object)
+
+descrip(object) &lt;- value
+
+## S4 replacement method for signature 'nifti'
+descrip(object) &lt;- value
+
+## S4 replacement method for signature 'anlz'
+descrip(object) &lt;- value
+
+## S4 method for signature 'niftiImage'
+descrip(object)
+
+## S4 replacement method for signature 'niftiImage'
+descrip(object) &lt;- value
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>is an object of class <code>nifti</code> or <code>anlz</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>is the value to assign to the <code>descrip</code> field.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See documentation on the ANALYZE and/or NIfTI data standards for
+more details.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>John Muschelli <a href="mailto:muschellij2@gmail.com">muschellij2@gmail.com</a>,<br>
+Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>ANALYZE 7.5<br><a href="http://eeg.sourceforge.net/ANALYZE75.pdf">http://eeg.sourceforge.net/ANALYZE75.pdf</a><br>
+NIfTI-1<br><a href="http://nifti.nimh.nih.gov/">http://nifti.nimh.nih.gov/</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+url &lt;- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_LR_nifti.nii.gz"
+urlfile &lt;- file.path(system.file("nifti", package="oro.nifti"),
+                     "mniLR.nii.gz")
+download.file(url, urlfile, quiet=TRUE)
+
+## End(Not run)
+urlfile &lt;- file.path(system.file("nifti", package="oro.nifti"),
+                     "mniLR.nii.gz")
+mniLR &lt;- readNIfTI(urlfile)
+descrip(mniLR)
+## Not run: 
+descrip(mniLR) &lt;- paste(descrip(mniLR), version$version.string, sep="; ")
+descrip(mniLR)
+
+## End(Not run)
+file = system.file("extdata", "example.nii.gz", package = "RNifti")
+img = RNifti::readNifti(file)
+descrip(img)
+file = system.file("extdata", "example.nii.gz", package = "RNifti")
+img = RNifti::readNifti(file)
+descrip(img) = "a file"
+descrip(img)
+stopifnot(descrip(img) == "a file")
+</code></pre>
+
+
+</div>

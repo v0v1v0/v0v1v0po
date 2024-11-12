@@ -1,0 +1,233 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ODEmorris.ODEnetwork</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Morris Screening for Objects of Class <code>ODEnetwork</code>
+</h2>
+
+<h3>Description</h3>
+
+<p><code>ODEmorris.ODEnetwork</code> performs a sensitivity analysis for objects of 
+class <code>ODEnetwork</code> using the Morris screening method.
+Package <code>ODEnetwork</code> is required for this function to work.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ODEnetwork'
+ODEmorris(mod, pars, times, binf = 0, bsup = 1,
+  r = 500, design = list(type = "oat", levels = 10, grid.jump = 1),
+  scale = TRUE, ode_method = "lsoda", parallel_eval = FALSE,
+  parallel_eval_ncores = NA, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>[<code>ODEnetwork</code>]<br>
+list of class <code>ODEnetwork</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pars</code></td>
+<td>
+<p>[<code>character(k)</code>]<br>
+names of the parameters to be included as input variables in Morris 
+screening. All parameter names must be contained in 
+<code>names(ODEnetwork::createParamVec(mod))</code> and must not be derivable 
+from other parameters supplied (e.g. <code>"k.2.1"</code> can be derived from 
+<code>"k.1.2"</code>, so supplying <code>"k.1.2"</code> suffices).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>[<code>numeric</code>]<br>
+points of time at which the sensitivity analysis should be executed (vector
+of arbitrary length). The first point of time must be greater than zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binf</code></td>
+<td>
+<p>[<code>character(1</code> or <code>k)</code>]<br>
+vector of lower borders of possible values for the <code>k</code> input 
+parameters. If they are all equal, a single value can be set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bsup</code></td>
+<td>
+<p>[<code>character(1</code> or <code>k)</code>]<br>
+vector of upper borders of possible values for the <code>k</code> input 
+parameters. If they are all equal, a single value can be set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+if of length 1, the number of repetitions of the <code>design</code>. If of 
+length 2, a space-filling optimization of the sampling design is used, see 
+<code>morris</code>. However, this space-filling optimization
+might lead to long runtimes, so length 1 is recommended for <code>r</code>. 
+Defaults to 500.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design</code></td>
+<td>
+<p>[<code>list</code>]<br>
+a list specifying the design type and its parameters,
+cf. <code>morris</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+if <code>TRUE</code>, scaling is done for the input design of experiments after 
+building the design and before calculating the elementary effects,
+cf. <code>morris</code>. Defaults to <code>TRUE</code>, which is
+highly recommended if the factors have different orders of magnitude, see
+<code>morris</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ode_method</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+method to be used for solving the ODEs in situations where the solution has
+to be determined numerically, see <code>ode</code> for details.
+Defaults to <code>"lsoda"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel_eval</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+logical indicating if the evaluation of the ODE model shall be performed
+parallelized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel_eval_ncores</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+number of processor cores to be used for parallelization. Only applies if
+<code>parallel_eval = TRUE</code>. If set to <code>NA</code> (as per default) and 
+<code>parallel_eval = TRUE</code>, 1 processor core is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the object of class <code>ODEnetwork</code> supplied for <code>mod</code> doesn't
+include any events, the solution of the ODE network is determined 
+analytically using <code>simuNetwork</code>. In the presence
+of events, <code>simuNetwork</code> uses 
+<code>ode</code> to solve the ODE network numerically.
+</p>
+<p>The sensitivity analysis is done for all state variables and all
+timepoints simultaneously using <code>morris</code> from the 
+package <code>sensitivity</code>.
+</p>
+<p>For non-ODE models, values for <code>r</code> are typically between 10 and 50.
+However, much higher values are recommended for ODE models (the default is
+<code>r = 500</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of class <code>ODEmorris</code> of length <code>2 * nrow(mod$state)</code> 
+containing in each element a matrix for one state variable (all components 
+of the 2 state variables are analyzed independently). The matrices 
+themselves contain the Morris screening results for all timepoints (rows: 
+<code>mu, mu.star</code> and <code>sigma</code> for every parameter; columns: 
+timepoints).
+</p>
+
+
+<h3>Note</h3>
+
+<p>In situations where the solution of the ODE model has to be determined 
+numerically, it might be helpful to try another ODE-solver if the 
+evaluation of the model function takes too long, (argument 
+<code>ode_method</code>). The <code>ode_method</code>s <code>"vode"</code>, <code>"bdf"</code>, 
+<code>"bdf_d"</code>, <code>"adams"</code>, <code>"impAdams"</code> and <code>"impAdams_d"</code> 
+might be faster than the default <code>"lsoda"</code>.
+</p>
+<p>If <code>morris</code> throws a warning message stating
+"In ... keeping ... repetitions out of ...", try using a bigger number of 
+<code>levels</code> in the <code>design</code> argument (only possible for OAT design).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Frank Weber
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>morris, plot.ODEmorris</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##### A network of 4 mechanical oscillators connected in a circle #####
+# Definition of the network using the package "ODEnetwork":
+M_mat &lt;- rep(2, 4)
+K_mat &lt;- diag(rep(2 * (2*pi*0.17)^2, 4))
+K_mat[1, 2] &lt;- K_mat[2, 3] &lt;- 
+  K_mat[3, 4] &lt;- K_mat[1, 4] &lt;- 2 * (2*pi*0.17)^2 / 10
+D_mat &lt;- diag(rep(0.05, 4))
+library("ODEnetwork")
+lfonet &lt;- ODEnetwork(masses = M_mat, dampers = D_mat, springs = K_mat)
+# The parameters to be included in the sensitivity analysis and their lower
+# and upper boundaries:
+LFOpars &lt;- c("k.1", "k.2", "k.3", "k.4",
+             "d.1", "d.2", "d.3", "d.4")
+LFObinf &lt;- c(rep(0.2, 4), rep(0.01, 4))
+LFObsup &lt;- c(rep(20, 4), rep(0.1, 4))
+# Setting of the initial values of the state variables:
+lfonet &lt;- setState(lfonet, state1 = rep(2, 4), state2 = rep(0, 4))
+# The timepoints of interest:
+LFOtimes &lt;- seq(25, 150, by = 2.5)
+# Morris screening:
+set.seed(283)
+# Warning: The following code might take very long!
+
+LFOres_morris &lt;- ODEmorris(mod = lfonet,
+                           pars = LFOpars,
+                           times = LFOtimes,
+                           binf = LFObinf,
+                           bsup = LFObsup,
+                           r = 500,
+                           design = list(type = "oat", 
+                                         levels = 10, grid.jump = 1),
+                           scale = TRUE,
+                           parallel_eval = TRUE,
+                           parallel_eval_ncores = 2)
+
+
+</code></pre>
+
+
+</div>

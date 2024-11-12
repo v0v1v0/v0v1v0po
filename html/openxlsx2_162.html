@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_set_header_footer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set headers and footers of a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>Set document headers and footers. You can also do this when adding a worksheet
+with <code>wb_add_worksheet()</code> with the <code>header</code>, <code>footer</code> arguments and friends.
+These will show up when printing an xlsx file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_set_header_footer(
+  wb,
+  sheet = current_sheet(),
+  header = NULL,
+  footer = NULL,
+  even_header = NULL,
+  even_footer = NULL,
+  first_header = NULL,
+  first_footer = NULL,
+  align_with_margins = NULL,
+  scale_with_doc = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name or index of a worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header, even_header, first_header, footer, even_footer, first_footer</code></td>
+<td>
+<p>Character vector of length 3 corresponding to positions left, center,
+right.  <code>header</code> and <code>footer</code> are used to default additional arguments.
+Setting <code>even</code>, <code>odd</code>, or <code>first</code>, overrides <code>header</code>/<code>footer</code>. Use <code>NA</code> to
+skip a position.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>align_with_margins</code></td>
+<td>
+<p>Align header/footer with margins</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale_with_doc</code></td>
+<td>
+<p>Scale header/footer with document</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Headers and footers can contain special tags
+</p>
+
+<ul>
+<li> <p><strong>&amp;[Page]</strong> Page number
+</p>
+</li>
+<li> <p><strong>&amp;[Pages]</strong> Number of pages
+</p>
+</li>
+<li> <p><strong>&amp;[Date]</strong> Current date
+</p>
+</li>
+<li> <p><strong>&amp;[Time]</strong> Current time
+</p>
+</li>
+<li> <p><strong>&amp;[Path]</strong> File path
+</p>
+</li>
+<li> <p><strong>&amp;[File]</strong> File name
+</p>
+</li>
+<li> <p><strong>&amp;[Tab]</strong> Worksheet name
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- wb_workbook()
+
+# Add example data
+wb$add_worksheet("S1")$add_data(x = 1:400)
+wb$add_worksheet("S2")$add_data(x = 1:400)
+wb$add_worksheet("S3")$add_data(x = 3:400)
+wb$add_worksheet("S4")$add_data(x = 3:400)
+
+wb$set_header_footer(
+  sheet = "S1",
+  header = c("ODD HEAD LEFT", "ODD HEAD CENTER", "ODD HEAD RIGHT"),
+  footer = c("ODD FOOT RIGHT", "ODD FOOT CENTER", "ODD FOOT RIGHT"),
+  even_header = c("EVEN HEAD LEFT", "EVEN HEAD CENTER", "EVEN HEAD RIGHT"),
+  even_footer = c("EVEN FOOT RIGHT", "EVEN FOOT CENTER", "EVEN FOOT RIGHT"),
+  first_header = c("TOP", "OF FIRST", "PAGE"),
+  first_footer = c("BOTTOM", "OF FIRST", "PAGE")
+)
+
+wb$set_header_footer(
+  sheet = 2,
+  header = c("&amp;[Date]", "ALL HEAD CENTER 2", "&amp;[Page] / &amp;[Pages]"),
+  footer = c("&amp;[Path]&amp;[File]", NA, "&amp;[Tab]"),
+  first_header = c(NA, "Center Header of First Page", NA),
+  first_footer = c(NA, "Center Footer of First Page", NA)
+)
+
+wb$set_header_footer(
+  sheet = 3,
+  header = c("ALL HEAD LEFT 2", "ALL HEAD CENTER 2", "ALL HEAD RIGHT 2"),
+  footer = c("ALL FOOT RIGHT 2", "ALL FOOT CENTER 2", "ALL FOOT RIGHT 2")
+)
+
+wb$set_header_footer(
+  sheet = 4,
+  first_header = c("FIRST ONLY L", NA, "FIRST ONLY R"),
+  first_footer = c("FIRST ONLY L", NA, "FIRST ONLY R")
+)
+</code></pre>
+
+
+</div>

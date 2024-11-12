@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ore_switch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>String multiplexing</h2>
+
+<h3>Description</h3>
+
+<p>This function maps one character vector to another, based on sequential
+matching to a series of regular expressions. The return value corresponding
+to each element in the source text is chosen based on the first matching
+regex: once matched, later options are ignored.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ore_switch(text, ..., options = "", encoding = getOption("ore.encoding"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>A vector of strings to match against.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>One or more string arguments specifying a possible return value.
+These are generally named with a regex, and the string is only used for a
+given <code>text</code> element if the regex matches (and no previous one
+matched). These strings may reference captured groups. Unnamed arguments
+match unconditionally, and will always be taken literally.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>A string composed of characters indicating variations on the
+usual interpretation of the regex. These may currently include <code>"i"</code>
+for case-insensitive matching, and <code>"m"</code> for multiline matching (in
+which case <code>"."</code> matches the newline character).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encoding</code></td>
+<td>
+<p>A string specifying the encoding that matching will take
+place in. The default is given by the <code>"ore.encoding"</code> option, which
+is usually set automatically from the current locale when the package is
+loaded, but can be modified if needed.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A character vector of the same length as <code>text</code>, containing the
+multiplexed strings. If none of the regexes matched, the corresponding
+element will be <code>NA</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ore_subst</code> for details of back-reference syntax.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Extract digits where present; otherwise return zero
+ore_switch(c("2 dogs","no dogs"), "\\d+"="\\0", "0")
+</code></pre>
+
+
+</div>

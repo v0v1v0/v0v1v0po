@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otp_evaluate_surface</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Evaluates an existing travel time surface (OTPv1 only).</h2>
+
+<h3>Description</h3>
+
+<p>Evaluates an existing travel time surface. Using a pointset from a specified CSV file,
+the travel time to each point is obtained from the specified surface. Accessibility
+indicators are then generated for one or more 'opportunity' columns in the pointset.
+For example, you might have the number of jobs available at each location, or
+the number of hospital beds.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otp_evaluate_surface(otpcon, surfaceId, pointset, detail = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otpcon</code></td>
+<td>
+<p>An OTP connection object produced by <code>otp_connect</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>surfaceId</code></td>
+<td>
+<p>Integer, the id number of an existing surface created using
+<code>otp_create_surface()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pointset</code></td>
+<td>
+<p>Character string, the name of a pointset known to OTP. A pointset
+is contained in a CSV file present in the pointset directory location passed to
+OTP at startup. The name of the pointset is the name of the file (without extension).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detail</code></td>
+<td>
+<p>logical, whether the travel time from the surface origin to each
+location in the pointset should be returned. Default is FALSE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function requires OTP to have been started with the <code>--analyst</code> switch and
+the <code>--pointset</code> parameter set to the path of a directory containing the pointset file(s).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Assuming no error, returns a list containing 4 or more elements:
+</p>
+
+<ul>
+<li> <p><code>errorId</code> Will be "OK" if no error condition.
+</p>
+</li>
+<li> <p><code>surfaceId</code> The id of the surface that was evaluated.
+</p>
+</li>
+<li>
+<p> One or more dataframes for each of the 'opportunity' columns in the pointset
+CSV file. Each dataframe contains four columns:
+</p>
+
+<ul>
+<li>
+<p> minutes. The time from the surface origin in one-minute increments.
+</p>
+</li>
+<li>
+<p> counts. The number of the opportunity locations
+reached within each minute interval.
+</p>
+</li>
+<li>
+<p> sum. The sum of the opportunities at each of
+the locations reached within each minute interval.
+</p>
+</li>
+<li>
+<p> cumsums. A cumulative sum of the opportunities reached.
+</p>
+</li>
+</ul>
+</li>
+<li>
+<p> If <code>detail</code> was set to TRUE then an additional dataframe containing
+the time taken (in seconds) to reach each point in the pointset CSV file. If a
+point was not reachable the time will be recorded as NA.
+</p>
+</li>
+<li> <p><code>query</code> The URL that was submitted to the OTP API.
+</p>
+</li>
+</ul>
+<p>If there is an error, a list containing 3 elements is returned:
+</p>
+
+<ul>
+<li> <p><code>errorId</code> The id code of the error.
+</p>
+</li>
+<li> <p><code>errorMessage</code> The error message.
+</p>
+</li>
+<li> <p><code>query</code> The URL that was submitted to the OTP API.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+otp_evaluate_surface(otpcon, surfaceId = 0, pointset = "jobs", detail = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

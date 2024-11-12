@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ConvertConcentration</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Concentration Basis</h2>
+
+<h3>Description</h3>
+
+<p>Change the unit basis for a sample concentration, such as
+ng/g wet weight to ng/g dry weight, or pg/g lipid weight to
+pg/g wet weight.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ConvertConcentration(x, convert, percent)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>numeric value. The concentration to be converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convert</code></td>
+<td>
+<p>character string. One of <code>wet.to.dry</code>,
+<code>dry.to.wet</code>, <code>wet.to.lipid</code>, or <code>lipid.to.wet</code>. See
+details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent</code></td>
+<td>
+<p>numeric value. Either the percent moisture or percent
+lipid. See details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>convert</code> argument specifies the type of conversion,
+for example <code>wet.to.dry</code> is wet weight basis to dry weight basis.
+</p>
+<p>Conversion between wet weight basis and dry weight basis requires
+<code>percent</code> to equal the percent moisture in the sample. Conversion
+between wet weight basis and lipid weight basis requires
+<code>percent</code> to equal the percent lipid in the sample. The following
+definitions for percent moisture and percent lipid are used.
+</p>
+<p style="text-align: center;"><code class="reqn">percent moisture = \frac{wet weight - dry weight}{wet weight} *
+  100</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">percent lipid = \frac{lipid weight}{wet weight} * 100</code>
+</p>
+ 
+<p>The unit prefixes (for example ng/g or pg/g) are not changed by the
+conversion.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric vector of length 1. The unit prefixes are the same as for
+<code>x</code>, only the concentration basis is converted. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Nathan G. Dodder</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Convert a concentration of 15.3 ng/g wet weight,
+## 5 percent lipid, to ng/g lipid weight.
+
+ConvertConcentration(15.3, "wet.to.lipid", 5)
+</code></pre>
+
+
+</div>

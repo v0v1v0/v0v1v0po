@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ORICC1</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>One-stage ORICC</h2>
+
+<h3>Description</h3>
+
+<p> One-stage ORICC is a computationally efficient information criterion-based clustering algorithm for selecting and
+clustering genes according to their time-course or dose-response
+profiles. This algorithm takes account of the ordering in time-course or dose-response experiments by 
+embedding the order-restricted inference into a model selection framework. This algorithm mainly consist of two steps. In the first step,
+candidate  profiles are defined in terms of inequalities
+among mean expression levels at different time points or doses levels. In the
+second step, genes are assigned to the best matched profiles
+determined by an information criterion for
+order-restricted inference.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+ORICC1(data,data.col,id.col,n.rep,n.top,transform,
+       name.profile,cyclical.profile,complete.profile,
+       onefile,plot.format)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>A matrix containing the gene expressions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.col</code></td>
+<td>
+<p>Column indices of the gene expression data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id.col</code></td>
+<td>
+<p>Column index of the gene ID. Defaults to 1. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.rep</code></td>
+<td>
+<p>A vector consisting of the number of replicate arrays at time points (1, 2,... ,T), where T is the total number of time points.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.top</code></td>
+<td>
+<p>The number of genes kept for the final clustering result. Genes are ranked based on expression variation across time or dose levels. Defaults to all genes ORICC1 selects
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transform</code></td>
+<td>
+<p>Transformation of the original data:
+</p>
+<p>0=None, 1=natural log, 2=square root, 3=cubic root.  Defaults to 0.      
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name.profile</code></td>
+<td>
+<p>A character string specifying the collection of candidate profiles. This option only supports monotone, up-down and down-up profiles specified as by 
+</p>
+<p><code>"decreasing";</code> 
+</p>
+<p><code>"increasing".</code>
+</p>
+<p><code>paste("up down max at",i,sep=" ");</code>
+</p>
+<p><code>paste("down up min at",j,sep=" ");</code>
+</p>
+<p>If <code>name.profile="all"</code>, the ‘decreasing’, ‘increasing’ and all ‘up-down’ and ‘down-up’ profiles will be included. 
+</p>
+<p>If <code>name.profile=NULL</code>, ‘decreasing’, ‘increasing’ and all ‘up-down’ and ‘down-up’ profiles will be absent. Defaults to NULL.
+</p>
+<p>One can also specify  several up-down or down-up profiles together as follows. 
+</p>
+<p><code>profile1=paste("up down max at",c(2,4),sep=" ");</code>
+</p>
+<p><code>profile2=paste("down up min at",c(3,5),sep=" ");</code>
+</p>
+<p><code>name.profile=c(profile1,profile2);</code>
+</p>
+<p>then up-down profile with maxima at 2 and 4 as well as down-up profile with  minima  at 3 and 5 will be included. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cyclical.profile</code></td>
+<td>
+<p>A matrix with 2 columns. Each element of the matrix must be  a number in the set {2,3,...,T-1}.  Each row of the matrix represents a cyclical profile with minima at the first entry of the row and maxima at the 2nd entry. As a result, two elements in the same row must be different.  For example, if 
+</p>
+<p><code>cyclical.profile=matrix(c(2,3,4,3),2,2,byrow=T),</code>
+then the cyclical profile with minima at 2 and maxima at 3 and the cyclical profile with minima at 4 and maxima at 3 will be included as candidate profiles.
+</p>
+<p>If <code>cyclical.profile=NULL</code>, all cyclical profiles will be absent. Defaults to NULL.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>complete.profile</code></td>
+<td>
+<p>The <code>complete.profile</code> means a profile in which there is no defined inequality constraint. 
+</p>
+<p>If the <code>complete.profile</code> is a candidate profile, 
+</p>
+<p><code>complete.profile=1</code>, otherwise, 
+</p>
+<p><code>complete.profile=NULL</code>. Defaults to NULL.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>onefile</code></td>
+<td>
+<p>logical: if true (the default) multiple figures for different clusters are output in one file. If FALSE, each cluster is plotted in a seperate file. Defaults to TRUE. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.format</code></td>
+<td>
+<p>The format of the output file containing plots of gene clusters.Users can choose between ‘eps’ and ‘jpg’. Defaults to ‘eps’.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The gene expression dataset should be in a tab-delimited txt file, in which the first two columns contain the gene names and their
+accession numbers or descriptions, and the remaining columns, in their orders, are the geneexpression data (contain multiple columns, i.e. <code>data.col</code>).The dataset is assumed to have been processed so that each row contains the expressions of only one gene.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The results are displayed in a graphical form. The graphics can be stored in a JPG or EPS format. Both the raw gene expression values and the estimated mean expressions are output to external files ‘cluster of raw data.txt’ and ‘cluster of fitted mean data.txt’, respectively. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tianqing Liu, Nan Lin, Ningzhong Shi and Baoxue Zhang 
+</p>
+<p>Maintainer: Tianqing Liu &lt;tianqingliu@gmail.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Liu, T., Lin, N., Shi, N. and Zhang, B. (2009), <em>Information criterion-based clustering with order-restricted candidate profiles in short time-course microarray experiments.</em> BMC Bioinformatics, <b>10</b>: 146.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Breast)
+ORICC1(Breast,data.col=3:50,id.col=1,n.rep=rep(8,6),
+       n.top=50,transform=1,name.profile="all",plot.format="eps")
+</code></pre>
+
+
+</div>

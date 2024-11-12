@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiSetup_for_Octopus900</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Implementation of opiSetup for the Octopus900 machine.</h2>
+
+<h3>Description</h3>
+
+<p>This is for internal use only.
+Use <code>opiSetup()</code> with the same parameters.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lum</code></td>
+<td>
+<p>Luminance level in cd/m^2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color</code></td>
+<td>
+<p>Stimulus color (see details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixation</code></td>
+<td>
+<p>fixation target</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixIntensity</code></td>
+<td>
+<p>fixation point intensity</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Allowable <code>lum</code> and <code>color</code> are defined in the <code>.opi_env$O900</code> environment.
+</p>
+
+<ul>
+<li> <p><code>lum</code> is intensity of the background and can be one of
+</p>
+
+<ul>
+<li> <p><code>.opi_env$O900$BG_OFF</code>, which turns background off.
+</p>
+</li>
+<li> <p><code>.opi_env$O900$BG_1</code>, background of 1.27 cd/<code class="reqn">\mbox{m}^2</code>.
+</p>
+</li>
+<li> <p><code>.opi_env$O900$BG_10</code>, background of 10 cd/<code class="reqn">\mbox{m}^2</code>.
+</p>
+</li>
+<li> <p><code>.opi_env$O900$BG_100</code>, background of 100 cd/<code class="reqn">\mbox{m}^2</code>.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>color</code> can be one of the following choices.
+</p>
+
+<ul>
+<li> <p><code>.opi_env$O900$MET_COL_WW</code> for white-on-white
+</p>
+</li>
+<li> <p><code>.opi_env$O900$MET_COL_RW</code> for red-on-white
+</p>
+</li>
+<li> <p><code>.opi_env$O900$MET_COL_BW</code> for blue-on-white
+</p>
+</li>
+<li> <p><code>.opi_env$O900$MET_COL_WY</code> for white-on-yellow
+</p>
+</li>
+<li> <p><code>.opi_env$O900$MET_COL_RY</code> for red-on-yellow
+</p>
+</li>
+<li> <p><code>.opi_env$O900$MET_COL_BY</code> for blue-on-yellow
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>fixation</code> is one of
+</p>
+
+<ul>
+<li> <p><code>.opi_env$O900$FIX_CENTRE</code> or <code>.opi_env$O900$FIX_CENTER</code>
+</p>
+</li>
+<li> <p><code>.opi_env$O900$FIX_CROSS</code>
+</p>
+</li>
+<li> <p><code>.opi_env$O900$FIX_RING</code>
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>fixIntensity</code> is a percentage between 0 and 100. 0 is off, 100 the brightest.
+</p>
+</li>
+</ul>
+<p>Note if you specify <code>fixation</code> you also have to specify <code>fixIntensity</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with element <code>err</code> which is
+</p>
+
+<ul>
+<li>
+<p> NULL on success
+</p>
+</li>
+<li>
+<p> -1 indicates <code>opiInitialize</code> has not been called.
+</p>
+</li>
+<li>
+<p> -2 indicates could not set the background color.
+</p>
+</li>
+<li>
+<p> -3 indicates could not set the fixation marker.
+</p>
+</li>
+<li>
+<p> or a string message about bad parameters
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+  chooseOpi("Octopus900")
+  oi &lt;- opiInitialize(eyeSuiteJarLocation="c:/EyeSuite/",
+                      eyeSuiteSettingsLocation="c:/Documents and Settings/All Users/Haag-Streit/",
+                      eye="left")
+  if(!is.null(oi$err))
+      stop("opiInitialize failed")
+  if(!is.null(opiSetup(fixation=.opi_env$O900$FIX_CENTRE)$err))
+      stop("opiSetup failed")
+  if(!is.null(opiSetup(fixation=.opi_env$O900$FIX_RING, fixIntensity=0)$err))
+      stop("opiSetup failed")
+  if(!is.null(opiSetup(color=.opi_env$O900$MET_COL_BY)$err))
+      stop("opiSetup failed")
+  if(!is.null(opiSetup(lum=.opi_env$O900$BG_100, color=.opi_env$O900$MET_COL_RW)$err))
+      stop("opiSetup failed")
+  opiClose()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

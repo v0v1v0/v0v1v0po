@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.data.list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary with checks of the data.list for appropriate form.</h2>
+
+<h3>Description</h3>
+
+<p>Summary including checks of the data.list for appropriate form.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'data.list'
+summary(
+  object,
+  printit = TRUE,
+  stopit = TRUE,
+  nms = names(object),
+  msgextra = "",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>The object to be summarized and checked</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printit</code></td>
+<td>
+<p>A boolean deciding if check results tables are printed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopit</code></td>
+<td>
+<p>A boolean deciding if the function stop with an error if the check is not ok</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nms</code></td>
+<td>
+<p>A character vector. If given specifies the variables (vectors or matrices) in object to check</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>msgextra</code></td>
+<td>
+<p>A character which is added in the printout of an (potential) error message</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Prints on table form the result of the checks.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The tables generated.
+</p>
+<p>Checking the data.list for appropriate form:
+</p>
+<p>A check of the time vector t, which must have equidistant time points and no NAs.
+</p>
+<p>Then the results of checks of vectors (observations):
+</p>
+<p>- NAs: Proportion of NAs
+</p>
+<p>- length: Same length as the 't' vector?
+</p>
+<p>- class: The class of the vector
+</p>
+<p>Then the results of checking data.frames and matrices (forecasts):
+</p>
+<p>- maxHorizonNAs: The proportion of NAs for the horizon (i.e. column) with the highest proportion of NAs
+</p>
+<p>- meanNAs: The proportion of NAs of the entire matrix
+</p>
+<p>- nrow: Same length as the 't' vector?
+</p>
+<p>- colnames: Columns must be names 'kx', where 'x' is the horizon (e.g. k12 is 12-step horizon)
+</p>
+<p>- sameclass: Error if not all columns are the same class
+</p>
+<p>- class: Prints the class of the columns if they are all the same
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+summary(Dbuilding)
+
+# Some NAs in k1 forecast
+D &lt;- Dbuilding
+D$Ta$k1[1:1500] &lt;- NA
+summary(D)
+
+# Vector with observations not same length as t throws error
+D &lt;- Dbuilding
+D$heatload &lt;- D$heatload[1:10]
+try(summary(D))
+
+# Forecasts wrong count
+D &lt;- Dbuilding
+D$Ta &lt;- D$Ta[1:10, ]
+try(summary(D))
+
+# Wrong column names
+D &lt;- Dbuilding
+names(D$Ta)[4] &lt;- "xk"
+names(D$Ta)[2] &lt;- "x2"
+try(summary(D))
+
+# No column names
+D &lt;- Dbuilding
+names(D$Ta) &lt;- NULL
+try(summary(D))
+
+# Don't stop or only print if stopped 
+onlineforecast:::summary.data.list(D, stopit=FALSE)
+try(onlineforecast:::summary.data.list(D, printit=FALSE))
+
+# Only check for specified variables
+# (e.g. do like this in model functions to check only variables used in model)
+onlineforecast:::summary.data.list(D, nms=c("heatload","I"))
+
+</code></pre>
+
+
+</div>

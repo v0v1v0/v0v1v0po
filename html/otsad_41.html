@@ -1,0 +1,260 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>IpKnnCad</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Incremental processing KNN based Conformal Anomaly Detector (KNN-CAD).</h2>
+
+<h3>Description</h3>
+
+<p><code>IpKnnCad</code> allows the calculation of anomalies using SD-EWMA in an
+incremental processing mode. KNN-CAD is a model-free anomaly
+detection method for univariate time-series which adapts itself to
+non-stationarity in the data stream and provides probabilistic abnormality
+scores based on the conformal prediction paradigm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">IpKnnCad(data, n.train, threshold = 1, l = 19, k = 27,
+  ncm.type = "ICAD", reducefp = TRUE, to.next.iteration = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Numerical vector with training and test dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.train</code></td>
+<td>
+<p>Number of points of the dataset that correspond to the
+training set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Anomaly threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l</code></td>
+<td>
+<p>Window length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Number of neighbours to take into account.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncm.type</code></td>
+<td>
+<p>Non Conformity Measure to use "ICAD" or "LDCD"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reducefp</code></td>
+<td>
+<p>If TRUE reduces false positives.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to.next.iteration</code></td>
+<td>
+<p>list with the necessary parameters to execute in
+the next iteration.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>data</code> must be a numerical vector without NA values.
+<code>threshold</code> must be a numeric value between 0 and 1. If the anomaly
+score obtained for an observation is greater than the <code>threshold</code>, the
+observation will be considered abnormal. <code>l</code> must be a numerical value
+between 1 and 1/<code>n</code>; <code>n</code> being the length of the training data.
+Take into account that the value of l has a direct impact on the
+computational cost, so very high values will make the execution time longer.
+<code>k</code> parameter must be a numerical value less than the <code>n.train</code>
+value. <code>ncm.type</code> determines the non-conformity measurement to be used.
+ICAD calculates dissimilarity as the sum of the distances of the nearest k
+neighbours and LDCD as the average. <code>to.next.iteration</code>
+is the last result returned by some previous execution of this algorithm.
+The first time the algorithm is executed its value is NULL. However, to run a
+new batch of data without having to include it in the old dataset and restart
+the process, this parameter returned by the last run is only needed.
+</p>
+<p>This algorithm can be used for both classical and incremental processing.
+It should be noted that in case of having a finite dataset, the
+<code>CpKnnCad</code> algorithm is faster.
+Incremental processing can be used in two ways. 1) Processing all available
+data and saving <code>calibration.alpha</code> and <code>last.data</code> for future runs
+with new data. 2) Using the
+<a href="https://CRAN.R-project.org/package=stream">stream</a> library for when
+there is much data and it does not fit into the memory. An example has been
+made for this use case.
+</p>
+
+
+<h3>Value</h3>
+
+<p>dataset conformed by the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>is.anomaly</code></td>
+<td>
+<p>1 if the value is anomalous 0, otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anomaly.score</code></td>
+<td>
+<p>Probability of anomaly.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to.next.iteration</code></td>
+<td>
+<p>Last result returned by the algorithm. It is a list
+containing the following items.</p>
+</td>
+</tr>
+</table>
+<ul>
+<li> <p><code>training.set</code> Last training set values used
+in the previous iteration and required for the next run.
+</p>
+</li>
+<li> <p><code>calibration.set</code> Last calibration set values used
+in the previous iteration and required for the next run.
+</p>
+</li>
+<li> <p><code>sigma</code> Last covariance matrix calculated in the previous
+iteration and required for the next run.
+</p>
+</li>
+<li> <p><code>alphas</code> Last calibration alpha values calculated
+in the previous iteration and required for the next run.
+</p>
+</li>
+<li> <p><code>last.data</code> Last values of the dataset converted into
+multi-dimensional vectors..
+</p>
+</li>
+<li> <p><code>pred</code> Parameter that is used to reduce false positives. Only
+necessary in case of reducefp is TRUE.
+</p>
+</li>
+<li> <p><code>record.count</code> Number of observations that have been
+processed up to the last iteration.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev. Conformal
+k-NN Anomaly Detector for Univariate Data Streams. ArXiv e-prints, jun. 2017.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## EXAMPLE 1: ----------------------
+## It can be used in the same way as with CpKnnCad passing the whole dataset as
+## an argument.
+
+## Generate data
+set.seed(100)
+n &lt;- 500
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[320] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+## Set parameters
+params.KNN &lt;- list(threshold = 1, n.train = 50, l = 19, k = 17)
+
+## Calculate anomalies
+result &lt;- IpKnnCad(
+  data = df$value,
+  n.train = params.KNN$n.train,
+  threshold = params.KNN$threshold,
+  l = params.KNN$l,
+  k = params.KNN$k,
+  ncm.type = "ICAD",
+  reducefp = TRUE
+)
+
+## Plot results
+res &lt;- cbind(df, is.anomaly = result$is.anomaly)
+PlotDetections(res, print.time.window = FALSE, title = "KNN-CAD ANOMALY DETECTOR")
+
+## EXAMPLE 2: ----------------------
+## You can use it in an incremental way. This is an example using the stream
+## library. This library allows the simulation of streaming operation.
+
+# install.packages("stream")
+library("stream")
+
+## Generate data
+set.seed(100)
+n &lt;- 500
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[320] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+dsd_df &lt;- DSD_Memory(df)
+
+## Initialize parameters for the loop
+last.res &lt;- NULL
+res &lt;- NULL
+nread &lt;- 100
+numIter &lt;- n%/%nread
+
+## Set parameters
+params.KNN &lt;- list(threshold = 1, n.train = 50, l = 19, k = 17)
+
+## Calculate anomalies
+for(i in 1:numIter) {
+  # read new data
+  newRow &lt;- get_points(dsd_df, n = nread, outofpoints = "ignore")
+  # calculate if it's an anomaly
+  last.res &lt;- IpKnnCad(
+    data = newRow$value,
+    n.train = params.KNN$n.train,
+    threshold = params.KNN$threshold,
+    l = params.KNN$l,
+    k = params.KNN$k,
+    ncm.type = "ICAD",
+    reducefp = TRUE,
+    to.next.iteration = last.res$to.next.iteration
+  )
+  # prepare the result
+  if(!is.null(last.res$is.anomaly)){
+    res &lt;- rbind(res, cbind(newRow, is.anomaly = last.res$is.anomaly))
+  }
+}
+
+## Plot results
+PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
+
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_Simmap_Rev</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reading stochastic character maps file from ReVBayes</h2>
+
+<h3>Description</h3>
+
+<p>Imports stochastic character maps file from RevBayes into R.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_Simmap_Rev(file, start = 1, end = 1, save = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>character. Path to the RevBayes file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>integer. First tree of the sample to start reading the RevBayes file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end</code></td>
+<td>
+<p>integer. Last tree of the sample to finish reading the RevBayes file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>save</code></td>
+<td>
+<p>character. Name to save output file.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tree in 'phylip' format.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sergei Tarasov
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">rev_stm &lt;- "Iteration\t1\t2\t3\tsimmap\n
+0\t{1,2.0}\t((spp1:{1,4.0:0,4.0},spp2:{1,2.0:0,6.0}):{1,0.5});\n
+1\t{1,2.0}\t((spp1:{1,2.0:0,6.0},spp2:{1,3.0:0,5.0}):{1,0.5});\n
+3\t{1,2.0}\t((spp1:{1,2.0:0,6.0},spp2:{1,3.0:0,5.0}):{1,0.5});"
+stm &lt;- read_Simmap_Rev(textConnection(rev_stm, "r"), start = 0, end = 3, save = NULL)
+stm &lt;- phytools::read.simmap(text = stm, format = "phylip")
+phytools::plotSimmap(stm[[1]])
+
+</code></pre>
+
+
+</div>

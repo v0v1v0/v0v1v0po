@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Graph</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Graph object</h2>
+
+<h3>Description</h3>
+
+<p>This class represents an openEO process graph - which is generally denoted as field <code>process_graph</code>
+in the exchange objects of the API. The graph consists of <code>ProcessNode()</code>s and optional
+<code>ProcessGraphParameter()</code> (former variables). The explicit creation of a Graph is usually not
+required and discouraged, because this will be handled automatically.
+</p>
+
+
+<h3>Details</h3>
+
+<p>In terms of the openEO API the process graph is the technical description of a process. To create a
+user-defined process it requires a process graph and additional meta data. The process graph is not
+accepted at any openEO endpoint directly. Therefore, it has to be wrapped in a <code>Process()</code>
+object. Use <code>as.Process()</code> in those cases. It is similarly handled in other functions of
+this package.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of <code>R6Class()</code> with methods for building an openEO process graph
+</p>
+
+
+<h3>Fields</h3>
+
+
+<dl>
+<dt><code>data</code></dt>
+<dd>
+<p>a named list of collection ids or process graph parameters depending on the context</p>
+</dd>
+</dl>
+<h3>Methods</h3>
+
+
+<dl>
+<dt><code style="white-space: pre;">⁠$new(final_node=NULL)⁠</code></dt>
+<dd>
+<p>The object creator created from processes and available data.</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$getNodes()⁠</code></dt>
+<dd>
+<p>a function to return a list of created <code>ProcessNode()</code>s for this graph</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$serialize()⁠</code></dt>
+<dd>
+<p>creates a list representation of the graph by recursively calling <code style="white-space: pre;">⁠$serialize⁠</code></p>
+</dd>
+<dt><code style="white-space: pre;">⁠$validate()⁠</code></dt>
+<dd>
+<p>runs through the nodes and checks the validity of its argument values</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$getNode(node_id)⁠</code></dt>
+<dd>
+<p>searches and returns a node from within the graph referenced by its node id</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$addNode(node)⁠</code></dt>
+<dd>
+<p>adds a <code>ProcessNode()</code> to the graph</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$removeNode(node_id)⁠</code></dt>
+<dd>
+<p>removes a process node from the graph</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$getFinalNode()⁠</code></dt>
+<dd>
+<p>gets the result process node of a process graph</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$setFinalNode(node)⁠</code></dt>
+<dd>
+<p>sets the result process node by node id or a ProcessNode</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$getVariables()⁠</code></dt>
+<dd>
+<p>creates a named list of the defined variables of a process graph</p>
+</dd>
+<dt><code style="white-space: pre;">⁠$setVariables(list_of_vars)⁠</code></dt>
+<dd>
+<p>sets the <code>ProcessGraphParameter()</code> ( former variables) of graph</p>
+</dd>
+</dl>
+<h3>Arguments</h3>
+
+
+<dl>
+<dt><code>final_node</code></dt>
+<dd>
+<p>optional, the final node (end node) that was used to create a graph</p>
+</dd>
+<dt><code>node_id</code></dt>
+<dd>
+<p>the id of a process node</p>
+</dd>
+<dt><code>node</code></dt>
+<dd>
+<p>process node or  its node id</p>
+</dd>
+<dt><code>parameter</code></dt>
+<dd>
+<p>the name of a parameter in a process</p>
+</dd>
+<dt><code>value</code></dt>
+<dd>
+<p>the value to be set for a parameter of a particular process</p>
+</dd>
+<dt>
+<code>id</code> or <code>variable_id</code>
+</dt>
+<dd>
+<p>the variable id</p>
+</dd>
+<dt><code>description</code></dt>
+<dd>
+<p>a description field for a variable</p>
+</dd>
+<dt><code>type</code></dt>
+<dd>
+<p>the type of variable, default 'string'</p>
+</dd>
+<dt><code>default</code></dt>
+<dd>
+<p>optional default value to be set for a variable</p>
+</dd>
+</dl>
+</div>

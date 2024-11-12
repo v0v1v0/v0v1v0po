@@ -1,0 +1,194 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>remote_share</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Share your validated data</h2>
+
+<h3>Description</h3>
+
+<p>This function uploads validated data to specified remote repositories,
+such as CKAN, Amazon S3, and/or MongoDB.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">remote_share(
+  validation,
+  data_formatted,
+  files,
+  verified,
+  valid_rules,
+  valid_key_share,
+  ckan_url,
+  ckan_key,
+  ckan_package,
+  url_to_send,
+  rules,
+  results,
+  s3_key_id,
+  s3_secret_key,
+  s3_region,
+  s3_bucket,
+  mongo_key,
+  mongo_collection,
+  old_cert = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>validation</code></td>
+<td>
+<p>A list containing validation information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_formatted</code></td>
+<td>
+<p>A list containing formatted data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>A vector of file paths to upload.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verified</code></td>
+<td>
+<p>The secret key provided by the portal maintainer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>valid_rules</code></td>
+<td>
+<p>A list of valid rules for the dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>valid_key_share</code></td>
+<td>
+<p>A valid key to share data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ckan_url</code></td>
+<td>
+<p>The URL of the CKAN instance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ckan_key</code></td>
+<td>
+<p>The API key for the CKAN instance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ckan_package</code></td>
+<td>
+<p>The CKAN package to which the data will be uploaded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>url_to_send</code></td>
+<td>
+<p>The URL to send the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rules</code></td>
+<td>
+<p>A set of rules used for validation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>results</code></td>
+<td>
+<p>A list containing results of the validation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s3_key_id</code></td>
+<td>
+<p>AWS ACCESS KEY ID</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s3_secret_key</code></td>
+<td>
+<p>AWS SECRET ACCESS KEY</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s3_region</code></td>
+<td>
+<p>AWS DEFAULT REGION</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s3_bucket</code></td>
+<td>
+<p>The name of the Amazon S3 bucket.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mongo_key</code></td>
+<td>
+<p>mongo connection url</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mongo_collection</code></td>
+<td>
+<p>collection name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>old_cert</code></td>
+<td>
+<p>(Optional) An old certificate to be uploaded alongside the new one to override the previous submission with.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing the status and message of the operation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+shared_data &lt;- remote_share(validation = result_valid,
+                            data_formatted = result_valid$data_formatted,
+                            files = test_file,
+                            verified = "your_verified_key",
+                            valid_key_share = "your_valid_key_share",
+                            valid_rules = digest::digest(test_rules),
+                            ckan_url = "https://example.com",
+                            ckan_key = "your_ckan_key",
+                            ckan_package = "your_ckan_package",
+                            url_to_send = "https://your-url-to-send.com",
+                            rules = test_rules,
+                            results = valid_example$results,
+                            s3_key_id = "your_s3_key_id",
+                            s3_secret_key = "your_s3_secret_key",
+                            s3_region = "your_s3_region",
+                            s3_bucket = "your_s3_bucket",
+                            mongo_key = "your_mongo_key",
+                            mongo_collection = "your_mongo_collection",
+                            old_cert = NULL
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

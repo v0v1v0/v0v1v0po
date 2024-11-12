@@ -1,0 +1,166 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>margins.orf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Marginal Effects for the Ordered Forest</h2>
+
+<h3>Description</h3>
+
+<p>S3 method for estimation of marginal effects
+of an Ordered Forest objects of class <code>orf</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'orf'
+margins(forest, eval = NULL, inference = NULL, window = NULL, newdata = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>forest</code></td>
+<td>
+<p>estimated Ordered Forest object of class <code>orf</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eval</code></td>
+<td>
+<p>string, defining evaluation point for marginal effects. These can be one of "mean", "atmean", or "atmedian". (Default is "mean")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inference</code></td>
+<td>
+<p>logical, if TRUE inference on marginal effects will be conducted (default is inherited from the <code>orf</code> object)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window</code></td>
+<td>
+<p>numeric, share of standard deviation of X to be used for evaluation of the marginal effect (default is 0.1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>numeric matrix X containing the new observations for which the marginal effects should be estimated</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>margins.orf</code> estimates marginal effects at the mean, at the median, or
+the mean marginal effects, depending on the <code>eval</code> argument. It is advised
+to increase the number of subsampling replications in the supplied <code>orf</code>
+object as the estimation of the marginal effects is a more demanding exercise
+than a simple Ordered Forest estimation/prediction. Additionally to the estimation
+of the marginal effects, the weight-based inference for the effects is supported
+as well. Note, that the inference procedure is much more computationally exhausting
+exercise due to the computation of the forest weights. Additionally, the evaluation
+window for the marginal effects can be regulated through the <code>window</code> argument.
+Furthermore, new data for which marginal effects should be computed can be supplied
+as well as long as it lies within the support of <code>X</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>object of type <code>margins.orf</code> with following elements
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>info</code></td>
+<td>
+<p>info containing forest inputs and data used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effects</code></td>
+<td>
+<p>marginal effects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variances</code></td>
+<td>
+<p>variances of marginal effects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>errors</code></td>
+<td>
+<p>standard errors of marginal effects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tvalues</code></td>
+<td>
+<p>t-values of marginal effects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalues</code></td>
+<td>
+<p>p-values of marginal effects</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gabriel Okasa
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summary.margins.orf</code>, <code>print.margins.orf</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Ordered Forest
+require(orf)
+
+# load example data
+data(odata)
+
+# specify response and covariates
+Y &lt;- as.numeric(odata[, 1])
+X &lt;- as.matrix(odata[, -1])
+
+# estimate Ordered Forest
+orf_fit &lt;- orf(X, Y)
+
+# estimate marginal effects of the orf (default)
+orf_margins &lt;- margins(orf_fit)
+
+# estimate marginal effects evaluated at the mean
+orf_margins &lt;- margins(orf_fit, eval = "atmean")
+
+# estimate marginal effects with inference
+# (orf object has to be estimated with honesty and subsampling)
+orf_margins &lt;- margins(orf_fit, inference = TRUE)
+
+# estimate marginal effects with custom window size
+orf_margins &lt;- margins(orf_fit, window = 0.5)
+
+# estimate marginal effects for some new data (within support of X)
+orf_margins &lt;- margins(orf_fit, newdata = X[1:10, ])
+
+# estimate marginal effects with all custom settings
+orf_margins &lt;- margins(orf_fit, eval = "atmedian", inference = TRUE,
+                                window = 0.5, newdata = X[1:10, ])
+
+
+</code></pre>
+
+
+</div>

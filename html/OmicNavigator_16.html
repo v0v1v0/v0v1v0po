@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addResultsLinkouts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add linkouts to external resources in the results table</h2>
+
+<h3>Description</h3>
+
+<p>You can provide additional information on the features in your study by
+providing linkouts to external resources. These will be embedded directly in
+the results table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addResultsLinkouts(study, resultsLinkouts, reset = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>study</code></td>
+<td>
+<p>An OmicNavigator study created with <code>createStudy</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resultsLinkouts</code></td>
+<td>
+<p>The URL patterns that describe linkouts to external
+resources (see Details below). The input object is a nested named list. The
+names of the list correspond to the model names. Each element of the list
+is a named list of character vectors. The names of this nested list must
+correspond to the column names of the matching features table. To share
+linkouts across multiple models, use the modelID "default".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reset</code></td>
+<td>
+<p>Reset the data prior to adding the new data (default:
+<code>FALSE</code>). The default is to add to or modify any previously added data
+(if it exists). Setting <code>reset = TRUE</code> enables you to remove existing
+data you no longer want to include in the study.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For each linkout, the URL pattern you provide will be concatenated with the
+value of that column for each row. As an example, if your features table
+included a column named <code>"ensembl"</code> that contained the Ensembl Gene ID
+for each feature, you could create a linkout to Ensembl using the following
+pattern:
+</p>
+<pre>ensembl = "https://ensembl.org/Homo_sapiens/Gene/Summary?g="</pre>
+<p>As another example, if you had a column named <code>"entrez"</code> that contained
+the Entrez Gene ID  for each feature, you could create a linkout to Entrez
+using the following pattern:
+</p>
+<pre>entrez = "https://www.ncbi.nlm.nih.gov/gene/"</pre>
+<p>Note that you can provide more than one linkout per column.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the original <code>onStudy</code> object passed to the argument
+<code>study</code>, but modified to include the newly added data
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>addFeatures</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  study &lt;- createStudy("example")
+  resultsLinkouts &lt;- list(
+    default = list(
+      ensembl = c("https://ensembl.org/Homo_sapiens/Gene/Summary?g=",
+                  "https://www.genome.ucsc.edu/cgi-bin/hgGene?hgg_gene="),
+      entrez = "https://www.ncbi.nlm.nih.gov/gene/"
+    )
+  )
+  study &lt;- addResultsLinkouts(study, resultsLinkouts)
+
+</code></pre>
+
+
+</div>

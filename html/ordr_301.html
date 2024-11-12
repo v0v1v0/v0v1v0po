@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dplyr-verbs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+<strong>dplyr</strong> verbs for tbl_ord factors</h2>
+
+<h3>Description</h3>
+
+<p>These functions adapt dplyr verbs to the factors
+of a tbl_ord.
+</p>
+<p>The raw verbs are not defined for tbl_ords; instead, each verb
+has two analogues, corresponding to the two matrix factors. They each rely
+on a common workhorse function, which takes the composition of the
+<strong>dplyr</strong> verb with <code style="white-space: pre;">⁠annotation_*⁠</code>, applied to the factor, removes any
+variables corresponding to coordinates or already annotated, and only then
+assigns it as the new <code>"*_annotation"</code> attribute of <code>.data</code> (see
+annotation). Note that these functions are not generics and so cannot be
+extended to other classes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pull_factor(.data, var = -1, .matrix)
+
+pull_rows(.data, var = -1)
+
+pull_cols(.data, var = -1)
+
+rename_rows(.data, ...)
+
+rename_cols(.data, ...)
+
+select_rows(.data, ...)
+
+select_cols(.data, ...)
+
+mutate_rows(.data, ...)
+
+mutate_cols(.data, ...)
+
+transmute_rows(.data, ...)
+
+transmute_cols(.data, ...)
+
+cbind_rows(.data, ..., elements = "all")
+
+cbind_cols(.data, ..., elements = "all")
+
+left_join_rows(.data, ...)
+
+left_join_cols(.data, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>An object of class 'tbl_ord'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var</code></td>
+<td>
+<p>A variable specified as in <code>dplyr::pull()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.matrix</code></td>
+<td>
+<p>A character string partially matched (lowercase) to several
+indicators for one or both matrices in a matrix decomposition used for
+ordination. The standard values are <code>"rows"</code>, <code>"cols"</code>, and <code>"dims"</code> (for
+both).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Comma-separated unquoted expressions as in, e.g.,
+<code>dplyr::select()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>elements</code></td>
+<td>
+<p>Character vector; which elements of each factor for which to
+render graphical elements. One of <code>"all"</code> (the default), <code>"active"</code>, or any
+supplementary element type defined by the specific class methods (e.g.
+<code>"score"</code> for 'factanal', 'lda_ord', and 'cancord_ord' and <code>"intraset"</code> and
+<code>"interset"</code> for 'cancor_ord').</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tbl_ord; the wrapped model is unchanged.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># illustrative ordination: LDA of iris data
+(iris_lda &lt;- ordinate(iris, cols = 1:4, lda_ord, grouping = iris$Species))
+
+# extract a coordinate or annotation
+head(pull_rows(iris_lda, Species))
+pull_cols(iris_lda, LD2)
+
+# rename an annotation
+rename_cols(iris_lda, species = name)
+
+# select annotations
+select_rows(iris_lda, species = name, .element)
+
+# create, modify, and delete annotations
+mutate_cols(iris_lda, vec.length = sqrt(LD1^2 + LD2^2))
+transmute_cols(iris_lda, vec.length = sqrt(LD1^2 + LD2^2))
+
+# bind data frames of annotations
+iris_medians &lt;-
+  stats::aggregate(iris[, 1:4], median, by = iris[, 5, drop = FALSE])
+iris_lda %&gt;%
+  # retain '.element' in order to match by `elements`
+  select_rows(.element) %&gt;%
+  cbind_rows(iris_medians, elements = "active")
+</code></pre>
+
+
+</div>

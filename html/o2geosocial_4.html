@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>custom_moves</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Customise samplers for outbreaker</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to specify customised movement functions
+(a.k.a. samplers) for outbreaker. Custom functions are specified as a named
+list or series of comma-separated, named arguments, indicating which type of
+movement they implement. Values currently available are:
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">custom_moves(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>A list or a series of named, comma-separated functions
+implementing movements of parameters or augmented data.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+
+<ul>
+<li> <p><code>pi</code>: movement of the reporting probability; by default, the function
+<code>cpp_move_pi</code> is used.
+</p>
+</li>
+<li> <p><code>a</code>: movement of the first spatial parameter; by default, the function
+<code>cpp_move_a</code> is used.
+</p>
+</li>
+<li> <p><code>b</code>: movement of the second  spatial parameter; by default, the function
+<code>cpp_move_b</code> is used.
+</p>
+</li>
+<li> <p><code>alpha</code>: movement of the transmission tree, by randomly proposing
+infectors in the pool of cases infected before; by default, the function
+<code>cpp_move_alpha</code> is used.
+</p>
+</li>
+<li> <p><code>swap_cases</code>: movement of the transmission tree, by swapping
+infectors and infected cases; by default, the function
+<code>cpp_move_swap_cases</code> is used.
+</p>
+</li>
+<li> <p><code>ancestors</code>: movement of the transmission tree, by changing
+the ancestors of the different trees in a cluster; by default, the function
+<code>cpp_move_ancestors</code> is used.
+</p>
+</li>
+<li> <p><code>t_inf</code>: movement of the date of infection; by default, the
+function <code>cpp_move_t_inf</code> is used.
+</p>
+</li>
+<li> <p><code>kappa</code>: movement of the number generations between cases; by
+default, the function <code>cpp_move_kappa</code> is used.
+</p>
+</li>
+</ul>
+<p>Movement functions must have an argument <code>param</code>, which is a list of
+parameters and augmented data of the class <code>create_param</code>.
+Each movement function will be enclosed with its other arguments, so that the
+resulting function will have a single argument 'param'. For non-standard
+movements (i.e. none of the names specified above), the closure will contain:
+</p>
+
+<ul>
+<li> <p><code>data</code>: a list of named items containing input data as returned by
+<code>outbreaker_data</code>
+</p>
+</li>
+<li> <p><code>config</code>:  a list of named items containing input data as returned by
+<code>create_config</code>
+</p>
+</li>
+<li> <p><code>likelihoods</code>: a list of named custom likelihood functions as returned by
+<code>custom_likelihoods</code>
+</p>
+</li>
+<li> <p><code>priors</code>: a list of named custom prior functions as returned by
+<code>custom_priors</code>
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A named list of movement functions with a single argument 'param', with
+class <code>outbreaker_moves</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Initial version by Thibaut Jombart, rewritten by Alexis Robert (<a href="mailto:alexis.robert@lshtm.ac.uk">alexis.robert@lshtm.ac.uk</a>)
+</p>
+
+
+</div>

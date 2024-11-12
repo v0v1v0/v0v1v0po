@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>KMeans</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>K-means clustering algorithm for multi/single view data</h2>
+
+<h3>Description</h3>
+
+<p>The K-means clustering algorithm is a common clustering algorithm that divides a data set into K clusters, with each cluster represented using the mean of all samples within the cluster, referring to that mean as the j-cluster centre. The algorithm is unsupervised learning, where the categories are not known in advance and similar objects are automatically grouped into the same cluster. The K-means algorithm achieves clustering by calculating the distance between each point and the centre of mass of different clusters and assigning it to the nearest cluster. The algorithm is simple and easy to implement, but is susceptible to the initial centre of mass, the possibility of empty clusters, and the possibility of convergence to local minima. Clustering applications can be used to discover different groups of users, allowing for tasks such as precision marketing, document segmentation, finding people in the same circle in social networks, and handling anomalous data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">KMeans(X, K, V, r, max.iter, truere, method = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+  
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>data matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>number of cluster</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>V</code></td>
+<td>
+<p>number of view</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>balance parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truere</code></td>
+<td>
+<p>true cluster result</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iter</code></td>
+<td>
+<p>max iter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>caculate the index of NMI</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>NMI,weight,center,result
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Miao Yu
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  library(MASS)
+  library(Matrix)   
+  V=2;K=3;r=0.5;max.iter=10;n1=n2=n3=70
+  X1&lt;-rnorm(n1,20,2);X2&lt;-rnorm(n2,25,1.5);X3&lt;-rnorm(n3,30,2) 
+  Xv&lt;-c(X1,X2,X3)
+  data&lt;-matrix(Xv,n1+n2+n3,2)
+  data[1:70,2]&lt;-1;data[71:140,2]&lt;-2;data[141:210,2]&lt;-3
+  truere=data[,2]
+  X&lt;-matrix(data[,1],n1+n2+n3,1) 
+  lamda1&lt;-0.2;lamda2&lt;-0.8
+  lamda&lt;-matrix(c(lamda1,lamda2),nrow=1,ncol=2)
+  sol.svd &lt;- svd(lamda)
+  U1&lt;-sol.svd$u
+  D1&lt;-sol.svd$d
+  V1&lt;-sol.svd$v
+  C1&lt;-t(U1)
+  Y1&lt;-C1/D1
+  view&lt;-V1
+  view1&lt;-matrix(view[1,])
+  view2&lt;-matrix(view[2,])
+  X1&lt;-matrix(view1,n1+n2+n3,1)
+  X2&lt;-matrix(view2,n1+n2+n3,1)
+  KMeans(X=X1,K=K,V=V,r=r,max.iter=max.iter,truere=truere,method=0)
+</code></pre>
+
+
+</div>

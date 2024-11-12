@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>O3plotT</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Draws an Overview of Outliers (O3) plot for one method and parallel coordinate plots
+</h2>
+
+<h3>Description</h3>
+
+<p>Function for drawing Overview of Outliers (O3) plots for one method and up to 3 tolerance levels and for drawing supporting parallel coordinate plots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">O3plotT(outResults, caseNames=paste0("X", 1:nrow(outResults$data)),
+ sortVars=TRUE, coltxtsize=14, O3control=O3plotColours())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>outResults</code></td>
+<td>
+
+<p>a list for each tolerance level, and within that for each variable combination, of the variables used, the indices of cases identified as outliers, and the outlier distances for all cases in the dataset.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>caseNames</code></td>
+<td>
+
+<p>the ID variable used to identify the cases in an O3 plot, the default is the rownames from the dataset (so that they will then just be X7, X11, etc.)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sortVars</code></td>
+<td>
+
+<p>sort the variable columns by how often the variables occur in combinations, otherwise keep the variable order in the dataset
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coltxtsize</code></td>
+<td>
+
+<p>set the size of text for column names in O3 plots (useful if there are so many columns that names overlap)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>O3control</code></td>
+<td>
+
+<p>A list of colours for O3 plots. If omitted, <code>O3plotColours</code> gives the defaults.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function takes the output from <code>O3prep</code> and draws an O3 plot with up to 3 different tolerance levels.  The default colours are khaki for the least strict tolerance level, yellow for the next, and red for the strictest.
+</p>
+<p>The two parallel coordinate plots, one using the raw data and one using outlier distances, are examples of what can be done to explore the results in more detail.  If you want these plots with other highlighting then you can use outsTable with either the dataset or the Ds array to draw them using <code>ggparcoord</code> from <span class="pkg">GGally</span> or whatever graphics tool you prefer.
+</p>
+<p>The plots produced are ggplot objects so that you can work with them—to some extent—directly.  In particular, plot margins can be set using  <code> + theme(plot.margin = unit(c(t, r, b, l), ''cm''))</code>, which is useful when the cases are labelled with the caseNames option and you need more space to the right of the plot.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nOut</code></td>
+<td>
+
+<p>numbers of outliers found for the specified tolerance levels
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gpcp</code></td>
+<td>
+
+<p>a parallel coordinate plot of all the data with cases ever found to be outliers coloured red
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gO3</code></td>
+<td>
+
+<p>an O3 plot
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gCombs</code></td>
+<td>
+
+<p>a parallel coordinate plot of the outlier distances calculated for each variable combination for the full dataset with cases found to be outliers at the strictest tolerance level coloured red
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outsTable</code></td>
+<td>
+
+<p>a table of all outliers found by case, variable combination, and tolerance level.  The variable combination labels are a binary coding in the original order of the variables in the dataset.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ds</code></td>
+<td>
+
+<p>a three-dimensional array of tolerance levels by variable combinations by cases of the outlier distances calculated.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Antony Unwin unwin@math.uni-augsburg.de
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>O3plotColours</code>, <code>HDoutliers</code> in <span class="pkg">HDoutliers</span>, <code>FastPCS</code> in <span class="pkg">FastPCS</span>, <code>mvBACON</code> in <span class="pkg">robustX</span>, <code>adjOutlyingness</code> in <span class="pkg">robustbase</span>, <code>DDC</code> in <span class="pkg">cellWise</span>, <code>covMcd</code> in <span class="pkg">robustbase</span>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">a0 &lt;- O3prep(stackloss, method="PCS", tols=0.05, boxplotLimits=3)
+a1 &lt;- O3plotT(a0)
+a1$nOut
+a1$gO3
+
+b0 &lt;- O3prep(stackloss, method="BAC", k1=2, tols=0.01, boxplotLimits=6)
+b1 &lt;- O3plotT(b0)
+b1$nOut
+b1$gpcp
+b1$gO3
+
+## Not run: 
+a2 &lt;- O3prep(stackloss, method="PCS", tols=c(0.1, 0.05, 0.01), boxplotLimits=c(3, 6, 10))
+a3 &lt;- O3plotT(a2)
+a3$nOut
+a3$gpcp
+a3$gO3
+a3$outsTable
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

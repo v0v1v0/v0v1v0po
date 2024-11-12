@@ -1,0 +1,172 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_characteristic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Determine the characteristic variables (e.g. species) of a clustering solution (e.g. classification)</h2>
+
+<h3>Description</h3>
+
+<p><code>get_characteristic</code> takes a clustering solution, fits models based on the underlying multivariate data, and determines 'important' variables for the clustering solution. In Ecology, particularly vegetation science, this is the process of determining characteristic (or diagnostic/indicator) species of a classification.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_characteristic(data, clustering, family, type = "per.cluster",
+  signif = TRUE, K = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame (or object that can be coerced by <code>as.data.frame</code> containing the "raw" multivariate data. This is not necessarily the data used by the clustering algorithm - it is the data on which you are testing the predictive ability of the clustering solution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clustering</code></td>
+<td>
+<p>a clustering solution for <code>data</code>, that is, a vector of cluster labels (that can be coerced by <code>as.factor</code>). The number of cluster labels must match the number of rows of the object supplied in the <code>data</code> argument. The solution could for example come form a call to <code>cutree</code>, see Examples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>a character string denoting the error distribution to be used for model fitting. The options are similar to those in <code>family</code>, but are more limited - see Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>a character string, one of <code>"per.cluster"</code> or <code>"global"</code>, denoting the type of characteristic variables (species). See Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signif</code></td>
+<td>
+<p>logical, denoting whether <em>significance</em> should be returned also when <code>"type=per.cluster"</code>. Ignored if <code>"type=global"</code>. See Details. Minimal additional overhead is required if <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>number of trials in binomial regression. By default, K=1 for presence-absence data (with cloglog link).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>get_characteristic</code> is built on the premise that a <em>good</em> clustering solution (i.e. a classification) should provide information about the composition and abundance of the multivariate data it is classifying. A natural way to formalize this is with a predictive model, where group membership (clusters) is the predictor, and the multivariate data (site by variables matrix) is the response. <code>get_characteristic</code> fits linear models to each variable. If <code>type = "per.cluster"</code> the coefficients corresponding to each level of the clustering solution for each variable are used to define the characteristic variables for each cluster level. If <code>type = "global"</code>, characteristic variables are determined (via delta AIC - larger values = more important) for the overall classification. If <code>signif = TRUE</code>, delta AIC (that is, to the corresponding null model) and the coefficient standard errors are also returned with the per-cluster characteristic variables. We loosely define that the larger the coefficient (with larger delta AIC values and smaller standard errors guiding <em>significance</em>), the <em>more</em> characteristic that variable (species) is. Lyons et al. (2016) provides background, a detailed description of the methodology, and application of delta AIC on both real and simulated ecological multivariate abundance data.
+</p>
+<p>At present, <code>get_characteristic</code> supports the following error distributions for model fitting:
+</p>
+
+<ul>
+<li>
+<p> Gaussian (LM)
+</p>
+</li>
+<li>
+<p> Negative Binomial (GLM with log link)
+</p>
+</li>
+<li>
+<p> Poisson (GLM with log link)
+</p>
+</li>
+<li>
+<p> Binomial (GLM with cloglog link for binary data, logit link otherwise)
+</p>
+</li>
+<li>
+<p> Ordinal (Proportional odds model with logit link)
+</p>
+</li>
+</ul>
+<p>Gaussian LMs should be used for 'normal' data. Negative Binomial and Poisson GLMs should be used for count data. Binomial GLMs should be used for binary and presence/absence data (when <code>K=1</code>), or trials data (e.g. frequency scores). If Binomial regression is being used with <code>K&gt;1</code>, then <code>data</code> should be numerical values between 0 and 1, interpreted as the proportion of successful cases, where the total number of cases is given by <code>K</code> (see Details in <code>family</code>). Ordinal regression should be used for ordinal data, for example, cover-abundance scores. For ordinal regression, data should be supplied as either 1) factors, with the appropriate ordinal level order specified (see <code>levels</code>) or 2) numeric, which will be coerced into a factor with levels ordered in numerical order (e.g. cover-abundance/numeric response scores). LMs fit via <code>manylm</code>; GLMs fit via <code>manyglm</code>; proportional odds model fit via <code>clm</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>either a list of sorted characteristic variables for each cluster (of class <code>perclustchar</code>) or a data frame containing the delta AIC values for each variable (of class <code>globalchar</code>). If <code>signif=</code> is not <code>"none"</code>, then the corresponding significance metrics are appended.
+</p>
+<p>Attributes for the object are:
+</p>
+
+<dl>
+<dt><code>family</code></dt>
+<dd>
+<p> which error distribution was used for modelling, see Arguments</p>
+</dd>
+<dt><code>type</code></dt>
+<dd>
+<p>the type of characteristic variables calculated, see Arguments</p>
+</dd>
+<dt><code>K</code></dt>
+<dd>
+<p> number of cases for Binomial regression, see Arguments</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Mitchell Lyons
+</p>
+
+
+<h3>References</h3>
+
+<p>Lyons et al. 2016. Model-based assessment of ecological community classifications. <em>Journal of Vegetation Science</em>, <strong>27 (4)</strong>: 704–715.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>find_optimal</code>, S3 for print 'top-n' variables for each cluster, S3 for residual plots (at some stage)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Prep the 'swamps' data
+## ======================
+
+data(swamps) # see ?swamps
+swamps &lt;- swamps[,-1]
+
+## Find characteristic species in a classification of the swamps data
+## ==================================================================
+
+## perhaps not the best clustering option, but this is base R
+swamps_hclust &lt;- hclust(d = dist(x = log1p(swamps), method = "canberra"),
+                       method = "complete")
+
+# calculate per cluster characteristic species
+swamps_char &lt;- get_characteristic(data = swamps,
+clustering = cutree(tree = swamps_hclust, k = 10), family = "poisson",
+type = "per.cluster")
+
+# look at the top 10 characteristic species for cluster 1
+head(swamps_char[[1]], 10)
+
+# calculate global characteristic species
+swamps_char &lt;- get_characteristic(data = swamps,
+clustering = cutree(tree = swamps_hclust, k = 10), family = "poisson",
+type = "global")
+
+# top 10 characteristic species for the whole classification
+head(swamps_char, 10)
+
+## See vignette for more explanation than this example
+## ============================================================
+
+</code></pre>
+
+
+</div>

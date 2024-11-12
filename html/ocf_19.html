@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>marginal_effects</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Marginal Effects for Ordered Correlation Forest</h2>
+
+<h3>Description</h3>
+
+<p>Nonparametric estimation of marginal effects using an <code>ocf</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">marginal_effects(
+  object,
+  data = NULL,
+  which_covariates = c(),
+  eval = "atmean",
+  bandwitdh = 0.1,
+  inference = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An <code>ocf</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Data set of class <code>data.frame</code> to estimate marginal effects. It must contain at least the same covariates used to train the forests. If <code>NULL</code>, marginal effects are estimated on <code>object$full_data</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which_covariates</code></td>
+<td>
+<p>Character vector storing the names of the covariates for which marginal effect estimation is desired. If empty (the default), marginal effects are estimated for all covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eval</code></td>
+<td>
+<p>Evaluation point for marginal effects. Either <code>"mean"</code>, <code>"atmean"</code> or <code>"atmedian"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bandwitdh</code></td>
+<td>
+<p>How many standard deviations <code>x_up</code> and <code>x_down</code> differ from <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inference</code></td>
+<td>
+<p>Whether to extract weights and compute standard errors. The weights extraction considerably slows down the program.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>marginal_effects</code> can estimate mean marginal effects, marginal effects at the mean, or marginal effects at the
+median, according to the <code>eval</code> argument.<br></p>
+<p>The routine assumes that covariates with more than ten unique values are continuous. Otherwise, covariates are assumed to 
+be discrete.<br></p>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>ocf.marginal</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Riccardo Di Francesco
+</p>
+
+
+<h3>References</h3>
+
+
+<ul><li>
+<p> Di Francesco, R. (2023). Ordered Correlation Forest. arXiv preprint <a href="https://arxiv.org/abs/2309.08755">arXiv:2309.08755</a>.
+</p>
+</li></ul>
+<h3>See Also</h3>
+
+<p><code>ocf</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate synthetic data.
+set.seed(1986)
+
+data &lt;- generate_ordered_data(100)
+sample &lt;- data$sample
+Y &lt;- sample$Y
+X &lt;- sample[, -1]
+
+## Fit ocf.
+forests &lt;- ocf(Y, X)
+
+## Marginal effects at the mean.
+me &lt;- marginal_effects(forests, eval = "atmean")
+
+print(me)
+print(me, latex = TRUE)
+
+## Compute standard errors. This requires honest forests.
+honest_forests &lt;- ocf(Y, X, honesty = TRUE)
+
+honest_me &lt;- marginal_effects(honest_forests, eval = "atmean", inference = TRUE)
+
+print(honest_me, latex = TRUE)
+
+</code></pre>
+
+
+</div>

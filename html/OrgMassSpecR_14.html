@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ExchangeableAmides</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Determine the Number of Backbone Amide Hydrogens</h2>
+
+<h3>Description</h3>
+
+<p>Determine the number of backbone amide hydrogens given a protein/peptide sequence.  Used in hydrogen-deuterium exchange experiments.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ExchangeableAmides(sequence)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>sequence</code></td>
+<td>
+<p>character vector containing one or more amino acid sequences.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The number of backbone amide hydrogens in an amino acid sequence is the number of residues, minus the number of prolines, minus 1.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector containing the number of exchangeable hydrogens.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Nathan G. Dodder</p>
+
+
+<h3>See Also</h3>
+
+<p><code>IsotopicDistributionHDX</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ExchangeableAmides(c("VDVMCTA", "VSTPTL"))
+
+## find the number of exchangeable amides for 
+## each peptide in a digest of human serum albumin
+x &lt;- Digest(example.sequence, enzyme = "pepsin", IAA = FALSE, missed = 4)
+transform(x, exchange = ExchangeableAmides(x$peptide))
+</code></pre>
+
+
+</div>

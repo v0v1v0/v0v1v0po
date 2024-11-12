@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>listOMLSetup</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List hyperparameter settings</h2>
+
+<h3>Description</h3>
+
+<p>Each run has a <code>setup.id</code>, i.e. an ID for the hyperparameter settings of the flow that produced the run.
+This function allows the listing of hyperparameter settings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">listOMLSetup(
+  setup.id = NULL,
+  flow.id = NULL,
+  limit = 1000,
+  offset = NULL,
+  verbosity = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>setup.id</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+ID of the setup (which is basically an ID for the parameter configuration).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flow.id</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+ID of the implementation of an OpenML flow.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>[<code>numeric(1)</code>]<br>
+Optional. The maximum number of entries to return. 
+Without specifying <code>offset</code>, it returns the first '<code>limit</code>' entries.
+Setting <code>limit = NULL</code> returns all available entries.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>[<code>numeric(1)</code>]<br>
+Optional. The offset to start from. 
+Should be indices starting from 0, which do not refer to IDs. 
+Is ignored when no <code>limit</code> is given.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbosity</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+Print verbose output on console? Possible values are:<br><code>0</code>: normal output,<br><code>1</code>: info output,<br><code>2</code>: debug output.<br>
+Default is set via <code>setOMLConfig</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>[<code>data.frame</code>].
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function is memoised. I.e., if you call this function twice in a running R session,
+the first call will query the server and store the results in memory while the second and all subsequent calls will return
+the cached results from the first call.
+You can reset the cache by calling <code>forget</code> on the function manually.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other listing functions: 
+<code>chunkOMLlist()</code>,
+<code>listOMLDataSetQualities()</code>,
+<code>listOMLDataSets()</code>,
+<code>listOMLEstimationProcedures()</code>,
+<code>listOMLEvaluationMeasures()</code>,
+<code>listOMLFlows()</code>,
+<code>listOMLRuns()</code>,
+<code>listOMLStudies()</code>,
+<code>listOMLTaskTypes()</code>,
+<code>listOMLTasks()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># \dontrun{
+#   listOMLSetup(limit = 1)
+# }
+</code></pre>
+
+
+</div>

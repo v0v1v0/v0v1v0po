@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>qgrubbs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate critical values and p-values for Grubbs tests </h2>
+
+<h3>Description</h3>
+
+<p>This function is designed to calculate critical values for Grubbs tests
+for outliers detecting and to approximate p-values reversively.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">qgrubbs(p, n, type = 10, rev = FALSE)
+pgrubbs(q, n, type = 10)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p> vector of probabilities. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p> vector of quantiles. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p> sample size. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p> Integer value indicating test variant. 10 is a test for one outlier (side is
+detected automatically and can be reversed by <code>opposite</code> parameter). 11 is a test
+for two outliers on opposite tails, 20 is test for two outliers in one tail. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rev</code></td>
+<td>
+<p> if set to TRUE, function <code>qgrubbs</code> acts as <code>pgrubbs</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The critical values for test for one outlier is calculated according to approximations given by
+Pearson and Sekar (1936). The formula is simply reversed to obtain p-value.
+</p>
+<p>The values for two outliers test (on opposite sides) are calculated according to David, Hartley,
+and Pearson (1954). Their formula cannot be rearranged to obtain p-value, thus such values are
+obtained by <code>uniroot</code>.
+</p>
+<p>For test checking presence of two outliers at one tail, the tabularized distribution (Grubbs, 1950)
+is used, and approximations of p-values are interpolated using <code>qtable</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of quantiles or p-values.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Lukasz Komsta </p>
+
+
+<h3>References</h3>
+
+ 
+<p>Grubbs, F.E. (1950). Sample Criteria for testing outlying observations. Ann. Math. Stat. 21, 1, 27-58.
+</p>
+<p>Pearson, E.S., Sekar, C.C. (1936). The efficiency of statistical tools and a criterion for the rejection of outlying observations. Biometrika, 28, 3, 308-320.
+</p>
+<p>David, H.A, Hartley, H.O., Pearson, E.S. (1954). The distribution of the ratio, in a single normal sample, of range to standard deviation. Biometrika, 41, 3, 482-493.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>grubbs.test</code></p>
+
+
+</div>

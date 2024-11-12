@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rapport_ronds</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Ratio between radius and value for 'leaflet' maps</h2>
+
+<h3>Description</h3>
+
+<p>Returns the ratio between the area of the largest circle and the maximum
+value of the volume data for 'leaflet' maps.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rapport_ronds(map)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>objet leaflet.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Le rapport n'a pas d'unite. Il s'agit d'une valeur relative.
+</p>
+<p>Le calcul du rapport sert a comparer plusieurs cartes en ronds
+proportionnels entre elles puisque la valeur du rapport est fonction du
+volume a representer.
+</p>
+<p>La formule utilisee pour calculer le rapport est :
+(pi*(rayonRond)^2)/max_var
+</p>
+<p>Il peut y avoir une legere difference entre la valeur du rapport passee en
+parametre de la fonction <code>leaflet_ronds</code> et la valeur renvoyee par la
+fonction <code>rapport_ronds</code>. Cette difference s'explique par l'arrondi de
+pi a 6 chiffres apres la virgule.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Retourne un numerique.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>leaflet_ronds, leaflet_ronds_classes,
+leaflet_classes_ronds</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("donnees_monoloc")
+data("depm")
+
+# Ronds proportionnels
+map &lt;- leaflet_ronds(data = donnees_monoloc, fondMaille = depm, idData = "COD_DEP",
+					 varVolume = "POP_2015")
+
+ map
+
+rapport_ronds(map)
+# [1] 1924095
+
+# Ronds proportionnels
+map &lt;- leaflet_ronds(data = donnees_monoloc, fondMaille = depm, idData = "COD_DEP",
+varVolume = "POP_2015", rapportRond = 1900000)
+
+ map
+
+rapport_ronds(map)
+# [1] 1900022
+
+</code></pre>
+
+
+</div>

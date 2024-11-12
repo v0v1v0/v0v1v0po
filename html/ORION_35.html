@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.PredictionMap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary of prediction maps</h2>
+
+<h3>Description</h3>
+
+<p><code>summary.PredictionMap</code> returns a summarizing overview of a PredictionMap object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'PredictionMap'
+summary(object = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A PredictionMap object as it is returned by <code>predictionMap</code>-function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function gives an overview of the PredictionMap object. 
+A short summary about the utilized data and labels is given as well as the number of runs and folds of the cross-validation.
+The summary also includes if the prediction map was generated in parallel and the name of the utilized TunePareto classifier as well as its specified parameters.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>predictionMap</code>, <code>summary.Subcascades</code>, <code>summary.Groupwise</code>, <code>summary.Conf</code>, <code>summary.ConfusionTable</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(TunePareto)
+data(esl)
+data = esl$data
+labels = esl$labels
+foldList = generateCVRuns(labels  = labels,
+                          ntimes      = 2,
+                          nfold       = 2,
+                          leaveOneOut = FALSE,
+                          stratified  = TRUE)
+predMap = predictionMap(data, labels, foldList = foldList, 
+                       classifier = tunePareto.svm(), kernel='linear')
+
+summary(predMap)
+</code></pre>
+
+
+</div>

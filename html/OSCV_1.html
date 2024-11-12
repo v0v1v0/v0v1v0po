@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ASE_reg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The ASE function for the local linear estimator (LLE) in the regression context.</h2>
+
+<h3>Description</h3>
+
+<p>Computing <code class="reqn">ASE(h)</code>, the value of the ASE function for the local linear estimator in the regression context, for the given vector of <code class="reqn">h</code> values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ASE_reg(h, desx, y, rx)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>numerical vector of bandwidth values,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>desx</code></td>
+<td>
+<p>numerical vecror of design points,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>numerical vecror of data points corresponding to the design points <code class="reqn">desx</code>,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rx</code></td>
+<td>
+<p>numerical vecror of values of the regression function at <code class="reqn">desx</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The average squared error (ASE) is used as a measure of performace of the local linear estimator based on the Gaussian kernel.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The vector of values of <code class="reqn">ASE(h)</code> for the correponsing vector of <code class="reqn">h</code> values.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hart, J.D. and Yi, S. (1998) One-sided cross-validation. <em>Journal of the American Statistical Association</em>, 93(442), 620-631.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>loclin</code>, <code>h_ASE_reg</code>, <code>CV_reg</code>, <code>OSCV_reg</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Example (ASE function for a random sample of size n=100 generated from the function reg3 that
+# has six cusps. The function originates from the article of Savchuk et al. (2013).
+# The level of the added Gaussian noise is sigma=1/1000).
+n=100
+dx=(1:n-0.5)/n
+regx=reg3(dx)
+ydat=regx+rnorm(n,sd=1/1000)
+harray=seq(0.003,0.05,len=300)
+ASEarray=ASE_reg(harray,dx,ydat,regx)
+hmin=round(h_ASE_reg(dx,ydat,regx),digits=4)
+dev.new()
+plot(harray,ASEarray,'l',lwd=3,xlab="h",ylab="ASE",main="ASE function for a random sample
+from r3",cex.lab=1.7,cex.axis=1.7,cex.main=1.5)
+legend(0.029,0.0000008,legend=c("n=100","sigma=1/1000"),cex=1.7,bty="n")
+legend(0.005,0.000002,legend=paste("h_ASE=",hmin),cex=2,bty="n")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>solvers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Problem solvers</h2>
+
+<h3>Description</h3>
+
+<p>Specify the software and configuration used to solve a project prioritization
+<code>problem()</code>. By default, the best available exact algorithm
+solver will be used.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The following solvers can be used to find solutions for a
+project prioritization <code>problem()</code>:
+</p>
+
+<dl>
+<dt><code>add_default_solver()</code></dt>
+<dd>
+<p>This solver uses the best software
+currently installed on the system.</p>
+</dd>
+<dt><code>add_gurobi_solver()</code></dt>
+<dd>
+<p><a href="https://www.gurobi.com"><em>Gurobi</em></a>
+is a state-of-the-art commercial optimization software with an R package
+interface. It is by far the fastest solver that can be used by
+this package, however, it is also the only solver that is not freely
+available. That said, licenses are available to academics at no cost. The
+<span class="pkg">gurobi</span> package is distributed with the <em>Gurobi</em> software
+suite. This solver uses the <span class="pkg">gurobi</span> package to solve problems.</p>
+</dd>
+<dt><code>add_rsymphony_solver()</code></dt>
+<dd>
+<p><a href="https://github.com/coin-or/SYMPHONY"><em>SYMPHONY</em></a> is an
+open-source integer programming solver that is part of the Computational
+Infrastructure for Operations Research (COIN-OR) project, an initiative
+to promote development of open-source tools for operations research (a
+field that includes linear programming). The <span class="pkg">Rsymphony</span> package
+provides an interface to COIN-OR and is available on CRAN. This solver
+uses the <span class="pkg">Rsymphony</span> package to solve problems.</p>
+</dd>
+<dt><code>add_lpsymphony_solver()</code></dt>
+<dd>
+<p>The <span class="pkg">lpsymphony</span> package
+provides a different interface to the COIN-OR software suite. Unlike the
+<span class="pkg">Rsymhpony</span> package, the <span class="pkg">lpsymphony</span> package is distributed
+through
+<a href="https://doi.org/doi:10.18129/B9.bioc.lpsymphony">Bioconductor</a>.
+The <span class="pkg">lpsymphony</span> package may be easier to install on Windows or
+Max OSX systems than the <span class="pkg">Rsymphony</span> package.</p>
+</dd>
+<dt><code>add_lpsolveapi_solver()</code></dt>
+<dd>
+<p><a href="http://lpsolve.sourceforge.net/5.5/"><em>lp_solve</em></a> is an
+open-source integer programming solver. The <span class="pkg">lpSolveAPI</span> package
+provides an interface to this solver and is available on CRAN.
+Although this solver is the slowest currently supported solver,
+it is also the only exact algorithm solver that can be installed on all
+operating systems without any manual installation steps.</p>
+</dd>
+<dt><code>add_heuristic_solver()</code></dt>
+<dd>
+<p>Generate solutions using
+a backwards heuristic algorithm. Although these types of algorithms have
+conventionally been used to solve project prioritization problems,
+they are extremely unlikely to identify optimal solutions and provide
+no guarantees concerning solution quality.</p>
+</dd>
+<dt><code>add_random_solver()</code></dt>
+<dd>
+<p>Generate solutions by
+randomly funding actions. This can be useful when evaluating the
+performance of a funding scheme—though it is strongly recommended
+to evaluate the performance of a funding scheme by comparing it
+to an optimal solution identified using exact algorithms (e.g.
+<code>add_gurobi_solver()</code>, <code>add_rsymphony_solver()</code>).</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>constraints,  decisions,
+objectives, <code>problem()</code>, targets.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem
+p1 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 200) %&gt;%
+     add_binary_decisions()
+
+# build another problem, with the default solver
+p2 &lt;- p1 %&gt;%
+      add_default_solver()
+
+# build another problem, with the gurobi solver
+## Not run: 
+p3 &lt;- p1 %&gt;%
+      add_gurobi_solver()
+
+## End(Not run)
+
+# build another problem, with the Rsympony solver
+## Not run: 
+p4 &lt;- p1 %&gt;%
+      add_rsymphony_solver()
+
+## End(Not run)
+
+# build another problem, with the lpsymphony solver
+## Not run: 
+p5 &lt;- p1 %&gt;%
+      add_lpsymphony_solver()
+
+## End(Not run)
+
+# build another problem, with the lpSolveAPI solver
+p6 &lt;- p1 %&gt;%
+      add_lpsolveapi_solver()
+
+# build another problem, with the heuristic solver
+p7 &lt;- p1 %&gt;%
+      add_heuristic_solver()
+
+# build another problem, with the random solver
+p8 &lt;- p1 %&gt;%
+      add_random_solver()
+
+## Not run: 
+# generate solutions using each of the solvers
+s &lt;- rbind(solve(p2), solve(p3), solve(p4), solve(p5), solve(p6), solve(p7),
+           solve(p8))
+s$solver &lt;- c("default", "gurobi", "Rsymphony", "lpsymphony", "lpSolveAPI",
+              "heuristic", "random")
+
+# print solutions
+print(as.data.frame(s))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>write_odf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write R data frame to the Open Data Format.</h2>
+
+<h3>Description</h3>
+
+<p>Export data from an R data frame to a ZIP file that stores
+the data as Open Data Format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">write_odf(
+  x,
+  file,
+  languages = "all",
+  export_data = TRUE,
+  verbose = TRUE,
+  compression_level = 5
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>R data frame (df) to be writtem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>Path to ZIP file or name of zip file to save the odf-dataset
+in the working directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>languages</code></td>
+<td>
+<p>Select the language in which the descriptions and labels of the data will be
+exported
+</p>
+
+<ul>
+<li>
+<p> By default all available language variants are exported
+(<code>languages = "all"</code>).
+</p>
+</li>
+<li>
+<p> You can also choose to export only the default language
+(<code>languages = "default"</code>),
+</p>
+</li>
+<li>
+<p> Or only the current language
+(<code>languages = "current"</code>),
+</p>
+</li>
+<li>
+<p> or you can select the language by language code, e.g.
+<code>languages = "en"</code>.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>export_data</code></td>
+<td>
+<p>Choose, if you want to export the file that holds the
+data (data.csv).Default is TRUE.
+</p>
+
+<ul>
+<li>
+<p> By default the data and metadata are exported (<code>export_data = "yes"</code>).
+</p>
+</li>
+<li>
+<p> To export only metadata and no data, select <code>export_data = "no"</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Display more messages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compression_level</code></td>
+<td>
+<p>A number between 1 and 9. 9 compresses best, but it also takes the longest.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>ZIP file and unzipped directory containing the data as CSV file and
+the metadata as XML file (DDI Codebook 2.5.).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># get example data from the opendataformat package
+df  &lt;-  get(data("data_odf"))
+
+# write R data frame with attributes to the file my_data.zip specified
+# as Open Data Format.
+write_odf(x = df, paste0(tempdir(), "/my_data.zip"))
+
+# write R data frame with attributes to the file my_data.zip
+# with selected language.
+write_odf(x = df,  paste0(tempdir(), "/my_data.zip"), languages = "en")
+
+# write R data frame with attributes to the file my_data.zip but only
+# metadata, no data.
+write_odf(x = df,  file = paste0(tempdir(), "/my_data.zip"), export_data = "no")
+
+
+</code></pre>
+
+
+</div>

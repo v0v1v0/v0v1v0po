@@ -1,0 +1,227 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>biplotSimple</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A graphically unsophisticated version of a biplot.</h2>
+
+<h3>Description</h3>
+
+<p>It will draw elements and constructs vectors using similar
+arguments as <code>biplot2d()</code>. It is a version for quick
+exploration used during development.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">biplotSimple(
+  x,
+  dim = 1:2,
+  center = 1,
+  normalize = 0,
+  g = 0,
+  h = 1 - g,
+  unity = T,
+  col.active = NA,
+  col.passive = NA,
+  scale.e = 0.9,
+  zoom = 1,
+  e.point.col = "black",
+  e.point.cex = 1,
+  e.label.col = "black",
+  e.label.cex = 0.7,
+  c.point.col = grey(0.6),
+  c.label.col = grey(0.6),
+  c.label.cex = 0.6,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dim</code></td>
+<td>
+<p>Dimensions (i.e. principal components) to be used for biplot
+(default is <code>c(1,2)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>Numeric. The type of centering to be performed.
+0= no centering, 1= row mean centering (construct),
+2= column mean centering (elements), 3= double-centering (construct and element means),
+4= midpoint centering of rows (constructs).
+The default is <code>1</code> (row centering).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>A numeric value indicating along what direction (rows, columns)
+to normalize by standard deviations. <code style="white-space: pre;">⁠0 = none, 1= rows, 2 = columns⁠</code>
+(default is <code>0</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the left singular
+vectors, i.e. the constructs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>Power of the singular value matrix assigned to the right singular
+vectors, i.e. the elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unity</code></td>
+<td>
+<p>Scale elements and constructs coordinates to unit scale in 2D (maximum of 1)
+so they are printed more neatly (default <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.active</code></td>
+<td>
+<p>Columns (elements) that are no supplementary points, i.e. they are used
+in the SVD to find principal components. default is to use all elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.passive</code></td>
+<td>
+<p>Columns (elements) that are supplementary points, i.e. they are NOT used
+in the SVD but projected into the component space afterwards. They do not
+determine the solution. Default is <code>NA</code>, i.e. no elements are set
+supplementary.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.e</code></td>
+<td>
+<p>Scaling factor for element vectors. Will cause element points to move a bit more
+to the center. This argument is for visual appeal only.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zoom</code></td>
+<td>
+<p>Scaling factor for all vectors. Can be used to zoom
+the plot in and out (default <code>1</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.point.col</code></td>
+<td>
+<p>Color of the element symbols (default is <code>"black"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.point.cex</code></td>
+<td>
+<p>Size of the element symbol (default is <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.label.col</code></td>
+<td>
+<p>Color of the element labels (default is <code>"black"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e.label.cex</code></td>
+<td>
+<p>Size of the element labels (default is <code>.7</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.point.col</code></td>
+<td>
+<p>Color of the construct lines (default is <code>grey(.6)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.label.col</code></td>
+<td>
+<p>Color of the construct labels (default is <code>grey(.6)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.label.cex</code></td>
+<td>
+<p>Size of the construct labels (default is <code>.6</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Parameters to be passed on to <code>center()</code> and <code>normalize</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>repgrid</code> object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Unsophisticated biplot: <code>biplotSimple()</code>; <br>
+2D biplots:
+<code>biplot2d()</code>,
+<code>biplotEsa2d()</code>,
+<code>biplotSlater2d()</code>;<br>
+Pseudo 3D biplots:
+<code>biplotPseudo3d()</code>,
+<code>biplotEsaPseudo3d()</code>,
+<code>biplotSlaterPseudo3d()</code>;<br>
+Interactive 3D biplots:
+<code>biplot3d()</code>,
+<code>biplotEsa3d()</code>,
+<code>biplotSlater3d()</code>;<br>
+Function to set view in 3D:
+<code>home()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+biplotSimple(boeker)
+biplotSimple(boeker, unity = F)
+
+biplotSimple(boeker, g = 1, h = 1) # INGRID biplot
+biplotSimple(boeker, g = 1, h = 1, center = 4) # ESA biplot
+
+biplotSimple(boeker, zoom = .9) # zooming out
+biplotSimple(boeker, scale.e = .6) # scale element vectors
+
+biplotSimple(boeker, e.point.col = "brown") # change colors
+biplotSimple(boeker,
+  e.point.col = "brown",
+  c.label.col = "darkblue"
+)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

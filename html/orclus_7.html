@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.orclus</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Arbitrarily ORiented projected CLUSter generation</h2>
+
+<h3>Description</h3>
+
+<p>Assigns clusters and distances to cluster centers in the corresponding subspaces for new data according to a subspace clustering model of class <code>orclus</code>.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'orclus'
+predict(object, newdata, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Model resulting from a call of <code>orclus</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>A matrix or data frame to be clustered by the given model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>distances</code></td>
+<td>
+<p>A matrix where coloumns are the distances to all cluster centers in the corresponding subspaces for the new data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>The resulting cluster labels for the new data.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Gero Szepannek</p>
+
+
+<h3>References</h3>
+
+<p>Aggarwal, C. and Yu, P. (2000): <em>Finding generalized projected clusters in high dimensional spaces</em>, 
+Proceedings of ACM SIGMOD International Conference on Management of Data, pp. 70-81.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>orclus</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># generate simple artificial example of two clusters
+clus1.v1 &lt;- runif(100)
+clus2.v1 &lt;- runif(100) 
+xample &lt;- rbind(cbind(clus1.v1, 0.5 - clus1.v1), cbind(clus2.v1, -0.5 + clus2.v1))
+
+orclus.res &lt;- orclus(x = xample, k = 2, l = 1, k0 = 8, a = 0.5)
+
+# generate new data and predict it using the 
+newclus1.v1 &lt;- runif(100)
+newclus2.v1 &lt;- runif(100) 
+true.clusterids  &lt;- rep(1:2, each = 100)
+xample2 &lt;- rbind(cbind(newclus1.v1, 0.5 - newclus1.v1), 
+                 cbind(newclus2.v1, -0.5 + newclus2.v1))
+
+orclus.prediction &lt;- predict(orclus.res, xample2)
+table(orclus.prediction$cluster, true.clusterids)
+
+</code></pre>
+
+
+</div>

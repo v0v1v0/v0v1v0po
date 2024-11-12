@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_lines</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract all <code>osm_lines</code> from an osmdata object</h2>
+
+<h3>Description</h3>
+
+<p>If <code>id</code> is of a point object, <code>osm_lines</code> will return all lines
+containing that point. If <code>id</code> is of a line or polygon object,
+<code>osm_lines</code> will return all lines which intersect the given line or
+polygon.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_lines(dat, id)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>An object of class osmdata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>OSM identification of one or more objects for which lines are to be
+extracted</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <span class="pkg">sf</span> Simple Features Collection of linestrings
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other search: 
+<code>osm_multilines()</code>,
+<code>osm_multipolygons()</code>,
+<code>osm_points()</code>,
+<code>osm_polygons()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+dat &lt;- opq ("hengelo nl") %&gt;%
+    add_osm_feature (key = "highway") %&gt;%
+    osmdata_sf ()
+bus &lt;- dat$osm_points [which (dat$osm_points$highway == "bus_stop"), ] %&gt;%
+    rownames () # all OSM IDs of bus stops
+osm_lines (dat, bus) # all highways containing bus stops
+
+# All lines which intersect with Piccadilly Circus in London, UK
+dat &lt;- opq ("Fitzrovia London") %&gt;%
+    add_osm_feature (key = "highway") %&gt;%
+    osmdata_sf ()
+i &lt;- which (dat$osm_polygons$name == "Piccadilly Circus")
+id &lt;- rownames (dat$osm_polygons [i, ])
+osm_lines (dat, id)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

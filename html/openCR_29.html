@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>JS.counts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarise Non-spatial Open-population Data</h2>
+
+<h3>Description</h3>
+
+<p>Simple conventional summaries of data held in secr ‘capthist’ objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+JS.counts(object, primary.only = TRUE, stratified = FALSE)
+m.array(object, primary.only = TRUE, never.recaptured = TRUE, 
+    last.session = TRUE, stratified = FALSE)
+bd.array(beta, phi)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>secr capthist object or similar</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>primary.only</code></td>
+<td>
+<p>logical; if TRUE then counts are tabuated for primary sessions </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratified</code></td>
+<td>
+<p>logical; if TRUE then sessions of multisession object summarised separately </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>never.recaptured</code></td>
+<td>
+<p>logical; if TRUE then a column is added for animals never recaptured </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>last.session</code></td>
+<td>
+<p>logical; if TRUE releases are reported for the last session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>numeric vector of entry probabilities, one per primary session</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi</code></td>
+<td>
+<p>numeric vector of survival probabilities, one per primary session</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The input is a capthist object representing a multi-session capture–recapture study. This may be (i) a single-session capthist in which occasions are understood to represent primary sessions, or (ii) a multi-session capthist object that is automatically converted to a single session object with <code>join</code> (any secondary sessions (occasions) are first collapsed with <code>reduce(object, by = 'all')</code>*, or (iii) a multi-session capthist object in which sessions are interpreted as strata.
+</p>
+<p>The argument <code>primary.only</code> applies for single-session input with a robust-design structure defined by the <code>intervals</code>. <code>last.session</code> results in a final row with no recaptures.
+</p>
+<p>If the covariates attribute of <code>object</code> includes a column named ‘freq’ then this is used to expand the capture histories.
+</p>
+<p>Conventional Jolly–Seber estimates may be computed with <code>JS.direct</code>.
+</p>
+<p><code>bd.array</code> computes the probability of each possible combination of birth and death times (strictly, the primary session at which an animal was first and last available for detection), given the parameter vectors beta and phi. These cell probabilities are integral to JSSA models.
+</p>
+<p>* this may fail with nonspatial data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For <code>JS.counts</code>, a data.frame where rows correspond to sessions and columns hold counts as follows –
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>number of individuals detected</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>number of individuals released</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>number of previously marked individuals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>number of released individuals detected in later sessions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>number known to be alive (detected before and after) but not detected in current session</p>
+</td>
+</tr>
+</table>
+<p>For <code>m.array</code>, a table object with rows corresponding to release cohorts and columns  corresponding to first–recapture sessions. The size of the release cohort is shown in the first column. Cells in the lower triangle have value NA and print as blank by default.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>join</code>, <code>JS.direct</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+JS.counts(ovenCH)
+m.array(ovenCH)
+
+## Not run: 
+
+## probabilities of b,d pairs
+fit &lt;- openCR.fit(ovenCH, type = 'JSSAbCL')
+beta &lt;- predict(fit)$b$estimate
+phi &lt;- predict(fit)$phi$estimate
+bd.array(beta, phi)
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

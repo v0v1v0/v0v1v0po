@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>os.sort</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Sort and select predictors according to the strength of target-predictor relationship</h2>
+
+<h3>Description</h3>
+
+<p>Sort and select predictors according to the strength of target-predictor relationship
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">os.sort(x, y, method = "linear", n.pred = ncol(x), thresh = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A data matrix (raw: samples, col: predictors).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A vector of target value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A string to specify the regression function for calculating R-squared values.
+"linear" (default), "quadratic" or "cubic" function can be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.pred</code></td>
+<td>
+<p>The number of predictors to be leaved in prediction model (default: ncol(x)).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresh</code></td>
+<td>
+<p>The lower threshold of R-squared value to be leaved in prediction model (default: 1).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data matrix (raw: samples, col: sorted predictors)
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Takahiko Koizumi
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Pinus)
+train &lt;- os.clean(Pinus$train)
+target &lt;- Pinus$target
+cor(target, train[, 1])
+
+train &lt;- os.sort(train, target, thresh = 0.5)
+cor(target, train[, 1])
+</code></pre>
+
+
+</div>

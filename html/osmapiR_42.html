@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osm_redaction_object</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Redact an object version</h2>
+
+<h3>Description</h3>
+
+<p>Used by the <a href="https://wiki.openstreetmap.org/wiki/Data_working_group">Data Working Group</a> to hide old versions of
+elements containing data privacy or copyright infringements. Only permitted for OSM accounts with the moderator role
+(DWG and server admins).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osm_redaction_object(
+  osm_type = c("node", "way", "relation"),
+  osm_id,
+  version,
+  redaction_id
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>osm_type</code></td>
+<td>
+<p>Object type (<code>"node"</code>, <code>"way"</code> or <code>"relation"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osm_id</code></td>
+<td>
+<p>Object id represented by a numeric or a character value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p>Version of the object to redact.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>redaction_id</code></td>
+<td>
+<p>If missing, then this is an unredact operation. If a redaction ID was specified, then set this
+element to be redacted in that redaction.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>redaction_id</code> is listed on <a href="https://www.openstreetmap.org/redactions">https://www.openstreetmap.org/redactions</a>. More information can be found in
+<a href="https://git.openstreetmap.org/rails.git/blob/HEAD:/app/controllers/redactions_controller.rb">the source</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Nothing is returned upon successful redaction or unredaction of an object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other functions for moderators: 
+<code>osm_delete_note()</code>,
+<code>osm_hide_comment_changeset_discussion()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## WARNING: this example will edit the OSM (testing) DB with your user!
+# You will need a user with moderator role in the server to use `osm_redaction_object()`
+set_osmapi_connection(server = "testing") # setting https://master.apis.dev.openstreetmap.org
+x &lt;- data.frame(type = "node", lat = 0, lon = 0, name = "Test redaction.")
+obj &lt;- osmapi_objects(x, tag_columns = "name")
+changeset_id &lt;- osm_create_changeset(
+  comment = "Test object redaction",
+  hashtags = "#testing;#osmapiR"
+)
+
+node_id &lt;- osm_create_object(x = obj, changeset_id = changeset_id)
+node_osm &lt;- osm_get_objects(osm_type = "node", osm_id = node_id)
+deleted_version &lt;- osm_delete_object(x = node_osm, changeset_id = changeset_id)
+redaction &lt;- osm_redaction_object(
+  osm_type = node_osm$type, osm_id = node_osm$id, version = 1, redaction_id = 1
+)
+unredaction &lt;- osm_redaction_object(osm_type = node_osm$type, osm_id = node_osm$id, version = 1)
+osm_close_changeset(changeset_id = changeset_id)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

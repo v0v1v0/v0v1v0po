@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>initScenario</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Initialize the robust optimization</h2>
+
+<h3>Description</h3>
+
+<p>The function initializes an <em>optimLanduse</em> S3 object on the
+basis of a coefficients table. Please note that the coefficients table must follow
+the expected <em>optimLanduse</em> format. The expected format is explained in the example on the
+<a href="https://github.com/Forest-Economics-Goettingen/optimLanduse/">GitHub project page</a> and in the publication in Methods in Ecology and Evolution (Husmann et al. ,2022)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">initScenario(
+  coefTable,
+  uValue = 1,
+  optimisticRule = "expectation",
+  fixDistance = 3
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>coefTable</code></td>
+<td>
+<p>Coefficient table in the expected <em>optimLanduse</em> format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uValue</code></td>
+<td>
+<p><em>u</em> Value. The uncertainty value delivered in the coefTable is
+multiplied with this u value. The value, therefore, enables scenario analyses with differing
+uncertainties in relation to indicator values. Higher u values can be interpreted as a higher
+risk aversion of the decision maker.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>optimisticRule</code></td>
+<td>
+<p>Either <em>expectation</em> or <em>uncertaintyAdjustedExpectation</em>.
+The rule indicates whether the optimistic outcomes of an indicator are directly
+reflected by their expectations or if the indicator is calculated as expectation +
+uncertainty when "more is better" or expectation - uncertainty respectively when "less is better".
+An optimization based on <em>expectation</em> considers only downside risks.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixDistance</code></td>
+<td>
+<p>This optional numeric value allows to define distinct uncertainty levels for the
+calculation of the uncertainty space and the averaged distances of a certain land-cover composition
+(see Equation 9 in Husmann et al. (2020)). Passing NA disables fixDistance. In this case,
+the uncertainty space is defined by uValue.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Separating the initialization from the optimization is to save
+computation time in batch analysis. The separated function calls allow the
+user to perform multiple
+optimizations from one initialized object. This could save time in the scenario or
+sensitivity analysis.
+</p>
+<p>A detailed description of the input parameters can be found in Husmann et al. (2022).
+</p>
+
+
+<h3>Value</h3>
+
+<p>An initialized optimLanduse S3 object ready for optimization.
+</p>
+
+
+<h3>References</h3>
+
+<p>Husmann, K., von Groß, V., Bödeker, K., Fuchs, J. M., Paul, C., &amp; Knoke, T. (2022). optimLanduse: A package for multiobjective land-cover composition optimization under uncertainty. Methods in Ecology and Evolution, 00, 1– 10. https://doi.org/10.1111/2041-210X.14000
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">require(readxl)
+dat &lt;- read_xlsx(exampleData("exampleGosling.xlsx"))
+
+init &lt;- initScenario(dat,
+                     uValue = 2,
+                     optimisticRule = "expectation",
+                     fixDistance = 3)
+</code></pre>
+
+
+</div>

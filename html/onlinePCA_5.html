@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>coef2fd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Recover functional data from their B-spline coefficients
+</h2>
+
+<h3>Description</h3>
+
+<p>This function computes functional data 
+from their coefficients in a B-spline basis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">coef2fd(beta, basis, byrow = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>B-spline coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>basis</code></td>
+<td>
+<p>object created by <code>create.basis</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+<p>are the coefficients of each functional observation
+stored in rows (TRUE) or in columns (FALSE)?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix of functional data stored in the same format (row or columns) as the coefficients <code>beta</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>In view of (online or offline) functional PCA, 
+the coefficients <code>beta</code> are left- or right- multiplied 
+by <code>M^{-1/2}</code> (depending on their row/column format)) 
+before applying the B-spline matrix <code>B</code>, 
+with <code>M</code> the Gram matrix associated to <code>B</code>.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>create.basis</code>, <code>fd2coef</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 100 # number of curves
+d &lt;- 500 # number of observation points
+grid &lt;- (1:d)/d # observation points
+p &lt;- 50 # number of B-spline basis functions 
+
+# Simulate Brownian motion
+x &lt;- matrix(rnorm(n*d,sd=1/sqrt(d)),n,d)
+x &lt;- t(apply(x,1,cumsum))
+
+# Create B-spline basis 
+mybasis &lt;- create.basis(grid, p, 1e-4)
+
+# Compute smooth basis coefficients 
+beta &lt;- fd2coef(x, mybasis)
+
+# Recover smooth functional data
+x.smooth &lt;- coef2fd(beta, mybasis) 
+	
+# Standard PCA and Functional PCA
+pca &lt;- prcomp(x)
+fpca &lt;- prcomp(beta)
+</code></pre>
+
+
+</div>

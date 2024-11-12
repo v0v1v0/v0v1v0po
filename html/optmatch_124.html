@@ -1,0 +1,166 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.ism</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarize a distance matrix</h2>
+
+<h3>Description</h3>
+
+<p>Given a distance matrix, return information above it, including
+dimension, sparsity information, unmatchable members, summary of
+finite distances, and, in the case of
+<code>BlockedInfinitySparseMatrix</code>, block structure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'InfinitySparseMatrix'
+summary(object, ..., distanceSummary = TRUE)
+
+## S3 method for class 'BlockedInfinitySparseMatrix'
+summary(
+  object,
+  ...,
+  distanceSummary = TRUE,
+  printAllBlocks = FALSE,
+  blockStructure = TRUE
+)
+
+## S3 method for class 'DenseMatrix'
+summary(object, ..., distanceSummary = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A <code>InfinitySparseMatrix</code>,
+<code>BlockedInfinitySparseMatrix</code> or <code>DenseMatrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distanceSummary</code></td>
+<td>
+<p>Default <code>TRUE</code>. Should a summary of
+minimum distance per treatment member be calculated? May be slow
+on larger data sets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printAllBlocks</code></td>
+<td>
+<p>If <code>object</code> is a
+<code>BlockedInfinitySparseMatrix</code>, should summaries of all
+blocks be printed alongside the overall summary? Default
+<code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockStructure</code></td>
+<td>
+<p>If <code>object</code> is a
+<code>BlockedInfinitySparseMatrix</code> and <code>printAllBlocks</code> is
+false, print a quick summary of each individual block. Default
+<code>TRUE</code>. If the number of blocks is high, consider
+suppressing this.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The output consists of several pieces.
+</p>
+
+<ul>
+<li>
+<p> Membership: Indicates the dimension of the distance.
+</p>
+</li>
+<li>
+<p> Total (in)eligible potential matches: A measure of the sparsity of
+the distance. Eligible matches have a finite distance between treatment and
+control members; they could be matched. Ineligible matches have <code>Inf</code>
+distance and can not be matched. A higher number of ineligible matches can
+speed up matching, but runs the risk of less optimal overall matching
+results.
+</p>
+</li>
+<li>
+<p> Unmatchable treatment/control members: If any observations have no
+eligible matches (e.g. their distance to every potential match is
+<code>Inf</code>) they are listed here. See Value below for details of how to
+access lists of matchable and unmatchable treatment and control members.
+</p>
+</li>
+<li>
+<p> Summary of minimum matchable distance per treatment member: To assist
+with choosing a caliper, this is a numeric summary of the smallest distance
+per matchable treatment member. If you provide a caliper that is less than
+the maximum value, at least one treatment member will become unmatchable.
+</p>
+</li>
+<li>
+<p> Block structure: For <code>BlockedInfinitySparseMatrix</code>, a quick
+summary of the structure of each individual block. (The above will all be
+across all blocks.) This may indicate which blocks, if any, are problematic.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A named <code>list</code>. The summary for an
+<code>InfinitySparseMatrix</code> or <code>DenseMatrix</code> contains the
+following:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td>
+<code>total</code>: </td>
+<td>
+<p>Contains the total number of treatment and control members, as well as eligible and ineligible matches.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td>
+<code>matchable</code>: </td>
+<td>
+<p>The names of all treatment and control members with at least one eligible match.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td>
+<code>unmatchable</code>: </td>
+<td>
+<p>The names of all treatment and control members with no eligible matches.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td>
+<code>distances</code>: </td>
+<td>
+<p>The summary of minimum matchable distances, if <code>distanceSummary</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<p>For <code>BlockedInfinitySparseMatrix</code>, the named <code>list</code>
+instead of contains one entry per block, named after each block
+(i.e. the value of the blocking variable) as well as a block
+named 'overall' which contains the summary ignoring blocks. Each
+of these entries contains a <code>list</code> with entries 'total',
+'matchable', 'unmatchable' and 'distances', as described above.
+</p>
+
+
+</div>

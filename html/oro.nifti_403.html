@@ -1,0 +1,256 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Audit Trails</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Facilitate the Creation and Modification of Audit Trails</h2>
+
+<h3>Description</h3>
+
+<p>Facilitate the creation and modification of audit trails for NIfTI class
+objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oro.nifti.info(type)
+
+enableAuditTrail()
+
+getLastCallWithName(functionName)
+
+newAuditTrail()
+
+niftiExtensionToAuditTrail(
+  nim,
+  workingDirectory = NULL,
+  filename = NULL,
+  call = NULL
+)
+
+niftiAuditTrailSystemNode(
+  type = "system-info",
+  workingDirectory = NULL,
+  filename = NULL,
+  call = NULL
+)
+
+niftiAuditTrailSystemNodeEvent(
+  trail,
+  type = NULL,
+  call = NULL,
+  workingDirectory = NULL,
+  filename = NULL,
+  comment = NULL
+)
+
+niftiAuditTrailCreated(
+  history = NULL,
+  call = NULL,
+  workingDirectory = NULL,
+  filename = NULL
+)
+
+niftiAuditTrailEvent(trail, type = NULL, call = NULL, comment = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>An identifier to add some meaning to the event.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>functionName</code></td>
+<td>
+<p>The name of a function on the call stack.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nim</code></td>
+<td>
+<p>is an object of class <code>niftiAuditTrail</code> or can be converted
+to such.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>workingDirectory</code></td>
+<td>
+<p>The working directory associated with the
+‘filename’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>The filename associated with the nifti object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>A <code>call</code>, function name in the call-stack or a string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trail</code></td>
+<td>
+<p>The <code>XMLAbstractNode</code> representing the audit trail or the
+<code>niftiAuditTrail</code> object with a trail that will be amended.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comment</code></td>
+<td>
+<p>Some textual comment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>history</code></td>
+<td>
+<p>An <code>XMLAbstractNode</code> to store historical events for
+inclusion in the ‘trail’.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>oro.nifti.info</code> is used to find the <code>ecode</code> or the
+XML <code>namespace</code> relevant to the audit trail.
+</p>
+<p>The function <code>enableAuditTrail</code> is turned “off” by default to
+minimize package dependencies.  Should one wish to turn “on” the
+audit trail functionality, then one should set the option
+<code>NIfTI.audit.trail</code> to <code>TRUE</code> and call the function
+<code>enableAuditTrail</code>.  Setting the option <code>NIfTI.audit.trail</code> to
+<code>FALSE</code> will disable the audit trail.
+</p>
+<p>The function <code>newAuditTrail</code> returns an <code>XMLAbstractNode</code>
+representing the root node of an audit trail.  This is mostly intended as an
+internal function.
+</p>
+<p>The function <code>niftiExtensionToAuditTrail</code> takes an object representing
+a NIfTI object, casts it as a <code>niftiAuditTrail</code> and checks if there is
+an extension (a <code>niftiExtensionSection</code>) with <code>ecode</code> equal to
+<code>oro.nifti.info("ecode")</code>; i.e. has a extension with data representing
+a serialized audit trail.  The function will then strip the object of this
+extension parsing the serialized <code>edata</code> into an audit trail and adding
+a ‘read’ event to the trail.
+</p>
+<p>The function <code>niftiAuditTrailToExtension</code> takes a
+<code>niftiAuditTrail</code> and returns a <code>niftiExtensionSection</code> with
+<code>edata</code> containing the serialized form of the audit trail after adding
+a ‘saved’ event to the trail.
+</p>
+<p>The function <code>niftiAuditTrailSystemNodeEvent</code> adds an element with name
+equal to <code>type</code> to the <code>trail</code>.  It uses the
+<code>niftiAuditTrailSystemNode</code> function to create the node.
+</p>
+<p>The function <code>niftiAuditTrailSystemNode</code> is an internal function
+creating an <code>XMLAbstractNode</code> element with name <code>type</code> and
+attributes giving information about the R system and library.  The
+<code>filename</code> and <code>call</code> will also be added as attributes if
+available.
+</p>
+<p>The function <code>niftiAuditTrailEvent</code> adds an element with name
+<code>event</code> to the <code>trail</code>.  The arguments <code>type</code>,
+<code>filename</code>, <code>call</code> are added as attributes and the <code>comment</code>
+is the text value of the element.
+</p>
+<p>The function <code>niftiAuditTrailCreated</code> will create a new audit trail
+containing a system node element <code>created</code> with the child
+<code>history</code> with the contents <code>history</code>.  If the last element of the
+<code>history</code> given is an <code>event</code> with <code>type="processing"</code>, then
+this node will be removed from the <code>history</code> and its <code>call</code>
+attribute will be used as the value of the <code>call</code> attribute on the
+<code>created</code> node.
+</p>
+<p>The function <code>getLastCallWithName</code> will search the call stack for a
+call of the function <code>functionName</code>, returning last call to that
+function if possible.  It will default to the call of the function which
+called the function which called getLastCallWithName if there was no such
+call (and if there was no such call it will return the call of itself).
+</p>
+
+
+<h3>Note</h3>
+
+<p>These functions are mostly intended to be used internally in order to
+document the changes that occur to NIfTI objects due to functions that are
+audit-trail aware.  However, as the precise manner in which these functions
+are used is not documented anywhere else, we shall proceed to describe which
+functions are audit-trail aware and how they interact with the audit trail.
+</p>
+<p><code>as.nifti</code> and its S4 alias <code>as(nim, "nifti")</code> will always produce
+<code>niftiAuditTrail</code> objects if the functionality is turned on.  The
+function <code>niftiAuditTrailCreated</code> will be used and if an exemplar
+object is provided (e.g., <code>as.nifti(array, niftiExemplar)</code>) then the
+trail of the exemplar will be used as the <code>history</code>.
+</p>
+<p><code>readNIfTI</code> and <code>writeNIfTI</code> also always produce
+<code>niftiAuditTrail</code> objects if the functionality is turned on.  The
+functions <code>niftiExtensionToAuditTrail</code> and
+<code>niftiAuditTrailToExtension</code> are used internally by these functions to
+facilitate this behaviour.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Andrew Thornton <a href="mailto:zeripath@users.sourceforge.net">zeripath@users.sourceforge.net</a> and Brandon
+Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## A good example of the use of these functions is shown by this
+## wrapper function which takes a function fun(nim, ...) returning
+## lists of arrays which are nifti-ized using as(...)
+options("niftiAuditTrail"=TRUE)
+enableAuditTrail()
+
+wrapper &lt;- function(functionToWrap, nameOfCallingFunction, nim, ...) {
+  if (!is(nim, "nifti")) 
+    nim &lt;- as(nim, "nifti")
+  
+  if (is(nim, "niftiAuditTrail")) {
+    ## This will force as(...) to set the call which created the
+    ## results to the calling function's call rather than
+    ## as(result, nifti) as it would otherwise do
+    slot(nim, "trail") &lt;- niftiAuditTrailEvent(slot(nim, "trail"), "processing",
+                                      nameOfCallingFunction)
+  }
+  
+  result &lt;- functionToWrap(nim, ...)
+  as(result, "nifti") &lt;- nim
+  return(result)
+}
+
+## An example of how wrapper is used follows:
+functionToWrap &lt;- function(ignored, x, y) {
+  return (array(1, dim=c(x,y)))
+}
+
+## The nifti-ized form
+niftiizedForm &lt;- function(nim,...) {
+  return(wrapper(functionToWrap, "niftiizedForm", nim, ...))
+}
+ 
+## Not run: 
+  if (isTRUE(getOption("niftiAuditTrail"))) {
+    print(slot(as.nifti(functionToWrap(nifti(), 4, 4), nifti()), "trail"))
+    print(slot(niftiizedForm(nifti(), 4, 4), "trail"))
+  }
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>api</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Start the occupation coding API.</h2>
+
+<h3>Description</h3>
+
+<p>Start the occupation coding API.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">api(
+  start = TRUE,
+  log_to_file = FALSE,
+  file = system.file("plumber", "api", "plumber.R", package = "occupationMeasurement"),
+  log_to_console = TRUE,
+  log_filepath = file.path("output", "log_api.csv"),
+  require_identifier = FALSE,
+  allow_origin = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>Whether to immediately start the api. (Defaults to TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log_to_file</code></td>
+<td>
+<p>Whether to requests should be logged in a file.
+Defaults to FALSE.
+Note: The file format used here is a CSV file for easier analysis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>Path to the <code>plumber.R</code> file describing the API.
+Defaults to <code>plumber/api/plumber.R</code> within the installed package.
+Refer to this file to understand how the API is implemented.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log_to_console</code></td>
+<td>
+<p>Whether to requests should be logged in the console.
+Defaults to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log_filepath</code></td>
+<td>
+<p>The path to a CSV file in which to save the structured
+logs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>require_identifier</code></td>
+<td>
+<p>Whether an identifier has to be added to api
+requests in order to match / identify requests afterwards.
+Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allow_origin</code></td>
+<td>
+<p>Domain from which to allow cross origin requests (CORS).
+If the API is running on a different domain / server than the application
+using it, the website's root has to be provided here e.g.
+"https://occupationMeasurement.github.io". For more information see the
+<a href="https://www.rplumber.io/articles/security.html#cross-origin-resource-sharing-cors">plumber security page</a>,
+and <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin">MDN</a>.
+Defaults to NULL to not set any header at all.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A Plumber router
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>vignette("api")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+if (interactive()) {
+  # Get the plumber router
+  router &lt;- api(
+    start = FALSE,
+    # If this is TRUE, the log directory will immediately be created
+    log_to_file = FALSE
+  )
+  # Start the router
+  plumber::pr_run(router)
+}
+
+if (interactive()) {
+  # Immediately start the API
+  api(start = TRUE)
+}
+</code></pre>
+
+
+</div>

@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filter_offset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter: offset an element a specified amount</h2>
+
+<h3>Description</h3>
+
+<p>The offset filter applies an offset in the x and y directions to an existing
+element. The offset is handled by setting values for <code>dx</code> and <code>dy</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filter_offset(dx = NULL, dy = NULL, what = "source")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dx, dy</code></td>
+<td>
+<p>The offset of the element position compared to its initial
+position.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>what</code></td>
+<td>
+<p>What exactly should be offset? By default, it is the <code>"source"</code>
+image.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>svg</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# Add a circle element to an
+# SVG drawing and offset it
+# by 10px to the right
+SVG(width = 150, height = 150) %&gt;%
+  svg_filter(
+    id = "offset_right",
+    filters = list(
+      filter_offset(dx = 50, dy = 0)
+    )
+  ) %&gt;%
+  svg_circle(
+    x = 30, y = 30,
+    diameter = 40,
+    attrs = svg_attrs_pres(
+      fill = "red",
+      filter = "offset_right"
+    )
+  )
+}
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,177 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>objectives</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Problem objective</h2>
+
+<h3>Description</h3>
+
+<p>An objective is used to specify the overall goal of a project prioritization
+<code>problem()</code>. All project prioritization problems involve
+minimizing or maximizing some kind of objective. For instance, the decision
+maker may require a funding scheme that maximizes the total number of
+species that are expected to persist into the future whilst ensuring that
+the total cost of the funded actions does not exceed a budget.
+Alternatively, the planner may require a solution that ensures that
+each species meets a target level of persistence whilst minimizing the cost
+of  the funded actions. A project prioritization
+<code>problem()</code> <strong>must</strong> have a specified objective before it can
+be solved, and attempting to solve a problem which does not have
+a specified objective will throw an error.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The following objectives can be added to a conservation planning
+<code>problem()</code>:
+</p>
+
+<dl>
+<dt><code>add_max_richness_objective()</code></dt>
+<dd>
+<p>Maximize the total number of features that are expected to persist,
+whilst ensuring that the cost of the solution is within a pre-specified
+budget (Joseph, Maloney &amp; Possingham 2009).</p>
+</dd>
+<dt><code>add_max_targets_met_objective()</code></dt>
+<dd>
+<p>Maximize the total number of persistence targets met for the features,
+whilst ensuring that the cost of the solution is within a pre-specified
+budget (Chades <em>et al.</em> 2015).</p>
+</dd>
+<dt><code>add_max_phylo_div_objective()</code></dt>
+<dd>
+<p>Maximize the phylogenetic diversity that is expected to persist into the
+future, whilst ensuring that the cost of the solution is within a
+pre-specified budget (Bennett <em>et al.</em> 2014, Faith 2008).</p>
+</dd>
+<dt><code>add_min_set_objective()</code></dt>
+<dd>
+<p>Minimize the cost of the solution whilst ensuring that all targets are
+met. This objective is conceptually similar to that used in <em>Marxan</em>
+(Ball, Possingham &amp; Watts 2009).</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>Ball IR, Possingham HP &amp; Watts M (2009) Marxan and relatives: software for
+spatial conservation prioritisation.
+<em>Spatial conservation prioritisation: Quantitative methods and
+computational tools</em>, 185-195.
+</p>
+<p>Bennett JR, Elliott G, Mellish B, Joseph LN, Tulloch AI,
+Probert WJ, Di Fonzo MMI, Monks JM, Possingham HP &amp; Maloney R (2014)
+Balancing phylogenetic diversity
+and species numbers in conservation prioritization, using a case study of
+threatened species in New Zealand. <em>Biological Conservation</em>,
+<strong>174</strong>: 47–54.
+</p>
+<p>Chades I, Nicol S, van Leeuwen S, Walters B, Firn J, Reeson A, Martin TG &amp;
+Carwardine J (2015) Benefits of integrating complementarity into priority
+threat management. <em>Conservation Biology</em>, <strong>29</strong>, 525–536.
+</p>
+<p>Faith DP (2008) Threatened species and the potential loss of
+phylogenetic diversity: conservation scenarios based on estimated extinction
+probabilities and phylogenetic risk analysis. <em>Conservation Biology</em>,
+<strong>22</strong>: 1461–1470.
+</p>
+<p>Joseph LN, Maloney RF &amp; Possingham HP (2009) Optimal allocation of
+resources among threatened species: A project prioritization protocol.
+<em>Conservation Biology</em>, <strong>23</strong>, 328–338.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>constraints, decisions,
+<code>problem()</code>, solvers, targets,
+weights.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions, sim_tree)
+
+# build problem with maximum richness objective and $200 budget
+p1 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 200) %&gt;%
+     add_binary_decisions()
+
+## Not run: 
+# solve problem
+s1 &lt;- solve(p1)
+
+# print solution
+print(s1)
+
+# plot solution
+plot(p1, s1)
+
+## End(Not run)
+
+# build problem with maximum phylogenetic diversity objective and $200 budget
+p2 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_phylo_div_objective(budget = 200, tree = sim_tree) %&gt;%
+     add_binary_decisions()
+
+## Not run: 
+# solve problem
+s2 &lt;- solve(p2)
+
+# print solution
+print(s2)
+
+# plot solution
+plot(p2, s2)
+
+## End(Not run)
+# build problem with maximum targets met objective, $200 budget, and
+# 40% persistence targets
+p3 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_targets_met_objective(budget = 200) %&gt;%
+     add_absolute_targets(0.4) %&gt;%
+     add_binary_decisions()
+
+## Not run: 
+# solve problem
+s3 &lt;- solve(p3)
+
+# print solution
+print(s3)
+
+# plot solution
+plot(p3, s3)
+
+## End(Not run)
+
+# build problem with minimum set objective, $200 budget, and 40%
+# persistence targets
+p4 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_min_set_objective() %&gt;%
+     add_absolute_targets(0.4) %&gt;%
+     add_binary_decisions()
+
+## Not run: 
+# solve problem
+s4 &lt;- solve(p4)
+
+# print solution
+print(s4)
+
+# plot solution
+plot(p4, s4)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

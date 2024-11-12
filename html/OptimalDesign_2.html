@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dirder</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Vector of directional derivatives
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the vector of derivatives at a normalized approximate design <code>w</code> of length <code>n</code> in the directions of singular designs e_i, where i ranges from <code>1</code> to <code>n</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dirder(Fx, w, crit="D", h=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> matrix of candidate regressors (as rows), where <code>n</code> is the number of candidate design points and <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) is the number of parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design. It is normalized prior to the computation of the directional derivatives.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>the criterion; possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code> and <code>"c"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> nor <code>"c"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> or <code>"c"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The i-th directional derivative measures the increase of the criterion value provided that we infinitesimally increase the i-th design weight (and decrease other weights by the same proportion). For a concave optimality criterion, an approximate design is optimal in the class of all normalized approximate designs if and only if all its directional derivatives are non-positive. This statement can be rewritten to the form of the so-called equivalence theorem. See the reference paper at <a href="http://www.iam.fmph.uniba.sk/design/">http://www.iam.fmph.uniba.sk/design/</a> for mathematical details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The vector of directional derivatives of the chosen criterion at <code>w/sum(w)</code> in the direction of the singular designs e_i, where i ranges from <code>1</code> to <code>n</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The design <code>w</code> should have a non-singular information matrix.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>effbound, varfun</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# The directional derivatives of the D-optimal approximate design
+# for a cubic regression on a square grid.
+
+form.cube &lt;- ~x1 + x2 + I(x1^2) + I(x2^2) + I(x1*x2) +
+              I(x1^3) + I(x1^2*x2) + I(x1*x2^2) + I(x2^3)
+Fx &lt;- Fx_cube(form.cube, n.levels = c(101, 101))
+w &lt;- od_REX(Fx)$w.best
+
+# Because w is optimal approximate, no directional derivative is positive:
+boxplot(dirder(Fx, w))
+
+# The yellow values indicate the directional derivative at each design point:
+od_plot(Fx, w, Fx[, 2:3])
+
+# An alternative view is a "projection" of the above plot:
+od_plot(Fx, w, Fx[, 2], dd.pool = c("max", "min"))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

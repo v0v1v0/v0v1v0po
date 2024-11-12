@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>kerndensmeasure</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Statistic measuring closeness to symmetric unimodal distribution</h2>
+
+<h3>Description</h3>
+
+<p>Density-based distance between one-dimensional data and a unimodal
+symmetric distribution about the data mean based on Pons (2013, p.79),
+adapted by Hennig and Coretto (2021), see details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  kerndensmeasure(x,weights=rep(1,nrow(as.matrix(x))),maxq=qnorm(0.9995),
+                  kernn=100)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector. One-dimensional dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>non-negative vector. Relative weights of observations
+(will be standardised to sup up to one internally).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxq</code></td>
+<td>
+<p>densities are evaluated between <code>mean(x)-maxq</code> and
+<code>mean(x)+maxq</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernn</code></td>
+<td>
+<p>integer. Number of points at which the density is
+evaluated, input parameter <code>n</code> of <code>density</code>. This
+should be even.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Function <code>density</code> is used in order to compute a kernel
+density estimator from the data. The <code style="white-space: pre;">⁠kernn⁠</code> values of the
+density are then ordered from the pargest to the smallest. Beginning
+from the largest to the smallest, pairs of two values are formed
+(largest and largest biggest, third and fourth largest, and so
+on). Each pair is replaced by two copies of the average of the two
+values. Then on each side of the mean one of each copy is placed from
+the biggest to the smallest, and this produces a symmetric density
+about the mean. The the root mean squared difference between this and
+the original density is computed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components <code>cp, cpx, measure</code>.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>cp</code></td>
+<td>
+<p>vector of generated symmetric density values from largest to
+smallest (just one copy, sp <code>kernn/2</code> values).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cpx</code></td>
+<td>
+<p><code>y</code>-component of <code>density</code>-output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measure</code></td>
+<td>
+<p>root mean squared difference between the densities.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Christian Hennig
+<a href="mailto:christian.hennig@unibo.it">christian.hennig@unibo.it</a>
+<a href="https://www.unibo.it/sitoweb/christian.hennig/en/">https://www.unibo.it/sitoweb/christian.hennig/en/</a></p>
+
+
+<h3>References</h3>
+
+<p>Hennig, C. and P.Coretto (2021). An adequacy approach for deciding the
+number of clusters for OTRIMLE robust Gaussian mixture based
+clustering. To appear in <em>Australian and New Zealand Journal of
+Statistics</em>, <a href="https://arxiv.org/abs/2009.00921">https://arxiv.org/abs/2009.00921</a>.
+</p>
+<p>Pons, O. (2013). <em>Statistical Tests of Nonparametric Hypotheses:
+Asymptotic Theory</em>. World Scientific, Singapore.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>kerndensp</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  set.seed(124578)
+  x &lt;- runif(20)
+  str(kerndensmeasure(x))
+</code></pre>
+
+
+</div>

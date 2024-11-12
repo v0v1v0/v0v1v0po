@@ -1,0 +1,244 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>timeProp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Time series plot with categories shown as a stacked bar chart</h2>
+
+<h3>Description</h3>
+
+<p>This function shows time series plots as stacked bar charts. The different
+categories in the bar chart are made up from a character or factor variable
+in a data frame. The function is primarily developed to support the plotting
+of cluster analysis output from <code>polarCluster</code> and
+<code>trajCluster</code> that consider local and regional (back trajectory)
+cluster analysis respectively. However, the function has more general use for
+understanding time series data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">timeProp(
+  mydata,
+  pollutant = "nox",
+  proportion = "cluster",
+  avg.time = "day",
+  type = "default",
+  normalise = FALSE,
+  cols = "Set1",
+  date.breaks = 7,
+  date.format = NULL,
+  key.columns = 1,
+  key.position = "right",
+  key.title = proportion,
+  auto.text = TRUE,
+  plot = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame containing the fields <code>date</code>,
+<code>pollutant</code> and a splitting variable <code>proportion</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>Name of the pollutant to plot contained in <code>mydata</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proportion</code></td>
+<td>
+<p>The splitting variable that makes up the bars in the bar
+chart e.g. <code>proportion = "cluster"</code> if the output from
+<code>polarCluster</code> is being analysed. If <code>proportion</code> is a numeric
+variable it is split into 4 quantiles (by default) by <code>cutData</code>. If
+<code>proportion</code> is a factor or character variable then the categories are
+used directly.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>avg.time</code></td>
+<td>
+<p>This defines the time period to average to. Can be
+“sec”, “min”, “hour”, “day”, “DSTday”,
+“week”, “month”, “quarter” or “year”. For much
+increased flexibility a number can precede these options followed by a
+space. For example, a timeAverage of 2 months would be <code>period = "2
+  month"</code>.
+</p>
+<p>Note that <code>avg.time</code> when used in <code>timeProp</code> should be greater
+than the time gap in the original data. For example, <code>avg.time =
+  "day"</code> for hourly data is OK, but <code>avg.time = "hour"</code> for daily data
+is not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>type</code> determines how the data are split i.e. conditioned,
+and then plotted. The default is will produce a single plot using the
+entire data. Type can be one of the built-in types as detailed in
+<code>cutData</code> e.g. "season", "year", "weekday" and so on. For example,
+<code>type = "season"</code> will produce four plots — one for each season.
+</p>
+<p>It is also possible to choose <code>type</code> as another variable in the data
+frame. If that variable is numeric, then the data will be split into four
+quantiles (if possible) and labelled accordingly. If type is an existing
+character or factor variable, then those categories/levels will be used
+directly. This offers great flexibility for understanding the variation of
+different variables and how they depend on one another.
+</p>
+<p><code>type</code> must be of length one.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalise</code></td>
+<td>
+<p>If <code>normalise = TRUE</code> then each time interval is scaled
+to 100. This is helpful to show the relative (percentage) contribution of
+the proportions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>Colours to be used for plotting. Options include
+“default”, “increment”, “heat”, “jet” and
+<code>RColorBrewer</code> colours — see the <code>openair</code> <code>openColours</code>
+function for more details. For user defined the user can supply a list of
+colour names recognised by R (type <code>colours()</code> to see the full list).
+An example would be <code>cols = c("yellow", "green", "blue")</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.breaks</code></td>
+<td>
+<p>Number of major x-axis intervals to use. The function will
+try and choose a sensible number of dates/times as well as formatting the
+date/time appropriately to the range being considered.  This does not
+always work as desired automatically. The user can therefore increase or
+decrease the number of intervals by adjusting the value of
+<code>date.breaks</code> up or down.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.format</code></td>
+<td>
+<p>This option controls the date format on the x-axis. While
+<code>timePlot</code> generally sets the date format sensibly there can be some
+situations where the user wishes to have more control. For format types see
+<code>strptime</code>. For example, to format the date like “Jan-2012” set
+<code>date.format = "%b-%Y"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.columns</code></td>
+<td>
+<p>Number of columns to be used in the key. With many
+pollutants a single column can make to key too wide. The user can thus
+choose to use several columns by setting <code>columns</code> to be less than the
+number of pollutants.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.position</code></td>
+<td>
+<p>Location where the scale key is to plotted. Allowed
+arguments currently include “top”, “right”, “bottom”
+and “left”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.title</code></td>
+<td>
+<p>The title of the key.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.text</code></td>
+<td>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code>
+titles and axis labels etc. will automatically try and format pollutant
+names and units properly e.g.  by subscripting the ‘2’ in NO2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should a plot be produced? <code>FALSE</code> can be useful when
+analysing data to extract plot components and plotting them in other ways.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other graphical parameters passed onto <code>timeProp</code> and
+<code>cutData</code>. For example, <code>timeProp</code> passes the option
+<code>hemisphere = "southern"</code> on to <code>cutData</code> to provide southern
+(rather than default northern) hemisphere handling of <code>type =
+  "season"</code>. Similarly, common axis and title labelling options (such as
+<code>xlab</code>, <code>ylab</code>, <code>main</code>) are passed to <code>xyplot</code> via
+<code>quickText</code> to handle routine formatting.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In order to plot time series in this way, some sort of time aggregation is
+needed, which is controlled by the option <code>avg.time</code>.
+</p>
+<p>The plot shows the value of <code>pollutant</code> on the y-axis (averaged
+according to <code>avg.time</code>). The time intervals are made up of bars split
+according to <code>proportion</code>. The bars therefore show how the total value
+of <code>pollutant</code> is made up for any time interval.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an openair object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other time series and trend functions: 
+<code>TheilSen()</code>,
+<code>calendarPlot()</code>,
+<code>runRegression()</code>,
+<code>smoothTrend()</code>,
+<code>timePlot()</code>,
+<code>timeVariation()</code>,
+<code>trendLevel()</code>
+</p>
+<p>Other cluster analysis functions: 
+<code>polarCluster()</code>,
+<code>trajCluster()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## monthly plot of SO2 showing the contribution by wind sector
+timeProp(mydata, pollutant = "so2", avg.time = "month", proportion = "wd")
+</code></pre>
+
+
+</div>

@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>crossval_o2m</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cross-validate procedure for O2PLS</h2>
+
+<h3>Description</h3>
+
+<p>Cross-validate procedure for O2PLS
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">crossval_o2m(
+  X,
+  Y,
+  a,
+  ax,
+  ay,
+  nr_folds,
+  nr_cores = 1,
+  stripped = TRUE,
+  p_thresh = 3000,
+  q_thresh = p_thresh,
+  tol = 1e-10,
+  max_iterations = 100
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Numeric matrix. Vectors will be coerced to matrix with <code>as.matrix</code> (if this is possible)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Numeric matrix. Vectors will be coerced to matrix with <code>as.matrix</code> (if this is possible)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>Vector of positive integers. Denotes the numbers of joint components to consider.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ax</code></td>
+<td>
+<p>Vector of non-negative integers. Denotes the numbers of X-specific components to consider.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ay</code></td>
+<td>
+<p>Vector of non-negative integers. Denotes the numbers of Y-specific components to consider.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nr_folds</code></td>
+<td>
+<p>Positive integer. Number of folds to consider. Note: <code>kcv=N</code> gives leave-one-out CV. Note that CV with less than two folds does not make sense.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nr_cores</code></td>
+<td>
+<p>Positive integer. Number of cores to use for CV. You might want to use <code>detectCores()</code>. Defaults to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stripped</code></td>
+<td>
+<p>Logical. Use the stripped version of o2m (usually when cross-validating)?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p_thresh</code></td>
+<td>
+<p>Integer. If <code>X</code> has more than <code>p_thresh</code> columns, a power method optimization is used, see <code>o2m2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q_thresh</code></td>
+<td>
+<p>Integer. If <code>Y</code> has more than <code>q_thresh</code> columns, a power method optimization is used, see <code>o2m2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Double. Threshold for which the NIPALS method is deemed converged. Must be positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_iterations</code></td>
+<td>
+<p>Integer. Maximum number of iterations for the NIPALS method.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is the standard CV approach. It minimizes the sum of the prediction errors of X and Y over a three-dimensional grid of integers.
+Parallelization is possible on all platforms. On Windows it uses <code>makePSOCKcluster</code>, then exports all necessary objects to the workers,
+and then calls <code>parLapply</code>. On OSX and Linux the more friendly <code>mclapply</code> is used, which uses forking.
+A print method is defined, printing the minimizers and minimum in a readable way. Also the elapsed time is tracked and reported.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of class <code>"cvo2m"</code> with the original and sorted Prediction errors and the number of folds used.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">local({
+X = scale(jitter(tcrossprod(rnorm(100),runif(10))))
+Y = scale(jitter(tcrossprod(rnorm(100),runif(10))))
+crossval_o2m(X, Y, a = 1:4, ax = 1:2, ay = 1:2,
+             nr_folds = 5, nr_cores = 1)
+})
+
+</code></pre>
+
+
+</div>

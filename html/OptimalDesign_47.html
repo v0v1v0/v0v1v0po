@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optcrit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Criterion value of a design
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the criterion value of a design <code>w</code> in the model determined by the matrix <code>Fx</code> of all regressors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optcrit(Fx, w, crit="D", h=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> (where <code>m&gt;=2</code>) is the number of parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>the criterion; possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code> and <code>"c"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> nor <code>"c"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> or <code>"c"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The package works with optimality criteria as information functions, i.e., the criteria are concave, positive homogeneous and upper semicontinuous on the set of all non-negative definite matrices. The criteria are normalized such that they assign the value of 1 to any design with information matrix equal to the identity matrix.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A non-negative number corresponding to the criterion value.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Since the criteria are positive homogeneous, the relative efficiency of two designs is just the ratio of their criterion values.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>infmat</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The Fx matrix for the spring balance weighing model with 6 weighed items.
+Fx &lt;- Fx_cube(~x1 + x2 + x3 + x4 + x5 + x6 - 1, lower = rep(0, 6), n.levels = rep(2, 6))
+
+# Criteria of the design of size 15 that weighs each pair of items exactly once.
+w2 &lt;- rep(0, 64); w2[apply(Fx, 1, sum) == 2] &lt;- 1
+optcrit(Fx, w2, crit = "D")
+optcrit(Fx, w2, crit = "A")
+optcrit(Fx, w2, crit = "I")
+
+# Criteria for the design of size 15 that weighs each quadruple of items exactly once.
+w4 &lt;- rep(0, 64); w4[apply(Fx, 1, sum) == 4] &lt;- 1
+optcrit(Fx, w4, crit = "D")
+optcrit(Fx, w4, crit = "A")
+optcrit(Fx, w4, crit = "I")
+</code></pre>
+
+
+</div>

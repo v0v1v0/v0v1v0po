@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>odin_package</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create odin model in a package</h2>
+
+<h3>Description</h3>
+
+<p>Create an odin model within an existing package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">odin_package(path_package)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>path_package</code></td>
+<td>
+<p>Path to the package root (the directory that
+contains <code>DESCRIPTION</code>)</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>I am resisting the urge to actually create the package here.
+There are better options than I can come up with; for example
+<code>devtools::create</code>, <code>pkgkitten::kitten</code>, <code>mason::mason</code>, or
+creating <code>DESCRIPTION</code> files using <code>desc</code>.  What is required here
+is that your package:
+</p>
+
+<ul>
+<li>
+<p> Lists <code>odin</code> in <code style="white-space: pre;">⁠Imports:⁠</code>
+</p>
+</li>
+<li>
+<p> Includes <code style="white-space: pre;">⁠useDynLib(&lt;your package name&gt;)⁠</code> in
+<code>NAMESPACE</code> (possibly via a roxygen comment <code style="white-space: pre;">⁠@useDynLib &lt;your package name&gt;⁠</code>
+</p>
+</li>
+<li>
+<p> To avoid a NOTE in <code style="white-space: pre;">⁠R CMD check⁠</code>, import something from
+<code>odin</code> in your namespace (e.g., <code>importFrom("odin", "odin")</code>s
+or roxygen <code style="white-space: pre;">⁠@importFrom(odin, odin)⁠</code>
+</p>
+</li>
+</ul>
+<p>Point this function at the package root (the directory containing
+<code>DESCRIPTION</code> and it will write out files <code>src/odin.c</code>
+and <code>odin.R</code>.  These files will be overwritten without
+warning by running this again.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path &lt;- tempfile()
+dir.create(path)
+
+src &lt;- system.file("examples/package", package = "odin", mustWork = TRUE)
+file.copy(src, path, recursive = TRUE)
+pkg &lt;- file.path(path, "package")
+
+# The package is minimal:
+dir(pkg)
+
+# But contains odin files in inst/odin
+dir(file.path(pkg, "inst/odin"))
+
+# Compile the odin code in the package
+odin::odin_package(pkg)
+
+# Which creates the rest of the package structure
+dir(pkg)
+dir(file.path(pkg, "R"))
+dir(file.path(pkg, "src"))
+</code></pre>
+
+
+</div>

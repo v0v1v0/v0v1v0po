@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>forecastmodel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Class for forecastmodels</h2>
+
+<h3>Description</h3>
+
+<p>R6 class for a forecastmodel
+</p>
+
+
+<h3>Details</h3>
+
+<p>This class holds the variables and functions needed for defining and setting up a forecast model - independent of the fitting scheme.
+See the vignettes on how to setup and use a model and the website <a href="https://onlineforecasting.org">https://onlineforecasting.org</a> for more info.
+</p>
+<p>Holds all the information needed independently of the fitting scheme (e.g. lm_fit or rls_fit), see the fields and functions below.
+</p>
+<p>The fields are separated into:
+- Fields for setting up the model
+- Fields used when fitting (e.g. which horizons to fit for is set in <code>kseq</code>
+</p>
+<p>See the fields description below.
+</p>
+<p>Note, it's an R6 class, hence an object variable is a pointer (reference), which means two important points:
+- In order to make a copy, the function clone_deep() must be used (usually <code>clone(deep=TRUE)</code>, but that will end in an infinite loop).
+- It can be manimulated directly in functions (without return). The code is written such that no external functions manipulate the model object, except for online updating.
+</p>
+<p>For online updating (i.e. receiving new data and updating the fit), then the model definition and the data becomes entangled, since transformation functions like low-pass filtering with <code>lp()</code> requires past values.
+See the vignette ??(ref to online vignette, not yet available) and note that <code>rls_fit()</code> resets the state, which is also done in all <code>xxx_fit</code> functions (e.g. <code>rls_fit</code>.
+</p>
+
+
+<h3>Public fields used for setting up the model</h3>
+
+<p>- output = NA, character: Name of the output.
+</p>
+<p>- inputs = list(), add them with add_inputs(): List of inputs (which are R6 objects) (note the "cloning of list of reference objects" issue below in deep_clone function)
+</p>
+<p>- regprmexpr = NA: The expression (as character) used for generating the regprm, e.g. "<code>rls_prm()</code>" for RLS.
+</p>
+<p>- regprm = list(): Regression parameters calculated by evaluating the <code>regprmexpr</code>.
+</p>
+<p>- prmbounds = as.matrix(data.frame(lower=NA, init=NA, upper=NA)): The bounds for optimization of the parameters, e.g. with <code>rls_optim()</code>.
+</p>
+<p>- outputrange = NA, numeric vector of length 2: Limits of the predictions cropped in the range, e.g. outputrange = c(0,Inf) removes all negative output predictions.
+</p>
+
+
+<h3>Public fields used when the model is fitted</h3>
+
+<p>- kseq = NA: The horizons to fit for.
+</p>
+<p>- kseqopt = NA: The horizons to fit for when optimizing.
+</p>
+<p>- p = NA: The (transformation stage) parameters used for the fit.
+</p>
+<p>- Lfits = list(): The regression fits, one for each k in kseq (simply a list with the latest fit).
+</p>
+<p>- datatr = NA: Transformed input data (data.list with all inputs for regression)
+</p>
+
+
+<h3>Public methods</h3>
+
+<p>All public functions are described below and in examples a section for each is included:
+</p>
+
+
+<h3><code>$new()</code></h3>
+
+<p>Create a new 'forecastmodel' object.
+</p>
+<p>Returns a forecastmodel object.
+</p>
+
+
+<h3><code>$add_inputs(...)</code></h3>
+
+<p>Add inputs to the model.
+</p>
+<p>- <code>...</code>: The inputs are given as arguments, see examples.
+</p>
+
+
+<h3><code>$add_regprm(regprm_expr)</code></h3>
+
+<p>Add expression (as character) which generates regression parameters.
+</p>
+
+
+<h3><code>$add_prmbounds(...)</code></h3>
+
+<p>Add the transformation parameters and bounds for optimization.
+</p>
+
+
+<h3><code>$get_prmbounds(...)</code></h3>
+
+<p>Get the transformation parameter bounds, used by optimization functions e.g. <code>rls_optim()</code>.
+</p>
+
+
+<h3><code>$insert_prm(prm)</code></h3>
+
+<p>Insert the transformation parameters prm in the input expressions and regression expressions, and keep them in $prm (simply string manipulation).
+</p>
+
+
+<h3><code>$transform_data(data)</code></h3>
+
+<p>Function for transforming the input data to the regression stage input data (see <code>vignette("setup-data", package = "onlineforecast")</code>).
+</p>
+
+
+<h3><code>$reset_state()</code></h3>
+
+<p>Resets the input states and stored data for iterative fitting (datatr rows and yAR) (see ??(ref to online updating vignette, not yet available).
+</p>
+
+
+<h3><code>$check(data = NA)</code></h3>
+
+<p>Check if the model is setup correctly.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># New object
+model &lt;- forecastmodel$new()
+
+# Print it
+model
+
+
+# Add model inputs
+model$add_inputs(Ta = "lp(Ta)")
+# See it
+model$inputs
+# Update to use no low-pass filter
+model$add_inputs(Ta = "Ta")
+model$inputs
+# Add another
+model$add_inputs(I = "lp(I)")
+model$inputs
+
+# Simply a list, so manipulate directly
+class(model$inputs$Ta)
+model$inputs$Ta$expr &lt;- "lp(Ta, a1=0.9)"
+
+# Add the parameters for the regression stage
+model$add_regprm("rls_prm(lambda=0.99)")
+# The evaluation is a list, which is set in
+model$regprm
+
+
+# Set the lambda to be optimized between 0.9 and 0.999, starting at 0.99
+model$add_prmbounds(lambda = c(0.9, 0.99, 0.999))
+# Note the "__" syntax to set parameters for inputs: "input__prm"
+model$add_prmbounds(Ta__a1 = c(0.8, 0.95, 0.99))
+
+# Get the lower bounds
+model$get_prmbounds("lower")
+
+# Insert the init parameters
+prm &lt;- model$get_prmbounds("init")
+prm
+# Before
+model$inputs$Ta$expr
+# After
+model$insert_prm(prm)
+model$inputs$Ta$expr
+
+# Check if the model is setup and can be used with a given data.list
+# An error is thrown
+try(model$check(Dbuilding))
+# Add the model output
+model$output &lt;- "heatload"
+# Still not error free
+try(model$check(Dbuilding))
+# Add the horizons to fit for
+model$kseq &lt;- 1:4
+# Finally, no errors :)
+model$check(Dbuilding)
+</code></pre>
+
+
+</div>

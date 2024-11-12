@@ -1,0 +1,233 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_RC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Efficient exact design using the RC heuristic</h2>
+
+<h3>Description</h3>
+
+<p>Computes an efficient exact design under multiple linear resource constraints using the RC heuristic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_RC(Fx, b, A = NULL, w0 = NULL, bin = FALSE, Phi.app = NULL, crit = "D",
+      h=NULL, w1 = NULL, rest.max = Inf, t.max = 120,
+      echo = TRUE, track=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> is the number of parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b, A</code></td>
+<td>
+
+<p>the vector of length <code>k</code> with positive real components and the <code>k</code> times <code>n</code> matrix of non-negative reals numbers. Each column of <code>A</code> must have at least one strictly positive element. The linear constraints <code>A%*%w&lt;=b, w0&lt;=w</code> define the set of permissible designs <code>w</code> (where <code>w0</code> is a described below.) The argument <code>A</code> can also be <code>NULL</code>; in that case <code>b</code> must be a positive number and <code>A</code> is set to the <code>1</code> times <code>n</code> matrix of ones.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w0</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design to be augmented (i.e., the function adds the constraint <code>w &gt;= w0</code> for permissible designs <code>w</code>). This argument can also be <code>NULL</code>; in that case, <code>w0</code> is set to the vector of zeros.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bin</code></td>
+<td>
+
+<p>Should each design point be used at most once?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phi.app</code></td>
+<td>
+
+<p>the optimal value of the corresponding approximate (relaxed) problem. If <code>Phi.app = NULL</code>, a very conservative upper bound on <code>Phi.app</code> is pre-computed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>the optimality criterion. Possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w1</code></td>
+<td>
+
+<p>an <code>n</code> times <code>1</code> nonnegative vector that represents the initial design. The design <code>w1</code> must satisfy <code>w0&lt;=w1</code> and <code>A*w1&lt;=b</code>. The argument <code>w1</code> can also be <code>NULL</code>; in that case the procedure sets <code>w1</code> to be <code>w0</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rest.max</code></td>
+<td>
+
+<p>the maximum allowed number of restarts of the method.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.max</code></td>
+<td>
+
+<p>the time limit for the computation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>track</code></td>
+<td>
+
+<p>Trace the computation?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is an implementation of the algorithm proposed by Harman et al. (2016); see the references. The inequalities <code>A%*%w&lt;=b</code>, <code>w0&lt;=w</code> with the specific properties mentioned above, form the so-called resource constraints. They encompass many practical restrictions on the design, and lead to a bounded set of feasible solutions.
+</p>
+<p>The information matrix of <code>w1</code> should preferably have the reciprocal condition number of at least <code>1e-5</code>. Note that the floor of an optimal approximate design (computed for instance using <code>od_MISOCP</code>) is often a good initial design. Alternatively, the initial design can be the result of another optimal design procedure, such as <code>od_AQUA</code>. Even if no initial design is provided, the model should be non-singular in the sense that there <em>exists</em> an exact design <code>w</code> with a well conditioned information matrix, satisfying all constraints. If this requirement is not satisfied, the computation may fail, or it may produce a deficient design.
+</p>
+<p>The procedure always returns a permissible design, but in some cases, especially if <code>t.max</code> is too small, the resulting design can be inefficient. The performance depends on the problem and on the hardware used, but in most cases the function can compute a nearly-optimal exact design for a problem with a few hundreds design points and tens of constraints within minutes of computing time. Because this is a heuristic method, we advise the user to verify the quality of the resulting design by comparing it to the result of an alternative method (such as <code>od_AQUA</code> and <code>od_MISOCP</code>) and/or by computing its efficiency relative to the corresponding optimal approximate design.
+</p>
+<p>In the very special (but frequently used) case of the single constraint on the experimental size, it is generally more efficient to use the function <code>od_KL</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>The call of the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.best</code></td>
+<td>
+<p>The resulting exact design.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supp</code></td>
+<td>
+<p>The indices of the support of <code>w.best</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.supp</code></td>
+<td>
+<p>The weights of <code>w.best</code> on the support.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M.best</code></td>
+<td>
+<p>The information matrix of <code>w.best</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phi.best</code></td>
+<td>
+<p>The criterion value of <code>w.best</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eff.best</code></td>
+<td>
+<p>A lower bound on the efficiency of <code>w.best</code> with respect to the optimal approximate design.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.rest</code></td>
+<td>
+<p>The number of restarts performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.act</code></td>
+<td>
+<p>The actual time of the computation.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Alena Bachrata, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Harman R, Bachrata A, Filova L (2016): Heuristic construction of exact experimental designs under multiple resource constraints, Applied Stochastic Models in Business and Industry, Volume 32, pp. 3-17
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>od_AQUA, od_MISOCP, od_KL</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# A D-efficient exact design for a quadratic model with 2 factors
+# constrained by the total time and the total cost of the experiment.
+# The cost of a single trial in (x1, x2) is 10 + x1 + 2*x2
+# The limit on the total cost is 1000
+# (we do not know the number of trials in advance)
+
+form.quad &lt;- ~x1 + x2 + I(x1^2) + I(x2^2) + I(x1 * x2)
+Fx &lt;- Fx_cube(form.quad, lower = c(0, 0), upper = c(10, 10), n.levels = c(11, 11))
+n &lt;- nrow(Fx); A &lt;- matrix(0, nrow = 1, ncol = n)
+for(i in 1:n) A[1, i] &lt;- 5 + Fx[i, 2] + 2*Fx[i, 3]
+w &lt;- od_RC(Fx, 1000, A, bin = TRUE, t.max = 8)$w.best
+od_plot(Fx, w, Fx[, 2:3], dd.size = 3)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

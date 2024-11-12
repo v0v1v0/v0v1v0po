@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_order</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Order worksheets in a workbook</h2>
+
+<h3>Description</h3>
+
+<p>Get/set order of worksheets in a Workbook object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_get_order(wb)
+
+wb_set_order(wb, sheets)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A <code>wbWorkbook</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheets</code></td>
+<td>
+<p>Sheet order</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function does not reorder the worksheets within the workbook
+object, it simply shuffles the order when writing to file.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## setup a workbook with 3 worksheets
+wb &lt;- wb_workbook()
+wb$add_worksheet("Sheet 1", grid_lines = FALSE)
+wb$add_data_table(x = iris)
+
+wb$add_worksheet("mtcars (Sheet 2)", grid_lines = FALSE)
+wb$add_data(x = mtcars)
+
+wb$add_worksheet("Sheet 3", grid_lines = FALSE)
+wb$add_data(x = Formaldehyde)
+
+wb_get_order(wb)
+wb$get_sheet_na
+wb$set_order(c(1, 3, 2)) # switch position of sheets 2 &amp; 3
+wb$add_data(2, 'This is still the "mtcars" worksheet', start_col = 15)
+wb_get_order(wb)
+wb$get_sheet_names() ## ordering within workbook is not changed
+wb$set_order(3:1)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opal.table_export</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Export a table as a file</h2>
+
+<h3>Description</h3>
+
+<p>Export a table as file in the specified format. The file destination is in the Opal server 
+file system. See opal.file_download to download the file locally. See also 
+opal.table_get to get directly the table as an R object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opal.table_export(
+  opal,
+  project,
+  table,
+  file,
+  identifiers = NULL,
+  id.name = "id",
+  wait = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opal</code></td>
+<td>
+<p>Opal connection object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Project name where the table is located.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+<p>Table name to export.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>Destination file in the Opal file system. The expected file extensions are: 
+rds (RDS), sav (SPSS), zsav (SPSS compressed), sas7bdat (SAS), xpt (SAS Transport), 
+dta (Stata).RDS (serialized single R object) is to be read by base::readRDS(), 
+while other formats are supported by the haven R package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>identifiers</code></td>
+<td>
+<p>Name of the identifiers mapping to use when exporting entities from Opal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id.name</code></td>
+<td>
+<p>The name of the column representing the entity identifiers. Default is 'id'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wait</code></td>
+<td>
+<p>Wait for import task completion. Default is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Other table functions: 
+<code>opal.perms()</code>,
+<code>opal.resource_view_create()</code>,
+<code>opal.resource_view_reconnect()</code>,
+<code>opal.table_create()</code>,
+<code>opal.table_delete()</code>,
+<code>opal.table_dictionary_get()</code>,
+<code>opal.table_dictionary_update()</code>,
+<code>opal.table_exists()</code>,
+<code>opal.table_get()</code>,
+<code>opal.table_import()</code>,
+<code>opal.table_perm()</code>,
+<code>opal.table_perm_add()</code>,
+<code>opal.table_perm_delete()</code>,
+<code>opal.table_save()</code>,
+<code>opal.table_truncate()</code>,
+<code>opal.table_view_create()</code>,
+<code>opal.table_view_update()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+cqx &lt;- opal.table_export(o, "CNSIM", "CNSIM1", 
+                         file = "/home/administrator/cnsim1.sav")
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

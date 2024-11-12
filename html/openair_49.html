@@ -1,0 +1,300 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summaryPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function to rapidly provide an overview of air quality data</h2>
+
+<h3>Description</h3>
+
+<p>This function provides a quick graphical and numerical summary of data. The
+location presence/absence of data are shown, with summary statistics and
+plots of variable distributions. <code>summaryPlot()</code> can also provide summaries
+of a single pollutant across many sites.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">summaryPlot(
+  mydata,
+  na.len = 24,
+  clip = TRUE,
+  percentile = 0.99,
+  type = "histogram",
+  pollutant = "nox",
+  period = "years",
+  avg.time = "day",
+  print.datacap = TRUE,
+  breaks = NULL,
+  plot.type = "l",
+  col.trend = "darkgoldenrod2",
+  col.data = "lightblue",
+  col.mis = rgb(0.65, 0.04, 0.07),
+  col.hist = "forestgreen",
+  cols = NULL,
+  date.breaks = 7,
+  auto.text = TRUE,
+  plot = TRUE,
+  debug = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame to be summarised. Must contain a <code>date</code> field and
+at least one other parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.len</code></td>
+<td>
+<p>Missing data are only shown with at least <code>na.len</code>
+<em>contiguous</em> missing vales. The purpose of setting <code>na.len</code> is
+for clarity: with long time series it is difficult to see where individual
+missing hours are. Furthermore, setting <code>na.len = 96</code>, for example would
+show where there are at least 4 days of continuous missing data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clip</code></td>
+<td>
+<p>When data contain outliers, the histogram or density plot can
+fail to show the distribution of the main body of data. Setting <code>clip = TRUE</code>, will remove the top 1 % of data to yield what is often a better
+display of the overall distribution of the data. The amount of clipping can
+be set with <code>percentile</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentile</code></td>
+<td>
+<p>This is used to clip the data. For example, <code>percentile = 0.99</code> (the default) will remove the top 1 percentile of values i.e. values
+greater than the 99th percentile will not be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>type</code> is used to determine whether a histogram (the default) or
+a density plot is used to show the distribution of the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p><code>pollutant</code> is used when there is a field <code>site</code> and there
+is more than one site in the data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p><code>period</code> is either <code>years</code> (the default) or <code>months</code>.
+Statistics are calculated depending on the <code>period</code> chosen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>avg.time</code></td>
+<td>
+<p>This defines the time period to average the time series
+plots. Can be "sec", "min", "hour", "day" (the default), "week", "month",
+"quarter" or "year". For much increased flexibility a number can precede
+these options followed by a space. For example, a <code>timeAverage()</code> of 2
+months would be <code>avg.time = "2 month"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print.datacap</code></td>
+<td>
+<p>Should the data capture % be shown for each period?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>Number of histogram bins. Sometime useful but not easy to set a
+single value for a range of very different variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.type</code></td>
+<td>
+<p>The <code>lattice</code> plot type, which is a line (<code>plot.type = "l"</code>)
+by default. Another useful option is <code>plot.type = "h"</code>, which draws
+vertical lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.trend</code></td>
+<td>
+<p>Colour to be used to show the monthly trend of the data,
+shown as a shaded region. Type <code>colors()</code> into R to see the full range of
+colour names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.data</code></td>
+<td>
+<p>Colour to be used to show the <em>presence</em> of data. Type
+<code>colors()</code> into R to see the full range of colour names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.mis</code></td>
+<td>
+<p>Colour to be used to show missing data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.hist</code></td>
+<td>
+<p>Colour for the histogram or density plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>Predefined colour scheme, currently only enabled for
+<code>"greyscale"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.breaks</code></td>
+<td>
+<p>Number of major x-axis intervals to use. The function will
+try and choose a sensible number of dates/times as well as formatting the
+date/time appropriately to the range being considered.  This does not
+always work as desired automatically. The user can therefore increase or
+decrease the number of intervals by adjusting the value of <code>date.breaks</code> up
+or down.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.text</code></td>
+<td>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code> titles and
+axis labels will automatically try and format pollutant names and units
+properly, e.g., by subscripting the '2' in NO2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should a plot be produced? <code>FALSE</code> can be useful when analysing
+data to extract plot components and plotting them in other ways.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>Should data types be printed to the console? <code>TRUE</code> can be
+useful for debugging.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other graphical parameters. Commonly used examples include the
+axis and title labelling options (such as <code>xlab</code>, <code>ylab</code> and <code>main</code>), which
+are all passed to the plot via <code>quickText()</code> to handle routine formatting.
+As <code>summaryPlot()</code> has two components, the axis labels may be a vector. For
+example, the default case (<code>type = "histogram"</code>) sets y labels equivalent
+to <code>ylab = c("", "Percent of Total")</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>summaryPlot()</code> produces two panels of plots: one showing the
+presence/absence of data and the other the distributions. The left panel
+shows time series and codes the presence or absence of data in different
+colours. By stacking the plots one on top of another it is easy to compare
+different pollutants/variables. Overall statistics are given for each
+variable: mean, maximum, minimum, missing hours (also expressed as a
+percentage), median and the 95th percentile. For each year the data capture
+rate (expressed as a percentage of hours in that year) is also given.
+</p>
+<p>The right panel shows either a histogram or a density plot depending on the
+choice of <code>type</code>. Density plots avoid the issue of arbitrary bin sizes that
+can sometimes provide a misleading view of the data distribution. Density
+plots are often more appropriate, but their effectiveness will depend on the
+data in question.
+</p>
+<p><code>summaryPlot()</code> will only show data that are numeric or integer type. This is
+useful for checking that data have been imported properly. For example, if
+for some reason a column representing wind speed erroneously had one or more
+fields with characters in, the whole column would be either character or
+factor type. The absence of a wind speed variable in the <code>summaryPlot()</code> plot
+would therefore indicate a problem with the input data. In this particular
+case, the user should go back to the source data and remove the characters or
+remove them using R functions.
+</p>
+<p>If there is a field <code>site</code>, which would generally mean there is more than one
+site, <code>summaryPlot()</code> will provide information on a
+<em>single</em> pollutant across all sites, rather than provide details on all
+pollutants at a <em>single</em> site. In this case the user should also provide a
+name of a pollutant e.g. <code>pollutant = "nox"</code>. If a pollutant is not provided
+the first numeric field will automatically be chosen.
+</p>
+<p><strong>It is strongly recommended that the <code>summaryPlot()</code> function is
+applied to all new imported data sets to ensure the data are imported as
+expected.</strong>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># do not clip density plot data
+## Not run: 
+summaryPlot(mydata, clip = FALSE)
+
+## End(Not run)
+
+# exclude highest 5 % of data etc.
+## Not run: 
+summaryPlot(mydata, percentile = 0.95)
+
+## End(Not run)
+
+# show missing data where there are at least 96 contiguous missing
+# values (4 days)
+## Not run: 
+summaryPlot(mydata, na.len = 96)
+
+## End(Not run)
+
+# show data in green
+## Not run: 
+summaryPlot(mydata, col.data = "green")
+
+## End(Not run)
+
+# show missing data in yellow
+## Not run: 
+summaryPlot(mydata, col.mis = "yellow")
+
+## End(Not run)
+
+# show density plot line in black
+## Not run: 
+summaryPlot(mydata, col.dens = "black")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

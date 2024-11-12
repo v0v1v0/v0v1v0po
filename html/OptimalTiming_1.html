@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>conf.MTL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Confidence interval of mean total lifetime</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to calculate confidence intervals of mean total lifetime using jackknife resampling.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">conf.MTL(obj, state = NULL, nsim = 1000, L = 120)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+<p>An object returned by <code>optim.fit</code>, which contains the transition probabilities
+and other information used to simulate mean total lifetime.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state</code></td>
+<td>
+<p>A numeric vector indicating from which state the mean total lifetime is simulated.
+Default is NULL, where no mean total life for a specific state is output. If obj is returned by optim.fit with
+treatment=NULL, there is no need to set this argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>The times of simulation for mean total life. The default is 1000.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>The prespecified threshold for blocking the increase of residual lifetime. The default is 120.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function systematically leaves out each subject from the original datset and simulates mean total lifetimes
+for each <code>n-1</code>-sized subsample. The jackknife mean and variance are calculated by aggregating <code>n</code> simulated
+mean total lifetimes. For each jackknife dataset, mean total lifetime is simulated using the
+algorithm described in sim.MTL.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If the input object comes from <code>optim.fit</code> with <code>treatment=NULL</code>, a list object with elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>conf.state.MTL</code></td>
+<td>
+<p>A data frame containing states, corresponding mean total lifetime,  standard
+error and 95% confidence interval. If state=NULL, this element does not exist.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state.table</code></td>
+<td>
+<p>The correspondence of state number and state label.</p>
+</td>
+</tr>
+</table>
+<p>If the input object comes from <code>optim.fit</code> with <code>treatment</code> is not NULL, a list object with elements:
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>conf.strategies</code></td>
+<td>
+<p>Mean total lifetime for different strategies, along with standard error and 95% confidence interval</p>
+</td>
+</tr></table>
+<h3>See Also</h3>
+
+<p><code>optim.fit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+library(OptimalTiming)
+
+##################################
+## Example 1: This example shows how to calculate confidence
+## intervals for different treatment strategies
+
+## read data
+data(SimCml)
+
+## fit multistate model with treatment not equals NULL
+fit=optim.fit(data=SimCml,
+       transM=matrix(c(0,1,0,0,0,1,0,0,0,1,0,1,1,1,0,0,0,1,1,1,1,
+       0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0),7,byrow=TRUE),
+       nstate=7,state_label=c("diagnose","cp1","ap","cp2","bc","sct","death"),
+       event_label=c("cp1.s","ap.s","cp2.s","bc.s","sct.s","death.s"),
+       treatment=c("sct","sct.s"),absorb=c("death","death.s"),
+       cov=c("age"),cov_value=c(0))
+
+## compare different treatment strategies
+conf.MTL(obj=fit,nsim=1000,L=120)
+
+##################################
+## Example 2: This example shows how to calculate confidence
+## intervals for a given state
+
+## read data
+data(SimCml)
+
+## delete the information of transplant time
+data=SimCml[SimCml$sct.s==0,]
+del=which(names(SimCml)%in%c("sct","sct.s"))
+data=data[,-del]
+
+## fit multistate model with treatment equals NULL
+fit=optim.fit(data=data,
+        transM=matrix(c(0,1,0,0,0,0,0,0,1,0,1,1,0,0,0,
+        1,1,1,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0),6,byrow=TRUE),
+        nstate=6,state_label=c("diagnose","cp1","ap","cp2","bc","death"),
+        absorb=c("death","death.s"),event_label=c("cp1.s","ap.s","cp2.s","bc.s","death.s"),
+        cov=c("age"),cov_value=c(0))
+
+## calculate mean total lifetime and confidence intervals
+## for state 1,2,3,4
+conf.MTL(obj=fit,state=c(1,2,3,4),nsim=1000,L=120)
+## End(Not run)
+
+
+
+</code></pre>
+
+
+</div>

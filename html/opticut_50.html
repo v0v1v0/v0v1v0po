@@ -1,0 +1,302 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optilevels</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Optimal Number of Factor Levels
+</h2>
+
+<h3>Description</h3>
+
+<p>Finds the optimal number of factor levels given the data and a model
+using a likelihood-based agglomerative algorithm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optilevels(y, x, z = NULL, alpha = 0, dist = "gaussian", ...)
+
+## S3 method for class 'optilevels'
+bestmodel(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>vector of observations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>a factor or a matrix of proportions (i.e. the values 0 and 1 should have
+consistent meaning across the columns, often through a unit sum constraint).
+It is the user's responsibility to ensure that values supplied
+for <code>x</code> are sensible. <code>x</code> is not expected to
+include an intercept.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+
+<p>a design matrix with predictor variables besides the one(s) defined
+via the argument <code>x</code>.
+It is the user's responsibility to ensure that values supplied
+for <code>z</code> are sensible and it also makes sense to bind
+<code>x</code> and <code>z</code> together.
+Variables in <code>z</code> should be centered (mean 0) (and
+possibly normalized by SD), because the design matrix
+from <code>x</code> is not expected to include an intercept.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>numeric [0-1],
+weighting factor for calculating information criteria for model selection
+(i.e. IC = (1-alpha)*AIC + alpha*BIC, also referred to as CAIC: consistent AIC).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist</code></td>
+<td>
+
+<p>character, distribution argument passed to underlying functions,
+see listed on the help page of <code>opticut</code>
+(except for <code>dist = "zip2"</code>, <code>dist = "zinb2"</code>
+<code>dist = "rsf"</code>, and <code>dist = "rspf"</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+
+<p>fitted object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments passed to the underlying functions, see <code>opticut1</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class 'optilevels' that is a list with the following elements:
+</p>
+
+<dl>
+<dt><code>"delta"</code></dt>
+<dd>
+<p>delta IC values along the selection path considering best models.</p>
+</dd>
+<dt><code>"ic"</code></dt>
+<dd>
+<p>IC values along the selection path considering best models.</p>
+</dd>
+<dt><code>"coef"</code></dt>
+<dd>
+<p>matrix of coefficients (linear predictor scale)
+corresponding to argument <code>x</code>
+along the selection path considering best models.</p>
+</dd>
+<dt><code>"zcoef"</code></dt>
+<dd>
+<p>matrix of coefficients (linear predictor scale)
+corresponding to argument <code>z</code> when not <code>NULL</code>
+along the selection path considering best models, or <code>NULL</code>.</p>
+</dd>
+<dt><code>"rank"</code></dt>
+<dd>
+<p>matrix ranks based on the coefficients
+along the selection path considering best models.
+Ranking uses the default <code>ties.method = "average"</code> in <code>rank</code>.</p>
+</dd>
+<dt><code>"deltalist"</code></dt>
+<dd>
+<p>delta IC values along the selection path
+considering all competing models.</p>
+</dd>
+<dt><code>"iclist"</code></dt>
+<dd>
+<p>IC values along the selection path
+considering all competing models.</p>
+</dd>
+<dt><code>"coeflist"</code></dt>
+<dd>
+<p>matrix of coefficients (linear predictor scale)
+corresponding to argument <code>x</code>
+along the selection path considering all competing models.</p>
+</dd>
+<dt><code>"zcoeflist"</code></dt>
+<dd>
+<p>matrix of coefficients (linear predictor scale)
+corresponding to argument <code>z</code> when not <code>NULL</code>
+along the selection path considering all competing models, or <code>NULL</code>.</p>
+</dd>
+<dt><code>"ranklist"</code></dt>
+<dd>
+<p>matrix ranks based on the coefficients
+along the selection path considering all competing models.</p>
+</dd>
+<dt><code>"levels"</code></dt>
+<dd>
+<p>list of (merged) factor levels along the selection path
+considering best models.</p>
+</dd>
+<dt><code>"Y"</code></dt>
+<dd>
+<p>vector of observations (argument <code>y</code>).</p>
+</dd>
+<dt><code>"X"</code></dt>
+<dd>
+<p>design matrix component corresponding to argument <code>x</code>.</p>
+</dd>
+<dt><code>"Z"</code></dt>
+<dd>
+<p>design matrix component corresponding to argument <code>z</code>.</p>
+</dd>
+<dt><code>"alpha"</code></dt>
+<dd>
+<p>weighting argument.</p>
+</dd>
+<dt><code>"dist"</code></dt>
+<dd>
+<p>distribution argument.</p>
+</dd>
+<dt><code>"factor"</code></dt>
+<dd>
+<p>logical, indicating if argument <code>x</code> is a factor
+(<code>TRUE</code>) or a matrix (<code>FALSE</code>).</p>
+</dd>
+</dl>
+<p><code>bestmodel</code> returns the best supported model for further
+manipulation (e.g. prediction).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Solymos &lt;psolymos@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>opticut</code> and <code>multicut</code>
+for fitting best binary and multi-level response models.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## --- Factor levels with Gaussian distribution
+## simple example from Legendre 2013
+## Indicator Species: Computation, in
+## Encyclopedia of Biodiversity, Volume 4
+## https://dx.doi.org/10.1016/B978-0-12-384719-5.00430-5
+gr &lt;- as.factor(paste0("X", rep(1:5, each=5)))
+spp &lt;- cbind(Species1=rep(c(4,6,5,3,2), each=5),
+    Species2=c(rep(c(8,4,6), each=5), 4,4,2, rep(0,7)),
+    Species3=rep(c(18,2,0,0,0), each=5))
+rownames(spp) &lt;- gr
+## must add some noise to avoid perfect fit
+spp[6, "Species1"] &lt;- 7
+spp[1, "Species3"] &lt;- 17
+spp
+
+ol &lt;- optilevels(spp[,"Species3"], gr)
+ol[c("delta", "coef", "rank", "levels")]
+
+## get the final factor level
+gr1 &lt;- gr
+levels(gr1) &lt;- ol$level[[length(ol$level)]]
+table(gr, gr1)
+
+## compare the models
+o0 &lt;- lm(spp[,"Species3"] ~ gr - 1)
+o1 &lt;- lm(spp[,"Species3"] ~ gr1 - 1)
+data.frame(AIC(o0, o1), delta=AIC(o0, o1)$AIC - AIC(o0))
+ol$delta # should be identical
+
+## --- Proportions with Poisson distribution
+## simulation
+set.seed(123)
+n &lt;- 500 # number of observations
+k &lt;- 5 # number of habitat types
+b &lt;- c(-1, -0.2, -0.2, 0.5, 1)
+names(b) &lt;- LETTERS[1:k]
+x &lt;- replicate(k, exp(rnorm(n)))
+x &lt;- x / rowSums(x) # proportions
+X &lt;- model.matrix(~.-1, data=data.frame(x))
+lam &lt;- exp(drop(crossprod(t(X), b)))
+y &lt;- rpois(n, lam)
+
+z &lt;- optilevels(y, x, dist="poisson")
+
+## best model refit
+bestmodel(z)
+
+## estimates
+plogis(z$coef)
+plogis(b)
+## optimal classification
+z$rank
+
+## get the final matrix
+x1 &lt;- mefa4::groupSums(x, 2, z$levels[[length(z$levels)]])
+head(x)
+head(x1)
+
+## compare the models
+m0 &lt;- glm(y ~ x - 1, family="poisson")
+m1 &lt;- glm(y ~ x1 - 1, family="poisson")
+data.frame(AIC(m0, m1), delta=AIC(m0, m1)$AIC - AIC(m0))
+z$delta # should be identical
+
+## Not run: 
+## dolina example with factor
+data(dolina)
+dolina$samp$stratum &lt;- as.integer(dolina$samp$stratum)
+y &lt;- dolina$xtab[dolina$samp$method == "Q", "ppyg"]
+x &lt;- dolina$samp$mhab[dolina$samp$method == "Q"]
+z &lt;- scale(model.matrix(~ stratum + lmoist - 1,
+    dolina$samp[dolina$samp$method == "Q",]))
+
+## without additional covariates
+dol1 &lt;- optilevels(y, x, z=NULL, dist="poisson")
+dol1$rank
+summary(bestmodel(dol1))
+
+## with additional covariates
+dol2 &lt;- optilevels(y, x, z, dist="poisson")
+dol2$rank
+summary(bestmodel(dol2))
+
+## compare the two models
+AIC(bestmodel(dol1), bestmodel(dol2))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

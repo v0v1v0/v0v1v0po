@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OSFD</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Output space-filling design</h2>
+
+<h3>Description</h3>
+
+<p>This function is for producing designs that fill the output space.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OSFD(
+  D = NULL,
+  f,
+  p,
+  q,
+  n_ini = NA,
+  n,
+  scale = TRUE,
+  method = "EI",
+  CAND = NULL,
+  rand_out = FALSE,
+  rand_in = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>D</code></td>
+<td>
+<p>a matrix of the initial design. If not specified, a random Latin hypercube design of size n_ini and dimension p will be generated as initial design.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>black-box function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>input dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>output dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_ini</code></td>
+<td>
+<p>the size of initial design. This initial size must be specified if D is not provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>the size of the final design.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>whether to scale the output points to 0 to 1 for each dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>two choices: 'EI' or 'Greedy'; the default is 'EI'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CAND</code></td>
+<td>
+<p>the candidate points in the input space. If Null, it will be automatically generated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rand_out</code></td>
+<td>
+<p>whether to use random uniform points or quasi random points by twinning algorithm for generating points in spheres for output space approximation. The default value is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rand_in</code></td>
+<td>
+<p>whether to use random uniform points or quasi random points by twinning algorithm for generating points in spheres for input space candidate sets. The default value is FALSE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>OSFD</code> produces a design that fills the output space using the sequential algorithm by Wang et al. (2023).
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>D</code></td>
+<td>
+<p>the final design points in the input space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>the output points</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Wang, Shangkun, Adam P. Generale, Surya R. Kalidindi, and V. Roshan Joseph. "Sequential Designs for Filling Output Spaces." Technometrics, to appear (2023).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># test function: inverse-radius function (Wang et.al 2023)
+inverse_r = function(x){
+epsilon = 0.1
+y1=1/(x[1]^2+x[2]^2+epsilon^2)^(1/2)
+if (x[2]==0){
+ y2 = 0
+}else if (x[1]==0) {
+  y2 = pi/2}else{
+    y2 = atan(x[2]/x[1])
+  }
+return (c(y1=y1,y2=y2))
+}
+
+set.seed(2022)
+p = 2
+q = 2
+f = inverse_r
+n_ini = 10
+n = 50
+osfd = OSFD(f=f,p=p,q=q,n_ini=n_ini,n=n)
+D = osfd$D
+Y = osfd$Y
+
+</code></pre>
+
+
+</div>

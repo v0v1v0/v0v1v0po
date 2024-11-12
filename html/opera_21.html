@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.mixture</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict method for Mixture models</h2>
+
+<h3>Description</h3>
+
+<p>Performs sequential predictions and updates
+of a mixture object based on new observations 
+and expert advice.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'mixture'
+predict(
+  object,
+  newexperts = NULL,
+  newY = NULL,
+  awake = NULL,
+  online = TRUE,
+  type = c("model", "response", "weights", "all"),
+  use_cpp = getOption("opera_use_cpp", default = FALSE),
+  quiet = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Object of class inheriting from 'mixture'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newexperts</code></td>
+<td>
+<p>An optional matrix in which to look for expert advice with which
+predict. If omitted, the past predictions of the object are returned and the
+object is not updated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newY</code></td>
+<td>
+<p>An optional matrix with d columns (or vector if <code class="reqn">d=1</code>) of observations to be predicted. If provided, it 
+should have the same number of rows as the number of rows of <code>newexperts</code>.
+If omitted, the object (i.e, the aggregation rule) is not updated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>awake</code></td>
+<td>
+<p>An optional array specifying the
+activation coefficients of the experts. It must have the same dimension as experts. Its entries lie in <code>[0,1]</code>.
+Possible if some experts are specialists and do not always form and suggest
+prediction. If the expert number <code>k</code> at instance <code>t</code> does not
+form any prediction of observation <code>Y_t</code>, we can put
+<code>awake[t,k]=0</code> so that the mixture does not consider expert <code>k</code> in
+the mixture to predict <code>Y_t</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>online</code></td>
+<td>
+<p>A boolean determining if the observations in newY are predicted
+sequentially (by updating the object step by step) or not. If FALSE, 
+the observations are predicting using the object (without using any past 
+information in newY). If TRUE, newY and newexperts should not be null.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of prediction. It can be 
+</p>
+
+<dl>
+<dt>model</dt>
+<dd>
+<p>return the updated version of object (using newY and newexperts).</p>
+</dd>
+<dt>response</dt>
+<dd>
+<p>return the forecasts. If type is 'model', forecasts can also 
+be obtained from the last values of object$prediction.</p>
+</dd>
+<dt>weights</dt>
+<dd>
+<p>return the weights assigned to the expert advice to 
+produce the forecasts. If type is 'model', forecasts can also 
+be obtained from the last rows of object$weights.</p>
+</dd>
+<dt>all</dt>
+<dd>
+<p>return a list containing 'model', 'response', and 'weights'.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_cpp</code></td>
+<td>
+<p><code>boolean</code>. Whether or not to use cpp optimization to fasten the computations. This option is not yet compatible
+with the use of custom loss function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p><code>boolean</code>. Whether or not to display progress bars.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments are ignored</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>predict.mixture</code> produces a matrix of predictions 
+(type = 'response'), an updated object (type = 'model'), or a matrix of
+weights (type = 'weights').
+</p>
+
+
+</div>

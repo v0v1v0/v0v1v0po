@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>assign.optbin</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Bin Assignment
+</h2>
+
+<h3>Description</h3>
+
+<p><code>assign.optbin</code> returns an object with the same shape as the input
+data and values replaced by bin numbers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">assign.optbin(x, binspec, extend.upper=FALSE, by.value=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>numeric data to assign
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binspec</code></td>
+<td>
+
+<p>an optimal binning partition
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extend.upper</code></td>
+<td>
+
+<p>if true then any value in x above the last bin is assigned to that bin,
+otherwise its bin is set to NA
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by.value</code></td>
+<td>
+
+<p>if true then return average value for bin instead of bin numbers
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Replaces the values in a copy of the input data by the bin number it
+belongs to, or by the bin average value with by.value.  The lowest bin
+always extends to -Inf.  The extend.upper argument can open the last bin
+to +Inf if true.  Use this function to get in-place bin assignments for
+the unsorted data that was passed to optbin.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of the same shape as the data.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optbin</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">d &lt;- c(rnorm(30, mean=10, sd=2), rnorm(40, mean=20, sd=2),
+       rnorm(30, mean=30, sd=3))
+binned &lt;- optbin(d, 3)
+assign.optbin(d, binned)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>es</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Expression substitution</h2>
+
+<h3>Description</h3>
+
+<p>Evaluate R expressions and substitute their values into one or more strings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">es(text, round = NULL, signif = NULL, envir = parent.frame())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>A vector of strings to substitute into.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round</code></td>
+<td>
+<p><code>NULL</code> or a single integer, giving the number of decimal
+digits for rounding numeric expressions. This argument takes priority over
+<code>signif</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signif</code></td>
+<td>
+<p><code>NULL</code> or a single integer, giving the number of
+significant decimal digits to use for numeric expressions. The
+<code>round</code> argument takes priority over this one, and will be used if
+not <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envir</code></td>
+<td>
+<p>The environment to evaluate expressions in.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Each part of the string surrounded by <code>"#{}"</code> is extracted, evaluated
+as R code in the specified environment, and then its value is substituted
+back into the string. The literal string <code>"#{}"</code> can be obtained by
+escaping the hash character, viz. <code>"\\#{}"</code>. The block may contain
+multiple R expressions, separated by semicolons, but may not contain
+additional braces. Its value will be coerced to character mode, and if the
+result has multiple elements then the source string will be duplicated.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The final strings, with expression values substituted into them.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ore_subst</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">es("pi is #{pi}")
+es("pi is \\#{pi}")
+es("The square-root of pi is approximately #{sqrt(pi)}", signif=4)
+es("1/(1+x) for x=3 is #{x &lt;- 3; 1/(1+x)}")
+</code></pre>
+
+
+</div>

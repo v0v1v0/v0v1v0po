@@ -1,0 +1,172 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_osm_feature</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a feature to an Overpass query</h2>
+
+<h3>Description</h3>
+
+<p>Add a feature to an Overpass query
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_osm_feature(
+  opq,
+  key,
+  value,
+  key_exact = TRUE,
+  value_exact = TRUE,
+  match_case = TRUE,
+  bbox = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>opq</code></td>
+<td>
+<p>An <code>overpass_query</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>feature key; can be negated with an initial exclamation mark,
+<code>key = "!this"</code>, and can also be a vector if <code>value</code> is missing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>value for feature key; can be negated with an initial
+exclamation mark, <code>value = "!this"</code>, and can also be a vector,
+<code>value = c ("this", "that")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key_exact</code></td>
+<td>
+<p>If FALSE, <code>key</code> is not interpreted exactly; see
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API">https://wiki.openstreetmap.org/wiki/Overpass_API</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value_exact</code></td>
+<td>
+<p>If FALSE, <code>value</code> is not interpreted exactly</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match_case</code></td>
+<td>
+<p>If FALSE, matching for both <code>key</code> and <code>value</code> is
+not sensitive to case</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>optional bounding box for the feature query; must be set if no
+opq query bbox has been set</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>opq object
+</p>
+
+
+<h3>
+<code>add_osm_feature</code> vs <code>add_osm_features</code>
+</h3>
+
+<p>Features defined within an add_osm_features call are combined with a
+logical OR.
+</p>
+<p>Chained calls to either add_osm_feature or <code>add_osm_features()</code> combines
+features from these calls in a logical AND; this is analagous to chaining
+<code>dplyr::filter()</code> on a data frame.
+</p>
+<p><code>add_osm_features()</code> with only one feature is logically equivalent to
+<code>add_osm_feature()</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>key_exact</code> should generally be <code>TRUE</code>, because OSM uses a
+reasonably well defined set of possible keys, as returned by
+available_features. Setting <code>key_exact = FALSE</code> allows matching
+of regular expressions on OSM keys, as described in Section 6.1.5 of
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL">https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL</a>. The actual
+query submitted to the overpass API can be obtained from
+opq_string.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://wiki.openstreetmap.org/wiki/Map_Features">https://wiki.openstreetmap.org/wiki/Map_Features</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>add_osm_features
+</p>
+<p>Other queries: 
+<code>add_osm_features()</code>,
+<code>bbox_to_string()</code>,
+<code>getbb()</code>,
+<code>opq_around()</code>,
+<code>opq_csv()</code>,
+<code>opq_enclosing()</code>,
+<code>opq_osm_id()</code>,
+<code>opq_string()</code>,
+<code>opq()</code>,
+<code>overpass_status()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+q &lt;- opq ("portsmouth usa") %&gt;%
+    add_osm_feature (
+        key = "amenity",
+        value = "restaurant"
+    ) %&gt;%
+    add_osm_feature (key = "amenity", value = "pub")
+osmdata_sf (q) # all objects that are restaurants AND pubs (there are none!)
+q1 &lt;- opq ("portsmouth usa") %&gt;%
+    add_osm_feature (
+        key = "amenity",
+        value = "restaurant"
+    )
+q2 &lt;- opq ("portsmouth usa") %&gt;%
+    add_osm_feature (key = "amenity", value = "pub")
+c (osmdata_sf (q1), osmdata_sf (q2)) # all restaurants OR pubs
+# Use of negation to extract all non-primary highways
+q &lt;- opq ("portsmouth uk") %&gt;%
+    add_osm_feature (key = "highway", value = "!primary")
+
+# key negation without warnings
+q3 &lt;- opq ("Vinçà", osm_type="node") %&gt;%
+    add_osm_feature (key = c("name", "!name:ca"))
+q4 &lt;- opq ("el Carxe", osm_type="node") %&gt;%
+    add_osm_feature (key = "natural", value = "peak") %&gt;%
+    add_osm_feature (key = "!ele")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

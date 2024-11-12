@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ContextualAnomalyDetector</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Contextual Anomaly Detector - Open Source (CAD)</h2>
+
+<h3>Description</h3>
+
+<p><code>ContextualAnomalyDetector</code> calculates the anomaly score of a
+dataset using the notion of contexts conformed by facts and provides
+probabilistic abnormality scores.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ContextualAnomalyDetector(data, rest.period = max(min(150,
+  round(length(data) * 0.03), 1)), max.left.semicontexts = 7,
+  max.active.neurons = 15, num.norm.value.bits = 3,
+  base.threshold = 0.75, min.value = min(data, na.rm = T),
+  max.value = max(data, na.rm = T), python.object = NULL, lib = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Numerical vector with training and test dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rest.period</code></td>
+<td>
+<p>Training period after an anomaly.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.left.semicontexts</code></td>
+<td>
+<p>Number of semicontexts that should be maintained in memory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.active.neurons</code></td>
+<td>
+<p>Number of neurons of the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.norm.value.bits</code></td>
+<td>
+<p>Granularity of the transformation into discrete values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base.threshold</code></td>
+<td>
+<p>Threshold to be considered an anomaly.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.value</code></td>
+<td>
+<p>Minimum expected value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.value</code></td>
+<td>
+<p>Maximum expected value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>python.object</code></td>
+<td>
+<p>Python object for incremental processing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lib</code></td>
+<td>
+<p>0 to run the original python script, 1 to get the same results on all operating
+systems.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>data</code> must be a numerical vector without NA values.
+<code>threshold</code> must be a numeric value between 0 and 1. If the anomaly
+score obtained for an observation is greater than the <code>threshold</code>, the
+observation will be considered abnormal. Requires hashlib (included in python installation)
+and bencode-python3 (which can be installed using pip) python libraries.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>Data frame with <code>anomaly.score</code> and <code>is.anomaly</code> comparing the anomaly
+score with <code>base.threshold</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>python.object</code></td>
+<td>
+<p>ContextualAnomalyDetector Python object used in online anomaly detection</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Smirnov, M. (2018). CAD: Contextual Anomaly
+Detector. https://github.com/smirmik/CAD
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 200
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+## Calculate anomalies
+
+   result &lt;- ContextualAnomalyDetector(data = df$value, rest.period = 10, base.threshold = 0.9)
+
+   ## Plot results
+   res &lt;- cbind(df, result$result)
+   PlotDetections(res, title = "CAD_OSE ANOMALY DETECTOR")
+
+
+
+</code></pre>
+
+
+</div>

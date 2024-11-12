@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxFitFunctionWLS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create MxFitFunctionWLS Object</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a new MxFitFunctionWLS object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxFitFunctionWLS(type=c('WLS','DWLS','ULS'),
+			     allContinuousMethod=c("cumulants", "marginals"),
+			     fullWeight=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A character string 'WLS' (default), 'DWLS', or 'ULS' for weighted, diagonally weighted, or unweighted least squares, respectively</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allContinuousMethod</code></td>
+<td>
+<p>A character string 'cumulants' (default) or 'marginals'. See Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fullWeight</code></td>
+<td>
+<p>Logical determining if the full weight matrix is returned (default). Needed for standard error and quasi-chi-squared calculation.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>As with other fit functions, <code>mxFitFunctionWLS</code> optimizes free parameter values such that the value of a cost function is minimized. For <code>mxFitFunctionWLS</code>, this cost function is the weighted least squares difference between the data and the model-implied expectations for the data based on the free parameters and the expectation function (e.g., <code>mxExpectationNormal</code> or <code>mxExpectationRAM</code>) selected for the model.
+</p>
+<p><strong>Bias and sensitivity to model misspecification</strong>
+Both ordinal and continuous data are supported, as well as combinations of these data types. All three methods ('WLS', 'ULS' and 'DWLS') are unbiased when the model is correct. Full 'WLS' is highly sensitive to model misspecification – it can heavily weight the fourth-order moments of the distribution, so small deviations between the observed fourth-order moments and those implied by the model can lead to poor estimates.
+</p>
+<p><strong>Behavior with all-continuous data</strong>
+When only continuous variables are present, the argument <code>allContinuousMethod</code> dictates how to process the data.
+</p>
+<p>The default, <em>cumulants</em> is a good choice for non-normal data. This uses the asymptotically distribution free (ADF) method of Browne (1984) and computes the fourth order <em>cumulants</em> for the weight matrix: thus, the name. It is generally fast and ADF up to elliptical distributions. Data computed using cumulants should also be more accurate than via marginals (because the whole covariance is a single analytic expression, with no estimation involved).
+</p>
+<p><em>note</em>: The <em>cumulants</em> method does not handle missing data. It also does not return weights or summary statistics for the means.
+</p>
+<p>The alternative option, 'marginals', uses methods similar to those used in processing ordinal and joint ordinal-continuous data.  By contrast with cumulants, marginals returns weights and summary statistics for the means.
+</p>
+<p>When data are not all continuous, <code>allContinuousMethod</code> is ignored, and means are modelled.
+</p>
+<p><em>Usage Notes</em>:
+</p>
+<p>Model results can be reported using the summary function, or accessed directly in the 'output' slot of the model (i.e., <code>model$output</code>). Components of the output may also be accessed and used in the same way, i.e., via the <code>$</code> and <code>[]</code> <code>Extract</code> functions.
+</p>
+<p>Summary statistics are returned in the MxData object in an
+<code>observedStats</code> list. If <code>observedStats</code> are already present
+and in the appropriate shape then they are reused. It is also possible
+to provide your own arbitrary user supplied observed statistics using
+this same approach.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a new MxFitFunctionWLS object. One and only one fit function object should be included in each model, along with an associated mxExpectationNormal or <code>mxExpectationRAM</code> object.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+<p>Browne, M. W. (1984). Asymptotically distribution-free methods for the analysis of covariance structures. <em>British Journal of Mathematical and Statistical Psychology</em>, <strong>37</strong>, 62-83.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other fit functions:
+<code>mxFitFunctionMultigroup</code>, <code>mxFitFunctionML</code>,
+<code>mxFitFunctionAlgebra</code>, <code>mxFitFunctionGREML</code>,
+<code>mxFitFunctionR</code>, <code>mxFitFunctionRow</code>
+</p>
+<p>More information about the OpenMx package may be found here.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create and fit a WLS model using RAM, and then using matrices.
+
+library(OpenMx)
+
+# Simulate some data where y = .5x + error
+
+x = rnorm(1000, mean = 0, sd = 1)
+y = 0.5*x + rnorm(1000, mean = 0, sd = 1)
+tmpFrame = data.frame(x, y)
+varNames = names(tmpFrame)
+
+# =======================
+# = A RAM model example =
+# =======================
+
+m1 = mxModel("my_first_WLS", type = "RAM",
+	manifestVars = c("x", "y"),
+	mxPath(c("x", "y"), arrows = 2, values = 1, labels = c("xVar", "yVar")),
+	mxPath("x", to = "y", labels = "x_to_y"),
+	mxFitFunctionWLS(),
+	mxData(tmpFrame, 'raw')
+)
+
+m1 = mxRun(m1)
+summary(m1)$parameters
+
+# Here are the cov, acov and Weight matrices:
+print(m1$data$observedStats)
+
+# Use a different weight matrix
+m2 = m1
+os &lt;- m1$data$observedStats
+os$asymCov &lt;- solve(rWishart(n=1, df= nrow(tmpFrame), Sigma= diag(3))[,,1])
+os$useWeight &lt;- solve(os$asymCov * nrow(tmpFrame))
+m2$data$observedStats &lt;- os
+
+# Set verbose to check if our new weights are used
+m2$data$verbose &lt;- 1L
+
+# Run model
+m2 &lt;- mxRun(m2)
+
+# SE indeed changed due to new weights
+print(m2$output$standardErrors - m1$output$standardErrors)
+
+# ==========================
+# = A matrix-based example =
+# ==========================
+
+# Define matrices for Symmetric (S) and Asymmetric (A) paths and an Identity matrix.
+
+S &lt;- mxMatrix(type = "Full", nrow = 2, ncol = 2, values=c(1,0,0,1),
+              free=c(TRUE,FALSE,FALSE,TRUE), labels=c("Vx", NA, NA, "Vy"), name = "S")
+A &lt;- mxMatrix(type = "Full", nrow = 2, ncol = 2, values=c(0,1,0,0),
+              free=c(FALSE,TRUE,FALSE,FALSE), labels=c(NA, "b", NA, NA), name = "A")
+I &lt;- mxMatrix(type="Iden", nrow=2, ncol=2, name="I")
+
+# Build the model
+
+tmpModel &lt;- mxModel(model="exampleModel",
+	# Add the S, A, and I matrices constructed above
+	S, A, I,
+
+	# Define the expectation
+	mxAlgebra(name="expCov", solve(I-A) %*% S %*% t(solve(I-A))),
+
+	# Choose a normal expectation and WLS as the fit function
+	mxExpectationNormal(covariance= "expCov", dimnames= varNames),
+	mxFitFunctionWLS(),
+
+   # Add the data
+	mxData(tmpFrame, 'raw')
+)
+
+# Fit the model and print a summary
+tmpModel &lt;- mxRun(tmpModel)
+summary(tmpModel)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extent_from_ons_code</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve an extent for ONS geographies</h2>
+
+<h3>Description</h3>
+
+<p>Retrieve an extent for ONS geographies
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extent_from_ons_code(ons_code, returnType = c("qExtent", "geos", "wkt"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ons_code</code></td>
+<td>
+<p>(character) A single ONS code representing a statistical
+area.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnType</code></td>
+<td>
+<p>(character) Define the object returned. The default is
+<code>'qExtent'</code> to define a "query extent" object expected internally by
+<code>osdatahub</code>. Other options are <code>'wkt'</code> to return the geometry in
+Well-Known Text format or <code>'geos'</code> to return an object of class
+<code>geos</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Office for National Statistics (ONS) maintains a source of
+official geographies for the UK, such as county boundaries, electoral
+wards, parishes, and census output areas. These boundaries are commonly
+used for data analysis, particularly of socio-economic factors. A full list
+of available ONS geographies can be found here:
+<a href="https://statistics.data.gov.uk:443/atlas/resource?uri=http://statistics.data.gov.uk/id/statistical-geography/K02000001">https://statistics.data.gov.uk:443/atlas/resource?uri=http://statistics.data.gov.uk/id/statistical-geography/K02000001</a>.
+</p>
+<p>When returning a <code>geos</code> object, the coordinate reference system
+attribute will be set to CRS:84 by default and not to a full CRS
+definition.
+</p>
+<p>The <code>qExtent</code> return option identifies a simple class of objects
+containing a polygon of the extent in WKT format, the bounding box
+coordinates, and a CRS string. It is intended to be used internally by
+functions in <code>osdatahub</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The coordinates of the polygon boundary.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>extent
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+ext &lt;- extent_from_ons_code("E05002470", returnType = 'wkt')
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onetime_message_confirm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print a message, and ask for confirmation to hide it in future</h2>
+
+<h3>Description</h3>
+
+<p>This uses <code>readline()</code> to ask the user if the message should
+be shown again in future.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onetime_message_confirm(
+  ...,
+  id = deprecate_calling_package(),
+  path = default_lockfile_dir(),
+  expiry = NULL,
+  confirm_prompt = "Show this message again? [yN] ",
+  confirm_answers = c("N", "n", "No", "no"),
+  default_answer = "N",
+  require_permission = FALSE,
+  without_permission = "warn",
+  noninteractive = paste0("To hide this message in future, run:\n",
+    "  onetime::onetime_mark_as_done(id = \"", id, "\")"),
+  message = .Deprecated()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to <code>message()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Unique ID string. If this is unset, the name of the calling
+package will be used. Since onetime 0.2.0, not setting <code>id</code> is
+deprecated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Directory to store lockfiles. The default uses a unique
+directory corresponding to the calling package, beneath
+<code>rappdirs::user_config_dir()</code>. Normally you should leave this as the
+default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expiry</code></td>
+<td>
+<p><code>difftime()</code> or e.g. <code>lubridate::duration()</code> object.
+After this length of time, code will be run again.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>confirm_prompt</code></td>
+<td>
+<p>Character string. Question to prompt the user to hide
+the message in future.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>confirm_answers</code></td>
+<td>
+<p>Character vector. Answers which will cause
+the message to be hidden in future.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default_answer</code></td>
+<td>
+<p>Character string. Default answer if user
+simply presses return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>require_permission</code></td>
+<td>
+<p>Logical. Ask permission to store files on the user's
+computer, if this hasn't been granted? Setting this to <code>FALSE</code>
+overrides <code>without_permission</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>without_permission</code></td>
+<td>
+<p>Character string. What to do if the user hasn't
+given permission to store files? <code>"warn"</code> runs the action with an extra
+warning; <code>"run"</code> runs the action with no warning; <code>"pass"</code> does nothing
+and returns the default; <code>"stop"</code> throws an error; <code>"ask"</code> asks for
+permission using <code>check_ok_to_store()</code>, and returns the default if it is
+not granted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noninteractive</code></td>
+<td>
+<p>String. Additional message to send in non-interactive
+sessions. Set to <code>NULL</code> to do nothing in non-interactive sessions. The
+default tells the user how to manually mark the message as done.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>message</code></td>
+<td>
+<p>Deprecated. Use unnamed arguments <code>...</code> instead.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By default, the message will be hidden if the user answers
+"n", "No", or "N", or just presses return to the prompt question.
+</p>
+<p>Unlike other <code>onetime</code> functions, <code>onetime_message_confirm()</code> doesn't by
+default require permission to store files on the user's computer. The
+assumption is that saying "Don't show this message again" counts as
+granting permission (just for this one message). You can ask for broader
+permission by setting <code>require_permission = TRUE</code> and
+<code>without_permission = "ask"</code>.
+</p>
+
+
+<h3>Value</h3>
+
+
+<ul>
+<li> <p><code>NULL</code> if the message was not shown (shown already or non-interactive
+session and <code>noninteractive</code> was <code>NULL</code>).
+</p>
+</li>
+<li> <p><code>TRUE</code> if the user confirmed, i.e. chose to hide the message.
+</p>
+</li>
+<li> <p><code>FALSE</code> if the message was shown but the user did not confirm (did not
+choose to hide the message, or non-interactive session and <code>noninteractive</code>
+was not <code>NULL</code>).
+</p>
+</li>
+</ul>
+<p>Results are returned invisibly.
+</p>
+<p>Note that by default, <code>TRUE</code> is returned when the user answers "no" to
+"Show this message again?" and <code>FALSE</code> is returned when the user answers
+"yes".
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">oo &lt;- options(onetime.dir = tempdir(check = TRUE))
+id &lt;- sample(10000L, 1L)
+onetime_message_confirm("A message to show one or more times", id = id)
+
+onetime_reset(id = id)
+options(oo)
+</code></pre>
+
+
+</div>

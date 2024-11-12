@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>resample.data.frame</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Resampling to equidistant time series</h2>
+
+<h3>Description</h3>
+
+<p>Make a downsampling to a lower sampling frequency
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'data.frame'
+resample(
+  object,
+  ts,
+  tstart = NA,
+  tend = NA,
+  timename = "t",
+  fun = mean,
+  quantizetime = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Can be data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ts</code></td>
+<td>
+<p>(numeric) New sample period in seconds</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tstart</code></td>
+<td>
+<p>A POSIXxx (or charater or numeric), which indicates the first time point in the series returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tend</code></td>
+<td>
+<p>A POSIXxx (or charater or numeric), which indicates the last time point in the series returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timename</code></td>
+<td>
+<p>(character) The name of the time column in object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>(function) The function of apply. Default is mean, such that average values are obtained</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantizetime</code></td>
+<td>
+<p>(logical) Should the new time points be set to the end of the time intervals, or should they also be the result of the fun function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed on to the fun function</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given an object with a column indicating the time points of the observations the
+function returns a similar object, where the function is applied for each new (and longer)
+interval.
+</p>
+<p>Typically it is used if for example 15 minute values should be made into 1 hour values.
+</p>
+<p>NOTE that it is always assumed that the time point is at the end of the time interval,
+e.g. if hourly values are returned, then "2019-01-01 01:00" indicates the first hour in 2019.
+</p>
+<p>All time points at the time point (border) of between two intervals is assigned to the
+first interval of the two.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A downsampled data.frame
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Generate some test data with 10 minutes sampling frequency for one day
+X &lt;- data.frame(t=seq(ct("2019-01-01 00:10"),ct("2019-01-02"), by=10*60))
+
+# A single sine over the day
+X$val &lt;- sin(as.numeric(X$t)/3600*2*pi/(24))
+
+# Resample to hourly average values
+Xre &lt;- resample(X, 3600)
+plot(X$t, X$val)
+lines(Xre$t, Xre$val, type="b", col=2)
+
+# Resample to hourly max values
+Xre &lt;- resample(X, 3600, fun=max)
+lines(Xre$t, Xre$val, type="b", col=3)
+
+# Another starting time point
+Xre &lt;- resample(X, 3600, tstart="2019-01-01 00:30")
+lines(Xre$t, Xre$val, type="b", col=4)
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OSCV_reg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The OSCV function in the regression context.</h2>
+
+<h3>Description</h3>
+
+<p>Computing <code class="reqn">OSCV(b)</code>, the value of the OSCV function in the regression context, defined by expression (9) of Savchuk and Hart (2017).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OSCV_reg(b, desx, y, ktype)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>numerical vector of bandwidth values,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>desx</code></td>
+<td>
+<p>numerical vecror of design points,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>numerical vecror of data points corresponding to the design points <code class="reqn">desx</code>,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ktype</code></td>
+<td>
+<p>making choice between two cross-validation kernels:  (<code class="reqn">ktype=0</code>) corresponds to the Gaussian kernel; (<code class="reqn">ktype=1</code>) corresponds to the robust kernel <code>H_I</code> with <code class="reqn">(\alpha,\sigma)=(16.8954588,1.01)</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Computation of  <code class="reqn">OSCV(b)</code> for given <code class="reqn">b</code> (bandwidth vector) and the data values <code class="reqn">y</code> corresponding to the design points <code class="reqn">desx</code>. No preliminary sorting of the data (according to the <code class="reqn">desx</code> variable) is needed. The value of <code class="reqn">m=4</code> is used. Two choices of the two-sided cross-validation kernel are available: </p>
+<ul>
+<li>
+<p> (<code class="reqn">ktype=0</code>) Gaussian kernel; </p>
+</li>
+<li>
+<p> (<code class="reqn">ktype=1</code>) robust kernel <code>H_I</code> defined by expression (15) of Savchuk and Hart (2017) with <code class="reqn">(\alpha,\sigma)=(16.8954588,1.01)</code>.</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>The vector of values of <code class="reqn">OSCV(b)</code> for the correponsing vector of <code class="reqn">b</code> values.
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Savchuk, O.Y., Hart, J.D. (2017). Fully robust one-sided cross-validation for regression functions. <em>Computational Statistics</em>, doi:10.1007/s00180-017-0713-7.
+</p>
+</li>
+<li>
+<p> Hart, J.D. and Yi, S. (1998) One-sided cross-validation. <em>Journal of the American Statistical Association</em>, 93(442), 620-631.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>h_OSCV_reg</code>, <code>H_I</code>, <code>loclin</code>, <code>C_smooth</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# The Old Faithful geyser data set "faithful" is used. The sample size n=272.
+# The OSCV curves based on the Gaussian kernel and the robust kernel H_I (with 
+# alpha=16.8954588 and sigma=1.01) are plotted. The horizontal scales of the curves
+# are changed such that their global minimizers are to be used in computing the
+# Gaussian local linear estimates of the regression function.
+xdat=faithful[[2]] #waiting time
+ydat=faithful[[1]] #eruption duration
+barray=seq(0.5,10,len=250)
+C_gauss=C_smooth(1,1)
+OSCV_gauss=OSCV_reg(barray/C_gauss,xdat,ydat,0)
+h_gauss=round(h_OSCV_reg(xdat,ydat,0),digits=4)
+dev.new()
+plot(barray,OSCV_gauss,'l',lwd=3,cex.lab=1.7,cex.axis=1.7,xlab="h",ylab="OSCV criterion")
+title(main="OSCV based on the Gaussian kernel",cex.main=1.7)
+legend(2.5,0.25,legend=paste("h_min=",h_gauss),cex=2,bty="n")
+C_H_I=C_smooth(16.8954588,1.01)
+OSCV_H_I=OSCV_reg(barray/C_H_I,xdat,ydat,1)
+h_H_I=round(barray[which.min(OSCV_H_I)],digits=4)
+dev.new()
+plot(barray,OSCV_H_I,'l',lwd=3,cex.lab=1.7,cex.axis=1.7,xlab="h",ylab="OSCV criterion",
+ylim=c(0.15,0.5))
+title(main="OSCV based on the robust kernel H_I",cex.main=1.7)
+legend(2.5,0.4,legend=paste("h_min=",h_H_I),cex=2,bty="n")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

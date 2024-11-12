@@ -1,0 +1,198 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>biplotDraw</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>biplotDraw is the workhorse doing the drawing of a 2D biplot.</h2>
+
+<h3>Description</h3>
+
+<p>When the number of elements and constructs differs to a large extent, the
+absolute values of the coordinates for either constructs or elements
+will be much smaller or greater. This is an inherent property of the biplot.
+In the case it is not necessary to be able to read off the original
+data entries from the plot, the axes for elements and constructs
+can be scaled separately. The proportional projection values will
+stay unaffected. the absolute will change though. For grid interpretation
+the absolute values are usually oh no importance. Thus, there is an optional
+argument <code>normalize</code> which is <code>FALSE</code> as a default which
+rescales the axes so the longest construct and element vector will be
+set to the length of <code>1</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">biplotDraw(
+  x,
+  inner.positioning = TRUE,
+  outer.positioning = TRUE,
+  c.labels.inside = F,
+  flipaxes = c(F, F),
+  strokes.x = 0.1,
+  strokes.y = 0.1,
+  offsetting = TRUE,
+  offset.labels = 0,
+  offset.e = 1,
+  axis.ext = 0.1,
+  mai = c(0.2, 1.5, 0.2, 1.5),
+  rect.margins = c(0.01, 0.01),
+  srt = 45,
+  cex.pos = 0.7,
+  xpd = TRUE,
+  c.lines = TRUE,
+  col.c.lines = grey(0.9),
+  zoom = 1,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inner.positioning</code></td>
+<td>
+<p>Logical. Whether to calculate positions to minimize overplotting of
+elements and construct labels (default is<code>TRUE</code>). Note that
+the positioning may slow down the plotting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outer.positioning</code></td>
+<td>
+<p>Logical. Whether to calculate positions to minimize overplotting of
+of construct labels on the outer borders (default is<code>TRUE</code>). Note that
+the positioning may slow down the plotting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.labels.inside</code></td>
+<td>
+<p>Logical. Whether to print construct labels next to the points.
+Can be useful during inspection of the plot (default <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flipaxes</code></td>
+<td>
+<p>Logical vector of length two. Whether x and y axes are reversed
+(default is <code>c(F,F)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strokes.x</code></td>
+<td>
+<p>Length of outer strokes in x direction in NDC.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strokes.y</code></td>
+<td>
+<p>Length of outer strokes in y direction in NDC.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offsetting</code></td>
+<td>
+<p>Do offsetting? (TODO)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset.labels</code></td>
+<td>
+<p>Offsetting parameter for labels (TODO).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset.e</code></td>
+<td>
+<p>offsetting parameter for elements (TODO).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axis.ext</code></td>
+<td>
+<p>Axis extension factor (default is <code>.1</code>). A bigger value will
+zoom out the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mai</code></td>
+<td>
+<p>Margins available for plotting the labels in inch
+(default is <code>c(.2, 1.5, .2, 1.5)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rect.margins</code></td>
+<td>
+<p>Vector of length two (default is <code>c(.07, .07)</code>). Two values
+specifying the additional horizontal and vertical margin around each
+label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>srt</code></td>
+<td>
+<p>Angle to rotate construct label text. Only used in case <code>offsetting=FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.pos</code></td>
+<td>
+<p>Cex parameter used during positioning of labels if prompted. Does
+usually not have to be changed by user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xpd</code></td>
+<td>
+<p>Logical (default is <code>TRUE</code>). Whether to extend text labels
+over figure region. Usually not needed by the user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.lines</code></td>
+<td>
+<p>Logical. Whether construct lines from the center of the biplot
+to the surrounding box are drawn (default is <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.c.lines</code></td>
+<td>
+<p>The color of the construct lines from the center to the borders
+of the plot (default is <code>gray(.9)</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zoom</code></td>
+<td>
+<p>Scaling factor for all vectors. Can be used to zoom
+the plot in and out (default <code>1</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not evaluated.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Invisible return of dataframe used during construction of plot
+(useful for developers).
+</p>
+
+
+</div>

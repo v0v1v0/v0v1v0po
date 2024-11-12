@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calc_smds</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate standardized mean differences for initial and refined strata</h2>
+
+<h3>Description</h3>
+
+<p>Summarizes initial and/or refined strata in terms of standardized mean differences (SMDs).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calc_smds(
+  object = NULL,
+  z = NULL,
+  X = NULL,
+  base_strata = NULL,
+  refined_strata = NULL,
+  abs = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an optional object of class <code>strat</code>,
+typically created using <code>strat()</code>
+or as a result of a call to <code>prop_strat()</code>.
+If not provided, <code>z</code> and <code>X</code> must be specified</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>vector of treatment assignment; only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>covariate matrix/data.frame; only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_strata</code></td>
+<td>
+<p>optional initial stratification for which to calculate SMDs;
+only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refined_strata</code></td>
+<td>
+<p>optional refined stratification for which to calculate SMDs;
+only used if <code>object</code> is not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abs</code></td>
+<td>
+<p>boolean whether to return absolute standardized mean differences or raw values.
+Default is TRUE for absolute values</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>List with two elements, "base" and "refined", each containing
+a matrix of standardized mean differences for each stratum (row) and covariate (column).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Choose 500 patients and 5 covariates to work with for the example
+set.seed(15)
+samp &lt;- sample(1:nrow(rhc_X), 500)
+cov_samp &lt;- sample(1:26, 5)
+
+# Let it create propensity score strata for you and then refine them
+ref &lt;- refine(X = rhc_X[samp, cov_samp], z = rhc_X[samp, "z"])
+
+# Look at covariate balance for propensity score and refined strata
+calc_smds(object = ref)
+
+</code></pre>
+
+
+</div>

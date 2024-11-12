@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_commit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Commit a generated report</h2>
+
+<h3>Description</h3>
+
+<p>Commit a generated report, moving it from the <code style="white-space: pre;">⁠draft/⁠</code>
+directory to <code style="white-space: pre;">⁠archive/⁠</code> and updating the orderly index.  Once
+committed, reports should not be deleted.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_commit(id, name = NULL, root = NULL, locate = TRUE, timeout = 10)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>The identifier of the report</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>The name of the report - this can be omitted and the
+name will be determined from the <code>id</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeout</code></td>
+<td>
+<p>Time in seconds to wait for db to be available. In
+parallel the database may become locked so we can choose to wait
+for <code>timeout</code> seconds before throwing an error.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The path to the newly committed report
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># In a new example orderly, run a report
+path &lt;- orderly::orderly_example("minimal")
+id &lt;- orderly::orderly_run("example", root = path)
+
+# To commit it, all we need is the report id
+orderly::orderly_commit(id, root = path)
+
+# The report is now committed, and as such could be used as a
+# dependency in another report and is not subject to deletion by
+# orderly::orderly_cleanup
+orderly::orderly_list_archive(root = path)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.ocm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot method for Continuous Ordinal Fits</h2>
+
+<h3>Description</h3>
+
+<p>Draws several summary and diagnostic plots, including the estimated g function, 
+the estimated density function of the continuous ordinal score for the null model (no covariates), 
+the histogram of the quantile residuals, the normal Q-Q plot and any smoother included in the model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ocm'
+plot(
+  x,
+  plot.only = NULL,
+  CIs = c("vcov", "no", "rnd.x.bootstrap", "fix.x.bootstrap", "param.bootstrap"),
+  R = 100,
+  main_gfun = "g function",
+  main_density = "Density function when X=0",
+  xlab = "Continuous ordinal scale [v]",
+  CIcol = "lightblue",
+  individual_plots = F,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class <code>ocm</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.only</code></td>
+<td>
+<p>either NULL, in which case all plots are displayed, or a value among "gfun", 
+"quant_resid", "QQplot" or "smoother", in which case only the requested plot is displayed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CIs</code></td>
+<td>
+<p>method used for confidence bands for the g function. <code>"vcov"</code> = Wald [default]; <code>"no"</code> = no CIS;
+<code>"rnd.x.bootstrap"</code> = random-x bootstrap; <code>"fix.x.bootstrap"</code> = bootstrap with fixed-x 
+resampling; <code>"param.bootstrap"</code> = parametric bootstrap</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>the number of bootstrap replicates. Ignored if CIs=<code>"no"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main_gfun</code></td>
+<td>
+<p>title of the g function plot. Defauts to “g function (95% CIs)”</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main_density</code></td>
+<td>
+<p>title of the density function plot. Defauts to “Density function when X=0”</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>label of the x axis for the g function and the density plots. Defaults to “Continuous ordinal scale [v]”</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CIcol</code></td>
+<td>
+<p>color of the confidence interval bands. Defaults to “lightblue”</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>individual_plots</code></td>
+<td>
+<p>logical. If TRUE, every figure is drawn in a new window. If FALSE (default), 
+the first four figures are drawn in a 2-by-2 array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The estimated g function, quantile residual histogram and normal Q-Q plot of an <code>ocm</code> 
+object are plotted. If smothers are included in the formula, the user has the option to 
+plot them in the same graph or separately.
+If <code>CIs</code> is not <code>"no"</code>, 95% confidence bands are also plotted.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Maurizio Manuguerra, Gillian Heller
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ocm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fit.overall  &lt;- ocm(overall  ~ cycleno + age + bsa + treatment, data=ANZ0001.sub, scale=c(0,100))
+plot(fit.overall, CIs="vcov")
+## Not run: 
+plot(fit.overall, CIs="rnd.x.bootstrap", R=100)
+plot(fit.overall, CIs="fix.x.bootstrap", R=100)
+plot(fit.overall, CIs="param.bootstrap", R=100)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

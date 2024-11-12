@@ -1,0 +1,156 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bookdown_to_embed_leanpub</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Bookdown to Embed version of Leanpub</h2>
+
+<h3>Description</h3>
+
+<p>Convert Bookdown to Embed version of Leanpub
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bookdown_to_embed_leanpub(
+  path = ".",
+  chapt_img_key = NULL,
+  bookdown_index = file.path(base_url, "index.html"),
+  base_url = NULL,
+  clean_up = FALSE,
+  default_img = NULL,
+  render = TRUE,
+  output_dir = "manuscript",
+  make_book_txt = FALSE,
+  quiz_dir = "quizzes",
+  run_quiz_checks = FALSE,
+  remove_resources_start = FALSE,
+  verbose = TRUE,
+  footer_text = ""
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>path to the bookdown book, must have a '_bookdown.yml' file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chapt_img_key</code></td>
+<td>
+<p>File path to a TSV whose contents are the chapter urls ('url'),
+the chapter titles ('chapt_title'), the file path to the image to be used for the chapter ('img_path').
+Column names 'url', 'chapt_title', and 'img_path' must be used.
+If no chapter title column supplied, the basename of the url will be used,
+If no image column supplied, default image used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bookdown_index</code></td>
+<td>
+<p>The file path of the rendered bookdown index.html file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_url</code></td>
+<td>
+<p>The base url of where the chapters are published – the url to provide to the iframe in Leanpub
+e.g. https://jhudatascience.org/OTTR_Template/coursera</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_up</code></td>
+<td>
+<p>TRUE/FALSE the old output directory should be deleted and
+everything created fresh.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default_img</code></td>
+<td>
+<p>A google slide link to the default image to be used for all chapters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>render</code></td>
+<td>
+<p>if 'TRUE', then [bookdown::render_book()] will be run on each Rmd.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output_dir</code></td>
+<td>
+<p>output directory to put files.  It should likely be
+relative to path</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>make_book_txt</code></td>
+<td>
+<p>Should [ottrpal::bookdown_to_book_txt()] be run
+to create a 'Book.txt' in the output directory?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiz_dir</code></td>
+<td>
+<p>directory that contains the quiz .md files that should be
+checked and incorporated into the Book.txt file. If you don't have quizzes,
+set this to NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run_quiz_checks</code></td>
+<td>
+<p>TRUE/FALSE run quiz checks</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove_resources_start</code></td>
+<td>
+<p>remove the word 'resources/' at the front
+of any image path.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>print diagnostic messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>footer_text</code></td>
+<td>
+<p>Optionally can add a bit of text that will be added to the
+end of each file before the references section.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A directory of output files in a folder 'manuscript' for publishing on Leanpub.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+ottrpal::bookdown_to_embed_leanpub(
+  base_url = "https://jhudatascience.org/OTTR_Template/",
+  make_book_txt = TRUE,
+  quiz_dir = NULL
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

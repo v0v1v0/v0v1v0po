@@ -1,0 +1,208 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optbin</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Optimal Binning of Continuous Variables
+</h2>
+
+<h3>Description</h3>
+
+<p>Determines break points in numeric data that minimize the difference between
+each point in a bin and the average over it.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optbin(x, numbin, metric=c('se', 'mse'), is.sorted=FALSE, max.cache=2^31, na.rm=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>numeric data
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numbin</code></td>
+<td>
+
+<p>number of bins to partition vector into
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+
+<p>minimize squared error (se) between values and average over bin, or mean
+squared error (mse) dividing squared error by bin length
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>is.sorted</code></td>
+<td>
+
+<p>set true if x is already in increasing order
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.cache</code></td>
+<td>
+
+<p>maximum memory in bytes to use to cache bin metrics; if analysis would need
+more than use slower calculation without cache
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+
+<p>drop NA values (which may occur when converting the data to a vector),
+otherwise cannot proceed with binning
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Data is converted into a numeric vector and sorted if necessary.  Internally
+bins are determined by positions within the vector, with the breaks inclusive
+at the upper end.  The bin thresholds are the same, so bin b covers the range
+thr[b-1] &lt; x &lt;= thr[b], where thr[0] is -Inf.  The routine finds the first
+split found with the best metric, if there is more than one.
+</p>
+<p>The library uses an exhaustive search over all possible breakpoints.  It
+begins by finding the best splits with 2 bins for all pairs of start and
+endpoints, then adds a third bin, and so on.  This rejects most alternatives
+at each level, leaving an O(nbin * nval * nval) algorithm.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class 'optbin' with components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>the original data, sorted
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numbins</code></td>
+<td>
+
+<p>the number of bins created
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+
+<p>argument values when function called
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+
+<p>cost function used to select best partition
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minse</code></td>
+<td>
+
+<p>value of SE/MSE metric for all bins
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thr</code></td>
+<td>
+
+<p>upper threshold of bin range, inclusive
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binavg</code></td>
+<td>
+
+<p>average of values in each bin
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binse</code></td>
+<td>
+
+<p>value of SE/MSE metric for each bin
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+
+<p>positions of endpoint (inclusive) of each bin in x
+</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>assign.optbin</code>, <code>print.optbin</code>,
+<code>summary.optbin</code>, <code>plot.optbin</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Well separated groups
+set.seed(17)
+d1 &lt;- c(rnorm(75, mean=1, sd=0.2), rnorm(75, mean=3, sd=0.2),
+        rnorm(84, mean=6, sd=0.2), rnorm(75, mean=9, sd=0.2),
+        rnorm(75, mean=11, sd=0.2), rnorm(150, mean=15, sd=0.2))
+## Divides into groups 1+2+3, 4+5, 6, metric is 1176.3
+binned3 &lt;- optbin(d1, 3)
+summary(binned3)
+plot(binned3)
+## Divides into groups 1, 2, 3, 4+5, and 6, metric is 169.9
+binned5 &lt;- optbin(d1, 5)
+plot(binned5)
+## Divides into separate groups, metric is 24.4
+binned6 &lt;- optbin(d1, 6)
+summary(binned6)
+plot(binned6)
+## Each rnorm group divides roughly in half.
+binned12 &lt;- optbin(d1, 12)
+plot(binned12)
+## A grouping that overlaps, bins near but not at minima between peaks
+d2 &lt;- c(rnorm(300, mean=1, sd=0.25), rnorm(400, mean=2, sd=0.25),
+        rnorm(300, mean=3, sd=0.25))
+binned3b &lt;- optbin(d2, 3)
+hist(binned3b, breaks=50, col='yellow')
+</code></pre>
+
+
+</div>

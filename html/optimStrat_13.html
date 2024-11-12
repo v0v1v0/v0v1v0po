@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>vargreg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Design variance of the general regression estimator.
+</h2>
+
+<h3>Description</h3>
+
+<p>Compute the (approximated) design variance of the general regression estimator of the total of a study variable under different sampling designs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">vargreg(formula, design = NULL, n, stratum = NULL, 
+        x_des = NULL, inc.p = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>an object of class <code>formula</code>: a symbolic description of the model to be fitted. The details of model specification are given under ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design</code></td>
+<td>
+<p>a character string giving the sampling design. It must be one of 'srs' (simple random sampling without replacement),  'poi' (Poisson sampling), 'stsi' (stratified simple random sampling), 'pips' (Pareto <code class="reqn">\pi</code>ps sampling) or <code>NULL</code> (see ‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>either a positive number indicating the (expected) sample size (when <code>design</code> is one of 'srs', 'poi', 'pips' or <code>NULL</code>) or a numeric vector indicating the sample size of the strata to which each element belongs (when <code>design</code> is 'stsi') (see ‘Examples’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratum</code></td>
+<td>
+<p>a vector indicating the stratum to which every unit belongs. Only used if <code>design</code> is 'stsi'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_des</code></td>
+<td>
+<p>a positive numeric vector giving the values of the auxiliary variable that is used for defining the inclusion probabilities. Only used if <code>design</code> is 'poi' or 'pips'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inc.p</code></td>
+<td>
+<p>a matrix giving the first and second order inclusion probabilities. Only used if <code>design</code> is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>lm</code> (see ‘Details’).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>formula</code> should be of the form <code>y~x</code>, where <code>y</code> is the study variable and <code>x</code> are the auxiliary variables used by the general regression (GREG) estimator, <code class="reqn">\hat{t}</code>,. See <code>formula</code> for more details and ‘Examples’ for typical expressions for some well-known estimators (e.g. the Horvitz-Thompson, ratio, regression and poststratification estimators).
+</p>
+<p>The variance of the GREG estimator is approximated by
+</p>
+<p style="text-align: center;"><code class="reqn">AV\left(\hat{t}\right) = \sum_{k=1}^{N}\sum_{l=1}^{N}\pi_{kl}\frac{E_{k}}{\pi_{k}}\frac{E_{l}}{\pi_{l}} - \left(\sum_{k=1}^{N}E_{k}\right)^{2}</code>
+</p>
+
+<p>where
+</p>
+<p style="text-align: center;"><code class="reqn">E_{k} = y_{k}-\hat{y}_{k} \textrm{ and } \hat{y}_{k} = x_{k}B \textrm{ with } B = \left(\sum_{k=1}^{N}w_{k}x_{k}^{'}x_{k}\right)\sum_{k=1}^{N}w_{k}x_{k}^{'}y_{k}</code>
+</p>
+
+<p><code class="reqn">N</code> is the population size and <code class="reqn">\pi_{k}</code> and <code class="reqn">\pi_{kl}</code> are, respectively, the first and second order inclusion probabilities. <code class="reqn">w_{k}</code> is a weight associated to each element and it represents the inverse of the conditional variance (up to a scalar) of the underlying superpopulation model (see ‘Examples’).
+</p>
+<p>If <code>design=NULL</code>, the matrix of inclusion probabilities is obtained proportional to the matrix <code>p.inc</code>. If <code>design</code> is other than <code>NULL</code>, the formula for the variance is simplified in such a way that the inclusion probabilities matrix is no longer necessary. In particular:
+</p>
+
+<ul>
+<li>
+<p> if <code>design='srs'</code>, only the sample size <code>n</code> is required;
+</p>
+</li>
+<li>
+<p> if <code>design='stsi'</code>, both the stratum ID <code>stratum</code> and the sample size per stratum <code>n</code>, are required;
+</p>
+</li>
+<li>
+<p> if <code>design</code> is either <code>'pips'</code> or <code>'poi'</code>, the inclusion probabilities are obtained proportional to the values of <code>x_des</code>, corrected if necessary.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A numeric value giving the variance of the general regression estimator under the desired design.</p>
+
+
+<h3>References</h3>
+
+<p>Sarndal, C.E., Swensson, B. and Wretman, J. (1992). <em>Model Assisted Survey Sampling</em>. Springer.
+</p>
+<p>Rosen, B. (1997). <em>On Sampling with Probability Proportional to Size.</em> Journal of Statistical Planning and Inference <strong>62</strong>, 159-191.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>desvar</code> for the simultaneous calculation of the variance of six sampling strategies; <code>expgreg</code> for the expected variance of the GREG estimator under a superpopulation model; <code>expvar</code> for the simultaneous calculation of the expected variance of five sampling strategies under a superpopulation model; <code>optimApp</code> for an interactive application of <code>expgreg</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">f&lt;- function(x,b0,b1,b2,...) {b0+b1*x^b2}
+g&lt;- function(x,b3,...) {x^b3}
+x&lt;- 1 + sort( rgamma(5000, shape=4/9, scale=108) )
+y&lt;- simulatey(x,f,g,dist="gamma",b0=10,b1=1,b2=1,b3=1,rho=0.95)
+
+st1&lt;- optiallo(n=100,x=x,H=6)
+vargreg("y~0",design="srs",n=100)                         #SRS-HT
+vargreg("y~0",design="poi",n=100,x_des=x)                 #Poi-HT
+vargreg("y~0",design="stsi",n=st1$nh,stratum=st1$stratum) #STSI-HT
+vargreg("y~0",design="pips",n=100,x_des=x)                #PIPS-HT
+
+vargreg("y~x-1",design="srs",n=100,weights=1/x)          #SRS-ratio
+vargreg("y~x-1",design="poi",n=100,x_des=x,weights=1/x)  #Poi-ratio
+vargreg("y~x-1",design="stsi",n=st1$nh,
+        stratum=st1$stratum,weights=1/x)                 #STSI-ratio
+vargreg("y~x-1",design="pips",n=100,x_des=x,weights=1/x) #PIPS-ratio
+
+vargreg("y~x",design="srs",n=100)                         #SRS-reg
+vargreg("y~x",design="poi",n=100,x_des=x)                 #Poi-reg
+vargreg("y~x",design="stsi",n=st1$nh,stratum=st1$stratum) #STSI-reg
+vargreg("y~x",design="pips",n=100,x_des=x)                #PIPS-reg
+
+x2&lt;- as.factor(st1$stratum)
+vargreg("y~x2",design="srs",n=100)                          #SRS-pos
+vargreg("y~x2",design="poi",n=100,x_des=x)                  #Poi-pos
+vargreg("y~x2",design="stsi",n=st1$nh,stratum=st1$stratum)  #STSI-pos
+vargreg("y~x2",design="pips",n=100,x_des=x)                 #PIPS-pos
+
+y2&lt;- c(16,21,18)
+x2&lt;- y2
+inc.probs&lt;- matrix(c(8,5,4,5,7,3,4,3,6),3,3)
+vargreg("y2~0",n=2.1,inc.p=inc.probs)                 #HT
+vargreg("y2~x2-1",n=2.1,inc.p=inc.probs,weights=1/x2) #Ratio
+vargreg("y2~x2",n=2.1,inc.p=inc.probs)                #Regression
+x3&lt;- as.factor(c(1,2,2))
+vargreg("y2~x3",n=2.1,inc.p=inc.probs)                #Post.
+</code></pre>
+
+
+</div>

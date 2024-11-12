@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>L_I</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The family of one-sided cross-validation kernels <code class="reqn">L_I</code>.</h2>
+
+<h3>Description</h3>
+
+<p>The one-sided counterpart of the kernel <code>H_I</code>. See expressions (15) and (8) of Savchuk and Hart (2017).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">L_I(u, alpha, sigma)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>u</code></td>
+<td>
+<p>numerical vector of argument values,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>first parameter of the cross-validation kernel <code class="reqn">L_I</code>,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>second parameter of the cross-validation kernel <code class="reqn">L_I</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The family of the one-sided cross-validation kernels <code class="reqn">L_I</code> indexed by the parameters <code class="reqn">-\infty&lt;\alpha&lt;\infty</code> and <code class="reqn">\sigma&gt;0</code>. This family is used in the OSCV implementations in both regression context (see Savchuk and Hart (2017)) and density estimation context (see Savchuk (2017)). The special members of the family: </p>
+<ul>
+<li>
+<p> The <em> robust</em> kernel used in Savchuk and Hart (2017) and Savchuk (2017) is obtained by setting  <code class="reqn">\alpha=16.8954588</code> and <code class="reqn">\sigma=1.01</code>; </p>
+</li>
+<li>
+<p>  The one-sided Gaussian kernel <code class="reqn">L_G</code> is obtained by either setting <code class="reqn">\alpha=0</code> for any <code class="reqn">\sigma&gt;0</code> or by setting <code class="reqn">\sigma=1</code> for any <code class="reqn">-\infty&lt;\alpha&lt;\infty</code>.</p>
+</li>
+</ul>
+<p> The bandwidth selected by <code class="reqn">L_I</code> should be multiplied by a reascaling constant before it is used in computing the ultimate Gaussian (regression or density) estimate. In the case of a smooth (regression or density) function the rescaling constant is <code>C_smooth</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The value of <code class="reqn">L_I(u;\alpha,\sigma)</code>.
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Savchuk, O.Y., Hart, J.D. (2017). Fully robust one-sided cross-validation for regression functions. <em>Computational Statistics</em>, doi:10.1007/s00180-017-0713-7.
+</p>
+</li>
+<li>
+<p> Savchuk, O.Y. (2017). One-sided cross-validation for nonsmooth density functions, arXiv:1703.05157.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>H_I</code>, <code>C_smooth</code>, <code>OSCV_LI_dens</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Plotting the robust one-sided kernel from Savchuk and Hart (2017) with 
+# alpha=16.8954588 and sigma=1.01.
+u=seq(-1,5,len=1000)
+rker=L_I(u,16.8954588,1.01)
+Gker=L_I(u,0,1)
+dev.new()
+plot(u,rker,'l',lwd=3,cex.axis=1.7, cex.lab=1.7)
+title(main="One-sided kernels: L_I (robust) and L_G",cex=1.7)
+lines(u,Gker,lty="dashed",lwd=3)
+legend(0.5,2.5,lty=c("solid","dashed"),lwd=c(3,3),legend=c("L_I","L_G"),cex=1.7)
+legend(2,1.5,legend=c("alpha=16.8955","sigma=1.01"),cex=1.5)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

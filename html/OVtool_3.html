@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>es_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>es_plot
+</h2>
+
+<h3>Description</h3>
+
+<p>Plot of the effect size contours
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">es_plot(prep, col="bw")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>prep</code></td>
+<td>
+
+<p>Input from prep_for_plots
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+
+<p>If user wants color (a heat map layered with contours) or black and white (contours only). Specify the heat map with "color" or black and white "bw".
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list of class gg and ggplot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sud)
+sud = data.frame(sud[sample(1:nrow(sud),100),])
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(1, 10, by=.01), size=nrow(sud), replace = TRUE)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_6",
+                            model_covariates = c("sfs8p_0", "eps7p_0",
+                                                 "ada_0"),
+                            estimand = "ATE")
+
+ovtool_results = ov_sim(model_results=outcome_mod,
+                        plot_covariates=c("sfs8p_0", "ada_0"),
+                        es_grid = 0,
+                        rho_grid = 0,
+                        n_reps = 2,
+                        progress=FALSE)
+prep = prep_for_plots(ovtool_results, p_contours=.05)
+plot = es_plot(prep = prep)
+</code></pre>
+
+
+</div>

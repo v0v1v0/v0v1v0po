@@ -1,0 +1,267 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Optimal Classification Roll Call Scaling </h2>
+
+<h3>Description</h3>
+
+ 
+<p><code>oc</code> is the function that takes a <code>rollcall</code> object and estimates nonmetric
+Optimal Classification scores with them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oc(rcObject, dims=2, minvotes=20, lop=0.025, polarity, verbose=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rcObject</code></td>
+<td>
+<p> An object of class <code>rollcall</code>, from Simon Jackman's <code>pscl</code> package. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p> integer, number of dimensions to estimate. Must be nonnegative and cannot
+exceed 10 dimensions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minvotes</code></td>
+<td>
+<p> minimum number of votes a legislator must vote in for them to be analyzed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lop</code></td>
+<td>
+<p> A proportion between 0 and 1, the cut-off used for excluding lopsided
+votes, expressed as the proportion of non-missing votes on the minority side.
+The default, <code>lop=0.025</code>, eliminates votes where the minority is smaller
+than 2.5
+overwrites the <code>lopsided</code> attribute in the RC object inputted. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>polarity</code></td>
+<td>
+<p> a vector specifying the legislator in the data set who is conservative on
+each dimension. For example, <code>c(3,5)</code> indicates legislator 3 is conservative
+on dimension 1, and legislator 5 is conservative on dimension 2.
+Alternatively, polarity can be specified as a string for legislator names
+found in <code>legis.names</code> (ie. <code>c("Bush", "Gore")</code>) if every legislative name in
+the data set is unique.  Finally, polarity can be specified as a list (ie.
+<code>list("cd",c(4,5))</code>) where the first list item is a variable from the roll
+call object's <code>legis.data</code>, and the second list item is a conservative
+legislator on each dimension as specified by the first list item.
+<code>list("cd",c(4,5))</code> thus specifies the legislators with congressional
+district numbers of 4 and 5. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> logical, indicates whether bills and legislators to be deleted should be
+printed while data is being checked before ideal points are estimated.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>OCobject</code>, with elements as follows:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>legislators</code></td>
+<td>
+<p> data frame, containing all data from the old <code>perf25.dat</code> file about
+legislators. For a typical <code>ocObject</code> run with an ORD file read using
+<code>readKH</code>, it will contain the following:
+</p>
+
+<ul>
+<li>
+<p><code>state</code>State name of legislator.
+</p>
+</li>
+<li>
+<p><code>icpsrState</code>ICPSR state code of legislator.
+</p>
+</li>
+<li>
+<p><code>cd</code>Congressional District number.
+</p>
+</li>
+<li>
+<p><code>icpsrLegis</code>ICPSR code of legislator.
+</p>
+</li>
+<li>
+<p><code>party</code>Party of legislator.
+</p>
+</li>
+<li>
+<p><code>partyCode</code>ICPSR party code of legislator.
+</p>
+</li>
+<li>
+<p><code>rank</code>Rank ordering of legislator on the first dimension, from lowest to highest.
+</p>
+</li>
+<li>
+<p><code>correctYea</code>Predicted Yeas and Actual Yeas.
+</p>
+</li>
+<li>
+<p><code>wrongYea</code>Predicted Yeas and Actual Nays.
+</p>
+</li>
+<li>
+<p><code>wrongNay</code>Predicted Nays and Actual Yeas.
+</p>
+</li>
+<li>
+<p><code>correctNay</code>Predicted Nays and Actual Nays.
+</p>
+</li>
+<li>
+<p><code>volume</code>Measure of the legislator's polytope size.
+</p>
+</li>
+<li>
+<p><code>coord1D</code>First dimension OC score, with all subsequent dimensions
+numbered similarly.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rollcalls</code></td>
+<td>
+<p> data frame, containing all data from the old <code>perf21.dat</code> file about
+bills. For a typical <code>OCobject</code> object run with an ORD file read
+using <code>readKH</code>, it will contain the following:
+</p>
+
+<ul>
+<li>
+<p><code>correctYea</code>Predicted Yeas and Actual Yeas.
+</p>
+</li>
+<li>
+<p><code>wrongYea</code>Predicted Yeas and Actual Nays.
+</p>
+</li>
+<li>
+<p><code>wrongNay</code>Predicted Nays and Actual Yeas.
+</p>
+</li>
+<li>
+<p><code>correctNay</code>Predicted Nays and Actual Nays.
+</p>
+</li>
+<li>
+<p><code>PRE</code>Proportional Reduction In Error.
+</p>
+</li>
+<li>
+<p><code>normvector1D</code>First dimension of the unit normal vector, with all subsequent dimensions
+numbered similarly.
+</p>
+</li>
+<li>
+<p><code>midpoints</code>The projection of the normal vector needed to get the midpoint.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dimensions</code></td>
+<td>
+<p> integer, number of dimensions estimated. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eigenvalues</code></td>
+<td>
+<p> A vector of roll call eigenvalues. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fits</code></td>
+<td>
+<p> A vector of length 2 with the classic measures of fit, containing
+the percent correct classification and the APRE.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+ 
+<p>Keith Poole <a href="mailto:ktpoole@uga.edu">ktpoole@uga.edu</a>
+</p>
+<p>Jeffrey Lewis <a href="mailto:jblewis@ucla.edu">jblewis@ucla.edu</a>
+</p>
+<p>James Lo <a href="mailto:lojames@usc.edu">lojames@usc.edu</a>
+</p>
+<p>Royce Carroll <a href="mailto:rcarroll@rice.edu">rcarroll@rice.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Keith Poole. 2000. 'Non-parametric Unfolding of Binary Choice Data.' Political
+Analysis, 8(3):211-237
+</p>
+<p>Keith Poole. 2005. 'Spatial Models of Parliamentary Voting.' Cambridge:
+Cambridge University Press.
+</p>
+<p>Keith Poole. <a href="https://legacy.voteview.com/">https://legacy.voteview.com/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>'plot.OCobject','summary.OCobject'.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">    #This data file is the same as reading file using:
+    ## Not run: 
+    sen90 &lt;- readKH("https://voteview.com/static/data/out/votes/S090_votes.ord")
+    
+## End(Not run)
+    #All ORD files can be found on voteview.com
+    data(sen90)
+    summary(sen90)
+
+	#Small executable example
+	sen90.1d &lt;- oc(sen90,dims=1,polarity=c(7))
+
+    #Output file identical to one produced by command below
+    ## Not run: 
+    sen90oc &lt;- oc(sen90,dims=2,polarity=c(7,2))
+	
+## End(Not run)
+    data(sen90oc)
+    summary(sen90oc)
+    plot(sen90oc) 
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Accuracy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>accuracy of oblique decision random forest</h2>
+
+<h3>Description</h3>
+
+<p>Prediction accuracy of ODRF at different tree sizes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Accuracy(obj, data, newdata = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+<p>An object of class <code>ODRF</code>, as that created by the function <code>ODRF</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Training data of class <code>data.frame</code> in <code>ODRF</code> is used to calculate the OOB error.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>A data frame or matrix containing new data is used to calculate the test error. If it is missing, then it is replaced by <code>data</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>OOB error and test error, misclassification rate (MR) for classification or mean square error (MSE) for regression.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ODRF</code> <code>VarImp</code> <code>plot.Accuracy</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(breast_cancer)
+set.seed(221212)
+train &lt;- sample(1:569, 80)
+train_data &lt;- data.frame(breast_cancer[train, -1])
+test_data &lt;- data.frame(breast_cancer[-train, -1])
+
+forest &lt;- ODRF(diagnosis ~ ., train_data, split = "gini",
+parallel = FALSE, ntrees = 50)
+(error &lt;- Accuracy(forest, train_data, test_data))
+
+</code></pre>
+
+
+</div>

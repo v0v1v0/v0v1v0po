@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>residuals.data.frame</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the residuals given a forecast matrix and the observations.</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the residuals given a forecast matrix and the observations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'data.frame'
+residuals(object, y, ...)
+
+## S3 method for class 'matrix'
+residuals(object, y, ...)
+
+## S3 method for class 'list'
+residuals(object, y, ...)
+
+## S3 method for class 'forecastmodel_fit'
+residuals(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>The forecast matrix (a data.frame with kxx as column names, Yhat in returned fits).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>The observations vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Simply give the forecast matrix and the observations to get the residuals for each horizon in the forecast matrix.
+</p>
+<p>The residuals returned are synced with the observations (i.e. k0) and the columns are names "hxx" (not kxx) to indicate this and will not be lagged in <code>plot_ts()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If object is a matrix or data.frame: a data.frame with the residuals for each horizon.
+If object is a list: A list with residuals from each element.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># ?? list example
+# Just a vector to be forecasted
+n &lt;- 100
+D &lt;- data.list()
+D$t &lt;- 1:n
+D$y &lt;- c(filter(rnorm(n), 0.95, "recursive"))
+plot(D$y, type="l")
+
+# Generate a forecast matrix with a simple persistence model
+D$Yhat &lt;- persistence(D$y, kseq=1:4)
+
+# The residuals for each horizon
+D$Resid &lt;- residuals(D$Yhat, D$y)
+D$Resid
+# Note the names of the columns
+names(D$Resid)
+# which means that they are aligned with the observations and will not be lagged in the plot
+plot_ts(D, c("y|Yhat","Resid"))
+
+# Check that it matches (the forecasts is lagged in the plot_ts
+# such that the forecast for t+k is at t+k (and not t))
+plot_ts(D, c("y|Yhat","Resid"), xlim=c(1,10), kseq=1,
+        plotfun=function(x,...){lines(x,...,type="b")})
+
+# Just for fun, see the auto-correlation function of the persistence 
+acf(D$Resid$h1, na.action=na.pass)
+acf(D$Resid$h4, na.action=na.pass)
+
+</code></pre>
+
+
+</div>

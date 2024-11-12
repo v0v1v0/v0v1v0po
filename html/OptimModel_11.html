@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hill_model</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Four-parameter Hill model, gradient, starting values, and back-calculation functions</h2>
+
+<h3>Description</h3>
+
+<p> Four-parameter Hill model, gradient, starting values, and back-calculation functions.  </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> 
+        hill_model(theta, x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p> Vector of four parameters:  <code class="reqn">(e_{\min}, e_{\max}, \text{lec50}, m)</code>.  See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Vector of concentrations for the Hill model. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The four parameter Hill model is given by:
+</p>
+<p style="text-align: center;"><code class="reqn">y = e_{\min} + \frac{(e_{\max}-e_{\min})}{( 1 + \exp( m\log(x) - m*\text{lec50} ) )}\text{, where }</code>
+</p>
+
+<p><code class="reqn">e_{\min} = \min y</code> (minimum y value), <code class="reqn">e_{\max} = \max y</code> (maximum y value), <code class="reqn">\text{lec50} = \log( \text{ec5} )</code>, and m is the shape parameter.
+Note:  ec50 is defined such that hill.model(theta, ec50) = .5*( emin+ emax ).  
+</p>
+
+
+<h3>Value</h3>
+
+<p>Let N = length(x).  Then
+</p>
+
+<ul>
+<li>
+<p> hill_model(theta, x) returns a numeric vector of length N.
+</p>
+</li>
+<li>
+<p> attr(hill_model, "gradient")(theta, x) returns an N x 4 matrix.
+</p>
+</li>
+<li>
+<p> attr(hill_model, "start")(x, y) returns a numeric vector of length 4 with starting values for
+<code class="reqn">(e_{\min}, e_{\max}, \text{lec50}, m)</code>.
+</p>
+</li>
+<li>
+<p> attr(hill_model, "backsolve")(theta, y) returns a numeric vector of length=length(y).
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Steven Novick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optim_fit</code>, <code>rout_fitter</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123L)
+x = rep( c(0, 2^(-4:4)), each=4 )
+theta = c(0, 100, log(.5), 2)
+y = hill_model(theta, x)  + rnorm( length(x), mean=0, sd=1 )
+attr(hill_model, "gradient")(theta, x)
+attr(hill_model, "start")(x, y)
+attr(hill_model, "backsolve")(theta, 50)
+</code></pre>
+
+
+</div>

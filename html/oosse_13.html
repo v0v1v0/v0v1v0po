@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>R2oosse</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate out-of-sample R² and its standard error</h2>
+
+<h3>Description</h3>
+
+<p>Estimate out-of-sample R² and its standard error
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">R2oosse(
+  y,
+  x,
+  fitFun,
+  predFun,
+  methodMSE = c("CV", "bootstrap"),
+  methodCor = c("nonparametric", "jackknife"),
+  printTimeEstimate = TRUE,
+  nFolds = 10L,
+  nInnerFolds = nFolds - 1L,
+  cvReps = 200L,
+  nBootstraps = 200L,
+  nBootstrapsCor = 50L,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>The vector of outcome values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The matrix of predictors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitFun</code></td>
+<td>
+<p>The function for fitting the prediction model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predFun</code></td>
+<td>
+<p>The function for evaluating the prediction model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>methodMSE</code></td>
+<td>
+<p>The method to estimate the MSE, either "CV" for cross-validation or "bootstrap" for .632 bootstrap</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>methodCor</code></td>
+<td>
+<p>The method to estimate the correlation between MSE and MST estimators, either "nonparametric" or "jackknife"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printTimeEstimate</code></td>
+<td>
+<p>A boolean, should an estimate of the running time be printed?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nFolds</code></td>
+<td>
+<p>The number of outer folds for cross-validation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nInnerFolds</code></td>
+<td>
+<p>The number of inner cross-validation folds</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cvReps</code></td>
+<td>
+<p>The number of repeats for the cross-validation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nBootstraps</code></td>
+<td>
+<p>The number of .632 bootstraps</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nBootstrapsCor</code></td>
+<td>
+<p>The number of bootstraps to estimate the correlation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>passed onto fitFun and predFun</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Implements the calculation of the R² and its standard error by (Hawinkel et al. 2023).
+Multithreading is used as provided by the BiocParallel or doParallel packages,
+A rough estimate of expected computation time is printed when printTimeEstimate is true, but this is purely indicative.
+The options to estimate the mean squared error (MSE) are cross-validation (Bates et al. 2023) or the .632 bootstrap (Efron and Tibshirani 1997).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>R2</code></td>
+<td>
+<p>Estimate of the R² with standard error</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MSE</code></td>
+<td>
+<p>Estimate of the MSE with standard error</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MST</code></td>
+<td>
+<p>Estimate of the MST with standard error</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corMSEMST</code></td>
+<td>
+<p>Estimated correlation between MSE and MST estimators</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>params</code></td>
+<td>
+<p>List of parameters used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fullModel</code></td>
+<td>
+<p>The model trained on the entire dataset using fitFun</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The sample size of the training data</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Bates S, Hastie T, Tibshirani R (2023).
+“Cross-validation: What does it estimate and how well does it do it?”
+<em>J. Am. Stat. Assoc.</em>, <b>118</b>(ja), 1 - 22.
+<a href="https://doi.org/10.1080/01621459.2023.2197686">doi:10.1080/01621459.2023.2197686</a>, https://doi.org/10.1080/01621459.2023.2197686.<br><br> Efron B, Tibshirani R (1997).
+“Improvements on cross-validation: The 632+ bootstrap method.”
+<em>J. Am. Stat. Assoc.</em>, <b>92</b>(438), 548 - 560.<br><br> Hawinkel S, Waegeman W, Maere S (2023).
+“Out-of-sample R2: Estimation and inference.”
+<em>Am. Stat.</em>, 1 - 16.
+<a href="https://doi.org/10.1080/00031305.2023.2216252">doi:10.1080/00031305.2023.2216252</a>, https://doi.org/10.1080/00031305.2023.2216252.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>buildConfInt
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Brassica)
+#Linear model
+fitFunLM = function(y, x){lm.fit(y = y, x = cbind(1, x))}
+predFunLM = function(mod, x) {cbind(1,x) %*% mod$coef}
+y = Brassica$Pheno$Leaf_8_width
+R2lm = R2oosse(y = Brassica$Pheno$Leaf_8_width, x = Brassica$Expr[, 1:10],
+fitFun = fitFunLM, predFun = predFunLM, nFolds = 10)
+</code></pre>
+
+
+</div>

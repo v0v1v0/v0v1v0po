@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>efficiency</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Efficiency of optimal design</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the efficiency of the D, I, and A optimal designs
+compared to the random design.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">efficiency(
+  yyy,
+  ip,
+  uncert = FALSE,
+  ipop,
+  oc = "D",
+  L = NULL,
+  items = FALSE,
+  integ = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>yyy</code></td>
+<td>
+<p>a <code>optical</code> object; the output of a call <code>optical()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ip</code></td>
+<td>
+<p>matrix with item parameters for all items (number of rows determines number of items;
+number of columns is 2 (for 2PL; or 1PL with common a-parameter when NA in first column from second item)
+or 3 (for 3PL; or mixed 2/3-PL with NA for 2PL-items in third column)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uncert</code></td>
+<td>
+<p>if false (default), abilities are assumed to be known; if true,
+handling of uncertainties of Bjermo et al. (2021) is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ipop</code></td>
+<td>
+<p>matrix with item parameters for operational items
+(used if uncert=TRUE, only).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oc</code></td>
+<td>
+<p>optimality criterion: "D" (D-optimality, default),
+"I" (I-optimality with standard normal weight function), "A" (A-optimality).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>L-matrix (not used for D-optimality)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>items</code></td>
+<td>
+<p>if false (default), only total block efficiency is returned; if true,
+criteria for optimal and random and the efficiency
+for each item are reported in each column of output. Last column are then
+total criteria and efficiency. D-, L-, I-, A-optimality</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>integ</code></td>
+<td>
+<p>if true (default), integrate() is used for computation of partial
+information matrices; if false, Riemann rule is used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A numerical value is displayed.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optical</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># 2PL-models for two items; parameters (a, b)=(1.6, -1) and (1.6, 1), respectively
+ip &lt;- cbind(c(1.6, 1.6),c(-1, 1))
+
+yyy &lt;- optical(ip)
+
+# Efficiency of A-optimal design compared to random design
+efficiency(yyy, ip, oc="A")
+
+
+# Efficiency of D-optimal design compared to random design
+efficiency(yyy, ip, oc="D")
+
+# Efficiency of I-optimal design compared to random design
+efficiency(yyy, ip, oc="I")
+
+</code></pre>
+
+
+</div>

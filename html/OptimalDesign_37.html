@@ -1,0 +1,278 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_KL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+The KL exchange algorithm for efficient exact designs
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes an optimal or near-optimal exact design of experiments under the standard (size) constraint on the size of the experiment.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_KL(Fx, N, bin=FALSE, Phi.app=NULL, crit="D", h=NULL, w1=NULL, K=NULL,
+      L=NULL, rest.max=Inf, t.max=120, echo=TRUE, track=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> (where <code>m&gt;=2</code>) is the number of parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+
+<p>the size of the experiment (i.e., the required number of trials).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bin</code></td>
+<td>
+
+<p>Should each design point be used at most once?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phi.app</code></td>
+<td>
+
+<p>the optimal value of the corresponding approximate (relaxed) problem. If <code>Phi.app = NULL</code>, the value is pre-computed using <code>od_REX</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>the optimality criterion. Possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> nor <code>"c"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> or <code>"c"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w1</code></td>
+<td>
+
+<p>the initial design; it must have a non-singular information matrix and the size <code>sum(w1)</code> of <code>w1</code> must be <code>N</code>. The default option <code>w1 = NULL</code> prompts the algorithm to generate its own initial design using <code>od_PIN</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K, L</code></td>
+<td>
+
+<p>integer numbers (or <code>Inf</code>) representing parameters of the method. Various combinations of <code>K</code> and <code>L</code> lead to specific variants of the exchange method. If <code>K = NULL</code> or <code>L = NULL</code>, the algorithm automatically chooses appropriate values.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rest.max</code></td>
+<td>
+
+<p>the limit on the number of restarts of the method.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.max</code></td>
+<td>
+
+<p>the time limit for the computation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>track</code></td>
+<td>
+
+<p>Display the progress of the computation?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This implementation of the KL algorithm is loosely based on the ideas described in Atkinson et al. (2007); see the references.
+</p>
+<p>The tuning parameter <code>K</code> is the (upper bound on the) number of "least promising" support points of the current design, for which exchanges are attempted. The tuning parameter <code>L</code> is the (upper bound on the) number of "most promising" candidate design points for which exchanges are attempted.
+</p>
+<p>The implemented method is greedy in the sense that each improving exchange is immediately executed. If the algorithm stops in a local optimum before the allotted time elapsed, the computation is restarted with a random initial design (independent of <code>w1</code>). The final result is the best design found within all restarts.
+</p>
+<p>The performance of the function depends on the problem, on the chosen parameters, and on the hardware used, but in most cases the function can compute a nearly-optimal exact design for a problem with a ten thousands design points within seconds of computing time. Because this is only a heuristic, we advise the user to verify the quality of the resulting design by comparing it to the result of an alternative method (such as <code>od_RC</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Output is the list with components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the call of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.best</code></td>
+<td>
+<p>the best exact design found by the algorithm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supp</code></td>
+<td>
+<p>the indices of the support of w.best</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.supp</code></td>
+<td>
+<p>the weights of w.best on the support</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M.best</code></td>
+<td>
+<p>the information matrix of w.best</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phi.best</code></td>
+<td>
+<p>the criterion value of w.best</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eff.best</code></td>
+<td>
+<p>a lower bound on the eff of w.best with respect to <code>Phi.app</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.rest</code></td>
+<td>
+<p>number of restarts performed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.ex</code></td>
+<td>
+<p>the total number of exchanges performed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.act</code></td>
+<td>
+<p>the actual time of the computation</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Atkinson AC, Donev AN, Tobias RD (2007): Optimum experimental designs, with SAS. Vol. 34. Oxford: Oxford University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>od_RC</code>, <code>od_AQUA</code>, <code>od_MISOCP</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Compute a D-efficient exact design of size 27 on a unit square
+# for the full quadratic model with 2 discretized factors
+
+form.q &lt;- ~x1 + x2 + I(x1^2) + I(x2^2) + I(x1*x2)
+Fx &lt;- Fx_cube(form.q, n.levels = c(101, 101))
+w &lt;- od_KL(Fx, 13, t.max = 8)$w.best
+od_plot(Fx, w, Fx[, 2:3])
+od_print(Fx, w)
+
+
+# Compute an I-efficient exact design of size 100 without replications
+# on a discretized L1 ball for the full quadratic model with 3 factors
+
+form.q &lt;- ~x1 + x2 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + I(x1*x2) + I(x1*x3) + I(x2*x3)
+Fx &lt;- Fx_cube(form.q, n.levels = c(21, 21, 21))
+remove &lt;- (1:nrow(Fx))[apply(abs(Fx[, 2:4]), 1, sum) &gt; 1 + 1e-9]
+Fx &lt;- Fx[-remove, ]
+w &lt;- od_KL(Fx, 100, bin = TRUE, crit = "I", t.max = 3)$w.best
+od_plot(Fx, w, Fx[, 2:4])
+
+# Compute a D-efficient exact design of size 20 on a 4D cube
+# for the full quadratic model with 4 continuous factors
+
+# We can begin with a crude discretization and compute
+# an initial (already good) exact design using the KL algorithm
+
+form.q &lt;- ~x1 + x2 + x3 + x4 + I(x1^2) + I(x2^2) + I(x3^2) + I(x4^2) +
+           I(x1*x2) + I(x1*x3) + I(x1*x4) + I(x2*x3) + I(x2*x4) + I(x3*x4)
+Fx &lt;- Fx_cube(form.q, n.levels = rep(11, 4))
+w &lt;- od_KL(Fx, 20, t.max = 10)$w.best
+od_print(Fx, w)$design[, c(2:5, 16)]
+print(paste("D-criterion value:", optcrit(Fx, w)))
+
+# Now we can fine-tune the positions of the design points
+# using any general-purpose continuous optimization method
+
+F &lt;- Fx[rep(1:nrow(Fx), w), ]
+f &lt;- function(x) {c(1, x, x^2, x[1]*x[2], x[1]*x[3], x[1]*x[4],
+                               x[2]*x[3], x[2]*x[4], x[3]*x[4])}
+obj &lt;- function(x, M.red) {-log(det(M.red + f(x) %*% t(f(x))))}
+for (i in 1:10)
+  for (j in 1:20) {
+    F[j, ] &lt;- f(optim(F[j, 2:5], obj, M.red = t(F[-j, ]) %*% F[-j, ],
+              method = "L-BFGS-B", lower = rep(-1, 3), upper = rep(1, 3))$par)
+  }
+
+tune &lt;- od_pool(round(F, 4), rep(1, 20))
+Fx.tune &lt;- tune$X.unique; w.tune &lt;- tune$val.pooled
+od_print(Fx.tune, w.tune)$design[, c(2:5, 16)]
+print(paste("D-criterion value:", optcrit(Fx.tune, w.tune)))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

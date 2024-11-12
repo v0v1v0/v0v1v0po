@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>distanceNormalized</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate power-transformed Hartmann distances.</h2>
+
+<h3>Description</h3>
+
+<p>Hartmann (1992) suggested a transformation of Slater (1977) distances to make
+them independent from the size of a grid. Hartmann distances are supposed to
+yield stable cutoff values used to determine 'significance' of inter-element
+distances. It can be shown that Hartmann distances are still affected by grid
+parameters like size and the range of the rating scale used (Heckmann, 2012).
+The function <code>distanceNormalize</code> applies a Box-Cox (1964) transformation to the
+Hartmann distances in order to remove the skew of the Hartmann distance
+distribution. The normalized values show to have more stable cutoffs
+(quantiles) and better properties for comparison across grids of different
+size and scale range.  <br></p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">distanceNormalized(
+  x,
+  reps = 1000,
+  prob = NULL,
+  progress = TRUE,
+  distributions = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reps</code></td>
+<td>
+<p>Number of random grids to generate to produce
+sample distribution for Hartmann distances
+(default is <code>1000</code>). Note that
+a lot of samples may take a while to calculate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+<p>The probability of each rating value to occur.
+If <code>NULL</code> (default) the distribution is uniform.
+The number of values must match the length of the rating scale.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progress</code></td>
+<td>
+<p>Whether to show a progress bar during simulation
+(default is <code>TRUE</code>) (for <code>method="simulate"</code>).
+May be useful when the distribution is estimated on the basis
+of many quasis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distributions</code></td>
+<td>
+<p>Whether to additionally return the values of the simulated
+distributions (Slater etc.) The default is <code>FALSE</code>
+as it will quickly boost the object size.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>distanceNormalize</code> can also return
+the quantiles of the sample distribution and only the element distances
+considered 'significant' according to the quantiles defined.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix containing the standardized distances. <br>
+Further data is contained in the object's attributes: <br></p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>"arguments"</code></td>
+<td>
+<p>A list of several parameters
+including <code>mean</code> and <code>sd</code> of Slater distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>"quantiles"</code></td>
+<td>
+<p>Quantiles for Slater, Hartmann
+and power transformed distance distributions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>"distributions"</code></td>
+<td>
+<p>List with values of the
+simulated distributions, if <code>distributions=TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Calculations</h3>
+
+<p>The 'power transformed Hartmann distance' are calculated as
+follows: The simulated Hartmann distribution is added a constant as the
+Box-Cox transformation can only be applied to positive values. Then a range
+of values for lambda in the Box-Cox transformation (Box &amp; Cox, 1964) are
+tried out. The best lambda is the one maximizing the correlation of the
+quantiles with the standard normal distribution. The lambda value maximizing
+normality is used to transform Hartmann distances. As the resulting scale of
+the power transformation depends on lambda, the resulting values are
+z-transformed to derive a common scaling.
+</p>
+<p>The code for the calculation of the optimal lambda was written by Ioannis
+Kosmidis.
+</p>
+
+
+<h3>References</h3>
+
+<p>Box, G. E. P., &amp; Cox, D. R. (1964). An Analysis of Transformations.
+<em>Journal of the Royal Statistical Society. Series B (Methodological), 26</em>(2), 211-252.
+</p>
+<p>Hartmann, A. (1992). Element comparisons in repertory grid technique: Results and consequences of a Monte Carlo
+study. <em>International Journal of Personal Construct Psychology, 5</em>(1), 41-56.
+</p>
+<p>Heckmann, M. (2012). <em>Standardizing inter-element distances in grids - A revision of Hartmann's distances</em>, 11th
+Biennal Conference of the European Personal Construct Association (EPCA), Dublin, Ireland, Paper presentation,
+July 2012.
+</p>
+<p>Slater, P. (1977). <em>The measurement of intrapersonal space by Grid technique</em>. London: Wiley.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>distanceHartmann()</code> and <code>distanceSlater()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+### basics  ###
+
+distanceNormalized(bell2010)
+n &lt;- distanceNormalized(bell2010)
+n
+
+# printing options
+print(n)
+print(n, digits = 4)
+# 'significant' distances only
+print(n, p = c(.05, .95))
+
+# access cells of distance matrix
+n[1, 2]
+
+### advanced  ###
+
+# histogram of Slater distances and indifference region
+n &lt;- distanceNormalized(bell2010, distributions = TRUE)
+l &lt;- attr(n, "distributions")
+hist(l$bc, breaks = 100)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otp_connect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set up and confirm a connection to an OTP instance.</h2>
+
+<h3>Description</h3>
+
+<p>Defines the parameters required to connect to a router on an OTP instance and,
+if required, confirms that the instance and router are queryable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otp_connect(
+  hostname = "localhost",
+  router = "default",
+  port = 8080,
+  tz = Sys.timezone(),
+  ssl = FALSE,
+  check = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>hostname</code></td>
+<td>
+<p>A string, e.g. "ec2-34-217-73-26.us-west-2.compute.amazonaws.com".
+Optional, default is "localhost".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>router</code></td>
+<td>
+<p>A string, e.g. "UK2018". Optional, default is "default". Do not
+specify for OTPv2 which does not support named routers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>port</code></td>
+<td>
+<p>A positive integer. Optional, default is 8080.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tz</code></td>
+<td>
+<p>A string, containing the time zone of the router's graph. Optional.
+This should be a valid time zone (checked against vector returned by
+'OlsonNames()'). For example: "Europe/Berlin". Default is the timezone of the
+current system (obtained from <code>Sys.timezone()</code>). Using the default will
+be ok if the current system time zone is the same as the time zone of the OTP
+graph.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ssl</code></td>
+<td>
+<p>Logical, indicates whether to use https. Optional, default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check</code></td>
+<td>
+<p>Deprecated and has no effect.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns S3 object of class otpconnect if reachable.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+otpcon &lt;- otpr_connect()
+otpcon &lt;- otpr_connect(router = "UK2018",
+                      ssl = TRUE)
+otpcon &lt;- otpr_connect(hostname = "ec2.us-west-2.compute.amazonaws.com",
+                      router = "UK2018",
+                      port = 8888,
+                      ssl = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

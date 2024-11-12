@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>importGridstat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import Gridstat data files.</h2>
+
+<h3>Description</h3>
+
+<p>Reads the file format that is used by the latest version of the grid
+program gridstat (Bell, 1998).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">importGridstat(file, dir = NULL, min = NULL, max = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>Filename including path if file is not in current working
+directory. File can also be a complete URL. The fileformat
+is <code>.dat</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dir</code></td>
+<td>
+<p>Alternative way to supply the directory where the file is located
+(default <code>NULL</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min</code></td>
+<td>
+<p>Optional argument (<code>numeric</code>, default <code>NULL</code>)
+for minimum rating value in grid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max</code></td>
+<td>
+<p>Optional argument (<code>numeric</code>, default <code>NULL</code>)
+for maximum rating value in grid.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A single <code>repgrid</code> object in case one file and a list of <code>repgrid</code> objects in case multiple files are
+imported.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Note that the gridstat data format does not contain explicit information about the range of the rating scale
+used (minimum and maximum). By default the range is inferred by scanning the ratings and picking the minimal and
+maximal values as rating range. You can set the minimal and maximal value by hand using the <code>min</code> and <code>max</code>
+arguments or by using the <code>setScale()</code> function. Note that if the rating range is not set, it may cause several
+functions to not work properly. A warning will be issued if the range is not set explicitly when using the
+importing function.
+</p>
+<p>The function only reads data from the latest GridStat version. The latest version allows the separation of the
+left and right pole by using on of the following symbols <code style="white-space: pre;">⁠/:-⁠</code> (hyphen, colon and dash). Older versions may not
+separate the left and right pole. This will cause all labels to be assigned to the left pole only when importing.
+You may fix this by simply entering one of the construct separator symbols into the GridStat file between each
+left and right construct pole.
+</p>
+<p>The third line of a GridStat file may contain a no labels statement (i.e. a line containing any string of 'NOLA',
+'NO L', 'NoLa', 'No L', 'Nola', 'No l', 'nola' or 'no l'). In this case only ratings are supplied, hence, default
+names are assigned to elements and constructs.
+</p>
+
+
+<h3>References</h3>
+
+<p>Bell, R. C. (1998)  GRIDSTAT: A program for analyzing the data of a repertory grid. Melbourne: Author.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>importGridcor()</code>, <code>importGridstat()</code>, <code>importScivesco()</code>, <code>importGridsuite()</code>, <code>importTxt()</code>,
+<code>importExcel()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# supposing that the data file gridstat.dat is in the current working directory
+file &lt;- "gridstat.dat"
+rg &lt;- importGridstat(file)
+
+# specifying a directory (example)
+dir &lt;- "/Users/markheckmann/data"
+rg &lt;- importGridstat(file, dir)
+
+# using a full path (example)
+rg &lt;- importGridstat("/Users/markheckmann/data/gridstat.dat")
+
+# setting rating scale range
+rg &lt;- importGridstat(file, dir, min = 1, max = 6)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

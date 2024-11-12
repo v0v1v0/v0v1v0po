@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulatey</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate the Study Variable</h2>
+
+<h3>Description</h3>
+
+<p>Simulate values for the study variable based on the auxiliary variable <code>x</code> and an assumed superpopulation model.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulatey(x, f, g, dist = "normal", rho = NULL, Sigma = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector giving the values of the auxiliary variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>the name of the function defining the desired trend (see ‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>the name of the function defining the desired spread (see ‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist</code></td>
+<td>
+<p>the desired distribution of the study variable conditioned on the auxiliary variable. Either 'normal' or 'gamma' (see ‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>a number giving the absolute value of the desired correlation between <code>x</code> and the vector to be simulated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Sigma</code></td>
+<td>
+<p>a nonnegative number giving the scale of the spread term in the superpopulation model. Ignored if <code>rho</code> is given (see ‘Details’).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>f</code> and <code>g</code> (see ‘Details’).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The values of the study variable <code>y</code> are simulated using a superpopulation model defined as:
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{k}=f(x_{k})+\epsilon_{k}</code>
+</p>
+
+<p>with <code class="reqn">E(\epsilon_{k}) = 0</code>, <code class="reqn">V(\epsilon_{k}) = \sigma^{2}g^{2}(x_{k})</code> and <code class="reqn">Cov(\epsilon_{k},\epsilon_{l}) = 0</code> if <code class="reqn">k\ne l</code>. Also <code class="reqn">Y_{k}|f(x_{k})</code> is distributed according to <code>dist</code>.
+</p>
+<p><code>f</code> and <code>g</code> should return a vector of the same length of <code>x</code>. Their first argument should be <code>x</code> and they should not share the name of any other argument. Both <code>f</code> and <code>g</code> should have the ... argument (see ‘Examples’).
+</p>
+<p>Note that <code>Sigma</code> defines the degree of association between <code>x</code> and <code>y</code>: the larger <code>Sigma</code>, the smaller the correlation, <code>rho</code>, and vice versa. For this reason only one of them should be defined. If both are defined, <code>Sigma</code> will be ignored.
+</p>
+<p>Depending on the trend function <code>f</code>, some correlations cannot be reached. In those cases, <code>Sigma</code> will automatically be set to zero, <code>dist</code> will automatically be set to 'normal' and <code>rho</code> will be ignored (see ‘Examples’).
+</p>
+<p>If the trend term takes negative values, <code>dist</code> will be automatically set to 'normal'.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector giving the simulated value of <code>y</code> associated to each value in <code>x</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">f&lt;- function(x,b0,b1,b2,...) {b0+b1*x^b2}
+g&lt;- function(x,b3,...) {x^b3}
+
+x&lt;- 1 + sort( rgamma(5000, shape=4/9, scale=108) )
+
+#Linear trend and homocedasticity
+y1&lt;- simulatey(x,f,g,dist="normal",b0=0,b1=1,b2=1,b3=0,rho=0.90)
+y2&lt;- simulatey(x,f,g,dist="gamma",b0=0,b1=1,b2=1,b3=0,rho=0.90)
+
+#Linear trend and heterocedasticity
+y3&lt;- simulatey(x,f,g,dist="normal",b0=0,b1=1,b2=1,b3=1,rho=0.90)
+y4&lt;- simulatey(x,f,g,dist="gamma",b0=0,b1=1,b2=1,b3=1,rho=0.90)
+
+#Quadratic trend and homocedasticity
+y5&lt;- simulatey(x,f,g,dist="gamma",b0=0,b1=1,b2=2,b3=0,rho=0.80)
+
+#Correlation of minus one
+y6&lt;- simulatey(x,f,g,dist="normal",b0=0,b1=-1,b2=1,b3=0,rho=1)
+
+#Desired correlation cannot be attained
+y7&lt;- simulatey(x,f,g,dist="normal",b0=0,b1=1,b2=3,b3=0,rho=0.99)
+
+#Negative expectation not possible under gamma distribution
+y8&lt;- simulatey(x,f,g,dist="gamma",b0=0,b1=-1,b2=1,b3=0,rho=1) 
+
+#Conditional variance of zero not possible under gamma distribution
+y9&lt;- simulatey(x,f,g,dist="gamma",b0=0,b1=1,b2=3,b3=0,rho=0.99)
+</code></pre>
+
+
+</div>

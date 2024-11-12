@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>distsummin</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>distsummin en el paquete orloca</h2>
+
+<h3>Description</h3>
+
+<p>Resuelve el problema de localización min-sum para un objeto dado de la clase <code>loca.p</code>.
+</p>
+
+
+<h3>Uso</h3>
+
+<p>distsummin(o, x=0, y=0, lp=numeric(0), max.iter=100, eps=1.e-3, 
+verbose=FALSE, algorithm="Weiszfeld", ...)
+</p>
+
+
+<h3>Argumentos</h3>
+
+
+<dl>
+<dt>o</dt>
+<dd>
+<p>Un objeto de la clase <code>loca.p</code>.</p>
+</dd>
+<dt>x</dt>
+<dd>
+<p>La coordenada x del punto inicial.</p>
+</dd>
+<dt>y</dt>
+<dd>
+<p>La coordenada y del punto inicial.</p>
+</dd>
+<dt>lp</dt>
+<dd>
+<p>Si se proporciona, la norma <code class="reqn">l_p</code> se usa en vez de la norma euclídea.</p>
+</dd>
+<dt>max.iter</dt>
+<dd>
+<p>Número máximo de iteraciones permitido.</p>
+</dd>
+<dt>eps</dt>
+<dd>
+<p>La norma del gradiente en la regla de parada.</p>
+</dd>
+<dt>verbose</dt>
+<dd>
+<p>Si es TRUE la función proporciona salida
+detallada.</p>
+</dd>
+<dt>algorithm</dt>
+<dd>
+<p>El algoritmo a utilizar. En esta
+versión del paquete los valores
+válidos son: "gradient" o "g" para el
+método basado en gradiente, "search" o "s"
+para el método de búsqueda local,
+"ucminf" o "u" para usar optimizar usando ucminf del paquete ucminf,
+y "weiszfeld" o "w" para el método de Weiszfeld o
+cualquier otro método válido para la
+función optim, ahora "Nelder-Mead", "BFGS", "CG",
+"L-BFGS-B", "SANN". "weiszfeld" es el valor por defecto.</p>
+</dd>
+<dt>...</dt>
+<dd>
+<p>Otras opciones para los algoritmos de optimización.</p>
+</dd>
+</dl>
+<h3>Detalles</h3>
+
+<p>Los algoritmos de Weiszfeld y gradiente incluyen un test de
+optimalidad para los puntos de demanda. El algoritmo de Weiszfeld
+también implementa un test de convergencia lenta y un
+procedimiento acelerador.
+</p>
+<p>Si <code class="reqn">p &lt; 1</code> entonces <code class="reqn">l_p</code> no es una norma, por tanto,
+sólo <code class="reqn">p \ge 1</code> es válido.
+</p>
+<p><code class="reqn">l_2</code> es la norma euclídea, cuando <code class="reqn">p=2</code>
+<code>distsumlpmin</code> es igual a <code>distsuml2min</code>. Pero los
+cálculos involucrados en la primera forma son mucho
+mayores.
+</p>
+<p>max.iter en el algoritmo SANN es el número de
+evaluaciones de la función objetivo, por lo que este
+método requiere de valores grandes de max.iter para
+alcanzar el óptimo.
+</p>
+<p>La función zsummin está marcada como obsoleta
+y será borrada de nuevas versiones del paquete.
+</p>
+
+
+<h3>Valor</h3>
+
+<p><code>distsummin</code> devuelve un vector con las coordenadas del punto solución.
+</p>
+
+
+<h3>Véase también</h3>
+
+<p><code>Véase</code>Vease también <code>orloca.es-package</code>, <code>loca.p</code> y <code>distsum</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Un objeto loca.p sin pesos
+loca &lt;- new("loca.p", x = c(-1, 1, 1, -1), y = c(-1, -1, 1, 1))
+
+# Calcula el minimo
+sol &lt;- distsummin(loca)
+
+# Muestra el resultado
+sol
+
+# Evaluacion de la funcion objetivo en el punto solucion
+distsum(loca, sol[1], sol[2])
+</code></pre>
+
+
+</div>

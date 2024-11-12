@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>buildPopup</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build a Complex Popup for a Leaflet Map</h2>
+
+<h3>Description</h3>
+
+<p>Group a dataframe together by latitude/longitude columns and create a HTML
+popup with user-defined columns. By default, the unique values of character
+columns are collapsed into comma-separated lists, numeric columns are
+averaged, and date columns are presented as a range. This function returns
+the input dataframe appended with a "popup" column, which can then be used in
+the <code>popup</code> argument of a function like <code>polarMap()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">buildPopup(
+  data,
+  columns,
+  latitude = NULL,
+  longitude = NULL,
+  type = NULL,
+  fun.character = function(x) paste(unique(x), collapse = ", "),
+  fun.numeric = function(x) signif(mean(x, na.rm = TRUE), 3),
+  fun.dttm = function(x) paste(lubridate::floor_date(range(x, na.rm = TRUE), "day"),
+    collapse = " to "),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p><em>Input data table with geo-spatial information.</em>
+</p>
+<p><strong>required</strong>
+</p>
+<p>A data frame containing latitude and longitude information that will go on
+to be used in a function such as <code>polarMap()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columns</code></td>
+<td>
+<p><em>A character vector of column names to include in the popup.</em>
+</p>
+<p><strong>required</strong>
+</p>
+<p>Summaries of the selected columns will appear in the popup. If a named
+vector is provided, the names of the vector will be used in place of the
+raw column names. See the Examples for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latitude, longitude</code></td>
+<td>
+<p><em>The decimal latitude(Y)/longitude(X).</em>
+</p>
+<p><em>default:</em> <code>NULL</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Column names representing the decimal latitude and longitude (or other Y/X
+coordinate if using a different <code>crs</code>). If not provided, will be
+automatically inferred from data by looking for a column named
+"lat"/"latitude" or "lon"/"lng"/"long"/"longitude" (case-insensitively).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><em>A column to be passed to the <code>type</code> argument of another
+function.</em>
+</p>
+<p><em>default:</em> <code>NULL</code>
+</p>
+<p>Column which will be used for the <code>type</code> argument of other mapping
+functions. This only needs to be used if <code>type</code> is going to be used in
+<code>polarMap()</code> or another similar function, and you'd expect different values
+for the different map layers (for example, if you are calculating a mean
+pollutant concentration).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun.character</code></td>
+<td>
+<p><em>A function to summarise character and factor columns.</em>
+</p>
+<p><em>default:</em> <code>function(x) paste(unique(x), collapse = ", ")</code>
+</p>
+<p>The default collapses unique values into a comma-separated list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun.numeric</code></td>
+<td>
+<p><em>A function to summarise numeric columns.</em>
+</p>
+<p><em>default:</em> <code>function(x) signif(mean(x, na.rm = TRUE), 3)</code>
+</p>
+<p>The default takes the mean to three significant figures. Other numeric
+summaries may be of interest, such as the maximum, minimum, standard
+deviation, and so on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun.dttm</code></td>
+<td>
+<p><em>A function to summarise date columns.</em>
+</p>
+<p><em>default:</em> <code>function(x) paste(lubridate::floor_date(range(x, na.rm = TRUE), "day"), collapse = " to ")</code>
+</p>
+<p>The default presents the date as a range. Other statistics of interest
+could be the start or end of the dates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p><strong>Not currently used.</strong></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>tibble::tibble()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+buildPopup(
+  data = polar_data,
+  columns = c(
+    "Site" = "site",
+    "Site Type" = "site_type",
+    "Date Range" = "date"
+  )
+) %&gt;%
+  polarMap("nox", popup = "popup")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

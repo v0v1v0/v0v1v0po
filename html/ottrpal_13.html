@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_question</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check Quiz Question Set Up</h2>
+
+<h3>Description</h3>
+
+<p>Check quiz question set up to see if it is compliant with Leanpub and Coursera needs.
+Based off of [Markua guide](https://leanpub.com/markua/read#leanpub-auto-quizzes-and-exercises).
+Is called by [ottrpal::check_all_questions] and run for each question.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check_question(
+  question_df,
+  quiz_name = NA,
+  verbose = TRUE,
+  ignore_coursera = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>question_df</code></td>
+<td>
+<p>Which is an individual question's data frame after being parse from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiz_name</code></td>
+<td>
+<p>The name of the quiz the question is from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Whether progress messages should be given</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore_coursera</code></td>
+<td>
+<p>Coursera doesn't like '!' or ':' in the quizzes. Do not convert quizzes to coursera and ignore ! and : in question prompts that would not be allowed in Leanpub quizzes when converted to a Coursera quiz. Default is to ignore Coursera compatibility</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of messages/warnings regarding each check for the given question.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Use readLines to read in a quiz
+quiz_path &lt;- good_quiz_path()
+quiz_lines &lt;- readLines(quiz_path)
+
+# Use group_split to get the questions
+questions_df &lt;- parse_quiz(quiz_lines)$data %&gt;%
+  dplyr::group_split(question)
+
+good_quiz_checks &lt;- check_question(questions_df[[2]])
+
+## End(Not run)
+</code></pre>
+
+
+</div>

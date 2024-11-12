@@ -1,0 +1,475 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otrimlesimg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adequacy approach for number of clusters for OTRIMLE</h2>
+
+<h3>Description</h3>
+
+<p><code>otrimlesimg</code> computes Optimally Tuned Robust Improper Maximum
+Likelihood Clustering
+(OTRIMLE), see <code>otrimle</code> for a range of values of the
+number of clusters, and also for artificial datasets simulated from
+the model parameters estimated on the original data. The
+<code>summary</code>-methods present and evaluate the results so that a
+smallest adequate number of clusters can be found as the smallest one
+for which the value of the density-based cluster quality statistics Q
+on the original data 
+is compatible with its distribution on the artificial datasets with
+the same number of clusters, see Hennig and Coretto 2021 for details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otrimlesimg(dataset, G=1:6, multicore=TRUE,
+ncores=detectCores(logical=FALSE)-1, erc=20, beta0=0, simruns=20,
+sim.est.logicd=FALSE, 
+monitor=1)
+
+## S3 method for class 'otrimlesimgdens'
+summary(object, noisepenalty=0.05 , sdcutoff=2
+, ...)
+
+## S3 method for class 'summary.otrimlesimgdens'
+print(x, ...)
+
+## S3 method for class 'summary.otrimlesimgdens'
+plot(x , plot="criterion", penx=NULL,
+peny=NULL, pencex=1, cutoff=TRUE, ylim=NULL, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataset</code></td>
+<td>
+<p>something that can be coerced into an
+observations times variables matrix. The dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+<p>vector of integers (normally starting from 1). Numbers of
+clusters to be considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multicore</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, parallel computing is used
+through the function <code>mclapply</code> from package
+<code>parallel</code>; read warnings there if you intend to use this; it
+won't work on Windows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p>integer. Number of cores for parallelisation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>erc</code></td>
+<td>
+<p>A number larger or equal than one specifying the maximum
+allowed ratio between within-cluster covariance matrix
+eigenvalues. See <code>otrimle</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta0</code></td>
+<td>
+<p>A non-negative constant, penalty term for noise, to be
+passed as <code>beta</code> to  <code>otrimle</code>, see documentation
+there.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simruns</code></td>
+<td>
+<p>integer. Number of replicate artificial datasets drawn
+from each model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sim.est.logicd</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, the logarithm of the improper
+constant density <code>logicd</code>, see <code>otrimle</code>, is
+re-estimated when running <code>otrimle</code> on the artificial
+datasets. Otherwise the value estimated on the original data is
+taken as fixed. <code>TRUE</code> requires much longer computation time,
+but can be seen as generating more realistic variation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>monitor</code></td>
+<td>
+<p>0 or 1. If 1, progress messages are printed on screen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noisepenalty</code></td>
+<td>
+<p>number between 0 and 1. <code>p_0</code> in Hennig and
+Coretto (2021); normally small. The method prefers to treat a
+proportion of <code>&lt;=noisepenalty</code> of points as outliers to adding a
+cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sdcutoff</code></td>
+<td>
+<p>numerical. <code>c</code> in formula (7) in Hennig and
+Coretto (2021). A clustering is treated as adequate if its value of
+the density-based cluster quality measure Q calibrated (i.e.,
+mean/sd-standardised) by the values on the artificial datasets
+generated from the estimated model is <code>&lt;=sdcutoff</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p><code>"criterion"</code> or <code>"noise"</code>, see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penx</code></td>
+<td>
+<p><code>FALSE, NULL</code>, or numerical. x-coordinate from where
+the simplicity ordering of clustering is given (as test in the
+plot). If <code>FALSE</code>, this is not added to the plot. If
+<code>NULL</code> a default guess is made for a good position (which
+doesn't always work well).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>peny</code></td>
+<td>
+<p><code>NULL</code>, or numerical. x-coordinate from where
+the simplicity ordering of clustering is given (as test in the
+plot). If
+<code>NULL</code>, a default guess is made for a good position (which
+doesn't always work well).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pencex</code></td>
+<td>
+<p>numeric. Magnification factor (parameter <code>cex</code> to
+be passed on to <code>legend</code>) for simplicity ordering, see
+parameter <code>penx</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutoff</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, the <code>"criterion"</code>-plot
+shows the cutoff value below which numbers of clusters are adequate,
+see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>vector of two numericals, range of the y-axis to be passed
+on to <code>plot</code>. If <code>NULL</code>, the range is chosen
+automatically (but can be different from the <code>plot</code>
+default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>'otrimlesimgdens'</code> obtained
+from calling <code>otrimlesimg</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class <code>'summary.otrimlesimgdens'</code> obtained
+from calling <code>summary</code> function over an object of class 
+<code>'otrimlesimgdens'</code> obtained from calling <code>otrimlesimg</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>optional parameters to be passed on to <code>plot</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The method is fully described in Hennig and Coretto
+(2021). The required tuning constants for choosing an optimal number
+of clusters, the smallest percentage of additional noise that the user
+is willing to trade in for adding another cluster (<code>p_0</code> in the
+paper, <code>noisepenalty</code> here) and the critical value (<code>c</code> in
+the paper, <code>sdcutoff</code> here) for adequacy of the standardised
+density based quality measure Q are provided to the summary function,
+which is required to choose the best (simplest adequate) number of
+clusters.
+</p>
+<p>The plot function <code>plot.summary.otrimlesimgdens</code> can produce two
+plots. If <code>plot="criterion"</code>, the standardised density-based
+cluster quality
+measure Q is plotted against the number of clusters. The values for
+the simulated artificial datasets are points, the values for the
+original dataset are given as line type. If <code>cutoff="TRUE"</code>, the
+critical values (see above) are added as red crosses; a number of
+clusters is adequate if the value of the original data is below the
+critical value, i.e., Q is not significantly larger than for the
+artificial datasets generated from the fitted model. Using
+<code>penx</code>, the ordered numbers of clusters from the simplest to the
+least simple can also be indicated in the plot, where simplicitly is
+defined as the number of clusters plus the estimated noise proportion
+divided by <code>noisepenalty</code>, see above. The chosen number of
+clusters is the simplest adequate one, meaning that a low number of
+clusters and a low noise proportion are preferred.
+</p>
+<p>If <code>plot="noise"</code>, the noise proportion (black) and the
+simplicity (red) are plotted against the numnber of clusters.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>otrimlesimg</code> returns a list of type <code>"otrimlesimgdens"</code>
+containing the components <code>result, simresult, simruns</code>.   
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>output object of <code>otrimleg</code> (list of results on
+original data) run with the parameters provided to
+<code>otrimlesimg</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simresult</code></td>
+<td>
+<p>list of length <code>simruns</code> of output objects of
+<code>otrimleg</code> for all the simulated artificial datasets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simruns</code></td>
+<td>
+<p>input parameter <code>simruns</code>.</p>
+</td>
+</tr>
+</table>
+<p><code>summary.otrimlesimgdens</code> returns a list of type
+<code>"summary.otrimlesimgdens"</code> with components <code>G, simeval,
+    ssimruns, npr, nprdiff, logicd, denscrit, peng,
+    penorder, bestG, sdcutoff, bestresult,
+    cluster</code>. <code>simruns</code> 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+<p><code>otrmlesimg</code> input parameter <code>G</code> (numbers of
+clusters).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simeval</code></td>
+<td>
+<p>list with components <code>denscrit,
+      meandens, sddens, standens, errors</code>, defined below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ssimruns</code></td>
+<td>
+<p><code>otrmlesimg</code> input parameter <code>simruns</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>npr</code></td>
+<td>
+<p>vector of estimated noise proportions on the original data
+for all numbers of clusters, <code>exproportion[1]</code> from
+<code>otrimle</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nprdiff</code></td>
+<td>
+<p>vector for all numbers of clusters of differences
+between estimated smallest cluster proportion and noise proportion
+on the original data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logicd</code></td>
+<td>
+<p>vector of logs of improper constant density values on
+the original data for all numbers of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>denscrit</code></td>
+<td>
+<p>vector over all numbers of clusters of density-based
+cluster quality statistics Q
+on original data as provided by the <code>measure</code>-component of
+<code>kerndensmeasure</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>peng</code></td>
+<td>
+<p>vector of simplicity values (see Details) over all numbers
+of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penorder</code></td>
+<td>
+<p>simplicity order of number of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bestG</code></td>
+<td>
+<p>best (i.e., most simple adequate) number of clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sdcutoff</code></td>
+<td>
+<p>input parameter <code>sdcutoff</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>output of <code>otrimle</code> for the best number of
+clusters <code>bestG</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>clustering vector for the best number of
+clusters <code>bestG</code>. <code>0</code> corresponds to noise/outliers.</p>
+</td>
+</tr>
+</table>
+<p>Components of <code>summary.otrimlesimgdens</code> output component
+<code>simeval</code>:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>denscritmatrix</code></td>
+<td>
+<p>maximum number of clusters times <code>simruns</code> matrix
+of <code>denscrit</code>-vectors for all clusterings on simulated data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meandens</code></td>
+<td>
+<p>vector over numbers of clusters of robust estimator of
+the mean of <code>denscrit</code> over simulated datasets, computed by
+<code>scaleTau2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sddens</code></td>
+<td>
+<p>vector over numbers of clusters of robust estimator of
+the standard deviation of <code>denscrit</code> over simulated datasets,
+computed by <code>scaleTau2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>standens</code></td>
+<td>
+<p>vector over numbers of clusters of <code>denscrit</code> of
+the original data standardised by <code>meandens</code> and
+<code>sddens</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>errors</code></td>
+<td>
+<p>vector over numbers of clusters of numbers of times that
+<code>otrimle led to an error.</code>
+</p>
+<p><code>plot.summary.otrimlesimgdens</code> will return the output
+of <code>par()</code> before anything was changed by the plot
+function. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Christian Hennig
+<a href="mailto:christian.hennig@unibo.it">christian.hennig@unibo.it</a>
+<a href="https://www.unibo.it/sitoweb/christian.hennig/en/">https://www.unibo.it/sitoweb/christian.hennig/en/</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Coretto, P.  and C. Hennig (2016).  Robust improper maximum
+likelihood: tuning, computation, and a comparison with other
+methods for robust Gaussian clustering.  <em>Journal of the American
+Statistical Association</em>, Vol. 111(516), pp. 1648-1659.
+doi: <a href="https://doi.org/10.1080/01621459.2015.1100996">10.1080/01621459.2015.1100996</a>
+</p>
+<p>P. Coretto and C. Hennig (2017).  Consistency, breakdown
+robustness, and algorithms for robust improper maximum likelihood
+clustering. <em>Journal of Machine Learning Research</em>, Vol. 18(142),
+pp. 1-39.  <a href="https://jmlr.org/papers/v18/16-382.html">https://jmlr.org/papers/v18/16-382.html</a>
+</p>
+<p>Hennig, C. and P.Coretto (2021). An adequacy approach for deciding the
+number of clusters for OTRIMLE robust Gaussian mixture based
+clustering. To appear in <em>Australian and New Zealand Journal of
+Statistics</em>, <a href="https://arxiv.org/abs/2009.00921">https://arxiv.org/abs/2009.00921</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>otrimle</code>, <code>rimle</code>, <code>otrimleg</code>,
+<code>kerndensmeasure</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## otrimlesimg is computer intensive, so only a small data subset
+## is used for speed.
+data(banknote)
+selectdata &lt;- c(1:30,101:110,117:136,160:161)
+set.seed(555566)
+x &lt;- banknote[selectdata,5:7]
+   
+## simruns=2 chosen for speed. This is not recommended in practice. 
+obanknote &lt;- otrimlesimg(x,G=1:2,multicore=FALSE,simruns=2,monitor=0)
+sobanknote &lt;- summary(obanknote)
+print(sobanknote)
+plot(sobanknote,plot="criterion",penx=1.4)
+plot(sobanknote,plot="noise",penx=1.4)
+plot(x,col=sobanknote$cluster+1,pch=c("N","1","2")[sobanknote$cluster+1])
+</code></pre>
+
+
+</div>

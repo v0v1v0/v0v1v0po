@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anomalous_networks</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Identifies anomalous networks from a series of temporal networks.</h2>
+
+<h3>Description</h3>
+
+<p>This function identifies anomalous networks from a series of temporal networks. It uses graph
+theoretic features to transform networks to a feature space. This function has parameters for
+feature computation, scaling, robust PCA and anomaly detection procedures.   ADD MORE DESCRIPTION.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anomalous_networks(
+  networks,
+  alpha = 0.05,
+  dd = 2,
+  trim = 0.005,
+  na_action = NULL,
+  vert_attr = FALSE,
+  attr_name = NULL,
+  attr_mat = NULL,
+  fast = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>networks</code></td>
+<td>
+<p>The input series of temporal networks given in a list with each network denoted
+by its adjacency matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>An anomaly detection parameter. The level of significance for the anomaly detection
+algorithm lookout. Default is 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dd</code></td>
+<td>
+<p>A robust PCA parameter. The number of reduced dimensions in robust PCA. Default is 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>A scaling parameter. The percentage used to compute trimmed mean and trimmed standard
+deviation. Default is 0.5 percent.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na_action</code></td>
+<td>
+<p>The action for NA valued features.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vert_attr</code></td>
+<td>
+<p>A feature computation parameter. If <code>TRUE</code> the network nodes/vertices have
+attributes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attr_name</code></td>
+<td>
+<p>A feature computation parameter. The name of the network vertex attribute. Only a
+single attribute can be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attr_mat</code></td>
+<td>
+<p>A feature computation parameter. If network nodes/vertices have attributes, the list of attribute
+matrices for each network can be given using this feature.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fast</code></td>
+<td>
+<p>If set to <code>TRUE</code> will avoid computing time consuming features.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Object imported from lookout.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>[lookout::lookout()]
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># We generate a series of networks and add an anomaly at 50th network.
+set.seed(1)
+networks &lt;- list()
+p.or.m.seq &lt;- rep(0.1, 50)
+p.or.m.seq[20] &lt;- 0.3  # anomalous network at 20
+for(i in 1:50){
+  gr &lt;- igraph::erdos.renyi.game(50, p.or.m = p.or.m.seq[i])
+  networks[[i]] &lt;- igraph::as_adjacency_matrix(gr)
+}
+anomalous_networks(networks, fast = TRUE)
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_jitter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Move desire line end points within zone to avoid all trips going to a single centroid</h2>
+
+<h3>Description</h3>
+
+<p>These functions tackle the problem associated with OD data representing movement to and from large zones.
+Typically the associated desire lines start and end in one point per zone.
+This function produces desire lines that can start and end anywhere (or at predefined points) within each zone.
+See <a href="https://github.com/ITSLeeds/od/issues/11">issue #11</a> for details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_jitter(
+  od,
+  z,
+  subpoints = NULL,
+  code_append = "_ag",
+  population_column = 3,
+  max_per_od = 1e+05,
+  keep_ids = TRUE,
+  integer_outputs = FALSE,
+  zd = NULL,
+  subpoints_o = NULL,
+  subpoints_d = NULL,
+  disag = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>od</code></td>
+<td>
+<p>An origin-destination data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>Zones representing origins and destinations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subpoints</code></td>
+<td>
+<p>Points, lines or polygons within the zones.
+These define the OD data start/end points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code_append</code></td>
+<td>
+<p>The name of the column containing aggregate zone names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>population_column</code></td>
+<td>
+<p>The column containing the total population (if it exists)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_per_od</code></td>
+<td>
+<p>Maximum flow in the population_column to assign per OD pair.
+This only comes into effect if there are enough subpoints to choose from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_ids</code></td>
+<td>
+<p>Should the origin and destination ids be kept?
+<code>TRUE</code> by default, meaning 2 extra columns are appended, with the
+names <code>o_agg</code> and <code>d_agg</code> containing IDs from the original OD data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>integer_outputs</code></td>
+<td>
+<p>Should integer outputs be returned? <code>FALSE</code> by default.
+Note: there is a known issue when integer results are generated. See
+https://github.com/ITSLeeds/od/issues/31 for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zd</code></td>
+<td>
+<p>Zones with ids matching the destination codes in input OD data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subpoints_o</code></td>
+<td>
+<p>Points within origin zones representing possible destinations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subpoints_d</code></td>
+<td>
+<p>Points within destination zones representing possible destinations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disag</code></td>
+<td>
+<p>Should the od_disaggregate function be used as a 'back end' where possible?
+FALSE by default. See https://github.com/ITSLeeds/od/issues/39.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>sf</code> data frame
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Basic example
+od = od_data_df
+z = od_data_zones_min
+dlr = od_jitter(od, z) # desire_lines_random
+desire_lines = od_to_sf(od, z)
+plot(z$geometry)
+plot(dlr["all"], add = TRUE, lwd = 3)
+dlr$all
+desire_lines$all
+plot(desire_lines["all"], add = TRUE, lwd = 5)
+
+# Example showing use of subpoints
+subpoints_o = sf::st_sample(z, 200)
+subpoints_d = sf::st_sample(z, 100)
+dlr_d = od_jitter(od, z, subpoints_o = subpoints_o, subpoints_d = subpoints_d)
+plot(z$geometry)
+plot(dlr_d$geometry, add = TRUE)
+plot(subpoints_o, add = TRUE)
+plot(subpoints_d, col = "red", add = TRUE)
+plot(desire_lines, add = TRUE, lwd = 5)
+# mapview::mapview(desire_lines) + dlr + z # interactive map
+sp = sf::st_sample(z, 100)
+dlr2 = od_jitter(desire_lines, z, subpoints_o = sp, subpoints_d = sp)
+plot(z$geometry)
+plot(sp, add = TRUE)
+plot(dlr2, add = TRUE, lwd = 3)
+plot(desire_lines, add = TRUE, lwd = 5)
+
+# Example showing jittering with origin and destination zones
+od = od_data_df2
+z = sf::st_buffer(od_data_centroids2, dist = 1000)
+zd = sf::st_buffer(od_data_destinations, dist = 300)
+zd = zd[zd[[1]] %in% od[[2]], ]
+desire_lines = od_to_sf(od, od_data_centroids2, zd = od_data_destinations)
+dlr = od_jitter(od, z, zd = zd)
+plot(z$geometry)
+plot(od_data_centroids2$geometry, add = TRUE)
+plot(od_data_destinations$geometry, add = TRUE)
+plot(zd$geometry, add = TRUE)
+plot(dlr, add = TRUE, lwd = 3)
+plot(desire_lines, add = TRUE, lwd = 5)
+
+# Larger example with only subset of matching zones
+# od = od_data_df_medium
+# od_sf = od_to_sf(od, od_data_zones)
+# dlr3 = od_jitter(od_sf, od_data_zones)
+# plot(od_sf[od$all &gt; 200, 1])
+# plot(dlr3[od$all &gt; 200, 1])
+# mapview::mapview(od_sf$geometry[od$all &gt; 200])
+</code></pre>
+
+
+</div>

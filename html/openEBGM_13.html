@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>negLLzeroSquash</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Likelihood with data squashing &amp; zero counts</h2>
+
+<h3>Description</h3>
+
+<p><code>negLLzeroSquash</code> computes the negative log-likelihood based on the
+unconditional marginal distribution of <em>N</em> (DuMouchel et al. 2001).
+This function is minimized to estimate the hyperparameters of the prior
+distribution. Use this function if including zero counts and using data
+squashing. Generally this function is not recommended unless convergence
+issues occur without zero counts (<code>negLLsquash</code> is typically more
+efficient).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">negLLzeroSquash(theta, ni, ei, wi)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>A numeric vector of hyperparameters ordered as:
+<code class="reqn">\alpha_1, \beta_1, \alpha_2, \beta_2, P</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ni</code></td>
+<td>
+<p>A whole number vector of squashed actual counts from
+<code>squashData</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ei</code></td>
+<td>
+<p>A numeric vector of squashed expected counts from
+<code>squashData</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wi</code></td>
+<td>
+<p>A whole number vector of bin weights from <code>squashData</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The marginal distribution of the counts, <em>N</em>, is a mixture of
+two negative binomial distributions. The hyperparameters for the prior
+distribution (mixture of gammas) are estimated by optimizing the likelihood
+equation from this marginal distribution.
+</p>
+<p>The hyperparameters are:
+</p>
+
+<ul>
+<li>
+<p><code class="reqn">\alpha_1, \beta_1</code>: Parameters of the first component of the
+marginal distribution of the counts (also the prior distribution)
+</p>
+</li>
+<li>
+<p><code class="reqn">\alpha_2, \beta_2</code>: Parameters of the second component
+</p>
+</li>
+<li>
+<p><code class="reqn">P</code>: Mixture fraction
+</p>
+</li>
+</ul>
+<p>This function will not need to be called directly if using
+<code>exploreHypers</code> or <code>autoHyper</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A scalar negative log-likelihood value.
+</p>
+
+
+<h3>Warnings</h3>
+
+<p>Make sure <em>ni</em> actually contains zeroes before using this function.
+You should have used the <code>zeroes = TRUE</code> option when calling the
+<code>processRaw</code> function.
+</p>
+<p>Make sure the data were actually squashed (see <code>squashData</code>)
+before using this function.
+</p>
+
+
+<h3>References</h3>
+
+<p>DuMouchel W, Pregibon D (2001). "Empirical Bayes Screening for
+Multi-item Associations." In <em>Proceedings of the Seventh ACM SIGKDD
+International Conference on Knowledge Discovery and Data Mining</em>, KDD '01,
+pp. 67-76. ACM, New York, NY, USA. ISBN 1-58113-391-X.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>nlm</code>, <code>nlminb</code>, and
+<code>optim</code> for optimization and <code>squashData</code>
+for data squashing
+</p>
+<p>Other negative log-likelihood functions: 
+<code>negLLsquash()</code>,
+<code>negLLzero()</code>,
+<code>negLL()</code>
+</p>
+
+
+</div>

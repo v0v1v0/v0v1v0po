@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_binary_decisions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add binary decisions</h2>
+
+<h3>Description</h3>
+
+<p>Add a binary decision to a project prioritization <code>problem()</code>.
+This is the conventional decision of either prioritizing funding
+for a management action or not.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_binary_decisions(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Project prioritization problems involve making decisions about
+how funding will be allocated to management actions.
+Only a single decision should be added to a <code>ProjectProblem</code> object.
+If no decision is added to a problem then this decision type will
+be used by default. Currently, this is the only supported decision type.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ProjectProblem object with the decisions
+added to it.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>decisions.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem with maximum richness objective, $200 budget, and
+# binary decisions
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 200) %&gt;%
+     add_binary_decisions()
+
+# print problem
+print(p)
+
+## Not run: 
+# solve problem
+s &lt;- solve(p)
+
+# print solution
+print(s)
+
+# plot solution
+plot(p, s)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

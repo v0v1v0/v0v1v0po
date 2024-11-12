@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Arith</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Methods for Function Arith in package Onion</h2>
+
+<h3>Description</h3>
+
+<p>Methods for Arithmetic functions for onions: <code>+</code>,
+<code>-</code>, <code>*</code>, <code>/</code>, <code>^</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onion_negative(z)
+onion_inverse(z)
+onion_arith_onion(e1,e2)
+onion_arith_numeric(e1,e2)
+numeric_arith_onion(e1,e2)
+harmonize_oo(a,b)
+harmonize_on(a,b)
+onion_plus_onion(a,b)
+onion_plus_numeric(a,b)
+onion_prod_onion(e1,e2)
+octonion_prod_octonion(o1,o2)
+quaternion_prod_quaternion(q1,q2)
+onion_prod_numeric(a,b)
+onion_power_singleinteger(o,n)
+onion_power_numeric(o,p)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>z,e1,e2,a,b,o,o1,o2,n,q1,q2,p</code></td>
+<td>
+<p>onions or numeric vectors</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The package implements the <code>Arith</code> group of <code>S4</code> generics so
+that idiom like <code>A + B*C</code> works as expected with onions.
+</p>
+<p>Functions like <code>onion_inverse()</code> and <code>onion_plus_onion()</code>
+are low-level helper functions.  The only really interesting operation
+is multiplication; functions <code>octonion_prod_octonion()</code> and
+<code>quaternion_prod_quaternion()</code> dispatch to C.
+</p>
+<p>Names are implemented and the rules are inherited (via
+<code>harmonize_oo()</code> and <code>harmonize_on()</code>) from <code>rbind()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>generally return an onion</p>
+
+
+<h3>Note</h3>
+
+<p>Previous versions of the package included the option to use native <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>
+rather than the faster compiled C code used here.  But this
+was very slow and is now discontinued.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robin K. S. Hankin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">a &lt;- rquat()
+b &lt;- rquat()
+a
+Re(a)
+j(a) &lt;- 0.2
+a*b
+b*a  # quaternions are noncommutative
+
+
+x &lt;- as.octonion(matrix(rnorm(40),nrow=8))
+y &lt;- roct()
+z &lt;- roct()
+
+
+x*(y*z) - (x*y)*z  # octonions are nonassociative [use associator()]
+
+
+
+
+
+
+</code></pre>
+
+
+</div>

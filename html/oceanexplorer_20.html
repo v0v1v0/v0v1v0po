@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_ui</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>NOAA plot module</h2>
+
+<h3>Description</h3>
+
+<p>This shiny module (<code>plot_ui()</code> + <code>plot_server()</code>) visualizes the loaded
+data according to the selected epsg projection (<code>"original"</code>, <code>"4326"</code>,
+<code>"3031"</code>, or <code>"3995"</code>). In addition it provides an interactive plot
+interface to select location for data extraction based on a single-click.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_ui(id)
+
+plot_server(id, NOAA, points)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Namespace id shiny module.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NOAA</code></td>
+<td>
+<p>Reactive value for the dataset containing the locations
+coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>points</code></td>
+<td>
+<p>Add locations of extracted point geometry.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Shiny module.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# run plot module stand-alone
+if (interactive()) {
+
+library(oceanexplorer)
+library(shiny)
+
+# data
+NOAA &lt;- get_NOAA("oxygen", 1, "annual")
+
+# coordinates
+points &lt;- filter_NOAA(NOAA, 1, list(lon = c(-160, -120), lat =  c(11, 12)))
+
+# gui
+ui &lt;- fluidPage(plot_ui("plot"))
+
+# server
+server &lt;-function(input, output, session) {
+ plot_server("plot", reactive(NOAA), reactive(points))
+}
+
+# run app
+shinyApp(ui, server)
+
+}
+</code></pre>
+
+
+</div>

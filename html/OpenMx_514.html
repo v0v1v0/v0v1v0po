@@ -1,0 +1,47 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>omxGetRAMDepth</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>omxGetRAMDepth</h2>
+
+<h3>Description</h3>
+
+<p>Get the potency of a matrix for inversion speed-up
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">omxGetRAMDepth(A, maxdepth = nrow(A) - 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>A</code></td>
+<td>
+<p>MxMatrix object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxdepth</code></td>
+<td>
+<p>Numeric. maximum depth to check</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used internally by the mxExpectationRAM function
+to determine how far to expand <code class="reqn">(I-A)^{-1} = I + A + A^2 + A^3 + ...</code>.  It is
+similarly used by mxExpectationLISREL in expanding <code class="reqn">(I-B)^{-1} = I + B + B^2 + B^3 + ...</code>.
+In many situations <code class="reqn">A^2</code> is a zero matrix (nilpotent of order 2).  So when <code class="reqn">A</code> has large
+dimension it is much faster to compute <code class="reqn">I+A</code> than <code class="reqn">(I-A)^{-1}</code>.
+</p>
+
+
+</div>

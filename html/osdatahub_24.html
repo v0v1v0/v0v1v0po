@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>list_os_opendata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve information on OS OpenData Downloads</h2>
+
+<h3>Description</h3>
+
+<p>Query the osdatahub Downloads API to gather information on available data
+collections. An API key is not required to list OS OpenData.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">list_os_opendata(product_id, file_name, file_format, file_subformat, area, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>product_id</code></td>
+<td>
+<p>(character) Retrieve information on a specific data product.
+Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_name</code></td>
+<td>
+<p>(character) Filter downloads to only include those with this
+file name. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_format</code></td>
+<td>
+<p>(character) Filter downloads to only include those with
+this format. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_subformat</code></td>
+<td>
+<p>(character) Filter downloads to only include those with
+this subformat. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>area</code></td>
+<td>
+<p>(character) Filter downloads for only this area. Use 'GB' for all
+Great Britain. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional paramters. Not currently used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The OS Downloads API assists with the discovery and download of OS
+OpenData and OS premium data packages. This function is used for initial
+listing and discovery of open data products. Use the product ID from this
+list to filter further or to initiate a download.
+</p>
+<p>When a <code>product_id</code> is not specified then all available open data is
+listed. Additional filters (i.e. <code>file_name</code>, <code>file_format</code>,
+<code>file_subformat</code>, <code>area</code>) can be used to find the specific
+download, but these filters are only valid when a specific product has been
+specified first.
+</p>
+<p>The optional <code>area</code> filter is based on two-letter British National
+Grid tiles. Use 'GB' for all of Great Britain. Valid values area: GB, HP,
+HT, HU, HW, HX, HY, HZ, NA, NB, NC, ND, NF, NG, NH, NJ, NK, NL, NM, NN, NO,
+NR, NS, NT, NU, NW, NX, NY, NZ, OV, SD, SE, TA, SH, SJ, SK, TF, TG, SM, SN,
+SO, SP, TL, TM, SR, SS, ST, SU, TQ, TR, SV, SW, SX, SY, SZ, TV.
+</p>
+<p>For more information on the Downloads API, see
+<a href="https://osdatahub.os.uk/docs/downloads/technicalSpecification">https://osdatahub.os.uk/docs/downloads/technicalSpecification</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> or a <code>product_list</code>, which extends a
+<code>data.frame</code>, containing the information on downloadable files from
+the Downloads API.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>download_os_opendata()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Retrieve a data.frame listing all OS OpenData products.
+opendata &lt;- list_os_opendata()
+opendata[, c("name", "url")]
+
+
+</code></pre>
+
+
+</div>

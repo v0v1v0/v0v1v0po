@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ols_plot_cooksd_chart</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cooks' D chart</h2>
+
+<h3>Description</h3>
+
+<p>Chart of cook's distance to detect observations that strongly influence
+fitted values of the model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ols_plot_cooksd_chart(model, type = 1, threshold = NULL, print_plot = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>An integer between 1 and 5 selecting one of the 6 methods for computing the threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Threshold for detecting outliers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_plot</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, prints the plot else returns a plot object.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Cook's distance was introduced by American statistician R Dennis Cook in
+1977. It is used to identify influential data points. It depends on both the
+residual and leverage i.e it takes it account both the <em>x</em> value and
+<em>y</em> value of the observation.
+</p>
+<p>Steps to compute Cook's distance:
+</p>
+
+<ul>
+<li>
+<p> Delete observations one at a time.
+</p>
+</li>
+<li>
+<p> Refit the regression model on remaining <code class="reqn">n - 1</code> observations
+</p>
+</li>
+<li>
+<p> exmine how much all of the fitted values change when the ith observation is deleted.
+</p>
+</li>
+</ul>
+<p>A data point having a large cook's d indicates that the data point strongly
+influences the fitted values. There are several methods/formulas to compute
+the threshold used for detecting or classifying observations as outliers
+and we list them below.
+</p>
+
+<ul>
+<li> <p><strong>Type 1</strong> : 4 / n
+</p>
+</li>
+<li> <p><strong>Type 2</strong> : 4 / (n - k - 1)
+</p>
+</li>
+<li> <p><strong>Type 3</strong> : ~1
+</p>
+</li>
+<li> <p><strong>Type 4</strong> : 1 / (n - k - 1)
+</p>
+</li>
+<li> <p><strong>Type 5</strong> : 3 * mean(Vector of cook's distance values)
+</p>
+</li>
+</ul>
+<p>where <strong>n</strong> and <strong>k</strong> stand for
+</p>
+
+<ul>
+<li> <p><strong>n</strong>: Number of observations
+</p>
+</li>
+<li> <p><strong>k</strong>: Number of predictors
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p><code>ols_plot_cooksd_chart</code> returns  a list containing the
+following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>outliers</code></td>
+<td>
+<p>a <code>data.frame</code> with observation number and <code>cooks distance</code> that exceed <code>threshold</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p><code>threshold</code> for classifying an observation as an outlier</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>ols_plot_cooksd_bar()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">model &lt;- lm(mpg ~ disp + hp + wt, data = mtcars)
+ols_plot_cooksd_chart(model)
+ols_plot_cooksd_chart(model, type = 4)
+ols_plot_cooksd_chart(model, threshold = 0.2)
+
+</code></pre>
+
+
+</div>

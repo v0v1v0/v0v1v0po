@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ors_directions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Openrouteservice Directions</h2>
+
+<h3>Description</h3>
+
+<p>Get directions for different modes of transport.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ors_directions(
+  coordinates,
+  profile = ors_profile(),
+  format = c("geojson", "json", "gpx"),
+  ...,
+  api_key = ors_api_key(),
+  output = c("parsed", "text", "sf")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>coordinates</code></td>
+<td>
+<p>List of <code style="white-space: pre;">⁠longitude, latitude⁠</code> coordinate pairs visited in order, alternatively a two column <code>matrix</code> or <code>data.frame</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>profile</code></td>
+<td>
+<p>Route profile, defaults to <code>"driving-car"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Response format, defaults to <code>"geojson"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional parameters as described <a href="https://openrouteservice.org/dev/#/api-docs/v2/directions/%7Bprofile%7D/post">here</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>Character scalar containing openrouteservice API key</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Output format. By default the response is being parsed to a list-based R object</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Route between two or more locations in the selected <code>format</code> structured according to <code>output</code>:
+</p>
+
+<ul><li>
+<p> for <code>"text"</code>, a character vector of length 1 re-encoded to UTF-8.
+</p>
+</li></ul>
+<ul><li>
+<p> for <code>"parsed"</code>, a parsed R object.
+</p>
+</li></ul>
+<ul><li>
+<p> for <code>"sf"</code>, a simple features <code>sf</code> object.
+</p>
+</li></ul>
+<h3>Author(s)</h3>
+
+<p>Andrzej Oleś <a href="mailto:andrzej.oles@gmail.com">andrzej.oles@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">coordinates &lt;- list(c(8.34234, 48.23424), c(8.34423, 48.26424))
+
+# simple call
+ors_directions(coordinates, preference="fastest")
+
+# customized options
+ors_directions(coordinates, profile="cycling-mountain", elevation=TRUE)
+
+# list of locations as `data.frame` output as simple features `sf` object
+locations &lt;- data.frame(lng = c(8.34234, 8.327807, 8.34423),
+                        lat = c(48.23424, 48.239368, 48.26424))
+ors_directions(locations, output = "sf")
+</code></pre>
+
+
+</div>

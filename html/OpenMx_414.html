@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxParametricBootstrap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Assess whether potential parameters should be freed using
+parametric bootstrap</h2>
+
+<h3>Description</h3>
+
+<p>Data is simulated from ‘nullModel’. The parameters named by
+‘labels’ are freed to obtain the alternative model. The
+alternative model is fit against each simulated data set.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxParametricBootstrap(nullModel, labels,
+   alternative=c("two.sided", "greater", "less"),
+   ..., alpha=0.05, correction=p.adjust.methods,
+   previousRun=NULL, replications=400, checkHess=FALSE,
+   signif.stars = getOption("show.signif.stars"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nullModel</code></td>
+<td>
+<p>The model specifying the null distribution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>A character vector of parameters to free to obtain
+the alternative model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>a character string specifying the alternative hypothesis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Forces remaining arguments to be specified by
+name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The false positive rate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correction</code></td>
+<td>
+<p>How to adjust the p values for multiple tests.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replications</code></td>
+<td>
+<p>The number of resampling replications. If
+available, replications from prior invocation will be reused.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>previousRun</code></td>
+<td>
+<p>Results to re-use from a previous bootstrap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkHess</code></td>
+<td>
+<p>Whether to approximate the Hessian in each
+replication</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signif.stars</code></td>
+<td>
+<p>logical. If TRUE, ‘significance stars’ are
+printed for each coefficient.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When the model has a default compute plan and ‘checkHess’ is
+kept at FALSE then the Hessian will not be approximated or checked.
+On the other hand, ‘checkHess’ is TRUE then the Hessian will be
+approximated by finite differences. This procedure is of some value
+because it can be informative to check whether the Hessian is positive
+definite (see <code>mxComputeHessianQuality</code>).  However,
+approximating the Hessian is often costly in terms of CPU time. For
+bootstrapping, the parameter estimates derived from the resampled data
+are typically of primary interest.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame is returned containing the test results.
+Details of the bootstrap replications are stored in the
+‘bootData’ attribute on the data frame.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+library(OpenMx)
+
+data(demoOneFactor)
+manifests &lt;- names(demoOneFactor)
+latents &lt;- c("G")
+
+base &lt;- mxModel(
+  "OneFactorCov", type="RAM",
+  manifestVars = manifests,
+  latentVars = latents,
+  mxPath(from=latents, to=manifests, values=0,  free=FALSE, labels=paste0('l',1:length(manifests))),
+  mxPath(from=manifests, arrows=2, values=rlnorm(length(manifests)), lbound=.01),
+  mxPath(from=latents, arrows=2, free=FALSE, values=1.0),
+  mxPath(from = 'one', to = manifests, values=0, free=TRUE, labels=paste0('m',1:length(manifests))),
+  mxData(demoOneFactor, type="raw"))
+
+base &lt;- mxRun(base)
+
+# use more replications, 8 is for demonstration purpose only
+mxParametricBootstrap(base, paste0('l', 1:length(manifests)),
+                      "two.sided", replications=8)
+
+
+</code></pre>
+
+
+</div>

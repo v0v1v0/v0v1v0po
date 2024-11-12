@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_pca_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function to plot a PCA of the data</h2>
+
+<h3>Description</h3>
+
+<p>Generates a PCA projection of all samples from NPX data along two principal components (default PC2 vs. PC1) including the explained variance and dots colored by QC_Warning using stats::prcomp and ggplot2::ggplot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_pca_plot(
+  df,
+  color_g = "QC_Warning",
+  x_val = 1,
+  y_val = 2,
+  label_samples = FALSE,
+  drop_assays = FALSE,
+  drop_samples = FALSE,
+  n_loadings = 0,
+  loadings_list = NULL,
+  byPanel = FALSE,
+  outlierDefX = NA,
+  outlierDefY = NA,
+  outlierLines = FALSE,
+  label_outliers = TRUE,
+  quiet = FALSE,
+  verbose = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>data frame in long format with Sample Id, NPX and column of choice for colors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color_g</code></td>
+<td>
+<p>Character value indicating which column to use for colors (default QC_Warning)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_val</code></td>
+<td>
+<p>Integer indicating which principal component to plot along the x-axis (default 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y_val</code></td>
+<td>
+<p>Integer indicating which principal component to plot along the y-axis (default 2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label_samples</code></td>
+<td>
+<p>Logical. If TRUE, points are replaced with SampleID (default FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop_assays</code></td>
+<td>
+<p>Logical. All assays with any missing values will be dropped. Takes precedence over sample drop.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop_samples</code></td>
+<td>
+<p>Logical. All samples with any missing values will be dropped.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_loadings</code></td>
+<td>
+<p>Integer. Will plot the top n_loadings based on size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loadings_list</code></td>
+<td>
+<p>Character vector indicating for which OlinkID's to plot as loadings. It is possible to use n_loadings and loadings_list simultaneously.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byPanel</code></td>
+<td>
+<p>Perform the PCA per panel (default FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlierDefX</code></td>
+<td>
+<p>The number standard deviations along the PC plotted on the x-axis that defines an outlier. See also 'Details"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlierDefY</code></td>
+<td>
+<p>The number standard deviations along the PC plotted on the y-axis that defines an outlier. See also 'Details"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlierLines</code></td>
+<td>
+<p>Draw dashed lines at +/- outlierDefX and outlierDefY standard deviations from the mean of the plotted PCs (default FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label_outliers</code></td>
+<td>
+<p>Use ggrepel to label samples lying outside the limits set by the outlierLines (default TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>Logical. If TRUE, the resulting plot is not printed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. Whether warnings about the number of samples and/or assays dropped or imputed should be printed to the console.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>coloroption passed to specify color order.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The values are by default scaled and centered in the PCA and proteins with missing NPX values are by default removed from the corresponding assay.
+Unique sample names are required.
+Imputation by the median is done for assays with missingness &lt;10\
+The plot is printed, and a list of ggplot objects is returned. <br><br>
+If byPanel = TRUE, the data processing (imputation of missing values etc) and subsequent PCA is performed separately per panel. A faceted plot is printed, while the individual ggplot objects are returned. <br><br>
+The arguments outlierDefX and outlierDefY can be used to identify outliers in the PCA. Samples more than +/- outlierDefX and outlierDefY standard deviations from the mean of the plotted PC will be labelled. Both arguments have to be specified.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of objects of class "ggplot", each plot contains scatter plot of PCs
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+npx_data &lt;- npx_data1 %&gt;%
+    filter(!grepl('CONTROL', SampleID))
+
+#PCA using all the data
+olink_pca_plot(df=npx_data, color_g = "QC_Warning")
+
+#PCA per panel
+g &lt;- olink_pca_plot(df=npx_data, color_g = "QC_Warning", byPanel = TRUE)
+g[[2]] #Plot only the second panel
+
+#Label outliers
+olink_pca_plot(df=npx_data, color_g = "QC_Warning",
+               outlierDefX = 2, outlierDefY = 4) #All data
+olink_pca_plot(df=npx_data, color_g = "QC_Warning",
+               outlierDefX = 2.5, outlierDefY = 4, byPanel = TRUE) #Per panel
+
+#Retrieve the outliers
+g &lt;- olink_pca_plot(df=npx_data, color_g = "QC_Warning",
+                    outlierDefX = 2.5, outlierDefY = 4, byPanel = TRUE)
+outliers &lt;- lapply(g, function(x){x$data}) %&gt;%
+    bind_rows() %&gt;%
+    filter(Outlier == 1)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_pkg_usage</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check which packages are actually used in a project</h2>
+
+<h3>Description</h3>
+
+<p>Provide a folder and a vector of package names to check, 
+which packages are actually in use and which functions are used but not 
+exported by the provided packages.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">check_pkg_usage(
+  path = getwd(),
+  pkgs = getOption("origin.pkgs", .packages()),
+  recursive = TRUE,
+  exclude_files = NULL,
+  path_to_local_functions = NULL,
+  check_local_conflicts = TRUE,
+  use_markers = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>a character vector of full path names; the default corresponds 
+to the working directory, getwd()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pkgs</code></td>
+<td>
+<p>a character vector with package names. Defaults to the result of
+.packages but only if the option 'origin.pkgs' is not specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recursive</code></td>
+<td>
+<p>logical. Should the listing recurse into directories?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude_files</code></td>
+<td>
+<p>a character vector of file paths that should be 
+excluded from being checked Helpful if all but a few files should be
+considered by origin.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path_to_local_functions</code></td>
+<td>
+<p>file path. Helpful if all project specific
+functions are defined in a specific folder. This folder might not be a 
+sub directory of the current project so the default to just find all 
+function definitions would not be sufficient.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check_local_conflicts</code></td>
+<td>
+<p>if TRUE, it is checked whether locally
+defined functions inside of the project mask exported functions
+packages listed in pkgs. It avoids mistakenly adding pkg:: to a
+custom local function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_markers</code></td>
+<td>
+<p>a boolean. If TRUE, the markers tab inn RStudio is used
+to track changes and show issues. FALSE prints the same information in
+the console.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>'data.frame' invisibly, It consists of 5 columns. 
+- 'pkg': the package that exports this function
+- 'fun': all functions in alphabetical order
+- 'n_calls': how often the function has been used in the files
+- 'namespaced': logical, whether the function has been called explicitly 
+via 'pkg::fct' or implicitly by an attached package
+- 'conflict': whether this function is exported by multiple checked packages
+- 'conflict_pkgs': in case of a conflict, which packages does 
+export the same function but are masked
+Note that functions for that it is unknown from which package they are 
+exported have an 'NA' in the 'pkg' column.
+Similarly, Packages that are checked but no functions from these are
+used are listed but have an 'NA' in the 'fun' column
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+check_pkg_usage()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as_id</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract OSF identifiers</h2>
+
+<h3>Description</h3>
+
+<p>Extract OSF GUIDs and Waterbutler IDs from various types of inputs. Valid
+looking IDs are returned as <code>osf_id</code> objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as_id(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An <code>osf_tbl</code>, OSF URL, or a generic string containing a GUID or
+Waterbutler ID.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A character vector with class <code>osf_id</code>.
+</p>
+
+
+<h3>Identifier types</h3>
+
+<p>There are 2 types of identifiers you'll encounter on OSF. The first is the
+globally unique identifier, or GUID, that OSF assigns to every entity. A
+valid OSF GUID consists of 5 alphanumeric characters. The second type of
+identifier is specific to files stored on OSF. All file operations on OSF are
+handled via Waterbutler. A valid Waterbutler ID consists of 24 alphanumeric
+characters.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# extract a GUID from an OSF URL
+proj_id &lt;- as_id("https://osf.io/7zqxp/")
+
+# extract waterbutler IDs from an `osf_tbl_file`` with multiple files
+osf_retrieve_node(proj_id) %&gt;%
+  osf_ls_files() %&gt;%
+  as_id()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>write_GRMBin</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write GRM binary files.</h2>
+
+<h3>Description</h3>
+
+<p>Function to write a binary GRM format recently introduced by GCTA. It takes
+a correlation matrix as used by other Kriging functions, and writes three
+files: binary file for storing the diagonal + lower triangular elements, a
+text file for sample IDs, and a binary file storing the number of SNPs used
+in the correlation matrix calculation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">write_GRMBin(X, n.snps = 0, prefix, size = 4)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Correlation matrix with rownames and colnames as sample IDs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.snps</code></td>
+<td>
+<p>Number of SNPs used in correlation matrix calculation. Default is 0.0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefix</code></td>
+<td>
+<p>Base file path and names for the three output files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>Number of bytes to write for each value. Default is 4</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>None. Though side effects are writing three files as described above.
+</p>
+
+
+<h3>References</h3>
+
+<p>http://www.complextraitgenomics.com/software/gcta/estimate_grm.html
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  
+  ## create a random genotype matrix
+  nSamples &lt;- 10
+  mMarkers &lt;- 100
+  X &lt;- matrix(rbinom(n=100, size=2, prob=0.5), nrow=nSamples)
+  ## compute the Genetric Relatedness Matrix
+  grm &lt;- cor(X)
+  ## write a Genetic Relatedness Matrix (GRM)
+  ## NOTE: to following is not run here -- not writing any files in examples
+  #write_GRMBin(grm, n.snps=mMarkers, prefix="grm.out")
+</code></pre>
+
+
+</div>

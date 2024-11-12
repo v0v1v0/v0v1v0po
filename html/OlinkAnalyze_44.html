@@ -1,0 +1,328 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>olink_norm_input_check</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check inputs of <code>olink_normalization</code> function.</h2>
+
+<h3>Description</h3>
+
+<p>This function is a wrapper of multiple help functions which check the inputs
+of the <code>olink_normalization</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">olink_norm_input_check(
+  df1,
+  df2,
+  overlapping_samples_df1,
+  overlapping_samples_df2,
+  df1_project_nr,
+  df2_project_nr,
+  reference_project,
+  reference_medians
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df1</code></td>
+<td>
+<p>First dataset to be used in normalization (required).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df2</code></td>
+<td>
+<p>Second dataset to be used in normalization.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overlapping_samples_df1</code></td>
+<td>
+<p>Samples to be used for adjustment factor
+calculation in df1 (required).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overlapping_samples_df2</code></td>
+<td>
+<p>Samples to be used for adjustment factor
+calculation in df2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df1_project_nr</code></td>
+<td>
+<p>Project name of first dataset (df1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df2_project_nr</code></td>
+<td>
+<p>Project name of first dataset (df2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reference_project</code></td>
+<td>
+<p>Project name of reference_project. Should be one of
+<var>df1_project_nr</var> or <var>df2_project_nr</var>. Indicates the project to which
+the other project is adjusted to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reference_medians</code></td>
+<td>
+<p>Dataset with columns "OlinkID" and "Reference_NPX".
+Used for reference median normalization.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The following checks are performed:
+</p>
+
+<ul>
+<li> <p><code>olink_norm_input_validate</code>:
+</p>
+
+<ul>
+<li>
+<p> Determines the normalization to be performed by intersecting inputs with
+internal global variable <code>olink_norm_mode_combos</code>.
+</p>
+</li>
+<li>
+<p> Returns the type of normalization to be performed from
+<code>olink_norm_modes</code>.
+</p>
+</li>
+<li>
+<p> Message with the normalization type.
+</p>
+</li>
+<li>
+<p> Error message if input is invalid.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>olink_norm_input_class</code>:
+</p>
+
+<ul>
+<li>
+<p> Checks if all inputs are of the expected class:
+</p>
+
+<ul>
+<li> <p><code>df1</code>, <code>df2</code> and <code>reference_medians</code>: tibble or R6 ArrowObject
+</p>
+</li>
+<li> <p><code>overlapping_samples_df1</code>, <code>overlapping_samples_df2</code>,
+<code>df1_project_nr</code>, <code>df2_project_nr</code> and <code>reference_project</code>: Character
+vector
+</p>
+</li>
+</ul>
+</li>
+<li>
+<p> Also checks the validity of names of project and reference project.
+</p>
+</li>
+<li>
+<p> Error if invalid input classes are detected.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>olink_norm_input_check_df_cols</code>:
+</p>
+
+<ul>
+<li>
+<p> Detects the column names of input datasets <code>df1</code> and <code>df2</code> to allow for
+alternative names.
+</p>
+</li>
+<li>
+<p> Returns named list of column names to use downstream.
+</p>
+</li>
+<li>
+<p> Warning if <code>Normalization</code> column missing from all datasets.
+</p>
+</li>
+<li>
+<p> Warning if <code>LOD</code> is missing or if there are multiple <code>LOD</code> columns.
+</p>
+</li>
+<li>
+<p> Error if required columns are missing.
+</p>
+</li>
+<li>
+<p> Error if not all input datasets have or lack <code>Normalization</code> column.
+</p>
+</li>
+<li>
+<p> Error if input datasets have been quantified with different methods.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>olink_norm_input_ref_medians</code>:
+</p>
+
+<ul>
+<li>
+<p> Checks validity of dataset containing <code>reference_medians</code>.
+</p>
+</li>
+<li>
+<p> Error if required columns are missing based on
+<code>olink_norm_ref_median_cols</code>.
+</p>
+</li>
+<li>
+<p> Error if columns are not of the correct class bases on
+<code>olink_norm_ref_median_cols</code>.
+</p>
+</li>
+<li>
+<p> Error if there duplicate assay identifiers.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>olink_norm_input_check_samples</code>:
+</p>
+
+<ul><li>
+<p> Check character vectors of reference sample identifiers for:
+</p>
+
+<ul>
+<li>
+<p> Being present in <code>df1</code> and/or <code>df2</code>.
+</p>
+</li>
+<li>
+<p> Duplicate identifiers.
+</p>
+</li>
+</ul>
+</li></ul>
+</li>
+<li> <p><code>olink_norm_input_clean_assays</code>:
+</p>
+
+<ul>
+<li>
+<p> Returns a named list with the updated <code>df1</code>, <code>df2</code> and/or
+<code>reference_medians</code>.
+</p>
+</li>
+<li>
+<p> Removes assays that are not of the format OID followed by 5 digits.
+</p>
+</li>
+<li>
+<p> Removes assays that are marked with <code>Normalization = EXCLUDED</code>.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>olink_norm_input_assay_overlap</code>:
+</p>
+
+<ul>
+<li>
+<p> Returns a named list with the updated <code>df1</code>, <code>df2</code> and/or
+<code>reference_medians</code>.
+</p>
+</li>
+<li>
+<p> Remove assays not shared between <code>df1</code> and <code>df2</code>, or between <code>df1</code> and
+<code>reference_medians</code>.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>olink_norm_input_norm_method</code>:
+</p>
+
+<ul>
+<li>
+<p> Check if all assays in <code>df1</code> and <code>df2</code> have been originally normalized
+with the same method "Intensity" or "Plate control".
+</p>
+</li>
+<li>
+<p> Warning is thrown if not.
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>Named list of updated inputs to use for normalization:
+</p>
+
+<ul>
+<li> <p><code>df1</code>: dataset df1.
+</p>
+</li>
+<li> <p><code>df2</code>: <code>NULL</code> if reference median normalization, or dataset df2.
+</p>
+</li>
+<li> <p><code>overlapping_samples_df1</code>: character vector of reference samples from df1.
+</p>
+</li>
+<li> <p><code>overlapping_samples_df2</code>: <code>NULL</code> if reference median normalization, or
+character vector of reference samples from df1.
+</p>
+</li>
+<li> <p><code>df1_project_nr</code>: name of df1 project.
+</p>
+</li>
+<li> <p><code>df2_project_nr</code>: <code>NULL</code> if reference median normalization, or name of df2
+project.
+</p>
+</li>
+<li> <p><code>reference_project</code>: <code>NULL</code> if reference median normalization, or name of
+reference project.
+</p>
+</li>
+<li> <p><code>reference_medians</code>: <code>NULL</code> if bridge or subset normalization, or dataset
+with reference_medians.
+</p>
+</li>
+<li> <p><code>df1_cols</code>: column names of df1 to use downstream.
+</p>
+</li>
+<li> <p><code>df2_cols</code>: <code>NULL</code> if reference median normalization, or column names of
+df2 to use downstream.
+</p>
+</li>
+<li> <p><code>norm_mode</code>: one of bridge, subset, ref_median, and norm_ht_3k
+indicating the normalization to be performed.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Klev Diamanti
+</p>
+
+
+</div>

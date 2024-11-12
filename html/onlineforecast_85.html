@@ -1,0 +1,150 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rls_optim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimize parameters for onlineforecast model fitted with RLS</h2>
+
+<h3>Description</h3>
+
+<p>Optimize parameters (transformation stage) of RLS model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rls_optim(
+  model,
+  data,
+  kseq = NA,
+  scorefun = rmse,
+  cachedir = "",
+  cachererun = FALSE,
+  printout = TRUE,
+  method = "L-BFGS-B",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>The onlineforecast model, including inputs, output, kseq, p</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data.list which holds the data on which the model is fitted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kseq</code></td>
+<td>
+<p>The horizons to fit for (if not set, then model$kseq is used)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scorefun</code></td>
+<td>
+<p>The function to be score used for calculating the score to be optimized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cachedir</code></td>
+<td>
+<p>A character specifying the path (and prefix) of the cache file name. If set to <code>""</code>, then no cache will be loaded or written. See <a href="https://onlineforecasting.org/vignettes/nice-tricks.html">https://onlineforecasting.org/vignettes/nice-tricks.html</a> for examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cachererun</code></td>
+<td>
+<p>A logical controlling whether to run the optimization even if the cache exists.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printout</code></td>
+<td>
+<p>A logical determining if the score function is printed out in each iteration of the optimization.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>The method argument for <code>optim</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to <code>optim</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a wrapper for <code>optim</code> to enable easy use of bounds and caching in the optimization.
+</p>
+<p>One smart trick, is to cache the optimization results. Caching can be done by providing a path to the
+<code>cachedir</code> argument (relative to the current working directory).
+E.g. <code>rls_optim(model, D, cachedir="cache")</code> will write a file in the folder 'cache', such that
+next time the same call is carried out, then the file is read instead of running the optimization again.
+See the example in <a href="https://onlineforecasting.org/vignettes/nice-tricks.html">https://onlineforecasting.org/vignettes/nice-tricks.html</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Result object of optim().
+Parameters resulting from the optimization can be found from <code>result$par</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>link{optim}</code> for how to control the optimization.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Take data
+D &lt;- subset(Dbuilding, c("2010-12-15", "2011-01-01"))
+D$y &lt;- D$heatload
+# Define a simple model 
+model &lt;- forecastmodel$new()
+model$add_inputs(Ta = "Ta", mu = "one()")
+model$add_regprm("rls_prm(lambda=0.99)")
+
+# Before fitting the model, define which points to include in the evaluation of the score function
+D$scoreperiod &lt;- in_range("2010-12-20", D$t)
+# And the sequence of horizons to fit for
+model$kseq &lt;- 1:6
+# Now we can fit the model and get the score, as it is
+rls_fit(model=model, data=D, scorefun=rmse, returnanalysis=FALSE)
+# Or we can change the lambda
+rls_fit(c(lambda=0.9), model, D, rmse, returnanalysis=FALSE)
+
+# This could be passed to optim() (or any optimizer, see forecastmodel$insert_prm()).
+optim(c(lambda=0.98), rls_fit, model=model, data=D, scorefun=rmse, returnanalysis=FALSE,
+      lower=c(lambda=0.9), upper=c(lambda=0.999), method="L-BFGS-B")
+
+# rls_optim is simply a helper, it's makes using bounds easiere and enables caching of the results
+# First add bounds for lambda (lower, init, upper)
+model$add_prmbounds(lambda = c(0.9, 0.98, 0.999))
+
+# Now the same optimization as above can be done by
+val &lt;- rls_optim(model, D)
+val
+
+
+</code></pre>
+
+
+</div>

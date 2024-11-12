@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.MxModel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+<code>predict</code> method for <code>MxModel</code> objects</h2>
+
+<h3>Description</h3>
+
+<p><code>predict</code> method for <code>MxModel</code> objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'MxModel'
+predict(
+  object,
+  newdata = NULL,
+  interval = c("none", "confidence", "prediction"),
+  method = c("ML", "WeightedML", "Regression", "Kalman"),
+  level = 0.95,
+  type = c("latent", "observed"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an MxModel object from which predictions are desired</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>an optional <code>data.frame</code> object. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+<p>character indicating what kind of intervals are desired.  'none' gives no intervals, 'confidence', gives confidence intervals, 'prediction' gives prediction intervals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>character the method used to create the predictions.  See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>the confidence or predictions level, ignored if not using intervals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character the type of thing you want predicted: latent variables or manifest variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further named arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>newdata</code> argument is either a <code>data.frame</code> or <code>MxData</code> object.  In the latter case is replaces the data in the top level model.  In the former case, it is passed as the <code>observed</code> argument of <code>mxData</code> with <code>type='raw'</code> and must accept the same further arguments as the data in the model passed in the <code>object</code> argument.
+</p>
+<p>The available methods for prediction are 'ML', 'WeightedML', 'Regression', and 'Kalman'.  See the help page for <code>mxFactorScores</code> for details on the first three of these.  The 'Kalman' method uses the Kalman filter to create predictions for state space models.
+</p>
+
+
+</div>

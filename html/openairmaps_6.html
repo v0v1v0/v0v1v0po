@@ -1,0 +1,624 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>annulusMap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Polar annulus plots on dynamic and static maps</h2>
+
+<h3>Description</h3>
+
+<p>The <code>annulusMap()</code> function creates a map using polar annulus plots as
+markers. Any number of pollutants can be specified using the <code>pollutant</code>
+argument, and multiple layers of markers can be created using <code>type</code>. By
+default, these maps are dynamic and can be panned, zoomed, and otherwise
+interacted with. Using the <code>static</code> argument allows for static images to be
+produced instead.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">annulusMap(
+  data,
+  pollutant = NULL,
+  period = "hour",
+  limits = "free",
+  latitude = NULL,
+  longitude = NULL,
+  crs = 4326,
+  type = NULL,
+  popup = NULL,
+  label = NULL,
+  provider = "OpenStreetMap",
+  cols = "turbo",
+  alpha = 1,
+  key = FALSE,
+  legend = TRUE,
+  legend.position = NULL,
+  legend.title = NULL,
+  legend.title.autotext = TRUE,
+  control.collapsed = FALSE,
+  control.position = "topright",
+  control.autotext = TRUE,
+  d.icon = 200,
+  d.fig = 3.5,
+  static = FALSE,
+  static.nrow = NULL,
+  ...,
+  control = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p><em>Input data table with pollutant, wind, and geo-spatial
+information.</em>
+</p>
+<p><strong>required</strong> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>A data frame. The data frame must contain the data to plot the directional
+analysis marker, which includes wind speed (<code>ws</code>), wind direction (<code>wd</code>),
+and the column representing the concentration of a pollutant. In addition,
+<code>data</code> must include a decimal latitude and longitude (or X/Y coordinate
+used in conjunction with <code>crs</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p><em>Pollutant name(s).</em>
+</p>
+<p><strong>required</strong> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The column name(s) of the pollutant(s) to plot. If multiple pollutants are
+specified the <code>type</code> argument will no longer be able to be used, and:
+</p>
+
+<ul>
+<li> <p><em>Dynamic</em>: The pollutants can be toggled between using a "layer control" menu.
+</p>
+</li>
+<li> <p><em>Static:</em>: The pollutants will each appear in a different panel.
+</p>
+</li>
+</ul>
+<p>Multiple <code>pollutants</code> prohibit the use of the <code>type</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p><em>Temporal period for radial axis.</em>
+</p>
+<p><em>default:</em> <code>"hour"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Options are "hour" (the default, to plot diurnal variations), "season" to
+plot variation throughout the year, "weekday" to plot day of the week
+variation and "trend" to plot the trend by wind direction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits</code></td>
+<td>
+<p><em>Specifier for the plot colour scale bounds.</em>
+</p>
+<p><em>default:</em> <code>"free"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>One of:
+</p>
+
+<ul>
+<li> <p><code>"fixed"</code> which ensures all of the markers use the same colour scale.
+</p>
+</li>
+<li> <p><code>"free"</code> (the default) which allows all of the markers to use different
+colour scales.
+</p>
+</li>
+<li>
+<p> A numeric vector in the form <code>c(lower, upper)</code> used to define the colour
+scale. For example, <code>limits = c(0, 100)</code> would force the plot limits to
+span 0-100.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latitude, longitude</code></td>
+<td>
+<p><em>The decimal latitude(Y)/longitude(X).</em>
+</p>
+<p><em>default:</em> <code>NULL</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Column names representing the decimal latitude and longitude (or other Y/X
+coordinate if using a different <code>crs</code>). If not provided, will be
+automatically inferred from data by looking for a column named
+"lat"/"latitude" or "lon"/"lng"/"long"/"longitude" (case-insensitively).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p><em>The coordinate reference system (CRS).</em>
+</p>
+<p><em>default:</em> <code>4326</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The coordinate reference system (CRS) of the data, passed to
+<code>sf::st_crs()</code>. By default this is <a href="https://epsg.io/4326">EPSG:4326</a>, the
+CRS associated with the commonly used latitude and longitude coordinates.
+Different coordinate systems can be specified using <code>crs</code> (e.g., <code>crs = 27700</code> for the <a href="https://epsg.io/27700">British National Grid</a>). Note that
+non-lat/lng coordinate systems will be re-projected to EPSG:4326 for
+plotting on the map.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><em>A method to condition the <code>data</code> for separate plotting.</em>
+</p>
+<p><em>default:</em> <code>NULL</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Used for splitting the input data into different groups, passed to the
+<code>type</code> argument of <code>openair::cutData()</code>. When <code>type</code> is specified:
+</p>
+
+<ul>
+<li> <p><em>Dynamic</em>: The different data splits can be toggled between using a "layer control" menu.
+</p>
+</li>
+<li> <p><em>Static:</em>: The data splits will each appear in a different panel.
+</p>
+</li>
+</ul>
+<p><code>type</code> cannot be used if multiple <code>pollutant</code> columns have been provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>popup</code></td>
+<td>
+<p><em>Content for marker popups on dynamic maps.</em>
+</p>
+<p><em>default:</em> <code>NULL</code> | <em>scope:</em> dynamic
+</p>
+<p>Columns to be used as the HTML content for marker popups on dynamic maps.
+Popups may be useful to show information about the individual sites (e.g.,
+site names, codes, types, etc.). If a vector of column names are provided
+they are passed to <code>buildPopup()</code> using its default values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label</code></td>
+<td>
+<p><em>Content for marker hover-over on dynamic maps.</em>
+</p>
+<p><em>default:</em> <code>NULL</code> | <em>scope:</em> dynamic
+</p>
+<p>Column to be used as the HTML content for hover-over labels. Labels are
+useful for the same reasons as popups, though are typically shorter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>provider</code></td>
+<td>
+<p><em>The basemap(s) to be used.</em>
+</p>
+<p><em>default:</em> <code>"OpenStreetMap"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The base map(s) to be used beneath the polar markers. If not provided, will
+default to <code>"OpenStreetMap"</code>/<code>"osm"</code> for both dynamic and static maps.
+</p>
+
+<ul>
+<li> <p><em>Dynamic</em>: Any number of leaflet::providers.
+See <a href="http://leaflet-extras.github.io/leaflet-providers/preview/">http://leaflet-extras.github.io/leaflet-providers/preview/</a> for a list
+of all base maps that can be used. If multiple base maps are provided, they
+can be toggled between using a "layer control" interface. By default, the
+interface will use the provider names as labels, but users can define their
+own using a named vector (e.g., <code>c("Default" = "OpenStreetMap", "Satellite"   = "Esri.WorldImagery")</code>)
+</p>
+</li>
+<li> <p><em>Static</em>: One of <code>rosm::osm.types()</code>.
+</p>
+</li>
+</ul>
+<p>There is some overlap in static and dynamic providers. For example,
+<code>{ggspatial}</code> uses "osm" to specify "OpenStreetMap". When static providers
+are provided to dynamic maps or vice versa, <code>{openairmaps}</code> will attempt to
+substitute the correct provider string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p><em>Colours to use for plotting.</em>
+</p>
+<p><em>default:</em> <code>"turbo"</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>The colours used for plotting, passed to <code>openair::openColours()</code>. The
+default, <code>"turbo"</code>, is a rainbow palette with relatively perceptually
+uniform colours. Read more about this palette at
+<a href="https://research.google/blog/turbo-an-improved-rainbow-colormap-for-visualization/">https://research.google/blog/turbo-an-improved-rainbow-colormap-for-visualization/</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p><em>Transparency value for polar markers.</em>
+</p>
+<p><em>default:</em> <code>1</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>A value between 0 (fully transparent) and 1 (fully opaque).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p><em>Draw individual marker legends?</em>
+</p>
+<p><em>default:</em> <code>FALSE</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>Draw a key for each individual marker? Potentially useful when <code>limits = "free"</code>, but of limited use otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend</code></td>
+<td>
+<p><em>Draw a shared legend?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>When all markers share the same colour scale (e.g., when <code>limits != "free"</code>
+in <code>polarMap()</code>), should a shared legend be created at the side of the map?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.position</code></td>
+<td>
+<p><em>Position of the shared legend.</em>
+</p>
+<p><em>default:</em> <code>NULL</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>When <code>legend = TRUE</code>, where should the legend be placed?
+</p>
+
+<ul>
+<li> <p><em>Dynamic</em>: One of "topright", "topright", "bottomleft" or "bottomright". Passed to the <code>position</code> argument of <code>leaflet::addLegend()</code>.
+</p>
+</li>
+<li> <p><em>Static:</em>: One of "top", "right", "bottom" or "left". Passed to the <code>legend.position</code> argument of <code>ggplot2::theme()</code>.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.title</code></td>
+<td>
+<p><em>Title of the legend.</em>
+</p>
+<p><em>default:</em> <code>NULL</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>By default, when <code>legend.title = NULL</code>, the function will attempt to
+provide a sensible legend title. <code>legend.title</code> allows users to overwrite
+this - for example, to include units or other contextual information. For
+<em>dynamic</em> maps, users may wish to use HTML tags to format the title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.title.autotext</code></td>
+<td>
+<p><em>Automatically format the title of the legend?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>When <code>legend.title.autotext = TRUE</code>, <code>legend.title</code> will be first run
+through <code>quickTextHTML()</code> (<em>dynamic</em>) or <code>openair::quickText()</code> (<em>static</em>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control.collapsed</code></td>
+<td>
+<p><em>Show the layer control as a collapsed?</em>
+</p>
+<p><em>default:</em> <code>FALSE</code> | <em>scope:</em> dynamic
+</p>
+<p>For <em>dynamic</em> maps, should the "layer control" interface be collapsed? If
+<code>TRUE</code>, users will have to hover over an icon to view the options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control.position</code></td>
+<td>
+<p><em>Position of the layer control menu</em>
+</p>
+<p><em>default:</em> <code>"topright"</code> | <em>scope:</em> dynamic
+</p>
+<p>When <code>type != NULL</code>, or multiple pollutants are specified, where should the
+"layer control" interface be placed? One of "topleft", "topright",
+"bottomleft" or "bottomright". Passed to the <code>position</code> argument of
+<code>leaflet::addLayersControl()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control.autotext</code></td>
+<td>
+<p><em>Automatically format the content of the layer
+control menu?</em>
+</p>
+<p><em>default:</em> <code>TRUE</code> | <em>scope:</em> dynamic
+</p>
+<p>When <code>control.autotext = TRUE</code>, the content of the "layer control"
+interface will be first run through <code>quickTextHTML()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d.icon</code></td>
+<td>
+<p><em>The diameter of the plot on the map in pixels.</em>
+</p>
+<p><em>default:</em> <code>200</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>This will affect the size of the individual polar markers. Alternatively, a
+vector in the form <code>c(width, height)</code> can be provided if a non-circular
+marker is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d.fig</code></td>
+<td>
+<p><em>The diameter of the plots to be produced using <code>{openair}</code> in
+inches.</em>
+</p>
+<p><em>default:</em> <code>3.5</code> | <em>scope:</em> dynamic &amp; static
+</p>
+<p>This will affect the resolution of the markers on the map. Alternatively, a
+vector in the form <code>c(width, height)</code> can be provided if a non-circular
+marker is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>static</code></td>
+<td>
+<p><em>Produce a static map?</em>
+</p>
+<p><em>default:</em> <code>FALSE</code>
+</p>
+<p>This controls whether a <em>dynamic</em> or <em>static</em> map is produced. The former
+is the default and is broadly more useful, but the latter may be preferable
+for DOCX or PDF outputs (e.g., academic papers).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>static.nrow</code></td>
+<td>
+<p><em>Number of rows in a static map.</em>
+</p>
+<p><em>default:</em> <code>NULL</code> | <em>scope:</em> static
+</p>
+<p>Controls the number of rows of panels on a static map when multiple
+<code>pollutant</code>s or <code>type</code> are specified; passed to the <code>nrow</code> argument of
+<code>ggplot2::facet_wrap()</code>. The default, <code>NULL</code>, results in a roughly square
+grid of panels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code>openair::polarAnnulus</code>
+</p>
+
+<dl>
+<dt><code>resolution</code></dt>
+<dd>
+<p>Two plot resolutions can be set: “normal” and
+“fine” (the default).</p>
+</dd>
+<dt><code>local.tz</code></dt>
+<dd>
+<p>Should the results be calculated in local time that includes
+a treatment of daylight savings time (DST)? The default is not to consider
+DST issues, provided the data were imported without a DST offset. Emissions
+activity tends to occur at local time e.g. rush hour is at 8 am every day.
+When the clocks go forward in spring, the emissions are effectively
+released into the atmosphere typically 1 hour earlier during the summertime
+i.e. when DST applies. When plotting diurnal profiles, this has the effect
+of “smearing-out” the concentrations. Sometimes, a useful approach
+is to express time as local time. This correction tends to produce
+better-defined diurnal profiles of concentration (or other variables) and
+allows a better comparison to be made with emissions/activity data. If set
+to <code>FALSE</code> then GMT is used. Examples of usage include <code>local.tz
+  = "Europe/London"</code>, <code>local.tz = "America/New_York"</code>. See
+<code>cutData</code> and <code>import</code> for more details.</p>
+</dd>
+<dt><code>statistic</code></dt>
+<dd>
+<p>The statistic that should be applied to each wind
+speed/direction bin. Can be “mean” (default), “median”,
+“max” (maximum), “frequency”. “stdev” (standard
+deviation), “weighted.mean” or “cpf” (Conditional Probability
+Function). Because of the smoothing involved, the colour scale for some of
+these statistics is only to provide an indication of overall pattern and
+should not be interpreted in concentration units e.g. for <code>statistic =
+  "weighted.mean"</code> where the bin mean is multiplied by the bin frequency and
+divided by the total frequency. In many cases using <code>polarFreq</code> will
+be better. Setting <code>statistic = "weighted.mean"</code> can be useful because
+it provides an indication of the concentration * frequency of occurrence
+and will highlight the wind speed/direction conditions that dominate the
+overall mean.</p>
+</dd>
+<dt><code>percentile</code></dt>
+<dd>
+<p>If <code>statistic = "percentile"</code> or <code>statistic =
+  "cpf"</code> then <code>percentile</code> is used, expressed from 0 to 100. Note that
+the percentile value is calculated in the wind speed, wind direction
+‘bins’. For this reason it can also be useful to set <code>min.bin</code>
+to ensure there are a sufficient number of points available to estimate a
+percentile. See <code>quantile</code> for more details of how percentiles are
+calculated.</p>
+</dd>
+<dt><code>width</code></dt>
+<dd>
+<p>The width of the annulus; can be “normal” (the default),
+“thin” or “fat”.</p>
+</dd>
+<dt><code>min.bin</code></dt>
+<dd>
+<p>The minimum number of points allowed in a wind speed/wind
+direction bin.  The default is 1. A value of two requires at least 2 valid
+records in each bin an so on; bins with less than 2 valid records are set
+to NA. Care should be taken when using a value &gt; 1 because of the risk of
+removing real data points. It is recommended to consider your data with
+care. Also, the <code>polarFreq</code> function can be of use in such
+circumstances.</p>
+</dd>
+<dt><code>exclude.missing</code></dt>
+<dd>
+<p>Setting this option to <code>TRUE</code> (the default)
+removes points from the plot that are too far from the original data. The
+smoothing routines will produce predictions at points where no data exist
+i.e. they predict. By removing the points too far from the original data
+produces a plot where it is clear where the original data lie. If set to
+<code>FALSE</code> missing data will be interpolated.</p>
+</dd>
+<dt><code>date.pad</code></dt>
+<dd>
+<p>For <code>type = "trend"</code> (default), <code>date.pad = TRUE</code>
+will pad-out missing data to the beginning of the first year and the end of
+the last year. The purpose is to ensure that the trend plot begins and ends
+at the beginning or end of year.</p>
+</dd>
+<dt><code>force.positive</code></dt>
+<dd>
+<p>The default is <code>TRUE</code>. Sometimes if smoothing data
+with steep gradients it is possible for predicted values to be negative.
+<code>force.positive = TRUE</code> ensures that predictions remain positive. This
+is useful for several reasons. First, with lots of missing data more
+interpolation is needed and this can result in artefacts because the
+predictions are too far from the original data. Second, if it is known
+beforehand that the data are all positive, then this option carries that
+assumption through to the prediction. The only likely time where setting
+<code>force.positive = FALSE</code> would be if background concentrations were
+first subtracted resulting in data that is legitimately negative. For the
+vast majority of situations it is expected that the user will not need to
+alter the default option.</p>
+</dd>
+<dt><code>k</code></dt>
+<dd>
+<p>The smoothing value supplied to <code>gam</code> for the temporal and wind
+direction components, respectively. In some cases e.g. a trend plot with
+less than 1-year of data the smoothing with the default values may become
+too noisy and affected more by outliers. Choosing a lower value of <code>k</code>
+(say 10) may help produce a better plot.</p>
+</dd>
+<dt><code>normalise</code></dt>
+<dd>
+<p>If <code>TRUE</code> concentrations are normalised by dividing by
+their mean value. This is done <em>after</em> fitting the smooth surface.
+This option is particularly useful if one is interested in the patterns of
+concentrations for several pollutants on different scales e.g. NOx and CO.
+Often useful if more than one <code>pollutant</code> is chosen.</p>
+</dd>
+<dt><code>key.header</code></dt>
+<dd>
+<p>Adds additional text/labels to the scale key. For example,
+passing the options <code>key.header = "header", key.footer = "footer1"</code>
+adds addition text above and below the scale key. These arguments are
+passed to <code>drawOpenKey</code> via <code>quickText</code>, applying the
+<code>auto.text</code> argument, to handle formatting.</p>
+</dd>
+<dt><code>key.footer</code></dt>
+<dd>
+<p>see <code>key.footer</code>.</p>
+</dd>
+<dt><code>key.position</code></dt>
+<dd>
+<p>Location where the scale key is to plotted. Allowed
+arguments currently include <code>"top"</code>, <code>"right"</code>, <code>"bottom"</code>
+and <code>"left"</code>.</p>
+</dd>
+<dt><code>auto.text</code></dt>
+<dd>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code>
+titles and axis labels will automatically try and format pollutant names
+and units properly e.g.  by subscripting the ‘2’ in NO2.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p><strong>Deprecated.</strong> Please use <code>type</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Either:
+</p>
+
+<ul>
+<li> <p><em>Dynamic:</em> A leaflet object
+</p>
+</li>
+<li> <p><em>Static:</em> A <code>ggplot2</code> object using <code>ggplot2::coord_sf()</code> coordinates with a <code>ggspatial</code> basemap
+</p>
+</li>
+</ul>
+<h3>Customisation of static maps using ggplot2</h3>
+
+<p>As the outputs of the static directional analysis functions are <code>ggplot2</code>
+figures, further customisation is possible using functions such as
+<code>ggplot2::theme()</code>, <code>ggplot2::guides()</code> and <code>ggplot2::labs()</code>.
+</p>
+<p>If multiple pollutants are specified, subscripting (e.g., the "x" in "NOx")
+is achieved using the ggtext package. Therefore if you
+choose to override the plot theme, it is recommended to use
+<code style="white-space: pre;">⁠[ggplot2::theme()]⁠</code> and <code style="white-space: pre;">⁠[ggtext::element_markdown()]⁠</code> to define the
+<code>strip.text</code> parameter.
+</p>
+<p>When arguments like <code>limits</code>, <code>percentile</code> or <code>breaks</code> are defined, a
+legend is automatically added to the figure. Legends can be removed using
+<code>ggplot2::theme(legend.position = "none")</code>, or further customised using
+<code>ggplot2::guides()</code> and either <code>color = ggplot2::guide_colourbar()</code> for
+continuous legends or <code>fill = ggplot2::guide_legend()</code> for discrete
+legends.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>openair::polarAnnulus()</code>
+</p>
+<p>Other directional analysis maps: 
+<code>diffMap()</code>,
+<code>freqMap()</code>,
+<code>percentileMap()</code>,
+<code>polarMap()</code>,
+<code>pollroseMap()</code>,
+<code>windroseMap()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+annulusMap(polar_data,
+  pollutant = "nox",
+  period = "hour",
+  provider = "CartoDB.Voyager"
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

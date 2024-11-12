@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oa_ngrams</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get N-grams of works</h2>
+
+<h3>Description</h3>
+
+<p>Some work entities in OpenAlex include N-grams (word sequences and their frequencies) of their full text.
+The N-grams are obtained from Internet Archive, which uses the spaCy parser to index scholarly works.
+See &lt;https://docs.openalex.org/api-entities/works/get-n-grams&gt; for coverage and more technical details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oa_ngrams(
+  works_identifier,
+  ...,
+  endpoint = "https://api.openalex.org",
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>works_identifier</code></td>
+<td>
+<p>Character. OpenAlex ID(s) of "works" entities as item identifier(s).
+These IDs start with "W". See more at &lt;https://docs.openalex.org/api-entities/works#id&gt;.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Unused.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endpoint</code></td>
+<td>
+<p>Character. URL of the OpenAlex Endpoint API server.
+Defaults to endpoint = "https://api.openalex.org".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. If TRUE, print information on querying process.
+Default to <code>verbose = FALSE</code>.
+To shorten the printed query URL, set the environment variable openalexR.print
+to the number of characters to print: <code>Sys.setenv(openalexR.print = 70)</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A dataframe of paper metadatada and a list-column of ngrams.
+</p>
+
+
+<h3>Note</h3>
+
+<p>A faster implementation is available for 'curl' &gt;= v5.0.0, and 'oa_ngrams' will issue a one-time message
+about this. This can be suppressed with 'options("oa_ngrams.message.curlv5" = FALSE)'.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+ngrams_data &lt;- oa_ngrams(c("W1963991285", "W1964141474"))
+
+# 10 most common ngrams in the first work
+first_paper_ngrams &lt;- ngrams_data$ngrams[[1]]
+first_paper_ngrams[
+  order(first_paper_ngrams$ngram_count, decreasing = TRUE),
+][
+  1:10,
+]
+
+# Missing N-grams are `NULL` in the `ngrams` list-column
+oa_ngrams("https://openalex.org/W2284876136")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,213 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+City Clustering Algorithm (CCA)
+</h2>
+
+<h3>Description</h3>
+
+<p>CCA is initialized by selecting an arbitrary populated cell which is burnt. Then, the populated neighbors are also burnt. The algorithm keeps growing the cluster by iteratively burning neighbors of the burnt cells until there are no further populated neighboring cells. Next, another unburned populated cell is picked and the procedure is repeated until all populated cells are assigned to a cluster.
+</p>
+<p>The City Clustering Algorithm (CCA) is based on the burning algorithm [1] and was first introduced in the context of cities [2]. Among other things, it was also used for a global urban percolation study [3].
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cca(data, s=1, mode=3, count.cells=FALSE, 
+    count.max=ncol(data)*3,  
+    res.x=NULL, res.y=NULL, cell.class=1,
+    unit="", compare="")
+cca.single(data, s, x,y, mode = 3)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>data to be clustered. This can be either a raster, a matrix or a data.frame. See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+
+<p>The radius/shell size of the burning procedure (i.e. how tolerant to small gaps the algorithm is). The unit is 'number of cells' if data is a numeric matrix and 'meters' if data is a raster or data.frame.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>The starting position in x-direction. Only used if data is a numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>The starting position in y-direction. Only used if data is a numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+
+<p>The algorithm for a non-georeferenced matrix comes in three versions which affect which close cells are 
+included to the considered cluster:
+(mode=1) nearest neighbors
+(mode=2) cells within a shell (i.e. squares of certain size)
+(mode=3) cells within a radius
+Whereas (mode=1) is equivalent to (mode=3) with r=1 and 
+(mode=2) with r=1 is equivalent to (mode=3) with r=2.
+Only used if data is a numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>count.cells</code></td>
+<td>
+
+<p>Set this option TRUE, if you want to know the number of cells which belongs to each cluster.
+Only used if data is a numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>count.max</code></td>
+<td>
+
+<p>This defines the maximum number of clusters, It is set per default to ncol*3.
+Only used if data is a numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res.y</code></td>
+<td>
+
+<p>The resolution of the data-set expressed as the distance between two cell centers in degrees (geographical coordinate system). Only needed if data is a data.frame and unit="m".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res.x</code></td>
+<td>
+
+<p>X-resolution. Only needed if data is a data.frame and unit="m".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cell.class</code></td>
+<td>
+
+<p>Only required if data is a raster. Specify which cell class (eg. land use type) will be clustered. Can be an integer or a vector and can be combined with the compare option.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit</code></td>
+<td>
+
+<p>If unit = "m" (meter) the cluster algorithm will be done for a cluster distance in 'meter'. Otherwise, the clustering is done in the degrees. If you want to do a pixel-wise clustering, then choose the resolution as cluster distance.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compare</code></td>
+<td>
+
+<p>If compare = "g" then cells greater than the given cell.class will be chosen. If compare = "s" cells smaller then the cell.class will be chosen.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>cca is implemented in two versions, depending on the format of the data. For numerical matrices, a matrix based version is called. For raster and data.frame based data, a list based version is used, which is faster for sparse matrices and large cluster distances. (See vignette, section: Comparison - matrix vs list)
+</p>
+<p>For matrix:
+</p>
+<p>The matrix is a simple numerical matrix. A value equal 0 or smaller is treated as an unimportant cell, a value above 0 is treated as a cell of interest. Clusters of connected cells are identified.
+</p>
+<p>For raster:
+</p>
+<p>A sub-function will be called to extract the coordinates of a given cell type (cell.class). Also, a threshold determining which cells can be burnt is possible by using compare = "g" (eg. minimum population to consider a cell as populated) Following steps; see data.frame.
+</p>
+<p>For data.frame:
+</p>
+<p>A data frame with two columns specifying the longitude (first column) and latitude (second column) coordinates. The algorithm identifies all points with a distance to each other smaller than the cluster distance s. If unit="m" the orthodromic distance, otherwise the Euclidean distance will be used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For matrix:
+</p>
+<p>A matrix that defines for each cell to which cluster it belongs.
+</p>
+<p>For raster / data.frame:
+</p>
+<p>List with two entries - 1. data frame with longitude and latitude coordinates of the cells and the cluster_id. and 2. a vector giving the size of the cluster in units of the primitive cell. The first number is the size of the cluster with cluster_id 1, second the size of the cluster with cluster_id 2, and so on.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steffen Kriewald, Till Fluschnik, Dominik Reusser,  Diego Rybski
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] Stauffer, D., &amp; Aharony, A. (2014). Introduction to percolation theory. Taylor &amp; Francis.
+</p>
+<p>[2] Rozenfeld, H. D., Rybski, D., Andrade, J. S., Batty, M., Stanley, H. E., &amp; Makse, H. A. (2008). Laws of population growth. Proceedings of the National Academy of Sciences, 105(48), 18702-18707.
+</p>
+<p>[3] Fluschnik, T., Kriewald, S., Garcia Cantu Ros, A., Zhou, B., Reusser, D., Kropp, J., &amp; Rybski, D. (2016). The size distribution, scaling properties and spatial organization of urban clusters: a global and regional percolation perspective. ISPRS International Journal of Geo-Information, 5(7), 110.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# for a matrix
+data(population)
+image(population)
+
+clusters &lt;- cca(population, s=5)
+cols &lt;- c("white",rep(rainbow(10), length.out=length(table(clusters))) )
+image(clusters, col=cols, xlab="", ylab="")
+
+one.cluster &lt;- cca.single(population, s=1, x=125, y=125)
+image(one.cluster, col=cols, xlab="", ylab="")
+
+# for a raster-object
+data(landcover)
+
+# clustering urban areas
+urban &lt;- cca(landcover, cell.class=1,s=2000, unit="m")
+str(urban)
+
+# plot the result    
+result &lt;- landcover*NA
+result[cellFromXY(result,urban$cluster[,c("long","lat")])]&lt;-urban$cluster[,"cluster_id"]*(-1)
+plot(result, col=rainbow(9))
+
+</code></pre>
+
+
+</div>

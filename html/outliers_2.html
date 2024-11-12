@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cochran.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Test for outlying or inlying variance </h2>
+
+<h3>Description</h3>
+
+<p>This test is useful to check if largest variance in several groups of
+data is "outlying" and this group should be rejected. Alternatively,
+if one group has very small variance, we can test for "inlying" variance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cochran.test(object, data, inlying = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p> A vector of variances or formula. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p> If object is a vector, data should be another vector, giving number of data in
+each corresponding group. If object is a formula, data should be a dataframe.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inlying</code></td>
+<td>
+<p> Test smallest variance instead of largest.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The corresponding p-value is calculated using <code>pcochran</code> function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class <code>htest</code> containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>the value of Cochran-statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>the p-value for the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>a character string describing the alternative hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a character string indicating what type of test was performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.name</code></td>
+<td>
+<p>name of the data argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate</code></td>
+<td>
+<p>vector of variance estimates</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Lukasz Komsta </p>
+
+
+<h3>References</h3>
+
+<p>Snedecor, G.W., Cochran, W.G. (1980). Statistical Methods (seventh edition).
+Iowa State University Press, Ames, Iowa.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>qcochran</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1234)
+x=rnorm(100)
+d=data.frame(x=x,group=rep(1:10,10))
+cochran.test(x~group,d)
+cochran.test(x~group,d,inlying=TRUE)
+x=runif(5)
+cochran.test(x,rep(5,5))
+cochran.test(x,rep(100,5))
+</code></pre>
+
+
+</div>

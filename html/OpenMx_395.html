@@ -1,0 +1,271 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxMatrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create MxMatrix Object</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a new MxMatrix object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxMatrix(type = c('Full', 'Diag', 'Iden', 'Lower',
+	'Sdiag', 'Stand', 'Symm', 'Unit', 'Zero'), nrow = NA, ncol = NA, 
+    free = FALSE, values = NA, labels = NA, lbound = NA, 
+    ubound = NA, byrow = getOption('mxByrow'), dimnames = NA, name = NA, 
+    condenseSlots=getOption('mxCondenseMatrixSlots'),
+    ..., joinKey=as.character(NA), joinModel=as.character(NA))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A character string indicating the matrix type, where type indicates the range of values and equalities in the matrix. Must be one of:  ‘Diag’, ‘Full’, ‘Iden’, ‘Lower’, ‘Sdiag’, ‘Stand’, ‘Symm’, ‘Unit’, or ‘Zero’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrow</code></td>
+<td>
+<p>Integer; the desired number of rows. One or both of ‘nrow’ and ‘ncol’ is required when ‘values’, ‘free’, ‘labels’, ‘lbound’, and ‘ubound’ arguments are not matrices, depending on the desired MxMatrix type.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncol</code></td>
+<td>
+<p>Integer; the desired number of columns. One or both of ‘nrow’ and ‘ncol’ is required when ‘values’, ‘free’, ‘labels’, ‘lbound’, and ‘ubound’ arguments are not matrices, depending on the desired MxMatrix type.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>free</code></td>
+<td>
+<p>A vector or matrix of logicals for free parameter specification. A single ‘TRUE’ or ‘FALSE’ will set all allowable variables to free or fixed, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>A vector or matrix of numeric starting values. By default, all values are set to zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>A vector or matrix of characters for variable label specification.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lbound</code></td>
+<td>
+<p>A vector or matrix of numeric lower bounds. Default bounds are specified with an <code>NA</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ubound</code></td>
+<td>
+<p>A vector or matrix of numeric upper bounds. Default bounds are specified with an <code>NA</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+<p>Logical; defaults to value of global option 'mxByRow'. If <code>FALSE</code> (default), the ‘values’, ‘free’, ‘labels’, ‘lbound’, and ‘ubound’ matrices are populated by column rather than by row. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dimnames</code></td>
+<td>
+<p>List. The dimnames attribute for the matrix: a list of length 2 giving the row and column names respectively. An empty list is treated as NULL, and a list of length one as row names. The list can be named, and the list names will be used as names for the dimensions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>An optional character string indicating the name of the MxMatrix object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condenseSlots</code></td>
+<td>
+<p>Logical; defaults to value of global option 'mxCondenseMatrixSlots'.  If <code>TRUE</code>, then the resulting MxMatrix will "condense" its ‘labels’, ‘free’, ‘lbound’, and ‘ubound’ down to 1x1 matrices if they contain only <code>FALSE</code> (‘free’) or <code>NA</code> (the other three).  If <code>FALSE</code>, those four matrices and the ‘values’ matrix will all be of equal dimensions.   </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.  Forces remaining arguments to be specified by
+name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>joinKey</code></td>
+<td>
+<p>The name of the column in current model's raw data that
+is used as a foreign key to match against the primary key in the
+joinModel's raw data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>joinModel</code></td>
+<td>
+<p>The name of the model that this matrix joins against.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The mxMatrix function creates MxMatrix objects, which consist of five matrices and a ‘type’ argument. The ‘values’ matrix is made up of numeric elements whose usage and capabilities in other functions are defined by the ‘free’ matrix. If an element is specified as a fixed parameter in the ‘free’ matrix, then the element in the ‘values’ matrix is treated as a constant value and cannot be altered or updated by an objective function when included in an mxRun function. If an element is specified as a free parameter in the ‘free’ matrix, the element in the ‘value’ matrix is considered a starting value and can be changed by an objective function when included in an mxRun function. 
+</p>
+<p>Element labels beginning with <code>'data.'</code> can be used if the MxMatrix is to be used in an MxModel object that has a raw dataset (i.e., an MxData object of <code>type="raw"</code>).  Such a label instructs OpenMx to use a particular column of the raw dataset to fill in the value of that element.  For historical reasons, the variable contained in that column is called a "definition variable."  For example, if an MxMatrix element has the label <code>'data.x'</code>, then OpenMx will use the first value of the data column named "x" when evaluating the fitfunction for the first row, and will use the second value of column "x" when evaluating the fitfunction for the second row, and so on.  After the call to <code>mxRun()</code>, the values for elements labeled with <code>'data.x'</code> are returned as the value from the first (i.e., first before any automated sorting is done) element of column "x" in the data. 
+</p>
+<p>Objects created by the <code>mxMatrix()</code> function are of a specific ‘type’, which specifies the number and location of parameters in the ‘labels’ matrix and the starting values in the ‘values’ matrix. Input ‘values’, ‘free’, and ‘labels’ matrices must be of appropriate shape and have appropriate values for the matrix type requested. Nine types of matrices are supported:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+‘Diag’   </td>
+<td style="text-align: left;"> matrices must be square, and only elements on the principal diagonal may be specified as free parameters or take non-zero values. All other elements are required to be fixed parameters with a value of 0. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+‘Full’   </td>
+<td style="text-align: left;"> matrices may be either rectangular or square, and all elements in the matrix may be freely estimated. This type is the default for the mxMatrix() function. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+‘Iden’   </td>
+<td style="text-align: left;"> matrices must be square, and consist of no free parameters. Matrices of this type have a value of 1 for all entries on the principal diagonal and the value 0 in all off-diagonal entries. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+‘Lower’  </td>
+<td style="text-align: left;"> matrices must be square, with a value of 0 for all entries in the upper triangle and no free parameters in the upper triangle. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+‘Sdiag’  </td>
+<td style="text-align: left;"> matrices must be square, with a value of 0 for all entries in the upper triangle and along the diagonal. No free parameters in the upper triangle or along the diagonal. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+‘Symm’   </td>
+<td style="text-align: left;"> matrices must be square, and elements in the principle diagonal and lower triangular portion of the matrix may be free parameters of any value. Elements in the upper triangular portion of the matrix are constrained to be equal to those in the lower triangular portion, such that the value and parameter specification of the element in row i and column j is identical to to the value and specification of the element in row j and column i. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+‘Stand’  </td>
+<td style="text-align: left;"> matrices are symmetric matrices (see 'Symm') with 1's along the main diagonal. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+‘Unit’   </td>
+<td style="text-align: left;"> matrices may be either rectangular or square, and contain no free parameters. All elements in matrices of this type have a value of 1 for all elements. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+
+‘Zero’   </td>
+<td style="text-align: left;"> matrices may be either rectangular or square, and contain no free parameters. All elements in matrices of this type have a value of 0 for all elements. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>When ‘type’ is ‘Lower’ or ‘Symm’, then the arguments to ‘free’, ‘values’, ‘labels’, ‘lbound’, or ‘ubound’ may be vectors of length <code class="reqn">N * (N + 1) / 2</code>, where N is the number of rows and columns of the matrix. When ‘type’ is ‘Sdiag’ or ‘Stand’, then the arguments to ‘free’, ‘values’, ‘labels’, ‘lbound’, or ‘ubound’ may be vectors of length <code class="reqn">N * (N - 1) / 2</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a new MxMatrix object, which consists of a ‘values’ matrix of numeric starting values, a ‘free’ matrix describing free parameter specification, a ‘labels’ matrix of labels for the variable names, and ‘lbound’ and ‘ubound’ matrices of the lower and upper parameter bounds. This MxMatrix object can be used as an argument in the <code>mxAlgebra()</code>, <code>mxBounds()</code>, <code>mxConstraint()</code> and <code>mxModel()</code> functions.
+</p>
+
+
+<h3>References</h3>
+
+<p>The OpenMx User's guide can be found at <a href="https://openmx.ssri.psu.edu/documentation/">https://openmx.ssri.psu.edu/documentation/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>MxMatrix for the S4 class created by mxMatrix. More information about the OpenMx package may be found here. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create a 3 x 3 identity matrix
+
+idenMatrix &lt;- mxMatrix(type = "Iden", nrow = 3, 
+    ncol = 3, name = "I")
+
+# Create a full 4 x 2 matrix from existing 
+# value matrix with all free parameters
+
+vals &lt;- matrix(1:8, nrow = 4)
+fullMatrix &lt;- mxMatrix(type = "Full", values = vals, 
+    free = TRUE, name = "foo")
+ 
+# Create a 3 x 3 symmetric matrix with free off-
+# diagonal parameters and starting values
+
+symmMatrix &lt;- mxMatrix(type = "Symm", nrow = 3, ncol = 3,
+    free = c(FALSE, TRUE, TRUE, FALSE, TRUE, FALSE),
+    values = c(1, .8, .8, 1, .8, 1),
+    labels = c(NA, "free1", "free2", NA, "free3", NA),
+    name = "bar")
+
+# Create an mxMatrix from a character matrix.  All numbers are
+# interpreted as fixed and non-numbers are interpreted as free
+# parameters.
+
+matrixFromChar &lt;- function(inputm, name=NA) {
+  inputmFixed &lt;- suppressWarnings(matrix(
+    as.numeric(inputm),nrow = nrow(inputm), ncol = ncol(inputm)))
+  inputmCharacter &lt;- inputm
+  inputmCharacter[!is.na(inputmFixed)] &lt;- NA
+  mxMatrix(nrow=nrow(inputm), ncol=ncol(inputm),
+           free=!is.na(inputmCharacter),
+           values=inputmFixed,
+           labels=inputmCharacter,
+           dimnames=dimnames(inputm), name=name)
+}
+
+
+# Demonstrate some of the behavior of the condensed slots
+# Create a 3x3 matrix with condensed slots
+
+a &lt;- mxMatrix('Full', 3, 3, values=1, condenseSlots=TRUE)
+a@free # at operator returns the stored 1x1 matrix
+a$free # dollar operator constructs full matrix for printing
+
+# assignment with the dollar operator
+#  de-condenses the slots to create the
+#  full 3x3 matrix
+a$free[1,1] &lt;- TRUE
+a@free
+
+
+
+</code></pre>
+
+
+</div>

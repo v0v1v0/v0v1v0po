@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>name_join</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+create '<code>'.gz'</code>-filenames from a list or dataframe
+</h2>
+
+<h3>Description</h3>
+
+<p>creates filenames based on a list or dataframe with the (header)-names:
+</p>
+<p><code>area source parameter resolution timestep date1 date2 option</code>
+</p>
+<p>by aligning the defined filetype: 
+</p>
+<p>e.g. <code>area_source_parameter_resolution_timestep_date1_date2.option.filetype</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">name_join(parts,filetype='gz')
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>parts</code></td>
+<td>
+
+<p>a list or dataframe with the parts:
+</p>
+</td>
+</tr></table>
+<dl>
+<dt><code>area</code></dt>
+<dd>
+<p>, the region keyword
+</p>
+</dd>
+<dt><code>source</code></dt>
+<dd>
+<p>, the data source
+</p>
+</dd>
+<dt><code>param</code></dt>
+<dd>
+<p>, the parameter saved in the <code>'.gz'</code>-file. Can only be one value!
+</p>
+</dd>
+<dt><code>resolution</code></dt>
+<dd>
+<p>, the  spatial resolution
+</p>
+</dd>
+<dt><code>timestep</code></dt>
+<dd>
+<p>, the temporal resolution
+</p>
+</dd>
+<dt>
+<code>date1</code> &amp; <code>date2</code>
+</dt>
+<dd>
+<p>, the temporal resolution (the time interval covered).
+</p>
+</dd>
+<dt><code>option</code></dt>
+<dd>
+<p>a character string holding supplmentary information of <code>'.gz'</code>-file treatment
+</p>
+</dd>
+</dl>
+<table><tr style="vertical-align: top;">
+<td><code>filetype</code></td>
+<td>
+
+<p>character string inidicating the filtype to be checked. ('.gz' by default)</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Herve Demarq, translated from IDL by Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See check_gzfiles to return summary of available <code>'.gz'</code>-files and name_split to split <code>'.gz'</code>-filenames
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example: read and plot '.gz'-file
+path &lt;- system.file("test_files", package="oceanmap")
+gz.files &lt;- Sys.glob(paste0(path,'/*.gz')) # load sample-'.gz'-files
+check_gzfiles(folder=path) # return file summary-table
+
+# return summary of availble '.gz'-files
+# suffix-column corresponds to option column of the name_join-call
+# addition n-column returns the number of available files per filetype
+check_gzfiles(gz.files)
+
+## Example: split and rejoin '.gz'-filenames
+name_split(gz.files) # return summary-table per file
+name_join(name_split(gz.files))
+</code></pre>
+
+
+</div>

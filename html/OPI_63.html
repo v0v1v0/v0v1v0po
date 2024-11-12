@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiPresent_for_Compass</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Implementation of opiPresent for the Compass machine.</h2>
+
+<h3>Description</h3>
+
+<p>This is for internal use only. Use <code>opiSetup()</code> with
+these Arguments and you will get the Value back.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stim</code></td>
+<td>
+<p>A list of stimulus parameters (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nextStim</code></td>
+<td>
+<p>Unused - included for compliance with OPI standard.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the chosen OPI implementation is <code>Compass</code>, then <code>nextStim</code>
+is ignored. Note that the dB level is rounded to the nearest integer.
+</p>
+<p>If tracking is on, then this will block until the tracking is obtained,
+and the stimulus presented.
+</p>
+<p><code>stim</code> is a list containing some or all of the following elements:
+</p>
+
+<ul>
+<li> <p><code>x</code>, x-coordinate in degrees (floating point) (range $[-30,30]$).
+</p>
+</li>
+<li> <p><code>y</code>, y-coordinate in degrees (floating point) (range $[-30,30]$).
+</p>
+</li>
+<li> <p><code>level</code> is luminance in cd/<code class="reqn">\mbox{m}^2</code>, and is rounded to the nearest
+whole dB for display (range 0 to 50). 0dB is 10000aps.
+</p>
+</li>
+<li> <p><code>responseWindow</code> is in milliseconds (range 0 to 2680).
+</p>
+</li>
+</ul>
+<p>Stimulus duration is assumed to be 200ms, and size is assumed to be
+Goldmann III (0.43 degrees diameter),  color is assumed to be white.
+These cannot be changed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing:
+</p>
+
+<ul>
+<li> <p><code>err</code> 0 all clear, &gt;= 1 some error codes (eg cannot track, etc) (integer)
+</p>
+</li>
+<li> <p><code>seen</code> <code>FALSE</code> for not seen, <code>TRUE</code> for seen (button pressed in response window)
+</p>
+</li>
+<li> <p><code>time</code> Response time in ms (integer) since stimulus onset, -1 for not seen
+</p>
+</li>
+<li> <p><code>time_rec</code> Time since epoch when command was received at Compass (integer ms)
+</p>
+</li>
+<li> <p><code>time_pres</code> Time since epoch that stimulus was presented (integer ms)
+</p>
+</li>
+<li> <p><code>num_track_events</code> Number of tracking events that occurred during presentation (integer)
+</p>
+</li>
+<li> <p><code>num_motor_fails</code> Number of times motor could not follow fixation movement during presentation (integer)
+</p>
+</li>
+<li> <p><code>pupil_diam</code> Pupil diameter in mm (float)
+</p>
+</li>
+<li> <p><code>loc_x</code> Pixels integer, location in image of presentation (integer)
+</p>
+</li>
+<li> <p><code>loc_y</code> Pixels integer, location in image of presentation (integer)
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+  # Set up the Compass
+  chooseOpi("Compass")
+  result &lt;- opiInitialize(ip = "192.168.1.7", port = 44965)
+  if (!is.null(result$err))
+    stop("Initialisation failed")
+
+   #' @param x X location of stim in degrees
+   #' @param y Y location of stim in degrees
+   #' @param size If 3, Goldmann III, else V
+   #' @param db Value in dB
+   #' @return stim object ready for opiPresent
+   makeStim &lt;- function(x, y, size, db) {
+       s &lt;- list(x = x, y = y, level = dbTocd(db, 10000 / pi),
+           size = ifelse(size == 3, 0.43, 1.77),
+           duration = 200, responseWindow = 1500)
+       class(s) &lt;- "opiStaticStimulus"
+       return(s)
+   }
+
+   result &lt;- opiPresent(makeStim(9, 9, 3, 10))
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

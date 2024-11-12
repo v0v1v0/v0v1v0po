@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fIsonymyAll</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate the Isonymy, Isonymy between regions, Lasker distances, Euclidean distance and Nei's distances</h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the Isonymy, Isonymy between regions, Lasker distance, Euclidean distance and Nei's distances and Hedrick's coefficient.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fIsonymyAll (x, n, location, union, measure)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> data frame with the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p> number of the locations in the data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> name of a variable which represents the location in the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>union</code></td>
+<td>
+<p> variable to be used to search for matching surnames in two locations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measure</code></td>
+<td>
+<p> name of a variable which represents the relative frequency for each surname.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Values of Isonymy, Isonymy between regions, Lasker distance, Euclidean distance and Nei's distances and Hedrick's coefficient.
+</p>
+<p>Surname (dis)similarity among regions can be quantified by different measures. Consider index <code class="reqn">i=1,\ldots,n</code> for denoting a certain geographical region (for two regions, <code class="reqn">(i,j)</code>). Each region has an associated collection <code class="reqn">S_i</code> of surnames, and for a pair of regions, the collection of all the surnames in them is denoted by <code class="reqn">S_{ij} (S_{ij}=S_i\cup S_j)</code>. The total number of surnames in a certain region <code class="reqn">i</code> is denoted by <code class="reqn">n_i</code>. Surnames will be denoted by indices <code class="reqn">k</code> and <code class="reqn">l</code>.
+</p>
+<p>Isonymy is defined as <code class="reqn">I_i=\sum \limits _{k\in S_i}p_{ki}^2</code> where <code class="reqn">p_{ki}</code> denotes the relative frequency of surname <code class="reqn">k</code> in region <code class="reqn">i</code>. Isonymy can be also extended as a measure of population similarities between groups. Under the assumption of a common origin, isonymy between two regions <code class="reqn">i</code> and <code class="reqn">j</code> is defined as <code class="reqn">I_{ij}=\sum \limits_{k\in S_{ij}}p_{k_i}p_{k_j}</code>.
+</p>
+<p>Other different measures of the isonymic distance between a pair of locations can be derived from isonymy between. For instance, the Lasker distance is given by <code class="reqn">L = -\log(I_{ij})</code>.
+</p>
+<p>Lasker distance can be interpreted as a measure of similarity between to areas, where large distance indicate less similarity in surname composition. Nevertheless, Lasker distance is not the only option to quantify surname similarity. Other common coefficients are the Euclidean distance and Nei's distance, both of them given by <code class="reqn">E = \sqrt{1-\sum_{k\in S_{ij}}{\sqrt{p_{ki}p_{kj}}}}\quad\mbox{and}\quad N = -\log\left(\frac{I_{ij}}{\sqrt{I_iI_j}}\right),</code> respectively.
+Finally, Hedrick's coefficient gives a standardized measure of isonymy using a procedure similar to that utilized in the calculation of a correlation coefficient. Specifically:
+<code class="reqn">H_{ij} = \frac{ 2 \sum \limits_{k \in S_{ij}} p_{ki} p_{kj}}{  
+\left(\sum \limits_{k \in S_{ij}} p_{ki}^2 + \sum \limits_{k \in S_{ij}} p_{kj}^2 \right) } \mbox{, with } i,j=1\ldots,n.</code>
+</p>
+<p>In diversity context, <code class="reqn">p_{ki}</code> denotes the relative frequency of species <code class="reqn">k</code> in community (<code class="reqn">\approx</code> region onomastic context) <code class="reqn">i</code> and <code class="reqn">S_i</code> are all species in community <code class="reqn">i</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>isonymy</code></td>
+<td>
+<p> data frame with two columns and number of rows the number of regions / communities (<code class="reqn">n</code>). For each location, it returns the value of the isonymy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isonymy.btw</code></td>
+<td>
+<p> the value of isonymy between. Matrix, <code class="reqn">n \times n</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hedrick</code></td>
+<td>
+<p> the value of Hedrick's coefficient. Matrix, <code class="reqn">n \times n</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nei</code></td>
+<td>
+<p> the value of Nei's distance. Matrix, <code class="reqn">n \times n</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lasker</code></td>
+<td>
+<p> the value of Lasker distance. Matrix, <code class="reqn">n \times n</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distE</code></td>
+<td>
+<p> the value of Euclidean distance. Matrix, <code class="reqn">n \times n</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Barrai, I., Scapoli, C., Beretta, M., Nesti, C., Mamolini, E., and Rodriguez–Larralde, A., (1996) Isonymy and the genetic structure of Switzerland. I: The distributions of surnames. <em>Annals of Human Biology</em>, <b>23</b>, 431–455.
+</p>
+<p>Cavalli-Sforza, L. L., and Edwards, A. W. F., (1967), Phylogenetic analysis models and estimation procedures. <em>American Journal of Human Genetics</em>, <b>19</b>, 233 257.
+</p>
+<p>Hedrick, P. W. (1971), A new approach to measuring genetic similarity. <em>Evolution</em>, <b>25</b>: 276–280. 
+</p>
+<p>Lasker, G. W. (1977) A coefficicnt of relationship by isonymy: a method for estimating the genetic relationship between populations. <em>Human Biology</em>, <b>49</b>, 489–493.
+</p>
+<p>Mikerezi, I., Shina, E. Scapoli, C., Barbujani, G. Mamolini, E., Sandri, M., Carrieri, A., Rodriguez–Larralde, A. and Barrai, I. (2013). Surnames in Albania: a study of the population of Albania through isonymy. <em>Annals of Human Genetics</em>, <b>77</b>, 232–243.
+</p>
+<p>Nei, M.(1973). The theory and estimation of genetic distance. In <em>Genetic Structure of Populations</em>, edited by N. E. Morton, (Honolulu: University Press of Hawaii), 45–54.
+</p>
+<p>Weiss, V. 1980. Inbreeding and genetic distance between hierarchically structured populations measured by surname frequencies. <em>Mankind Quarterly</em>, <b>21</b>, 135–149.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fIsonymy.</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(surnamesgal14)
+result = fIsonymyAll (x= surnamesgal14, n= 314, location = 'muni',
+union = 'surname', measure = 'pki')
+result
+
+data(namesmengal16)
+namesmengal16$pki &lt;- (namesmengal16$number /
+namesmengal16$population)
+result = fIsonymyAll (x= namesmengal16, n= 313, location = 'muni',
+union = 'name', measure = 'pki')
+result
+
+data(nameswomengal16)
+nameswomengal16$pki &lt;- (nameswomengal16$number /
+nameswomengal16$population)
+result = fIsonymyAll (x= nameswomengal16, n= 313, location = 'muni',
+union = 'name', measure = 'pki')
+result
+</code></pre>
+
+
+</div>

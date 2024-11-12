@@ -1,0 +1,59 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>odin_ir</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return detailed information about an odin model</h2>
+
+<h3>Description</h3>
+
+<p>Return detailed information about an odin model.  This is the
+mechanism through which coef works with odin.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">odin_ir(x, parsed = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An <code>odin_generator</code> function, as created by
+<code>odin::odin</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parsed</code></td>
+<td>
+<p>Logical, indicating if the representation should be
+parsed and converted into an R object.  If <code>FALSE</code> we
+return a json string.</p>
+</td>
+</tr>
+</table>
+<h3>Warning</h3>
+
+<p>The returned data is subject to change for a few versions while I
+work out how we'll use it.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">exp_decay &lt;- odin::odin({
+  deriv(y) &lt;- -0.5 * y
+  initial(y) &lt;- 1
+}, target = "r")
+odin::odin_ir(exp_decay)
+coef(exp_decay)
+</code></pre>
+
+
+</div>

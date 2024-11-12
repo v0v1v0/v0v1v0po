@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_DEL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Removal of redundant design points
+</h2>
+
+<h3>Description</h3>
+
+<p>Removes the design points (or, equivalently, candidate regressors) that cannot support an optimal approximate design.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_DEL(Fx, w, crit = "D", h=NULL, echo = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> is the number of parameters
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>the optimality criterion. Possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> nor <code>"c"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> or <code>"c"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Output is the list with components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the call of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep</code></td>
+<td>
+<p>the indices of <code>w</code> that have not been removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.keep</code></td>
+<td>
+<p>the approximate design on the reduced space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Fx.keep</code></td>
+<td>
+<p>the model matrix of the regressors on the reduced space</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The design vector <code>w</code> should have a non-singular information matrix. The procedure is valid only for the standard (size) constraint.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Harman R, Pronzato L (2007): Improvements on removing non-optimal support points in D-optimum design algorithms, Statistics &amp; Probability Letters 77, 90-94
+</p>
+<p>Pronzato L (2013): A delimitation of the support of optimal designs for Kiefers Phi_p-class of criteria. Statistics &amp; Probability Letters 83, 2721-2728</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Generate a model matrix for the quadratic model
+# on a semi-circle with a huge number of design points
+form.q &lt;- ~x1 + x2 + I(x1^2) + I(x2^2) + I(x1*x2)
+Fx &lt;- Fx_cube(form.q, lower = c(-1, 0), n.levels = c(1001, 501))
+remove &lt;- (1:nrow(Fx))[Fx[ ,2]^2 + Fx[ ,3]^2 &gt; 1]
+Fx &lt;- Fx[-remove, ]
+
+# Compute an approximate design w with an efficiency of cca 0.999
+w &lt;- od_REX(Fx, eff = 0.999)$w.best
+
+# Remove the redundant design points based on w
+Fx &lt;- od_DEL(Fx, w)$Fx.keep
+
+# Now an almost perfect design can be computed very rapidly:
+w &lt;- od_REX(Fx, eff = 0.9999999999)$w.best
+
+# Plotting of the relevant directional derivative is also faster:
+od_plot(Fx, w, Fx[ , 2:3], dd.size = 0.1)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

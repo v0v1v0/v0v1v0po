@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_cpp_api</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Access internal C++ rountines used in outbreaker2</h2>
+
+<h3>Description</h3>
+
+<p>This function returns an environment containing all C++ functions (bound to R
+using Rcpp) used for priors, likelihoods, and movements of parameters in
+outbreaker2.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_cpp_api()
+</code></pre>
+
+
+<h3>Value</h3>
+
+<p>An environment containing Rcpp bindings to C++ functions used internally in
+outbreaker2. All functions are named as cpp_[type]_[component], where 'type'
+can be:
+</p>
+
+<ul>
+<li>
+<p> 'prior': prior computation
+</p>
+</li>
+<li>
+<p> 'll':  likelihood computation
+</p>
+</li>
+<li>
+<p> 'move': movement of parameters or augmented data
+</p>
+</li>
+</ul>
+<p>And where 'component' can be:
+</p>
+
+<ul>
+<li>
+<p> 'mu': (parameter) mutation rate
+</p>
+</li>
+<li>
+<p> 'pi': (parameter) reporting probability
+</p>
+</li>
+<li>
+<p> 'lambda': (parameter) non-infectious contact rate
+</p>
+</li>
+<li>
+<p> 'eps': (parameter) contact reporting coverage
+</p>
+</li>
+<li>
+<p> 'alpha': (augmented data) ancestries of the cases
+</p>
+</li>
+<li>
+<p> 'kappa': (augmented data) generation between cases on transmission
+chains
+</p>
+</li>
+<li>
+<p> 't_inf': (augmented data) dates of infections
+</p>
+</li>
+<li>
+<p> 'timing_infections': (likelihood component) timing between infectors and
+infectees
+</p>
+</li>
+<li>
+<p> 'timing_sampling': (likelihood component) timing between infection and
+reporting / isolation
+</p>
+</li>
+<li>
+<p> 'timing': (likelihood component) sum of the two timing components
+</p>
+</li>
+<li>
+<p> 'genetic': (likelihood component) genetic diversity accumulated along
+transmission chains
+</p>
+</li>
+<li>
+<p> 'reporting': (likelihood component) reporting of cases
+</p>
+</li>
+<li>
+<p> 'all': (likelihood component) sum of all likelihood components
+</p>
+</li>
+<li>
+<p> 'swap_cases': (type of movement) swap infectors and infectees on a
+transmission tree 
+</p>
+</li>
+</ul>
+<p>For a description of the arguments of these functions, see the Rcpp_API
+vignette (<code>vignette("Rcpp_API", package = "outbreaker2")</code>).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thibaut Jombart (<a href="mailto:thibautjombart@gmail.com">thibautjombart@gmail.com</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## get functions in an environment
+api &lt;- get_cpp_api()
+api
+
+## check content of the environment
+ls(api)
+
+## test the prior for mu
+args(api$cpp_prior_mu)
+
+config &lt;- create_config()
+
+api$cpp_prior_mu(list(mu = 0.00123), config)
+
+dexp(0.00123, rate = config$prior_mu, log = TRUE)
+
+</code></pre>
+
+
+</div>

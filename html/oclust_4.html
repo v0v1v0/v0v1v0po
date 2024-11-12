@@ -1,0 +1,218 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oclust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The OCLUST Algorithm</h2>
+
+<h3>Description</h3>
+
+<p>oclust is a trimming method in model-based clustering. It iterates over possible values for the number of outliers and returns the model parameters for the best model as determined by the minimum KL divergence. If kuiper=TRUE, oclust calculates an approximate p-value using the Kuiper test and stops the algorithm if the p-value exceeds the specified threhold.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oclust(
+  X,
+  maxO,
+  G,
+  grossOuts = NULL,
+  modelNames = "VVV",
+  mc.cores = 1,
+  nmax = 1000,
+  kuiper = FALSE,
+  pval = 0.05,
+  B = 100,
+  verb = FALSE,
+  scale = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>A matrix or data frame with n rows of observations and p columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxO</code></td>
+<td>
+<p>An upper bound for the number of outliers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+<p>The number of clusters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grossOuts</code></td>
+<td>
+<p>The indices of the initial outliers to remove. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modelNames</code></td>
+<td>
+<p>The model to fit using the gpcm function in the mixture package. Default is "VVV" (unconstrained). If modelNames=NULL, all models are fitted for each subset at each iteration. The BIC chooses the best model for each subset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mc.cores</code></td>
+<td>
+<p>Number of cores to use if running in parallel. Default is 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nmax</code></td>
+<td>
+<p>Maximum number of iterations for each EM algorithm. Decreasing nmax may speed up the algorithm but lose precision in finding the log-likelihoods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kuiper</code></td>
+<td>
+<p>A logical specifying whether to use the Kuiper test (Kuiper, 1960) to stop the algorithm when p-value exceeds the specified threshold. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pval</code></td>
+<td>
+<p>The p-value for the Kuiper test. Default is 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>Number of samples to calculate the approximate p-value. Default is 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verb</code></td>
+<td>
+<p>A logical specifying whether to print the current iteration number. Default is FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>A logical specifying whether to centre and scale the data. Default is TRUE</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Gross outlier indices can be found with the <code>findGrossOuts</code> function.
+</p>
+<p>N. H. Kuiper, Tests concerning random points on a circle, in: Nederl. Akad. Wetensch. Proc. Ser. A, Vol. 63, 1960, pp. 38–47.
+</p>
+
+
+<h3>Value</h3>
+
+<p>oclust returns a list of class oclust with
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A list containing the raw and scaled data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numO</code></td>
+<td>
+<p>The predicted number of outliers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outliers</code></td>
+<td>
+<p>The most likely outliers in the optimal solution in order of likelihood</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>class</code></td>
+<td>
+<p>The classification for the optimal solution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>The model selected for the optimal solution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+<p>The number of clusters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pi.g</code></td>
+<td>
+<p>The group proportions for the optimal solution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>The cluster means for the optimal solution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>The cluster variances for the optimal solution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>KL</code></td>
+<td>
+<p>The KL divergence for each iteration, with the first value being for the initial dataset with the gross outliers removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allCand</code></td>
+<td>
+<p>All outlier candidates in order of likelihood</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#simulate 4D dataset
+library(mvtnorm)
+set.seed(123)
+data&lt;-rbind(rmvnorm(250,rep(-3,4),diag(4)),
+           rmvnorm(250,rep(3,4),diag(4)))
+#add outliers
+noisy&lt;-simOuts(data=data,alpha=0.02,seed=123)
+
+#Find gross outliers
+findGrossOuts(X=noisy,minPts=10)
+
+#Elbow between 5 and 10. Specify limits of graph
+findGrossOuts(X=noisy,minPts=10,xlim=c(5,10))
+
+#Elbow at 9
+gross&lt;-findGrossOuts(X=noisy,minPts=10,elbow=9)
+
+#run algorithm
+result&lt;-oclust(X=noisy,maxO=15,G=2,grossOuts = gross,
+modelNames = "EEE",mc.cores=1,nmax=50,kuiper=FALSE,
+verb=TRUE,scale=TRUE)
+
+## End(Not run)</code></pre>
+
+
+</div>

@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>estimateDistances</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate distances between oscillators</h2>
+
+<h3>Description</h3>
+
+<p>Estimates the distances between the oscillators of a <code>ODEnetwork</code>
+from an equilibrium state.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">estimateDistances(
+  odenet,
+  equilibrium,
+  distGround = c("combined", "individual", "fixed", c("A", "B", "123", "A")),
+  optim.control = list()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>odenet</code></td>
+<td>
+<p>[<code>ODEnetwork</code>]<br>
+List of class <code>ODEnetwork</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>equilibrium</code></td>
+<td>
+<p>[<code>numeric(n)</code>]<br>
+The desired equilibrium positions of the oscillators.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distGround</code></td>
+<td>
+<p>[<code>character(1)</code>] or [<code>character(n)</code>]<br><code>"combined"</code> estimates one value for all distances of the oscillators to the ground.
+Optimisation starts from <code>median(equilibrium)</code>.<br><code>"individual"</code> estimates individual distance values for every oscillator.
+Optimisation starts from <code>equilibrium</code>.<br><code>"fixed"</code> no estimation of the distances to the ground. 
+Set to diagonal of distances matrix in <code>ODEnetwork</code>.<br><code>character(n)</code> specifies groups of oscillators which distances to the ground are 
+estimated by the same value. Optimisation starts from <code>median(equilibrium)</code> of the 
+specified groups.<br>
+Default is <code>"combined"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>optim.control</code></td>
+<td>
+<p>[<code>list()</code>]<br>
+A list of control parameters for optim.
+See <code>optim</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>an extended list of class <code>ODEnetwork</code>.<br>
+Matrix of distances is added or overwritten.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">masses &lt;- c(1, 1)
+dampers &lt;- diag(c(1, 1))
+springs &lt;- diag(c(1, 1))
+springs[1, 2] &lt;- 1
+equilibrium &lt;- c(1/3, 5/3)
+odenet &lt;- ODEnetwork(masses, dampers, springs)
+estimateDistances(odenet, equilibrium)$distances
+estimateDistances(odenet, equilibrium, distGround="individual")$distances
+</code></pre>
+
+
+</div>

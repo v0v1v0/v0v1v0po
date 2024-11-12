@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>indexBieri</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bieri's index of cognitive complexity</h2>
+
+<h3>Description</h3>
+
+<p>The index builds on the number of rating matches between pairs of constructs. It is the relation between the total
+number of matches and the possible number of matches.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">indexBieri(x, deviation = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>repgrid</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deviation</code></td>
+<td>
+<p>Maximal difference between ratings to be considered a match (default <code>0</code> = identical scores for a
+match).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><strong>CAVEAT</strong>: The Bieri index will change when constructs are reversed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of class <code>indexBieri</code>:
+</p>
+
+<ul>
+<li> <p><code>grid</code>: The grid used to calculate the index
+</p>
+</li>
+<li> <p><code>deviation</code> The deviation parameter.
+</p>
+</li>
+<li> <p><code>matches_max</code> Maximum possible number of matches across constructs.
+</p>
+</li>
+<li> <p><code>matches</code> Total number of matches across constructs.
+</p>
+</li>
+<li> <p><code>constructs</code>: Matrix with no. of matches for constructs.
+</p>
+</li>
+<li> <p><code>bieri</code>: Bieri index (= matches / matches_max)
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">m &lt;- indexBieri(boeker)
+
+# several output options
+print(m)
+print(m, output = "IC")  # construct matches
+
+# extract the matrix of matches
+m$constructs
+
+# CAVEAT: Bieri's index changes when constructs are reversed
+nr &lt;- nrow(boeker)
+l &lt;- replicate(1000, swapPoles(boeker, sample(nr, sample(nr, 1))))
+bieri &lt;- sapply(l, function(x) indexBieri(x)$bieri)
+hist(bieri, breaks = 50)
+abline(v = mean(bieri), col = "red", lty = 2)
+
+</code></pre>
+
+
+</div>

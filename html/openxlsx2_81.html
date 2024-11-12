@@ -1,0 +1,229 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_formula</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a formula to a cell range in a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>This function can be used to add a formula to a worksheet.
+In <code>wb_add_formula()</code>, you can provide the formula as a character vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_formula(
+  wb,
+  sheet = current_sheet(),
+  x,
+  dims = wb_dims(start_row, start_col),
+  start_col = 1,
+  start_row = 1,
+  array = FALSE,
+  cm = FALSE,
+  apply_cell_style = TRUE,
+  remove_cell_style = FALSE,
+  enforce = FALSE,
+  shared = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A Workbook object containing a worksheet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>The worksheet to write to. (either as index or name)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A formula as character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>Spreadsheet dimensions that will determine where <code>x</code> spans: "A1", "A1:B2", "A:B"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_col</code></td>
+<td>
+<p>A vector specifying the starting column to write to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_row</code></td>
+<td>
+<p>A vector specifying the starting row to write to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>array</code></td>
+<td>
+<p>A bool if the function written is of type array</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cm</code></td>
+<td>
+<p>A special kind of array function that hides the curly braces in the cell.
+Add this, if you see "@" inserted into your formulas.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>apply_cell_style</code></td>
+<td>
+<p>Should we write cell styles to the workbook?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove_cell_style</code></td>
+<td>
+<p>Should we keep the cell style?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enforce</code></td>
+<td>
+<p>enforce dims</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shared</code></td>
+<td>
+<p>shared formula</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Currently, the local translations of formulas are not supported.
+Only the English functions work.
+</p>
+<p>The examples below show a small list of possible formulas:
+</p>
+
+<ul>
+<li>
+<p> SUM(B2:B4)
+</p>
+</li>
+<li>
+<p> AVERAGE(B2:B4)
+</p>
+</li>
+<li>
+<p> MIN(B2:B4)
+</p>
+</li>
+<li>
+<p> MAX(B2:B4)
+</p>
+</li>
+<li>
+<p> ...
+</p>
+</li>
+</ul>
+<p>It is possible to pass vectors to <code>x</code>. If <code>x</code> is an array formula, it will
+take <code>dims</code> as a reference. For some formulas, the result will span multiple
+cells (see the <code>MMULT()</code> example below). For this type of formula, the
+output range must be known a priori and passed to <code>dims</code>, otherwise only the
+value of the first cell will be returned. This type of formula, whose result
+extends over several cells, is only possible with single strings. If a vector
+is passed, it is only possible to return individual cells.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The workbook, invisibly.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>grouping-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+<p>Other worksheet content functions: 
+<code>col_widths-wb</code>,
+<code>filter-wb</code>,
+<code>grouping-wb</code>,
+<code>named_region-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_conditional_formatting()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_thread()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb &lt;- wb_workbook()$add_worksheet()
+wb$add_data(dims = wb_dims(rows = 1, cols = 1:3), x = c(4, 5, 8))
+
+# calculate the sum of elements.
+wb$add_formula(dims = "D1", x = "SUM(A1:C1)")
+
+# array formula with result spanning over multiple cells
+mm &lt;- matrix(1:4, 2, 2)
+
+wb$add_worksheet()$
+ add_data(x = mm, dims = "A1:B2", col_names = FALSE)$
+ add_data(x = mm, dims = "A4:B5", col_names = FALSE)$
+ add_formula(x = "MMULT(A1:B2, A4:B5)", dims = "A7:B8", array = TRUE)
+
+# add shared formula
+wb$add_worksheet()$
+ add_data(x = matrix(rnorm(5*5), ncol = 5, nrow = 5))$
+ add_formula(x = "SUM($A2:A2)", dims = "A8:E12", shared = TRUE)
+
+</code></pre>
+
+
+</div>

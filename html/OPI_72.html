@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiPresent_for_SimHenson</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>opiPresent_for_SimHenson</h2>
+
+<h3>Description</h3>
+
+<p>Determine the response to a stimuli by sampling from a cumulative Gaussian
+Frequency-of-Seeing (FoS) curve (also known as the psychometric function).
+</p>
+<p>For internal use only, use <code>opiPresent()</code>.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stim</code></td>
+<td>
+<p>A list that contains at least:
+</p>
+
+<ul><li> <p><code>level</code> which is the stim value in cd/<code class="reqn">\mbox{m}^2</code>.
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fpr</code></td>
+<td>
+<p>false positive rate for the FoS curve (range 0..1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fnr</code></td>
+<td>
+<p>false negative rate for the FoS curve (range 0..1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tt</code></td>
+<td>
+<p>mean of the assumed FoS curve in dB.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Any other parameters you like, they are ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The FoS formula is
+</p>
+<p style="text-align: center;"><code class="reqn">\mbox{fpr}+(1-\mbox{fpr}-\mbox{fnr})(1-\mbox{pnorm}(x, \mbox{tt}, \mbox{pxVar})</code>
+</p>
+
+<p>where <code>x</code> is the stimulus value in dB, and <code>pxVar</code> is
+</p>
+<p style="text-align: center;"><code class="reqn">\min(\mbox{cap}, e^{A\times\mbox{tt}+B}).</code>
+</p>
+
+<p>The ceiling <code>cap</code> is set with the call to
+<code>opiInitialize</code>, and <code>A</code> and <code>B</code> are from Table 1 in Henson
+et al (2000), also set in the call to <code>opiInitialise</code> using the <code>type</code> parameter.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with elements:
+</p>
+
+<ul>
+<li> <p><code>err</code> <code>NULL</code> if no error, a string message otherwise.
+</p>
+</li>
+<li> <p><code>seen</code> <code>TRUE</code> or <code>FALSE</code>.
+</p>
+</li>
+<li> <p><code>time</code> Always <code>NA</code>.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">    # Stimulus is Size III white-on-white as in the HFA
+chooseOpi("SimHenson")
+res &lt;- opiInitialize(type = "C", cap = 6)
+if (!is.null(res$err))
+  stop(paste("opiInitialize() failed:", res$err))
+
+result &lt;- opiPresent(stim = list(level = dbTocd(20)), tt = 30, fpr = 0.15, fnr = 0.01)
+print(paste("Seen:", result$seen, quote = FALSE))
+
+res &lt;- opiClose()
+if (!is.null(res$err))
+  stop(paste("opiClose() failed:", res$err))
+
+</code></pre>
+
+
+</div>

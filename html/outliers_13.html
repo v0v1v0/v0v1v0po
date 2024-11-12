@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rm.outlier</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Remove the value(s) most differing from the mean </h2>
+
+<h3>Description</h3>
+
+<p>If the outlier is detected and confirmed by statistical tests, this function
+can remove it or replace by sample mean or median.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rm.outlier(x, fill = FALSE, median = FALSE, opposite = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a dataset, most frequently a vector. If argument is a dataframe, then outlier is removed 
+from each column by <code>sapply</code>. The same behavior is applied by <code>apply</code> when the matrix 
+is given.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fill</code></td>
+<td>
+<p> If set to TRUE, the median or mean is placed instead of outlier. Otherwise, 
+the outlier(s) is/are simply removed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>median</code></td>
+<td>
+<p> If set to TRUE, median is used instead of mean in outlier replacement. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opposite</code></td>
+<td>
+<p> if set to TRUE, gives opposite value (if largest value has maximum difference
+from the mean, it gives smallest and vice versa)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A dataset of the same type as argument, with outlier(s) removed or replacement by appropriate means
+or medians.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Lukasz Komsta</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>outlier</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1234)
+y=rnorm(100)
+outlier(y)
+outlier(y,opposite=TRUE)
+rm.outlier(y)
+rm.outlier(y,opposite=TRUE)
+dim(y) &lt;- c(20,5)
+outlier(y)
+outlier(y,logical=TRUE)
+outlier(y,logical=TRUE,opposite=TRUE)
+rm.outlier(y)
+rm.outlier(y,opposite=TRUE)
+</code></pre>
+
+
+</div>

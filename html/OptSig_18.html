@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Power.F</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Function to calculate the power of an F-test
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the power of an F-test, given the value of non-centrality parameter
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Power.F(df1, df2, ncp, alpha, Figure = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df1</code></td>
+<td>
+<p> the first degrees of freedom for the F-distribution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df2</code></td>
+<td>
+<p> the second degrees of freedom for the F-distribution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncp</code></td>
+<td>
+<p> a value of of the non-centality paramter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p> the level of significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Figure</code></td>
+<td>
+<p> show graph if TRUE (default); No graph if FALSE </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See Kim and Choi (2020) 
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Power </code></td>
+<td>
+<p>Power of the test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Crit.val  </code></td>
+<td>
+<p>Critical value at alpha level of signifcance</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>See Application Section and Appendix of Kim and Choi (2020)
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jae H. Kim
+</p>
+
+
+<h3>References</h3>
+
+<p>Kim and Choi, 2020, Choosing the Level of Significance: A Decision-theoretic Approach, Abacus, Wiley.
+&lt;https://doi.org/10.1111/abac.12172&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Leamer, E. 1978, Specification Searches: Ad Hoc Inference with Nonexperimental Data, Wiley, New York.
+</p>
+<p>Kim, JH and Ji, P. 2015, Significance Testing in Empirical Finance: A Critical Review and Assessment, Journal of Empirical Finance 34, 1-14.
+&lt;DOI:http://dx.doi.org/10.1016/j.jempfin.2015.08.006&gt;
+</p>
+<p>Kim, Jae H., 2020, Decision-theoretic hypothesis testing: A primer with R package OptSig, The American Statistician. 
+&lt;https://doi.org/10.1080/00031305.2020.1750484.&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(data1)
+# Define Y and X
+y=data1$lnoutput; x=cbind(data1$lncapital,data1$lnlabor)
+# Restriction matrices to test for constant returns to scale
+Rmat=matrix(c(0,1,1),nrow=1); rvec=matrix(0.94,nrow=1)
+# Model Estimation and F-test
+M=R.OLS(y,x,Rmat,rvec) 
+# Degrees of Freedom and estimate of non-centrality parameter 
+K=ncol(x)+1; T=length(y)
+df1=nrow(Rmat);df2=T-K; NCP=M$ncp
+
+Power.F(df1,df2,ncp=NCP,alpha=0.20747,Figure=TRUE)
+</code></pre>
+
+
+</div>

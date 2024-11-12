@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>prepLegend</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function for arranging plotting layout to accomodate a legend panel</h2>
+
+<h3>Description</h3>
+
+<p>Function for arranging plotting layout to accomodate a legend panel
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">prepLegend(layout = c(1, 1), type = if (is.matrix(layout)) "layout" else
+  "mfrow", side = "right", proportion = 0.15, heights = NULL,
+  widths = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>layout</code></td>
+<td>
+<p>layout vector or matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>type of layout; either "mfrow" or "layout"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>side</code></td>
+<td>
+<p>side of the plot to place legend on; one of "top", "bottom", "left" or "right"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proportion</code></td>
+<td>
+<p>proportion of plotting window to allocate to legend</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>heights</code></td>
+<td>
+<p>height vector for original layout (before the legend panel is appended)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>widths</code></td>
+<td>
+<p>width vector for original layout (before the legend panel is appended)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>none; layout is passed to current device
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jason Waddell
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">layout &lt;- c(2,3);
+side &lt;- "left"
+proportion &lt;- 0.2
+
+prepLegend(layout = layout, side = side, proportion = proportion)
+for(i in 1:(layout[1]*layout[2]))
+	plot(1:7, 1:7, col = 1:7, pch = 19, cex = 2.2, xaxt = "n",
+			yaxt = "n", ann = FALSE)
+addLegend(legend = paste("Group", 1:7), font = 2,
+		pch = 19, pt.cex = 2, text.col = 1:7, col = 1:7,
+		y.intersp = 1.5, cex = 1.5)
+
+
+layout = rbind(c(1, 2, 3), c(0, 4, 3), c(0, 4, 5))
+side = "right"
+proportion = 0.15
+
+prepLegend(layout = layout, side = side, proportion = proportion)
+for(i in 1:max(layout))
+	plot(1:7, 1:7, col = 1:7, pch = 19, cex = 2.2, xaxt = "n",
+			yaxt = "n", xlab = "", ylab = "", main = paste("Plot", i))
+addLegend(legend = paste("Group", 1:7), font = 2,
+		pch = 19, pt.cex = 2, text.col = 1:7, col = 1:7,
+		y.intersp = 1.5, cex = 1.5)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>otp_traveltime</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get travel times between points</h2>
+
+<h3>Description</h3>
+
+<p>This function requires OTP 1.x and the analyst
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">otp_traveltime(
+  otpcon = NA,
+  path_data = NULL,
+  fromPlace = NA,
+  toPlace = NA,
+  fromID = NULL,
+  toID = NULL,
+  mode = "CAR",
+  date_time = Sys.time(),
+  arriveBy = FALSE,
+  maxWalkDistance = 1000,
+  numItineraries = 3,
+  routeOptions = NULL,
+  ncores = max(round(parallel::detectCores() * 1.25) - 1, 1),
+  timezone = otpcon$timezone
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>otpcon</code></td>
+<td>
+<p>OTP connection object produced by otp_connect()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path_data</code></td>
+<td>
+<p>Path to data used in otp_build_graph()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fromPlace</code></td>
+<td>
+<p>Numeric vector, Longitude/Latitude pair, e.g.
+'c(-0.134649,51.529258)', or 2 column matrix of Longitude/Latitude pairs,
+or sf data frame of POINTS with CRS 4326</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toPlace</code></td>
+<td>
+<p>Numeric vector, Longitude/Latitude pair, e.g.
+'c(-0.088780,51.506383)', or 2 column matrix of Longitude/Latitude pairs,
+or sf data frame of POINTS with CRS 4326</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fromID</code></td>
+<td>
+<p>character vector same length as fromPlace</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toID</code></td>
+<td>
+<p>character vector same length as toPlace</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>character vector of one or more modes of travel valid values
+TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all combinations
+are valid e.g. c("WALK","BUS") is valid but c("WALK","CAR") is not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_time</code></td>
+<td>
+<p>POSIXct, a date and time, defaults to current date and time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arriveBy</code></td>
+<td>
+<p>Logical, Whether the trip should depart or arrive at the
+specified date and time, default FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxWalkDistance</code></td>
+<td>
+<p>Numeric passed to OTP in metres</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numItineraries</code></td>
+<td>
+<p>The maximum number of possible itineraries to return</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>routeOptions</code></td>
+<td>
+<p>Named list of values passed to OTP use
+'otp_route_options()' to make template object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p>Numeric, number of cores to use when batch processing, default
+1, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timezone</code></td>
+<td>
+<p>Character, what timezone to use, see as.POSIXct, default is
+local timezone</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Make a travel time matrix using the analyst features in OPT 1.x
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an  data frame
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other analyst: 
+<code>otp_make_surface()</code>
+</p>
+
+
+</div>

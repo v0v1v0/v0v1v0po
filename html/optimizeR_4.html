@@ -1,0 +1,197 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>new_optimizer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Construct <code>optimizer</code> object</h2>
+
+<h3>Description</h3>
+
+<p>This function constructs an S3 <code>optimizer</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">new_optimizer(
+  x = list(),
+  .optimizer = function() {
+ },
+  optimizer_name = character(),
+  optimizer_arguments = list(),
+  .objective = character(),
+  .initial = character(),
+  .value = character(),
+  .parameter = character(),
+  .direction = character(),
+  .output_ignore = character()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>list</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.optimizer</code></td>
+<td>
+<p>A <code>function</code>, a numerical optimizer. Four conditions must be met:
+</p>
+
+<ol>
+<li>
+<p> It must have an input named <code>.objective</code> for a <code>function</code>, the
+objective function which is optimized over its first argument.
+</p>
+</li>
+<li>
+<p> It must have an input named <code>.initial</code> for a <code>numerical</code>
+vector, the initial parameter vector.
+</p>
+</li>
+<li>
+<p> It must have a <code>...</code> argument for additional parameters to
+the objective function.
+</p>
+</li>
+<li>
+<p> The output must be a named <code>list</code>, including the optimal function
+value and the optimal parameter vector.
+</p>
+</li>
+</ol>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>optimizer_name</code></td>
+<td>
+<p>A <code>character</code>, the name of <code>optimizer</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>optimizer_arguments</code></td>
+<td>
+<p>A <code>list</code> of additional and named arguments to be passed to
+<code>optimizer</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.objective</code></td>
+<td>
+<p>A <code>character</code>, the name of the function input of <code>optimizer</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.initial</code></td>
+<td>
+<p>A <code>character</code>, the name of the starting parameter values input of
+<code>optimizer</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.value</code></td>
+<td>
+<p>A <code>character</code>, the name of the optimal function value in the output list
+of <code>optimizer</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.parameter</code></td>
+<td>
+<p>A <code>character</code>, the name of the optimal parameter vector in the output
+list of <code>optimizer</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.direction</code></td>
+<td>
+<p>A <code>character</code>, indicates whether the optimizer minimizes (<code>"min"</code>)
+or maximizes (<code>"max"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.output_ignore</code></td>
+<td>
+<p>A <code>character</code> vector of element names in the output of <code>.optimizer</code>
+that are not saved. The elements <code>.value</code> and <code>.parameter</code> are
+added automatically to <code>.output_ignore</code>, because they are saved
+separately, see the output documentation of <code>apply_optimizer</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An S3 object of class <code>optimizer</code>.
+</p>
+
+
+<h3>Format</h3>
+
+<p>An <code>optimizer</code> object is a <code>list</code> of six elements:
+</p>
+
+<dl>
+<dt>optimizer</dt>
+<dd>
+<p>A <code>function</code>, the optimization algorithm.</p>
+</dd>
+<dt>optimizer_name</dt>
+<dd>
+<p>A <code>character</code>, the name of
+<code>optimizer</code>.</p>
+</dd>
+<dt>optimizer_arguments</dt>
+<dd>
+<p>A named <code>list</code>, where each element
+is an additional function argument for <code>optimizer</code>.</p>
+</dd>
+<dt>optimizer_direction</dt>
+<dd>
+<p>Either <code>"min"</code> if the optimizer minimizes
+or <code>"max"</code> if the optimizer maximizes.</p>
+</dd>
+<dt>optimizer_labels</dt>
+<dd>
+<p>A named <code>list</code> of four
+<code>character</code>:
+</p>
+
+<dl>
+<dt>objective</dt>
+<dd>
+<p>the name of the function input of <code>optimizer</code></p>
+</dd>
+<dt>initial</dt>
+<dd>
+<p>the name of the starting parameter values input of
+<code>optimizer</code></p>
+</dd>
+<dt>value</dt>
+<dd>
+<p>the name of the optimal function value in the output list
+of <code>optimizer</code></p>
+</dd>
+<dt>parameter</dt>
+<dd>
+<p>the name of the optimal parameter vector in the
+output list of <code>optimizer</code>.</p>
+</dd>
+</dl>
+</dd>
+<dt>output_ignore</dt>
+<dd>
+<p>A <code>character</code> vector of element
+names in the output <code>list</code> of <code>optimizer</code> that are ignored.
+The elements <code>value</code> and <code>parameter</code> are added automatically to
+<code>output_ignore</code>, because they are saved
+separately, see the output documentation of <code>apply_optimizer</code>.</p>
+</dd>
+</dl>
+</div>

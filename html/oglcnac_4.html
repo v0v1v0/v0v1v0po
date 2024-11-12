@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>process_tibble_uniprot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Process a Tibble of UniProt Data</h2>
+
+<h3>Description</h3>
+
+<p>This function processes a tibble containing accession and accession_source columns.
+It retrieves data from the UniProt API for rows with accession_source == "UniProt" and
+overwrites or creates the entry_name, protein_name, and gene_name columns only if the parsed values are not NULL or NA.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">process_tibble_uniprot(
+  data,
+  accession_col = "accession",
+  accession_source_col = "accession_source",
+  entry_name_col = "entry_name",
+  protein_name_col = "protein_name",
+  gene_name_col = "gene_name"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A tibble containing at least accession and accession_source columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>accession_col</code></td>
+<td>
+<p>The column name for accession numbers (default: "accession").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>accession_source_col</code></td>
+<td>
+<p>The column name for accession sources (default: "accession_source").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>entry_name_col</code></td>
+<td>
+<p>The column name for entry names (default: "entry_name").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protein_name_col</code></td>
+<td>
+<p>The column name for protein names (default: "protein_name").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gene_name_col</code></td>
+<td>
+<p>The column name for gene names (default: "gene_name").</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble with UniProt data processed.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example usage:
+
+# Load necessary library
+library(tibble)
+
+# Reduced example data as an R tibble
+test_data &lt;- tibble::tibble(
+  id = c(1, 78, 83, 87),
+  species = c("mouse", "mouse", "rat", "mouse"),
+  sample_type = c("brain", "brain", "brain", "brain"),
+  accession = c("O88737", "O35927", "Q9R064", "P51611"),
+  accession_source = c("OtherDB", "UniProt", "UniProt", "UniProt"),
+  entry_name = c("BSN_MOUSE", NA, "GORS2_RAT", NA),
+  protein_name = c("Protein bassoon", NA, "Golgi reassembly-stacking protein2", NA),
+  gene_name = c("Bsn", NA, "Gorasp2", NA)
+)
+
+# Process the tibble
+result_data &lt;- process_tibble_uniprot(test_data)
+
+# Compare the original and processed tibbles
+compare_tibbles_uniprot(test_data, result_data)
+
+</code></pre>
+
+
+</div>

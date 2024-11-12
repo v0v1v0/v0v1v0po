@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OcpPewma</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Optimized Classic Processing Probabilistic-EWMA (PEWMA).</h2>
+
+<h3>Description</h3>
+
+<p><code>OcpPewma</code> calculates the anomalies of a dataset using
+an optimized version of classical processing Probabilistic-EWMA algorithm.
+It Is an optimized implementation of the <code>CpPewma</code> algorithm
+using environmental variables. It has been shown that in long datasets it can
+reduce runtime by up to 50%. TThis algorithm is a probabilistic method of
+EWMA which dynamically adjusts the parameterization based on the probability
+of the given observation. This method produces dynamic, data-driven anomaly
+thresholds which are robust to abrupt transient changes, yet quickly adjust
+to long-term distributional shifts.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OcpPewma(data, alpha0 = 0.2, beta = 0, n.train = 5, l = 3)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Numerical vector with training and test datasets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha0</code></td>
+<td>
+<p>Maximal weighting parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>Weight placed on the probability of the given observation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.train</code></td>
+<td>
+<p>Number of points of the dataset that correspond to the
+training set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l</code></td>
+<td>
+<p>Control limit multiplier.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>data</code> must be a numerical vector without NA values.
+<code>alpha0</code> must be a numeric value where 0 &lt; <code>alpha0</code> &lt; 1. If a
+faster adjustment to the initial shift is desirable, simply lowering
+<code>alpha0</code> will suffice. <code>beta</code> is the weight placed on the
+probability of the given observation. It must be a numeric value where
+0 &lt;= <code>beta</code> &lt;= 1. Note that if <code>beta</code> equals 0, PEWMA converges to
+a standard EWMA. Finally <code>l</code> is the parameter that determines the
+control limits. By default, 3 is used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>dataset conformed by the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>is.anomaly</code></td>
+<td>
+<p>1 if the value is anomalous 0, otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ucl</code></td>
+<td>
+<p>Upper control limit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lcl</code></td>
+<td>
+<p>Lower control limit.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>M. Carter, Kevin y W. Streilein. Probabilistic reasoning for
+streaming anomaly detection. 2012 IEEE Statistical Signal Processing Workshop
+(SSP), pp. 377-380, Aug 2012.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 180
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+## Calculate anomalies
+result &lt;- OcpPewma(
+  data = df$value,
+  n.train = 5,
+  alpha0 = 0.8,
+  beta = 0.1,
+  l = 3
+)
+
+## Plot results
+res &lt;- cbind(df, result)
+PlotDetections(res, title = "PEWMA ANOMALY DETECTOR")
+</code></pre>
+
+
+</div>

@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>clim_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+plots <code>'.gz'</code>-file climatologies</h2>
+
+<h3>Description</h3>
+
+<p>Creates climatology plots of <code>'.gz'</code>-files. <b>ATTENTION!</b> This function requires an ImageMagick installation, but runs also under Windows operating systems. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">clim_plot(obj, folder,plotfolder=".", plotname, question=T, sst.frontcolor='red', 
+          chla.frontcolor='blue', sidelabels = F, Ylab = F, axeslabels = T, v_area, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+
+<p>Character string indicating search criteria for climatology <code>'.gz'</code>-files. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>folder</code></td>
+<td>
+
+<p>directory where data files are located (optional).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotfolder</code></td>
+<td>
+
+<p>directory where image should be saved.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotname</code></td>
+<td>
+
+<p>the name of the output file. If not provided, value will be derived from <code>'.gz'</code>-filenames. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>question</code></td>
+<td>
+
+<p>whether the user shall be informed about the number of figures to plot before running the procedure (default is <code>TRUE</code>). 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chla.frontcolor</code></td>
+<td>
+
+<p>color map to be plotted for chlorophyll fronts (default is blue; obtained from cmap-dataset)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sst.frontcolor</code></td>
+<td>
+
+<p>color map to be plotted for sea surface temperature fronts (default is red; obtained from cmap-dataset)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sidelabels</code></td>
+<td>
+
+<p>whether an additional y-axis label and title should be added to the plot device (default is <code>FALSE</code>). If <code>TRUE</code>, y-axis label is defined by <code>Ylab</code>, the additional title is derived from the <code>date</code>-information and gives the month information.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ylab</code></td>
+<td>
+
+<p>an additional title for the y axis (default is date information), only used when <code>sidelabels</code> is set <code>TRUE</code>. Default value is year-information.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axeslabels</code></td>
+<td>
+
+<p>whether axeslabels should be shown (default is <code>TRUE</code>, set as 'longitude' and 'latitude')
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v_area</code></td>
+<td>
+
+<p>character string identifying the region that should be plotted, or in case of <code>obj == 'bathy'</code>, also a Raster* or Extent object. If missing, region is derived from the <code>'.gz'</code>-filename. 
+See region_definitions for area definitions and use add.region to add new regions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Additional arguments to be passed to v and plotmap (e.g. <code>main</code>, <code>sidelabels</code>, <code>Ylab</code>, <code>scale_arrow</code>, <code>minv</code>, <code>maxv</code>, <code>adaptive.vals</code>, <code>cb.xlab</code>, <code>suffix</code>, <code>v_area</code>, <code>v_image</code>, <code>v_contour</code>, <code>v_arrows</code>, <code>fill</code>, <code>col</code>, <code>border</code>, <code>grid</code>, <code>grid.res</code>, <code>bwd</code>, <code>axeslabels</code>, <code>ticklabels</code>, <code>cex.lab</code>, <code>cex.ticks</code>)
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code> v, readbin, name_split, regions, plotmap</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example 1: plot seasonal '.gz'-files, following default plot-procedure
+path &lt;- system.file("test_files", package="oceanmap")
+gz.file &lt;- Sys.glob(paste0(path,'/*.gz'))[1] # load sample-'.gz'-files
+check_gzfiles(folder=path) # return file summary-table
+gz.files &lt;- Sys.glob(paste0(path,'/*1s_*.gz')) # load seasonal '.gz'-files
+# v(gz.files) # as single plots
+
+## as combined climatology plot, saved in plotfolder
+# clim_plot(gz.files,plotname='chla.summary.png') 
+</code></pre>
+
+
+</div>

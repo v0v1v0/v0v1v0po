@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>open_curtain</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve (Spatially Filtered) Overture Datasets</h2>
+
+<h3>Description</h3>
+
+<p>Fetches overture data from AWS.
+If a bounding box is provided, it applies spatial filtering to only include
+records within that area. The core code is copied from <code>duckdbfs</code>, which
+deserves all credit for the implementation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">open_curtain(
+  type,
+  spatial_filter = NULL,
+  theme = get_theme_from_type(type),
+  conn = NULL,
+  as_sf = FALSE,
+  mode = "view",
+  tablename = NULL,
+  read_opts = list(),
+  base_url = "s3://overturemaps-us-west-2/release/2024-08-20.0",
+  bbox = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A string specifying the type of overture dataset to read.
+Setting to "*" or <code>NULL</code> will read all types for a given theme.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spatial_filter</code></td>
+<td>
+<p>An object to spatially filter the result.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theme</code></td>
+<td>
+<p>Inferred from type by default. Must be set if type is "*" or NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conn</code></td>
+<td>
+<p>A connection to a duckdb database.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as_sf</code></td>
+<td>
+<p>If TRUE, return an sf dataframe</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>Either "view" (default) or "table". If "table", will download the
+dataset into memory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tablename</code></td>
+<td>
+<p>The name of the table to create in the database.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>read_opts</code></td>
+<td>
+<p>A named list of key-value pairs passed to
+<a href="https://duckdb.org/docs/data/parquet/overview.html#parameters">DuckDB's read_parquet</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_url</code></td>
+<td>
+<p>Allows user to download data from a different mirror, such
+as a local directory, or a alternative release.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>alias for <code>spatial_filter</code>. may be deprecated in the future.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An dbplyr lazy dataframe, or an sf dataframe if as_sf is TRUE
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+bbox &lt;- c(xmin = -120.5, ymin = 35.5, xmax = -120.0, ymax = 36.0)
+open_curtain("building", bbox)
+
+</code></pre>
+
+
+</div>

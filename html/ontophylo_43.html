@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make_pic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Assign colors to picture ID layers</h2>
+
+<h3>Description</h3>
+
+<p>Assigns colors to picture ID layers (@paths) of an object of class 'Picture'.
+The object should be a PS or ESP vector illustration imported using the grImport package.
+Colors are taken from cols.maps argument were the palette indicates the scale of the desired statistics for the evolutionary rates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">make_pic(picture, layers, cols.maps)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>picture</code></td>
+<td>
+<p>grImport object. A vector image imported in R using the 'readPicture' function from grImport.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layers</code></td>
+<td>
+<p>numeric. A named vector where values indicate the layer IDs in the Picture object and names indicate the anatomy ontology term labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols.maps</code></td>
+<td>
+<p>character. A named vector where elements correspond to color IDs and names indicate the anatomy ontology term labels.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class 'Picture' with the assigned colors to different anatomical regions.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sergei Tarasov
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("HAO", "hym_graph", "hym_img", "hym_kde")
+# Get picture.
+picture &lt;- hym_img
+# Get picture layers from three anatomical regions.
+terms_list &lt;- as.list(c("HAO:0000397", "HAO:0000576", "HAO:0000626"))
+terms_list &lt;- setNames(terms_list, c("head", "mesosoma", "metasoma"))
+anat_layers &lt;- get_vector_ids_list(terms = terms_list , ONT = HAO, GR = hym_graph)
+# Get mean rates all branches for the three anatomical regions.
+plot_stat &lt;- lapply(hym_kde, function(x) unlist(lapply(x$loess.lambda.mean, function(x) mean(x) )) )
+plot_stat &lt;- do.call(cbind, plot_stat)
+# Add two columns for the other anatomical regions (just for this example).
+plot_stat &lt;- cbind(plot_stat, plot_stat*0.75, plot_stat*0.5)
+colnames(plot_stat) &lt;- c("head", "mesosoma", "metasoma")
+# Select an arbitrary branch.
+plot_stat &lt;- plot_stat[5,]
+# Set scale.
+scale_lim &lt;- range(plot_stat)
+# Get color palette.
+hm.palette &lt;- colorRampPalette(RColorBrewer::brewer.pal(9, "Spectral"), space = "Lab")
+cols_maps &lt;- make_colors_relative_scale(plot_stat, palette = hm.palette(100),
+                                        lims = scale_lim)
+# Plot picture.
+new_pic &lt;- make_pic(picture, anat_layers, cols_maps)
+grImport::grid.picture(new_pic)
+
+</code></pre>
+
+
+</div>

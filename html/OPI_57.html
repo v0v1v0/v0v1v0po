@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiInitialise_for_SimHensonRT</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>opiInitialise_for_SimHensonRT</h2>
+
+<h3>Description</h3>
+
+<p>Simulates responses using a Frequency of Seeing (FoS) curve.
+</p>
+<p>For internal use only, use <code>opiInitialize()</code>.
+</p>
+<p>The FoS is modelled as a cumulative Gaussian function over dB with
+standard deviation equal to <code>min(cap, exp( A * t + B))</code>, where
+t is the threshold/mean of the FoS in dB.
+All values are in dB relative to <code>maxStim</code>.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A single character that is:
+</p>
+
+<ul>
+<li> <p><code>N</code> for using the A and B values from the Normals in Henson et al (2000)
+</p>
+</li>
+<li> <p><code>G</code> for using the A and B values from the Glaucomas in Henson et al (2000)
+</p>
+</li>
+<li> <p><code>C</code> for using the A and B values from the Combined in Henson et al (2000)
+</p>
+</li>
+<li> <p><code>X</code> to specify your own A and B values as parameters
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>A</code></td>
+<td>
+<p>Coefficient of <code>t</code> in the formula (ignored if <code>type != 'X'</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>Addend of <code>t</code> in the formula (ignored if <code>type != 'X'</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cap</code></td>
+<td>
+<p>Maximum dB value for the stdev of the FoS curve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxStim</code></td>
+<td>
+<p>The maximum stimulus value (0 dB) in cd/<code class="reqn">\mbox{m}^2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rtData</code></td>
+<td>
+<p>A data.frame with colnames == "Rt", "Dist", "Person" (or NULL for default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rtFP</code></td>
+<td>
+<p>A response time for false positives ??? for "SimHensonRT"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Any other parameters you like, they are ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the chosen OPI implementation is <code>SimHensonRT</code>, then the first six
+parameters are as in <code>SimHenson</code>, and <code>rtData</code> is a data frame
+with at least 2 columns: <code>"Rt"</code>, response time; and <code>"Dist"</code>,
+signifying that distance between assumed threshold and stimulus value in
+your units.
+</p>
+<p>This package contains <code>RtSigmaUnits</code> or <code>RtDbUnits</code> that can be
+loaded with the commands <code>data(RtSigmaUnits)</code> or <code>data(RtDbUnits)</code>,
+and are suitable to pass as values for <code>rtData</code>.
+</p>
+<p><code>rtFp</code> gives the vector of values in milliseconds from which a response
+time for a false positive response is randomly sampled.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with elements:
+</p>
+
+<ul><li> <p><code>err</code> NULL if initialised, string msg otherwise
+</p>
+</li></ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Set up a simple simulation for white-on-white perimetry
+# and display the stimuli in a plot region and simulate response times
+chooseOpi("SimHensonRT")
+data(RtSigmaUnits)
+oi &lt;- opiInitialize(type="C", cap=6, display=NA, rtData=RtSigmaUnits, rtFP=1:100)
+if (!is.null(oi$err))
+  stop("opiInitialize failed")
+
+    # Set up a simple simulation for white-on-white perimetry
+chooseOpi("SimHenson")
+res &lt;- opiInitialize(type = "C", cap = 6)
+if (!is.null(res$err))
+  stop(paste("opiInitialize() failed:", res$err))
+
+</code></pre>
+
+
+</div>

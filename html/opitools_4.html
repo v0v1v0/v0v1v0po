@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opi_score</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Opinion score of a digital text document (DTD)</h2>
+
+<h3>Description</h3>
+
+<p>Given a DTD,
+this function computes the overall opinion score based on the
+proportion of text records classified as expressing positive,
+negative or a neutral sentiment.
+The function first transforms
+the text document into a tidy-format dataframe, described as the
+<code style="white-space: pre;">⁠observed sentiment document (OSD)⁠</code> (Adepeju and Jimoh, 2021),
+in which each text record is assigned a sentiment class based
+on the summation of all sentiment scores expressed by the words in
+the text record.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opi_score(textdoc, metric = 1, fun = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>textdoc</code></td>
+<td>
+<p>An <code>n</code> x <code>1</code> list (dataframe) of
+individual text records, where <code>n</code> is the total
+number of individual records.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+<p>(an integer) Specify the metric to utilize for
+the calculation of opinion score. Valid values include
+<code>1, 2, ...,5</code>.
+Assuming <code>P</code>, <code>N</code> and <code>O</code> represent positive,
+negative, and neutral record sentiments, respectively,
+the followings are the details of the opinion score function
+represented by the numerical arguments above:
+<code>1</code>: Polarity (percentage difference)
+<code>((P - N)/(P + N))*100</code>, (Bound: -100%, +100%);
+<code>2</code>: Polarity (proportional difference)
+<code>((abs(P - N) / (P + N + O))*100</code>,
+(Bound: 0, +100%);
+<code>3</code>: Positivity <code>(P/ (P + N + O))*100</code>,
+(Bound: 0, +100%); <code>4</code>: Negativity <code>(N / (P + N + O))*100</code>,
+(Bound: 0, +100%) (Malshe, A. 2019;
+Lowe et al. 2011). <code>5</code>: To pass a
+user-defined opinion score function (also see the <code>fun</code>
+parameter below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>A user-defined function given that <code>metric</code>
+parameter (above) is set equal to <code>5</code>.
+For example, given a defined opinion score function
+<code>myfun</code> &lt;- <code style="white-space: pre;">⁠function(P, N, O){⁠</code>
+<code>("some tasks to do")</code>; <code style="white-space: pre;">⁠return("a value")}⁠</code>, the input
+argument of <code>fun</code> parameter then becomes <code>fun = myfun</code>.
+Default: <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An opinion score is derived from all the sentiments
+(i.e. positive, negative (and neutral) expressed within a
+text document. We deploy a lexicon-based approach
+(Taboada et al. 2011) using the <code>AFINN</code> lexicon
+(Nielsen, 2011).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an <code>opi_object</code> containing details of the
+opinion measures from the text document.
+</p>
+
+
+<h3>References</h3>
+
+<p>(1) Adepeju, M. and Jimoh, F. (2021). An
+Analytical Framework for Measuring Inequality in the
+Public Opinions on Policing – Assessing the impacts
+of COVID-19 Pandemic using Twitter Data.
+https://doi.org/10.31235/osf.io/c32qh
+(2) Malshe, A. (2019) Data Analytics Applications.
+Online book available at:
+https://ashgreat.github.io/analyticsAppBook/index.html.
+Date accessed: 15th December 2020.
+(3) Taboada, M.et al. (2011).
+Lexicon-based methods for sentiment analysis. Computational
+linguistics, 37(2), pp.267-307.
+(4) Lowe, W. et al. (2011).
+Scaling policy preferences from coded political texts.
+Legislative studies quarterly, 36(1), pp.123-155.
+(5) Razorfish (2009) Fluent: The Razorfish Social Influence
+Marketing Report. Accessed: 24th February, 2021.
+(6) Nielsen, F. A. (2011), “A new ANEW: Evaluation of a word
+list for sentiment analysis in microblogs”, Proceedings of the
+ESWC2011 Workshop on 'Making Sense of Microposts': Big things
+come in small packages (2011) 93-98.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Use police/pandemic posts on Twitter
+# Experiment with a standard metric (e.g. metric 1)
+score &lt;- opi_score(textdoc = policing_dtd, metric = 1, fun = NULL)
+#print result
+print(score)
+
+#Example using a user-defined opinion score -
+#a demonstration with a component of SIM opinion
+#Score function (by Razorfish, 2009). The opinion
+#function can be expressed as:
+
+myfun &lt;- function(P, N, O){
+  score &lt;- (P + O - N)/(P + O + N)
+return(score)
+}
+
+#Run analysis
+score &lt;- opi_score(textdoc = policing_dtd, metric = 5, fun = myfun)
+#print results
+print(score)
+
+
+</code></pre>
+
+
+</div>

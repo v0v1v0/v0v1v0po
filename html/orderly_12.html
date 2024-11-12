@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderly_db</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Connect to orderly databases</h2>
+
+<h3>Description</h3>
+
+<p>Connect to the orderly databases.  These should be treated as as
+<em>read-only</em>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderly_db(type, root = NULL, locate = TRUE, validate = TRUE, instance = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of connection to make (<code>source</code>,
+<code>destination</code>, <code>csv</code> or <code>rds</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The path to an orderly root directory, or <code>NULL</code>
+(the default) to search for one from the current working
+directory if <code>locate</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locate</code></td>
+<td>
+<p>Logical, indicating if the configuration should be
+searched for.  If <code>TRUE</code> and <code>config</code> is not given,
+then orderly looks in the working directory and up through its
+parents until it finds an <code>orderly_config.yml</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validate</code></td>
+<td>
+<p>Logical, indicating if the database schema should
+be validated on open (currently only applicable with <code>type = "destination"</code>).  This is primarily intended for internal use.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instance</code></td>
+<td>
+<p>Used only by <code>type = "source"</code>, and used to
+select the instance, where multiple instances are configured.
+Use a single <em>unnamed</em> character string to indicate an
+instance to match.  If given, then this name must be present in
+all databases where instances are listed in
+<code>orderly_config.yml</code>, and will be ignored by all database
+where instances are not given.  See the "orderly" vignette for
+further information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Orderly has several databases:
+</p>
+
+<ul>
+<li> <p><code>source</code>: All of the databases named in the <code>database</code> section
+of the <code>orderly_config.yml</code>
+</p>
+</li>
+<li> <p><code>destination</code>: The orderly index database (typically a SQLite
+database stored at the orderly root)
+</p>
+</li>
+<li> <p><code>csv</code>: The cache of database query results, in csv format
+</p>
+</li>
+<li> <p><code>rds</code>: The cache of database query results, in rds format
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A database connection, or list of connections in the case
+of <code>source</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create an orderly that has a single commited report:
+path &lt;- orderly::orderly_example("minimal")
+id &lt;- orderly::orderly_run("example", root = path)
+orderly::orderly_commit(id, root = path)
+
+# The source database holds the data that might be accessible via
+# the 'data' entry in orderly.yml:
+db &lt;- orderly::orderly_db("source", root = path)
+# This is a list, with one connection per database listed in the
+# orderly_config.yml (an empty list if none are specified):
+db
+DBI::dbListTables(db$source)
+head(DBI::dbReadTable(db$source, "data"))
+DBI::dbDisconnect(db$source)
+
+# The destination database holds information about the archived
+# reports:
+db &lt;- orderly::orderly_db("destination", root = path)
+DBI::dbListTables(db)
+
+# These tables are documented online:
+# https://vimc.github.io/orderly/schema
+DBI::dbReadTable(db, "report_version")
+</code></pre>
+
+
+</div>

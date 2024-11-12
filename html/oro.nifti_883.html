@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>writeAFNI-methods</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>writeAFNI</h2>
+
+<h3>Description</h3>
+
+<p>This function saves a afni-class object to HEAD/BRIK pair in
+AFNI format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">writeAFNI(nim, ...)
+
+## S4 method for signature 'afni'
+writeAFNI(nim, fname, verbose = FALSE, warn = -1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nim</code></td>
+<td>
+<p>is an object of class <code>afni</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional variables defined by the method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fname</code></td>
+<td>
+<p>is the path and file name to save the AFNI file (.HEAD/BRIK)
+<b>without</b> the suffix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>is a logical variable (default = <code>FALSE</code>) that allows
+text-based feedback during execution of the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warn</code></td>
+<td>
+<p>is a number to regulate the display of warnings (default = -1).
+See <code>options</code> for more details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>writeAFNI</code> function utilizes the internal <code>writeBin</code>
+and <code>writeLines</code> command to write information to header/binary file
+pair.
+</p>
+<p>Current acceptable data types include 
+</p>
+ 
+<dl>
+<dt>INT16"</dt>
+<dd>
+<p>DT SIGNED SHORT (16 bits per voxel)</p>
+</dd> 
+<dt>FLOAT32"</dt>
+<dd>
+<p>DT FLOAT (32 bits per voxel)</p>
+</dd> 
+<dt>"COMPLEX128"</dt>
+<dd>
+<p>DT COMPLEX (128 bits per voxel)</p>
+</dd> 
+</dl>
+<h3>Value</h3>
+
+<p>Nothing.
+</p>
+
+
+<h3>Methods</h3>
+
+ 
+<dl>
+<dt>nim = "afni"</dt>
+<dd>
+<p>Write AFNI volume to disk.</p>
+</dd> 
+<dt>nim = "ANY"</dt>
+<dd>
+<p>Not implemented.</p>
+</dd> 
+</dl>
+<h3>Author(s)</h3>
+
+<p>Karsten Tabelow <a href="mailto:karsten.tabelow@wias-berlin.de">karsten.tabelow@wias-berlin.de</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>AFNI<br><a href="http://afni.nimh.nih.gov/pub/dist/src/README.attributes">http://afni.nimh.nih.gov/pub/dist/src/README.attributes</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>writeANALYZE</code>, <code>writeNIfTI</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Taken from the AFNI Matlab Library
+## http://afni.nimh.nih.gov/pub/dist/data/afni_matlab_data.tgz
+afni.path &lt;- system.file("afni", package="oro.nifti")
+orig &lt;- readAFNI(file.path(afni.path, "ARzs_CW_avvr.DEL+orig"))
+fname = file.path(tempdir(), "test-afni-image")
+writeAFNI(orig, fname, verbose=TRUE)
+
+data &lt;- readAFNI(fname, verbose=TRUE)
+image(orig, zlim=c(0.5,256), oma=rep(2,4), bg="white")
+image(data, zlim=c(0.5,256), oma=rep(2,4), bg="white")
+abs.err &lt;- abs(data - orig)
+image(as(abs.err, "nifti"), zlim=range(0,1), oma=rep(2,4),
+      bg="white")
+</code></pre>
+
+
+</div>

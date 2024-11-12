@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>homogenizeData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Homogenizes two expression matrices</h2>
+
+<h3>Description</h3>
+
+<p>This function takes two gene expression matrices (like trainExprMat and testExprMat) and returns homogenized versions of the matrices by employing the homogenization method specified.
+By default, the Combat method from the sva library is used.
+In both matrices, genes are row names and samples are column names.
+It will deal with duplicated gene names, as it subsets and orders the matrices correctly.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">homogenizeData(
+  testExprMat,
+  trainExprMat,
+  batchCorrect = "eb",
+  selection = -1,
+  printOutput = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>testExprMat</code></td>
+<td>
+<p>A gene expression matrix for samples on which we wish to predict a phenotype.Genes are rows, samples are columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trainExprMat</code></td>
+<td>
+<p>A gene expression matrix for samples for which the phenotype is already known.Genes are rows, samples are columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>batchCorrect</code></td>
+<td>
+<p>The type of batch correction to be used. Options are 'eb' for Combat, 'none', or 'qn' for quantile normalization.
+#The default is 'eb'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selection</code></td>
+<td>
+<p>This parameter can be used to specify how duplicates are handled. The default value of -1 means to ask the user.
+#Other options include '1' to summarize duplicates by their mean, and '2'to discard all duplicated genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printOutput</code></td>
+<td>
+<p>To suppress output, set to false. Default is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing two entries $train and $test, which are the homogenized input matrices.
+</p>
+
+
+</div>

@@ -1,0 +1,244 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>collapse_spec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Define features</h2>
+
+<h3>Description</h3>
+
+<p>Functions for analyzing features, like particles, fragments, or fibers, in
+spectral map oriented <code>OpenSpecy</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">collapse_spec(x, ...)
+
+## Default S3 method:
+collapse_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+collapse_spec(x, fun = median, column = "feature_id", ...)
+
+def_features(x, ...)
+
+## Default S3 method:
+def_features(x, ...)
+
+## S3 method for class 'OpenSpecy'
+def_features(
+  x,
+  features,
+  shape_kernel = c(3, 3),
+  shape_type = "box",
+  close = F,
+  close_kernel = c(4, 4),
+  close_type = "box",
+  img = NULL,
+  bottom_left = NULL,
+  top_right = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an <code>OpenSpecy</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>function name to collapse by.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>column</code></td>
+<td>
+<p>column name in metadata to collapse by.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>features</code></td>
+<td>
+<p>a logical vector or character vector describing which of the
+spectra are of features (<code>TRUE</code>) and which are not (<code>FALSE</code>).
+If a character vector is provided, it should represent the different feature
+types present in the spectra.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape_kernel</code></td>
+<td>
+<p>the width and height of the area in pixels to search for
+connecting features, c(3,3) is typically used but larger numbers will smooth
+connections between particles more.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape_type</code></td>
+<td>
+<p>character, options are for the shape used to find connections c("box", "disc", "diamond")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>close</code></td>
+<td>
+<p>logical, whether a closing should be performed using the shape kernel before
+estimating components.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>close_kernel</code></td>
+<td>
+<p>width and height of the area to close if using the close option.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>close_type</code></td>
+<td>
+<p>character, options are for the shape used to find connections c("box", "disc", "diamond")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>img</code></td>
+<td>
+<p>a file location where a visual image is that corresponds to the spectral image.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bottom_left</code></td>
+<td>
+<p>a two value vector specifying the x,y location in image pixels where
+the bottom left of the spectral map begins. y values are from the top down while
+x values are left to right.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top_right</code></td>
+<td>
+<p>a two value vector specifying the x,y location in the visual image
+pixels where the top right of the spectral map extent is. y values are from
+the top down while x values are left to right.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to subfunctions.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>def_features()</code> accepts an <code>OpenSpecy</code> object and a logical or
+character vector describing which pixels correspond to particles.
+<code>collapse_spec()</code> takes an <code>OpenSpecy</code> object with particle-specific
+metadata (from <code>def_features()</code>) and collapses the spectra with a function
+intensities for each unique particle.
+It also updates the metadata with centroid coordinates, while preserving the
+feature information on area and Feret max.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>OpenSpecy</code> object appended with metadata about the features or
+collapsed for the features. All units are in pixels. Metadata described below.
+</p>
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>x coordinate of the pixel or centroid if collapsed</p>
+</dd>
+<dt><code>y</code></dt>
+<dd>
+<p>y coordinate of the pixel or centroid if collapsed</p>
+</dd>
+<dt><code>feature_id</code></dt>
+<dd>
+<p>unique identifier of each feature</p>
+</dd>
+<dt><code>area</code></dt>
+<dd>
+<p>area in pixels of the feature</p>
+</dd>
+<dt><code>perimeter</code></dt>
+<dd>
+<p>perimeter of the convex hull of the feature</p>
+</dd>
+<dt><code>feret_min</code></dt>
+<dd>
+<p>feret_max divided by the area</p>
+</dd>
+<dt><code>feret_max</code></dt>
+<dd>
+<p>largest dimension of the convex hull of the feature</p>
+</dd>
+<dt><code>convex_hull_area</code></dt>
+<dd>
+<p>area of the convex hull</p>
+</dd>
+<dt><code>centroid_x</code></dt>
+<dd>
+<p>mean x coordinate of the feature</p>
+</dd>
+<dt><code>centroid_y</code></dt>
+<dd>
+<p>mean y coordinate of the feature</p>
+</dd>
+<dt><code>first_x</code></dt>
+<dd>
+<p>first x coordinate of the feature</p>
+</dd>
+<dt><code>first_y</code></dt>
+<dd>
+<p>first y coordinate of the feature</p>
+</dd>
+<dt><code>rand_x</code></dt>
+<dd>
+<p>random x coordinate from the feature</p>
+</dd>
+<dt><code>rand_y</code></dt>
+<dd>
+<p>random y coordinate from the feature</p>
+</dd>
+<dt><code>r</code></dt>
+<dd>
+<p>if using visual imagery overlay, the red band value at that location</p>
+</dd>
+<dt><code>g</code></dt>
+<dd>
+<p>if using visual imagery overlay, the green band value at that location</p>
+</dd>
+<dt><code>b</code></dt>
+<dd>
+<p>if using visual imagery overlay, the blue band value at that location</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Win Cowger, Zacharias Steinmetz
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+tiny_map &lt;- read_extdata("CA_tiny_map.zip") |&gt; read_any()
+identified_map &lt;- def_features(tiny_map, tiny_map$metadata$x == 0)
+collapse_spec(identified_map)
+
+</code></pre>
+
+
+</div>

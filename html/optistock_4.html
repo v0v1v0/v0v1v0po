@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cost_per_fish</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute the per-cost fish based on stocking time, time to recruitment,
+growth, and mortality</h2>
+
+<h3>Description</h3>
+
+<p>Compute the per-cost fish based on stocking time, time to recruitment,
+growth, and mortality
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cost_per_fish(
+  time_at_stocking,
+  time_at_rec,
+  n_recruits_desired,
+  cost_fun = total_cost,
+  cost_fun_args,
+  mort_fun = constant_mort,
+  mort_fun_args
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>time_at_stocking</code></td>
+<td>
+<p>The time at which fish are stocked (i.e. synonymous
+with the amount of time that fish are raised in a hatchery)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_at_rec</code></td>
+<td>
+<p>The time at which a fish enters the fishery (i.e. the
+amount of time it takes a fish to grow to a desired length). Use
+<code>inv_vb</code> to calculate this.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_recruits_desired</code></td>
+<td>
+<p>The number of recruits desired at
+<code>time_at_rec</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cost_fun</code></td>
+<td>
+<p>The cost function. Defaults to <code>total_cost</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cost_fun_args</code></td>
+<td>
+<p>Arguments for <code>cost_fun</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mort_fun</code></td>
+<td>
+<p>The mortality function, see ?mort_funs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mort_fun_args</code></td>
+<td>
+<p>List. Named arguments to be passed to <code>mort_fun</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The per-fish cost fish that lives until <code>time_at_rec</code> based on
+<code>time_at_stocking</code>, the cost function and mortality functions.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">cost_args &lt;- list(
+    init_cost = 0.05,
+    time_slope = 0.01, time_exp = 1.2,
+    rec_exp = 1
+)
+mort_args &lt;- list(m_init = (1 / 365))
+# the cost-per-fish to stock across a range of times given cost and mortality
+# assumes fish recruit into the fishery at day 1000
+curve(cost_per_fish(
+    x, 1000, 1000,
+    cost_fun_args = cost_args,
+    mort_fun_args = mort_args),
+  xlab = "Days", ylab = "$ per fish stocked",
+  10, 1200
+)
+</code></pre>
+
+
+</div>

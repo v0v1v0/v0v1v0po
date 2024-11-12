@@ -1,0 +1,208 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>LinBurst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generation of a Burst Signal with Linear Rise and Decline</h2>
+
+<h3>Description</h3>
+
+<p>This function takes in numeric arguments for a customizable, burst shape with linear rise and decline. Each oscillation cycle is separated into four phases: the growth phase, in which the oscillator rises from the baseline to the peak concentration, a first drop phase, in which the oscillator declines from the peak to the secondary peak concentration, a second drop phase, in which the oscillator declines from the secondary peak to the baseline concentration and an inactive phase, in which the oscillator stays at baseline concentration. A discretized time course is returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">LinBurst(baseline, peak, period, duty_cycle, sec_duty_cycle, sec_peak, trend,
+  peak_pos, duration, resolution)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>baseline</code></td>
+<td>
+<p>minimal oscillation value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>peak</code></td>
+<td>
+<p>maximal oscillation value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p>oscillation period of the oscillating species (reciprocal of the frequency)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>duty_cycle</code></td>
+<td>
+<p>ratio of the active phase (oscillator above baseline) to the total oscillation period</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sec_duty_cycle</code></td>
+<td>
+<p>ratio of the primary active phase (time interval from cycle start till reaching of the secondary peak) to the total active phase</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sec_peak</code></td>
+<td>
+<p>intermediary value reached after the end of the primary active phase</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trend</code></td>
+<td>
+<p>percental decrease or increase in the peak and secondary peak values for the successive oscillation cycles; if set to 1, values remain unchanged</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>peak_pos</code></td>
+<td>
+<p>position of the peak value in the primary active phase (example: <code>peak_pos = 0.5</code>, peak position is in the middle of the primary active phase)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>duration</code></td>
+<td>
+<p>duration of the generated time course</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resolution</code></td>
+<td>
+<p>temporal resolution of the generated time course</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Standards:
+</p>
+
+<ul>
+<li>
+<p><code>peak</code> and <code>sec_peak</code> must be larger than <code>baseline</code>
+</p>
+</li>
+<li>
+<p><code>duration</code> must be larger than <code>resolution</code>
+</p>
+</li>
+<li>
+<p><code>duration</code> must be a multiple of <code>resolution</code>
+</p>
+</li>
+<li>
+<p><code>period</code> must be a multiple of <code>resolution</code>
+</p>
+</li>
+<li>
+<p><code>duration</code>, <code>resolution</code>, <code>peak</code>, <code>sec_peak</code> and <code>period</code> must be larger than 0
+</p>
+</li>
+<li>
+<p><code>baseline</code> must be larger or equal to 0
+</p>
+</li>
+<li>
+<p><code>duty_cycle</code> must be larger than 0 and smaller or equal to 1
+</p>
+</li>
+<li>
+<p><code>sec_duty_cycle</code> must be larger than 0 and smaller or equal to 1
+</p>
+</li>
+<li>
+<p><code>trend</code> must be larger than 0
+</p>
+</li>
+<li>
+<p><code>peak_pos</code> must be larger or equal to 0 and smaller than 1
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>Returns a matrix with two columns: first column time vector, second column oscillator abundance vector.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># test effect of changes in period
+m1 = LinBurst(baseline = 200, peak = 1000, period = 50, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+m2 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+m3 = LinBurst(baseline = 200, peak = 1000, period = 200, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+
+par(mfrow = c(3,1))
+plot(m1, type = "l", xlab = "time", ylab = "abundance")
+plot(m2, type = "l", xlab = "time", ylab = "abundance")
+plot(m3, type = "l", xlab = "time", ylab = "abundance")
+
+# test effect of changes in duty_cycle
+m1 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.3,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+m2 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+m3 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.9,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+
+par(mfrow = c(3,1))
+plot(m1, type = "l", xlab = "time", ylab = "abundance")
+plot(m2, type = "l", xlab = "time", ylab = "abundance")
+plot(m3, type = "l", xlab = "time", ylab = "abundance")
+
+# test effect of changes in sec_duty_cycle
+m1 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.3, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+m2 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.6, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+m3 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.9, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+
+par(mfrow = c(3,1))
+plot(m1, type = "l", xlab = "time", ylab = "abundance")
+plot(m2, type = "l", xlab = "time", ylab = "abundance")
+plot(m3, type = "l", xlab = "time", ylab = "abundance")
+
+# test effect of changes in trend
+m1 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 0.7, peak_pos = 0.3, duration = 500, resolution = 0.1)
+m2 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+m3 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1.3, peak_pos = 0.3, duration = 500, resolution = 0.1)
+
+par(mfrow = c(3,1))
+plot(m1, type = "l", xlab = "time", ylab = "abundance")
+plot(m2, type = "l", xlab = "time", ylab = "abundance")
+plot(m3, type = "l", xlab = "time", ylab = "abundance")
+
+# test effect of changes in peak_pos
+m1 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.3, duration = 500, resolution = 0.1)
+m2 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.6, duration = 500, resolution = 0.1)
+m3 = LinBurst(baseline = 200, peak = 1000, period = 100, duty_cycle = 0.6,
+sec_duty_cycle = 0.5, sec_peak = 850, trend = 1, peak_pos = 0.9, duration = 500, resolution = 0.1)
+
+par(mfrow = c(3,1))
+plot(m1, type = "l", xlab = "time", ylab = "abundance")
+plot(m2, type = "l", xlab = "time", ylab = "abundance")
+plot(m3, type = "l", xlab = "time", ylab = "abundance")
+</code></pre>
+
+
+</div>

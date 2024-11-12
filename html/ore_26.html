@@ -1,0 +1,232 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ore_search</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search for matches to a regular expression</h2>
+
+<h3>Description</h3>
+
+<p>Search a character vector, or the content of a file or connection, for one
+or more matches to an Oniguruma-compatible regular expression. Printing and
+indexing methods are available for the results. <code>ore_match</code> is an alias
+for <code>ore_search</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ore_search(regex, text, all = FALSE, start = 1L, simplify = TRUE,
+  incremental = !all)
+
+is_orematch(x)
+
+## S3 method for class 'orematch'
+x[j, k, ...]
+
+## S3 method for class 'orematches'
+x[i, j, k, ...]
+
+## S3 method for class 'orematch'
+print(x, lines = getOption("ore.lines", 0L),
+  context = getOption("ore.context", 30L), width = getOption("width", 80L),
+  ...)
+
+## S3 method for class 'orematches'
+print(x, lines = getOption("ore.lines", 0L), simplify = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>regex</code></td>
+<td>
+<p>A single character string or object of class <code>"ore"</code>. In
+the former case, this will first be passed through <code>ore</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>A vector of strings to match against, or a connection, or the
+result of a call to <code>ore_file</code> to search in a file. In the
+latter case, match offsets will be relative to the file's encoding.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>If <code>TRUE</code>, then all matches within each element of
+<code>text</code> will be found. Otherwise, the search will stop at the first
+match.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>An optional vector of offsets (in characters) at which to start
+searching. Will be recycled to the length of <code>text</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simplify</code></td>
+<td>
+<p>If <code>TRUE</code>, an object of class <code>"orematch"</code> will
+be returned if <code>text</code> is of length 1. Otherwise, a list of such
+objects, with class <code>"orematches"</code>, will always be returned. When
+printing <code>"orematches"</code> objects, this controls whether or not to omit
+nonmatching elements from the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incremental</code></td>
+<td>
+<p>If <code>TRUE</code> and the <code>text</code> argument points to a
+file, the file is read in increasingly large blocks. This can reduce
+search time in large files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An R object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+<p>For indexing, the match number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>For indexing, the group number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>For <code>print.orematches</code>, additional arguments to be passed
+through to <code>print.orematch</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i</code></td>
+<td>
+<p>For indexing into an <code>"orematches"</code> object only, the string
+number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lines</code></td>
+<td>
+<p>The maximum number of lines to print. The default is zero,
+meaning no limit. For <code>"orematches"</code> objects this is split evenly
+between the elements printed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>context</code></td>
+<td>
+<p>The number of characters of context to include either side
+of each match.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>The number of characters in each line of printed output.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>For <code>ore_search</code>, an <code>"orematch"</code> object, or a list of
+the same, each with elements
+</p>
+
+<dl>
+<dt>text</dt>
+<dd>
+<p>A copy of the <code>text</code> element for the current match, if
+it was a character vector; otherwise a single string with the content
+retrieved from the file or connection. If the source was a binary file
+(from <code>ore_file(..., binary=TRUE)</code>) then this element will be
+<code>NULL</code>.</p>
+</dd>
+<dt>nMatches</dt>
+<dd>
+<p>The number of matches found.</p>
+</dd>
+<dt>offsets</dt>
+<dd>
+<p>The offsets (in characters) of each match.</p>
+</dd>
+<dt>byteOffsets</dt>
+<dd>
+<p>The offsets (in bytes) of each match.</p>
+</dd>
+<dt>lengths</dt>
+<dd>
+<p>The lengths (in characters) of each match.</p>
+</dd>
+<dt>byteLengths</dt>
+<dd>
+<p>The lengths (in bytes) of each match.</p>
+</dd>
+<dt>matches</dt>
+<dd>
+<p>The matched substrings.</p>
+</dd>
+<dt>groups</dt>
+<dd>
+<p>Equivalent metadata for each parenthesised subgroup in
+<code>regex</code>, in a series of matrices. If named groups are present in
+the regex then <code>dimnames</code> will be set appropriately.</p>
+</dd>
+</dl>
+<p>For <code>is_orematch</code>, a logical vector indicating whether the specified
+object has class <code>"orematch"</code>. For extraction with one index, a
+vector of matched substrings. For extraction with two indices, a vector
+or matrix of substrings corresponding to captured groups.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Only named *or* unnamed groups will currently be captured, not both. If
+there are named groups in the pattern, then unnamed groups will be ignored.
+</p>
+<p>By default the <code>print</code> method uses the <code>crayon</code> package (if it is
+available) to determine whether or not the R terminal supports colour.
+Alternatively, colour printing may be forced or disabled by setting the
+<code>"ore.colour"</code> (or <code>"ore.color"</code>) option to a logical value.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ore</code> for creating regex objects; <code>matches</code>
+and <code>groups</code> for an alternative to indexing for extracting
+matching substrings.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Pick out pairs of consecutive word characters
+match &lt;- ore_search("(\\w)(\\w)", "This is a test", all=TRUE)
+
+# Find the second matched substring ("is", from "This")
+match[2]
+
+# Find the content of the second group in the second match ("s")
+match[2,2]
+</code></pre>
+
+
+</div>

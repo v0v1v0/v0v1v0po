@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>MultiPage-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>MultiPage</h2>
+
+<h3>Description</h3>
+
+<p>API multiple page helper. Handles the download of data in multiple pages
+Used by real-time and archivefile services
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>extension:</code></td>
+<td>
+<p>Only provide for archivefiles filtering by filename extension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nextResponse</code></td>
+<td>
+<p>(named list) Response with the next data page to add</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>responseTime:</code></td>
+<td>
+<p>(double)     Request duration in seconds</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response</code></td>
+<td>
+<p>(named list) Response with the first page</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>service</code></td>
+<td>
+<p>(character)  One of: "scalardata", "rawdata", "archivefiles"</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>: Response with concatenated data for all pages obtained
+Do a page request
+</p>
+<p>Wraps the _doRequest method
+Performs additional processing of the response for certain services
+</p>
+<p>(list) A named list with: "response" (httr response) and "duration" (secs)
+Concatenate data
+</p>
+<p>Concatenates the data results from nextResponse into response
+Compatible with the row structure of scalardata, rowdata and archivefiles
+</p>
+<p>(named list) Modified original response
+Estimate pages
+</p>
+<p>Estimates the number of pages this request will require to download,
+from the first page's response and its duration
+</p>
+<p>(int) Estimated number of pages
+Response Time Span
+</p>
+<p>Determines the timespan covered by the data in the response
+</p>
+<pre>    (int)        page duration in seconds
+</pre>
+
+
+<h3>Fields</h3>
+
+
+<dl>
+<dt><code>showInfo</code></dt>
+<dd>
+<p>As provided by the Onc class</p>
+</dd>
+<dt><code>timeout</code></dt>
+<dd>
+<p>As provided by the Onc class
+Class initializer
+Get all pages
+</p>
+<p>Obtains all data pages for a query with the filters
+Multiple pages will be downloaded in sequence until completed
+Each new page gets concatenated to the previous one (limited to RAM)</p>
+</dd>
+</dl>
+</div>

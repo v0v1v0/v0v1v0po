@@ -1,0 +1,271 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>modStats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate common model evaluation statistics</h2>
+
+<h3>Description</h3>
+
+<p>Function to calculate common numerical model evaluation statistics with
+flexible conditioning.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">modStats(
+  mydata,
+  mod = "mod",
+  obs = "obs",
+  statistic = c("n", "FAC2", "MB", "MGE", "NMB", "NMGE", "RMSE", "r", "COE", "IOA"),
+  type = "default",
+  rank.name = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>Name of a variable in <code>mydata</code> that represents modelled
+values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obs</code></td>
+<td>
+<p>Name of a variable in <code>mydata</code> that represents measured
+values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>The statistic to be calculated. See details below for a
+description of each.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>type</code> determines how the data are split i.e. conditioned,
+and then plotted. The default is will produce statistics using the entire
+data. <code>type</code> can be one of the built-in types as detailed in
+<code>cutData</code> e.g. “season”, “year”, “weekday” and so
+on. For example, <code>type = "season"</code> will produce four sets of
+statistics — one for each season.
+</p>
+<p>It is also possible to choose <code>type</code> as another variable in the data
+frame. If that variable is numeric, then the data will be split into four
+quantiles (if possible) and labelled accordingly. If type is an existing
+character or factor variable, then those categories/levels will be used
+directly. This offers great flexibility for understanding the variation of
+different variables and how they depend on one another.
+</p>
+<p>More than one type can be considered e.g. <code>type = c("season",
+  "weekday")</code> will produce statistics split by season and day of the week.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rank.name</code></td>
+<td>
+<p>Simple model ranking can be carried out if <code>rank.name</code>
+is supplied. <code>rank.name</code> will generally refer to a column representing
+a model name, which is to ranked. The ranking is based the COE performance,
+as that indicator is arguably the best single model performance indicator
+available.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code>cutData</code>
+</p>
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>A data frame containing a field <code>date</code>.</p>
+</dd>
+<dt><code>hemisphere</code></dt>
+<dd>
+<p>Can be <code>"northern"</code> or <code>"southern"</code>, used to
+split data into seasons.</p>
+</dd>
+<dt><code>n.levels</code></dt>
+<dd>
+<p>Number of quantiles to split numeric data into.</p>
+</dd>
+<dt><code>start.day</code></dt>
+<dd>
+<p>What day of the week should the <code>type = "weekday"</code>
+start on?  The user can change the start day by supplying an integer
+between 0 and 6. Sunday = 0, Monday = 1, ... For example to start the
+weekday plots on a Saturday, choose <code>start.day = 6</code>.</p>
+</dd>
+<dt><code>is.axis</code></dt>
+<dd>
+<p>A logical (<code>TRUE</code>/<code>FALSE</code>), used to request
+shortened cut labels for axes.</p>
+</dd>
+<dt><code>local.tz</code></dt>
+<dd>
+<p>Used for identifying whether a date has daylight savings time
+(DST) applied or not. Examples include <code>local.tz = "Europe/London"</code>,
+<code>local.tz = "America/New_York"</code> i.e. time zones that assume DST.
+<a href="https://en.wikipedia.org/wiki/List_of_zoneinfo_time_zones">https://en.wikipedia.org/wiki/List_of_zoneinfo_time_zones</a> shows time
+zones that should be valid for most systems. It is important that the
+original data are in GMT (UTC) or a fixed offset from GMT. See
+<code>import</code> and the openair manual for information on how to import data
+and ensure no DST is applied.</p>
+</dd>
+<dt><code>latitude</code></dt>
+<dd>
+<p>The decimal latitude used in <code>type = "daylight"</code>.</p>
+</dd>
+<dt><code>longitude</code></dt>
+<dd>
+<p>The decimal longitude. Note that locations west of Greenwich
+are negative.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is under development and currently provides some common model
+evaluation statistics. These include (to be mathematically defined later):
+</p>
+
+<ul>
+<li> <p><code class="reqn">n</code>, the number of complete pairs of data.
+</p>
+</li>
+<li> <p><code class="reqn">FAC2</code>, fraction of predictions within a factor of two.
+</p>
+</li>
+<li> <p><code class="reqn">MB</code>, the mean bias.
+</p>
+</li>
+<li> <p><code class="reqn">MGE</code>, the mean gross error.
+</p>
+</li>
+<li> <p><code class="reqn">NMB</code>, the normalised mean bias.
+</p>
+</li>
+<li> <p><code class="reqn">NMGE</code>, the normalised mean gross error.
+</p>
+</li>
+<li> <p><code class="reqn">RMSE</code>, the root mean squared error.
+</p>
+</li>
+<li> <p><code class="reqn">r</code>, the Pearson correlation coefficient. Note, can also supply and
+argument <code>method</code> e.g. <code>method = "spearman"</code>. Also returned is the
+P value of the correlation coefficient, <code class="reqn">P</code>, which may present as <code>0</code> for
+very low values.
+</p>
+</li>
+<li> <p><code class="reqn">COE</code>, the <em>Coefficient of Efficiency</em> based on Legates and
+McCabe (1999, 2012). There have been many suggestions for measuring model
+performance over the years, but the COE is a simple formulation which is easy
+to interpret.
+</p>
+<p>A perfect model has a COE = 1. As noted by Legates and McCabe although the
+COE has no lower bound, a value of COE = 0.0 has a fundamental meaning. It
+implies that the model is no more able to predict the observed values than
+does the observed mean. Therefore, since the model can explain no more of the
+variation in the observed values than can the observed mean, such a model can
+have no predictive advantage.
+</p>
+<p>For negative values of COE, the model is less effective than the observed
+mean in predicting the variation in the observations. </p>
+</li>
+<li> <p><code class="reqn">IOA</code>, the
+Index of Agreement based on Willmott et al. (2011), which spans between -1
+and +1 with values approaching +1 representing better model performance.
+</p>
+<p>An IOA of 0.5, for example, indicates that the sum of the error-magnitudes is
+one half of the sum of the observed-deviation magnitudes.  When IOA = 0.0, it
+signifies that the sum of the magnitudes of the errors and the sum of the
+observed-deviation magnitudes are equivalent. When IOA = -0.5, it indicates
+that the sum of the error-magnitudes is twice the sum of the perfect
+model-deviation and observed-deviation magnitudes. Values of IOA near -1.0
+can mean that the model-estimated deviations about O are poor estimates of
+the observed deviations; but, they also can mean that there simply is little
+observed variability - so some caution is needed when the IOA approaches -1.
+</p>
+</li>
+</ul>
+<p>All statistics are based on complete pairs of <code>mod</code> and <code>obs</code>.
+</p>
+<p>Conditioning is possible through setting <code>type</code>, which can be a vector
+e.g. <code>type = c("weekday", "season")</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a data frame with model evaluation statistics.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>References</h3>
+
+<p>Legates DR, McCabe GJ. (1999). Evaluating the use of
+goodness-of-fit measures in hydrologic and hydroclimatic model validation.
+Water Resources Research 35(1): 233-241.
+</p>
+<p>Legates DR, McCabe GJ. (2012). A refined index of model performance: a
+rejoinder, International Journal of Climatology.
+</p>
+<p>Willmott, C.J., Robeson, S.M., Matsuura, K., 2011. A refined index of model
+performance. International Journal of Climatology.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other model evaluation functions: 
+<code>TaylorDiagram()</code>,
+<code>conditionalEval()</code>,
+<code>conditionalQuantile()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## the example below is somewhat artificial --- assuming the observed
+## values are given by NOx and the predicted values by NO2.
+
+modStats(mydata, mod = "no2", obs = "nox")
+
+## evaluation stats by season
+
+modStats(mydata, mod = "no2", obs = "nox", type = "season")
+
+
+</code></pre>
+
+
+</div>

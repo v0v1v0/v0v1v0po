@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Simplex gradient</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Simplex Gradient
+</h2>
+
+<h3>Description</h3>
+
+<p><code>optimsimplex.gradientfv</code> determines the simplex gradient of the function
+which is computed by the secondary functions <code>optimsimplex.gradcenter</code>
+and <code>optimsimplex.gradforward</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  optimsimplex.gradientfv(this = NULL, fun = NULL, method = "forward",
+                          data = NULL)
+  optimsimplex.gradcenter(this = NULL, fun = NULL, data = NULL)
+  optimsimplex.gradforward(this = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>this</code></td>
+<td>
+<p>An simplex object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>The function to compute at vertices. The function is expected to
+have the following input and output arguments:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+      myfunction &lt;- function(x, this){ </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+        ... </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+        return(list(f=f,this=this)) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+      }
+    </td>
+</tr>
+</table>
+<p>where x is a row vector and this a user-defined data, i.e. the <code>data</code>
+argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>The method used to compute the simplex gradient. Two methods
+are available: 'forward' and 'centered'. The 'forward' method uses the
+current simplex to compute the gradient (using <code>optimsimplex.dirmat</code>
+and  <code>optimsimplex.deltafv</code>). The 'centered' method creates an
+intermediate simplex and computes the average.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A user-defined data passed to the function. If data is provided,
+it is passed to the callback function both as an input and output argument.
+<code>data</code> may be used if the function uses some additionnal parameters. It
+is returned as an output parameter because the function may modify the data
+while computing the function value. This feature may be used, for example,
+to count the number of times that the function has been called.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>optimsimplex.gradientfv</code> returns a list with the following elements:
+</p>
+
+<dl>
+<dt>g</dt>
+<dd>
+<p>A column vector of function gradient (with length <code>this$n</code>).</p>
+</dd>
+<dt>data</dt>
+<dd>
+<p>The updated user-defined data.</p>
+</dd>
+</dl>
+<p><code>optimsimplex.gradcenter</code> returns a list with the following elements:
+</p>
+
+<dl>
+<dt>g</dt>
+<dd>
+<p>A column vector of function gradient (with length <code>this$n</code>).</p>
+</dd>
+<dt>data</dt>
+<dd>
+<p>The updated user-defined data.</p>
+</dd>
+</dl>
+<p><code>optimsimplex.gradforward</code> returns a column vector of function gradient
+(with length <code>this$n</code>).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Author of Scilab optimsimplex module: Michael Baudin (INRIA - Digiteo)
+</p>
+<p>Author of R adaptation: Sebastien Bihorel (<a href="mailto:sb.pmlab@gmail.com">sb.pmlab@gmail.com</a>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optimsimplex</code>,
+<code>optimsimplex.dirmat</code>,
+<code>optimsimplex.deltafv</code>
+</p>
+
+
+</div>

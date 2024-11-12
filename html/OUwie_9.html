@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OUwie.sim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generalized Hansen model simulator</h2>
+
+<h3>Description</h3>
+
+<p>Simulates the Ornstein-Uhlenbeck process of continuous characters evolving under discrete selective regimes.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OUwie.sim(phy=NULL, data=NULL, simmap.tree=FALSE, root.age=NULL, scaleHeight=FALSE,
+alpha=NULL, sigma.sq=NULL, theta0=NULL, theta=NULL, mserr="none", shift.point=0.5, 
+fitted.object=NULL, get.all=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>phy</code></td>
+<td>
+<p>a phylogenetic tree, in <code>ape</code> “phylo” format and with internal nodes labeled denoting the ancestral selective regimes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a dataframe containing species information (see Details). Not necessary to include if <code>simmap=TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simmap.tree</code></td>
+<td>
+<p>a logical indicating whether the input tree is in SIMMAP format. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>root.age</code></td>
+<td>
+<p>indicates the age of the tree. This is to be used in cases where the "tips" are not contemporary, such as in cases for fossil trees. Default is <code>NULL</code> meaning latest tip is modern day.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaleHeight</code></td>
+<td>
+<p>a logical indicating whether the total tree height should be scaled to 1 (see Details). The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>a numeric vector giving the values of <code class="reqn">\alpha</code> for each selective regime (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma.sq</code></td>
+<td>
+<p>a numeric vector giving the values of <code class="reqn">\sigma^2</code> for each selective regime (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta0</code></td>
+<td>
+<p>a numeric indicating the starting state, <code class="reqn">\theta_0</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>a numeric vector giving the values of <code class="reqn">\theta</code> for each selective regime (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mserr</code></td>
+<td>
+<p>designates whether a third column in the data matrix contains measurement error for each species value ("known"). The measurement error is assumed to be the standard error of the species mean. The default is "none".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift.point</code></td>
+<td>
+<p>the point along a branch where a regime change is assumed to have occurred (if <code>SIMMAP=FALSE</code>. The default is set to 0.5, or halfway along a branch.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.object</code></td>
+<td>
+<p>a model fit from OUwie to use for simulation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get.all</code></td>
+<td>
+<p>a logical indicating whether or not the entire simulation history is to be returned. The default is <code>FALSE</code> meaning that only the tips are returned.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The input is a tree and a data file OR a fitted OUwie object. The tree must be of class “phylo” and if <code>simmap=FALSE</code> must contain the ancestral selective regimes as internal node labels. The data file is a dataframe that must have column entries in the following order: [,1] species names and [,2] their current selective regime. If <code>mserr="known"</code> then a third column can be added which contains the measurement error for each species. Note that if <code>simmap=TRUE</code> no data file is needed. The user specifies the simulated parameter values (i.e. <code class="reqn">\alpha</code>, <code class="reqn">\sigma^2</code>, <code class="reqn">\theta_0</code>, <code class="reqn">\theta</code>). Assuming two selective regimes, possible models can be specified as follows (Note that this assumes a stationary distribution at the root):
+</p>
+<p>a. Single rate Brownian motion (<code>BM1</code>): alpha=c(1e-10,1e-10); sigma.sq=c(0.45,0.45); theta0=1.0; theta=c(0,0).
+</p>
+<p>b. Brownian motion with different rate parameters for each state on a tree (<code>BMS</code>): alpha=c(1e-10,1e-10) sigma.sq=c(0.45,0.90); theta0=1.0; theta=c(0,0).
+</p>
+<p>c. Ornstein Uhlenbeck with a single optimum for all species (<code>OU1</code>): alpha=c(0.1,0.1); sigma.sq=c(0.9,0.9); theta0=1; theta=c(1.0,1.0).
+</p>
+<p>d. Ornstein Uhlenbeck model that assumes different state means and a single <code class="reqn">\alpha</code> and <code class="reqn">\sigma^2</code> (<code>OUM</code>): alpha=c(1.0,1.0); sigma.sq=c(0.45,0.45); theta0=1.0; theta=c(1.0,2.0).
+</p>
+<p>e. Ornstein Uhlenbeck model that assumes different state means and multiple <code class="reqn">\sigma^2</code> (<code>OUMV</code>): alpha=c(1.0,1.0); sigma.sq=c(0.45,0.90); theta0=1.0; theta=c(1.0,2.0).
+</p>
+<p>f. Ornstein Uhlenbeck model that assumes different state means and multiple <code class="reqn">\alpha</code> (<code>OUMA</code>): alpha=c(1.0,0.5); sigma.sq=c(0.45,0.45); theta0=1.0; theta=c(1.0,2.0).
+</p>
+<p>g. Ornstein Uhlenbeck model that assumes different state means and multiple <code class="reqn">\sigma^2</code> and <code class="reqn">\alpha</code> (<code>OUMVA</code>): alpha=c(1.0,0.5); sigma.sq=c(0.45,0.9); theta0=1.0; theta=c(1.0,2.0).
+</p>
+<p>With a fitted OUwie model, it just uses the parameters from that, ignoring any alpha, theta, etc. set in the function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing, as column entries, [,1] species names, [,2] current regime, [,3] simulated continuous trait, x.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jeremy M. Beaulieu and Brian C. O'Meara</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(sim.ex)
+
+#Simulate an Ornstein-Uhlenbeck model with different state means
+#and a separate alpha and sigma^2 per selective regime
+alpha=c(1.0,0.5)
+sigma.sq=c(0.45,0.9)
+theta0=1.0
+theta=c(1.0,2.0)
+
+sim.data&lt;-OUwie.sim(tree,trait,simmap.tree=FALSE,scaleHeight=FALSE,
+alpha=alpha,sigma.sq=sigma.sq,theta0=theta0,theta=theta)
+
+#Now fit a model to this and simulate from the fitted results
+result &lt;- OUwie(tree, sim.data, model="OUMVA", simmap.tree=FALSE,scaleHeight=FALSE)
+sim.data.2 &lt;- OUwie.sim(fitted.object=result)
+
+
+</code></pre>
+
+
+</div>

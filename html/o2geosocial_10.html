@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_param</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Initializes outputs for outbreaker</h2>
+
+<h3>Description</h3>
+
+<p>This function creates initial outputs and parameter states for outbreaker.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_param(data = outbreaker_data(), config = create_config())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A list of data items as returned by <code>outbreaker_data</code>, or
+arguments passed to this function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>config</code></td>
+<td>
+<p>A list of settings as returned by <code>create_config</code>, or
+arguments passed to this function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A named list containing two components <code>$store</code> and
+<code>$current</code>. <code>store</code> is a list with the class
+<code>outbreaker_store</code>, used for storing 'saved' states of the
+MCMC. <code>current</code> is a list with the class <code>outbreaker_param</code>, used
+for storing 'current' states of the MCMC. <br><br></p>
+<p><code>outbreaker_store</code> class content:
+</p>
+
+<ul>
+<li> <p><code>size</code>:The length of the list, corresponding to the number of
+samples saved from the MCMC.
+</p>
+</li>
+<li> <p><code>step</code>: A vector of integers of length <code>size</code>, storing the
+steps of the MCMC corresponding to the saved samples.
+</p>
+</li>
+<li> <p><code>post</code>: A numeric vector of length <code>size</code>, storing
+log-posterior values.
+</p>
+</li>
+<li> <p><code>like</code>: A numeric vector of length <code>size</code>, storing
+log-likelihood values.
+</p>
+</li>
+<li> <p><code>prior</code>: A numeric vector of length <code>size</code>,
+storing log-prior values.
+</p>
+</li>
+<li> <p><code>alpha</code>: A list of length <code>size</code>. Each item of the list is
+an integer vector of length <code>data$N</code>, storing indices (from 1 to N) of
+infectors for each case.
+</p>
+</li>
+<li> <p><code>t_inf</code>: A list of length <code>size</code>. Each item of the list is
+an integer vector of length <code>data$N</code>, storing dates of infections for
+each case.
+</p>
+</li>
+<li> <p><code>kappa</code>: A list of length <code>size</code>. Each item of the list is
+an integer vector of length <code>data$N</code>, storing the number of generations
+before the last sampled ancestor for each case.
+</p>
+</li>
+<li> <p><code>pi</code>: A numeric vector of length <code>size</code>, storing values of
+the reporting probability.
+</p>
+</li>
+<li> <p><code>a</code>: A numeric vector of length <code>size</code>, storing values of
+the first spatial parameter (population).
+</p>
+</li>
+<li> <p><code>b</code>: A numeric vector of length <code>size</code>, storing values of
+the second spatial parameter (distance).
+</p>
+</li>
+<li> <p><code>counter</code>: A counter used to keep track of the current iteration
+of the MCMC (used internally).
+</p>
+</li>
+</ul>
+<p><code>outbreaker_param</code> class content:
+</p>
+
+<ul>
+<li> <p><code>alpha</code>: An integer vector of length <code>data$N</code>, storing
+indices (from 1 to N) of infectors for each case.
+</p>
+</li>
+<li> <p><code>t_inf</code>: An integer vector of length <code>data$N</code>, storing dates
+of infections for each case.
+</p>
+</li>
+<li> <p><code>kappa</code>: An integer vector of length <code>data$N</code>, storing the
+number of generations before the last sampled ancestor for each case.
+</p>
+</li>
+<li> <p><code>pi</code>: The value of the reporting probability.
+</p>
+</li>
+<li> <p><code>a</code>: The value of the first spatial parameter (population).
+</p>
+</li>
+<li> <p><code>b</code>: The value of the second spatial parameter (distance).
+</p>
+</li>
+<li> <p><code>log_s_dens</code>:The spatial likelihood matrix, calculated at each step
+from a and b if move_a == TRUE or move_b == TRUE.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Initial version by Thibaut Jombart, rewritten by Alexis Robert (<a href="mailto:alexis.robert@lshtm.ac.uk">alexis.robert@lshtm.ac.uk</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## load data
+data("toy_outbreak_short")
+dt_cases &lt;- toy_outbreak_short$cases
+dt_cases &lt;- dt_cases[order(dt_cases$Date), ]
+dt_regions &lt;- toy_outbreak_short$dt_regions
+all_dist &lt;- geosphere::distGeo(matrix(c(rep(dt_regions$long, nrow(dt_regions)), 
+                                        rep(dt_regions$lat, nrow(dt_regions))), 
+                                      ncol = 2), 
+                               matrix(c(rep(dt_regions$long, each = nrow(dt_regions)), 
+                                        rep(dt_regions$lat, each = nrow(dt_regions))),
+                                      ncol = 2))
+
+dist_mat &lt;- matrix(all_dist/1000, nrow = nrow(dt_regions))
+pop_vect &lt;- dt_regions$population
+names(pop_vect) &lt;- rownames(dist_mat) &lt;- colnames(dist_mat) &lt;- dt_regions$region
+
+data &lt;- outbreaker_data(dates = dt_cases$Date, age_group = dt_cases$age_group,
+                        region = dt_cases$Cens_tract, population = pop_vect, 
+                        distance = dist_mat)
+
+## modify config settings
+config &lt;- create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
+
+## create param object
+param &lt;- create_param(data = data, config = config)
+
+</code></pre>
+
+
+</div>

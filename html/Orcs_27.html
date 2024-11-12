@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>merge</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Merge Objects Stored in a List</h2>
+
+<h3>Description</h3>
+
+<p>Complementing existing merge methods, e.g. <code>terra::merge()</code> for <code style="white-space: pre;">⁠Spat*⁠</code>
+objects, which typically work with one or two inputs only, this function
+accepts a <code>list</code> of objects that are to be merged together.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'list,missing'
+merge(x, by = 1L, all = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>list</code> of objects of the same type (e.g. <code style="white-space: pre;">⁠Spat*⁠</code> or <code>data.frame</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by, all</code></td>
+<td>
+<p>See <code>merge.data.frame()</code>. Ignored if data stored in 'x' is not
+of class <code>data.frame</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to the underlying merge method (e.g.
+arguments compatible with <code>terra::merge()</code> and <code>terra::writeRaster()</code> for
+<code style="white-space: pre;">⁠Spat*⁠</code> input). Ignored if data stored in 'x' is of class <code>data.frame</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A merged object (e.g. a new <code style="white-space: pre;">⁠Spat*⁠</code> object with a larger spatial extent).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Florian Detsch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>do.call()</code>, <code>Reduce()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## `SpatRaster` input
+dms = list.files(system.file("extdata", package = "Orcs")
+                 , pattern = "ASTGTM2.*dem.tif$", full.names = TRUE)
+dms = lapply(dms, terra::rast)
+
+dem = merge(dms[3:4])
+terra::plot(dem)
+
+## data.frame input
+mrg = merge(list(iris, iris, iris)
+            , by = c("Species", "Sepal.Length", "Petal.Width"))
+head(mrg)
+
+</code></pre>
+
+
+</div>

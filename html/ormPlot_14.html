@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.orm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the prediction with confidence intervals</h2>
+
+<h3>Description</h3>
+
+<p>This function plots the model predictions given that all variables that are
+not included in the plot are kept constant. Hence it requires at least one
+variable to produce a plot.
+returns a <code>ggplot</code> object that can be further customized like any
+other ggplot
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'orm'
+plot(
+  x,
+  xval,
+  plot_cols = c(),
+  plot_rows = c(),
+  label_with_colname = TRUE,
+  facet_labels = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  np = 100,
+  fun = stats::plogis,
+  boot.type = "bca",
+  conf.int = 0.95,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object created by <code>Predict</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xval</code></td>
+<td>
+<p>The model value plotted on the x axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_cols</code></td>
+<td>
+<p>A vector of strings with  other model components that
+should be plotted. These are put on columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_rows</code></td>
+<td>
+<p>A vector of strings with other model components that
+should be plotted. These are put on rows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label_with_colname</code></td>
+<td>
+<p>Should he variable name also be included on plot
+row and column names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet_labels</code></td>
+<td>
+<p>A  named list of new names for variables on rows and
+columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A custom x-axis value (if specified)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A custom y-axis value (if specified)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>np</code></td>
+<td>
+
+<p>the number of equally-spaced points computed for continuous
+predictors that vary, i.e., when the specified value is <code>.</code>
+or <code>NA</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>an optional transformation of the linear predictor.
+Specify <code>fun='mean'</code> if the fit is a proportional odds model
+fit and you ran <code>bootcov</code> with <code>coef.reps=TRUE</code>.  This
+will let the mean function be re-estimated for each bootstrap rep to
+properly account for all sources of uncertainty in estimating the
+mean response.  <code>fun</code> can be a general function and can compute
+confidence limits (stored as a list in the <code>limits</code> attribute) of
+the transformed parameters such as means.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boot.type</code></td>
+<td>
+<p>set to <code>'bca'</code> to compute BCa confidence
+limits or <code>'basic'</code> to use the basic bootstrap.  The default is
+to compute percentile intervals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.int</code></td>
+<td>
+
+<p>confidence level (highest posterior density interval probability for
+Bayesian models).  Default is 0.95.  Specify <code>FALSE</code> to suppress.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional parameters that will be passed to <code>Predict</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>ggplot</code> plot object
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Predict</code>, <code>datadist</code>, <code>orm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#load the libraries
+library(rms)
+library(ormPlot)
+
+#make the datadist
+dd&lt;-datadist(educ_data)
+options(datadist='dd')
+
+#create the model
+cran_model &lt;- orm(educ_3 ~ Rural + sex + max_SEP_3 + cran_rzs, data = educ_data)
+
+#plot the predictions of the model for varying one variable only
+plot(cran_model, cran_rzs)
+
+#customize the plotting varying all variables
+plot(cran_model, cran_rzs,
+      plot_cols = max_SEP_3,
+      plot_rows = c(Rural, sex),
+
+      #setting new x-label (optional)
+     xlab = "Cranial volume (residuals to age an birth date)",
+
+     #setting new facet labels (optional)
+     facet_labels = list(Rural = c("Urban", "Rural"),
+                          sex = c("Boys","Girls"))
+     )
+</code></pre>
+
+
+</div>

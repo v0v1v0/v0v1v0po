@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GloptiPolyRegion</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Confidence region for optima of higher order polynomial models in multiple factors</h2>
+
+<h3>Description</h3>
+
+<p>Computes and displays an approximated (1 - alpha)*100% confidence region (CR) for
+the bound-constrained optimum of a fitted polynomial regression model of up to cubic order
+with up to 5 controllable factors
+(Del Castillo et al. 2020).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GloptiPolyRegion(
+  X,
+  y,
+  degree,
+  lb,
+  ub,
+  B = 200,
+  alpha = 0.05,
+  maximization = TRUE,
+  axes_labels = NULL,
+  outputPDFFile = "CRplot.pdf",
+  verbose = TRUE,
+  local_plot = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>an N*k numeric matrix where N is the number of experiments and k is the
+number of variables/factors (an integer in [2,5]). X specifies the
+design matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>N*1 numeric vector that specifies the responses</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>degree</code></td>
+<td>
+<p>integer scalar; degree specifies the order of the polynomial
+model, which can be 2 or 3</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lb</code></td>
+<td>
+<p>numeric vector of dimension (1, k); lb specifies the lower bounds for
+the k variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ub</code></td>
+<td>
+<p>1*k numeric vector that specifies the upper bounds for
+the k variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>integer scalar; B specifies the number of bootstrap operations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>numeric scalar between 0 and 1; alpha specifies the nominal
+confidence level, (1 - alpha)*100%, of the confidence region</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maximization</code></td>
+<td>
+<p>boolean scalar; specifies whether the algorithm
+computes the confidence region for a maximum or a minimun</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axes_labels</code></td>
+<td>
+<p>vector of strings; specifies the name of each variable or experimental
+factor to be displayed on the CR plot; the default value is NULL,
+which sets labels as "x1", "x2", etc.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputPDFFile</code></td>
+<td>
+<p>name of the PDF file where the CR plot is saved
+(default: "CR_plot.pdf")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>boolean scalar; specifies whether or not to display status of the
+bootstrapping/optimization iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>local_plot</code></td>
+<td>
+<p>boolean scalar; specifies whether or to display the confidence region on the screen</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Upon completion, a pdf file with the plot displaying the confidence region of the global optimum
+projected onto each pairwise-variable planes.
+If local_plot = TRUE, the plot will also be created on the screen.
+The function also returns a list consisting of 2 components:
+</p>
+
+<dl>
+<dt>boot_optima</dt>
+<dd>
+<p>numeric matrix of dimension ((1 - alpha)*B, k);
+it contains the (1 - alpha)*B bootstrap optima</p>
+</dd>
+<dt>bagged_optimum</dt>
+<dd>
+<p>numeric vector of dimension (1, k) containing the bagged
+optimum, computed by taking the column average
+of boot_optima</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Enrique del Castillo <a href="mailto:exd13@psu.edu">exd13@psu.edu</a>,
+Peng Chen <a href="mailto:pfc5098@psu.edu">pfc5098@psu.edu</a>,
+Adam Meyers <a href="mailto:akm5733@psu.edu">akm5733@psu.edu</a>,
+John Hunt <a href="mailto:J.Hunt@westernsydney.edu.au">J.Hunt@westernsydney.edu.au</a> and
+James Rapkin <a href="mailto:jr297@exeter.ac.uk">jr297@exeter.ac.uk</a>.
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Del Castillo E, Chen P, Meyers A, Hunt J, Rapkin J (2020).
+“Confidence regions for the location of response surface optima: the R package OptimaRegion.”
+<em>Communications in Statistics-Simulation and Computation</em>, 1–21.
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Example 1: run GloptiPolyRegion on a quadratic, 3 vars example
+out &lt;- GloptiPolyRegion(
+  X = quad_3D[, 1:3], y = quad_3D[, 4], degree = 2,
+  lb = c(-2, -2, -2), ub = c(2, 2, 2), B = 500, alpha = 0.1,
+  maximization = TRUE,
+  outputPDFFile = "CR_quad_3D.pdf", verbose = TRUE
+)
+# check result
+str(out)
+
+# Example 2: run GloptiPolyRegion on a cubic, 5 vars example
+out &lt;- GloptiPolyRegion(
+  X = cubic_5D$design_matrix, y = cubic_5D$response,
+  degree = 3, lb = rep(0, 5), ub = rep(5, 5), B = 200,
+  alpha = 0.05, maximization = TRUE,
+  outputPDFFile = "CR_cubic_5D.pdf", verbose = TRUE
+)
+# check result
+str(out)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

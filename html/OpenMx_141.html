@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mxJiggle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Jiggle parameter values.
+</h2>
+
+<h3>Description</h3>
+
+<p>Jiggle free parameter values, subject to box constraints.  <code>imxJiggle()</code> is called internally by <code>mxTryHard()</code> (q.v.).  <code>mxJiggle()</code> provides a more user-friendly wrapper to <code>imxJiggle()</code>, and can alternately emulate the 'JIGGLE' behavior of classic Mx.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mxJiggle(model, classic=FALSE, dsn=c("runif","rnorm","rcauchy"), loc=1, scale=0.25)
+imxJiggle(params, lbounds, ubounds, dsn, loc, scale)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class MxModel.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>classic</code></td>
+<td>
+<p>Logical; should <code>mxJiggle()</code> emulate the classic-Mx behavior elicited by keyword JIGGLE?  Defaults to <code>FALSE</code>.  See below, under "Details," for additional information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dsn</code></td>
+<td>
+<p>Character string naming which random-number distribution–either uniform (rectangular), normal (Gaussian), or Cauchy–to be used to perturb free-parameter values.  Defaults to the uniform distribution (for <code>mxJiggle()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loc, scale</code></td>
+<td>
+<p>Numeric. The location and scale parameters of the distribution from which random values are drawn to perturb free-parameter values, defaulting respectively to 1 and 0.25 (for <code>mxJiggle()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>params</code></td>
+<td>
+<p>Numeric vector of current free parameter values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lbounds</code></td>
+<td>
+<p>Numeric vector of lower bounds on parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ubounds</code></td>
+<td>
+<p>Numeric vector of upper bounds on parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>mxJiggle()</code> argument <code>classic=FALSE</code> (the default), <code>mxJiggle()</code> calls <code>imxJiggle()</code>.  In that case, <code>mxJiggle()</code> passes <code>imxJiggle()</code> its own values for arguments <code>dsn</code>, <code>loc</code>, and <code>scale</code>, and extracts values for arguments <code>params</code>, <code>lbounds</code>, and <code>ubounds</code> from <code>model</code>.  Then, <code>model</code>'s free-parameter values are randomly perturbed before being re-assigned to it.  The distributional family from which the perturbations are randomly generated is dictated by argument <code>dsn</code>.  The distribution is parameterized by arguments <code>loc</code> and <code>scale</code>, respectively the location and scale parameters.  The location parameter is the distribution's median.  For the uniform distribution, <code>scale</code> is the absolute difference between its median and extrema (i.e., half the width of the rectangle); for the normal distribution, <code>scale</code> is its standard deviation; and for the Cauchy, <code>scale</code> is one-half its interquartile range.  Free-parameter values are first multiplied by random draws from a distribution with the provided <code>loc</code> and <code>scale</code>, then added to random draws from a distribution with the same <code>scale</code> but with a median of zero.
+</p>
+<p>If <code>mxJiggle()</code> argument <code>classic=TRUE</code>, then each free-parameter value <code class="reqn">x_i</code> is replaced with <code class="reqn">x_i + 0.1(x_i + 0.5)</code>; this is the same behavior elicited in classic Mx by keyword JIGGLE.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>imxJiggle()</code> returns a numeric vector of randomly perturbed free-parameter values.  <code>mxJiggle()</code> returns <code>model</code>, with its free parameter values altered according to the other function arguments.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mxTryHard()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(demoOneFactor)
+manifests &lt;- names(demoOneFactor)
+latents &lt;- c("G")
+factorModel &lt;- mxModel(
+	"One Factor",
+	type="RAM",
+	manifestVars = manifests,
+	latentVars = latents,
+	mxPath(from=latents, to=manifests,values=0.8),
+	mxPath(from=manifests, arrows=2,values=1),
+	mxPath(from=latents, arrows=2,
+				 free=FALSE, values=1.0),
+	mxData(cov(demoOneFactor), type="cov",
+				 numObs=500)
+)
+
+iniPars &lt;- coef(factorModel)
+print(iniPars)
+
+pars2 &lt;- imxJiggle(params=iniPars,lbounds=NA,ubounds=NA,dsn="runif",loc=1,scale=0.05)
+print(pars2)
+
+mod2 &lt;- mxJiggle(model=factorModel,scale=0.05)
+coef(mod2)
+
+mod3 &lt;- mxJiggle(model=factorModel,classic=TRUE)
+coef(mod3)
+</code></pre>
+
+
+</div>

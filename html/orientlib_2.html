@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>boat3d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Draw boat glyphs for orientation data </h2>
+
+<h3>Description</h3>
+
+<p>Draws a stylized sailboat to represent an orientation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">boat3d(orientation, x = 1:length(orientation), y = 0, 
+       z = 0, scale = 0.25, col = 'red', add = FALSE, box = FALSE, axes = TRUE,
+       graphics = c('rgl', 'scatterplot3d'), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>orientation</code></td>
+<td>
+<p> An <code>orientation</code> object to be shown. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x, y, z</code></td>
+<td>
+<p> Coordinates where boats should be shown. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p> Size of boats </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p> Colour of boats </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+<p> Context in which to continue drawing, or <code>FALSE</code> to clear first.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>box</code></td>
+<td>
+<p> Whether to draw a box around the plot </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axes</code></td>
+<td>
+<p> Whether to draw axes </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>graphics</code></td>
+<td>
+<p> Which graphics package to use </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> Additional graphics parameters; see Details below </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For the identity orientation, the sailboats will be shown upright.
+Other orientations are shown as rotations of this glyph.
+</p>
+<p>The (x,y,z) coordinate appears in the middle of the sail, at the
+top of the gunwales of the boat.
+</p>
+<p>If the <code>rgl</code> package is 
+installed, it will be used to draw solid faces on the boats which can be moved by the
+user.  If not, but the <code>scatterplot3d</code> package is
+installed, it will be used to draw fixed wireframe boats.  This
+search order can be changed by modifying the <code>graphics</code> parameter.
+</p>
+<p>Additional graphics parameters may be passed.  If <code>scatterplot3d</code> is used, these
+are passed to the <code>scatterplot3d</code> function (and ignored
+when adding to an existing plot).  Extra parameters are not passed to
+<code>rgl</code>.
+</p>
+<p>To add to a <code>scatterplot3d</code> plot, you must pass the 
+return value from the initial plot as the value of <code>add</code>.  See
+the <code>orientlm</code> function for an example.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A current
+plot number for <code>rgl</code>, or a <code>scatterplot3d</code> 
+drawing context.  In any case, an attribute named <code>graphics</code> is added
+to indicate the drawing device type.
+</p>
+
+
+<h3>Note</h3>
+
+<p> Requires the <code>rgl</code> or 
+<code>scatterplot3d</code> package. </p>
+
+
+<h3>Author(s)</h3>
+
+<p> Duncan Murdoch </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- eulerzyx(psi=c(0,pi/4,0,0), theta=c(0,0,pi/4,0), phi=c(0,0,0,pi/4))
+
+# Need a 3D renderer; assume scatterplot3d, but others could be used
+
+s &lt;- boat3d(x, 0:3, axes = FALSE, graphics = 'scatterplot3d')
+text(s$xyz.convert(0:3, rep(-0.5,4), rep(-0.5,4)), 
+     label = c('Id','z','y','x'))
+         
+## Not run: 
+
+# if the rgl package is installed, this code will work
+
+boat3d(x, 0:3, axes = FALSE, graphics = 'rgl')
+rgl::bbox3d(xat=0:3,xlab=c('Id','z','y','x'),yat=1,zat=1,color='grey')  
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>find_esgrid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>find_esgrid
+</h2>
+
+<h3>Description</h3>
+
+<p>Finds a reasonable effect size grid to simulate over.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">find_esgrid(my_data, my_cov, treatment, outcome, my_estimand)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>my_data</code></td>
+<td>
+
+<p>Data
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>my_cov</code></td>
+<td>
+
+<p>vector of covariates
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>treatment</code></td>
+<td>
+
+<p>column name of treatment indicator in my_data
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+
+<p>column name of outcome in my_data
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>my_estimand</code></td>
+<td>
+
+<p>Relevant estimand ("ATE" or "ATT")
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data frame with three columns, "Cor_Outcome", "es", and "cov". "Cor_Outcome" represents rho grid values, "ES" represents the range of grid values to represent the association between the unobserved confounder and the treatment indicator on the effect size scale, and "cov" is a vector of all the covariates used in the propensity score model
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sud)
+sud = data.frame(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(1, 10, by=.01), size=nrow(sud), replace = TRUE)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_3",
+                            model_covariates = c("sfs8p_0"),
+                            estimand = "ATE")
+
+find_es = find_esgrid(sud, my_cov="sfs8p_0", treatment="treat",
+                      outcome="eps7p_3",
+                      my_estimand="ATE")
+</code></pre>
+
+
+</div>

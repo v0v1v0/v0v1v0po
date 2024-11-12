@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>body_fat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Body Fat Prediction Dataset</h2>
+
+<h3>Description</h3>
+
+<p>Lists estimates of the percentage of body fat determined by underwater
+weighing and various body circumference measurements for 252 men.
+Accurate measurement of body fat is inconvenient/costly and it is desirable to have easy methods of estimating body fat that are not inconvenient/costly.
+</p>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 252 rows and 15 covariate variables and 1 response variable
+</p>
+
+
+<h3>Details</h3>
+
+<p>The variables listed below, from left to right, are:
+</p>
+
+<ul>
+<li>
+<p> Density determined from underwater weighing
+</p>
+</li>
+<li>
+<p> Age (years)
+</p>
+</li>
+<li>
+<p> Weight (lbs)
+</p>
+</li>
+<li>
+<p> Height (inches)
+</p>
+</li>
+<li>
+<p> Neck circumference (cm)
+</p>
+</li>
+<li>
+<p> Chest circumference (cm)
+</p>
+</li>
+<li>
+<p> Abdomen 2 circumference (cm)
+</p>
+</li>
+<li>
+<p> Hip circumference (cm)
+</p>
+</li>
+<li>
+<p> Thigh circumference (cm)
+</p>
+</li>
+<li>
+<p> Knee circumference (cm)
+</p>
+</li>
+<li>
+<p> Ankle circumference (cm)
+</p>
+</li>
+<li>
+<p> Biceps (extended) circumference (cm)
+</p>
+</li>
+<li>
+<p> Forearm circumference (cm)
+</p>
+</li>
+<li>
+<p> Wrist circumference (cm)
+</p>
+</li>
+</ul>
+<h3>Source</h3>
+
+<p><a href="https://www.kaggle.com/datasets/fedesoriano/body-fat-prediction-dataset">https://www.kaggle.com/datasets/fedesoriano/body-fat-prediction-dataset</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Bailey, Covert (1994). Smart Exercise: Burning Fat, Getting Fit, Houghton-Mifflin Co., Boston, pp. 179-186.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>breast_cancer</code> <code>seeds</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(body_fat)
+set.seed(221212)
+train &lt;- sample(1:252, 60)
+train_data &lt;- data.frame(body_fat[train, ])
+test_data &lt;- data.frame(body_fat[-train, ])
+
+forest &lt;- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE, ntrees = 50)
+pred &lt;- predict(forest, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
+
+tree &lt;- ODT(Density ~ ., train_data, split = "mse")
+pred &lt;- predict(tree, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
+
+</code></pre>
+
+
+</div>

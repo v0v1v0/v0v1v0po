@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>word_imp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Importance of words (terms) embedded
+in a text document</h2>
+
+<h3>Description</h3>
+
+<p>Produces a wordcloud which represents the
+level of importance of each word (across different text groups)
+within a text document, according to a specified measure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">word_imp(textdoc, metric= "tf",
+words_to_filter=NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>textdoc</code></td>
+<td>
+<p>An <code>n</code> x <code>1</code> list (dataframe) of
+individual text records, where <code>n</code> is the total
+number of individual records. An <code>n</code> x code2 dataframe can
+also be supplied, in which the second column represents the
+labels of the pre-defined groupings of the text records,
+e.g. labels of geographical areas where each text record
+originates.
+For an <code>n</code> x <code>1</code> dataframe, an arbitrary grouping is
+automatically imposed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+<p>(character) The measure for determining the level of
+importance of each word within the text document. Options include <code>'tf'</code>
+representing <code style="white-space: pre;">⁠term frequency⁠</code> and <code>'tf-idf'</code>
+representing <code style="white-space: pre;">⁠term frequency inverse document frequency⁠</code>
+(Silge &amp; Robinson, 2016).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>words_to_filter</code></td>
+<td>
+<p>A pre-defined vector of words (terms) to
+filter out from the DTD prior to highlighting words importance.
+default: <code>NULL</code>. This parameter helps to eliminate
+non-necessary words that may be too dominant in the results.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function determines the most important words
+across various grouping of a text document. The measure
+options include the <code>tf</code> and <code>tf-idf</code>. The idea of <code>tf</code>
+is to rank words in the order of their number of occurrences
+across the text document, whereas <code>tf-idf</code> finds words that
+are not used very much, but appear across
+many groups in the document.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Graphical representation of words importance
+according to a specified metric. A wordcloud is used
+to represent words importance if <code>tf</code> is specified, while
+facet wrapped histogram is used if <code>tf-idf</code> is specified.
+A wordcloud is represents each word with a size corresponding
+to its level of importance. In the facet wrapped histograms
+words are ranked in each group (histogram) in their order
+of importance.
+</p>
+
+
+<h3>References</h3>
+
+<p>Silge, J. and Robinson, D. (2016) tidytext:
+Text mining and analysis using tidy data principles in R.
+Journal of Open Source Software, 1, 37.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#words to filter out
+wf &lt;- c("police","policing")
+output &lt;- word_imp(textdoc = policing_dtd, metric= "tf",
+words_to_filter= wf)
+</code></pre>
+
+
+</div>

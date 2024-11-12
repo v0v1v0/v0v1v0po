@@ -1,0 +1,59 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>record_batch_reader</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>record_batch_reader</h2>
+
+<h3>Description</h3>
+
+<p>This function retrieves a filtered dataset from the specified Overture dataset type,
+optionally within a bounding box, and converts it to an <code>sf</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">record_batch_reader(overture_type, bbox = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>overture_type</code></td>
+<td>
+<p>Character. Required. The type of feature to select. Examples include 'building', 'place', etc.
+To learn more, run <code>get_all_overture_types()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>Numeric vector. Optional. A bounding box specified as c(xmin, ymin, xmax, ymax).
+It is recommended to use a bounding box to limit the dataset size and processing time.
+Without a bounding box, processing the entire dataset (e.g., buildings over 2 billion) can be time-consuming.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>sf</code> object containing the filtered dataset based on the bounding box.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Example usage with a bounding box takes &gt; 20 secs
+sf_bbox &lt;- c(-122.5, 37.7, -122.3, 37.8)
+result &lt;- record_batch_reader(overture_type = 'place', bbox = sf_bbox)
+print(result)
+
+
+</code></pre>
+
+
+</div>

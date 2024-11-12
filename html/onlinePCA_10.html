@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>incRpca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Incremental PCA</h2>
+
+<h3>Description</h3>
+
+<p>Online PCA using the incremental SVD method of Brand (2002) and Arora et al. (2012).</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">incRpca(lambda, U, x, n, f = 1/n, q = length(lambda), center, tol = 1e-7)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>vector of eigenvalues.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>matrix of eigenvectors (principal components) stored in columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>new data vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>sample size before observing <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>forgetting factor: a number in (0,1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>number of eigenvectors to compute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>optional centering vector for <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>numerical tolerance.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the Euclidean distance between <code>x</code> and <code>U</code> is more than <code>tol</code>, the number of eigenpairs increases to <code>length(lambda)+1</code> before eventual truncation at order <code>q</code>. Otherwise, the eigenvectors remain unchanged and only the eigenvalues are updated.
+<br>  
+The forgetting factor <code>f</code> can be interpreted as the inverse of the number of observation vectors effectively used in the PCA: the "memory" of the PCA algorithm goes back <code>1/f</code> observations in the past. For larger values of <code>f</code>, the PCA update gives more relative weight to the new data <code>x</code> and less to the current PCA (<code>lambda,U</code>). For nonstationary processes, <code>f</code> should be closer to 1.<br>
+Only one of the arguments <code>n</code> and <code>f</code> needs being specified. If it is <code>n</code>, then <code>f</code> is set to <code>1/n</code> by default (usual PCA of sample covariance matrix where all data points have equal weight). If <code>f</code> is specified, its value overrides any eventual specification of <code>n</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components  
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>updated eigenvalues in decreasing order.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vectors</code></td>
+<td>
+<p>updated eigenvectors.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Arora et al. (2012). Stochastic Optimization for PCA and PLS.  <em>50th Annual Conference on Communication, Control, and Computing (Allerton).</em><br>
+Brand, M. (2002). Incremental singular value decomposition of uncertain data with missing values. <em>European Conference on Computer Vision (ECCV).</em>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Simulate Brownian motion
+n &lt;- 100 # number of sample paths
+d &lt;- 50	 # number of observation points
+q &lt;- 10	 # number of PCs to compute
+n0 &lt;- 50 # number of sample paths used for initialization 
+x &lt;- matrix(rnorm(n*d,sd=1/sqrt(d)), n, d)
+x &lt;- t(apply(x,1,cumsum))	
+dim(x) # (100,50)
+
+
+## Incremental PCA (IPCA, centered)
+pca &lt;- prcomp(x[1:n0,]) # initialization
+xbar &lt;- pca$center
+pca &lt;- list(values=pca$sdev[1:q]^2, vectors=pca$rotation[,1:q])
+for (i in (n0+1):n)
+{
+  xbar &lt;- updateMean(xbar, x[i,], i-1)
+  pca &lt;- incRpca(pca$values, pca$vectors, x[i,], i-1, q = q,
+		center = xbar)
+}
+
+## Incremental PCA (IPCA, uncentered)
+pca &lt;- prcomp(x[1:n0,],center=FALSE) # initialization
+pca &lt;- list(values = pca$sdev[1:q]^2, vectors = pca$rotation[,1:q])
+for (i in (n0+1):n)
+  pca &lt;- incRpca(pca$values, pca$vectors, x[i,], i-1, q = q)
+</code></pre>
+
+
+</div>

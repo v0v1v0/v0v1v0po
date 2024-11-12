@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pp_check_ordbeta</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Accurate Posterior Predictive Plots for Ordbetareg Models</h2>
+
+<h3>Description</h3>
+
+<p>The standard brms::pp_check plot available via <code>brms</code>
+is not accurate for ordbetareg models because an
+ordered beta regression has both continuous and discrete
+components. This function implements a bar plot and a density
+plot for the continuous and discrete elements separately,
+and will return accurate posterior predictive plots
+relative to the data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pp_check_ordbeta(
+  model = NULL,
+  type = "both",
+  ndraws = 10,
+  cores = NULL,
+  group = NULL,
+  new_theme = NULL,
+  outcome_label = NULL,
+  animate = FALSE,
+  reverse_bounds = TRUE,
+  facet_scales = "fixed"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A fitted ordbetareg model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Default is "both" for creating both a
+discrete (bar) and continuous (density) plot. Can also be
+"discrete" for only the bar plot for discrete values (0/1) or
+"continuous" for continuous values (density plot).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ndraws</code></td>
+<td>
+<p>Number of posterior draws to use to calculate estimates and show in plot.
+Defaults to 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cores</code></td>
+<td>
+<p>Number of cores to use to produce posterior predictive distribution. Defaults to NULL or 1 core.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>A factor variable of the same number of
+rows as the data that is used to broduce grouped
+(faceted) plots of the posterior distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new_theme</code></td>
+<td>
+<p>Any additional themes to be added to ggplot2 (default is NULL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome_label</code></td>
+<td>
+<p>A character value that will replace the name of the outcome in the plot
+(default is the name of the response variable in the data frame).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>animate</code></td>
+<td>
+<p>Whether to animate each posterior draw for continuous
+distributions (defaults to FALSE).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reverse_bounds</code></td>
+<td>
+<p>Whether to plot data using the original bounds in the data
+(i.e. not 0 and 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet_scales</code></td>
+<td>
+<p>The option passed on to the <code>facet_wrap</code> function in
+<code>ggplot2</code> for the type of scale for facetting if passing a variable for
+<code>group</code>. Defaults to <code>"fixed"</code> scales but can be set to <code>"free_y"</code> to allow
+probability density/bar count scales to vary or <code>"free"</code> to allow both x
+and y axes to vary (i.e., also outcome axis ticks).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If "both", prints both plots and returns a list of both plots as
+<code>ggplot2</code> objects. Otherwise, prints and returnst the specific plot
+as a <code>ggplot2</code> object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# need a fitted ordbetareg model
+
+data("ord_fit_mean")
+
+out_plots &lt;- pp_check_ordbeta(ord_fit_mean)
+
+# view discrete bar plot
+
+out_plots$discrete
+
+# view continuous density plot
+
+out_plots$continuous
+
+# change title using ggplot2 ggtitle function
+
+out_plots$discrete + ggplot2::ggtitle("New title")
+
+</code></pre>
+
+
+</div>

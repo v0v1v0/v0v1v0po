@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convert_VLE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Converts the VLE data format</h2>
+
+<h3>Description</h3>
+
+<p>Converts the data format of the Virtual Learning Environment (VLE) data set from total view counts to binary, standardised or logarithmic view count data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convert_VLE(
+  data,
+  conversion = c("binary", "standardise1", "standardise2", "logarithmic")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>VLE data set to be converted. The VLE data set should consist of student_id
+as the first column followed by total view counts per time period/activity in
+each of the remaining columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conversion</code></td>
+<td>
+<p>type of conversion to implement, either <code>"binary"</code>, <code>"standardise1"</code> (standardises each variable individually by using the scale function),
+<code>"standardise2"</code> (performs global standardisation of the data set),
+or <code>"logarithmic"</code> (where 1 is added first to the data).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Two tibbles are returned: 1) original_data, and 2) converted_data.
+</p>
+
+
+<h3>original_data tibble</h3>
+
+<p>A tibble of the original data inputted into the function.
+</p>
+
+
+<h3>converted_data tibble</h3>
+
+<p>A tibble where all columns, except the first column, have been changed from total view counts
+to either binary, standardised, globally standardised or logarithmic view count data.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dataset_VLE_time()</code> or <code>dataset_VLE_activity()</code> for obtaining the VLE data set needed for the input data.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">VLE_data = dataset_VLE_activity(example_data = TRUE)$resource_data
+convert_VLE(VLE_data, conversion = "standardise1")
+
+VLE_data = dataset_VLE_time(example_data = TRUE)$weekly_data
+convert_VLE(VLE_data, conversion = "logarithmic")
+</code></pre>
+
+
+</div>

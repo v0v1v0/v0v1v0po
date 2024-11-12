@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orbital_sql</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert to SQL code</h2>
+
+<h3>Description</h3>
+
+<p>Returns SQL code that is equivilant to prediction code.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orbital_sql(x, con)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An orbital object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>con</code></td>
+<td>
+<p>A connection object.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function requires a database connection object, as the resulting code
+SQL code can differ depending on the type of database.
+</p>
+
+
+<h3>Value</h3>
+
+<p>SQL code.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workflows)
+library(recipes)
+library(parsnip)
+
+rec_spec &lt;- recipe(mpg ~ ., data = mtcars) %&gt;%
+  step_normalize(all_numeric_predictors())
+
+lm_spec &lt;- linear_reg()
+
+wf_spec &lt;- workflow(rec_spec, lm_spec)
+
+wf_fit &lt;- fit(wf_spec, mtcars)
+
+orbital_obj &lt;- orbital(wf_fit)
+
+library(dbplyr)
+con &lt;- simulate_dbi()
+
+orbital_sql(orbital_obj, con)
+
+</code></pre>
+
+
+</div>

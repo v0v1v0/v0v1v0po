@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fitOxBS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit OxyBS for one specimen</h2>
+
+<h3>Description</h3>
+
+<p>Uses maximum likelihood to estimate (C,5mC,5hmC) vectors for one specimen</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fitOxBS(betaBS, betaOxBS, signalBS, signalOxBS, eps=1E-5)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>betaBS</code></td>
+<td>
+<p>beta value from conventional bisulfite conversion</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaOxBS</code></td>
+<td>
+<p>beta value from oxy-bisulfite conversion</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signalBS</code></td>
+<td>
+<p>total signal from conventional bisulfite conversion</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signalOxBS</code></td>
+<td>
+<p>total signal from oxy-bisulfite conversion</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>small positive value representing numerical zero</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Uses maximum likelihood to estimate (C,5mC,5hmC) one specimen (many CpGs).</p>
+
+
+<h3>Value</h3>
+
+<p>matrix of (C,5mC,5hmC) values (each row corresponds to a separate CpG).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>E. Andres Houseman</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(OxyBSSampleData)
+
+nSpecimens &lt;- 30
+nCpGs &lt;- 30
+
+# Calculate Total Signals
+signalBS &lt;- exampleMethBS+exampleUnmethBS
+signalOxBS &lt;- exampleMethOxBS+exampleUnmethOxBS
+
+# Calculate Beta Values
+betaBS &lt;- exampleMethBS/signalBS
+betaOxBS &lt;- exampleMethOxBS/signalOxBS
+
+# Create container for results
+MethOxy &lt;- array(NA,dim=c(nCpGs,nSpecimens,3))
+dimnames(MethOxy) &lt;- list(
+  rownames(exampleMethBS)[1:nCpGs],
+  colnames(exampleMethBS)[1:nSpecimens],
+  c("C","5mC","5hmC"))
+
+# Process results (one array at a time)
+for(i in 1:nSpecimens){
+  MethOxy[,i,] &lt;- fitOxBS(betaBS[,i],betaOxBS[,i],signalBS[,i],signalOxBS[,i])
+}
+
+# Check that results sum to one
+table(apply(MethOxy,1:2,sum))
+
+# First specimen
+MethOxy[,1,]
+
+# Ranges
+range(MethOxy[,,1])
+range(MethOxy[,,2])
+range(MethOxy[,,3])
+
+## End(Not run)</code></pre>
+
+
+</div>

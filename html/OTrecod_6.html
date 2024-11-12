@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ham</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ham()</h2>
+
+<h3>Description</h3>
+
+<p>This function computes a matrix distance using the Hamming distance as proximity measure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ham(mat_1, mat_2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat_1</code></td>
+<td>
+<p>a vector, a matrix or a data.frame of binary values that may contain missing data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mat_2</code></td>
+<td>
+<p>a vector, a matrix or a data.frame of binary values with the same number of columns as <code>mat_1</code> that may contain missing data</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>ham</code> returns the pairwise distances between rows (observations) of a single matrix if <code>mat_1</code> equals <code>mat_2</code>.
+Otherwise <code>ham</code> returns the matrix distance between rows of the two matrices <code>mat_1</code> and <code>mat_2</code> if this 2 matrices are different in input.
+Computing the Hamming distance stays possible despite the presence of missing data by applying the following formula. Assuming that A and B are 2 matrices such as <code>ncol(A) = ncol(B)</code>.
+The Hamming distance between the <code class="reqn">i^{th}</code> row of A and the <code class="reqn">k^{th}</code> row of B equals:
+</p>
+<p style="text-align: center;"><code class="reqn">\mbox{ham}(A_i,B_k) = \frac{\sum_j 1_{\left\{A_{ij} \neq B_{kj}\right\}}}{\sum_j 1}\times\left(\frac{\sum_j 1}{\sum_j 1_{\left\{!\mbox{is.na}(A_{ij}) \&amp; !\mbox{is.na}( B_{kj})\right\}}}\right)</code>
+</p>
+
+<p>where: <code class="reqn">i = 1,\dots,\mbox{nrow}(A)</code> and  <code class="reqn">k = 1,\dots,\mbox{nrow}(B)</code>; And the expression located to the right term of the multiplication corresponds to a specific weigh applied in presence of NAs in <code class="reqn">A_i</code> and/or <code class="reqn">B_k</code>.
+</p>
+<p>This specificity is not implemented in the <code>cdist</code> function and the Hamming distance can not be computed using the <code>dist</code> function either.
+</p>
+<p>The Hamming distance can not be calculated in only two situations:
+</p>
+
+<ol>
+<li>
+<p> If a row of A or B has only missing values (ie for each of the columns of A or B respectively).
+</p>
+</li>
+<li>
+<p> The union of the indexes of the missing values in row i of A with the indexes of the missing values in row j of B concerns the indexes of all considered columns.
+</p>
+</li>
+</ol>
+<p>Example: Assuming that <code class="reqn">\mbox{ncol}(A) = \mbox{ncol}(B) = 3</code>, if <code class="reqn">A_i = (1,\mbox{NA},0)</code> and <code class="reqn">B_j = (\mbox{NA},1,\mbox{NA})</code>, for each column, either the information in row i is missing in A,
+or the information is missing in B, which induces: <code class="reqn">\mbox{ham}(A_i,B_k) = \mbox{NA}</code>.
+</p>
+<p>If <code>mat_1</code> is a vector and <code>mat_2</code> is a matrix (or data.frame) or vice versa, the length of <code>mat_1</code> must be equal to the number of columns of <code>mat_2</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A distance matrix
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gregory Guernec
+</p>
+<p><a href="mailto:otrecod.pkg@gmail.com">otrecod.pkg@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Roth R (2006). Introduction to Coding Theory. Cambridge University Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(3010)
+sample_A &lt;- sample(c(0, 1), 12, replace = TRUE)
+set.seed(3007)
+sample_B &lt;- sample(c(0, 1), 15, replace = TRUE)
+A &lt;- matrix(sample_A, ncol = 3)
+B &lt;- matrix(sample_B, ncol = 3)
+
+# These 2 matrices have no missing values
+
+# Matrix of pairwise distances with A:
+ham(A, A)
+
+# Matrix of distances between the rows of A and the rows of B:
+ham(A, B)
+
+# If mat_1 is a vector of binary values:
+ham(c(0, 1, 0), B)
+
+# Now by considering A_NA and B_NA two matrices built from A and B respectively,
+# where missing values have been manually added:
+A_NA &lt;- A
+A_NA[3, 1] &lt;- NA
+A_NA[2, 2:3] &lt;- rep(NA, 2)
+
+B_NA &lt;- B
+B_NA[2, 2] &lt;- NA
+
+ham(A_NA, B_NA)
+
+</code></pre>
+
+
+</div>

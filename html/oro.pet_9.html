@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>leanBodyMass</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculating the Lean Body Mass</h2>
+
+<h3>Description</h3>
+
+<p>The lean body mass (LBM) is calculated according to the formula
+</p>
+<p style="text-align: center;"><code class="reqn">1.1\cdot\mbox{weight}-128\cdot(\mbox{weight}/\mbox{height})^2</code>
+</p>
+<p> if male
+and </p>
+<p style="text-align: center;"><code class="reqn">1.07\cdot\mbox{weight}-148\cdot(\mbox{weight}/\mbox{height})^2</code>
+</p>
+<p> if
+female.
+</p>
+<p>The standard uptake value (SUV) is summarized using the hotspot 
+method or by calculating total volume of the high values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">leanBodyMass(height, weight, gender)
+
+hotSpotSUV(suv, radius = 10, type = "3D")
+
+totalSUV(suv, mask, z, bg, local = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>is a vector of heights in centimeters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>is a vector of weights in kilograms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gender</code></td>
+<td>
+<p>is a character vector (may be of length one) with the value
+“male” or “female”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suv</code></td>
+<td>
+<p>is the standard uptake value (SUV).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>radius</code></td>
+<td>
+<p>is the desired hotspot radius (units = voxels).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>is a character string (acceptable values are <code>2D</code> or
+<code>3D</code>) that determines the dimension of the hot spot (default =
+<code>3D</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mask</code></td>
+<td>
+<p>is a multidimensional array of logical values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>is the slice index.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bg</code></td>
+<td>
+<p>is the estimated background SUV.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>local</code></td>
+<td>
+<p>is a logical value.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Vector of lean body mass values in kilograms.
+</p>
+<p>...
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brandon Whitcher <a href="mailto:bwhitcher@gmail.com">bwhitcher@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Sugawara, Y., K. R. Zasadny, A. W. Neuhoff, R. L. Wahl (1999)
+Reevaluation of the Standardized Uptake Value for FDG: Variations with Body
+Weight and Methods for Correction, <em>Radiology</em> <b>213</b>: 521–525.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>standardUptakeValue</code>
+</p>
+<p><code>leanBodyMass</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(oro.pet)
+n &lt;- 11
+h &lt;- seq(200, 150, length=n)
+w &lt;- seq(80, 120, length=n)
+cbind(h, w, leanBodyMass(h, w, "male"), leanBodyMass(h, w, "female"))
+</code></pre>
+
+
+</div>

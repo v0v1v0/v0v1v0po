@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>resampleORCME</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimation of the proportion of the heterogeneity in the observed data for clustering</h2>
+
+<h3>Description</h3>
+
+<p>The function is computing within cluster sum of squares for given proportion of heterogeneity. Minimal number of genes per  cluster is fixed as 2. The sum of squares is computed through resampling the 100 data sets with 100 genes randomly sampled with  replacement from the reduced expression data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">resampleORCME(clusteringData, lambdaVector, robust=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>clusteringData</code></td>
+<td>
+<p>the microarray data with rows corresponding to genes and columns 
+corresponding to time points or different doses</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambdaVector</code></td>
+<td>
+<p>vector of assumed proportions of of heterogeneity of the observed data, 
+it ranges between 0 and 1. A lambda value of 1 considers the observed data as a 
+cluster and lambda value of 0 finds every possible pattern within the data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>robust</code></td>
+<td>
+<p>logical variable that determines, if algorithm uses robust version based on median polish and 
+absolute values, instead of mean square error. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of matrices that represent one of the 100 iterations. Every matrix consist of the columns 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>vector of the proportions of heterogeneity given as input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WSS</code></td>
+<td>
+<p>within clusters sum of squares for given proportion of heterogeneity</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TSS</code></td>
+<td>
+<p>total clusters sum of squares for given proportions of heterogeneity</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>number of clusters as a function for given proportions of heterogeneity</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Adetayo Kasim, Martin Otava and Tobias Verbeke</p>
+
+
+<h3>References</h3>
+
+<p>Lin D., Shkedy Z., Yekutieli D., Amaratunga D., and Bijnens, 
+L. (editors). (2012) Modeling Dose-response Microarray
+Data in Early   Drug Development Experiments Using 
+R. Springer.
+</p>
+<p>Cheng, Y. and Church, G. M. (2000). Biclustering of expression data. In:
+Proceedings of the Eighth International Conference on Intelligent Systems for
+Molecular Biology, 1, 93-103.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ORCME</code>, <code>plotLambda</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  data(doseData)
+  data(geneData)
+
+  dirData &lt;- monotoneDirection(geneData = geneData,doseData = doseData)
+  incData &lt;- as.data.frame(dirData$incData)
+ 
+  lambdaVector &lt;- c(0.05,0.50,0.95)
+  
+  
+  resampleORCME(clusteringData=incData, lambdaVector=lambdaVector, robust=FALSE)
+  
+</code></pre>
+
+
+</div>

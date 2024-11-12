@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>validate_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Validate data based on specified rules</h2>
+
+<h3>Description</h3>
+
+<p>Validate data based on specified rules
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">validate_data(
+  files_data,
+  data_names = NULL,
+  file_rules = NULL,
+  zip_data = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files_data</code></td>
+<td>
+<p>A list of file paths for the datasets to be validated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_names</code></td>
+<td>
+<p>(Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_rules</code></td>
+<td>
+<p>A file path for the rules file, either in .csv or .xlsx format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zip_data</code></td>
+<td>
+<p>A file path to a zip folder for validating unstructured data.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing the following elements:
+- data_formatted: A list of data frames with the validated data.
+- data_names: A character vector of dataset names.
+- report: A list of validation report objects for each dataset.
+- results: A list of validation result data frames for each dataset.
+- rules: A list of validator objects for each dataset.
+- status: A character string indicating the overall validation status ("success" or "error").
+- issues: A logical vector indicating if there are any issues in the validation results.
+- message: A data.table containing information about any issues encountered.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Validate data with specified rules
+data("valid_example")
+data("invalid_example")
+data("test_rules")
+
+result_valid &lt;- validate_data(files_data = valid_example,
+                        data_names = c("methodology", "particles", "samples"),
+                        file_rules = test_rules)
+                       
+result_invalid &lt;- validate_data(files_data = invalid_example,
+                        data_names = c("methodology", "particles", "samples"),
+                        file_rules = test_rules)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,139 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>DecoratorClass</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an abstract R6 Class</h2>
+
+<h3>Description</h3>
+
+<p>Creates a decorator R6 class by placing a thin wrapper around R6::R6Class
+which allows the constructed class to inherit the fields and methods of
+the given object.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The decorator design pattern allows methods to be added to an
+object without bloating the interface with too many methods on construction
+and without causing large inheritance trees. A decorator class contains
+fields/methods that are 'added' to the given object in construction, this
+is made clearer in examples.
+</p>
+<p>There are three possibilities when trying to decorate an object with a
+field/method that already exists:
+</p>
+
+<ol>
+<li> <p><code>exists = "skip"</code> (default) - This will decorate the object with all
+fields/methods that don't already exist
+</p>
+</li>
+<li> <p><code>exists = "error"</code> - This will throw an error and prevent the
+object being decorated
+</p>
+</li>
+<li> <p><code>exists = "overwrite"</code> - This will decorate the object with all
+fields/methods from the decorator and overwrite ones with the same name
+if they already exist
+</p>
+</li>
+</ol>
+<p>Decorators are currently not cloneable.
+</p>
+<p>All arguments of R6::R6Class can be used as usual, see full
+details at R6::R6Class.
+</p>
+
+
+<h3>References</h3>
+
+<p>Gamma, E., Helm, R., Johnson, R., &amp; Vlissides, J. (1996).
+Design Patterns: Elements of Reusable Software.
+Addison-Wesley Professional Computing Series (p. 395).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>decorate
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(R6)
+
+## Create two decorators
+# Works with active bindings...
+dec1 &lt;- DecoratorClass("dec1", active = list(hi = function() "Hi World"))
+# And public fields...
+dec2 &lt;- DecoratorClass("dec2", public = list(goodbye = "Goodbye World"))
+
+## Create an object to decorate
+oop &lt;- ooplah$new()
+oop$hello()
+
+
+## Decorate with dec1 by constructing dec1 with object oop:
+dec_oop &lt;- dec1$new(oop) # equiv `decorate(oop, dec1)`
+## We have all original methods from oop
+dec_oop$hello()
+# It's inherited methods
+dec_oop$init
+# And now decorated methods
+dec_oop$hi
+
+## We can decorate again
+redec_oop &lt;- dec2$new(dec_oop)
+redec_oop$hello()
+redec_oop$init
+redec_oop$hi
+# And now
+redec_oop$goodbye
+
+# Notice the class reflects all decorators, the original object and parents,
+#  and adds the 'Decorator' class
+class(redec_oop)
+
+## Decorators also work with inheritance
+parent_dec &lt;- DecoratorClass("parent_dec",
+  public = list(hi = function() "Hi!"))
+child_dec &lt;- DecoratorClass("child_dec", inherit = parent_dec)
+dec_oop &lt;- child_dec$new(ooplah$new())
+dec_oop$hi()
+
+## Three possibilities if the method/field name already exists:
+oop &lt;- ooplah$new()
+exists_dec &lt;- DecoratorClass("exists_dec",
+  public = list(hello = function() "Hi!"))
+
+# 1. skip (default)
+oop$hello()
+exists_dec$new(oop, exists = "skip")$hello()
+
+# 2. error
+## Not run: 
+exists_dec$new(oop)
+exists_dec$new(oop, exists = "error")
+
+## End(Not run)
+
+# 3. overwrite
+oop$hello()
+exists_dec$new(oop, exists = "overwrite")$hello()
+
+## Cloning
+# Note that by default the decorated object is not cloned
+dec &lt;- DecoratorClass("dec", active = list(hi = function() "Hi World"))
+dec_oop &lt;- dec$new(oop)
+dec_oop$logically
+oop$logically &lt;- FALSE
+dec_oop$logically
+
+</code></pre>
+
+
+</div>

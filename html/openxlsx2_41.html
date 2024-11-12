@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grouping-wb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Group rows and columns in a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>Group a selection of rows or cols
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_group_cols(
+  wb,
+  sheet = current_sheet(),
+  cols,
+  collapsed = FALSE,
+  levels = NULL
+)
+
+wb_ungroup_cols(wb, sheet = current_sheet(), cols)
+
+wb_group_rows(
+  wb,
+  sheet = current_sheet(),
+  rows,
+  collapsed = FALSE,
+  levels = NULL
+)
+
+wb_ungroup_rows(wb, sheet = current_sheet(), rows)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A <code>wbWorkbook</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name or index of a worksheet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collapsed</code></td>
+<td>
+<p>If <code>TRUE</code> the grouped columns are collapsed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>levels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows, cols</code></td>
+<td>
+<p>Indices of rows and columns to group</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If row was previously hidden, it will now be shown.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+<p>Other worksheet content functions: 
+<code>col_widths-wb</code>,
+<code>filter-wb</code>,
+<code>named_region-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_conditional_formatting()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_thread()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>
+</p>
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>col_widths-wb</code>,
+<code>creators-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># create matrix
+t1 &lt;- AirPassengers
+t2 &lt;- do.call(cbind, split(t1, cycle(t1)))
+dimnames(t2) &lt;- dimnames(.preformat.ts(t1))
+
+wb &lt;- wb_workbook()
+wb$add_worksheet("AirPass")
+wb$add_data("AirPass", t2, row_names = TRUE)
+
+# groups will always end on/show the last row. in the example 1950, 1955, and 1960
+wb &lt;- wb_group_rows(wb, "AirPass", 2:3, collapsed = TRUE) # group years &lt; 1950
+wb &lt;- wb_group_rows(wb, "AirPass", 4:8, collapsed = TRUE) # group years 1951-1955
+wb &lt;- wb_group_rows(wb, "AirPass", 9:13)                  # group years 1956-1960
+
+wb &lt;- wb_group_cols(wb, "AirPass", 2:4, collapsed = TRUE)
+wb &lt;- wb_group_cols(wb, "AirPass", 5:7, collapsed = TRUE)
+wb &lt;- wb_group_cols(wb, "AirPass", 8:10, collapsed = TRUE)
+wb &lt;- wb_group_cols(wb, "AirPass", 11:13)
+
+### create grouping levels
+grp_rows &lt;- list(
+  "1" = seq(2, 3),
+  "2" = seq(4, 8),
+  "3" = seq(9, 13)
+)
+
+grp_cols &lt;- list(
+  "1" = seq(2, 4),
+  "2" = seq(5, 7),
+  "3" = seq(8, 10),
+  "4" = seq(11, 13)
+)
+
+wb &lt;- wb_workbook()
+wb$add_worksheet("AirPass")
+wb$add_data("AirPass", t2, row_names = TRUE)
+
+wb$group_cols("AirPass", cols = grp_cols)
+wb$group_rows("AirPass", rows = grp_rows)
+</code></pre>
+
+
+</div>

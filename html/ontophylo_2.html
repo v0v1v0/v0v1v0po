@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_pseudodata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add pseudodata</h2>
+
+<h3>Description</h3>
+
+<p>Adds a vector of pseudodata to the path data obtained from the 'make_data_NHPP_KDE_Markov_kernel' function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_pseudodata(Edge.groups, Pseudo.data, Path.data)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Edge.groups</code></td>
+<td>
+<p>list. A list with groups of edge IDs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pseudo.data</code></td>
+<td>
+<p>numeric. A vector with values of pdeusodata.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Path.data</code></td>
+<td>
+<p>numeric. A list of path data obtained from the 'make_data_NHPP_KDE_Markov_kernel' function.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of path data with the pseudodata added.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sergei Tarasov
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("hym_hm", "hym_tree")
+# Get hamming data from the head characters.
+hm &lt;- hym_hm$head
+# Make NHPP path data.
+nhpp &lt;- make_data_NHPP_KDE_Markov_kernel(hm, add.psd = FALSE)
+# Add pseudo data to path data.
+psd &lt;- lapply(nhpp, function(x) -x[x &lt; 100] )
+edge_groups &lt;- as.list(1:length(hym_tree$edge.length))
+nhpp_psd &lt;- add_pseudodata(Edge.groups = edge_groups, Pseudo.data = psd, Path.data = nhpp)
+# Check NHPP path data plus pseudodata for an arbitrary branch.
+nhpp_psd[[5]]
+
+</code></pre>
+
+
+</div>

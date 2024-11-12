@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getIntervalFlights</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve all flights registered during a time interval
+</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves the list of all flights registered for any aircraft during a given
+time interval. Beginning and end times must be specified as date-time strings in 
+any format that can be unambiguously converted to POSIXct (such as 
+YYYY-MM-DD HH:MM:SS).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getIntervalFlights(startTime, endTime, timeZone=Sys.timezone(), username=NULL, 
+                   password=NULL, includeStateVectors=FALSE, 
+                   timeResolution=NULL, useTrino=FALSE, 
+                   includeAirportsMetadata=FALSE, timeOut=60, maxQueryAttempts=1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>startTime</code></td>
+<td>
+<p>date-time string indicating the starting time of the interval 
+for which flights should be retrieved. Must be in a format that can be 
+unambiguously converted into POSIXct time. Valid examples are
+\"2011-03-27 01:30:00\" and \"2011/03/27 01:30:00\".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endTime</code></td>
+<td>
+<p>date-time string indicating the ending time of the interval for
+which flights should be retrieved. Must be in a format that can be 
+unambiguously converted into POSIXct time. Valid examples are
+\"2011-03-28 01:30:00\" and \"2011/03/28 01:30:00\".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeZone</code></td>
+<td>
+<p>string with the name of the time zone for startTime and 
+endTime. For details on supported time zones, see help(timezones). By default,
+the system time zone is used.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>username</code></td>
+<td>
+<p>optional string with the username to use for authentication
+for the OpenSky API. By default, no authentication is performed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>password</code></td>
+<td>
+<p>optional string with the password to use for authentication
+for the OpenSky API. By default, no authentication is performed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeStateVectors</code></td>
+<td>
+<p>logical indicating if the set of state vectors for
+each flight should also be retrieved. By default, state vectors are not
+retrieved.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeResolution</code></td>
+<td>
+<p>time resolution in seconds with which state vectors
+should be retrieved if <code>includeStateVectors=TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useTrino</code></td>
+<td>
+<p>logical indicating whether or not to use the OpenSky
+Trino query interface instead of the API to retrieve state vectors if <code>includeStateVectors=TRUE</code>. If used, the provided 
+username and password are used for the Trino connection. By default, the Trino interface
+is not used.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeAirportsMetadata</code></td>
+<td>
+<p>logical indicating if the data about the origin and destination
+airports of each flight should also be retrieved. If not, only the ICAO24 code of the airports will be
+included.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeOut</code></td>
+<td>
+<p>number of seconds after which the query will time out and return
+a NULL result. In the default behavior, timeout will be reached after 60 seconds.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxQueryAttempts</code></td>
+<td>
+<p>On rare occassions, queries to the OpenSky Network
+live API can return malformed responses. This is the maximum number of attempts 
+to obtain a properly formatted response when carrying out the requested query. 
+It should be noted that the query will still terminate if a timeout is reached.
+In the default behavior, a single attempt will be performed. It is not recommended
+to change this to a very large number, since it can lead to long running times.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of objects of class <code>openSkiesFlight</code>, where each object
+represents a flight that was registered during the specified time interval. See 
+the <code>openSkiesFlight</code> documentation for details on the fields for 
+the class.
+</p>
+
+
+<h3>References</h3>
+
+<p>https://opensky-network.org/apidoc/rest.html
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if(interactive()){
+# Obtain a list with information for all the flights registered during the 16th
+# of November, 2019 between 9 AM and 10 AM, London time.
+
+flights &lt;- getIntervalFlights(startTime="2019-11-16 09:00:00", 
+endTime="2019-11-16 10:00:00", timeZone="Europe/London")
+
+# Count the number of registered flights.
+
+length(flights)
+}
+</code></pre>
+
+
+</div>

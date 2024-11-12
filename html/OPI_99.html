@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opiSetup_for_PicoVR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Implementation of opiSetup for the PicoVR machine.</h2>
+
+<h3>Description</h3>
+
+<p>This is for internal use only. Use <code>opiSetup()</code> after
+<code>chooseOPI("PicoVR")</code> to call this function.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>settings</code></td>
+<td>
+<p>A list containing:
+</p>
+
+<ul>
+<li> <p><code>eye</code> The eye for which to apply the settings.
+</p>
+</li>
+<li> <p><code>bgImageFilename</code> (Optional) If present, display the image in the
+background for eye (scaled to fill fov, bgLum and bgCol ignored)
+</p>
+</li>
+<li> <p><code>fixShape</code> (Optional) Fixation target type for eye.
+</p>
+</li>
+<li> <p><code>fixLum</code> (Optional) Fixation target luminance for eye.
+</p>
+</li>
+<li> <p><code>fixType</code> (Optional) Fixation target texture for eye.
+</p>
+</li>
+<li> <p><code>fixCx</code> (Optional) x-coordinate of fixation target (degrees).
+</p>
+</li>
+<li> <p><code>fixCy</code> (Optional) y-coordinate of fixation target (degrees).
+</p>
+</li>
+<li> <p><code>fixCol</code> (Optional) Fixation target color for eye.
+</p>
+</li>
+<li> <p><code>bgLum</code> (Optional) Background luminance for eye (cd/m^2).
+</p>
+</li>
+<li> <p><code>tracking</code> (Optional) Whether to correct stimulus location based on eye position.
+</p>
+</li>
+<li> <p><code>bgCol</code> (Optional) Background color for eye (rgb).
+</p>
+</li>
+<li> <p><code>fixSx</code> (Optional) diameter along major axis of ellipse (degrees). 0
+to hide fixation marker.
+</p>
+</li>
+<li> <p><code>fixSy</code> (Optional) diameter along minor axis of ellipse (degrees). If
+not received, then sy = sx.
+</p>
+</li>
+<li> <p><code>fixRotation</code> (Optional) Angles of rotation of fixation target
+(degrees). Only useful if sx != sy specified.
+</p>
+</li>
+<li> <p><code>fixImageFilename</code> (Optional) If fixType == IMAGE, the filename on
+the local filesystem of the machine running JOVP of the image to use
+</p>
+</li>
+</ul>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p><code>eye</code> can take on values in the set <code>{"left", "right", "both",
+     "none"}</code>.
+</p>
+<p><code>fixShape</code> can take on values in the set <code>{"triangle",
+          "square", "polygon", "hollow_triangle", "hollow_square",
+          "hollow_polygon", "cross", "maltese", "circle", "annulus",
+          "optotype", "text", "model"}</code>.
+</p>
+<p><code>fixLum</code> can take on values in the range <code>[0.0, 1.0E10]</code>.
+</p>
+<p><code>fixType</code> can take on values in the set <code>{"flat",
+         "checkerboard", "sine", "squaresine", "g1", "g2", "g3", "text", "image"}</code>.
+</p>
+<p><code>fixCx</code> can take on values in the range <code>[-90.0, 90.0]</code>.
+</p>
+<p><code>fixCy</code> can take on values in the range <code>[-90.0, 90.0]</code>.
+</p>
+<p>Elements in <code>fixCol</code> can take on values in the range <code>[0.0, 1.0]</code>.
+</p>
+<p><code>bgLum</code> can take on values in the range <code>[0.0, 1.0E10]</code>.
+</p>
+<p><code>tracking</code> can take on values in the range <code>[0, 1]</code>.
+</p>
+<p>Elements in <code>bgCol</code> can take on values in the range <code>[0.0, 1.0]</code>.
+</p>
+<p><code>fixSx</code> can take on values in the range <code>[0.0, 1.0E10]</code>.
+</p>
+<p><code>fixSy</code> can take on values in the range <code>[0.0, 1.0E10]</code>.
+</p>
+<p><code>fixRotation</code> can take on values in the range <code>[0.0, 360.0]</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing:
+</p>
+
+<ul><li> <p><code>err</code> <code>NULL</code> if there was no error, a string message if there is an error.
+</p>
+</li></ul>
+<h3>See Also</h3>
+
+<p><code>opiSetup()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">chooseOpi("PicoVR")
+opiInitialise(list(port = 50001, ip = "localhost"))
+result &lt;- opiSetup(settings = list(eye = "BOTH"))
+
+</code></pre>
+
+
+</div>

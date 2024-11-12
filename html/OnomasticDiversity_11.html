@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fPielou</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate the Pielou's diversity index </h2>
+
+<h3>Description</h3>
+
+<p>This function obtains the Pielou's diversity index which is an index that measures diversity along with species richness introduced by Evelyn Chrystalla Pielou. It is a method for quantifying species biodiversity that can be adapted to the context of onomastic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fPielou(x, k, n, location, s)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> dataframe of the data values for each species not null (because if you have a sample, there might be species that are not represented).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p> name of a variable which represents absolute frequency for each species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p> name of a variable which represents total number of individuals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p> vector which represents number of species.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a community <code class="reqn">i</code>, the Pielou's diversity index is defined by
+<code class="reqn">J^{\prime} = \frac{H^{\prime}}{\log_2S_i}</code>, where <code class="reqn">H^{\prime}</code> denotes the Shannon-Wiener index and
+<code class="reqn">\log_2S_i</code> denotes the maximum diversity <code class="reqn">H^{\prime}_{\max}</code>.
+Pielou's index is the Shannon-Weiner index computed for the sample <code class="reqn">S_i</code> and represents a measure of Evenness of the community. If all species are represented in equal numbers in the sample, then <code class="reqn">J^{\prime} = 1</code>. If one species strongly dominates <code class="reqn">J^{\prime}</code> is close to zero.
+</p>
+<p>In onomastic context, <code class="reqn">S_i</code> are all surnames in region (<code class="reqn">\approx</code> community diversity context) <code class="reqn">i</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p> represents the grouping element, for example the communities / regions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pielou</code></td>
+<td>
+<p> the value of the Pielou's diversity index.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Maria Jose Ginzo Villamayor</p>
+
+
+<h3>References</h3>
+
+<p>Pielou, E. C. (1966) The measurement of diversity in different types of biological collections. <em>Journal of Theoretical Biology</em>, <b>13</b>, 131-144.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fMargalef</code>,
+<code>fMenhinick</code>,
+<code>fShannon</code>,
+<code>fSheldon</code>,
+<code>fSimpson</code>,
+<code>fSimpsonInf</code>,
+<code>fGeneralisedMean</code>, <code>fGeometricMean</code>,
+<code>fHeip</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(sqldf)
+data(surnamesgal14)
+
+apes2=sqldf('select  muni, count(surname) as ni,
+sum(number) as population from surnamesgal14
+group by muni;')
+
+result = fPielou (x= surnamesgal14[surnamesgal14$number != 0,],
+k="number", n="population", location  = "muni", s = apes2$ni )
+result
+
+data(namesmengal16)
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from namesmengal16
+group by muni;')
+
+result = fPielou (x= namesmengal16[namesmengal16$number != 0,],
+k="number", n="population", location  = "muni", s = names2$ni )
+result
+
+data(nameswomengal16)
+
+names2=sqldf('select  muni, count(name) as ni,
+sum(number) as population from nameswomengal16
+group by muni;')
+
+result = fPielou (x= nameswomengal16[nameswomengal16$number != 0,],
+k="number", n="population", location  = "muni", s = names2$ni )
+result
+</code></pre>
+
+
+</div>

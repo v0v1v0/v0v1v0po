@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.optweight</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plot Dual Variables for Assessing Balance Constraints
+</h2>
+
+<h3>Description</h3>
+
+<p>Plots the dual variables resulting from <code>optweight</code> in a way similar to figure 2 of Zubizarreta (2015), which explained how to interpret these values. These represent the cost of changing the constraint on the variance of the resulting weights. For covariates with large values of the dual variable, tightening the constraint will increase the variability of the weights, and loosening the constraint will decrease the variability of the weights, both to a greater extent than would doing the same for covariate with small values of the dual variable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'optweight'
+plot(x, which.time = 1, ...)
+
+## S3 method for class 'optweight.svy'
+plot(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>An <code>optweight</code> or <code>optweight.svy</code> object; the output of a call to <code>optweight</code> or <code>optweight.svy</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.time</code></td>
+<td>
+
+<p>For longitudinal treatments, which time period to display. Only one may be displayed at a time.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Ignored.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>ggplot</code> object that can be used with other <span class="pkg">ggplot2</span> functions.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Noah Greifer
+</p>
+
+
+<h3>References</h3>
+
+<p>Zubizarreta, J. R. (2015). Stable Weights that Balance Covariates for Estimation With Incomplete Outcome Data. Journal of the American Statistical Association, 110(511), 910–922. doi: <a href="https://doi.org/10.1080/01621459.2015.1023805">10.1080/01621459.2015.1023805</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>optweight</code> or <code>optweight.svy</code> to estimate the weights and the dual variables
+<code>plot.summary.optweight</code> for plots of the distribution of weights
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library("cobalt")
+data("lalonde", package = "cobalt")
+
+#Balancing covariates between treatment groups (binary)
+ow1 &lt;- optweight(treat ~ age + educ + married +
+                nodegree + re74, data = lalonde,
+                tols = c(.1, .1, .1, .1, .1),
+                estimand = "ATT")
+
+summary(ow1) # Note the coefficient of variation
+             # and effective sample size (ESS)
+
+plot(ow1) # age has a low value, married is high
+
+ow2 &lt;- optweight(treat ~ age + educ + married +
+                nodegree + re74, data = lalonde,
+                tols = c(0, .1, .1, .1, .1),
+                estimand = "ATT")
+
+summary(ow2) # Notice that tightening the constraint
+             # on age had a negligible effect on the
+             # variability of the weights and ESS
+
+ow3 &lt;- optweight(treat ~ age + educ + married +
+                nodegree + re74, data = lalonde,
+                tols = c(.1, .1, 0, .1, .1),
+                estimand = "ATT")
+
+summary(ow3) # In contrast, tightening the constraint
+             # on married had a large effect on the
+             # variability of the weights, shrinking
+             # the ESS
+</code></pre>
+
+
+</div>

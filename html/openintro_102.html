@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fadeColor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fade colors</h2>
+
+<h3>Description</h3>
+
+<p>Fade colors so they are transparent.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fadeColor(col, fade = "FF")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>An integer, color name, or RGB hexadecimal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fade</code></td>
+<td>
+<p>The amount to fade <code>col</code>. This value should be a character
+in hexadecimal from '00' to 'FF'. The smaller the value, the greater the
+fading.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Diez
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(mariokart)
+new &lt;- mariokart$cond == "new"
+used &lt;- mariokart$cond == "used"
+
+# ===&gt; color numbers &lt;===#
+dotPlot(mariokart$total_pr[new],
+  ylim = c(0, 3), xlim = c(25, 80), pch = 20,
+  col = 2, cex = 2, main = "using regular colors"
+)
+dotPlot(mariokart$total_pr[used], at = 2, add = TRUE, col = 4, pch = 20, cex = 2)
+dotPlot(mariokart$total_pr[new],
+  ylim = c(0, 3), xlim = c(25, 80),
+  col = fadeColor(2, "22"), pch = 20, cex = 2,
+  main = "fading the colors first"
+)
+dotPlot(mariokart$total_pr[used],
+  at = 2, add = TRUE,
+  col = fadeColor(4, "22"), pch = 20, cex = 2
+)
+
+# ===&gt; color names &lt;===#
+dotPlot(mariokart$total_pr[new],
+  ylim = c(0, 3), xlim = c(25, 80), pch = 20,
+  col = "red", cex = 2, main = "using regular colors"
+)
+dotPlot(mariokart$total_pr[used], at = 2, add = TRUE, col = "blue", pch = 20, cex = 2)
+dotPlot(mariokart$total_pr[new],
+  ylim = c(0, 3), xlim = c(25, 80),
+  col = fadeColor("red", "22"), pch = 20, cex = 2,
+  main = "fading the colors first"
+)
+dotPlot(mariokart$total_pr[used],
+  at = 2, add = TRUE,
+  col = fadeColor("blue", "22"), pch = 20, cex = 2
+)
+
+# ===&gt; hexadecimal &lt;===#
+dotPlot(mariokart$total_pr[new],
+  ylim = c(0, 3), xlim = c(25, 80), pch = 20,
+  col = "#FF0000", cex = 2, main = "using regular colors"
+)
+dotPlot(mariokart$total_pr[used],
+  at = 2, add = TRUE, col = "#0000FF", pch = 20,
+  cex = 2
+)
+dotPlot(mariokart$total_pr[new],
+  ylim = c(0, 3), xlim = c(25, 80),
+  col = fadeColor("#FF0000", "22"), pch = 20, cex = 2,
+  main = "fading the colors first"
+)
+dotPlot(mariokart$total_pr[used],
+  at = 2, add = TRUE,
+  col = fadeColor("#0000FF", "22"), pch = 20, cex = 2
+)
+
+# ===&gt; alternative: rgb function &lt;===#
+dotPlot(mariokart$total_pr[new],
+  ylim = c(0, 3), xlim = c(25, 80), pch = 20,
+  col = rgb(1, 0, 0), cex = 2, main = "using regular colors"
+)
+dotPlot(mariokart$total_pr[used],
+  at = 2, add = TRUE, col = rgb(0, 0, 1),
+  pch = 20, cex = 2
+)
+dotPlot(mariokart$total_pr[new],
+  ylim = c(0, 3), xlim = c(25, 80),
+  col = rgb(1, 0, 0, 1 / 8), pch = 20, cex = 2,
+  main = "fading the colors first"
+)
+dotPlot(mariokart$total_pr[used],
+  at = 2, add = TRUE,
+  col = rgb(0, 0, 1, 1 / 8), pch = 20, cex = 2
+)
+</code></pre>
+
+
+</div>

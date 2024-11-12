@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_lsymphony_solver</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a SYMPHONY solver with <span class="pkg">lpsymphony</span>
+</h2>
+
+<h3>Description</h3>
+
+<p>Specify that the <em>SYMPHONY</em> software should be used to solve a
+project prioritization <code>problem()</code> using the <span class="pkg">lpsymphony</span>
+package. This function can also be used to customize the behavior of the
+solver. It requires the <span class="pkg">lpsymphony</span> package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_lpsymphony_solver(
+  x,
+  gap = 0,
+  time_limit = .Machine$integer.max,
+  first_feasible = FALSE,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gap</code></td>
+<td>
+<p><code>numeric</code> gap to optimality. This gap is relative
+and expresses the acceptable deviance from the optimal objective.
+For example, a value of 0.01 will result in the solver stopping when
+it has found a solution within 1% of optimality.
+Additionally, a value of 0 will result in the solver stopping
+when it has found an optimal solution.
+The default value is 0.1 (i.e. 10% from optimality).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_limit</code></td>
+<td>
+<p><code>numeric</code> time limit in seconds to run the optimizer.
+The solver will return the current best solution when this time limit is
+exceeded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first_feasible</code></td>
+<td>
+<p><code>logical</code> should the first feasible solution be
+be returned? If <code>first_feasible</code> is set to <code>TRUE</code>, the solver
+will return the first solution it encounters that meets all the
+constraints, regardless of solution quality. Note that the first feasible
+solution is not an arbitrary solution, rather it is derived from the
+relaxed solution, and is therefore often reasonably close to optimality.
+Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical</code> should information be printed while solving
+optimization problems?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><a href="https://github.com/coin-or/SYMPHONY"><em>SYMPHONY</em></a> is an
+open-source integer programming solver that is part of the Computational
+Infrastructure for Operations Research (COIN-OR) project, an initiative
+to promote development of open-source tools for operations research (a
+field that includes linear programming). The <span class="pkg">lpsymphony</span> package is
+distributed through
+<a href="https://doi.org/doi:10.18129/B9.bioc.lpsymphony">Bioconductor</a>.
+This functionality is provided because the <span class="pkg">lpsymphony</span> package may
+be easier to install to install on Windows and Mac OSX systems than the
+<span class="pkg">Rsymphony</span> package.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ProjectProblem object with the solver added
+to it.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>solvers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem with lpsymphony solver
+p &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 200) %&gt;%
+     add_binary_decisions() %&gt;%
+     add_lpsymphony_solver()
+
+# print problem
+print(p)
+
+# solve problem
+s &lt;- solve(p)
+
+# print solution
+print(s)
+
+# plot solution
+plot(p, s)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

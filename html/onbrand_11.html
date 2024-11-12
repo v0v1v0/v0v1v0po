@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>md_to_officer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse Markdown for Officer</h2>
+
+<h3>Description</h3>
+
+<p>Parses text in Markdown format and returns fpar and as_paragraph command strings to be used with officer
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">md_to_officer(
+  str,
+  default_format = list(color = "black", font.size = 12, bold = FALSE, italic = FALSE,
+    underlined = FALSE, font.family = "Cambria (Body)", vertical.align = "baseline",
+    shading.color = "transparent")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>str</code></td>
+<td>
+<p>string containing Markdown can contain the following elements:
+</p>
+
+<ul>
+<li>
+<p> paragraph:   two or more new lines creates a paragraph
+</p>
+</li>
+<li>
+<p> bold:        can be either <code>"**text in bold**"</code> or <code>"__text in bold__"</code>
+</p>
+</li>
+<li>
+<p> italics:     can be either <code>"*text in italics*"</code> or <code>"_text in italics_"</code>
+</p>
+</li>
+<li>
+<p> subscript:   <code>"Normal~subscript~"</code>
+</p>
+</li>
+<li>
+<p> superscript: <code>"Normal^superscript^"</code>
+</p>
+</li>
+<li>
+<p> color:       <code>"&lt;color:red&gt;red text&lt;/color&gt;"</code>
+</p>
+</li>
+<li>
+<p> shade:       <code>"&lt;shade:#33ff33&gt;shading&lt;/shade&gt;"</code>
+</p>
+</li>
+<li>
+<p> font family: <code>"&lt;ff:symbol&gt;symbol&lt;/ff&gt;"</code>
+</p>
+</li>
+<li>
+<p> reference:   <code>"&lt;ref:key&gt;"</code> Where <code>"key"</code> is the value  assigned when adding a table or figure
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default_format</code></td>
+<td>
+<p>list containing the default format for elements not defined with markdown default values.
+</p>
+<pre>
+   default_format = list(
+      color          = "black",
+      font.size      = 12,
+      bold           = FALSE,
+      italic         = FALSE,
+      underlined     = FALSE,
+      font.family    = "Cambria (Body)",
+      vertical.align = "baseline",
+      shading.color  = "transparent")
+</pre>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list with parsed paragraph elements with the content added to the body, 
+each paragraph can be found in a numbered list element (e.g. <code>pgraph_1</code>,
+<code>pgraph_2</code>, etc) each with the following elements:
+</p>
+
+<ul>
+<li>
+<p>locs: Dataframe showing the locations of markdown elements in the current paragraph
+</p>
+</li>
+<li>
+<p>pele: These are the individual parsed paragraph elements
+</p>
+</li>
+<li>
+<p>ftext_cmd: String containing the ftext commands.
+</p>
+</li>
+<li>
+<p>fpar_cmd: String containing the fpar commands that can be run using
+<code>eval</code> to return the output of <code>fpar</code>. For example:
+</p>
+<pre>
+  myfpar = eval(parse(text=pgparse$pgraph_1$fpar_cmd))
+ </pre>
+</li>
+<li>
+<p>as_paragraph_cmd: String containing the as_paragraph_cmd that can be run using
+</p>
+<pre>
+  myas_para = eval(parse(text=pgparse$pgraph_1$as_paragraph_cmd))
+ </pre>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">res              = md_to_officer("Be **bold**!")
+fpar_obj         = eval(parse(text=res$pgraph_1$fpar_cmd))
+as_paragraph_obj = eval(parse(text=res$pgraph_1$as_paragraph_cmd))
+</code></pre>
+
+
+</div>

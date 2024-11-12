@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>od_SYM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Symmetrization of an approximate design
+</h2>
+
+<h3>Description</h3>
+
+<p>Attempts to "symmetrize" an approximate design <code>w</code> by minimizing its norm while keeping its information matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">od_SYM(Fx, w, b1=NULL, A1=NULL, b2=NULL, A2=NULL, b3=NULL, A3=NULL, w0=NULL,
+      crit="D", h=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Fx</code></td>
+<td>
+
+<p>the <code>n</code> times <code>m</code> (where <code>m&gt;=2</code>, <code>m&lt;=n</code>) matrix containing all candidate regressors (as rows), i.e., <code>n</code> is the number of candidate design points, and <code>m</code> is the number of parameters
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b1,A1, b2,A2, b3,A3</code></td>
+<td>
+
+<p>the real vectors and matrices that define the constraints on permissible designs <code>w</code> as follows: <code>A1 %*% w &lt;= b1</code>, <code>A2 %*% w &gt;= b2</code>, <code>A3 %*% w == b3</code>. Each of the arguments can be <code>NULL</code>, but at least one of <code>b1</code>, <code>b2</code>, <code>b3</code> must be non-<code>NULL</code>. If some <code>bi</code> is non-<code>NULL</code> and <code>Ai</code> is <code>NULL</code>, then <code>Ai</code> is set to be <code>matrix(1, nrow =1, ncol = n)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w0</code></td>
+<td>
+
+<p>a non-negative vector of length <code>n</code> representing the design to be augmented (i.e., the function adds the constraint <code>w &gt;= w0</code> for permissible designs <code>w</code>). This argument can also be <code>NULL</code>; in that case, <code>w0</code> is set to the vector of zeros.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit</code></td>
+<td>
+
+<p>the optimality criterion. Possible values are <code>"D"</code>, <code>"A"</code>, <code>"I"</code>, <code>"C"</code>, <code>"c"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+
+<p>a non-zero vector of length <code>m</code> corresponding to the coefficients of the linear parameter combination of interest. If <code>crit</code> is not <code>"C"</code> nor <code>"c"</code> then <code>h</code> is ignored. If <code>crit</code> is <code>"C"</code> or <code>"c"</code> and <code>h=NULL</code> then <code>h</code> is assumed to be <code>c(0,...,0,1)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For some models, the optimum approximate design is not unique (although the optimum information matrix usually <em>is</em> unique). This function uses one optimal approximate design to produce an optimal approximate design with a minimum Euclidean norm, which is unique and usually more "symmetric".
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>The call of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.sym</code></td>
+<td>
+<p>The resulting "symmetrized" approximate design</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Harman R, Filova L, Richtarik P (2019). A randomized exchange algorithm for computing optimal approximate designs of experiments. Journal of the American Statistical Association, 1-30. (Subsection 5.1)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compute a D-optimal approximate design using the randomized method REX.
+# Visualize both the design obtained by REX and its symmetrized version.
+
+form.q &lt;- ~x1 + x2 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + I(x1*x2) + I(x1*x3) + I(x2*x3)
+Fx &lt;- Fx_cube(form.q, n.levels = c(5, 5, 5))
+w.app &lt;- od_REX(Fx)$w.best
+od_plot(Fx, w.app, X=Fx[, 2:3])
+w.app.sym &lt;- od_SYM(Fx, w.app, b3 = 1)$w.sym
+od_plot(Fx, w.app.sym, X=Fx[, 2:3])
+</code></pre>
+
+
+</div>

@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dictionary.annotate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set variable annotation with a taxonomy term</h2>
+
+<h3>Description</h3>
+
+<p>Apply or remove an annotation from a set of variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dictionary.annotate(
+  tibble,
+  variables = NULL,
+  taxonomy = "Mlstr_area",
+  vocabulary,
+  term
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tibble</code></td>
+<td>
+<p>Tibble to be annotated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variables</code></td>
+<td>
+<p>A character vector of variable names to be annotated. If NULL or empty, all
+the columns of the tibble will be annotated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taxonomy</code></td>
+<td>
+<p>The taxonomy to which the vocabulary belongs. If NULL, the annotation is a simple
+attribute (i.e. without a taxonomy reference).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vocabulary</code></td>
+<td>
+<p>The vocabulary to which the term belongs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>term</code></td>
+<td>
+<p>The term to apply. If NULL, the annotation will be deleted.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The annotated tibble
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+o &lt;- opal.login('administrator','password', url='https://opal-demo.obiba.org')
+cqx &lt;- opal.table_get(o, "CPTP", "Cag_coreqx")
+cqx &lt;- dictionary.annotate(cqx, 
+  variables = c("A_SDC_EDU_LEVEL", "A_SDC_EDU_LEVEL_AGE"), 
+  taxonomy = "Mlstr_area", 
+  vocabulary = "Sociodemographic_economic_characteristics", 
+  term = "Education")
+opal.logout(o)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

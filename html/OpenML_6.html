@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convertOMLDataSetToMlr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert an OpenML data set to mlr task.</h2>
+
+<h3>Description</h3>
+
+<p>Converts an <code>OMLDataSet</code> to a <code>Task</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convertOMLDataSetToMlr(
+  obj,
+  mlr.task.id = "&lt;oml.data.name&gt;",
+  task.type = NULL,
+  target = obj$desc$default.target.attribute,
+  ignore.flagged.attributes = TRUE,
+  drop.levels = TRUE,
+  fix.colnames = TRUE,
+  verbosity = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+<p>[<code>OMLDataSet</code>]<br>
+The object that should be converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mlr.task.id</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+Id string for <code>Task</code> object.
+The strings <code>&lt;oml.data.name&gt;</code>, <code>&lt;oml.data.id&gt;</code> and <code>&lt;oml.data.version&gt;</code>
+will be replaced by their respective values contained in the <code>OMLDataSet</code> object.
+Default is <code>&lt;oml.data.name&gt;</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>task.type</code></td>
+<td>
+<p>[<code>character(1)</code>]<br>
+As we only pass the data set, we need to define the task type manually.
+Possible are: “Supervised Classification”, “Supervised Regression”,
+“Survival Analysis”.
+Default is <code>NULL</code> which means to guess it from the target column in the
+data set. If that is a factor or a logical, we choose classification.
+If it is numeric we choose regression. In all other cases an error is thrown.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+<p>[<code>character</code>]<br>
+The target for the classification/regression task.
+Default is the <code>default.target.attribute</code> of the <code>OMLDataSetDescription</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore.flagged.attributes</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+Should those features that are listed in the data set description slot “ignore.attribute”
+be removed?
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop.levels</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+Should empty factor levels be dropped in the data?
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fix.colnames</code></td>
+<td>
+<p>[<code>logical(1)</code>]<br>
+Should colnames of the data be fixed using <code>make.names</code>?
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbosity</code></td>
+<td>
+<p>[<code>integer(1)</code>]<br>
+Print verbose output on console? Possible values are:<br><code>0</code>: normal output,<br><code>1</code>: info output,<br><code>2</code>: debug output.<br>
+Default is set via <code>setOMLConfig</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>[<code>Task</code>].
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other data set-related functions: 
+<code>OMLDataSetDescription</code>,
+<code>OMLDataSet</code>,
+<code>convertMlrTaskToOMLDataSet()</code>,
+<code>deleteOMLObject()</code>,
+<code>getOMLDataSet()</code>,
+<code>listOMLDataSets()</code>,
+<code>tagOMLObject()</code>,
+<code>uploadOMLDataSet()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># \dontrun{
+# 	library("mlr")
+# 	autosOML = getOMLDataSet(data.id = 9)
+# 	autosMlr = convertOMLDataSetToMlr(autosOML)
+# }
+</code></pre>
+
+
+</div>

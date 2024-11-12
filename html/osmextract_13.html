@@ -1,0 +1,245 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oe_get_keys</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return keys and (optionally) values stored in "other_tags" column</h2>
+
+<h3>Description</h3>
+
+<p>This function returns the OSM keys and (optionally) the values stored in the
+<code>other_tags</code> field. See Details. In both cases, the keys are sorted according
+to the number of occurrences, which means that the most common keys are
+stored first.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oe_get_keys(
+  zone,
+  layer = "lines",
+  values = FALSE,
+  which_keys = NULL,
+  download_directory = oe_download_directory()
+)
+
+## Default S3 method:
+oe_get_keys(
+  zone,
+  layer = "lines",
+  values = FALSE,
+  which_keys = NULL,
+  download_directory = oe_download_directory()
+)
+
+## S3 method for class 'character'
+oe_get_keys(
+  zone,
+  layer = "lines",
+  values = FALSE,
+  which_keys = NULL,
+  download_directory = oe_download_directory()
+)
+
+## S3 method for class 'sf'
+oe_get_keys(
+  zone,
+  layer = "lines",
+  values = FALSE,
+  which_keys = NULL,
+  download_directory = oe_download_directory()
+)
+
+## S3 method for class 'oe_key_values_list'
+print(x, n = getOption("oe_max_print_keys", 10L), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>zone</code></td>
+<td>
+<p>An <code>sf</code> object with an <code>other_tags</code> field or a character vector
+(of length 1) that can be linked to or pointing to a <code>.osm.pbf</code> or <code>.gpkg</code>
+file with an <code>other_tags</code> field. Character vectors are linked to <code>.osm.pbf</code>
+files using <code>oe_find()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layer</code></td>
+<td>
+<p>Which <code>layer</code> should be read in? Typically <code>points</code>, <code>lines</code>
+(the default), <code>multilinestrings</code>, <code>multipolygons</code> or <code>other_relations</code>. If
+you specify an ad-hoc query using the argument <code>query</code> (see introductory
+vignette and examples), then <code>oe_get()</code> and <code>oe_read()</code> will read the layer
+specified in the query and ignore <code>layer</code>. See also
+<a href="https://github.com/ropensci/osmextract/issues/122">#122</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, then function returns the keys and the
+corresponding values, otherwise only the keys. Defaults to <code>FALSE. </code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which_keys</code></td>
+<td>
+<p>Character vector used to subset only some keys and
+corresponding values. Ignored if <code>values</code> is <code>FALSE</code>. See examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>download_directory</code></td>
+<td>
+<p>Path of the directory that stores the <code>.osm.pbf</code>
+files. Only relevant when <code>zone</code> is as a character vector that must be
+matched to a file via <code>oe_find()</code>. Ignored unless <code>zone</code> is a character
+vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>object of class <code>oe_key_values_list</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Maximum number of keys (and corresponding values) to print; can be
+set globally by <code>options(oe_max_print_keys=...)</code>. Default value is 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>OSM data are typically documented using several
+<a href="https://wiki.openstreetmap.org/wiki/Tags"><code>tags</code></a>, i.e. pairs of two
+items, namely a <code>key</code> and a <code>value</code>. The conversion between <code>.osm.pbf</code> and
+<code>.gpkg</code> formats is governed by a <code>CONFIG</code> file that lists which tags must
+be explicitly added to the <code>.gpkg</code> file. All the other keys are
+automatically stored using an <code>other_tags</code> field with a syntax compatible
+with the PostgreSQL HSTORE type. See
+<a href="https://gdal.org/drivers/vector/osm.html#driver-capabilities">here</a> for
+more details.
+</p>
+<p>When the argument <code>values</code> is <code>TRUE</code>, then the function returns a named
+list of class <code>oe_key_values_list</code> that, for each key, summarises the
+corresponding values. The key-value pairs are stored using the following
+format: <code style="white-space: pre;">⁠list(key1 = c("value1", "value1", "value2", ...), key2 = c("value1", ...) ...)⁠</code>. We decided to implement an ad-hoc method for
+printing objects of class <code>oe_key_values_list</code> using the following
+structure:</p>
+<pre>key1 = {#value1 = n1; #value2 = n2; #value3 = n3,
+  ...} key2 = {#value1 = n1; #value2 = n2; ...} key3 = {#value1 = n1} ...</pre>
+<p>where <code>n1</code> denotes the number of times that value1 is repeated, <code>n2</code>
+denotes the number of times that value2 is repeated and so on. Also the
+values are listed according to the number of occurrences in decreasing
+order. By default, the function prints only the ten most common keys, but
+the number can be adjusted using the option <code>oe_max_print_keys</code>.
+</p>
+<p>Finally, the <code>hstore_get_value()</code> function can be used inside the <code>query</code>
+argument in <code>oe_get()</code> to extract one particular tag from an existing file.
+Check the introductory vignette and see examples.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If the argument <code>values</code> is <code>FALSE</code> (the default), then the function
+returns a character vector with the names of all keys stored in the
+<code>other_tags</code> field. If <code>values</code> is <code>TRUE</code>, then the function returns named
+list which stores all keys and the corresponding values. In the latter
+case, the returned object has class <code>oe_key_values_list</code> and we defined an
+ad-hoc printing method. See Details.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>oe_vectortranslate()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Copy the ITS file to tempdir() to make sure that the examples do not
+# require internet connection. You can skip the next 4 lines (and start
+# directly with oe_get_keys) when running the examples locally.
+
+its_pbf = file.path(tempdir(), "test_its-example.osm.pbf")
+file.copy(
+  from = system.file("its-example.osm.pbf", package = "osmextract"),
+  to = its_pbf,
+  overwrite = TRUE
+)
+
+# Get keys
+oe_get_keys("ITS Leeds", download_directory = tempdir())
+
+# Get keys and values
+oe_get_keys("ITS Leeds", values = TRUE, download_directory = tempdir())
+
+# Subset some keys
+oe_get_keys(
+  "ITS Leeds", values = TRUE, which_keys = c("surface", "lanes"),
+  download_directory = tempdir()
+)
+
+# Print all (non-NA) values for a given set of keys
+res = oe_get_keys("ITS Leeds", values = TRUE, download_directory = tempdir())
+res["surface"]
+
+# Get keys from an existing sf object
+its = oe_get("ITS Leeds", download_directory = tempdir())
+oe_get_keys(its, values = TRUE)
+
+# Get keys from a character vector pointing to a file (might be faster than
+# reading the complete file and then filter it)
+its_path = oe_get(
+  "ITS Leeds", download_only = TRUE,
+  download_directory = tempdir(), quiet = TRUE
+)
+oe_get_keys(its_path, values = TRUE)
+
+# Add a key to an existing .gpkg file without repeating the
+# vectortranslate operations
+its = oe_get("ITS Leeds", download_directory = tempdir())
+colnames(its)
+its_extra = oe_read(
+  its_path,
+  query = "SELECT *, hstore_get_value(other_tags, 'oneway') AS oneway FROM lines",
+  quiet = TRUE
+)
+colnames(its_extra)
+
+# The following fails since there is no points layer in the .gpkg file
+## Not run: 
+oe_get_keys(its_path, layer = "points")
+## End(Not run)
+
+# Add layer and read keys
+its_path = oe_get(
+  "ITS Leeds", layer = "points", download_only = TRUE,
+  download_directory = tempdir(), quiet = TRUE
+)
+oe_get_keys(its_path, layer = "points")
+
+# Remove .pbf and .gpkg files in tempdir
+rm(its_pbf, res, its_path, its, its_extra)
+oe_clean(tempdir())
+</code></pre>
+
+
+</div>

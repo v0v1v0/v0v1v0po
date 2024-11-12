@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>outbreaker</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>outbreaker2: main function for reconstructing disease outbreaks</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>outbreaker</code> is the main function of the package. It runs
+processes various inputs (data, configuration settings, custom priors,
+likelihoods and movement functions) and explores the space of plausible
+transmission trees of a densely sampled outbreaks.<br></p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">outbreaker(
+  data = outbreaker_data(),
+  config = create_config(),
+  priors = custom_priors(),
+  likelihoods = custom_likelihoods(),
+  moves = custom_moves()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a list of named items containing input data as returned by
+<code>outbreaker_data</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>config</code></td>
+<td>
+<p>a set of settings as returned by <code>create_config</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priors</code></td>
+<td>
+<p>a set of log-prior functions as returned by
+<code>custom_priors</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>likelihoods</code></td>
+<td>
+<p>a set of log-likelihood functions as returned by
+<code>custom_likelihoods</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moves</code></td>
+<td>
+<p>a set of movement functions as returned by
+<code>custom_moves</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The emphasis of 'outbreaker2' is on modularity, which enables customisation
+of priors, likelihoods and even movements of parameters and augmented data by
+the user. This the dedicated vignette on this topic
+<code>vignette("outbreaker2_custom")</code>.<br></p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thibaut Jombart (<a href="mailto:thibautjombart@gmail.com">thibautjombart@gmail.com</a>)
+</p>
+
+
+<h3>References</h3>
+
+<p>Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
+N (2014).  Bayesian reconstruction of disease outbreaks by combining
+epidemiologic and genomic data. PLoS Computational Biology.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>outbreaker_data</code> to process input data, and
+<code>create_config</code> to process/set up parameters
+</p>
+
+<ul>
+<li> <p><code>outbreaker_data</code>: function to process input data
+</p>
+</li>
+<li> <p><code>create_config</code>: function to create default and customise
+configuration settings
+</p>
+</li>
+<li> <p><code>custom_priors</code>: function to specify customised prior
+functions
+</p>
+</li>
+<li> <p><code>custom_likelihoods</code>: function to specify customised likelihoods
+functions
+</p>
+</li>
+<li> <p><code>custom_moves</code>: function to create default and customise movement
+functions
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## get data
+data(fake_outbreak)
+dat &lt;- fake_outbreak
+
+## Not run: 
+## run outbreaker
+out &lt;- outbreaker(data = list(dna = dat$dna, dates = dat$onset, w_dens = dat$w),
+config = list(n_iter = 2e4, sample_every = 200))
+plot(out)
+as.data.frame(out)
+
+## run outbreaker, no DNA sequences
+out2 &lt;- outbreaker(data = list(dates = dat$onset, w_dens = w),
+config = list(n_iter = 2e4, sample_every = 200))
+plot(out2)
+as.data.frame(out2)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

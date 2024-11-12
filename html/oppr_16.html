@@ -1,0 +1,255 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_heuristic_solver</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a heuristic solver</h2>
+
+<h3>Description</h3>
+
+<p>Specify that solutions should be generated using a backwards step-wise
+heuristic algorithm (inspired by Cabeza <em>et al.</em> 2004,
+Korte &amp; Vygen 2000, Probert <em>et al.</em> 2016). Ideally,
+solutions should be generated using exact algorithm solvers (e.g.
+<code>add_rsymphony_solver()</code> or <code>add_gurobi_solver()</code>)
+because they are guaranteed to identify optimal solutions (Rodrigues &amp; Gaston
+2002).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_heuristic_solver(
+  x,
+  number_solutions = 1,
+  initial_sweep = TRUE,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>ProjectProblem object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>number_solutions</code></td>
+<td>
+<p><code>integer</code> number of solutions desired.
+Defaults to 1. Note that the number of returned solutions can sometimes
+be less than the argument to <code>number_solutions</code> depending on the
+argument to <code>solution_pool_method</code>, for example if 100
+solutions are requested but only 10 unique solutions exist, then only 10
+solutions will be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initial_sweep</code></td>
+<td>
+<p><code>logical</code> value indicating if projects and
+actions which exceed the budget should be automatically excluded
+prior to running the backwards heuristic. This step prevents
+projects which exceed the budget, and so would never be selected in
+the final solution, from biasing the cost-sharing calculations.
+However, previous algorithms for project prioritization have not
+used this step (e.g. Probert <em>et al.</em> 2016).
+Defaults to <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical</code> should information be printed while solving
+optimization problems?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The heuristic algorithm used to generate solutions is described
+below. It is heavily inspired by the cost-sharing backwards heuristic
+algorithm conventionally used to guide the prioritization of species
+recovery projects (Probert <em>et al.</em> 2016).
+</p>
+
+<ol>
+<li>
+<p> All actions and projects are initially selected for funding.
+</p>
+</li>
+<li>
+<p> A set of rules are then used to deselect actions and projects
+based on locked constraints (if any). Specifically, (i) actions which are
+which are locked out are deselected, and (ii) projects which are
+associated with actions that are locked out are also deselected.
+</p>
+</li>
+<li>
+<p> If the argument to <code>initial_sweep</code> is <code>TRUE</code>, then a set of
+rules are then used to deselect actions and projects
+based on budgetary constraints (if present). Specifically, (i) actions
+which exceed the budget are deselected, (ii) projects which are
+associated with a set of actions that exceed the budget are deselected,
+and (iii) actions which are not associated with any project (excepting
+locked in actions) are also deselected.
+</p>
+</li>
+<li>
+<p> If the objective function is to maximize biodiversity subject
+to budgetary constraints (e.g. <code>add_max_richness_objective()</code>)
+then go to step 5. Otherwise, if the objective is to minimize cost
+subject to biodiversity constraints (i.e.
+<code>add_min_set_objective()</code>) then go to step 7.
+</p>
+</li>
+<li>
+<p> The next step is repeated until (i) the number of desired
+solutions is obtained, and (ii) the total cost of the remaining
+actions that are selected for funding is within the budget. After both of
+these conditions are met, the algorithm is terminated.
+</p>
+</li>
+<li>
+<p> Each of the remaining projects that are currently selected for
+funding are evaluated according to how much the performance of the
+solution decreases when the project is deselected for funding, relative to
+the cost of the project not shared by other remaining projects. This can
+be expressed mathematically as:
+</p>
+<p style="text-align: center;"><code class="reqn">B_j = \frac{V(J) - V(J - j)}{C_j}</code>
+</p>
+
+<p>Where <code class="reqn">J</code> is the set of remaining projects currently
+selected for funding (indexed by <code class="reqn">j</code>), <code class="reqn">B_j</code> is the benefit
+associated with funding project <code class="reqn">j</code>, <code class="reqn">V(J)</code> is the objective
+value associated with the solution where all remaining projects are
+funded, <code class="reqn">V(J - j)</code> is the objective value associated with the
+solution where all remaining projects except for project <code class="reqn">j</code> are
+funded, and <code class="reqn">C_j</code> is the sum cost of all of the actions
+associated with project <code class="reqn">j</code>—excluding locked in actions—with the
+cost of each action divided by the total number of remaining
+projects that share the action (e.g. if two projects both share a $100
+action, then this action contributes $50 to the overall cost of each
+project).
+</p>
+<p>The project with the smallest benefit (i.e. <code class="reqn">B_j</code> value) is then
+deselected for funding. In cases where multiple projects have
+the same benefit (<code class="reqn">B_j</code>) value, the project with the greatest overall
+cost (including actions which are shared among multiple remaining
+projects) is deselected.
+</p>
+</li>
+<li>
+<p> The next step is repeated until (i) the number of desired
+solutions is obtained or (ii) no action can be deselected for funding
+without the probability of any feature expecting to persist falling below
+its target probability of persistence. After one or both of
+these conditions are met, the algorithm is terminated.
+</p>
+</li>
+<li>
+<p> Each of the remaining projects that are currently selected for
+funding are evaluated according to how much the performance of the
+solution decreases when the project is deselected for funding, relative to
+the cost of the project not shared by other remaining projects. This can
+be expressed mathematically as:
+</p>
+<p style="text-align: center;"><code class="reqn">B_j = \frac{\big(\sum_{f}^{F} P_f(J) - T_f \big) -
+   \big( \sum_{f}^{F} P_f(J - j) - T_f \big)}{C_j}</code>
+</p>
+
+<p>Where <code class="reqn">F</code> is the set of features (indexed by <code class="reqn">f</code>),
+<code class="reqn">T_f</code> is the target for feature <code class="reqn">f</code>, <code class="reqn">P</code> is the set of
+remaining projects that are selected for funding (indexed by <code class="reqn">j</code>),
+<code class="reqn">C_j</code> is the cost of all of the actions
+associated with project <code class="reqn">j</code>—excluding locked in actions—and
+accounting for shared costs among remaining projects (e.g. if two
+projects both share a $100 action, then this action contributes $50 to
+the overall cost of each project), <code class="reqn">B_p</code> is the benefit
+associated with funding project <code class="reqn">p</code>, <code class="reqn">P(J)</code> is probability
+that each feature is expected to persist when the remaining projects
+(<code class="reqn">J</code>) are funded, and <code class="reqn">P(J - j)</code> is the probability that
+each feature is expected to persist when all the remaining projects except
+for action <code class="reqn">j</code> are funded.
+</p>
+<p>The project with the smallest benefit (i.e. <code class="reqn">B_j</code> value) is then
+deselected for funding. In cases where multiple projects have
+the same <code class="reqn">B_j</code> value, the project with the greatest overall cost
+(including actions which are shared among multiple remaining projects)
+is deselected.
+</p>
+</li>
+</ol>
+<h3>Value</h3>
+
+<p>ProjectProblem object with the solver added
+to it.
+</p>
+
+
+<h3>References</h3>
+
+<p>Rodrigues AS &amp; Gaston KJ (2002) Optimisation in reserve selection
+procedures—why not? <em>Biological Conservation</em>, <strong>107</strong>,
+123–129.
+</p>
+<p>Cabeza M, Araujo MB, Wilson RJ, Thomas CD, Cowley MJ &amp; Moilanen A (2004)
+Combining probabilities of occurrence with spatial reserve design.
+<em>Journal of Applied Ecology</em>, <strong>41</strong>, 252–262.
+</p>
+<p>Korte B &amp; Vygen J (2000)
+<em>Combinatorial Optimization. Theory and Algorithms</em>. Springer-Verlag,
+Berlin, Germany.
+</p>
+<p>Probert W, Maloney RF, Mellish B, and Joseph L (2016)
+Project Prioritisation Protocol (PPP).
+Formerly available at <a href="https://github.com/p-robot">https://github.com/p-robot</a>
+(copy available at <a href="https://github.com/jeffreyhanson/ppp">https://github.com/jeffreyhanson/ppp</a>).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>solvers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load ggplot2 package for making plots
+library(ggplot2)
+
+# load data
+data(sim_projects, sim_features, sim_actions)
+
+# build problem with heuristic solver and $200
+p1 &lt;- problem(sim_projects, sim_actions, sim_features,
+             "name", "success", "name", "cost", "name") %&gt;%
+     add_max_richness_objective(budget = 200) %&gt;%
+     add_binary_decisions() %&gt;%
+     add_heuristic_solver()
+
+# print problem
+print(p1)
+
+## Not run: 
+# solve problem
+s1 &lt;- solve(p1)
+
+# print solution
+print(s1)
+
+# plot solution
+plot(p1, s1)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.prune.ODT</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>to plot pruned oblique decision tree</h2>
+
+<h3>Description</h3>
+
+<p>Plot the error graph of the pruned oblique decision tree at different split nodes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'prune.ODT'
+plot(x, position = "topleft", digits = NULL, main = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class <code>prune.ODT</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>position</code></td>
+<td>
+<p>Position of the curve label, including "topleft" (default), "bottomright", "bottom", "bottomleft", "left", "top", "topright", "right" and "center".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>Integer indicating the number of decimal places (round) or significant digits (signif) to be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>main title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The leftmost value of the horizontal axis indicates the tree without pruning, while the rightmost value indicates the data without splitting and using the average value as the predicted value.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ODT</code> <code>prune.ODT</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(body_fat)
+set.seed(221212)
+train &lt;- sample(1:252, 100)
+train_data &lt;- data.frame(body_fat[train, ])
+test_data &lt;- data.frame(body_fat[-train, ])
+
+tree &lt;- ODT(Density ~ ., train_data, split = "mse")
+prune_tree &lt;- prune(tree, test_data[, -1], test_data[, 1])
+# Plot pruned oblique decision tree structure (default)
+plot(prune_tree)
+# Plot the error graph of the pruned oblique decision tree.
+class(prune_tree) &lt;- "prune.ODT"
+plot(prune_tree)
+
+</code></pre>
+
+
+</div>

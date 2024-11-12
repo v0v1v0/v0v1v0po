@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anim_rotation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Animate an element through rotation</h2>
+
+<h3>Description</h3>
+
+<p>Within an <code>anims()</code> call, itself passed to any <code>anims</code> argument, the
+<code>anim_rotation()</code> function can be used to express an animation where the
+target element undergoes a rotation change with time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anim_rotation(
+  rotation = NULL,
+  anchor = "center",
+  easing_fn = NULL,
+  initial = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rotation</code></td>
+<td>
+<p>The rotation value of the element at the keyframe time (given
+as the LHS value in the <code>anims()</code> call).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anchor</code></td>
+<td>
+<p>The location of the element anchor about which rotation will
+occur. By default, this is the keyword <code>"center"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>easing_fn</code></td>
+<td>
+<p>The timing or easing function to use for the animation. If
+not provided, the <code>linear()</code> timing function will be used (which is doesn't
+use any easing in the animation, just a linear movement). The other timing
+and easing functions are: <code>step_start()</code>, <code>step_end()</code>, <code>ease_in()</code>,
+<code>ease_out()</code>, and <code>ease_in_out()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initial</code></td>
+<td>
+<p>Should this rotation value be the initial rotation state of
+the element? If so, use <code>TRUE</code> and any value provided to <code>rotation</code> will be
+disregarded.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code>anim_opacity</code> object, which is to be used as part of an <code>anims()</code>
+call.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+
+# This is a basic animation of an
+# element's rotation state (moving to
+# a new `rotation` value)
+SVG(width = 300, height = 300) %&gt;%
+  svg_rect(
+    x = 50, y = 50,
+    width = 50, height = 50,
+    attrs = svg_attrs_pres(
+      stroke = "magenta",
+      fill = "lightblue"
+    ),
+    anims = anims(
+      2.0 ~ anim_rotation(rotation = 180)
+    )
+  )
+}
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ES</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Expected Shortfall</h2>
+
+<h3>Description</h3>
+
+<script id="MathJax-script" async src="../../mathjaxr/doc/mathjax/es5/tex-chtml-full.js"></script><p>Computes the Expected Shortfall of a given amount of loss based on variance-covariance method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ES(
+  variance,
+  alpha = 0.95,
+  weights = NULL,
+  model = c("normal", "t-student", "both"),
+  df = NULL,
+  percentage = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>variance</code></td>
+<td>
+<p>It could be either a scalar or a matrix containing the variances and covariances
+of the losses. Provide a covariance matrix when analyzing correlated losses or a scalar when
+dealing with a single loss.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>A numeric value (either a single one or a vector) consisting of the significance level
+at which ES has to be computed, it can either be a single numeric value or a vector of numeric values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>A vector of weights of size <em>N</em> for weighting the variance of losses.
+When <code>weights=NULL</code> variances used to compute ES are the original values supplied to  <code>variance</code>
+with no weighting scheme.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A character string indicating which distribution is to be used for computing the ES,
+the default value is the <code>normal</code> distribution, the other alternative is <code>t-student</code>
+distribution with <i>υ</i> degrees of freedom. When <code>model='both'</code> <code>'normal'</code>
+as well as <code>'t-student'</code> are used when computing the ES, see examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>An integer indicating the degrees of freedom for the t-student distribution when setting
+<code>model='t-student'</code> and <code>model='both'</code>. <code>df</code> must be greater than 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentage</code></td>
+<td>
+<p>Logical indicating whether the file names in the VaR table should be presented in percentage or decimal.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>ES</code> computes the Expected Shortfall (ES) of a certaing amount of loss based upon the following general formulation:
+</p>
+\[ES_\alpha = \dfrac{1}{1-\alpha}\int_{\alpha}^{1} VaR_u(X)du = E[X|X &gt; F_{X}^{-1}(\alpha)]\]
+<p>where \(\alpha\) is the significance level, \(VaR_u(X)\) is the Value-at-Risk of \(X.\)
+</p>
+<p><code>ES</code> for the normal case is based on the following expression:
+</p>
+\[ES_{\alpha} = \mu + \sigma \frac{\phi(\Phi^{-1}(\alpha))}{1-\alpha}\]
+<p>Meanwhile, <code>ES</code> for the t-student distribution takes comes from:
+</p>
+\[ES_{\alpha}(\tilde{X}) = \frac{g_{\upsilon}(t_{\upsilon}^{-1}(\alpha))}{1-\alpha} \left( \frac{\upsilon+(t_{\upsilon}^{-1}(\alpha))^{2}}{\upsilon - 1} \right)\]
+
+
+<h3>Author(s)</h3>
+
+<p>Jilber Urbina
+</p>
+
+
+<h3>References</h3>
+
+<p>Dhaene J., Tsanakas A., Valdez E. and Vanduffel S. (2011). <em>Optimal Capital Allocation Principles</em>. The Journal of Risk and Insurance. Vol. 00, No. 0, 1-28.
+</p>
+<p>McNeil, A. J.; Frey, R. &amp; Embrechts, P. <em>Quantitative risk management: concepts, techniques and tools</em>. Princeton University Press, 2005.
+</p>
+<p>Urbina, J. (2013) <em>Quantifying Optimal Capital Allocation Principles based on Risk Measures.</em> Master Thesis, Universitat Politècnica de Catalunya.
+</p>
+<p>Urbina, J. and Guillén, M. (2014). <em>An application of capital allocation principles to operational risk and the cost of fraud</em>. Expert Systems with Applications. 41(16):7023-7031.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Exercise 2.21, page 46 in McNeil et al (2005)
+alpha &lt;- c(.90, .95, .975, .99, .995)
+(ES(variance=(0.2/sqrt(250))^2, alpha=alpha, model='normal'))*10000
+(ES(variance=(0.2/sqrt(250))^2, alpha=alpha, model='t-student', df=4))*10000
+
+# Both type of models at once.
+(ES(variance=(0.2/sqrt(250))^2, alpha=alpha, model='both', df=4))*10000
+
+# A vector of losses
+variance &lt;- matrix(c(100,150,150,900), 2) # covariance matrix
+w &lt;- c(0.5, 0.5)                        # a vector weights
+ES(variance=variance, weights=w, alpha=0.95)
+
+</code></pre>
+
+
+</div>

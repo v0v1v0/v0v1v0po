@@ -1,0 +1,255 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>conditionalQuantile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Conditional quantile estimates for model evaluation</h2>
+
+<h3>Description</h3>
+
+<p>Function to calculate conditional quantiles with flexible conditioning. The
+function is for use in model evaluation and more generally to help better
+understand forecast predictions and how well they agree with observations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">conditionalQuantile(
+  mydata,
+  obs = "obs",
+  mod = "mod",
+  type = "default",
+  bins = 31,
+  min.bin = c(10, 20),
+  xlab = "predicted value",
+  ylab = "observed value",
+  col = brewer.pal(5, "YlOrRd"),
+  key.columns = 2,
+  key.position = "bottom",
+  auto.text = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mydata</code></td>
+<td>
+<p>A data frame containing the field <code>obs</code> and <code>mod</code>
+representing observed and modelled values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obs</code></td>
+<td>
+<p>The name of the observations in <code>mydata</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>The name of the predictions (modelled values) in <code>mydata</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>type</code> determines how the data are split i.e. conditioned,
+and then plotted. The default is will produce a single plot using the
+entire data. Type can be one of the built-in types as detailed in
+<code>cutData</code> e.g. “season”, “year”, “weekday” and so
+on. For example, <code>type = "season"</code> will produce four plots — one for
+each season.
+</p>
+<p>It is also possible to choose <code>type</code> as another variable in the data
+frame. If that variable is numeric, then the data will be split into four
+quantiles (if possible) and labelled accordingly. If type is an existing
+character or factor variable, then those categories/levels will be used
+directly. This offers great flexibility for understanding the variation of
+different variables and how they depend on one another.
+</p>
+<p>Type can be up length two e.g. <code>type = c("season", "weekday")</code> will
+produce a 2x2 plot split by season and day of the week. Note, when two
+types are provided the first forms the columns and the second the rows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bins</code></td>
+<td>
+<p>Number of bins to be used in calculating the different quantile
+levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.bin</code></td>
+<td>
+<p>The minimum number of points required for the estimates of the
+25/75th and 10/90th percentiles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>label for the x-axis, by default “predicted value”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>label for the y-axis, by default “observed value”.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Colours to be used for plotting the uncertainty bands and median
+line. Must be of length 5 or more.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.columns</code></td>
+<td>
+<p>Number of columns to be used in the key.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key.position</code></td>
+<td>
+<p>Location of the key e.g. “top”, “bottom”,
+“right”, “left”. See <code>lattice</code> <code>xyplot</code> for more
+details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.text</code></td>
+<td>
+<p>Either <code>TRUE</code> (default) or <code>FALSE</code>. If <code>TRUE</code>
+titles and axis labels etc. will automatically try and format pollutant
+names and units properly e.g.  by subscripting the ‘2’ in NO2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other graphical parameters passed onto <code>cutData</code> and
+<code>lattice:xyplot</code>. For example, <code>conditionalQuantile</code> passes the
+option <code>hemisphere = "southern"</code> on to <code>cutData</code> to provide
+southern (rather than default northern) hemisphere handling of <code>type = "season"</code>. Similarly, common axis and title labelling options (such as
+<code>xlab</code>, <code>ylab</code>, <code>main</code>) are passed to <code>xyplot</code> via
+<code>quickText</code> to handle routine formatting.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Conditional quantiles are a very useful way of considering model performance
+against observations for continuous measurements (Wilks, 2005). The
+conditional quantile plot splits the data into evenly spaced bins. For each
+predicted value bin e.g. from 0 to 10~ppb the <em>corresponding</em> values of
+the observations are identified and the median, 25/75th and 10/90 percentile
+(quantile) calculated for that bin. The data are plotted to show how these
+values vary across all bins. For a time series of observations and
+predictions that agree precisely the median value of the predictions will
+equal that for the observations for each bin.
+</p>
+<p>The conditional quantile plot differs from the quantile-quantile plot (Q-Q
+plot) that is often used to compare observations and predictions. A Q-Q~plot
+separately considers the distributions of observations and predictions,
+whereas the conditional quantile uses the corresponding observations for a
+particular interval in the predictions. Take as an example two time series,
+the first a series of real observations and the second a lagged time series
+of the same observations representing the predictions. These two time series
+will have identical (or very nearly identical) distributions (e.g. same
+median, minimum and maximum). A Q-Q plot would show a straight line showing
+perfect agreement, whereas the conditional quantile will not. This is because
+in any interval of the predictions the corresponding observations now have
+different values.
+</p>
+<p>Plotting the data in this way shows how well predictions agree with
+observations and can help reveal many useful characteristics of how well
+model predictions agree with observations — across the full distribution of
+values. A single plot can therefore convey a considerable amount of
+information concerning model performance. The <code>conditionalQuantile</code>
+function in openair allows conditional quantiles to be considered in a
+flexible way e.g. by considering how they vary by season.
+</p>
+<p>The function requires a data frame consisting of a column of observations and
+a column of predictions. The observations are split up into <code>bins</code>
+according to values of the predictions. The median prediction line together
+with the 25/75th and 10/90th quantile values are plotted together with a line
+showing a “perfect” model. Also shown is a histogram of predicted
+values (shaded grey) and a histogram of observed values (shown as a blue
+line).
+</p>
+<p>Far more insight can be gained into model performance through conditioning
+using <code>type</code>. For example, <code>type = "season"</code> will plot conditional
+quantiles by each season. <code>type</code> can also be a factor or character field
+e.g. representing different models used.
+</p>
+<p>See Wilks (2005) for more details and the examples below.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>References</h3>
+
+<p>Murphy, A. H., B.G. Brown and Y. Chen. (1989) Diagnostic Verification of
+Temperature Forecasts, Weather and Forecasting, Volume: 4, Issue: 4, Pages:
+485-501.
+</p>
+<p>Wilks, D. S., 2005. Statistical Methods in the Atmospheric Sciences, Volume
+91, Second Edition (International Geophysics), 2nd Edition. Academic Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The <code>verification</code> package for comprehensive functions for
+forecast verification.
+</p>
+<p>Other model evaluation functions: 
+<code>TaylorDiagram()</code>,
+<code>conditionalEval()</code>,
+<code>modStats()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## make some dummy prediction data based on 'nox'
+mydata$mod &lt;- mydata$nox * 1.1 + mydata$nox * runif(1:nrow(mydata))
+
+# basic conditional quantile plot
+## A "perfect" model is shown by the blue line
+## predictions tend to be increasingly positively biased at high nox,
+## shown by departure of median line from the blue one.
+## The widening uncertainty bands with increasing NOx shows that
+## hourly predictions are worse for higher NOx concentrations.
+## Also, the red (median) line extends beyond the data (blue line),
+## which shows in this case some predictions are much higher than
+## the corresponding measurements. Note that the uncertainty bands
+## do not extend as far as the median line because there is insufficient
+# to calculate them
+conditionalQuantile(mydata, obs = "nox", mod = "mod")
+
+## can split by season to show seasonal performance (not very
+## enlightening in this case - try some real data and it will be!)
+
+## Not run: 
+conditionalQuantile(mydata, obs = "nox", mod = "mod", type = "season")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

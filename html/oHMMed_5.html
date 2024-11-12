@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convert_to_ggmcmc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Converts MCMC Samples into <code>ggmcmc</code> Format</h2>
+
+<h3>Description</h3>
+
+<p>This helper function converts MCMC samples into <code>ggmcmc</code> format
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convert_to_ggmcmc(
+  x,
+  pattern = c("mean", "sigma", "beta", "alpha", "pois_means", "T"),
+  include_warmup = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(mcmc_hmm_*) MCMC HMM object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p>(character) pattern(s) with model parameters to be included in the output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_warmup</code></td>
+<td>
+<p>(logical) include warmup samples. By default <code>FALSE</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By default, for a given model, all parameters are converted into ggmcmc format.
+</p>
+<p>The parameter <code>pattern</code> can be used to extract specific parameters.
+For instance <code>pattern="mean"</code> extracts all mean parameters from 
+a hmm_mcmc_normal model.
+</p>
+<p>If a specific parameter is of interest it can be matched by an exact name:
+<code>pattern=c("mean[1]", "T[1,1]")</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>data.frame compatible with functions from the <code>ggmcmc</code> package
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Convert all parameters (Normal model)
+convert_normal_all &lt;- convert_to_ggmcmc(example_hmm_mcmc_normal)
+unique(convert_normal_all$Parameter)
+head(convert_normal_all)
+tail(convert_normal_all)
+
+# Convert only means (Normal model)
+convert_normal_means &lt;- convert_to_ggmcmc(example_hmm_mcmc_normal, 
+                                          pattern = "mean")
+unique(convert_normal_means$Parameter)
+
+# Convert selected parameter (Normal model)
+pattern_normal &lt;- c("mean[1]", "sigma[1]", "T[1,1]")
+convert_normal_param &lt;- convert_to_ggmcmc(example_hmm_mcmc_normal, 
+                                          pattern = pattern_normal)
+unique(convert_normal_param$Parameter)
+
+# Convert all parameters (Poisson-Gamma model)
+convert_pois_gamma_all &lt;- convert_to_ggmcmc(example_hmm_mcmc_gamma_poisson)
+unique(convert_pois_gamma_all$Parameter)
+</code></pre>
+
+
+</div>

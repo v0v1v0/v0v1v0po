@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>constructs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get or replace construct poles</h2>
+
+<h3>Description</h3>
+
+<p>Allows to get and set construct poles.
+Replaces the older functions <code>getConstructNames</code>, <code>getConstructNames2</code>,
+and <code>eNames</code> which are deprecated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">constructs(x, collapse = FALSE, sep = " - ")
+
+constructs(x, i, j) &lt;- value
+
+leftpoles(x)
+
+leftpoles(x, position) &lt;- value
+
+rightpoles(x)
+
+rightpoles(x, position) &lt;- value
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A repgrid object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collapse</code></td>
+<td>
+<p>Return vector with both poles instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>Separator if <code>collapse = TRUE</code>, default is <code>" - "</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i, j</code></td>
+<td>
+<p>Row and column Index of repgrid matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>Character vector of construct poles names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>position</code></td>
+<td>
+<p>Index where to insert construct</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# shorten object name
+x &lt;- boeker
+
+## get construct poles
+constructs(x) # both left and right poles
+leftpoles(x) # left poles only
+rightpoles(x)
+constructs(x, collapse = TRUE)
+
+## replace construct poles
+constructs(x)[1, 1] &lt;- "left pole 1"
+constructs(x)[1, "leftpole"] &lt;- "left pole 1" # alternative
+constructs(x)[1:3, 2] &lt;- paste("right pole", 1:3)
+constructs(x)[1:3, "rightpole"] &lt;- paste("right pole", 1:3) # alternative
+constructs(x)[4, 1:2] &lt;- c("left pole 4", "right pole 4")
+
+l &lt;- leftpoles(x)
+leftpoles(x) &lt;- sample(l) # brind poles into random order
+leftpoles(x)[1] &lt;- "new left pole 1" # replace name of first left pole
+
+# replace left poles of constructs 1 and 3
+leftpoles(x)[c(1, 3)] &lt;- c("new left pole 1", "new left pole 3")
+
+</code></pre>
+
+
+</div>

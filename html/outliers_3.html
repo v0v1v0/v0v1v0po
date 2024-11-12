@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dixon.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Dixon tests for outlier </h2>
+
+<h3>Description</h3>
+
+<p>Performs several variants of Dixon test for detecting outlier in data sample.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dixon.test(x, type = 0, opposite = FALSE, two.sided = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a numeric vector for data values. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opposite</code></td>
+<td>
+<p>  a logical indicating whether you want to check not the value with 
+largest difference from the mean, but opposite (lowest, if most suspicious is highest etc.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p> an integer specyfying the variant of test to be performed. Possible values are
+compliant with these given by Dixon (1950): 10, 11, 12, 20, 21. If this value is set to zero,
+a variant of the test is chosen according to sample size (10 for 3-7, 11 for 8-10, 21 for 11-13, 
+22 for 14 and more). The lowest or highest value is selected automatically, and can be reversed
+used <code>opposite</code> parameter.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>two.sided</code></td>
+<td>
+<p> treat test as two-sided (default). </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The p-value is calculating by interpolation using <code>qdixon</code> and <code>qtable</code>.
+According to Dixon (1951) conclusions, the critical values can be obtained numerically only for n=3.
+Other critical values are obtained by simulations, taken from original Dixon's paper, and
+regarding corrections given by Rorabacher (1991).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class <code>htest</code> containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>the value of Dixon Q-statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>the p-value for the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>a character string describing the alternative hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a character string indicating what type of test was performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.name</code></td>
+<td>
+<p>name of the data argument.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Lukasz Komsta </p>
+
+
+<h3>References</h3>
+
+ 
+<p>Dixon, W.J. (1950). Analysis of extreme values. Ann. Math. Stat. 21, 4, 488-506.
+</p>
+<p>Dixon, W.J. (1951). Ratios involving extreme values. Ann. Math. Stat. 22, 1, 68-78.
+</p>
+<p>Rorabacher, D.B. (1991). Statistical Treatment for Rejection of Deviant Values: Critical Values of Dixon Q Parameter and Related Subrange Ratios at the 95 percent Confidence Level. Anal. Chem. 83, 2, 139-146.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>chisq.out.test</code>, <code>grubbs.test</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(1234)
+x = rnorm(10)
+dixon.test(x)
+dixon.test(x,opposite=TRUE)
+dixon.test(x,type=10)
+
+</code></pre>
+
+
+</div>

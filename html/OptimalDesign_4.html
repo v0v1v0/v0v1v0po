@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Fx_blocks</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Matrix of candidate regressors for a block size-two model
+</h2>
+
+<h3>Description</h3>
+
+<p>Creates the matrix of all candidate regressors of a linear regression model corresponding to the problem of the optimal block size-two design.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Fx_blocks(n.treats, blocks=NULL, echo=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n.treats</code></td>
+<td>
+
+<p>the number of "treatments" in the block experiment.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blocks</code></td>
+<td>
+
+<p>the <code>2</code> times <code>n</code> matrix of all permissible blocks (that is, permissible pairings of treatments). If <code>blocks=NULL</code>, <code>blocks</code> is set to <code>combn(n.treats, 2)</code>, which means that all treatment pairings are permissible.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echo</code></td>
+<td>
+
+<p>Print the call of the function?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Creates the matrix <code>Fx</code> of artificial regressors, such that the D- and A-optimal designs for the corresponding artificial LRM are are the same as what is called the D- and A-optimal design in the original block model with blocks of size two.
+</p>
+
+
+<h3>Value</h3>
+
+<p>the <code>n</code> times <code>m</code> matrix of all candidate regressors of an auxiliary linear regression model corresponding to the problem of the optimal block size-two design (<code>n</code> is <code>ncol(blocks)</code>, <code>m</code> is <code>n.treats-1</code>).
+</p>
+
+
+<h3>Note</h3>
+
+<p>This optimal design problem is equivalent to various optimum-subgraph problems, depending on the criterion.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Radoslav Harman, Lenka Filova
+</p>
+
+
+<h3>References</h3>
+
+<p>Harman R, Filova, L: Computing efficient exact designs of experiments using integer quadratic programming, Computational Statistics and Data Analysis 71 (2014) 1159-1167.
+</p>
+<p>Sagnol G, Harman R: Computing Exact D-optimal designs by mixed integer second-order cone programming, The Annals of Statistics 43 (2015), 2198-2224.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Fx_cube, Fx_simplex, Fx_glm, Fx_dose, Fx_survival</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Compute a D-efficient block size-two design
+# with 15 treatments and 10 blocks of size two
+
+Fx &lt;- Fx_blocks(10)
+w &lt;- od_KL(Fx, 15, t.max = 5)$w.best
+des &lt;- combn(10, 2)[, as.logical(w)]
+print(des)
+
+
+# We can visualize the design as a graph
+library(igraph)
+grp &lt;- graph_(t(des), from_edgelist(directed = FALSE))
+plot(grp, layout=layout_with_graphopt)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

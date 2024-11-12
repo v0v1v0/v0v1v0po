@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_add_mschart</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add mschart object to a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>Add mschart object to a worksheet
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_add_mschart(
+  wb,
+  sheet = current_sheet(),
+  dims = NULL,
+  graph,
+  col_offset = 0,
+  row_offset = 0,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>a workbook</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>the sheet on which the graph will appear</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>the dimensions where the sheet will appear</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>graph</code></td>
+<td>
+<p>mschart object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_offset, row_offset</code></td>
+<td>
+<p>offsets for column and row</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>wb_data()</code> <code>wb_add_chart_xml()</code> wb_add_image <code>wb_add_mschart()</code> wb_add_plot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (requireNamespace("mschart")) {
+require(mschart)
+
+## Add mschart to worksheet (adds data and chart)
+scatter &lt;- ms_scatterchart(data = iris, x = "Sepal.Length", y = "Sepal.Width", group = "Species")
+scatter &lt;- chart_settings(scatter, scatterstyle = "marker")
+
+wb &lt;- wb_workbook() %&gt;%
+ wb_add_worksheet() %&gt;%
+ wb_add_mschart(dims = "F4:L20", graph = scatter)
+
+## Add mschart to worksheet and use available data
+wb &lt;- wb_workbook() %&gt;%
+  wb_add_worksheet() %&gt;%
+  wb_add_data(x = mtcars, dims = "B2")
+
+# create wb_data object
+dat &lt;- wb_data(wb, 1, dims = "B2:E6")
+
+# call ms_scatterplot
+data_plot &lt;- ms_scatterchart(
+  data = dat,
+  x = "mpg",
+  y = c("disp", "hp"),
+  labels = c("disp", "hp")
+)
+
+# add the scatterplot to the data
+wb &lt;- wb %&gt;%
+  wb_add_mschart(dims = "F4:L20", graph = data_plot)
+}
+</code></pre>
+
+
+</div>

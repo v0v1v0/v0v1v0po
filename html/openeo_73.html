@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BoundingBox</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>BoundingBox</h2>
+
+<h3>Description</h3>
+
+<p>Inheriting from <code>Argument()</code> in order to represent a bounding box / extent of an area of
+interest. Its value is usually a named list with "west","south","east" and "north". For this argument
+the 'bbox' object of the sf package is also recognized (<code>sf::st_bbox()</code>). This holds also true for
+classes that support <code>sf::st_bbox()</code> and return a valid 'bbox' object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of <code>R6Class()</code> representing a bounding box / extent.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Array()</code>, <code>Integer()</code>, <code>EPSGCode()</code>, <code>String()</code>, <code>Number()</code>,
+<code>Date()</code>, <code>RasterCube()</code>, <code>VectorCube()</code>, <code>ProcessGraphArgument()</code>,
+<code>ProcessGraphParameter()</code>, <code>OutputFormatOptions()</code>, <code>GeoJson()</code>,
+<code>Boolean()</code>, <code>DateTime()</code>, <code>Time()</code>, <code>BoundingBox()</code>, <code>Kernel()</code>,
+<code>TemporalInterval()</code>, <code>TemporalIntervals()</code>, <code>CollectionId()</code>, <code>OutputFormat()</code>,
+<code>AnyOf()</code>, <code>ProjDefinition()</code>, <code>UdfCodeArgument()</code>, <code>UdfRuntimeArgument()</code> and
+<code>UdfRuntimeVersionArgument()</code>,<code>TemporalIntervals()</code>, <code>MetadataFilter()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# most of the time BoundingBox is a choice as parameter value for 
+# spatial_extent in 'load_collection'
+p = processes()
+
+# using a list
+bbox = list(west=10.711799440170706, 
+            east= 11.542794097651838, 
+            south=45.92724558214729, 
+            north= 46.176044942018734)
+
+data = p$load_collection(id = "SENTINEL2_L2A", 
+                         spatial_extent = bbox,
+                         temporal_extent = list("2020-01-01T00:00:00Z", "2020-01-20T00:00:00Z"), 
+                         bands = list("B04","B08"))
+
+# using sf bbox
+bbox = st_bbox(c(xmin=10.711799440170706, 
+                 xmax= 11.542794097651838, 
+                 ymin=45.92724558214729, 
+                 ymax= 46.176044942018734),
+               crs = 4326)
+
+data = p$load_collection(id = "SENTINEL2_L2A", 
+                         spatial_extent = bbox,
+                         temporal_extent = list("2020-01-01T00:00:00Z", "2020-01-20T00:00:00Z"), 
+                         bands = list("B04","B08"))
+
+# objects supporting sf::st_bbox()
+img = stars::read_stars(system.file("tif/L7_ETMs.tif",package = "stars"))
+data = p$load_collection(id = "SENTINEL2_L2A", 
+                         spatial_extent = img,
+                         temporal_extent = list("2020-01-01T00:00:00Z", "2020-01-20T00:00:00Z"), 
+                         bands = list("B04","B08"))
+                         
+
+## End(Not run)
+</code></pre>
+
+
+</div>

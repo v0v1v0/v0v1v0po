@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>with_ROI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Configures a solver based on 'ROI'</h2>
+
+<h3>Description</h3>
+
+<p>This function makes all solvers in the R package 'ROI' available to solve
+'ompr' models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">with_ROI(solver, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>solver</code></td>
+<td>
+<p>the 'ROI' solver name (character vector of length 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>optional parameters passed to ROI_solve
+</p>
+<p>Note: it does only support column duals. It currently does not export
+row duals.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a function: Model -&gt; Solution that can be used
+together with <code>solve_model</code>. You can find <code>ROI</code>'s
+original solver <code>message</code> and <code>status</code> information in
+<code>&lt;return_value&gt;$ROI</code>. The <code>ompr</code> status code is <code>"success"</code>
+if <code>ROI</code> returns <code>code = 0</code> and is <code>"error"</code> otherwise.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kurt Hornik, David Meyer, Florian Schwendinger and Stefan Theussl (2016).
+ROI: R Optimization Infrastructure. &lt;https://CRAN.R-project.org/package=ROI&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(magrittr)
+library(ompr)
+library(ROI)
+library(ROI.plugin.glpk)
+add_variable(MIPModel(), x, type = "continuous") %&gt;%
+ set_objective(x, sense = "max") %&gt;%
+ add_constraint(x &lt;= 5) %&gt;%
+ solve_model(with_ROI(solver = "glpk", verbose = TRUE))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

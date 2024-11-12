@@ -1,0 +1,48 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>my_key</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Default key</h2>
+
+<h3>Description</h3>
+
+<p>The default user key can be set in the <code>USER_KEY</code> variable and otherwise
+is <code style="white-space: pre;">⁠~/.ssh/id_rsa⁠</code>. Note that on Windows we treat <code>~</code> as the windows user
+home (and not the documents folder).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">my_key()
+
+my_pubkey()
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>The <code>my_pubkey()</code> function looks for the public key by appending <code>.pub</code>
+to the above key path. If this file does not exist, it reads the private key file
+and automatically derives the corresponding pubkey. In the latter case the user
+may be prompted for a passphrase if the private key is protected.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Set random RSA key as default
+key &lt;- rsa_keygen()
+write_pem(key, tmp &lt;- tempfile(), password = "")
+rm(key)
+Sys.setenv("USER_KEY" = tmp)
+
+# Check the new keys
+print(my_key())
+print(my_pubkey())
+</code></pre>
+
+
+</div>

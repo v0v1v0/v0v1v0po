@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onetime_do</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run code only once</h2>
+
+<h3>Description</h3>
+
+<p>When first called, <code>onetime_do()</code> evaluates an expression. It then creates a
+lockfile recording a unique ID which will prevent the expression being run
+on subsequent calls.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onetime_do(
+  expr,
+  id = deprecate_calling_package(),
+  path = default_lockfile_dir(),
+  expiry = NULL,
+  default = NULL,
+  without_permission = c("warn", "run", "stop", "pass", "ask")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>expr</code></td>
+<td>
+<p>The code to evaluate. An R statement or <code>expression()</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Unique ID string. If this is unset, the name of the calling
+package will be used. Since onetime 0.2.0, not setting <code>id</code> is
+deprecated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Directory to store lockfiles. The default uses a unique
+directory corresponding to the calling package, beneath
+<code>rappdirs::user_config_dir()</code>. Normally you should leave this as the
+default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expiry</code></td>
+<td>
+<p><code>difftime()</code> or e.g. <code>lubridate::duration()</code> object.
+After this length of time, code will be run again.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default</code></td>
+<td>
+<p>Value to return if <code>expr</code> was not executed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>without_permission</code></td>
+<td>
+<p>Character string. What to do if the user hasn't
+given permission to store files? <code>"warn"</code> runs the action with an extra
+warning; <code>"run"</code> runs the action with no warning; <code>"pass"</code> does nothing
+and returns the default; <code>"stop"</code> throws an error; <code>"ask"</code> asks for
+permission using <code>check_ok_to_store()</code>, and returns the default if it is
+not granted.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>onetime_do()</code> is the engine used by other onetime functions.
+</p>
+<p>Calls are identified by <code>id</code>. If you use the same value of <code>id</code> across
+different calls to onetime functions, only the first call will get made.
+</p>
+<p>The default <code>path</code>, where lockfiles are stored, is in a per-package directory
+beneath <code>rappdirs::user_config_dir()</code>. To use a different subdirectory within
+the onetime base directory, set <code>path = onetime_dir("dirname")</code>.
+</p>
+<p>End users can also set <code>options(onetime.dir)</code> to change the base directory.
+Package authors should only set this option locally within package functions,
+if at all.
+</p>
+<p>If the call gives an error, the lockfile is still written.
+</p>
+<p><code>expiry</code> is backward-looking. That is, <code>expiry</code> is used at check time to see
+if the lockfile was written after <code>Sys.time() - expiry</code>. It is not used when
+the lockfile is created. So, you should set <code>expiry</code> to the same value
+whenever you call <code>onetime_do()</code>. See the example.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>onetime_do()</code> invisibly returns the value of <code>expr</code>,
+or <code>default</code> if <code>expr</code> was not run because it had been run already.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">oo &lt;- options(onetime.dir = tempdir(check = TRUE))
+id &lt;- sample(10000L, 1L)
+
+for (n in 1:3) {
+  onetime_do(print("printed once"), id = id)
+}
+
+# expiry is "backward-looking":
+id2 &lt;- sample(10000L, 1L)
+expiry &lt;- as.difftime(1, units = "secs")
+onetime_do(print("Expires quickly, right?"), id = id2, expiry = expiry)
+Sys.sleep(2)
+onetime_do(print("This won't be shown..."), id = id2)
+onetime_do(print("... but this will"), id = id2, expiry = expiry)
+
+
+onetime_reset(id = id)
+onetime_reset(id = id2)
+options(oo)
+</code></pre>
+
+
+</div>

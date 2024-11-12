@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>misc_parameter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Miscellaneous parameter</h2>
+
+<h3>Description</h3>
+
+<p>Create a parameter that consists of a miscellaneous object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">misc_parameter(name, value, validator, widget)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p><code>character</code> name of parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validator</code></td>
+<td>
+<p><code>function</code> to validate changes to the parameter. This
+function must have a single argument and return either <code>TRUE</code> or
+<code>FALSE</code> depending on if the argument is valid candidate for the
+parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>widget</code></td>
+<td>
+<p><code>function</code> to render a <code>shiny</code> widget. This function
+should must have a single argument that accepts a valid object and return
+a <code>shiny.tag</code> or <code>shiny.tag.list</code> object.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>MiscParameter object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load data
+data(iris, mtcars)
+
+# create table parameter can that can be updated to any other object
+p1 &lt;- misc_parameter("tbl", iris,
+                     function(x) TRUE,
+                     function(id, x) structure(id, .Class = "shiny.tag"))
+print(p1) # print it
+p1$get() # get value
+p1$id # get id
+p1$validate(mtcars) # check if parameter can be updated
+p1$set(mtcars) # set parameter to mtcars
+p1$print() # print it again
+
+# create table parameter with validation function that requires
+# all values in the first column to be less then 200 and that the
+# parameter have the same column names as the iris data set
+p2 &lt;- misc_parameter("tbl2", iris,
+                     function(x) all(names(x) %in% names(iris)) &amp;&amp;
+                                 all(x[[1]] &lt; 200),
+                     function(id, x) structure(id, .Class = "shiny.tag"))
+print(p2) # print it
+p2$get() # get value
+p2$id # get id
+p2$validate(mtcars) # check if parameter can be updated
+iris2 &lt;- iris; iris2[1,1] &lt;- 300 # create updated iris data set
+p2$validate(iris2) # check if parameter can be updated
+iris3 &lt;- iris; iris2[1,1] &lt;- 100 # create updated iris data set
+p2$set(iris3) # set parameter to iris3
+p2$print() # print it again
+
+</code></pre>
+
+
+</div>

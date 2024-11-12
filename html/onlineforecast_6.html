@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as.data.list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert to data.list class</h2>
+
+<h3>Description</h3>
+
+<p>These functions will convert the object into a data.list.
+</p>
+<p>Convert a data.frame into a data.list
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as.data.list(object)
+
+## S3 method for class 'data.frame'
+as.data.list(object)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>The data.frame to be converted.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>A data.list is simply a list of vectors and data.frames. For the use in the 
+onlineforecast package the following format must be kept:
+</p>
+<p>- t: A vector of time.
+</p>
+<p>- vectors with same length as t: Holds observations and values synced to time t.
+</p>
+<p>- data.frames with number of rows as time t: Holds forecasts in each column named by <code>kxx</code> where <code>xx</code> is the
+horizon, e.g. <code>k0</code> is synced as observations, and <code>k1</code> is one-step ahead.
+</p>
+<p>The convention is that columns with forecasts are postfixed with <code>.kxx</code> where
+<code>xx</code> is the horizon. See the examples.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a value of class data.list
+</p>
+<p>a data.list
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>For specific detailed info see the children, e.g. as.data.list.data.frame </code>
+</p>
+<p>as.data.list
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Convert a dataframe with time and two observed variables
+X &lt;- data.frame(t=1:10, x=1:10, y=1:10)
+as.data.list(X)
+
+# Convert a dataframe with time, forecast and an observed variable
+X &lt;- data.frame(t=1:10, x.k1=1:10, x.k2=10:1, yobs=1:10, y.k1=1:10, y.k2=1:10)
+as.data.list(X)
+
+# Can be converted back and forth
+X
+as.data.frame(as.data.list(X))
+
+</code></pre>
+
+
+</div>

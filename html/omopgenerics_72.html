@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>newSummarisedResult</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>'summarised_results' object constructor</h2>
+
+<h3>Description</h3>
+
+<p>'summarised_results' object constructor
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">newSummarisedResult(x, settings = attr(x, "settings"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>settings</code></td>
+<td>
+<p>Settings for the summarised_result object.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>summarised_result</code> object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+library(omopgenerics)
+
+x &lt;- tibble(
+ "result_id" = 1L,
+ "cdm_name" = "cprd",
+ "group_name" = "cohort_name",
+ "group_level" = "acetaminophen",
+ "strata_name" = "sex &amp;&amp;&amp; age_group",
+ "strata_level" = c("male &amp;&amp;&amp; &lt;40", "male &amp;&amp;&amp; &gt;=40"),
+ "variable_name" = "number_subjects",
+ "variable_level" = NA_character_,
+ "estimate_name" = "count",
+ "estimate_type" = "integer",
+ "estimate_value" = c("5", "15"),
+  "additional_name" = "overall",
+  "additional_level" = "overall"
+) |&gt;
+  newSummarisedResult()
+
+x
+settings(x)
+summary(x)
+
+x &lt;- tibble(
+ "result_id" = 1L,
+ "cdm_name" = "cprd",
+ "group_name" = "cohort_name",
+ "group_level" = "acetaminophen",
+ "strata_name" = "sex &amp;&amp;&amp; age_group",
+ "strata_level" = c("male &amp;&amp;&amp; &lt;40", "male &amp;&amp;&amp; &gt;=40"),
+ "variable_name" = "number_subjects",
+ "variable_level" = NA_character_,
+ "estimate_name" = "count",
+ "estimate_type" = "integer",
+ "estimate_value" = c("5", "15"),
+  "additional_name" = "overall",
+  "additional_level" = "overall"
+) |&gt;
+  newSummarisedResult(settings = tibble(
+    result_id = 1L, result_type = "custom_summary", mock = TRUE, value = 5
+  ))
+
+x
+settings(x)
+summary(x)
+
+</code></pre>
+
+
+</div>

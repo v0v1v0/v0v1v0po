@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cosine.similarity.iterative</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Tests the accumulated quality scores for outliers using cosine similarity</h2>
+
+<h3>Description</h3>
+
+<p>This function takes quality.scores, trims it and fits it to the distribution given.
+It then iteratively tests the largest datapoint compared a null distribution of size
+no.simulations. If the largest datapoint has a significant p-value it tests the 2nd largest
+one and so on. The function supports the following distributions:
+</p>
+
+<ul>
+<li>
+<p> 'weibull'
+</p>
+</li>
+<li>
+<p> 'norm'
+</p>
+</li>
+<li>
+<p> 'gamma'
+</p>
+</li>
+<li>
+<p> 'exp'
+</p>
+</li>
+<li>
+<p> 'lnorm'
+</p>
+</li>
+<li>
+<p> 'cauchy'
+</p>
+</li>
+<li>
+<p> 'logis'
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">cosine.similarity.iterative(
+  quality.scores,
+  no.simulations,
+  distribution = c("lnorm", "weibull", "norm", "gamma", "exp", "cauchy", "logis"),
+  trim.factor = 0.05,
+  alpha.significant = 0.05
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>quality.scores</code></td>
+<td>
+<p>A dataframe with columns 'Sum' (of scores) and 'Sample', i.e. the output of accumulate.zscores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no.simulations</code></td>
+<td>
+<p>The number of datasets to simulate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>A distribution to test, will default to 'lnorm'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim.factor</code></td>
+<td>
+<p>What fraction of values of each to trim to get parameters without using extremes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha.significant</code></td>
+<td>
+<p>Alpha value for significance</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Results in the form of a named list
+</p>
+
+<dl>
+<dt>no.outliers</dt>
+<dd>
+<p>Number of nominated outliers</p>
+</dd>
+<dt>outlier.labels</dt>
+<dd>
+<p>Outlier IDs, corresponding to <code>Sample</code> column of <code>quality.scores</code></p>
+</dd>
+</dl>
+</div>

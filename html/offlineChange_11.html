@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PriorRangeOrderKmeansCpp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Detect Location of Change Points of Independent Data with Prior Ranges using Rcpp
+</h2>
+
+<h3>Description</h3>
+
+<p>Detect the location of change points based on minimizing within segment quadratic
+loss with restriction of prior ranges that contaion change points.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PriorRangeOrderKmeansCpp(x, prior_range_x, num_init = 10)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The data to find change points with dimension N x D, must be matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior_range_x</code></td>
+<td>
+<p>The prior ranges that contain change points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_init</code></td>
+<td>
+<p>The number of repetition times, in order to avoid local minimal.
+Default is 10. Must be integer.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The K change points form K+1 segments (1 2 ... change_point(1)) ...
+(change_point(K) ... N).
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>num_change_point</code></td>
+<td>
+<p>optimal number of change points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_point</code></td>
+<td>
+<p>location of change points.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>J. Ding, Y. Xiang, L. Shen, and V. Tarokh, <em>Multiple Change Point Analysis:
+Fast Implementation and Strong Consistency</em>. IEEE Transactions on Signal
+Processing, vol. 65, no. 17, pp. 4495-4510, 2017.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">a&lt;-matrix(rnorm(40,mean=-1,sd=1),nrow=20,ncol=2)
+b&lt;-matrix(rnorm(120,mean=0,sd=1),nrow=60,ncol=2)
+c&lt;-matrix(rnorm(40,mean=1,sd=1),nrow=20,ncol=2)
+x&lt;-rbind(a,b,c)
+l1&lt;-c(15,25)
+l2&lt;-c(75,100)
+prior_range_x&lt;-list(l1,l2)
+PriorRangeOrderKmeansCpp(x,prior_range_x=list(l1,l2))
+</code></pre>
+
+
+</div>

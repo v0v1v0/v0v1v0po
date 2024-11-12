@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>col_widths-wb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modify column widths of a worksheet</h2>
+
+<h3>Description</h3>
+
+<p>Remove / set worksheet column widths to specified width or "auto".
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_set_col_widths(
+  wb,
+  sheet = current_sheet(),
+  cols,
+  widths = 8.43,
+  hidden = FALSE
+)
+
+wb_remove_col_widths(wb, sheet = current_sheet(), cols)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wb</code></td>
+<td>
+<p>A <code>wbWorkbook</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheet</code></td>
+<td>
+<p>A name or index of a worksheet, a vector in the case of <code>remove_</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>Indices of cols to set/remove column widths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>widths</code></td>
+<td>
+<p>Width to set <code>cols</code> to specified column width or <code>"auto"</code> for
+automatic sizing. <code>widths</code> is recycled to the length of <code>cols</code>. openxlsx2
+sets the default width is 8.43, as this is the standard in some spreadsheet
+software. See <strong>Details</strong> for general information on column widths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hidden</code></td>
+<td>
+<p>Logical vector recycled to the length of <code>cols</code>.
+If <code>TRUE</code>, the columns are hidden.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The global min and max column width for "auto" columns is set by (default values show):
+</p>
+
+<ul>
+<li> <p><code>options("openxlsx2.minWidth" = 3)</code>
+</p>
+</li>
+<li> <p><code>options("openxlsx2.maxWidth" = 250)</code> Maximum width allowed in Excel
+</p>
+</li>
+</ul>
+<p>NOTE: The calculation of column widths can be slow for large worksheets.
+</p>
+<p>NOTE: The <code>hidden</code> parameter may conflict with the one set in <code>wb_group_cols()</code>;
+changing one will update the other.
+</p>
+<p>NOTE: The default column width varies by spreadsheet software, operating system,
+and DPI settings used. Setting <code>widths</code> to specific value also is no guarantee
+that the output will have consistent column widths.
+</p>
+<p>For automatic text wrapping of columns use
+wb_add_cell_style(wrap_text = TRUE)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other workbook wrappers: 
+<code>base_font-wb</code>,
+<code>creators-wb</code>,
+<code>grouping-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_chartsheet()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_worksheet()</code>,
+<code>wb_base_colors</code>,
+<code>wb_clone_worksheet()</code>,
+<code>wb_copy_cells()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>,
+<code>wb_save()</code>,
+<code>wb_set_last_modified_by()</code>,
+<code>wb_workbook()</code>
+</p>
+<p>Other worksheet content functions: 
+<code>filter-wb</code>,
+<code>grouping-wb</code>,
+<code>named_region-wb</code>,
+<code>row_heights-wb</code>,
+<code>wb_add_conditional_formatting()</code>,
+<code>wb_add_data()</code>,
+<code>wb_add_data_table()</code>,
+<code>wb_add_formula()</code>,
+<code>wb_add_pivot_table()</code>,
+<code>wb_add_slicer()</code>,
+<code>wb_add_thread()</code>,
+<code>wb_freeze_pane()</code>,
+<code>wb_merge_cells()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Create a new workbook
+wb &lt;- wb_workbook()
+
+## Add a worksheet
+wb$add_worksheet("Sheet 1")
+
+## set col widths
+wb$set_col_widths(cols = c(1, 4, 6, 7, 9), widths = c(16, 15, 12, 18, 33))
+
+## auto columns
+wb$add_worksheet("Sheet 2")
+wb$add_data(sheet = 2, x = iris)
+wb$set_col_widths(sheet = 2, cols = 1:5, widths = "auto")
+
+## removing column widths
+## Create a new workbook
+wb &lt;- wb_load(file = system.file("extdata", "openxlsx2_example.xlsx", package = "openxlsx2"))
+
+## remove column widths in columns 1 to 20
+wb_remove_col_widths(wb, 1, cols = 1:20)
+</code></pre>
+
+
+</div>

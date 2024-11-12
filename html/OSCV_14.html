@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OSCV_LI_dens</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The OSCV function based on the kernel <code>L_I</code> in the density estimation (KDE) context.</h2>
+
+<h3>Description</h3>
+
+<p>Computing the values of the <code class="reqn">L_I</code>-based OSCV function in the density estimation context. See Savchuk (2017).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OSCV_LI_dens(h, dat, alpha, sigma)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>numerical vector of bandwidth values,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>numerical vecror of data values,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>first parameter of the kernel <code class="reqn">L_I</code>,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>second parameter of the kernel <code class="reqn">L_I</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Computing the OSCV function for the given vector of bandwidth values <code class="reqn">h</code> and the data vector <code class="reqn">dat</code>. The function is based on the one-sided kernel <code>L_I</code> that depends on the parameters <code class="reqn">\alpha</code> and <code class="reqn">\sigma</code>. The kernel <code class="reqn">L_I</code> is robust in the special case of <code class="reqn">\alpha=16.8954588</code> and <code class="reqn">\sigma=1.01</code>. The other special case is obtained when either of the following holds: </p>
+<ul>
+<li> <p><code class="reqn">\alpha=0</code> for any <code class="reqn">\sigma&gt;0</code>; </p>
+</li>
+<li> <p><code class="reqn">\sigma=1</code> for any <code class="reqn">-\infty&lt;\alpha&lt;\infty</code>.</p>
+</li>
+</ul>
+<p> In the above cases the kernel <code class="reqn">L_I</code> reduces to the one-sided Gaussian kernel <code class="reqn">L_G</code>.  The function's minimizer is to be used without additional rescaling to compute the ultimate Gaussian density estimate under the assumption that the underlying density is smooth.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The vector of values of the OSCV function for the correponsing vector of <code class="reqn">h</code> values.
+</p>
+
+
+<h3>References</h3>
+
+<p>Savchuk, O.Y. (2017). One-sided cross-validation for nonsmooth density functions, arXiv:1703.05157.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OSCV_Gauss_dens</code>, <code>OSCV_Epan_dens</code>, <code>C_smooth</code>, <code>L_I</code>, <code>H_I</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Example 1 (Old Faithful geyser data)
+dev.new()
+data=faithful[,1]         # Data on n=272 eruption duration of the Old Faithful geyser.
+harray=seq(0.025,0.6,len=50)
+alp=16.8954588
+sig=1.01
+plot(harray,OSCV_LI_dens(harray,data,alpha=alp,sigma=sig),lwd=3,'l',xlab="h",
+ylab="L_I-based OSCV",main="OSCV_LI(h) for eruption duration",cex.main=1.5,cex.lab=1.7,
+cex.axis=1.7)
+h_OSCV_LI=round(optimize(OSCV_LI_dens,c(0.001,0.5),tol=0.001,dat=data,alpha=16.8954588,
+sigma=1.01)$minimum,digits=4)
+legend(0.01,-0.2,legend=c("n=272",paste("h_OSCV_LI=",h_OSCV_LI)),cex=1.8,bty="n")
+legend(0.25,-0.33,legend=c("Parameters of L_I:", paste("alpha=",alp),
+paste("sigma=",sig)),cex=1.7,bty="n")
+
+# Example 2 (Simulated example)
+dat_norm=rnorm(100)   #generating a random sample of size n=100 from the N(0,1) density
+harray=seq(0.05,1.5,len=100)
+OSCVarray=OSCV_LI_dens(harray,dat=dat_norm,16.8954588,1.01)
+dev.new()
+plot(harray,OSCVarray,lwd=3,'l',xlab="h",ylab="L_I-based OSCV",
+main="OSCV_LI(h) for data generated from N(0,1)",cex.main=1.5,cex.lab=1.7,cex.axis=1.7)
+h_OSCV_LI_norm=round(optimize(OSCV_LI_dens,c(0.001,1),tol=0.001,
+dat=dat_norm,16.8954588,1.01)$minimum,digits=4)
+legend(0,OSCVarray[1],legend=c("n=100",paste("h_OSCV_LI=",h_OSCV_LI_norm),
+"Parameters of the robust kernel L_I:","alpha=16.8954588", "sigma=1.01"),cex=1.5,bty="n")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

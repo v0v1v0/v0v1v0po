@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oed_for_slope_over_intercept</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create an optimal design for measuring the slope divided by the intercept</h2>
+
+<h3>Description</h3>
+
+<p>Create an optimal design for measuring the slope divided by the intercept
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oed_for_slope_over_intercept(
+  n,
+  xmin,
+  xmax,
+  theta0,
+  f_hetero = NULL,
+  MaxIter = 6000,
+  MaxFunEvals = 6000,
+  TolFun = 1e-06,
+  NUM_RAND_STARTS = 50
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The number of experimental runs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmin</code></td>
+<td>
+<p>The minimum value of the independent variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xmax</code></td>
+<td>
+<p>The maximum value of the independent variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta0</code></td>
+<td>
+<p>The guess of the true value of the slope / intercept.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f_hetero</code></td>
+<td>
+<p>Specification of heteroskedasticity: the h(x) which relates the value of the 
+independent variable to the variance in the response around the line at that place
+or the proportional variance at that point. If <code>NULL</code>, homoskedasticity is
+assumed (this is the default behavior).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MaxIter</code></td>
+<td>
+<p>For the heteroskedastic design, a Nelder-Mead search is used (via the function <code>fminbnd</code>). 
+This is the <code>MaxIter</code> value for the search. Default is <code>6000</code>. Lower if <code>n</code> is high.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MaxFunEvals</code></td>
+<td>
+<p>For the heteroskedastic design, a Nelder-Mead search is used (via the function <code>fminbnd</code>). 
+This is the <code>MaxFunEvals</code> value for the search. Default is <code>6000</code>. Lower if <code>n</code> is high.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TolFun</code></td>
+<td>
+<p>For the heteroskedastic design, a Nelder-Mead search is used (via the function <code>fminbnd</code>). 
+This is the <code>TolFun</code> value for the search. Default is <code>1e-6</code>. Increase for faster execution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NUM_RAND_STARTS</code></td>
+<td>
+<p>For the heteroskedastic design, a Nelder-Mead search is used (via the function <code>fminbnd</code>). 
+The Nelder-Mead search must be given a starting location. Our implementation uses many
+starting locations. This parameter controls the number of additional random starting
+locations in the space <code>[xmin, xmax]</code>. Default is <code>50</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An n-vector of x-values which specifies the optimal design
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adam Kapelner
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">xmin = 5 / 15
+xmax = 19 / 1
+n = 10
+theta0 = 0.053
+opt_homo_design = oed_for_slope_over_intercept(n, xmin, xmax, theta0)
+table(opt_homo_design)
+</code></pre>
+
+
+</div>

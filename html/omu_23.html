@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_heatmap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a heatmap</h2>
+
+<h3>Description</h3>
+
+<p>Takes a metabolomics count data frame and creates a heatmap. It is recommended to
+either subset, truncate, or agglomerate by metabolite metadata to improve legibility.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_heatmap(
+  count_data,
+  metadata,
+  Factor,
+  response_variable,
+  log_transform = FALSE,
+  high_color,
+  low_color,
+  aggregate_by
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>count_data</code></td>
+<td>
+<p>A metabolomics count data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata</code></td>
+<td>
+<p>The descriptive meta data for the samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Factor</code></td>
+<td>
+<p>The column name for the independent variable in your metadata.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_variable</code></td>
+<td>
+<p>The response variable for the data, i.e. "Metabolite"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log_transform</code></td>
+<td>
+<p>TRUE or FALSE. Recommended for visualization purposes. If true data is
+transformed by the natural log.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>high_color</code></td>
+<td>
+<p>Color for high abundance values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>low_color</code></td>
+<td>
+<p>Color for low abundance values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aggregate_by</code></td>
+<td>
+<p>Hierarchical metadata value to sum metabolite values by, i.e. "Class"</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">c57_nos2KO_mouse_countDF &lt;- assign_hierarchy(c57_nos2KO_mouse_countDF, TRUE, "KEGG")
+
+plot_heatmap(count_data = c57_nos2KO_mouse_countDF, metadata = c57_nos2KO_mouse_metadata,
+log_transform = TRUE, Factor = "Treatment", response_variable = "Metabolite",
+aggregate_by = "Subclass_2", high_color = "darkgoldenrod1", low_color = "dodgerblue2")
+</code></pre>
+
+
+</div>

@@ -1,0 +1,278 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addPolarMarkers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add polar markers to leaflet map</h2>
+
+<h3>Description</h3>
+
+<p>This function is similar (but not identical to) the <code>leaflet::addMarkers()</code>
+and <code>leaflet::addCircleMarkers()</code> functions in <code>leaflet</code>, which allows users
+to add <code>openair</code> directional analysis plots to any leaflet map and have more
+control over groups and layerIds than in "all-in-one" functions like
+<code>polarMap()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addPolarMarkers(
+  map,
+  pollutant,
+  fun = openair::polarPlot,
+  lng = NULL,
+  lat = NULL,
+  layerId = NULL,
+  group = NULL,
+  popup = NULL,
+  popupOptions = NULL,
+  label = NULL,
+  labelOptions = NULL,
+  options = leaflet::markerOptions(),
+  clusterOptions = NULL,
+  clusterId = NULL,
+  key = FALSE,
+  d.icon = 200,
+  d.fig = 3.5,
+  data = leaflet::getMapData(map),
+  ...
+)
+
+addPolarDiffMarkers(
+  map,
+  pollutant,
+  before = leaflet::getMapData(map),
+  after = leaflet::getMapData(map),
+  lng = NULL,
+  lat = NULL,
+  layerId = NULL,
+  group = NULL,
+  popup = NULL,
+  popupOptions = NULL,
+  label = NULL,
+  labelOptions = NULL,
+  options = leaflet::markerOptions(),
+  clusterOptions = NULL,
+  clusterId = NULL,
+  key = FALSE,
+  d.icon = 200,
+  d.fig = 3.5,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>a map widget object created from <code>leaflet()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pollutant</code></td>
+<td>
+<p>The name of the pollutant to be plot. Note that, if <code>fun = openair::windRose</code>, you must set <code>pollutant = "ws"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>An <code>openair</code> directional analysis plotting function. Supported
+functions include <code>openair::polarPlot()</code> (the default),
+<code>openair::polarAnnulus()</code>, <code>openair::polarFreq()</code>,
+<code>openair::percentileRose()</code>, <code>openair::pollutionRose()</code> and
+<code>openair::windRose()</code>. For <code>openair::polarDiff()</code>, use
+<code>addPolarDiffMarkers()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng</code></td>
+<td>
+<p>The decimal longitude.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat</code></td>
+<td>
+<p>The decimal latitude.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layerId</code></td>
+<td>
+<p>the layer id</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>the name of the group the newly created layers should belong to
+(for <code>clearGroup</code> and <code>addLayersControl</code> purposes).
+Human-friendly group names are permitted–they need not be short,
+identifier-style names. Any number of layers and even different types of
+layers (e.g. markers and polygons) can share the same group name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>popup</code></td>
+<td>
+<p>A column of <code>data</code> to be used as a popup.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>popupOptions</code></td>
+<td>
+<p>A Vector of <code>popupOptions</code> to provide popups</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label</code></td>
+<td>
+<p>A column of <code>data</code> to be used as a label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labelOptions</code></td>
+<td>
+<p>A Vector of <code>labelOptions</code> to provide label
+options for each label. Default <code>NULL</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>a list of extra options for tile layers, popups, paths
+(circles, rectangles, polygons, ...), or other map elements</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clusterOptions</code></td>
+<td>
+<p>if not <code>NULL</code>, markers will be clustered using
+<a href="https://github.com/Leaflet/Leaflet.markercluster">Leaflet.markercluster</a>;
+you can use <code>markerClusterOptions()</code> to specify marker cluster
+options</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clusterId</code></td>
+<td>
+<p>the id for the marker cluster layer</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>Should a key for each marker be drawn? Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d.icon</code></td>
+<td>
+<p>The diameter of the plot on the map in pixels. This will affect
+the size of the individual polar markers. Alternatively, a vector in the
+form <code>c(width, height)</code> can be provided if a non-circular marker is
+desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d.fig</code></td>
+<td>
+<p>The diameter of the plots to be produced using <code>openair</code> in
+inches. This will affect the resolution of the markers on the map.
+Alternatively, a vector in the form <code>c(width, height)</code> can be provided if a
+non-circular marker is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame. The data frame must contain the data to plot your
+choice of openair directional analysis plot, which includes wind speed
+(<code>ws</code>), wind direction (<code>wd</code>), and the column representing the
+concentration of a pollutant. In addition, <code>data</code> must include a decimal
+latitude and longitude. By default, it is the data object provided to
+<code>leaflet::leaflet()</code> initially, but can be overridden.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments for the plotting function (e.g. <code>period</code> for
+<code>openair::polarAnnulus()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before, after</code></td>
+<td>
+<p>A data frame that represents the before/after case. See
+<code>openair::polarPlot()</code> for details of different input requirements. By
+default, both <code>before</code> and <code>after</code> are the data object provided to
+<code>leaflet::leaflet()</code> initially, but at least one should be overridden.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A leaflet object.
+</p>
+
+
+<h3>Functions</h3>
+
+
+<ul>
+<li> <p><code>addPolarMarkers()</code>: Add any one-table polar marker (e.g.,
+<code>openair::polarPlot()</code>)
+</p>
+</li>
+<li> <p><code>addPolarDiffMarkers()</code>: Add the two-table <code>openair::polarDiff()</code> marker.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>shiny::runExample(package = "openairmaps")</code> to see examples of this
+function used in a <code>shiny::shinyApp()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(leaflet)
+library(openair)
+
+# different types of polar plot on one map
+leaflet(data = polar_data) %&gt;%
+  addTiles() %&gt;%
+  addPolarMarkers("ws",
+    fun = openair::windRose,
+    group = "Wind Rose"
+  ) %&gt;%
+  addPolarMarkers("nox",
+    fun = openair::polarPlot,
+    group = "Polar Plot"
+  ) %&gt;%
+  addLayersControl(
+    baseGroups = c("Wind Rose", "Polar Plot")
+  )
+
+# use of polar diff (NB: both 'before' and 'after' inherit from `leaflet()`,
+# so at least one should be overridden - in this case 'after')
+leaflet(data = polar_data) %&gt;%
+  addTiles() %&gt;%
+  addPolarDiffMarkers("nox",
+    after = dplyr::mutate(polar_data, nox = jitter(nox, 5))
+  )
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>opq_osm_id</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a feature specified by OSM ID to an Overpass query</h2>
+
+<h3>Description</h3>
+
+<p>Add a feature specified by OSM ID to an Overpass query
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">opq_osm_id(
+  id = NULL,
+  type = NULL,
+  open_url = FALSE,
+  out = "body",
+  datetime = NULL,
+  datetime2 = NULL,
+  adiff = FALSE,
+  timeout = 25,
+  memsize
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>One or more official OSM identifiers (long-form integers), which
+must be entered as either a character or <em>numeric</em> value (because R does
+not support long-form integers). id can also be a character string
+prefixed with the id type, e.g. "relation/11158003"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of objects (recycled); must be either <code>node</code>, <code>way</code>, or
+<code>relation</code>. Optional if id is prefixed with the type.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>open_url</code></td>
+<td>
+<p>If <code>TRUE</code>, open the OSM page of the specified object in web
+browser. Multiple objects (<code>id</code> values) will be opened in multiple
+pages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>out</code></td>
+<td>
+<p>The level of verbosity of the overpass result: <code>body</code> (geometries
+and tags, the default), <code>tags</code> (tags without geometry), <code>meta</code> (like
+body + Timestamp, Version, Changeset, User, User ID of the last
+edition), <code>skel</code> (geometries only), <code style="white-space: pre;">⁠tags center⁠</code> (tags without geometry
++ the coordinates of the center of the bounding box) and <code>ids</code> (type and
+id of the objects only).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datetime</code></td>
+<td>
+<p>If specified, a date and time to extract data from the OSM
+database as it was up to the specified date and time, as described at
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#date">https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#date</a>.
+This <em>must</em> be in ISO8601 format ("YYYY-MM-DDThh:mm:ssZ"), where
+both the "T" and "Z" characters must be present.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datetime2</code></td>
+<td>
+<p>If specified, return the <em>difference</em> in the OSM
+database between <code>datetime</code> and <code>datetime2</code>, where
+<code>datetime2 &gt; datetime</code>. See
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Difference_between_two_dates_(diff)">https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Difference_between_two_dates_(diff)</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adiff</code></td>
+<td>
+<p>If <code>TRUE</code>, query for <a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Augmented-difference_between_two_dates_(adiff)">augmented difference</a>.
+The result indicates what happened to the modified and deleted OSM
+objects. Requires <code style="white-space: pre;">⁠datetime(2)*⁠</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeout</code></td>
+<td>
+<p>It may be necessary to increase this value for large queries,
+because the server may time out before all data are delivered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>memsize</code></td>
+<td>
+<p>The default memory size for the 'overpass' server in <em>bytes</em>;
+may need to be increased in order to handle large queries.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>opq object
+</p>
+
+
+<h3>Note</h3>
+
+<p>Extracting elements by ID requires explicitly specifying the type of
+element. Only elements of one of the three given types can be extracted in a
+single query, but the results of multiple types can nevertheless be combined
+with the c operation of osmdata.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#By_element_id">https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#By_element_id</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other queries: 
+<code>add_osm_features()</code>,
+<code>add_osm_feature()</code>,
+<code>bbox_to_string()</code>,
+<code>getbb()</code>,
+<code>opq_around()</code>,
+<code>opq_csv()</code>,
+<code>opq_enclosing()</code>,
+<code>opq_string()</code>,
+<code>opq()</code>,
+<code>overpass_status()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+id &lt;- c (1489221200, 1489221321, 1489221491)
+dat1 &lt;- opq_osm_id (type = "node", id = id) %&gt;%
+    opq_string () %&gt;%
+    osmdata_sf ()
+dat1$osm_points # the desired nodes
+id &lt;- c (136190595, 136190596)
+dat2 &lt;- opq_osm_id (type = "way", id = id) %&gt;%
+    opq_string () %&gt;%
+    osmdata_sf ()
+dat2$osm_lines # the desired ways
+dat &lt;- c (dat1, dat2) # The node and way data combined
+# All in one (same result as dat)
+id &lt;- c (1489221200, 1489221321, 1489221491, 136190595, 136190596)
+type &lt;- c ("node", "node", "node", "way", "way")
+datAiO &lt;- opq_osm_id (id = id, type = type) %&gt;%
+    opq_string () %&gt;%
+    osmdata_sf ()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

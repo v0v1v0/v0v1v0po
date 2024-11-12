@@ -1,0 +1,252 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ChangepointDetector</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Constructor for the ChangepointDetector S3 class</h2>
+
+<h3>Description</h3>
+
+<p>Constructor for the ChangepointDetector S3 class
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ChangepointDetector(dim, method = c("ocd", "Mei", "XS", "Chan"), thresh,
+  patience = 5000, MC_reps = 100, beta = 1, sparsity = "auto",
+  b = beta/sqrt(dim), p0 = 1/sqrt(dim), w = 200, lambda = sqrt(8) -
+  2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dim</code></td>
+<td>
+<p>Data dimension, all new data must be of this dimension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Four methods are implemented: <code>ocd</code>, <code>Mei</code>, <code>XS</code>
+and <code>Chan</code>. They correspond to the methods proposed in Chen, Wang and
+Samworth (2020), Mei (2010), Xie and Siegmund (2013) and Chan (2017). The
+constructed detector will be of 'OCD', 'Mei', 'XS' and 'Chan' subclass
+respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresh</code></td>
+<td>
+<p>A numeric vector or the character string 'MC'. If 'MC' is
+specified then the correct threshold will be computed by Monte Carlo
+simulation (the <code>patience</code> argument should be specified for this).
+Otherwise, for method <code>ocd</code>, a vector of length 3 (corresponding
+to the diagonal statistic, off-diagonal dense statistic and off-diagonal
+sparse statistic) should be specifiied; for method <code>Mei</code>, a vector of
+length two (corresponding to the max and sum statistics) should be specified;
+for methods <code>XS</code> and <code>Chan</code>, a single positive real number should
+be specified;</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>patience</code></td>
+<td>
+<p>Required patience (average run length without change) of the
+online changepoint procedure. This is optional if the thresholds for detection
+are manually specified, but is required if Monte Carlo thresholds are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MC_reps</code></td>
+<td>
+<p>Number of Monte Carlo repetitions to use to estimate the
+thresholds. Only used when <code>thresh='MC'</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>lower bound on the l_2 norm of the vector of mean change to be
+detected. This argument is used by the <code>ocd</code> method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sparsity</code></td>
+<td>
+<p>Parameter used by the <code>ocd</code>. If <code>sparsity='sparse'</code>,
+then only the diagonal and off-diagonal sparse statistics are used.
+If <code>sparsity='dense'</code>, then only the diagonal and off-diagonal sparse
+statistics are used. If <code>sparsity='auto'</code>, all three statistics are used
+to detect both sparse and dense change adaptively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>Lower bound on the per-coordinate magnitude of mean change be
+detected. This argument is used by the 'Mei' method. If <code>b</code> is
+unspecified but <code>beta</code> is specified, the default <code>b = beta/sqrt(dim)</code>
+will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p0</code></td>
+<td>
+<p>A real number between 0 and 1. Sparsity parameter used by <code>XS</code>
+and <code>Chan</code> methods. It is the assumed fraction of nonzero coordinates of
+change. Default to <code>1/sqrt(dim)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>Window size parameter used by <code>XS</code> and <code>Chan</code> methods.
+Number of most recent data points to keep track in memory. Default is 200.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>A tuning parameter used by the <code>Chan</code> method. Default is
+<code>sqrt(8)-2</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is a wrapper. The <code>new_OCD</code>,
+<code>new_Mei</code>, <code>new_XS</code> and <code>new_Chan</code> carry
+out the actual constructor implementation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of S3 class 'ChangepointDetector'. Depending on the
+<code>method</code> argument specified, the object also belongs to a subclass
+'OCD', 'Mei', 'XS' or 'Chan' corresponding to <code>method='ocd'</code>. It
+contains the following attributes:
+</p>
+
+<ul>
+<li>
+<p> class - S3 class and subclass
+</p>
+</li>
+<li>
+<p> data_dim - data dimension
+</p>
+</li>
+<li>
+<p> method - method used for changepoint detection
+</p>
+</li>
+<li>
+<p> param - a list of parameters used in the specific method: <code>beta</code>
+and <code>sparsity</code> for method <code>ocd</code>; <code>b</code> for method <code>Mei</code>;
+<code>p0</code> and <code>w</code> for method <code>XS</code>; <code>p0</code>, <code>w</code> and
+<code>lambda</code> for method <code>Chan</code>.
+</p>
+</li>
+<li>
+<p> threshold - a named vector of thresholds used for detection (see the
+<code>thresh</code> argument)
+</p>
+</li>
+<li>
+<p> n_obs - number of observations, initialised to 0
+</p>
+</li>
+<li>
+<p> baseline_mean - vector of pre-change mean, initialised to a vector of 0,
+can be estimated by setting the changepoint detector into baseline mean and
+standard deviation estimating status, see <code>setStatus</code>, or set
+directly using <code>setBaselineMean</code>.
+</p>
+</li>
+<li>
+<p> baseline_sd - vector of standard deviation, initialised to a vector of 1,
+can be estimated by setting the changepoint detector into baseline mean and
+standard deviation estimating status, see <code>setStatus</code>, or set
+directly using <code>setBaselineSD</code>.
+</p>
+</li>
+<li>
+<p> tracked -  a list of information tracked online by the changepoint
+detector: matrices <code>A</code>
+and <code>tail</code> for method <code>ocd</code>; vector <code>R</code> for method <code>Mei</code>;
+matrices <code>X_recent</code> and <code>CUSUM</code> for methods <code>XS</code> and <code>Chan</code>.
+</p>
+</li>
+<li>
+<p> statistics - a named vector of test statistics for changepoint
+detection: statistics with names <code>diag</code>, <code>off_d</code> and <code>off_s</code>
+for method <code>ocd</code> (note if <code>sparsity</code> is <code>'dense'</code> or
+<code>'sparse'</code>, then only (S^diag, S^off,d)
+and (S^diag, S^off,s) are included in <code>stat</code> respectively.);
+statistics with names <code>max</code> and <code>sum</code> for
+method <code>Mei</code>; a single numeric value for  methods <code>XS</code> and <code>Chan</code>.
+</p>
+</li>
+<li>
+<p> status - one of the following: 'estimating' (the detector is estimating
+the baseline mean and standard deviation with new data points), 'monitoring'
+(the detector is detecting changes from the baseline mean from new data points)
+and an integer recording the time of declaration of changepoint.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Chen, Y., Wang, T. and Samworth, R. J. (2020) High-dimensional
+multiscale online changepoint detection <em>Preprint</em>. arxiv:2003.03668.
+</p>
+</li>
+<li>
+<p> Mei, Y. (2010) Efficient scalable schemes for monitoring a large number
+of data streams. <em>Biometrika</em>, <strong>97</strong>, 419–433.
+</p>
+</li>
+<li>
+<p> Xie, Y. and Siegmund, D. (2013) Sequential multi-sensor change-point
+detection.  <em>Ann. Statist.</em>, <strong>41</strong>, 670–692.
+</p>
+</li>
+<li>
+<p> Chan, H. P. (2017) Optimal sequential detection in multi-stream data.
+<em>Ann. Statist.</em>, <strong>45</strong>, 2736–2763.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>accessor functions such as <code>data_dim</code>, the main function
+for processing a new data point <code>getData</code>, other methods for the
+ChangepointDetector class including <code>reset</code>,
+<code>setBaselineMean</code>, <code>setBaselineSD</code>,
+<code>setStatus</code>, <code>normalisedStatistics</code> and
+<code>checkChange</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">detector_ocd &lt;- ChangepointDetector(dim=100, method='ocd',
+                                    thresh=c(11.6, 179.5, 54.9), beta=1)
+detector_Mei &lt;- ChangepointDetector(dim=100, method='Mei',
+                                    thresh=c(8.6, 125.1), b=0.1)
+detector_XS &lt;- ChangepointDetector(dim=100, method='XS', thresh=55.1)
+detector_Chan &lt;- ChangepointDetector(dim=100, method='Chan', thresh=8.7)
+</code></pre>
+
+
+</div>

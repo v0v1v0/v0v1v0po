@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>OptSig.BootWeight</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Weighted Optimal Significance Level for the F-test based on the bootstrap
+</h2>
+
+<h3>Description</h3>
+
+<p>The function calculates the weighted optimal level of significance for the F-test 
+</p>
+<p>The weights are obtained from the bootstrap distribution of the non-centrality parameter estimates
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">OptSig.BootWeight(y,x,Rmat,rvec,p=0.5,k=1,nboot=3000,wild=FALSE,Figure=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p> a matrix of dependent variable, T by 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a matrix of K independent variable, T by K</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Rmat</code></td>
+<td>
+<p> a matrix for J restrictions, J by (K+1) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rvec</code></td>
+<td>
+<p> a vector for restrictions, J by 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p> prior probability for H0, default is p = 0.5</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p> relative loss from Type I and II errors, k = L2/L1, default is k = 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nboot</code></td>
+<td>
+<p> the number of bootstrap iterations, the default is 3000</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wild</code></td>
+<td>
+<p> if TRUE, wild bootsrap is conducted (default); if FALSE, bootstrap is based on iid resampling</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Figure</code></td>
+<td>
+<p> show graph if TRUE . No graph if FALSE (default) </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The bootstrap can be conducted using either iid resampling or wild bootstrap.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>alpha.opt </code></td>
+<td>
+<p>Optimal level of significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crit.opt </code></td>
+<td>
+<p>Critical value at the optimal level</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Applicable to a linear regression model
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jae H. Kim
+</p>
+
+
+<h3>References</h3>
+
+<p>Kim and Choi, 2020, Choosing the Level of Significance: A Decision-theoretic Approach. Abacus, Wiley.
+&lt;https://doi.org/10.1111/abac.12172&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Leamer, E. 1978, Specification Searches: Ad Hoc Inference with Nonexperimental Data, Wiley, New York.
+</p>
+<p>Kim, JH and Ji, P. 2015, Significance Testing in Empirical Finance: A Critical Review and Assessment, Journal of Empirical Finance 34, 1-14.
+&lt;DOI:http://dx.doi.org/10.1016/j.jempfin.2015.08.006&gt;
+</p>
+<p>Kim, Jae H., 2020, Decision-theoretic hypothesis testing: A primer with R package OptSig, The American Statistician. 
+&lt;https://doi.org/10.1080/00031305.2020.1750484.&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(data1)
+# Define Y and X
+y=data1$lnoutput; x=cbind(data1$lncapital,data1$lnlabor)
+# Restriction matrices to test for constant returns to scale
+Rmat=matrix(c(0,1,1),nrow=1); rvec=matrix(0.94,nrow=1)
+
+OptSig.Boot(y,x,Rmat,rvec,p=0.5,k=1,nboot=1000,Figure=TRUE)
+</code></pre>
+
+
+</div>

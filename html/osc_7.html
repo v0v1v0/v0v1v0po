@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>osc.buffer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Simple Buffer algorithm
+</h2>
+
+<h3>Description</h3>
+
+<p>Simple buffer based on euclidean distance are created around all cells equal to one.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">osc.buffer(input, width=max(dim(input)), return.width=F, complete=F) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+
+<p>Matrix or Raster containing 1 indicating a cluster, no NA values are allowed
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+
+<p>Width of the buffer in cells
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.width</code></td>
+<td>
+
+<p>Logical value, if TRUE then the distance to the nearest cell with value 1 will be returned for all cells within the buffer.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>complete</code></td>
+<td>
+
+<p>Logical value, if TRUE the buffer will be increased until the whole raster is covered. Can only be used in combination with return.width=TRUE.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns matrix or raster, depending on input, with 1 for cluster and -1 for surrounding buffer. If return.width=TRUE negative numbers indicating the distance (width) to the nearest cell with value 1.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(landcover)
+landcover[landcover[]&gt;1] &lt;- 0
+
+plot(osc.buffer(landcover, 6))
+
+plot(osc.buffer(landcover, 6, return.width = TRUE))
+
+plot(osc.buffer(landcover, return.width = TRUE, complete = TRUE))
+
+</code></pre>
+
+
+</div>

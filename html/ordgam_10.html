@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordregr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit a proportional odds model for ordinal data</h2>
+
+<h3>Description</h3>
+
+<p>Fit a proportional odds model for ordinal data
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordregr(
+  y,
+  nc = NULL,
+  Xcal = Xcal,
+  descending = FALSE,
+  prior = list(mean = NULL, Prec = NULL),
+  theta0 = NULL,
+  ci.level = 0.95
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Vector containing the ordinal response (coded using integers in 1:nc).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>(optional) Maximum value of <code>y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xcal</code></td>
+<td>
+<p>Design matrix (excluding intercept columns).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>descending</code></td>
+<td>
+<p>Logical indicating if the odds of the response taking a value in the upper scale should be preferred over values in the lower scale.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>(optional) List giving the 'mean' and 'Prec'(ision) of the regression parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta0</code></td>
+<td>
+<p>(Optional) Vector containing starting values for the regression parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.level</code></td>
+<td>
+<p>Confidence levels of the computed credible intervals for the regression parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class ordregr.object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Philippe Lambert <a href="mailto:p.lambert@uliege.be">p.lambert@uliege.be</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Lambert, P. and Gressani, 0. (2023) Penalty parameter selection and asymmetry corrections
+to Laplace approximations in Bayesian P-splines models. Statistical Modelling. &lt;doi:10.1177/1471082X231181173&gt;. Preprint: &lt;arXiv:2210.01668&gt;.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ordgam</code>, <code>ordregr.object</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ordgam)
+data(freehmsData)
+Xcal = with(freehmsData, cbind(gndr,eduyrs,age))
+mod = ordregr(y=freehmsData$freehms, Xcal=Xcal, descending=TRUE)
+print(mod)
+
+</code></pre>
+
+
+</div>

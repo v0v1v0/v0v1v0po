@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_sim_grid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get similarity matrix of pairwise similarities of term sets.</h2>
+
+<h3>Description</h3>
+
+<p>Using either an <code>ontology_index</code> object and numeric vector of information content per term - or a matrix of between-term similarities (e.g. the output of <code>get_term_sim_mat</code>), create a numeric matrix of ‘between-term set’ similarities. Either the ‘best-match-average’ or ‘best-match-product’ approach (i.e. where the 2 scores obtained by applying the asymmetric ‘best-match’ similarity function to two term sets in each order are combined by taking the average or the product respectively). Either Lin's (default) or Resnik's definition of term similarity can be used. If <code>information_content</code> is not specified, a default value from <code>descendants_IC</code> is generated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_sim_grid(
+  ontology,
+  information_content,
+  term_sim_method,
+  term_sim_mat,
+  term_sets,
+  term_sets2 = term_sets,
+  combine = "average"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ontology</code></td>
+<td>
+<p><code>ontology_index</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>information_content</code></td>
+<td>
+<p>Numeric vector of information contents of terms (named by term)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>term_sim_method</code></td>
+<td>
+<p>Character string equalling either "lin" or "resnik" to use Lin or Resnik's expression for the similarity of terms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>term_sim_mat</code></td>
+<td>
+<p>Numeric matrix with rows and columns corresponding to (and named by) term IDs, and cells containing the similarity between the row and column term</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>term_sets</code></td>
+<td>
+<p>List of character vectors of ontological term IDs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>term_sets2</code></td>
+<td>
+<p>Second set of term sets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>combine</code></td>
+<td>
+<p>Character string - either "average" or "product", indicating whether to use the best-match-product' method, or function accepting two arguments - the first, the similarity matrix obtained by averaging across term sets in <code>term_sets</code>, and the second averaging across those in <code>term_sets2</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that if any term set within <code>term_sets</code> has 0 terms associated with it, it will get a similarity of 0 to any other set. If you do not want to compare term sets with no annotation, take care to filter out empty sets first, e.g. by 'term_sets=term_sets[sapply(term_sets, length) &gt; 0]'.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric matrix of pairwise term set similarities.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>get_term_sim_mat</code> <code>get_sim_p</code> <code>get_asym_sim_grid</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ontologyIndex)
+data(hpo)
+term_sets &lt;- list(
+`case1`=c("HP:0001873", "HP:0011877"),
+`case2`=c("HP:0001872", "HP:0001892"),
+`case3`="HP:0001873")
+get_sim_grid(ontology=hpo, term_sets=term_sets)
+</code></pre>
+
+
+</div>

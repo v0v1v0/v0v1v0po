@@ -1,0 +1,139 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as.linodds</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>An object for modeling linear odds.</h2>
+
+<h3>Description</h3>
+
+<p>A model for odds linear in some feature.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as.linodds(object, formula, beta)
+
+## S3 method for class 'linodds'
+predict(object, newdata, type = c("eta", "mu",
+  "erank"), na.action = na.pass, group = NULL, ...)
+
+## S3 method for class 'linodds'
+coef(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>some list-like object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>an object of class <code>"formula"</code> (or one that
+can be coerced to that class): a symbolic description of the
+model to be fitted.  The details of model specification are given
+under ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>the fit coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>a <code>data.frame</code> from which we can extract a model
+frame via the formula of the <code>object</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>indicates which prediction should be returned:
+</p>
+
+<dl>
+<dt><code>eta</code></dt>
+<dd>
+<p>The odds.</p>
+</dd>
+<dt><code>mu</code></dt>
+<dd>
+<p>The probability.</p>
+</dd>
+<dt><code>erank</code></dt>
+<dd>
+<p>The expected rank.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p>How to deal with missing values in <code>y</code>, <code>g</code>,
+<code>X</code>, <code>wt</code>, <code>eta0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>the string name of the group variable in the data,
+or a bare character with the group name. The group indices
+need not be integers, but that is more efficient. 
+They need not be sorted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An object which holds a formula, some fit coefficients 
+<code class="reqn">\beta</code> which fit in that formula to generate odds
+in odds space. 
+The odds can then be converted, via <code>predict.linodds</code>
+to probabilities, 
+or to expected ranks under the Harville model.
+Both <code>harsm</code> and <code>hensm</code> return
+objects of class <code>linodds</code>.
+</p>
+<p>We think of linear odds as 
+<code class="reqn">\eta = x^{\top}\beta</code>,
+for independent variables <code class="reqn">x</code>. The odds, <code class="reqn">\eta</code>
+are converted to probabilities, <code class="reqn">\mu</code> via
+<code class="reqn">\mu = c \exp{\eta},</code> where the constant <code class="reqn">c</code>
+is chosen so the <code class="reqn">\mu</code> for a given matching
+sum to one.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven E. Pav <a href="mailto:shabbychef@gmail.com">shabbychef@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>harsm</code>, <code>hensm</code>.
+</p>
+<p><code>smax</code>, <code>harsm_invlink</code>.
+</p>
+
+
+</div>

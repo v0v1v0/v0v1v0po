@@ -1,0 +1,166 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make_attribute</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make Different Types of Protos</h2>
+
+<h3>Description</h3>
+
+<p>This includes AttributeProto, GraphProto, NodeProto, TensorProto,
+TensorValueInfoProto, etc.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">make_attribute(key, value, doc_string = NULL)
+
+make_graph(nodes, name, inputs, outputs, initializer = NULL, doc_string = NULL)
+
+make_node(op_type, inputs, outputs, name = NULL, doc_string = NULL)
+
+make_tensor(name, data_type, dims, vals, raw = FALSE)
+
+make_tensor_value_info(name, elem_type, shape, doc_string = "")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>The key</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>The value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doc_string</code></td>
+<td>
+<p>The doc_string</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nodes</code></td>
+<td>
+<p>The nodes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>The name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inputs</code></td>
+<td>
+<p>The inputs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputs</code></td>
+<td>
+<p>The outputs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initializer</code></td>
+<td>
+<p>The initializer</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>op_type</code></td>
+<td>
+<p>The op type</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_type</code></td>
+<td>
+<p>The data type</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p>The dimensions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vals</code></td>
+<td>
+<p>The values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>raw</code></td>
+<td>
+<p>If this is <code style="white-space: pre;">⁠FALSE``, this function will choose the corresponding proto field to store the values based on ⁠</code>data_type<code style="white-space: pre;">⁠. If raw is ⁠</code>TRUE', use "raw_data" proto
+field to store the values, and values should be of type bytes in this case.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>elem_type</code></td>
+<td>
+<p>The element type, e.g. <code>onnx$TensorProto$FLOAT</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape</code></td>
+<td>
+<p>The shape</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+library(onnx)
+
+# Define a node protobuf and check whether it's valid
+node_def &lt;- make_node("Relu", list("X"), list("Y"))
+check(node_def)
+
+# Define an attribute protobuf and check whether it's valid
+attr_def &lt;- make_attribute("this_is_an_int", 123L)
+check(attr_def)
+
+# Define a graph protobuf and check whether it's valid
+graph_def &lt;- make_graph(
+    nodes = list(
+      make_node("FC", list("X", "W1", "B1"), list("H1")),
+      make_node("Relu", list("H1"), list("R1")),
+      make_node("FC", list("R1", "W2", "B2"), list("Y"))
+    ),
+    name = "MLP",
+    inputs = list(
+      make_tensor_value_info('X' , onnx$TensorProto$FLOAT, list(1L)),
+      make_tensor_value_info('W1', onnx$TensorProto$FLOAT, list(1L)),
+      make_tensor_value_info('B1', onnx$TensorProto$FLOAT, list(1L)),
+      make_tensor_value_info('W2', onnx$TensorProto$FLOAT, list(1L)),
+      make_tensor_value_info('B2', onnx$TensorProto$FLOAT, list(1L))
+    ),
+    outputs = list(
+      make_tensor_value_info('Y', onnx$TensorProto$FLOAT, list(1L))
+    )
+)
+check(graph_def)
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

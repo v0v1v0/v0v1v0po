@@ -1,0 +1,169 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cv.oem</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cross validation for Orthogonalizing EM</h2>
+
+<h3>Description</h3>
+
+<p>Cross validation for Orthogonalizing EM
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cv.oem(
+  x,
+  y,
+  penalty = c("elastic.net", "lasso", "ols", "mcp", "scad", "mcp.net", "scad.net",
+    "grp.lasso", "grp.lasso.net", "grp.mcp", "grp.scad", "grp.mcp.net", "grp.scad.net",
+    "sparse.grp.lasso"),
+  weights = numeric(0),
+  lambda = NULL,
+  type.measure = c("mse", "deviance", "class", "auc", "mae"),
+  nfolds = 10,
+  foldid = NULL,
+  grouped = TRUE,
+  keep = FALSE,
+  parallel = FALSE,
+  ncores = -1,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>input matrix of dimension n x p or <code>CsparseMatrix</code> objects of the <span class="pkg">Matrix</span> (sparse not yet implemented. 
+Each row is an observation, each column corresponds to a covariate. The cv.oem() function
+is optimized for n &gt;&gt; p settings and may be very slow when p &gt; n, so please use other packages
+such as <code>glmnet</code>, <code>ncvreg</code>, <code>grpreg</code>, or <code>gglasso</code> when p &gt; n or p approx n.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>numeric response vector of length nobs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty</code></td>
+<td>
+<p>Specification of penalty type in lowercase letters. Choices include <code>"lasso"</code>, 
+<code>"ols"</code> (Ordinary least squares, no penaly), <code>"elastic.net"</code>, <code>"scad"</code>, <code>"mcp"</code>, <code>"grp.lasso"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>observation weights. defaults to 1 for each observation (setting weight vector to 
+length 0 will default all weights to 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>A user supplied lambda sequence. By default, the program computes
+its own lambda sequence based on nlambda and lambda.min.ratio. Supplying
+a value of lambda overrides this.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type.measure</code></td>
+<td>
+<p>measure to evaluate for cross-validation. The default is <code>type.measure = "deviance"</code>, 
+which uses squared-error for gaussian models (a.k.a <code>type.measure = "mse"</code> there), deviance for logistic
+regression. <code>type.measure = "class"</code> applies to binomial only. <code>type.measure = "auc"</code> is for two-class logistic 
+regression only. <code>type.measure = "mse"</code> or <code>type.measure = "mae"</code> (mean absolute error) can be used by all models;
+they measure the deviation from the fitted mean to the response.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nfolds</code></td>
+<td>
+<p>number of folds for cross-validation. default is 10. 3 is smallest value allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>foldid</code></td>
+<td>
+<p>an optional vector of values between 1 and nfold specifying which fold each observation belongs to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grouped</code></td>
+<td>
+<p>Like in <span class="pkg">glmnet</span>, this is an experimental argument, with default <code>TRUE</code>, and can be ignored by most users. 
+For all models, this refers to computing nfolds separate statistics, and then using their mean and estimated standard 
+error to describe the CV curve. If <code>grouped = FALSE</code>, an error matrix is built up at the observation level from the 
+predictions from the <code>nfold</code> fits, and then summarized (does not apply to <code>type.measure = "auc"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep</code></td>
+<td>
+<p>If <code>keep = TRUE</code>, a prevalidated list of arrasy is returned containing fitted values for each observation 
+and each value of lambda for each model. This means these fits are computed with this observation and the rest of its
+fold omitted. The folid vector is also returned. Default is <code>keep = FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>If TRUE, use parallel foreach to fit each fold. Must register parallel before hand, such as <span class="pkg">doMC</span>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncores</code></td>
+<td>
+<p>Number of cores to use. If <code>parallel = TRUE</code>, then ncores will be automatically set to 1 to prevent conflicts</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other parameters to be passed to <code>"oem"</code> function</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object with S3 class <code>"cv.oem"</code>
+</p>
+
+
+<h3>References</h3>
+
+<p>Huling. J.D. and Chien, P. (2022), Fast Penalized Regression and Cross Validation for Tall Data with the oem Package.
+Journal of Statistical Software 104(6), 1-24. doi:10.18637/jss.v104.i06
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+n.obs &lt;- 1e4
+n.vars &lt;- 100
+
+true.beta &lt;- c(runif(15, -0.25, 0.25), rep(0, n.vars - 15))
+
+x &lt;- matrix(rnorm(n.obs * n.vars), n.obs, n.vars)
+y &lt;- rnorm(n.obs, sd = 3) + x %*% true.beta
+
+fit &lt;- cv.oem(x = x, y = y, 
+              penalty = c("lasso", "grp.lasso"), 
+              groups = rep(1:20, each = 5))
+
+layout(matrix(1:2, ncol = 2))
+plot(fit)
+plot(fit, which.model = 2)
+</code></pre>
+
+
+</div>

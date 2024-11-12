@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>glds</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>This function determines drug-gene associations for pre-clinical data.</h2>
+
+<h3>Description</h3>
+
+<p>This function determines drug-gene associations for pre-clinical data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">glds(
+  drugMat,
+  drugRelatedness,
+  markerMat,
+  minMuts = 5,
+  additionalCovariateMatrix = NULL,
+  expression = NULL,
+  threshold = 0.7
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>drugMat</code></td>
+<td>
+<p>A matrix of drug sensitivity data. rownames() are pre-clinical samples, and colnames() are drug names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drugRelatedness</code></td>
+<td>
+<p>A matrix in which column 1 contains a list of compounds, and column 2 contains a list of their corresponding target pathways. Given the subjective nature of
+drug classification, please ensure these pathways are as specific as possible for accurate results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>markerMat</code></td>
+<td>
+<p>A matrix containing the data for which you are looking for an association with drug sensitivity (e.g. a matrix of somatic mutation data). rownames() are marker names (e.g. gene names), and colnames() are samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minMuts</code></td>
+<td>
+<p>The minimum number of non-zero entries required so that a p-value can be calculated (e.g. how many somatic mutations must be present). The default is 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>additionalCovariateMatrix</code></td>
+<td>
+<p>A matrix containing covariates to be fit in the drug biomarker association models. This could be, for example, tissue of origin or cancer type. Rows are sample names. The default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expression</code></td>
+<td>
+<p>A matrix of expression data. rownames() are genes, and colnames() are the same pre-clinical samples as those in the drugMat (also in the same order).
+The default is NULL. If expression data is provided, a gene signature will be obtained.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Determine the correlation coefficient. Drugs with a correlation coefficient greater than or equal to this number with the drug under scrutiny will be removed from the negative control group.
+The default is 0.7</p>
+</td>
+</tr>
+</table>
+</div>

@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ovmult</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Multiple overlapping estimation
+</h2>
+
+<h3>Description</h3>
+
+<p>It gives the overlap area between two or more kernel density estimations from empirical data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ovmult( x, nbins = 1024, type = c( "1", "2" ), 
+    boundaries = NULL, get_xpoints = FALSE, ... )
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a list of numerical vectors to be compared (each vector is an element of the list).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nbins</code></td>
+<td>
+<p>number of equally spaced points through which the density estimates are compared; see <code>density</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character, type of index. If <code>type = "2"</code> returns the proportion of the overlapped area between two or more densities, see <code>overlap</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundaries</code></td>
+<td>
+<p>an optional vector indicating the minimum and the maximum over a predefined subset of the support of the empirical densities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get_xpoints</code></td>
+<td>
+<p>logical, if <code>TRUE</code> returns a vector where the abscissas represent the points of intersection among the densities. Note: it works only if <code>pairsOverlap = FALSE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>optional arguments to be passed to the function <code>density</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the list <code>x</code> contains more than two elements (i.e. more than two distributions) it computes multiple overlap measures. 
+</p>
+<p>The optional vector <code>boundaries</code> has to contain two numbers for the empirical minimum and maximum of the overlapped area. See examples below.
+</p>
+
+
+<h3>Value</h3>
+
+<p>It returns the value of overlapped area. 
+</p>
+
+
+<h3>Note</h3>
+
+<p>Called from the function <code>overlap</code>. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Pierfrancesco Alaimo Di Loro, Marco Mingione, Massimiliano Pastore
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(20150605)
+x &lt;- list(X1=rnorm(100), X2=rt(50,8), X3=rchisq(80,2))
+ovmult(x)
+ovmult(x, normalized = TRUE)
+
+# including boundaries
+x &lt;- list(X1=runif(100), X2=runif(100,.5,1))
+ovmult(x, boundaries=c( 0, .8 ))
+
+x &lt;- list(X1=runif(100), X2=runif(50), X3=runif(30))
+ovmult(x, boundaries=c( .2, .8 ))
+
+# changing kernel
+ovmult(x, kernel="rectangular")
+
+</code></pre>
+
+
+</div>

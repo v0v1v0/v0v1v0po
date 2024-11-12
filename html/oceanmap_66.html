@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>writebin</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Saves geographic data as byte file (<code>'.gz'</code>)</h2>
+
+<h3>Description</h3>
+
+<p>Saves geographic data as byte file, in gzip compressed format (<code>'.gz'</code>). <b>ATTENTION!</b>! Only 2D (one layer) can be stored!
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">writebin(satdata,filename,folder,param)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>satdata</code></td>
+<td>
+
+<p>one layer-raster-object or matrix holding spatial data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>param</code></td>
+<td>
+
+<p>character string indicating the parameter name for the dataset treatment. See <code>parameter_definitions</code> for available parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+
+<p>character string naming the <code>'.gz'</code>-file to be created. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>folder</code></td>
+<td>
+
+<p>character string indicating the target directory. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Robert K. Bauer
+</p>
+
+
+<h3>See Also</h3>
+
+<p>readbin, regions, crop, raster2matrix, param_unconvert</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example for selecting wrong area definition when saving files
+path &lt;- system.file("test_files", package="oceanmap")
+gz.files &lt;- Sys.glob(paste0(path,'/*.gz')) # load sample-'.gz'-files
+v(gz.files[1])
+
+fname &lt;- name_split(gz.files[1])
+param &lt;- fname$parameter
+gz &lt;- readbin(gz.files[1])
+dim(gz)
+v(gz.files[1])
+
+### reset region name
+fname$area &lt;- 'med9'
+fname &lt;- name_join(fname)
+# writebin(gz,fname,folder=path,param=param)
+# v(fname)
+# system(paste('rm', fname))
+
+### multi layer raster file
+gz2 &lt;- stack(gz,gz)
+# writebin(gz2,rep(gz.files[1],2),folder=path,param) # error message since multi layer
+# writebin(gz,gz.files[1],folder=path,param) # single layer raster file
+# v(gz.files[1])
+</code></pre>
+
+
+</div>

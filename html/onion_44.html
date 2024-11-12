@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orthogonal</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Orthogonal matrix equivalents</h2>
+
+<h3>Description</h3>
+
+<p>Convert a quaternion to and from an equivalent orthogonal matrix
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matrix2quaternion(M)
+as.orthogonal(Q)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>A three-by-three orthogonal matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Q</code></td>
+<td>
+<p>A vector of quaternions</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Function <code>matrix2quaternion()</code> returns a quaternion.
+</p>
+<p>Function <code>as.orthogonal()</code> returns either a <code class="reqn">3\times 3</code>
+matrix or a <code class="reqn">3\times3\times n</code> array of orthogonal matrices
+</p>
+
+
+<h3>Note</h3>
+
+<p>Function <code>matrix2quaternion()</code> is low-level; use
+<code>as.quaternion()</code> to convert arrays.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robin K. S. Hankin</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rotate</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+as.orthogonal(rquat(1))
+
+o &lt;- function(w){diag(3)-2*outer(w,w)/sum(w^2)}  # Householder
+matrix2quaternion(o(1:3))   # Booorrrriiinnnggg
+matrix2quaternion(o(1:3) %*% o(3:1))
+
+Q &lt;- rquat(7)
+Q &lt;- Q/abs(Q)
+as.quaternion(as.orthogonal(Q))   # +/- Q
+
+
+A &lt;- replicate(7,o(rnorm(3)) %*% o(rnorm(3)))
+max(abs(as.orthogonal(as.quaternion(A))-A))
+
+</code></pre>
+
+
+</div>

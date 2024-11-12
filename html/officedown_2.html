@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>knit_print_run</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Force Run Printing while Knitting</h2>
+
+<h3>Description</h3>
+
+<p>When used in a loop, runs do not outputs
+because <code>knit_print</code> method is not called.
+Use the function to force printing. Also you should tell the chunk
+to use results 'as-is' (by adding <code>results='asis'</code> to your chunk header).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">knit_print_run(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a run object, result of a run function from officer package</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>unused arguments</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>None. the function only print XML code.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other functions that force printing: 
+<code>knit_print_block()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(rmarkdown)
+rmd_file_src &lt;- system.file(
+  package = "officedown", "examples", "word_loop.Rmd")
+rmd_file_des &lt;- tempfile(fileext = ".Rmd")
+if(pandoc_available()){
+
+  file.copy(rmd_file_src, to = rmd_file_des)
+  docx_file_1 &lt;- tempfile(fileext = ".docx")
+  render(rmd_file_des, output_file = docx_file_1, quiet = TRUE)
+
+  if(file.exists(docx_file_1)){
+    message("file ", docx_file_1, " has been written.")
+  }
+}
+</code></pre>
+
+
+</div>

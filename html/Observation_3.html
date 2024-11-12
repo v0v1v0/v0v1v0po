@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>data_collection_program</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Collect Direct Observation Data</h2>
+
+<h3>Description</h3>
+
+<p>A generic-like function for collecting direct observation data manually or
+interactively, depending on user-specified preference and session
+capabilities.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data_collection_program(interactive = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>interactive</code></td>
+<td>
+<p>Logical. Should program be run interactively?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to method-like functions (under "See Also" below)</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>If 'interactive = TRUE', but R is not being used interactively, a
+message is issued and an override is implemented to set 'interactive =
+FALSE'.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>example_data</code>
+</p>
+<p>Other collection functions: 
+<code>interactive_data_collection_program()</code>,
+<code>manual_data_collection_program()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+data_collection_program()
+}
+
+# Load Sample of interactively-collected data for comparison
+#    with manually-entered data
+
+data("example_data")
+
+# Example of manually defining input variables -------------------------
+
+id &lt;- "Test_ID"
+
+timestamps &lt;- c("2018-05-06 02:40:37", "2018-05-06 02:40:46",
+    "2018-05-06 02:40:59", "2018-05-06 02:41:14",
+    "2018-05-06 02:41:27", "2018-05-06 02:41:37",
+    "2018-05-06 02:41:48", "2018-05-06 02:42:03",
+    "2018-05-06 02:42:24", "2018-05-06 02:42:39",
+    "2018-05-06 02:42:53")
+
+activities &lt;- c("sitting still", "sitting stretching",
+    "sitting shoulder press", "sitting cycling",
+    "standing still", "standing stretching",
+    "standing shoulder press", "walking slowly",
+    "walking quickly", "jumping jacks")
+
+durations &lt;- c(9, 13, 15, 13, 10, 11, 15, 21, 15, 14.460825920105)
+
+Tree_Intensity &lt;- c("Sedentary", "Sedentary/Light",
+    "Light/Moderate", "Indeterminate", "Light", "Light",
+    "Light/Moderate", "Light", "MVPA", "Light/Moderate")
+
+seated &lt;- c("yes", "yes", "yes", "yes", "no", "no", "no",
+    "no", "no", "no")
+
+large_muscles_moving &lt;- c("no", "yes", "yes", "yes",
+    "no", "yes", "yes", "yes", "yes", "yes")
+
+slow &lt;- c(NA, "yes", "yes", "no", NA, "yes", "yes",
+    "no", "no", "no")
+
+slowed_by_resistance &lt;- c(NA, "no", "yes", NA, NA,
+    "no", "yes", NA, NA, NA)
+
+ambulation &lt;- c(NA, NA, NA, NA, NA, NA, NA,
+    "yes", "yes", "no")
+
+light_walking &lt;- c(NA, NA, NA, NA, NA, NA,
+    NA, "yes", "no", NA)
+
+# Example of using the manual program ----------------------------------
+
+manual_data &lt;- data_collection_program(
+  interactive = FALSE, id = id, timestamps = timestamps,
+  activities = activities, durations = durations, seated = seated,
+  large_muscles_moving = large_muscles_moving, slow = slow,
+  slowed_by_resistance = slowed_by_resistance, ambulation = ambulation,
+  light_walking = light_walking
+)
+
+# Comparing output of interactive vs manual program --------------------
+
+test_names &lt;- intersect(names(example_data), names(manual_data))
+test_names &lt;- setdiff(names(test_names), "duration_s")
+
+all.equal(
+  example_data[ ,test_names],
+  manual_data[ ,test_names],
+  scale = 1,
+  tolerance = 5
+)
+</code></pre>
+
+
+</div>

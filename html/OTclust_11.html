@@ -1,0 +1,56 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Point-wise Uncertainty Assessment</h2>
+
+<h3>Description</h3>
+
+<p>Output both the numerical and graphical point-wise uncertainty assessment for each individual points. The return of clustCPS, visCPS or CPS can be directly used as the input.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pplot(result, method = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>– the return from function clustCPS, visCPS or CPS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>– method for calculating point-wise uncertainty. Using posterior probability matrix is <code>0</code> and using topological information between clusters is <code>1</code>. Default is using posterior probability matrix.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list, in which P is the posterior probability matrix that each sample below to the reference clusters, point_stab is the point-wise stability for each sample and v is the visualization of the point-wise stability.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># CPS analysis on selection of visualization methods
+data(vis_pollen)
+k1=kmeans(vis_pollen$vis,max(vis_pollen$ref))$cluster
+k2=kmeans(vis_pollen$vis,max(vis_pollen$ref))$cluster
+k=cbind(as.matrix(k1,ncol=1),as.matrix(k2,ncol=1))
+c=CPS(vis_pollen$ref, vis_pollen$vis, pert=k)
+# Point-wise Uncertainty Assessment
+pplot(c)
+</code></pre>
+
+
+</div>

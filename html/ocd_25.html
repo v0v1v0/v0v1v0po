@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ocd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ocd: A package for high-dimensional multiscale online changepoint detection</h2>
+
+<h3>Description</h3>
+
+<p>The ocd package provides the S3 class <code>ChangepointDetector</code> that
+processes data sequentially using the <code>getData</code> function and
+aims to detect change as soon as it occurs online subject to false alarm
+rates.
+</p>
+
+
+<h3>References</h3>
+
+<p>Chen, Y., Wang, T. and Samworth, R. J. (2020) High-dimensional
+multiscale online changepoint detection <em>Preprint</em>. arxiv:2003.03668.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ChangepointDetector</code> for detailed usage.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2020)
+p &lt;- 100
+thresh &lt;- setNames(c(11.62, 179.48, 54.87), c('diag', 'off_d', 'off_s'))
+detector &lt;- ChangepointDetector(dim=p, method='ocd', beta=1, thresh=thresh)
+old_mean &lt;- rnorm(p); new_mean &lt;- old_mean + c(rnorm(p/4), rep(0,3*p/4)) / sqrt(p/4)
+
+# using functional semantics native in R
+detector &lt;- setStatus(detector, 'estimating')
+for (i in 1:10000){
+  x_new &lt;- rnorm(p, mean=old_mean)
+  detector &lt;- getData(detector, x_new)
+}
+print(detector)
+
+detector &lt;- setStatus(detector, 'monitoring')
+for (i in 1:200){
+  x_new &lt;- rnorm(p, old_mean * (i &lt; 100) + new_mean * (i&gt;=100))
+  detector &lt;- getData(detector, x_new)
+}
+print(detector)
+
+## Not run: 
+# alternative way to write the above using the piping semantics
+library(magrittr)
+detector %&lt;&gt;% reset
+detector %&lt;&gt;% setStatus('estimating')
+for (i in 1:10000){
+  x_new &lt;- rnorm(p, mean=old_mean)
+  detector %&lt;&gt;% getData(x_new)
+}
+detector %&gt;% print
+
+detector %&lt;&gt;% setStatus('monitoring')
+for (i in 1:200){
+  x_new &lt;- rnorm(p, old_mean * (i &lt; 100) + new_mean * (i&gt;=100))
+  detector %&lt;&gt;% getData(x_new)
+}
+detector %&gt;% print
+
+## End(Not run)
+</code></pre>
+
+
+</div>

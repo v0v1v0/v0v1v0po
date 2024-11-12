@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>call</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make HTTP request to <a href="http://openblender.io">openblender.io</a> services</h2>
+
+<h3>Description</h3>
+
+<p>Call 'OpenBlender' API services.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">call(action, parameters)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>action</code></td>
+<td>
+<p>Task you're requesting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p>Request options</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list that includes the new dataset id in case you create one, success/error message when you insert observations or the list of observations requested.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>To see more details go to <a href="http://openblender.io">openblender.io</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#CREATE DATASET
+df &lt;- read.csv(file = "/path/to/your/data.csv", header = TRUE, sep = ",")
+action &lt;- "API_createDataset"
+parameters &lt;- list(
+token = "YOUR TOKEN",
+id_user = "YOUR USER ID",
+name = "Assign a name",
+descriptipon = "Set a description",
+visibility = "public",
+tags = list("topic", "tag"),
+insert_observations = "off",# set "on" if you want include the observations
+dataframe = df
+)
+call(action, parameters)
+#INSERT OBSERVATIONS
+df &lt;- read.csv(file = "/path/to/your/data.csv", header = TRUE, sep = ",")
+action &lt;- "API_insertObservations"
+parameters &lt;- list(
+token = "YOUR TOKEN",
+id_user = "YOUR USER ID",
+id_dataset = "DATASET ID",
+notification = "on",
+observations = df
+)
+call(action, parameters)
+
+#GET OBSERVATIONS
+action &lt;- "API_getObservationsFromDataset"
+parameters &lt;- list(
+token = "YOUR TOKEN",
+id_user = "YOUR USER ID",
+id_dataset = "DATASET ID"
+)
+call(action, parameters)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

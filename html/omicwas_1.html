@@ -1,0 +1,262 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ctassoc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cell-Type-Specific Association Testing</h2>
+
+<h3>Description</h3>
+
+<p>Cell-Type-Specific Association Testing
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ctassoc(
+  X,
+  W,
+  Y,
+  C = NULL,
+  test = "full",
+  regularize = FALSE,
+  num.cores = 1,
+  chunk.size = 1000,
+  seed = 123
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Matrix (or vector) of traits; samples x traits.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>Matrix of cell type composition; samples x cell types.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Matrix (or vector) of bulk omics measurements; markers x samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C</code></td>
+<td>
+<p>Matrix (or vector) of covariates; samples x covariates.
+X, W, Y, C should be numeric.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test</code></td>
+<td>
+<p>Statistical test to apply; either <code>"full"</code>, <code>"marginal"</code>,
+<code>"nls.identity"</code>, <code>"nls.log"</code>, <code>"nls.logit"</code>,
+<code>"propdiff.identity"</code>, <code>"propdiff.log"</code>, <code>"propdiff.logit"</code>
+or <code>"reducedrankridge"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regularize</code></td>
+<td>
+<p>Whether to apply Tikhonov (ie ridge) regularization
+to <code class="reqn">\beta_{h j k}</code>.
+The regularization parameter is chosen automatically according to
+an unbiased version of (Lawless &amp; Wang, 1976).
+Effective for <code>nls.*</code> and <code>propdiff.*</code> tests.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.cores</code></td>
+<td>
+<p>Number of CPU cores to use.
+Full, marginal and propdiff tests are run in serial, thus num.cores is ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chunk.size</code></td>
+<td>
+<p>The size of job for a CPU core in one batch.
+If you have many cores but limited memory, and there is a memory failure,
+decrease num.cores and/or chunk.size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Seed for random number generation.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Let the indexes be
+<code class="reqn">h</code> for cell type, <code class="reqn">i</code> for sample,
+<code class="reqn">j</code> for marker (CpG site or gene),
+<code class="reqn">k</code> for each trait that has cell-type-specific effect,
+and <code class="reqn">l</code> for each trait that has a uniform effect across cell types.
+The input data are <code class="reqn">X_{i k}</code>, <code class="reqn">C_{i l}</code>, <code class="reqn">W_{i h}</code> and <code class="reqn">Y_{j i}</code>,
+where <code class="reqn">C_{i l}</code> can be omitted.
+<code class="reqn">X_{i k}</code> and <code class="reqn">C_{i l}</code> are the values for two types of traits,
+showing effects that are cell-type-specific or not, respectively.
+Thus, calling <code class="reqn">X_{i k}</code> and <code class="reqn">C_{i l}</code> as "traits" and "covariates"
+gives a rough idea, but is not strictly correct.
+<code class="reqn">W_{i h}</code> represents the cell type composition and
+<code class="reqn">Y_{j i}</code> represents the marker level,
+such as methylation or gene expression.
+For each tissue sample, the cell type proportion <code class="reqn">W_{i h}</code>
+is the proportion of each cell type in the bulk tissue,
+which is measured or imputed beforehand.
+The marker level <code class="reqn">Y_{j i}</code> in bulk tissue is measured and provided as input.
+</p>
+<p>The parameters we estimate are
+the cell-type-specific trait effect <code class="reqn">\beta_{h j k}</code>,
+the tissue-uniform trait effect <code class="reqn">\gamma_{j l}</code>,
+and the basal marker level <code class="reqn">\alpha_{h j}</code> in each cell type.
+</p>
+<p>We first describe the conventional linear regression models.
+For marker <code class="reqn">j</code> in sample <code class="reqn">i</code>,
+the maker level specific to cell type <code class="reqn">h</code> is
+</p>
+<p style="text-align: center;"><code class="reqn">\alpha_{h j} + \sum_k \beta_{h j k} * X_{i k}.</code>
+</p>
+
+<p>This is a representative value rather than a mean, because we do not model
+a probability distribution for cell-type-specific expression.
+The bulk tissue marker level is the average weighted by <code class="reqn">W_{i h}</code>,
+</p>
+<p style="text-align: center;"><code class="reqn">\mu_{j i} = \sum_h W_{i h} [ \alpha_{h j} + \sum_k \beta_{h j k} * X_{i k} ] +
+                  \sum_l \gamma_{j l} C_{i l}.</code>
+</p>
+
+<p>The statistical model is
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{j i} = \mu_{j i} + \epsilon_{j i},</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">\epsilon_{j i} ~ N(0, \sigma^2_j).</code>
+</p>
+
+<p>The error of the marker level is is noramlly distributed with variance
+<code class="reqn">\sigma^2_j</code>, independently among samples.
+</p>
+<p>The <code>full</code> model is the linear regression
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{j i} = (\sum_h \alpha_{h j} * W_{i h}) +
+                (\sum_{h k} \beta_{h j k} * W_{i h} * X_{i k}) +
+                (\sum_l \gamma_{j l} * C_{i l}) +
+                error.</code>
+</p>
+
+<p>The <code>marginal</code> model tests the trait association only in one
+cell type <code class="reqn">h</code>, under the linear regression,
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{j i} = (\sum_{h'} \alpha_{h' j} * W_{i h'}) +
+                (\sum_k \beta_{h j k} * W_{i h} * X_{i k}) +
+                (\sum_l \gamma_{j l} * C_{i l}) +
+                error.</code>
+</p>
+
+<p>The nonlinear model simultaneously analyze cell type composition in
+linear scale and differential expression/methylation in log/logit scale.
+The normalizing function is the natural logarithm <code class="reqn">f</code> = log for gene
+expression, and <code class="reqn">f</code> = logit for methylation. Conventional linear regression
+can be formulated by defining <code class="reqn">f</code> as the identity function. The three models
+are named <code>nls.log</code>, <code>nls.logit</code> and <code>nls.identity</code>.
+We denote the inverse function of <code class="reqn">f</code> by <code class="reqn">g</code>; <code class="reqn">g</code> = exp for
+gene expression, and <code class="reqn">g</code> = logistic for methylation.
+The mean normalized marker level of marker <code class="reqn">j</code> in sample <code class="reqn">i</code> becomes
+</p>
+<p style="text-align: center;"><code class="reqn">\mu_{j i} = f(\sum_h W_{i h} g( \alpha_{h j} + \sum_k \beta_{h j k} * X_{i k} )) +
+                  \sum_l \gamma_{j l} C_{i l}.</code>
+</p>
+
+<p>The statistical model is
+</p>
+<p style="text-align: center;"><code class="reqn">f(Y_{j i}) = \mu_{j i} + \epsilon_{j i},</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">\epsilon_{j i} ~ N(0, \sigma^2_j).</code>
+</p>
+
+<p>The error of the marker level is is noramlly distributed with variance
+<code class="reqn">\sigma^2_j</code>, independently among samples.
+</p>
+<p>The ridge regression aims to cope with multicollinearity of
+the interacting terms <code class="reqn">W_{i h} * X_{i k}</code>.
+Ridge regression is fit by minimizing the residual sum of squares (RSS) plus
+<code class="reqn">\lambda \sum_{h k} \beta_{h j k}^2</code>, where <code class="reqn">\lambda &gt; 0</code> is the
+regularization parameter.
+</p>
+<p>The propdiff tests try to cope with multicollinearity by, roughly speaking,
+using mean-centered <code class="reqn">W_{i h}</code>.
+We obtain, instead of <code class="reqn">\beta_{h j k}</code>, the deviation of
+<code class="reqn">\beta_{h j k}</code> from the average across cell types.
+Accordingly, the null hypothesis changes.
+The original null hypothesis was <code class="reqn">\beta_{h j k} = 0</code>.
+The null hypothesis when centered is
+<code class="reqn">\beta_{h j k} - (\sum_{i h'} W_{i h'} \beta_{h' j k}) / (\sum_{i h'} W_{i h'}) = 0</code>.
+It becomes difficult to detect a signal for a major cell type,
+because <code class="reqn">\beta_{h j k}</code> would be close to the average across cell types.
+The tests <code>propdiff.log</code> and <code>propdiff.logit</code> include
+an additional preprocessing step that converts <code class="reqn">Y_{j i}</code> to <code class="reqn">f(Y_{j i})</code>.
+Apart from the preprocessing, the computations are performed in linear scale.
+As the preprocessing distorts the linearity between the dependent variable
+and (the centered) <code class="reqn">W_{i h}</code>,
+I actually think <code>propdiff.identity</code> is better.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with one element, which is named "coefficients".
+The element gives the estimate, statistic, p.value in tibble format.
+In order to transform the estimate for <code class="reqn">\alpha_{h j}</code> to the original scale,
+apply <code>plogis</code> for <code>test = nls.logit</code> and
+<code>exp</code> for <code>test = nls.log</code>.
+The estimate for <code class="reqn">\beta_{h j k}</code> by <code>test = nls.log</code> is
+the natural logarithm of fold-change, not the log2.
+If numerical convergence fails, <code>NA</code> is returned for that marker.
+</p>
+
+
+<h3>References</h3>
+
+<p>Lawless, J. F., &amp; Wang, P. (1976). A simulation study of ridge and other
+regression estimators.
+Communications in Statistics - Theory and Methods, 5(4), 307–323.
+<a href="https://doi.org/10.1080/03610927608827353">https://doi.org/10.1080/03610927608827353</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>ctcisQTL
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(GSE42861small)
+X = GSE42861small$X
+W = GSE42861small$W
+Y = GSE42861small$Y
+C = GSE42861small$C
+result = ctassoc(X, W, Y, C = C)
+result$coefficients
+
+
+</code></pre>
+
+
+</div>

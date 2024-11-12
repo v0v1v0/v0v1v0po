@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>NormalizeScore</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Normalize Score using Max and Min normalization</h2>
+
+<h3>Description</h3>
+
+<p><code>ReduceAnomalies</code> It reduces the number of detected anomalies. This function is
+designed to reduce the number of false positives keeping only the first detection of all those
+that are close to each other. This proximity distance is defined by a window
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">NormalizeScore(real.score, perfect.score, null.score)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>real.score</code></td>
+<td>
+<p>Detector score. See <code>GetDetectorScore</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>perfect.score</code></td>
+<td>
+<p>Perfect detector score; one that outputs all true positives and no false
+positives. See <code>GetNullAndPerfectScores</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>null.score</code></td>
+<td>
+<p>Perfect detector score; one that outputs all true positives and no false
+positives. See <code>GetNullAndPerfectScores</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Normalized score.
+</p>
+
+
+<h3>References</h3>
+
+<p>A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
+Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
+Applications (IEEE ICMLA’15), 2015.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate data
+set.seed(100)
+n &lt;- 180
+x &lt;- sample(1:100, n, replace = TRUE)
+x[70:90] &lt;- sample(110:115, 21, replace = TRUE)
+x[25] &lt;- 200
+x[150] &lt;- 170
+df &lt;- data.frame(timestamp = 1:n, value = x)
+
+# Add is.real.anomaly column
+df$is.real.anomaly &lt;- 0
+df[c(25,80,150), "is.real.anomaly"] &lt;- 1
+
+## Calculate anomalies
+result &lt;- CpSdEwma(
+  data = df$value,
+  n.train = 5,
+  threshold = 0.01,
+  l = 3
+)
+res &lt;- cbind(df, result)
+
+# Get null and perfect scores
+np.scores &lt;- GetNullAndPerfectScores(df)
+np.standard &lt;- np.scores[1,]
+np.fp &lt;- np.scores[2,]
+np.fn &lt;- np.scores[3,]
+
+# Get detector score
+scores &lt;- GetDetectorScore(res, print = FALSE, title = "")
+
+# Normalize standard score
+NormalizeScore(scores$standard, np.standard$perfect.score, np.standard$null.score)
+
+# Normalize low_FP_rate score
+NormalizeScore(scores$low_FP_rate, np.fp$perfect.score, np.fp$null.score)
+
+# Normalize low_FN_rate score
+NormalizeScore(scores$low_FN_rate, np.fn$perfect.score, np.fn$null.score)
+</code></pre>
+
+
+</div>

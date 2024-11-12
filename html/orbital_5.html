@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orbital_json_write</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Save orbital object as json file</h2>
+
+<h3>Description</h3>
+
+<p>Saving an orbital object to disk in a human and machine readable way.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orbital_json_write(x, path)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An orbital object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>file on disk.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The structure of the resulting JSON file allows for easy reading, both by
+orbital itself with <code>orbital_json_read()</code>, but potentially by other packages
+and langauges. The file is versioned by the <code>version</code> field to allow for
+changes why being backwards combatible with older file versions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Nothing.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>orbital_json_read()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workflows)
+library(recipes)
+library(parsnip)
+
+rec_spec &lt;- recipe(mpg ~ ., data = mtcars) %&gt;%
+  step_normalize(all_numeric_predictors())
+
+lm_spec &lt;- linear_reg()
+
+wf_spec &lt;- workflow(rec_spec, lm_spec)
+
+wf_fit &lt;- fit(wf_spec, mtcars)
+
+orbital_obj &lt;- orbital(wf_fit)
+
+tmp_file &lt;- tempfile()
+
+orbital_json_write(orbital_obj, tmp_file)
+
+readLines(tmp_file)
+
+</code></pre>
+
+
+</div>

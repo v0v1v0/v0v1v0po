@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>secondary_casecohort</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Secondary analysis in case-cohort data</h2>
+
+<h3>Description</h3>
+
+<p><code>secondary_casecohort</code> performs the secondary analysis which describes
+the association between a continuous secondary outcome and the expensive
+exposure for case-cohort data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">secondary_casecohort(SRS, CCH, NVsample, Z1.dim, Z2.dim, Z3.dim)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>SRS</code></td>
+<td>
+<p>A data frame for subjects in the simple random sample. The first
+column is T: observation time for time-to-event outcome. The second column
+is Delta: the event indicator. The thid column is Y2: the continuous scale
+secondary outcome. The fourth column is X: the expensive exposure. Starting
+from the fifth column to the end are Z1, Z2 and Z3. Z1 is the set of
+covariates that are included in the linear regression model of the
+secondary outcome. Z2 is the set of covariates that are included in the Cox
+model (the proportional hazards model which relates the primary failure
+time to covariates). Z3 is the set of covariates that are related to the
+conditional distribution of X given other covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CCH</code></td>
+<td>
+<p>A data frame for subjects in the case-cohort sample. The
+case-cohort sample includes the simple random sample (SRS) and the
+supplemental cases. The data structure is the same as SRS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NVsample</code></td>
+<td>
+<p>A data frame for subjects in the non-validation sample.
+Subjects in the non-validation sample don't have the expensive exposure X
+measured. The data structure is the following: The first column is T. The
+second column is Delta. The thid column is Y2. Starting from the fourth
+column to the end are Z1, Z2 and Z3.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z1.dim</code></td>
+<td>
+<p>Dimension of Z1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z2.dim</code></td>
+<td>
+<p>Dimension of Z2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z3.dim</code></td>
+<td>
+<p>Dimension of Z3. Note here that the algorithm requires Z3 to be
+discrete and not high-dimensional, because we use the SRS sample to
+estimate the conditional distribution of X given other covariates.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list which contains parameter estimates, estimated standard error
+for the primary outcome model: </p>
+<p style="text-align: center;"><code class="reqn">\lambda
+  (t)=\lambda_{0}(t)\exp{\gamma_{1}Y_{2}+\gamma_{2}X+\gamma_{3}Z2},</code>
+</p>
+
+<p>and the secondary outcome model:
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{2}=\beta_{0}+\beta_{1}X+\beta_{2}Z_{1}.</code>
+</p>
+<p> The list contains the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>gamma_paramEst</code></td>
+<td>
+<p>parameter estimates for gamma in the primary outcome
+model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma_stdErr</code></td>
+<td>
+<p>estimated standard error for gamma in the
+primary outcome model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta_paramEst</code></td>
+<td>
+<p>parameter estimates for beta in
+the secondary outcome model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta_stdErr</code></td>
+<td>
+<p>estimated standard error
+for beta in the secondary outcome model</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(ODS)
+# take the example data from the ODS package
+# please see the documentation for details about the data set casecohort_data_secondary
+data &lt;- casecohort_data_secondary
+
+# obtain SRS, CCH and NVsample from the original cohort data based on subj_ind
+SRS &lt;- data[data[,1]==1, 2:ncol(data)]
+CCH &lt;- data[data[,1]==1 | data[,1]==2, 2:ncol(data)]
+NVsample &lt;- data[data[,1]==0, 2:ncol(data)]
+
+# delete the fourth column (columns for X) from the non-validation sample
+NVsample &lt;- NVsample[,-4]
+
+Z1.dim &lt;- 4
+Z2.dim &lt;- 3
+Z3.dim &lt;- 3
+secondary_casecohort(SRS, CCH, NVsample, Z1.dim, Z2.dim, Z3.dim)
+
+</code></pre>
+
+
+</div>

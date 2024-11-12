@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calculator</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>calculator of Pvalue</h2>
+
+<h3>Description</h3>
+
+<p>By using this function, you can calculate the Pvalue of all genes you have provided.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calculator(survival, RNA, result)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>survival</code></td>
+<td>
+<p>the dataframe that contains survival data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>RNA</code></td>
+<td>
+<p>the dataframe that contains the expression data of genes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>the dataframe which will contains the outcome</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>this function will return a dataframe that contains either the gene's ensemble IDs and it's Pvalue.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(Oncofilterfast)
+result &lt;- data.frame(gene = c("A"),Pvalue = c(1))
+RNA_all_path=system.file("extdata", "TCGA-LGG.htseq_fpkm.tsv", package = "Oncofilterfast")
+RNA_all=read.csv(RNA_all_path,header=TRUE,sep="\t")
+rows_to_keep &lt;- apply(RNA_all[, -1], 1, function(row) {
+  non_zero_count &lt;- sum(row != 0)
+  total_elements &lt;- length(row)
+  (non_zero_count / total_elements) &gt;= 0.5
+  })
+RNA &lt;- RNA_all[rows_to_keep, ]
+survival_path=system.file("extdata", "TCGA-LGG.survival.tsv", package = "Oncofilterfast")
+survival=read.csv(survival_path,header=TRUE,sep="\t")
+final=calculator(survival=survival,RNA=RNA,result=result)
+print(nrow(final))
+filtered_result &lt;- final[final$Pvalue &lt; 0.01, ]
+print(nrow(filtered_result))
+print(filtered_result)
+
+</code></pre>
+
+
+</div>

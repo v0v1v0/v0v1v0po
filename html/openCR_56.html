@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pkernel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Kernel Distribution Functions</h2>
+
+<h3>Description</h3>
+
+<p>Distribution of distance moved for each of the main movement kernels. Theoretical probability density, cumulative distribution function, and quantile function (inverse of the cumulative distribution function). 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+pkernel(q, movementmodel = c("BVN", "BVE", "BVC", "BVT", "RDE", "RDG", "RDL"), 
+    move.a, move.b, truncate = Inf, lower.tail = TRUE)
+
+dkernel(r, movementmodel = c("BVN", "BVE", "BVC", "BVT", "RDE", "RDG", "RDL"), 
+    move.a, move.b, truncate = Inf)
+
+qkernel(p, movementmodel = c("BVN", "BVE", "BVC", "BVT", "RDE", "RDG", "RDL"), 
+    move.a, move.b, truncate = Inf, lower.tail = TRUE)
+
+gkernel(r, movementmodel = c("BVN", "BVE", "BVC", "BVT", "RDE", "RDG", "RDL"),
+    move.a, move.b, truncate = Inf)
+    
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>numeric vector of cumulative probabilities (0.5 for median)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>numeric vector of distance moved</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>numeric vector of quantiles (distance moved)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>movementmodel</code></td>
+<td>
+<p>character (see Movement models and <a href="../doc/openCR-vignette.pdf">openCR-vignette.pdf</a>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>move.a</code></td>
+<td>
+<p>numeric parameter of movement kernel</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>move.b</code></td>
+<td>
+<p>numeric parameter of movement kernel</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truncate</code></td>
+<td>
+<p>numeric q value at which distribution truncated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower.tail</code></td>
+<td>
+<p>logical; if TRUE (default), probabilities are P[X &lt;= x] otherwise, P[X &gt; x].</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Some formulae are given in openCR-vignette.pdf. <code>gkernel</code> gives the 2-D probability density of the bivariate kernel <code class="reqn">g(r) = f(r) / (2\pi r)</code>; the remaining functions describe the distribution of distance moved <code class="reqn">f(r)</code>.
+</p>
+<p>Computation of <code>qkernel</code> for <code>movementmodel = 'BVE'</code> uses 
+numerical root finding (function <code>uniroot</code>).
+</p>
+<p>Truncation (<code>truncate = limit</code> for finite <code>limit</code>) adjusts probabilities 
+upwards by 1/pkernel(limit,..., truncate = Inf) so that 
+pkernel(limit, ..., truncate = limit) equals 1.0.
+By default the distribution is not truncated.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For <code>pkernel</code> –
+</p>
+<p>Vector of cumulative probabilities corresponding to q. The cumulative probability is 1.0 for q &gt; truncate.
+</p>
+<p>For <code>dkernel</code> –
+</p>
+<p>Vector of probability density at radial distance r (zero for r &gt; truncate).
+</p>
+<p>For <code>qkernel</code> –
+</p>
+<p>Vector of quantiles (distances moved) corresponding to cumulative probabilities p.
+</p>
+<p>For <code>gkernel</code> –
+</p>
+<p>Vector of 2-D probability density at radial distance r (zero for r &gt; truncate).
+</p>
+
+
+<h3>References</h3>
+
+<p>Efford, M. G. and Schofield, M. R. (2022) A review of movement models in open population capture–recapture. <em>Methods in Ecology and Evolution</em> <b>13</b>, 2106–2118. https://doi.org/10.1111/2041-210X.13947
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Movement models, <code>make.kernel</code>, <code>matchscale</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># plot 3 distributions chosen with matchscale to intersect at p = 0.5
+q &lt;- 0:100
+plot(q, pkernel(q, 'BVN', 34), type = 'l', ylab = 'Cumulative probability')
+lines(q, pkernel(q, 'BVT', move.a = 104, move.b = 5), col = 'darkgreen', lwd = 2)
+lines(q, pkernel(q, 'BVT', move.a = 40, move.b = 1), col = 'orange', lwd = 2)
+points(40, 0.5, pch = 16)
+legend(62, 0.36, lty=1, lwd = 2, col = c('black','darkgreen','orange'), 
+   legend = c('BVN sigma=34', 'BVT a=104, b=5', 'BVT a=40, b=1'))
+
+# median
+abline(v = qkernel(0.5, 'BVN', 34))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>write_spec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read and write spectral data</h2>
+
+<h3>Description</h3>
+
+<p>Functions for reading and writing spectral data to and from OpenSpecy format.
+<code>OpenSpecy</code> objects are lists with components <code>wavenumber</code>, <code>spectra</code>,
+and <code>metadata</code>. Currently supported formats are .y(a)ml, .json, .csv, or .rds.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">write_spec(x, ...)
+
+## Default S3 method:
+write_spec(x, ...)
+
+## S3 method for class 'OpenSpecy'
+write_spec(x, file, method = NULL, digits = getOption("digits"), ...)
+
+read_spec(file, method = NULL, ...)
+
+as_hyperSpec(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class <code>OpenSpecy</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>file path to be read from or written to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>optional; function to be used as a custom reader or writer.
+Defaults to the appropriate function based on the file extension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>number of significant digits to use when formatting numeric
+values; defaults to <code>getOption("digits")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to the submethods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Due to floating point number errors there may be some differences in the
+precision of the numbers returned if using multiple devices for .json and
+.yaml files but the numbers should be nearly identical.
+<code>readRDS()</code> should return the exact same object every time.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>read_spec()</code> reads data formatted as an <code>OpenSpecy</code> object and
+returns a list object of class <code>OpenSpecy</code> containing spectral
+data.
+<code>write_spec()</code> writes a file for an object of class
+<code>OpenSpecy</code> containing spectral data.
+<code>as_hyperspec()</code> converts an <code>OpenSpecy</code> object to a
+<code>hyperSpec-class</code> object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Zacharias Steinmetz, Win Cowger
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>OpenSpecy()</code>;
+<code>read_text()</code>, <code>read_asp()</code>, <code>read_spa()</code>,
+<code>read_spc()</code>, and <code>read_jdx()</code> for text files, .asp,
+.spa, .spa, .spc, and .jdx formats, respectively;
+<code>read_zip()</code> and <code>read_any()</code> for wrapper functions;
+<code>saveRDS()</code>; <code>readRDS()</code>;
+<code>write_yaml()</code>; <code>read_yaml()</code>;
+<code>write_json()</code>; <code>read_json()</code>;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">read_extdata("raman_hdpe.yml") |&gt; read_spec()
+read_extdata("raman_hdpe.json") |&gt; read_spec()
+read_extdata("raman_hdpe.rds") |&gt; read_spec()
+read_extdata("raman_hdpe.csv") |&gt; read_spec()
+
+## Not run: 
+data(raman_hdpe)
+write_spec(raman_hdpe, "raman_hdpe.yml")
+write_spec(raman_hdpe, "raman_hdpe.json")
+write_spec(raman_hdpe, "raman_hdpe.rds")
+write_spec(raman_hdpe, "raman_hdpe.csv")
+
+# Convert an OpenSpecy object to a hyperSpec object
+hyper &lt;- as_hyperSpec(raman_hdpe)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

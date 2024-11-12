@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>slimTax</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+reshape heirarchical taxonomy
+</h2>
+
+<h3>Description</h3>
+
+<p>The function will trunck the heirarchical taxonomy by "from" and "to".
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">slimTax(x, from, to, separator =';', jump=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Character, structured strings to give the heirarchical taxonomy. If x is not character, please use as.character() function to convert first.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+
+<p>numeric, valid values within 1,2,...7, which represent the tax rank of domain, phylum, class, order, family, genus and species, respectively.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+
+<p>numeric, similar to parameter "from". Please note that value of "to" must not be smaller than "from".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>separator</code></td>
+<td>
+
+<p>Character, for example semicolon ";" which states the seperator of taxonomic heirarchy.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jump</code></td>
+<td>
+
+<p>Logic, Setting "jump" to TRUE means only take the tax at indices "from" and "to", excluding those in between.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function will reformat the taxonomy by the taxonomic ranks specified by "from" and "to".
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function will return the reshaped taxonomy.
+
+
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sizhong Yang &lt;yanglzu@163.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>fillTax
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+test = 'd__Bacteria;p__Planctomycetota;c__Planctomycetes;o__Gemmatales;f__Gemmataceae;g__;s__'
+slimTax(test, from=2, to=5)
+
+data(otuqiime)
+dim(otuqiime)
+
+result &lt;- slimTax(x = as.character(otuqiime$taxonomy), from=2, to=5, separator =';', jump=FALSE)
+
+dim(result)
+
+</code></pre>
+
+
+</div>

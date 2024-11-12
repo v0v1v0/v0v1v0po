@@ -1,0 +1,208 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>size.anova</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Design of Experiments for ANOVA
+</h2>
+
+<h3>Description</h3>
+
+<p>This function provides access to several functions returning the
+optimal number of levels and / or observations in different types of
+One-Way, Two-Way and Three-Way ANOVA.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">size.anova(model, hypothesis = "", assumption = "",
+    a = NULL, b = NULL, c = NULL, n = NULL, alpha, beta, delta, cases)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>A character string describing the model, allowed characters are
+<code>(&gt;x)</code> and the letters <code>abcABC</code>, capital letters stand for
+random factors, lower case letters for fixed factors, <code>x</code> means
+cross classification, <code>&gt;</code> nested classification, brackets
+<code>()</code> are used to specify mixed model, the term in brackets has
+to come first. Spaces are allowed.
+</p>
+<p>Examples: One-Way fixed: <code>a</code>, Two-Way: <code>axB</code>, <code>a&gt;b</code>,
+Three-Way: <code>axbxc</code>, <code>axBxC</code>, <code>a&gt;b&gt;c</code>, <code>(axb)&gt;C</code>, ...
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hypothesis</code></td>
+<td>
+
+<p>Character string describiung Null hypothesis, can be omitted in
+most cases if it is clear that a
+test for no effects of factor A is performed, <code>"a"</code>.
+</p>
+<p>Other possibilities: <code>"axb"</code>, <code>"a&gt;b"</code>, <code>"c"</code> and some more.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>assumption</code></td>
+<td>
+
+<p>Character string. A few functions need an assumption on sigma, like
+<code>"sigma_AB=0,b=c"</code>, see the referenced book until this page is updated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+
+<p>Number of levels of fixed factor A
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+
+<p>Number of levels of fixed factor B
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c</code></td>
+<td>
+
+<p>Number of levels of fixed factor C
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>Number of Observations
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+
+<p>Risk of 1st kind
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+
+<p>Risk of 2nd kind
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+
+<p>The minimum difference to be detected
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cases</code></td>
+<td>
+
+<p>Specifies whether the <code>"maximin"</code> or <code>"maximin"</code> sizes are
+to be determined. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>see chapter 3 in the referenced book
+</p>
+
+
+<h3>Value</h3>
+
+<p>named integer giving the desired size(s)
+</p>
+
+
+<h3>Note</h3>
+
+<p>Depending on the selected model and hypothesis omit one or two of the
+sizes <code>a</code>, <code>b</code>, <code>c</code>, <code>n</code>. The function then tries
+to get its optimal value. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dieter Rasch, Juergen Pilz, L.R. Verdooren, Albrecht Gebhardt, Minghui Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Dieter Rasch, Juergen Pilz, L.R. Verdooren, Albrecht Gebhardt: Optimal Experimental Design with R, Chapman and Hall/CRC, 2011
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">size.anova(model="a",a=4,
+      alpha=0.05,beta=0.1, delta=2, case="maximin")
+size.anova(model="a",a=4,
+      alpha=0.05,beta=0.1, delta=2, case="minimin")
+
+size.anova(model="axb", hypothesis="a", a=6, b=4, 
+           alpha=0.05,beta=0.1, delta=1, cases="maximin")
+size.anova(model="axb", hypothesis="a", a=6, b=4, 
+           alpha=0.05,beta=0.1, delta=1, cases="maximin")
+
+size.anova(model="axb", hypothesis="axb", a=6, b=4, 
+           alpha=0.05,beta=0.1, delta=1, cases="minimin")
+size.anova(model="axb", hypothesis="axb", a=6, b=4, 
+           alpha=0.05,beta=0.1, delta=1, cases="minimin")
+
+size.anova(model="axBxC",hypothesis="a",
+           assumption="sigma_AC=0,b=c",a=6,n=2,
+           alpha=0.05, beta=0.1, delta=0.5, cases="maximin")
+size.anova(model="axBxC",hypothesis="a",
+           assumption="sigma_AC=0,b=c",a=6,n=2,
+           alpha=0.05, beta=0.1, delta=0.5, cases="minimin")
+
+size.anova(model="a&gt;B&gt;c", hypothesis="c",a=6, b=2, c=4, 
+           alpha=0.05, beta=0.1, delta=0.5, case="maximin")
+size.anova(model="a&gt;B&gt;c", hypothesis="c",a=6, b=20, c=4, 
+           alpha=0.05, beta=0.1, delta=0.5, case="maximin")
+
+size.anova(model="a&gt;B&gt;c", hypothesis="c",a=6, b=NA, c=4, 
+           alpha=0.05, beta=0.1, delta=0.5, case="maximin")
+
+size.anova(model="(axb)&gt;c", hypothesis="a",a=6, b=5, c=4, 
+           alpha=0.05, beta=0.1, delta=0.5, case="maximin")
+size.anova(model="(axb)&gt;c", hypothesis="a",a=6, b=5, c=4, 
+           alpha=0.05, beta=0.1, delta=0.5, case="minimin")
+
+size.anova(model="(axb)&gt;c", hypothesis="a",a=6, b=5, c=4, 
+           alpha=0.05, beta=0.1, delta=0.5, case="maximin")
+size.anova(model="(axb)&gt;c", hypothesis="a",a=6, b=5, c=4, 
+           alpha=0.05, beta=0.1, delta=0.5, case="minimin")
+</code></pre>
+
+
+</div>

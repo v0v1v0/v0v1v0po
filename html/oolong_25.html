@@ -1,0 +1,320 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_oolong</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate an oolong test</h2>
+
+<h3>Description</h3>
+
+<p><code>create_oolong</code> generates an oolong test object that can either be used for validating a topic model or for creating ground truth (gold standard) of a text corpus. <code>wi</code> (word intrusion test), <code>ti</code> (topic intrusion test), <code>witi</code> (word and topic intrusion tests), <code>wsi</code> (word set intrusion test) and <code>gs</code> are handy wrappers to <code>create_oolong</code>. It is recommended to use these wrappers instead of <code>create_oolong</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_oolong(
+  input_model = NULL,
+  input_corpus = NULL,
+  n_top_terms = 5,
+  bottom_terms_percentile = 0.6,
+  exact_n = NULL,
+  frac = 0.01,
+  n_top_topics = 3,
+  n_topiclabel_words = 8,
+  use_frex_words = FALSE,
+  frexweight = 0.5,
+  input_dfm = NULL,
+  construct = "positive",
+  btm_dataframe = NULL,
+  n_correct_ws = 3,
+  wsi_n_top_terms = 20,
+  userid = NA,
+  type = "witi",
+  lambda = 1,
+  difficulty = NULL
+)
+
+wi(
+  input_model = NULL,
+  userid = NA,
+  n_top_terms = 5,
+  bottom_terms_percentile = 0.6,
+  frexweight = 0.5,
+  use_frex_words = FALSE,
+  lambda = 1,
+  difficulty = NULL
+)
+
+witi(
+  input_model = NULL,
+  input_corpus = NULL,
+  userid = NA,
+  n_top_terms = 5,
+  bottom_terms_percentile = 0.6,
+  exact_n = NULL,
+  frac = 0.01,
+  n_top_topics = 3,
+  n_topiclabel_words = 8,
+  frexweight = 0.5,
+  use_frex_words = FALSE,
+  input_dfm = NULL,
+  btm_dataframe = NULL,
+  lambda = 1,
+  difficulty = NULL
+)
+
+ti(
+  input_model = NULL,
+  input_corpus = NULL,
+  userid = NA,
+  exact_n = NULL,
+  frac = 0.01,
+  n_top_topics = 3,
+  n_topiclabel_words = 8,
+  frexweight = 0.5,
+  use_frex_words = FALSE,
+  input_dfm = NULL,
+  btm_dataframe = NULL,
+  lambda = 1,
+  difficulty = NULL
+)
+
+wsi(
+  input_model = NULL,
+  userid = NA,
+  n_topiclabel_words = 4,
+  n_correct_ws = 3,
+  wsi_n_top_terms = 20,
+  frexweight = 0.5,
+  use_frex_words = FALSE,
+  lambda = 1,
+  difficulty = NULL
+)
+
+gs(
+  input_corpus = NULL,
+  userid = NA,
+  construct = "positive",
+  exact_n = NULL,
+  frac = 0.01
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input_model</code></td>
+<td>
+<p>(wi, ti, witi, wsi) a STM, WarpLDA, topicmodels, KeyATM, seededlda, textmodel_nb, or BTM object; if it is NULL, create_oolong assumes that you want to create gold standard.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input_corpus</code></td>
+<td>
+<p>(wi, ti, witi, wsi, gs) if input_model is not null, it should be the corpus (character vector or quanteda::corpus object) to generate the model object. If input_model and input_corpus are not NULL, topic intrusion test cases are generated. If input_model is a BTM object, this argument is ignored. If input_model is null, it generates gold standard test cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_top_terms</code></td>
+<td>
+<p>(wi, witi) integer, number of top topic words to be included in the candidates of word intrusion test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bottom_terms_percentile</code></td>
+<td>
+<p>(wi, witi) double, a term is considered to be an word intruder when its theta less than the percentile of this theta, must be within the range of 0 to 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exact_n</code></td>
+<td>
+<p>(ti, witi, gs) integer, number of topic intrusion test cases to generate, ignore if frac is not NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>frac</code></td>
+<td>
+<p>(ti, witi, gs) double, fraction of test cases to be generated from the corpus</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_top_topics</code></td>
+<td>
+<p>(wi, witi) integer, number of most relevant topics to be shown alongside the intruder topic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_topiclabel_words</code></td>
+<td>
+<p>(witi, ti, wsi) integer, number of topic words to be shown as the topic ("ti" and "witi") / word set ("wsi") label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_frex_words</code></td>
+<td>
+<p>(wi, witi, ti, wsi) logical, for a STM object, use FREX words if TRUE, use PROB words if FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>frexweight</code></td>
+<td>
+<p>(wi, witi, ti, wsi) double, adjust the 'frexweight' for STM (see [stm::labelTopics()]), no effect for STM if use_frex_words is FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input_dfm</code></td>
+<td>
+<p>(wi, witi, ti, wsi) a dfm object used for training the input_model, if input_model is a WarpLDA object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>construct</code></td>
+<td>
+<p>(gs) string, an adjective to describe the construct you want your coders to code the the gold standard test cases</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>btm_dataframe</code></td>
+<td>
+<p>(witi, ti) dataframe used for training the input_model, if input_model is a BTM object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_correct_ws</code></td>
+<td>
+<p>(wsi) number of word sets to be shown alongside the intruder word set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wsi_n_top_terms</code></td>
+<td>
+<p>(wsi) number of top topic words from each topic to be randomized selected as the word set label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>userid</code></td>
+<td>
+<p>a character string to denote the name of the coder. Default to NA (no userid); not recommended</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>(create_oolong) a character string to denote what you want to create. "wi": word intrusion test; "ti": topic intrusion test; "witi": both word intrusion test and topic intrusion test; "gs": gold standard generation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>(wi, witi, ti, wsi) double, adjust the 'lambda' for WarpLDA (see [text2vec::LatentDirichletAllocation()])</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>difficulty</code></td>
+<td>
+<p>(wi, witi, ti, wsi) double, deprecated, for backward compatibility</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>an oolong test object.
+</p>
+
+
+<h3>Usage</h3>
+
+<p>Use <code>wi</code>, <code>ti</code>, <code>witi</code>, <code>wsi</code> or <code>gs</code> to generate an oolong test of your choice. It is recommended to supply also <code>userid</code> (current coder).
+The names of the tests (word intrusion test and topic intrusion test) follow Chang et al (2009). In Ying et al. (2021), topic intrusion test is named "T8WSI" (Top 8 Word Set Intrusion). Word set intrusion test in this package is actually the "R4WSI" (Random 4 Word Set Intrusion) in Ying et al. The default settings of <code>wi</code>, <code>witi</code>, and <code>ti</code> follow Chang et al (2009), e.g. <code>n_top_terms</code> = 5; instead of <code>n_top_terms</code> = 4 as in Ying et al. The default setting of <code>wsi</code> follows Ying et al., e.g. <code>n_topiclabel_words</code> = 4.
+As suggested by Song et al. (2020), 1
+</p>
+
+
+<h3>About create_oolong</h3>
+
+<p>Because <code>create_oolong</code> is not intuitive to use, it is no longer recommended to use <code>create_oolong</code> to generate oolong test. <code>create_oolong</code> is retained only for backward compatibility purposes. This function generates an oolong test object based on <code>input_model</code> and <code>input_corpus</code>. If <code>input_model</code> is not NULL, it generates oolong test for a topic model (tm). If <code>input_model</code> is NULL but input_corpus is not NULL, it generates oolong test for generating gold standard (gs).
+</p>
+
+
+<h3>Methods</h3>
+
+<p>An oolong object, depends on its purpose, has the following methods:
+</p>
+
+<dl>
+<dt><code>$do_word_intrusion_test()</code></dt>
+<dd>
+<p>(tm) launch the shiny-based word intrusion test. The coder should find out the intruder word that is not related to other words.</p>
+</dd>
+<dt><code>$do_topic_intrusion_test()</code></dt>
+<dd>
+<p>(tm) launch the shiny-based topic intrusion test. The coder should find out the intruder topic that is least likely to be the topic of the document.</p>
+</dd>
+<dt><code>$do_word_set_intrusion_test()</code></dt>
+<dd>
+<p>(tm) launch the shiny-based word set intrusion test. The coder should find out the intruder word set that is not related to other word sets.</p>
+</dd>
+<dt><code>$do_gold_standard_test()</code></dt>
+<dd>
+<p>(gs) launch the shiny-based test for generating gold standard. The coder should determine the level of the predetermined constructs with a 5-point Likert scale.</p>
+</dd>
+<dt><code>$lock(force = FALSE)</code></dt>
+<dd>
+<p>(gs/tm) lock the object so that it cannot be changed anymore. It enables <code>summarize_oolong</code> and the following method.</p>
+</dd>
+<dt><code>$turn_gold()</code></dt>
+<dd>
+<p>(gs) convert the oolong object into a quanteda compatible corpus.</p>
+</dd>
+</dl>
+<p>For more details, please see the overview vignette: <code>vignette("overview", package = "oolong")</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Chung-hong Chan, Marius Sältzer
+</p>
+
+
+<h3>References</h3>
+
+<p>Chang, J., Gerrish, S., Wang, C., Boyd-Graber, J. L., &amp; Blei, D. M. (2009). Reading tea leaves: How humans interpret topic models. In Advances in neural information processing systems (pp. 288-296).
+</p>
+<p>Song et al. (2020) In validations we trust? The impact of imperfect human annotations as a gold standard on the quality of validation of automated content analysis. Political Communication.
+</p>
+<p>Ying, L., Montgomery, J. M., &amp; Stewart, B. M. (2021). Topics, Concepts, and Measurement: A Crowdsourced Procedure for Validating Topics as Measures. Political Analysis
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Creation of oolong test with only word intrusion test
+data(abstracts_seededlda)
+data(abstracts)
+oolong_test &lt;- wi(input_model = abstracts_seededlda, userid = "Hadley")
+## Creation of oolong test with both word intrusion test and topic intrusion test
+oolong_test &lt;- witi(input_model = abstracts_seededlda,
+input_corpus = abstracts$text, userid = "Julia")
+## Creation of oolong test with topic intrusion test
+oolong_test &lt;- ti(input_model = abstracts_seededlda,
+input_corpus = abstracts$text, userid = "Jenny")
+## Creation of oolong test with word set intrusion test
+oolong_test &lt;- wsi(input_model = abstracts_seededlda, userid = "Garrett")
+## Creation of gold standard
+oolong_test &lt;- gs(input_corpus = trump2k, userid = "Yihui")
+## Using create_oolong(); not recommended
+oolong_test &lt;- create_oolong(input_model = abstracts_seededlda,
+input_corpus = abstracts$text, userid = "JJ")
+oolong_test &lt;- create_oolong(input_model = abstracts_seededlda,
+input_corpus = abstracts$text, userid = "Mara", type = "ti")
+oolong_test &lt;- create_oolong(input_corpus = abstracts$text, userid = "Winston", type = "gs")
+</code></pre>
+
+
+</div>

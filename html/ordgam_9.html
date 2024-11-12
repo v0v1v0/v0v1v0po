@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ordgam_additive</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute the additive terms estimated using an 'ordgam' model</h2>
+
+<h3>Description</h3>
+
+<p>Compute the additive terms estimated using an 'ordgam' model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ordgam_additive(obj.ordgam, ngrid = 300, ci.level = 0.95)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj.ordgam</code></td>
+<td>
+<p>An object of class 'ordgam'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ngrid</code></td>
+<td>
+<p>Number of grid points where the additive terms are computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.level</code></td>
+<td>
+<p>Credibility level for the pointwise credible region for the additive terms</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list containing:
+</p>
+
+<ul>
+<li>
+<p><code>nalpha</code> : <code style="white-space: pre;">⁠ ⁠</code>number of intercepts in the proportional odds model.
+</p>
+</li>
+<li>
+<p><code>nfixed</code> : <code style="white-space: pre;">⁠ ⁠</code>number of non-penalized regression parameters in 'beta'.
+</p>
+</li>
+<li>
+<p><code>J</code> : <code style="white-space: pre;">⁠ ⁠</code>number of additive terms.
+</p>
+</li>
+<li>
+<p><code>additive.lab</code> : <code style="white-space: pre;">⁠ ⁠</code>labels of the additive terms.
+</p>
+</li>
+<li>
+<p><code>K</code> : <code style="white-space: pre;">⁠ ⁠</code>number of spline parameters to specify an additive term.
+</p>
+</li>
+<li>
+<p><code>knots</code> : <code style="white-space: pre;">⁠ ⁠</code>list of length J containing the knots for the B-spline basis associated to a given additive term.
+</p>
+</li>
+<li>
+<p><code>f.grid</code> : <code style="white-space: pre;">⁠ ⁠</code>list of length J with, for each additive term, a list of length 2 with 'x': a vector of grid values for the covariate ; 'y.mat': a matrix with 3 columns (est,low,up) giving the additive term and its pointwise credible region
+</p>
+</li>
+<li>
+<p><code>f</code> : <code style="white-space: pre;">⁠ ⁠</code>a list of length J with, for each additive term &lt;x&gt;, a list with f$x: a function computing the additive term f(x) for a given covariate value 'x' ; attributes(f$x): support, label, range.
+</p>
+</li>
+<li>
+<p><code>f.se</code> : <code style="white-space: pre;">⁠ ⁠</code>a list of length J with, for each additive term &lt;x&gt;, a list with f.se$x: a function computing the s.e. of f(x) for a given covariate value 'x' ; attributes(f.se$x): support, label, range
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Philippe Lambert <a href="mailto:p.lambert@uliege.be">p.lambert@uliege.be</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Lambert, P. and Gressani, 0. (2023) Penalty parameter selection and asymmetry corrections
+to Laplace approximations in Bayesian P-splines models. Statistical Modelling. &lt;doi:10.1177/1471082X231181173&gt;. Preprint: &lt;arXiv:2210.01668&gt;.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ordgam)
+data(freehmsData)
+mod = ordgam(freehms ~ gndr + s(eduyrs) + s(age),
+             data=freehmsData, descending=TRUE)
+obj = ordgam_additive(mod)
+names(obj)
+with(obj$f.grid$age,
+      matplot(x, y.mat, lty=c(1,2,2),type="l",col=1,
+              xlab="Age", ylab="f(Age)"))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>trim_osmdata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>trim_osmdata</h2>
+
+<h3>Description</h3>
+
+<p>Trim an osmdata object to within a bounding polygon
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">trim_osmdata(dat, bb_poly, exclude = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>An osmdata object returned from osmdata_sf or
+osmdata_sp.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bb_poly</code></td>
+<td>
+<p>A matrix representing a bounding polygon obtained with
+<code>getbb (..., format_out = "polygon")</code> (and possibly selected from
+resultant list where multiple polygons are returned).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>If TRUE, objects are trimmed exclusively, only retaining those
+strictly within the bounding polygon; otherwise all objects which partly
+extend within the bounding polygon are retained.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A trimmed version of <code>dat</code>, reduced only to those components
+lying within the bounding polygon.
+</p>
+
+
+<h3>Note</h3>
+
+<p>It will generally be necessary to pre-load the <span class="pkg">sf</span> package for
+this function to work correctly.
+</p>
+<p>Caution is advised when using polygons obtained from Nominatim via
+<code>getbb(..., format_out = "polygon"|"sf_polygon")</code>. These shapes can be
+outdated and thus could cause the trimming operation to not give results
+expected based on the current state of the OSM data.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other transform: 
+<code>osm_elevation()</code>,
+<code>osm_poly2line()</code>,
+<code>unique_osmdata()</code>,
+<code>unname_osmdata_sf()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+dat &lt;- opq ("colchester uk") %&gt;%
+    add_osm_feature (key = "highway") %&gt;%
+    osmdata_sf (quiet = FALSE)
+bb &lt;- getbb ("colchester uk", format_out = "polygon")
+library (sf) # required for this function to work
+dat_tr &lt;- trim_osmdata (dat, bb)
+bb &lt;- getbb ("colchester uk", format_out = "sf_polygon")
+class (bb) # sf data.frame
+dat_tr &lt;- trim_osmdata (dat, bb)
+bb &lt;- as (bb, "Spatial")
+class (bb) # SpatialPolygonsDataFrame
+dat_tr &lt;- trim_osmdata (dat, bb)
+
+## End(Not run)
+</code></pre>
+
+
+</div>
